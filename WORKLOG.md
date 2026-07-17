@@ -255,3 +255,34 @@
 - Preserved stable URLs, canonical pages, agent publications, search, graph
   navigation, browser history, keyboard access, safe Markdown rendering, review
   dates, and sources as load-bearing behavior.
+
+## 2026-07-18 — Two-mode interface production closure
+
+- Implemented Explore as a warm editorial panel beside a restrained animated
+  map, and Read as one centered article with provenance and a single return to
+  the map. Desktop and mobile now share those two full-page modes.
+- Removed the article/sidebar split, metadata cards, relation counts and labels,
+  graph legend, duplicate graph heading, mobile backdrop, modal sheet, and
+  open/close controls from the human projection.
+- Replaced the old sheet assumptions with behavior coverage for default
+  Explore, search and graph selection, focused Read, internal article links,
+  browser history, identical mobile modes, slash/Escape shortcuts, safe raw
+  HTML handling, sources, review dates, and accessibility checks.
+- Rendered review found and fixed one transition defect: entering Read from a
+  scrolled phone map could retain the old scroll offset. Mode/page changes now
+  reset to the top while moving semantic focus without an unwanted title ring.
+- Isolated the release into two jj changes and left seven unrelated
+  manufacturing-page edits untouched in the captain's working copy.
+- `npm run check` passed in a clean workspace. The reviewed artifact contains
+  54 files / 801,118 bytes / SHA-256
+  `44c578af4c389a5b2ee1730c57459dfb49afd341d6f4e47b0159511ccde48058`.
+- Published public commit `3c78279fd7956624c3d2345b7ebb3e2b3180b9ee`.
+  Vercel deployment `dpl_5DK9yJkZGaf1dMJ6giKwHdPwptb3` reached production /
+  Ready with both custom aliases.
+- Exact fetches of all 54 files from both custom domains matched the reviewed
+  bytes and digest with zero mismatches. Live desktop and 390px browser flows
+  passed with no overflow, graph-node collisions, modal semantics, warnings,
+  or errors.
+- A bounded fresh-context reviewer audited the exact release range read-only
+  and returned `ACCEPT`, confirming the two-mode contract, removed complexity,
+  unchanged agent surfaces, test coverage, and zero knowledge-page leakage.

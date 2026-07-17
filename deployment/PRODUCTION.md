@@ -163,3 +163,63 @@ including both custom domains. The reviewer independently matched public
 `possible.sh` and `www.possible.sh`: 54 files, 801,787 bytes, aggregate artifact
 SHA-256 `6aa2ddd85417656cb683eb3746b77d13b89401edeee7363077a6392f70fa088a`,
 and zero mismatches. Its verdict was `ACCEPT` with no blocking finding.
+
+## 2026-07-18 — Two-mode human interface simplification
+
+This release changes only the human projection and its artifact receipt. The
+49-page corpus, 146 internal links, generated agent publications, and two-tool
+read-only MCP contract remain unchanged.
+
+### Delivery identity
+
+- Public source commit:
+  `3c78279fd7956624c3d2345b7ebb3e2b3180b9ee`
+- Public branch: `fraylabs/possible` `main`
+- Vercel deployment: `dpl_5DK9yJkZGaf1dMJ6giKwHdPwptb3`
+- Deployment URL: `https://possible-fywcn5zgv-brainthrust.vercel.app`
+- State: production / Ready at 2026-07-18 12:02 Asia/Singapore
+- Aliases: `https://possible.sh`, `https://www.possible.sh`, and the existing
+  Vercel project aliases
+
+Authenticated Vercel metadata matched the deployment's Git SHA to the public
+source commit above and its ref to `main`.
+
+### Exact live artifact receipt
+
+At 2026-07-18 12:04 Asia/Singapore, a read-only verifier fetched every
+manifested file from both custom domains and compared status, byte count, and
+SHA-256:
+
+| Check | `possible.sh` | `www.possible.sh` |
+| --- | --- | --- |
+| Manifested files | 54 of 54 exact | 54 of 54 exact |
+| Total bytes | 801,118 exact | 801,118 exact |
+| Artifact SHA-256 | `44c578af4c389a5b2ee1730c57459dfb49afd341d6f4e47b0159511ccde48058` | same |
+| Mismatches | 0 | 0 |
+
+The clean local primary verifier independently reproduced the same 54-file
+manifest, byte count, and aggregate digest.
+
+### Live rendered acceptance
+
+The in-app Browser exercised the production deployment at desktop
+`1440 × 1000` and mobile `390 × 844`. Explore search, graph selection, stable
+URLs, focused Read, Back to map, history behavior, and the literal robot-arm
+outcome passed. The phone graph remained inside the viewport with zero node
+collisions; entering Read from a scrolled map landed at the article start below
+the sticky bar. No dialog semantics, horizontal overflow, browser warnings, or
+browser errors were observed.
+
+Ten accepted local and live images were retained under
+`.agent-notifications/artifacts/possible-simple-ui-20260718-115844/` for the
+Telegram media handoff.
+
+### Independent two-mode closure audit
+
+A fresh read-only reviewer returned `ACCEPT` after auditing the exact public
+release range. It confirmed the sparse Explore and Read surfaces, deletion of
+the modal sheet and dashboard metadata, preserved navigation and safety tests,
+unchanged agent publication/contract paths, and the absence of every
+`knowledge/**/*.md` file from the release. The reviewer intentionally did not
+rerun commands; the clean primary verifier and live browser receipts above are
+the execution evidence.

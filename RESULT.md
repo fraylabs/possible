@@ -12,73 +12,81 @@ separate planning ontology.
   links across Web and custom-part manufacturing.
 - A page has a stable slug, readable prose, tags, a review date, and at least
   one HTTPS source. Links derive graph edges, backlinks, and related pages.
-- The human atlas uses one page-selection action across search, article links,
-  and graph nodes. Desktop keeps a readable article beside a viewport-stable
-  related-page graph; mobile uses the graph plus an accessible article sheet.
-- The MCP server exposes exactly two read-only operations: `search` and `read`.
-- Production builds generate `/llms.txt`, `/wiki/index.json`, and one
-  `/wiki/<slug>.json` representation per page from the same corpus.
+- The human atlas has two presentation modes only. Explore contains the brand,
+  search, concise selected-page context, and a small related-page map. Read
+  contains the full article, review date, sources, and one Back to map action.
+- Desktop and mobile use that same full-page model. There is no mobile sheet,
+  modal, metadata rail, relation legend, page-facts panel, or agent dashboard.
+- Search, graph nodes, article links, browser history, and stable URLs share one
+  page-selection action. Mode changes do not change the selected page URL.
+- The MCP server still exposes exactly two read-only operations: `search` and
+  `read`. Production builds still generate `/llms.txt`, `/wiki/index.json`, and
+  one `/wiki/<slug>.json` representation per page from the same corpus.
 
 ## Verification receipt
 
-`npm run check` passes with:
+`npm run check` passed from a clean jj workspace with:
 
 - 49 pages and 146 internal links validated from 49 Markdown files;
 - 14 knowledge tests, including malformed metadata, source, date, and link
   negatives;
 - 7 real MCP tests across in-memory, stdio, and Streamable HTTP transports;
-- 9 website behavior/accessibility tests and 1 real-corpus integration test;
-- 1 real stdio helper test using the plain outcome “I want to make a robot
-  arm.”;
+- 10 web behavior, graph, accessibility, and fixture-corpus tests plus one
+  integration-mode real-corpus test;
+- 1 real stdio helper test using “I want to make a robot arm.”;
 - 5 preview-boundary tests;
-- all TypeScript and production builds;
-- exact verification of 54 production files totaling 801,787 bytes with
+- all TypeScript and production builds; and
+- exact verification of 54 production files totaling 801,118 bytes with
   aggregate SHA-256
-  `6aa2ddd85417656cb683eb3746b77d13b89401edeee7363077a6392f70fa088a`.
+  `44c578af4c389a5b2ee1730c57459dfb49afd341d6f4e47b0159511ccde48058`.
 
-The artifact verifier serves every reviewed file, checks exact bytes and
-content types, proves the `/wiki/web` SPA fallback, validates all 49 generated
-page documents and their backlinks/related pages, rejects symbolic links and
-unsafe paths, and confirms no source maps are published.
-
-A separate fresh-context agent received only “I want to make a robot arm.” and
-the two query operations. Its one verbatim search returned `Robotic arms`
-first; it read that page, followed `Parametric CAD master`, cited both review
-dates and source URLs, and returned `ACCEPT` without legacy schema vocabulary.
+The verifier checked exact bytes and content types, the `/wiki/web` SPA
+fallback, all generated page documents and relations, symbolic-link and unsafe
+path negatives, and the absence of public source maps. The simplified UI range
+does not contain the seven unrelated manufacturing-page edits retained in the
+captain's working copy.
 
 ## Production acceptance
 
 Public Git commit
-`ebfddd9df1c55cae5148ab26a7bbd0cd9d03a94e` was deployed by Vercel as
-`dpl_7qvQGXPPR5vUSeFVHFkZycHAcb7u` and promoted to
-`https://possible.sh` and `https://www.possible.sh`. The deployment was Ready
-at 2026-07-18 00:44 Asia/Singapore.
+`3c78279fd7956624c3d2345b7ebb3e2b3180b9ee` was deployed by Vercel as
+`dpl_5DK9yJkZGaf1dMJ6giKwHdPwptb3` and reached production / Ready at
+2026-07-18 12:02 Asia/Singapore. Vercel attached `https://possible.sh`,
+`https://www.possible.sh`, and the existing project aliases.
 
-An exact live fetch at 2026-07-18 00:54 Asia/Singapore downloaded all 54
-manifested files from `https://possible.sh`: every status, byte count, and
-SHA-256 matched the reviewed artifact, for 801,787 bytes and aggregate artifact
-SHA-256
-`6aa2ddd85417656cb683eb3746b77d13b89401edeee7363077a6392f70fa088a`.
-The public index reported 49 of 49 pages, `/wiki/web` returned the HTML app,
-and the `www` wiki index returned JSON. `git ls-remote` independently matched
-the public `main` branch to the deployed implementation commit.
+At 2026-07-18 12:04 Asia/Singapore, exact live fetches downloaded all 54
+manifested files from both custom domains. Every status, byte count, and
+SHA-256 matched the reviewed artifact: 801,118 bytes,
+`44c578af4c389a5b2ee1730c57459dfb49afd341d6f4e47b0159511ccde48058`,
+and zero mismatches on either host. Authenticated provider metadata matched the
+deployment to public `main` and the release commit above.
 
 ## Rendered acceptance
 
-The in-app Browser exercised the reviewed live deployment at desktop
-`1440 × 1000` and mobile `390 × 844`. Outcome search, result selection,
-article-link navigation, graph refocus, stable URLs, the mobile sheet, and
-graph-to-sheet navigation passed. The literal robot-arm outcome selected
-`/wiki/robotic-arms`; tapping its `CAD Skills (text-to-cad)` graph node changed
-the route to `/wiki/text-to-cad` and opened the matching mobile article sheet.
-The accepted pass had no horizontal overflow and no browser warnings or
-errors.
+The in-app Browser exercised the live deployment at desktop `1440 × 1000` and
+mobile `390 × 844`.
 
-An independent final release gate reran the full verifier, authenticated the
-exact Vercel deployment as production and Ready, matched public `main`, and
-fetched all 54 files from both custom domains. It reproduced 801,787 bytes and
-the reviewed artifact digest with zero mismatches, then returned `ACCEPT` with
-no blocking finding.
+- Desktop Explore rendered the editorial context and six-node map without
+  overflow; Read rendered the focused article without the previous sidebars.
+- The literal robot-arm outcome selected `/wiki/robotic-arms`; its
+  `CAD Skills (text-to-cad)` graph node selected `/wiki/text-to-cad`; Read and
+  Back to map preserved that URL.
+- At 390 px, the full graph stayed inside the viewport with zero pairwise node
+  collisions and no horizontal overflow.
+- Entering Read after scrolling the map reset to the article start, kept the
+  title below the sticky bar, and exposed no dialog semantics.
+- The exercised live paths produced zero browser warnings or errors.
+
+Ten accepted local and live previews are retained in the ignored Fray
+notification artifact directory for Telegram media handoff.
+
+A fresh read-only reviewer audited the exact public release range and returned
+`ACCEPT`. It independently confirmed the two-mode surface, deletion of the old
+sheet and metadata UI, behavior-test coverage, unchanged agent contracts, and
+the absence of all `knowledge/**/*.md` files from the release. Its only limit
+was intentionally not rerunning checks or browser automation; the clean primary
+verifier and live acceptance above supply that evidence. It also correctly
+flagged the old receipt in its isolated workspace, which this result replaces.
 
 ## What this does not claim
 
@@ -88,7 +96,6 @@ parts, or prove that a website, CAD model, robot arm, quote, or fabricated part
 has been completed. The host agent remains responsible for reasoning, current
 external checks, user decisions, execution, and artifact verification.
 
-The original 2026-07-17 typed-graph MVP and controlled evaluations remain in
-Git history and under `evals/`; the earlier deployment receipt remains in
-`deployment/PRODUCTION.md`. They are historical evidence, not the active
-page-only contract.
+The original 2026-07-17 typed-graph MVP and the first 2026-07-18 page-only UI
+remain in Git history and `deployment/PRODUCTION.md` as historical evidence.
+They are not the active human-interface contract.
