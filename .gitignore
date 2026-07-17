@@ -1,6 +1,7 @@
 node_modules/
 dist/
 .vite/
+.vercel/
 coverage/
 .DS_Store
 *.log
