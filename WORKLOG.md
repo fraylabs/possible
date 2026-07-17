@@ -142,3 +142,15 @@
 - Recorded its provider-edge distinction: local negative-route guarantees remain
   valid, while Vercel's SPA catch-all returns the app shell for an unknown asset
   and rejects the tested encoded traversal with HTTP 400 without exposing files.
+- Monitoring the first Git-triggered deployment caught an npm optional-platform
+  lockfile failure before it could reach either custom domain. The first build
+  lacked Rolldown's Linux binding; the next exposed the equivalent Lightning CSS
+  gap.
+- Audited every Linux x64 optional native dependency reachable from the lock and
+  pinned the exact glibc packages for Rolldown `1.1.5`, Lightning CSS `1.32.0`,
+  and Esbuild `0.28.1`. A clean temporary Linux/x64-resolved `npm ci` installed
+  all three packages and native files with no missing glibc x64 entry.
+- Public commit `f3b5bdabbffb997bc4523d30ed2b1bae08a17e78` then completed the
+  Vercel Git build in 11 seconds and was promoted to every production alias.
+  Post-promotion TLS, SPA, and exact live hash checks all passed with no artifact
+  change or user-visible outage.

@@ -63,12 +63,15 @@ serving the same project. Source is public on
 [github.com/fraylabs/possible](https://github.com/fraylabs/possible), and Vercel
 is connected to the repository for future Git deployments.
 
-The production build was made from public commit
+The initial production build was made from public commit
 `6378e10d4ca2909ce1ff4535e4399706b196ce8f`. Vercel's prebuilt static output was
-byte-identical to `apps/web/dist`. Independent HTTPS fetches reproduced all
-three reviewed hashes, including `index.html`; the client route
-`/knowledge/web` returned HTTP 200 with the expected HTML content type. Both the
-apex and `www` returned HTTPS 200 with valid certificates.
+byte-identical to `apps/web/dist`. Git-triggered Linux build portability was
+then proven by commit `f3b5bdabbffb997bc4523d30ed2b1bae08a17e78`, which
+completed on Vercel and promoted the same artifact to every production alias.
+Independent HTTPS fetches reproduced all three reviewed hashes, including
+`index.html`; the client route `/knowledge/web` returned HTTP 200 with the
+expected HTML content type. Both the apex and `www` returned HTTPS 200 with
+valid certificates.
 
 Rendered acceptance used the in-app Browser against the live custom domain:
 

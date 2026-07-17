@@ -17,7 +17,7 @@ provider is connected to that repository for future Git deployments.
 - Alternate custom URL: `https://www.possible.sh`
 - Provider fallback: `https://possible-three.vercel.app`
 - Public source: `https://github.com/fraylabs/possible`
-- Deployed source commit: `6378e10d4ca2909ce1ff4535e4399706b196ce8f`
+- Initial prebuilt source commit: `6378e10d4ca2909ce1ff4535e4399706b196ce8f`
 - Hosting: Vercel project `possible` in the existing `brainthrust` team
 - Authoritative DNS: Cloudflare zone `possible.sh`
 - DNS records added: DNS-only A records for the apex and `www`, both targeting
@@ -42,6 +42,26 @@ The canonical three-file aggregate SHA-256 remains
 Both custom hosts returned HTTPS 200 with valid certificates. The client route
 `/knowledge/web` returned HTTP 200 and `text/html; charset=utf-8`, proving the
 provider-side SPA fallback.
+
+## Git deployment durability
+
+The first Git-triggered Linux build exposed npm's platform-optional lockfile
+gap: the macOS-generated lock contained Darwin native binaries but omitted the
+Linux x64 bindings used by Rolldown, Lightning CSS, and Esbuild. Production
+remained on the already verified prebuilt deployment throughout; neither custom
+domain was promoted to a failed build.
+
+The root package now pins the exact glibc Linux x64 packages as optional
+dependencies. A clean temporary `npm ci --os=linux --cpu=x64` installed all
+three expected packages and native files with no remaining missing glibc x64
+optional dependency. The full primary check still passed and preserved the
+artifact digest.
+
+Vercel then cloned public commit
+`f3b5bdabbffb997bc4523d30ed2b1bae08a17e78`, completed its Git build in 11
+seconds, marked the deployment Ready, and promoted `possible.sh`, `www`, and the
+provider aliases. Post-promotion HTTPS fetches reproduced the same HTML,
+JavaScript, CSS, and aggregate hashes.
 
 ## Rendered acceptance
 
