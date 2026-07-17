@@ -9,18 +9,19 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "npm run preview:preflight && npm run build -w @possible/knowledge && npm run build -w @possible/mcp && npm run build -w @possible/web && npm run build -w @possible/evals",
-    "test": "npm run test -w @possible/knowledge && npm run test -w @possible/mcp && npm run test -w @possible/web && npm run test:data -w @possible/web && npm run test -w @possible/evals",
+    "build": "npm run preview:preflight && npm run build -w @possible/knowledge && npm run build -w @possible/mcp && npm run build -w @possible/web",
+    "test": "npm run test -w @possible/knowledge && npm run test -w @possible/mcp && npm run test -w @possible/web && npm run test:data -w @possible/web",
     "knowledge:validate": "npm run validate -w @possible/knowledge",
     "skill:validate": "node scripts/validate-skill.mjs",
-    "eval": "npm run eval -w @possible/evals",
+    "agent:test": "node --test scripts/query-possible.test.mjs",
     "possible:query": "node scripts/query-possible.mjs",
     "preview:preflight": "node scripts/verify-preview.mjs --preflight",
     "preview:build": "npm run preview:preflight && npm run build -w @possible/knowledge && npm run build -w @possible/web",
     "preview:test": "node --test scripts/verify-preview.test.mjs",
     "preview:verify": "node scripts/verify-preview.mjs",
+    "preview:record": "node scripts/verify-preview.mjs --record",
     "preview:prepare": "npm run preview:build && npm run preview:test && npm run preview:verify",
-    "check": "npm run knowledge:validate && npm run skill:validate && npm run test && npm run build && npm run preview:test && npm run preview:verify && npm run eval",
+    "check": "npm run knowledge:validate && npm run skill:validate && npm run test && npm run build && npm run agent:test && npm run preview:test && npm run preview:verify",
     "dev:web": "npm run dev -w @possible/web",
     "dev:mcp": "npm run dev -w @possible/mcp"
   },

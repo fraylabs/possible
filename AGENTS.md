@@ -1,7 +1,7 @@
 # Possible Repository Guidelines
 
-Possible is a standalone, agent-first operational knowledge base. It is not an
-LLM planner and it does not execute privileged provider actions itself.
+Possible is a sourced, linked wiki of what humans and agents can make possible.
+It is not an LLM planner, execution engine, or capability marketplace.
 
 ## Start
 
@@ -17,18 +17,17 @@ Read `GOAL.md` and the nearest package README before editing.
 
 ## Product contract
 
-- Contributor-authored knowledge is the source of truth.
-- The website and MCP interface must consume the same validated graph.
-- Recommendations state when they apply, when they do not, alternatives,
-  provenance, contributors, and review dates.
-- Possible may describe or route to a provider integration, but credentials,
-  payments, DNS, deployment writes, orders, and fabrication remain explicitly
-  approval-gated in the user's agent host.
+- Contributor-authored pages are the source of truth.
+- A page contains prose, links, sources, and a review date. Do not introduce a
+  second ontology for outcomes, tools, providers, workflows, or capabilities.
+- Internal page links derive the graph, backlinks, and related-page views.
+- The website and MCP interface consume the same validated page corpus.
+- The MCP surface is read-only and limited to search and exact page reads.
 - Do not add an LLM call to Possible's retrieval path for the MVP.
 
 ## Work boundaries
 
-- `knowledge/`, `schema/`, and `packages/knowledge/`: knowledge lane.
+- `knowledge/`, `schema/`, and `packages/knowledge/`: page-corpus lane.
 - `apps/mcp/`, `skills/possible/`, and `scripts/validate-skill.mjs`: agent lane.
 - `apps/web/`: human website lane.
 - `evals/` and `packages/evals/`: evaluation lane.

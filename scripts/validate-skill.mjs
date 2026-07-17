@@ -68,49 +68,28 @@ async function validate() {
   }
 
   check(!/\bTODO\b|\[TODO/i.test(skill), "SKILL.md must not contain placeholders");
-  for (const operation of [
+  for (const operation of ["search", "read"]) {
+    check(skill.includes(`\`${operation}\``), `SKILL.md must document ${operation}`);
+  }
+  for (const legacyOperation of [
     "search_knowledge",
     "read_node",
     "expand_node",
     "find_capabilities",
   ]) {
-    check(skill.includes(`\`${operation}\``), `SKILL.md must document ${operation}`);
+    check(!skill.includes(`\`${legacyOperation}\``), `SKILL.md must not reference ${legacyOperation}`);
   }
 
   check(/read-only/i.test(skill), "SKILL.md must state the read-only boundary");
   check(
-    /do\s+not\s+load\s+an\s+entire\s+branch/i.test(skill),
+    /follow.+links.+progressively|do\s+not\s+load\s+unrelated\s+branches/i.test(skill),
     "SKILL.md must require progressive retrieval",
   );
-  check(
-    /ask captain questions, not implementation preferences/i.test(skill),
-    "SKILL.md must preserve the captain-versus-implementation boundary",
-  );
-  check(
-    /do not ask whether the user prefers/i.test(skill),
-    "SKILL.md must forbid implementation-preference questions",
-  );
-  for (const implementationChoice of [
-    "framework",
-    "UI library",
-    "database",
-    "host",
-    "CAD system",
-    "interchange format",
-    "material",
-    "manufacturing process",
-    "provider",
-  ]) {
-    check(
-      skill.toLowerCase().includes(implementationChoice.toLowerCase()),
-      `SKILL.md must cover ${implementationChoice} as an agent-owned choice`,
-    );
-  }
-  check(
-    /already says they have no implementation preference, never ask/i.test(skill),
-    "SKILL.md must not repeat a waived implementation-preference question",
-  );
-  for (const approvalGate of ["credentials", "spending money", "order", "fabrication", "DNS"]) {
+  check(/cite.+sources/i.test(skill), "SKILL.md must require source citation");
+  check(/review date|reviewedAt/i.test(skill), "SKILL.md must mention page freshness");
+  check(/host[\s\S]*plan|agent host[\s\S]*plan/i.test(skill), "SKILL.md must state that the host agent plans");
+  check(/host[\s\S]*execut|agent host[\s\S]*execut/i.test(skill), "SKILL.md must state that the host agent executes");
+  for (const approvalGate of ["credentials", "spending money", "deployment", "DNS", "fabrication"]) {
     check(
       skill.toLowerCase().includes(approvalGate.toLowerCase()),
       `SKILL.md must retain the ${approvalGate} approval gate`,
@@ -126,7 +105,12 @@ async function validate() {
     shortDescription.length >= 25 && shortDescription.length <= 64,
     "openai.yaml short_description must be 25-64 characters",
   );
+  check(/wiki/i.test(shortDescription), "openai.yaml short_description must mention wiki knowledge");
   check(defaultPrompt.includes("$possible"), "openai.yaml default_prompt must mention $possible");
+  check(
+    /search/i.test(defaultPrompt) && /read/i.test(defaultPrompt),
+    "openai.yaml default_prompt must mention search and read",
+  );
   check(/^dependencies:\s*$/m.test(agentMetadata), "openai.yaml must declare its MCP dependency");
   check(/^\s+value:\s+"possible"\s*$/m.test(agentMetadata), "MCP dependency must be named possible");
   check(!/\bTODO\b|\[TODO/i.test(agentMetadata), "openai.yaml must not contain placeholders");

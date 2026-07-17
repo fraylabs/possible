@@ -5,25 +5,26 @@ import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js"
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const allowedTools = new Set([
-  "search_knowledge",
-  "read_node",
-  "expand_node",
-  "find_capabilities",
-]);
+const allowedTools = new Set(["search", "read"]);
 
 const [toolName, rawArguments = "{}"] = process.argv.slice(2);
 
 if (!toolName || !allowedTools.has(toolName)) {
-  console.error(`Usage: npm run possible:query -- <${[...allowedTools].join("|")}> '<json arguments>'`);
+  console.error(
+    `Usage: npm run possible:query -- <${[...allowedTools].join("|")}> '<plain query/slug or JSON arguments>'`,
+  );
   process.exitCode = 2;
 } else {
   let args;
   try {
     args = JSON.parse(rawArguments);
   } catch (error) {
-    console.error(`Arguments must be valid JSON: ${error instanceof Error ? error.message : String(error)}`);
-    process.exit(2);
+    const value = rawArguments.trim();
+    if (!value) {
+      console.error(`Arguments must be valid JSON: ${error instanceof Error ? error.message : String(error)}`);
+      process.exit(2);
+    }
+    args = toolName === "search" ? { query: value } : { slug: value };
   }
 
   const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");

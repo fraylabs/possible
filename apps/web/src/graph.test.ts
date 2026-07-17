@@ -1,126 +1,71 @@
 import { describe, expect, it } from "vitest";
-import {
-  buildGraphSlice,
-  buildPath,
-  findAlternativeNodes,
-  freshnessLabel,
-  normalizeGraphModule,
-  searchNodes,
-  type DisplayGraph,
-} from "./graph";
+import type { WikiCorpus } from "@possible/knowledge";
+import { parseMarkdown } from "./markdown";
+import { buildRelatedGraph, formatReviewedAt, hrefToSlug, routeSlug, wikiPath } from "./wiki";
 
-const graph: DisplayGraph = {
-  nodes: [
+const corpus: WikiCorpus = {
+  pages: [
     {
-      id: "root",
-      type: "topic",
-      title: "Root",
-      summary: "A top-level field",
-      applicability: [],
-      counterconditions: [],
-      alternatives: [],
-      capabilities: [],
-      actions: [],
-      sources: [],
-      contributors: [],
-      tags: [],
+      slug: "web",
+      title: "Web",
+      summary: "Browser-delivered outcomes.",
+      body: "## Start\n\nContinue with [Browser applications](/wiki/browser-applications).",
+      tags: ["browser"],
+      reviewedAt: "2026-07-17",
+      sources: [{ title: "React", url: "https://react.dev/" }],
+      links: ["browser-applications"],
     },
     {
-      id: "practice-a",
-      type: "practice",
-      title: "Fast workflow",
-      summary: "A productive workflow for constrained projects",
-      applicability: ["Fast iteration matters"],
-      counterconditions: ["Offline operation is required"],
-      alternatives: ["practice-b"],
-      capabilities: [],
-      actions: [],
-      sources: [],
-      contributors: [],
-      reviewedAt: "2026-07-01",
-      tags: ["workflow"],
+      slug: "browser-applications",
+      title: "Browser applications",
+      summary: "Interactive application work.",
+      body: "Choose a stack.",
+      tags: ["routing"],
+      reviewedAt: "2026-07-17",
+      sources: [{ title: "Vite", url: "https://vite.dev/" }],
+      links: ["vite-react"],
     },
     {
-      id: "practice-b",
-      type: "practice",
-      title: "Offline method",
-      summary: "An alternative approach",
-      applicability: [],
-      counterconditions: [],
-      alternatives: [],
-      capabilities: [],
-      actions: [],
-      sources: [],
-      contributors: [],
-      tags: ["workflow"],
+      slug: "vite-react",
+      title: "Vite with React",
+      summary: "A lightweight client-rendered stack.",
+      body: "Raw HTML stays literal: <span data-testid=\"unsafe-html\">unsafe html</span>.",
+      tags: ["vite"],
+      reviewedAt: "2026-07-17",
+      sources: [{ title: "Vite", url: "https://vite.dev/" }],
+      links: ["browser-applications"],
     },
-  ],
-  edges: [
-    { id: "root-a", source: "root", target: "practice-a", type: "hierarchy", label: "Contains" },
-    { id: "alt", source: "practice-a", target: "practice-b", type: "alternative", label: "Alternative" },
   ],
 };
 
-describe("knowledge graph adapter", () => {
-  it("normalizes browser-safe graph data without inventing content", () => {
-    const normalized = normalizeGraphModule({
-      graph: {
-        nodes: [{
-          id: "sample",
-          type: "provider",
-          title: "Sample provider",
-          summary: "Accepts a supported input.",
-          applicability: ["The input matches"],
-          counterconditions: ["The region is unsupported"],
-          actions: [{ title: "Request access", requiresApproval: true, url: "https://example.com" }],
-          reviewed_at: "2026-07-01",
-        }],
-        edges: [],
-      },
-    });
-
-    expect(normalized.nodes).toHaveLength(1);
-    expect(normalized.nodes[0]).toMatchObject({
-      id: "sample",
-      type: "provider",
-      applicability: ["The input matches"],
-      counterconditions: ["The region is unsupported"],
-      reviewedAt: "2026-07-01",
-    });
-    expect(normalized.nodes[0]?.actions[0]?.mode).toBe("approval-required");
+describe("wiki helpers", () => {
+  it("builds stable wiki paths and reads route slugs", () => {
+    expect(wikiPath("vite-react")).toBe("/wiki/vite-react");
+    expect(routeSlug("/wiki/vite-react")).toBe("vite-react");
+    expect(hrefToSlug("/wiki/browser-applications")).toBe("browser-applications");
+    expect(hrefToSlug("https://example.com")).toBeUndefined();
   });
 
-  it("rejects a module that does not expose graph nodes", () => {
-    expect(() => normalizeGraphModule({ content: [] })).toThrow(/nodes array/i);
+  it("formats review dates with explicit calendar dates", () => {
+    expect(formatReviewedAt("2026-07-17")).toBe("July 17, 2026");
+  });
+
+  it("builds a page-only related graph from outgoing links and backlinks", () => {
+    const graph = buildRelatedGraph(corpus, "browser-applications");
+    expect(graph.selected?.slug).toBe("browser-applications");
+    expect(graph.outgoingPages.map((page) => page.slug)).toEqual(["vite-react"]);
+    expect(graph.backlinkPages.map((page) => page.slug)).toEqual(["vite-react", "web"]);
+    expect(graph.relatedPages.map((page) => page.slug)).toEqual(["vite-react", "web"]);
+    expect(graph.nodes.find((node) => node.page.slug === "browser-applications")?.relation).toBe("selected");
   });
 });
 
-describe("exploration helpers", () => {
-  it("searches titles before contextual fields", () => {
-    const titleHits = searchNodes(graph, "workflow");
-    expect(titleHits.map((hit) => hit.node.id)).toEqual(["practice-a", "practice-b"]);
-    expect(titleHits[0]?.score).toBeGreaterThan(titleHits[1]?.score ?? 0);
-  });
-
-  it("builds a stable hierarchy path", () => {
-    expect(buildPath(graph, "practice-a").map((node) => node.id)).toEqual(["root", "practice-a"]);
-  });
-
-  it("includes the selected node and its direct relationships in a graph slice", () => {
-    const slice = buildGraphSlice(graph, "practice-a");
-    expect(slice.nodes.find((item) => item.depth === 0)?.node.id).toBe("practice-a");
-    expect(slice.nodes.map((item) => item.node.id)).toEqual(expect.arrayContaining(["root", "practice-b"]));
-  });
-
-  it("resolves alternatives from fields and typed relationships", () => {
-    expect(findAlternativeNodes(graph, graph.nodes[1]!).map((node) => node.id)).toEqual(["practice-b"]);
-  });
-
-  it("makes freshness explicit instead of implying current knowledge", () => {
-    expect(freshnessLabel("2026-07-01", new Date("2026-07-17T00:00:00Z"))).toEqual({
-      label: "Reviewed 16d ago",
-      state: "fresh",
-    });
-    expect(freshnessLabel(undefined).state).toBe("unknown");
+describe("safe markdown parsing", () => {
+  it("supports the wiki subset without raw HTML execution", () => {
+    expect(parseMarkdown("## Heading\n\nOne paragraph.\n\n- A list item")).toEqual([
+      { type: "heading", level: 2, text: "Heading" },
+      { type: "paragraph", text: "One paragraph." },
+      { type: "list", ordered: false, items: ["A list item"] },
+    ]);
   });
 });

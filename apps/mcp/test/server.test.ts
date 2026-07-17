@@ -10,11 +10,14 @@ import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import type { Transport } from "@modelcontextprotocol/sdk/shared/transport.js";
 import {
-  loadGraph,
-  type CapabilityMatch,
-  type GraphSlice,
-  type KnowledgeNode,
-  type SearchResult,
+  getBacklinks,
+  getPage,
+  getRelatedPages,
+  loadWiki,
+  searchPages,
+  type PageSource,
+  type WikiCorpus,
+  type WikiPage,
 } from "@possible/knowledge";
 
 import { startHttpServer } from "../src/http.js";
@@ -25,6 +28,121 @@ import {
 } from "../src/server.js";
 
 const packageDirectory = resolve(dirname(fileURLToPath(import.meta.url)), "..");
+const missingSlug = "missing-page";
+
+const fixtureWiki: WikiCorpus = {
+  pages: [
+    {
+      slug: "build-an-accessible-site",
+      title: "Build an accessible site",
+      summary: "Publish an inclusive website with semantic HTML and keyboard support.",
+      body: "Start with landmarks, headings, labels, and visible focus states.\n\nThen compare [hosting options](/wiki/choose-web-hosting).",
+      tags: ["web", "accessibility"],
+      reviewedAt: "2026-07-17",
+      sources: [{ title: "Web accessibility guidance", url: "https://example.com/a11y" }],
+      links: ["choose-web-hosting"],
+    },
+    {
+      slug: "choose-web-hosting",
+      title: "Choose web hosting",
+      summary: "Compare hosting constraints for a website before publishing it.",
+      body: "Check deployment inputs, custom domains, observability, and rollback options.",
+      tags: ["web", "publishing"],
+      reviewedAt: "2026-07-16",
+      sources: [{ title: "Hosting reference", url: "https://example.com/hosting" }],
+      links: [],
+    },
+    {
+      slug: "document-a-project",
+      title: "Document a project",
+      summary: "Write down decisions and limitations so that work can be reviewed.",
+      body: "Link the implementation guide and record verification evidence.\n\nReview [build an accessible site](/wiki/build-an-accessible-site).",
+      tags: ["practice"],
+      reviewedAt: "2026-07-15",
+      sources: [{ title: "Documentation reference", url: "https://example.com/docs" }],
+      links: ["build-an-accessible-site"],
+    },
+  ],
+};
+
+interface PageSummary {
+  slug: string;
+  title: string;
+  summary: string;
+}
+
+interface SearchResponse {
+  query: string;
+  count: number;
+  results: Array<PageSummary & { matchedTerms: string[] }>;
+}
+
+interface ReadResponse {
+  page: PageSummary & {
+    tags: string[];
+    reviewedAt: string;
+    markdown: string;
+    links: string[];
+    sources: PageSource[];
+  };
+  backlinks: PageSummary[];
+  relatedPages: PageSummary[];
+}
+
+function toPageSummary(page: WikiPage): PageSummary {
+  return {
+    slug: page.slug,
+    title: page.title,
+    summary: page.summary,
+  };
+}
+
+function renderMarkdown(page: WikiPage): string {
+  const lines = [
+    "---",
+    `slug: ${JSON.stringify(page.slug)}`,
+    `title: ${JSON.stringify(page.title)}`,
+    `summary: ${JSON.stringify(page.summary)}`,
+    `tags: [${page.tags.map((tag) => JSON.stringify(tag)).join(", ")}]`,
+    `reviewedAt: ${JSON.stringify(page.reviewedAt)}`,
+    "sources:",
+  ];
+  for (const source of page.sources) {
+    lines.push(`  - title: ${JSON.stringify(source.title)}`);
+    lines.push(`    url: ${JSON.stringify(source.url)}`);
+  }
+  lines.push("---", "", page.body);
+  return lines.join("\n");
+}
+
+function expectedSearchResponse(corpus: WikiCorpus, query: string, limit: number): SearchResponse {
+  const results = searchPages(corpus, query, { limit }).map((result) => ({
+    ...toPageSummary(result.page),
+    matchedTerms: result.matchedTerms,
+  }));
+  return {
+    query,
+    count: results.length,
+    results,
+  };
+}
+
+function expectedReadResponse(corpus: WikiCorpus, slug: string): ReadResponse {
+  const page = getPage(corpus, slug);
+  assert.ok(page, `expected wiki page '${slug}' to exist`);
+  return {
+    page: {
+      ...toPageSummary(page),
+      tags: page.tags,
+      reviewedAt: page.reviewedAt,
+      markdown: renderMarkdown(page),
+      links: page.links,
+      sources: page.sources,
+    },
+    backlinks: getBacklinks(corpus, slug).map(toPageSummary),
+    relatedPages: getRelatedPages(corpus, slug).map(toPageSummary),
+  };
+}
 
 function successData<T>(result: unknown): T {
   assert.ok(result && typeof result === "object", "tool result must be an object");
@@ -52,8 +170,7 @@ describe("Possible MCP", () => {
   let server: McpServer | undefined;
 
   beforeEach(async () => {
-    const graph = await loadGraph();
-    server = await createPossibleServer({ graph });
+    server = await createPossibleServer({ wiki: fixtureWiki });
     client = new Client({ name: "possible-test-client", version: "0.0.1" });
     const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
     await Promise.all([
@@ -67,12 +184,13 @@ describe("Possible MCP", () => {
     await server?.close();
   });
 
-  it("exposes exactly four explicitly read-only retrieval tools", async () => {
+  it("exposes exactly two explicitly read-only wiki retrieval tools", async () => {
     const activeClient = connectedClient(client);
     const response = await activeClient.listTools();
     const names = response.tools.map((tool) => tool.name).sort();
 
     assert.deepEqual(names, [...POSSIBLE_TOOL_NAMES].sort());
+    assert.equal(response.tools.length, 2);
     for (const tool of response.tools) {
       assert.equal(tool.annotations?.readOnlyHint, true);
       assert.equal(tool.annotations?.destructiveHint, false);
@@ -80,86 +198,57 @@ describe("Possible MCP", () => {
       assert.equal(tool.annotations?.openWorldHint, false);
       assert.doesNotMatch(tool.name, /create|update|delete|deploy|order|purchase|publish|write/i);
     }
+    assert.doesNotMatch(
+      names.join(" "),
+      /search_knowledge|read_node|expand_node|find_capabilities/,
+    );
     assert.equal(activeClient.getInstructions(), POSSIBLE_SERVER_INSTRUCTIONS);
   });
 
-  it("retrieves, searches, and expands a node from the validated graph", async () => {
+  it("searches maintained wiki pages with natural-language queries", async () => {
     const activeClient = connectedClient(client);
-    const graph = await loadGraph();
-    const node = graph.nodes[0];
-    assert.ok(node, "validated graph must contain at least one node");
-
-    const read = await activeClient.callTool({
-      name: "read_node",
-      arguments: { id: node.id },
+    const query = "I want to make an accessible website.";
+    const response = await activeClient.callTool({
+      name: "search",
+      arguments: { query, limit: 5 },
     });
-    const readData = successData<{ node: KnowledgeNode }>(read);
-    assert.equal(readData.node.id, node.id);
 
-    const search = await activeClient.callTool({
-      name: "search_knowledge",
-      arguments: { query: node.title, limit: 10 },
-    });
-    const searchData = successData<{
-      query: string;
-      count: number;
-      results: SearchResult[];
-    }>(search);
-    assert.ok(searchData.count >= 1);
-    assert.ok(
-      searchData.results.some((result) => result.node.id === node.id),
-      "search should return the source node",
-    );
-
-    const expanded = await activeClient.callTool({
-      name: "expand_node",
-      arguments: { id: node.id, depth: 1 },
-    });
-    const expandedData = successData<{ id: string; slice: GraphSlice }>(expanded);
-    assert.equal(expandedData.id, node.id);
-    assert.ok(
-      expandedData.slice.nodes.some((item) => item.id === node.id),
-      "expanded slice should contain its center node",
+    assert.deepEqual(
+      successData<SearchResponse>(response),
+      expectedSearchResponse(fixtureWiki, query, 5),
     );
   });
 
-  it("returns structured provider capability results", async () => {
+  it("reads one exact page with markdown, links, sources, backlinks, and related pages", async () => {
     const response = await connectedClient(client).callTool({
-      name: "find_capabilities",
-      arguments: { requirements: {} },
+      name: "read",
+      arguments: { slug: "build-an-accessible-site" },
     });
 
-    const capabilityData = successData<{
-      requirements: Record<string, unknown>;
-      count: number;
-      matches: CapabilityMatch[];
-    }>(response);
-    assert.ok(Array.isArray(capabilityData.matches));
-    assert.ok(capabilityData.matches.length >= 1);
-    assert.equal(
-      capabilityData.count,
-      capabilityData.matches.length,
-    );
+    const readData = successData<ReadResponse>(response);
+    assert.deepEqual(readData, expectedReadResponse(fixtureWiki, "build-an-accessible-site"));
+    assert.match(readData.page.markdown, /^---\nslug:/);
+    assert.match(readData.page.markdown, /\[hosting options\]\(\/wiki\/choose-web-hosting\)/);
   });
 
-  it("returns a stable structured error for missing nodes", async () => {
+  it("returns a stable structured error for missing pages", async () => {
     const response = await connectedClient(client).callTool({
-      name: "read_node",
-      arguments: { id: "missing/definitely-not-a-node" },
+      name: "read",
+      arguments: { slug: missingSlug },
     });
 
     assert.equal(response.isError, true);
     assert.deepEqual(response.structuredContent, {
       ok: false,
       error: {
-        code: "NODE_NOT_FOUND",
-        message: "Knowledge node 'missing/definitely-not-a-node' does not exist.",
-        details: { id: "missing/definitely-not-a-node" },
+        code: "PAGE_NOT_FOUND",
+        message: "Wiki page 'missing-page' does not exist.",
+        details: { slug: missingSlug },
       },
     });
   });
 
-  it("serves the same read-only tools over stateless Streamable HTTP", async () => {
+  it("serves canonical search and read over stateless Streamable HTTP", async () => {
     const httpServer = await startHttpServer({
       host: "127.0.0.1",
       port: 0,
@@ -174,11 +263,47 @@ describe("Possible MCP", () => {
         new URL(`http://127.0.0.1:${address.port}/mcp`),
       );
       await httpClient.connect(transport as unknown as Transport);
-      const response = await httpClient.listTools();
+      const wiki = await loadWiki();
+      const query = wiki.pages[0]?.title ?? "nonexistent wiki page";
+      const limit = 5;
+
+      const tools = await httpClient.listTools();
+      assert.deepEqual(tools.tools.map((tool) => tool.name).sort(), [...POSSIBLE_TOOL_NAMES].sort());
+      assert.equal(tools.tools.length, 2);
+
+      const search = await httpClient.callTool({
+        name: "search",
+        arguments: { query, limit },
+      });
       assert.deepEqual(
-        response.tools.map((tool) => tool.name).sort(),
-        [...POSSIBLE_TOOL_NAMES].sort(),
+        successData<SearchResponse>(search),
+        expectedSearchResponse(wiki, query, limit),
       );
+
+      if (wiki.pages[0]) {
+        const read = await httpClient.callTool({
+          name: "read",
+          arguments: { slug: wiki.pages[0].slug },
+        });
+        assert.deepEqual(
+          successData<ReadResponse>(read),
+          expectedReadResponse(wiki, wiki.pages[0].slug),
+        );
+      } else {
+        const read = await httpClient.callTool({
+          name: "read",
+          arguments: { slug: missingSlug },
+        });
+        assert.equal(read.isError, true);
+        assert.deepEqual(read.structuredContent, {
+          ok: false,
+          error: {
+            code: "PAGE_NOT_FOUND",
+            message: "Wiki page 'missing-page' does not exist.",
+            details: { slug: missingSlug },
+          },
+        });
+      }
     } finally {
       await httpClient.close();
       await new Promise<void>((resolve, reject) => {
@@ -187,7 +312,49 @@ describe("Possible MCP", () => {
     }
   });
 
-  it("serves the same read-only tools over local stdio", async () => {
+  it("rejects unsupported HTTP methods on the stateless endpoint", async () => {
+    const httpServer = await startHttpServer({
+      host: "127.0.0.1",
+      port: 0,
+      quiet: true,
+      wiki: fixtureWiki,
+    });
+    const address = httpServer.address();
+    assert.ok(address && typeof address === "object");
+
+    try {
+      const endpoint = new URL(`http://127.0.0.1:${address.port}/mcp`);
+      const getResponse = await fetch(endpoint, { method: "GET" });
+      assert.equal(getResponse.status, 405);
+      assert.equal(getResponse.headers.get("allow"), "POST");
+      assert.deepEqual(await getResponse.json(), {
+        jsonrpc: "2.0",
+        error: {
+          code: -32000,
+          message: "This stateless endpoint accepts MCP requests over POST only.",
+        },
+        id: null,
+      });
+
+      const deleteResponse = await fetch(endpoint, { method: "DELETE" });
+      assert.equal(deleteResponse.status, 405);
+      assert.equal(deleteResponse.headers.get("allow"), "POST");
+      assert.deepEqual(await deleteResponse.json(), {
+        jsonrpc: "2.0",
+        error: {
+          code: -32000,
+          message: "This stateless endpoint has no sessions to terminate.",
+        },
+        id: null,
+      });
+    } finally {
+      await new Promise<void>((resolve, reject) => {
+        httpServer.close((error) => error ? reject(error) : resolve());
+      });
+    }
+  });
+
+  it("serves canonical search and read over local stdio", async () => {
     const stdioClient = new Client({ name: "possible-stdio-test", version: "0.0.1" });
     const transport = new StdioClientTransport({
       command: process.execPath,
@@ -198,11 +365,47 @@ describe("Possible MCP", () => {
 
     try {
       await stdioClient.connect(transport);
-      const response = await stdioClient.listTools();
+      const wiki = await loadWiki();
+      const query = wiki.pages[0]?.title ?? "nonexistent wiki page";
+      const limit = 5;
+
+      const tools = await stdioClient.listTools();
+      assert.deepEqual(tools.tools.map((tool) => tool.name).sort(), [...POSSIBLE_TOOL_NAMES].sort());
+      assert.equal(tools.tools.length, 2);
+
+      const search = await stdioClient.callTool({
+        name: "search",
+        arguments: { query, limit },
+      });
       assert.deepEqual(
-        response.tools.map((tool) => tool.name).sort(),
-        [...POSSIBLE_TOOL_NAMES].sort(),
+        successData<SearchResponse>(search),
+        expectedSearchResponse(wiki, query, limit),
       );
+
+      if (wiki.pages[0]) {
+        const read = await stdioClient.callTool({
+          name: "read",
+          arguments: { slug: wiki.pages[0].slug },
+        });
+        assert.deepEqual(
+          successData<ReadResponse>(read),
+          expectedReadResponse(wiki, wiki.pages[0].slug),
+        );
+      } else {
+        const read = await stdioClient.callTool({
+          name: "read",
+          arguments: { slug: missingSlug },
+        });
+        assert.equal(read.isError, true);
+        assert.deepEqual(read.structuredContent, {
+          ok: false,
+          error: {
+            code: "PAGE_NOT_FOUND",
+            message: "Wiki page 'missing-page' does not exist.",
+            details: { slug: missingSlug },
+          },
+        });
+      }
     } finally {
       await stdioClient.close();
     }

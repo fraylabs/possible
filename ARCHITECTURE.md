@@ -1,55 +1,80 @@
-# MVP Integration Contract
+# KISS Wiki Contract
 
-Possible has one validated graph and two projections: an agent interface and a
-human website. The projections must not carry separate hand-authored knowledge.
+Possible has one canonical page corpus and two projections: a human atlas and a
+read-only agent interface. Neither projection carries separate hand-authored
+knowledge.
 
-## Shared package
+## Canonical page
 
-`@possible/knowledge` owns the canonical runtime contract:
+Every source page is Markdown with small frontmatter:
 
-```ts
-type KnowledgeGraph = { nodes: KnowledgeNode[]; edges: KnowledgeEdge[] };
-
-loadGraph(): Promise<KnowledgeGraph>;
-searchGraph(graph, query, options?): SearchResult[];
-getNode(graph, id): KnowledgeNode | undefined;
-expandNode(graph, id, options?): GraphSlice;
-findCapabilities(graph, requirements): CapabilityMatch[];
+```text
+slug
+title
+summary
+tags
+reviewedAt
+sources: [{ title, url }]
+body
 ```
 
-It must also export browser-safe graph data through `@possible/knowledge/data`.
-The concrete contributor file format is owned by the knowledge lane, but the
-compiled graph and exported functions are the integration boundary.
+Internal Markdown links use `/wiki/<slug>`. The compiler derives each page's
+links, validates every target, and generates backlinks and related-page views.
+There is no separately authored edge file.
 
-## Minimum node semantics
+The browser and server runtime share this contract:
 
-The graph must represent topics, practices, tools, providers, and actions. A
-recommendation is conditional rather than universal. Provider actions declare
-whether they are informational, read-only, or require external approval.
+```ts
+type PageSource = { title: string; url: string };
 
-Typed relationships include at least hierarchy, relevance, compatibility,
-alternatives, support, and invocation.
+type WikiPage = {
+  slug: string;
+  title: string;
+  summary: string;
+  body: string;
+  tags: string[];
+  reviewedAt: string;
+  sources: PageSource[];
+  links: string[];
+};
 
-## Agent projection
+type WikiCorpus = { pages: WikiPage[] };
 
-The MCP server exposes only read operations:
-
-- `search_knowledge`
-- `read_node`
-- `expand_node`
-- `find_capabilities`
-
-It may return an official provider endpoint or procedure but must not hold user
-credentials or execute deployments, DNS changes, purchases, or fabrication.
+loadWiki(): Promise<WikiCorpus>;
+searchPages(corpus, query, options?): PageSearchResult[];
+getPage(corpus, slug): WikiPage | undefined;
+getBacklinks(corpus, slug): WikiPage[];
+getRelatedPages(corpus, slug): WikiPage[];
+```
 
 ## Human projection
 
-The website imports the browser-safe graph data. It provides search, path and
-graph navigation, and a node detail view containing applicability, alternatives,
-provider/action links, provenance, contributors, and freshness.
+The website imports the browser-safe corpus. Search results, the selected
+article, browser URL, graph nodes, graph links, backlinks, and related pages all
+come from those pages. Selecting a result, article link, or graph node performs
+the same navigation action.
 
-## Evaluation projection
+## Agent projection
 
-Evaluation scenarios query the same package and MCP methods. Baseline and
-Possible-assisted transcripts are immutable receipts, not source fixtures. The
-scorer must not reward named tools unless they fit the scenario constraints.
+The MCP server exposes only:
+
+- `search`
+- `read`
+
+Both are read-only. Possible does not plan, choose tools on the user's behalf,
+hold credentials, or execute external actions.
+
+## Public machine-readable projection
+
+Production publishes an index and individual page representations alongside
+the human application. They are generated from the same validated corpus and
+must not be maintained separately.
+
+## Trust boundary
+
+Git records authorship and revisions. Page sources and review dates make claims
+inspectable. Validation rejects duplicate slugs, invalid metadata, missing or
+insecure sources, malformed internal links, and links to nonexistent pages.
+
+Possible intentionally has no capability planner, provider ranker, workflow
+engine, confidence formula, marketplace, or hosted LLM.

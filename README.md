@@ -1,33 +1,21 @@
 # Possible
 
-Possible is shared operational knowledge for agents.
+Possible is a sourced, linked wiki of what humans and agents can make possible.
 
-Explore the live graph at [possible.sh](https://possible.sh). The public source,
-knowledge records, Agent Skill, MCP server, and evaluation receipts live at
+Explore the public atlas at [possible.sh](https://possible.sh). Its source and
+pages live at
 [github.com/fraylabs/possible](https://github.com/fraylabs/possible).
 
-Users describe the outcome. Their agent consults Possible for maintained domain
-knowledge, current tools, practical decision rules, compatible providers, and
-safe action handoffs—then handles the implementation without requiring the user
-to secretly be the engineer.
+Possible deliberately keeps the product small:
 
-This MVP proves the idea across two branches:
+- A **page** explains an outcome, method, project, provider, or concept.
+- A page's internal **links** generate the graph and backlinks.
+- Its **sources** make the knowledge inspectable and maintainable.
 
-- Web applications and deployment.
-- Parametric custom parts and manufacturing handoff.
-
-Possible is deliberately not another chat interface. Contributor-authored,
-versioned knowledge is exposed through both an agent-facing MCP interface and a
-human graph explorer.
-
-## What the MVP ships
-
-- One validated graph with 48 sourced Web and manufacturing nodes.
-- A constellation-style explorer for humans to search and inspect the graph.
-- A read-only MCP server with search, node, expansion, and capability tools.
-- An installable Agent Skill that teaches agents when and how to consult it.
-- Locked baseline-versus-Possible scenarios with independently adjudicated
-  receipts.
+Humans search and read the pages beside a visual map. Agents search and read the
+same corpus through a two-tool, read-only MCP server. Possible supplies useful
+knowledge; the host agent still reasons, plans, asks the user for meaningful
+decisions, and executes through other tools.
 
 ## Run it
 
@@ -39,8 +27,7 @@ npm run check
 npm run dev:web
 ```
 
-The website starts on the local URL printed by Vite. The stateless Streamable
-HTTP MCP endpoint can be started separately with:
+Start the Streamable HTTP MCP server separately with:
 
 ```bash
 npm run dev:http -w @possible/mcp
@@ -49,48 +36,32 @@ npm run dev:http -w @possible/mcp
 It defaults to `http://127.0.0.1:3001/mcp`. Set `HOST`, `PORT`, and—when binding
 outside loopback—`ALLOWED_HOSTS` explicitly.
 
-Rebuild and verify the exact static artifact published to production with:
+## Agent interface
 
-```bash
-npm run preview:prepare
-```
+The MCP server exposes exactly two read-only operations:
 
-Its immutable file manifest and production receipt live under `deployment/`.
-The command verifies the reviewed bytes locally; it does not perform a deploy.
+- `search` — find pages from a natural-language outcome or subject.
+- `read` — retrieve one complete page, its sources, links, and related pages.
 
-## Query the real MCP path
+The installable guidance in [`skills/possible`](skills/possible/) teaches an
+agent to search, read only relevant pages, follow useful links, cite sources,
+and then do its own planning and execution.
 
-The helper below starts the stdio server, calls it with a real MCP client, and
-prints structured content:
+## Contribute
 
-```bash
-npm run build
-npm run possible:query -- search_knowledge '{"query":"inventory dashboard"}'
-npm run possible:query -- read_node '{"id":"web/outcomes/dashboards"}'
-npm run possible:query -- find_capabilities '{"requirements":{"domain":"manufacturing","capabilities":["cnc machining"]}}'
-```
+Canonical pages are ordinary Markdown under [`knowledge/pages`](knowledge/pages/).
+Each page has a stable slug, title, summary, optional tags, review date, and at
+least one source. Link to another Possible page with `/wiki/<slug>`; those links
+are the only source of graph edges.
 
-Install or link [skills/possible/SKILL.md](skills/possible/SKILL.md) in a
-compatible agent host and expose the four MCP tools described in
-[apps/mcp/README.md](apps/mcp/README.md). Possible itself remains read-only;
-deployment, uploads, quotes, purchases, and fabrication happen through separate
-approval-gated integrations.
-
-## Contribute knowledge
-
-Contributor records live under `knowledge/`. Recommendations must include
-applicability, counterconditions, alternatives, provenance, contributor, and a
-review date. Provider records keep live availability, pricing, delivery, and
-commercial terms explicit as unknown when they have not been verified.
-
-After changing records, run:
+After editing pages, run:
 
 ```bash
 npm run knowledge:validate
 npm run test -w @possible/knowledge
 ```
 
-See [GOAL.md](GOAL.md) for the supported scope and completion proof, and
-[ARCHITECTURE.md](ARCHITECTURE.md) for the shared integration contract. The
-current verified claims, controlled scores, and explicit limits are recorded in
-[RESULT.md](RESULT.md).
+See [`GOAL.md`](GOAL.md) for the active trust claim and
+[`ARCHITECTURE.md`](ARCHITECTURE.md) for the small shared contract. The original
+typed-graph MVP and its controlled evaluation receipts remain in Git history
+and under `evals/` as historical evidence; they are not the new content model.

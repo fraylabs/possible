@@ -18,14 +18,15 @@
     }
   },
   "scripts": {
-    "generate": "node scripts/build-graph.mjs --write",
-    "validate": "node scripts/build-graph.mjs --check",
+    "generate": "node scripts/build-wiki.mjs --write",
+    "validate": "node scripts/build-wiki.mjs --check",
     "build": "npm run generate && tsc -p tsconfig.json",
     "test": "npm run build && node --test test/*.test.mjs"
   },
   "dependencies": {
     "ajv": "^8.17.1",
-    "ajv-formats": "^3.0.1"
+    "ajv-formats": "^3.0.1",
+    "yaml": "2.9.0"
   },
   "devDependencies": {
     "typescript": "^5.9.3"

@@ -1,27 +1,33 @@
 # @possible/knowledge
 
-This package compiles the contributor-authored files in `knowledge/` into the
-single graph consumed by Possible's agent and human projections. Runtime code
-contains no LLM, network, filesystem, credential, or provider-write path.
+This package validates contributor-authored Markdown in `knowledge/pages/` and
+compiles it into the single wiki corpus consumed by Possible's human and agent
+surfaces. Runtime code contains no LLM, network, filesystem, credential, or
+provider-write path.
 
 ## Commands
 
 ```bash
+npm run generate -w @possible/knowledge
 npm run validate -w @possible/knowledge
 npm run test -w @possible/knowledge
 npm run build -w @possible/knowledge
 ```
 
-`validate` performs JSON Schema validation, cross-file graph integrity checks,
-and a deterministic generated-data comparison. `generate` updates the
-browser-safe TypeScript projection after reviewed contributor files change.
+`validate` checks frontmatter against `schema/wiki-page.schema.json`, rejects
+duplicate slugs and broken internal links, and compares the committed
+browser-safe data module with the canonical Markdown. `generate` updates that
+data module after reviewed page changes.
 
 ## Runtime API
 
-- `loadGraph()` returns an isolated copy of the compiled graph.
-- `searchGraph()` performs deterministic weighted text retrieval.
-- `getNode()` retrieves one exact node.
-- `expandNode()` traverses typed incoming and outgoing graph relationships.
-- `findCapabilities()` filters sourced provider capabilities against structured
-  requirements and includes approval-gated handoff actions.
-- `@possible/knowledge/data` exports the same graph without Node-only imports.
+- `loadWiki()` returns an isolated copy of the compiled `WikiCorpus`.
+- `searchPages()` performs deterministic weighted text search.
+- `getPage()` retrieves one exact slug.
+- `getBacklinks()` derives incoming links from page bodies.
+- `getRelatedPages()` returns the direct outgoing and incoming neighbors.
+- `@possible/knowledge/data` exports `wikiCorpusData` without Node-only imports.
+
+The public model has only `PageSource`, `WikiPage`, and `WikiCorpus`. Links are
+slug strings extracted from Markdown; no separately authored graph or planner
+ontology exists.

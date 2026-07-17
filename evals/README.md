@@ -1,6 +1,10 @@
-# Possible MVP evaluations
+# Historical typed-graph MVP evaluations
 
-This directory holds the controlled baseline-versus-Possible evaluation
+These receipts belong to the completed 2026-07-17 typed-graph MVP. They remain
+for audit history, but they are not an active contract for the page-only KISS
+wiki and do not run in its primary verifier.
+
+This directory holds the original controlled baseline-versus-Possible evaluation
 contract. It intentionally contains no hand-authored "ideal" run presented as
 agent evidence.
 

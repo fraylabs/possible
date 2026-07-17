@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { createReadStream } from "node:fs";
-import { lstat, readFile, readdir, realpath } from "node:fs/promises";
+import { lstat, readFile, readdir, realpath, writeFile } from "node:fs/promises";
 import { createServer } from "node:http";
 import { extname, join, relative, resolve, sep } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
@@ -17,6 +17,7 @@ const contentTypes = new Map([
   [".js", "text/javascript; charset=utf-8"],
   [".json", "application/json; charset=utf-8"],
   [".map", "application/json; charset=utf-8"],
+  [".txt", "text/plain; charset=utf-8"],
 ]);
 
 export async function assertRealArtifactDirectory(directory, { allowMissing = false } = {}) {
@@ -213,6 +214,81 @@ async function verifyNotFound(url, label) {
   assert.equal(response.bytes.toString("utf8"), "Not found", `${label} returned an unsafe body.`);
 }
 
+const machineReadableWikiFile = (path) =>
+  path === "llms.txt" || (path.startsWith("wiki/") && path.endsWith(".json"));
+
+async function verifyMachineReadableWiki(baseUrl, files) {
+  const paths = new Set(files.map((file) => file.path));
+  assert(paths.has("llms.txt"), "The preview artifact must publish llms.txt discovery guidance.");
+  assert(paths.has("wiki/index.json"), "The preview artifact must publish the wiki JSON index.");
+
+  const discovery = await requestBytes(`${baseUrl}/llms.txt`);
+  const discoveryText = discovery.bytes.toString("utf8");
+  assert.match(discoveryText, /https:\/\/possible\.sh\/wiki\/index\.json/);
+  assert.match(discoveryText, /https:\/\/possible\.sh\/wiki\/\{slug\}\.json/);
+
+  const indexResponse = await requestBytes(`${baseUrl}/wiki/index.json`);
+  assert.equal(indexResponse.response.status, 200);
+  const index = JSON.parse(indexResponse.bytes.toString("utf8"));
+  assert.equal(index.schemaVersion, 1);
+  assert.equal(index.title, "Possible wiki");
+  assert(Array.isArray(index.pages), "Wiki index pages must be an array.");
+  assert(index.pages.length > 0, "The published wiki must contain pages.");
+  assert.equal(index.pageCount, index.pages.length);
+
+  const slugs = index.pages.map((page) => page.slug);
+  assert.equal(new Set(slugs).size, slugs.length, "Published wiki slugs must be unique.");
+  const expectedPageFiles = slugs.map((slug) => `wiki/${slug}.json`).sort();
+  const actualPageFiles = files
+    .map((file) => file.path)
+    .filter((path) => path.startsWith("wiki/") && path !== "wiki/index.json")
+    .sort();
+  assert.deepEqual(actualPageFiles, expectedPageFiles, "Every indexed page needs one JSON representation.");
+
+  const documents = [];
+  for (const listing of index.pages) {
+    assert.equal(listing.humanUrl, `/wiki/${listing.slug}`);
+    assert.equal(listing.jsonUrl, `/wiki/${listing.slug}.json`);
+    assert(Array.isArray(listing.sources) && listing.sources.length > 0);
+    assert(Array.isArray(listing.links));
+
+    const response = await requestBytes(`${baseUrl}${listing.jsonUrl}`);
+    assert.equal(response.response.status, 200);
+    const document = JSON.parse(response.bytes.toString("utf8"));
+    assert.equal(document.schemaVersion, 1);
+    assert.equal(document.humanUrl, listing.humanUrl);
+    assert.equal(document.page.slug, listing.slug);
+    assert.equal(document.page.title, listing.title);
+    assert.equal(document.page.summary, listing.summary);
+    assert.equal(document.page.reviewedAt, listing.reviewedAt);
+    assert.deepEqual(document.page.sources, listing.sources);
+    assert.deepEqual(document.page.links, listing.links);
+    assert.equal(typeof document.page.body, "string");
+    assert(document.page.body.trim().length > 0, `${listing.slug} needs readable page prose.`);
+    assert(document.page.sources.every((source) => source.url.startsWith("https://")));
+    assert(document.page.links.every((slug) => slugs.includes(slug)));
+    assert(Array.isArray(document.backlinks));
+    assert(Array.isArray(document.relatedPages));
+    documents.push(document);
+  }
+
+  for (const document of documents) {
+    const expectedBacklinks = documents
+      .filter((candidate) => candidate.page.links.includes(document.page.slug))
+      .map((candidate) => candidate.page.slug)
+      .sort();
+    const publishedBacklinks = document.backlinks.map((page) => page.slug).sort();
+    assert.deepEqual(publishedBacklinks, expectedBacklinks, `${document.page.slug} backlinks drifted.`);
+
+    const expectedRelated = [...new Set([
+      ...document.page.links,
+      ...expectedBacklinks,
+    ])].filter((slug) => slug !== document.page.slug).sort();
+    const publishedRelated = document.relatedPages.map((page) => page.slug).sort();
+    assert.deepEqual(publishedRelated, expectedRelated, `${document.page.slug} related pages drifted.`);
+  }
+}
+
 async function verifyRuntime(files, rootDirectory = distDirectory) {
   const server = createPreviewServer(rootDirectory);
   const baseUrl = await listen(server);
@@ -240,7 +316,7 @@ async function verifyRuntime(files, rootDirectory = distDirectory) {
           references.stylesheets.includes(expectedPath),
           `index.html has no active stylesheet for ${file.path}.`,
         );
-      } else {
+      } else if (!machineReadableWikiFile(file.path)) {
         assert.fail(`No load-bearing HTML reference rule exists for ${file.path}.`);
       }
     }
@@ -258,7 +334,9 @@ async function verifyRuntime(files, rootDirectory = distDirectory) {
       assert.equal(sha256(served.bytes), file.sha256, `${file.path} hash changed in transit.`);
     }
 
-    const route = await requestBytes(`${baseUrl}/knowledge/web`);
+    await verifyMachineReadableWiki(baseUrl, files);
+
+    const route = await requestBytes(`${baseUrl}/wiki/web`);
     assert.equal(route.response.status, 200);
     assert.equal(sha256(route.bytes), expectedIndex.sha256, "SPA fallback did not return index.html.");
 
@@ -279,21 +357,24 @@ export async function verifyPreview() {
     entrypoint: "index.html",
     spaFallback: true,
     sourceMapsPublished: false,
+    machineReadableWiki: true,
+    wikiIndex: "wiki/index.json",
+    pageRepresentations: "wiki/<slug>.json",
+    llmsDiscovery: "llms.txt",
     contentTypesVerified: true,
     symbolicLinksAllowed: false,
     artifactRootSymbolicLinkAllowed: false,
     missingAssetStatus: 404,
     pathTraversalStatus: 404,
   });
-  assert.deepEqual(manifest.publication, {
+  const { publishedAt, artifactSha256, ...publication } = manifest.publication;
+  assert.deepEqual(publication, {
     state: "production",
     primaryUrl: "https://possible.sh",
     alternateUrl: "https://www.possible.sh",
     provider: "Vercel",
     dnsProvider: "Cloudflare",
     sourceRepository: "https://github.com/fraylabs/possible",
-    publishedAt: "2026-07-17",
-    artifactSha256: "8b8165a9e7cdcc6999ea99e4c52457da706650ff3f50ed3d46f280688dbf6c95",
     verificationReceipt: "deployment/PRODUCTION.md",
     remainingApprovalBoundaries: [
       "cost or paid-plan changes",
@@ -302,6 +383,8 @@ export async function verifyPreview() {
       "quotes, purchases, orders, and fabrication",
     ],
   });
+  assert.match(publishedAt, /^\d{4}-\d{2}-\d{2}$/);
+  assert.equal(artifactSha256, manifest.sha256, "Publication digest must match the reviewed artifact.");
 
   const actual = await describeArtifact();
   assert(
@@ -315,15 +398,34 @@ export async function verifyPreview() {
 
   console.log(
     `Verified production preview artifact ${actual.sha256}: ${actual.files.length} regular files, `
-    + `${actual.totalBytes} bytes, exact bytes and content types, SPA fallback, no links or public `
-    + "source maps, and safe negative routes.",
+    + `${actual.totalBytes} bytes, exact bytes and content types, SPA fallback, generated page JSON, `
+    + "no links or public source maps, and safe negative routes.",
   );
+}
+
+export async function recordPreview() {
+  const manifest = JSON.parse(await readFile(manifestPath, "utf8"));
+  const actual = await describeArtifact();
+  const next = {
+    ...manifest,
+    sha256: actual.sha256,
+    totalBytes: actual.totalBytes,
+    files: actual.files,
+    publication: {
+      ...manifest.publication,
+      artifactSha256: actual.sha256,
+    },
+  };
+  await writeFile(manifestPath, `${JSON.stringify(next, null, 2)}\n`);
+  console.log(`Recorded preview artifact ${actual.sha256} with ${actual.files.length} files.`);
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) {
   if (process.argv[2] === "--preflight") {
     await assertRealArtifactDirectory(distDirectory, { allowMissing: true });
     console.log("Preview artifact root is absent or a real directory; build preflight passed.");
+  } else if (process.argv[2] === "--record") {
+    await recordPreview();
   } else {
     await verifyPreview();
   }

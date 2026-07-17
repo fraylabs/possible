@@ -154,3 +154,55 @@
   Vercel Git build in 11 seconds and was promoted to every production alias.
   Post-promotion TLS, SPA, and exact live hash checks all passed with no artifact
   change or user-visible outage.
+
+## 2026-07-18 — KISS wiki reset activated
+
+- The captain rejected a formal capability-planning ontology in favor of a
+  simpler product: a sourced Wikipedia of what can be made possible, readable
+  by humans and agents.
+- Replaced the standing goal with a page–link–source contract. Pages are the
+  sole canonical content primitive; graph edges, backlinks, search, HTML, and
+  agent responses must be derived from the same corpus.
+- Kept the previous MVP result and production receipts intact as historical
+  evidence rather than rewriting the original claim.
+- Activated parallel bounded lanes for the wiki runtime, Web and manufacturing
+  page migration, human atlas, two-tool agent interface, and skeptical review.
+- The app background-thread allocator stalled and the first direct workers
+  exposed a local CLI/config mismatch (`gpt-5.6-sol` on Codex `0.139.0`, then an
+  unsupported `ultra`/`max` reasoning setting). Relaunched direct workers on
+  the compatible `gpt-5.4` and `xhigh` combination before any lane edited files.
+
+## 2026-07-18 — Page-only wiki implementation
+
+- Replaced the 48-node JSON graph with 49 sourced Markdown pages: all original
+  Web/manufacturing titles and unique source URLs were retained, and a sourced
+  CAD Skills (text-to-cad) page was added.
+- Reduced the canonical runtime to `WikiPage`, `PageSource`, and derived
+  search/read/backlink helpers. Validation now rejects duplicate slugs, invalid
+  dates, missing or non-HTTPS sources, reserved derived fields, malformed links,
+  and links to absent pages.
+- Reduced the MCP surface to exactly `search` and `read` across stdio and
+  Streamable HTTP; the Agent Skill now teaches progressive retrieval and leaves
+  planning/execution with the host agent.
+- Rebuilt the human projection as a warm article/sidebar beside a midnight
+  related-page graph. One selection action drives search, article links, graph
+  nodes, browser history, and the mobile article sheet.
+- Generated `/llms.txt`, `/wiki/index.json`, and 49 individual page JSON files
+  from the canonical corpus. The preview verifier checks each document's
+  sources, body, links, backlinks, and related pages plus exact artifact bytes.
+- Browser acceptance exposed a too-tall desktop graph and overlapping mobile
+  labels. Made the desktop graph viewport-stable and tightened the 390px graph;
+  search, graph refocus, mobile sheet transitions, and console checks then
+  passed.
+- Black-box agent probes exposed three retrieval usability defects: natural
+  filler words, trailing punctuation, and JSON-only helper arguments. Fixed all
+  three and added a real stdio regression for the literal outcome “I want to
+  make a robot arm.”
+- A final fresh-context run used that exact outcome once, read `Robotic arms`,
+  followed `Parametric CAD master`, cited both pages' review dates and sources,
+  avoided all legacy vocabulary, and returned `ACCEPT`.
+- `npm run check` passed with 49 pages, 146 links, 14 knowledge tests, 7 MCP
+  tests, 10 website/real-corpus tests, 1 black-box helper test, 5 artifact
+  boundary tests, all builds, and exact verification of 54 files / 801,787
+  bytes / SHA-256
+  `6aa2ddd85417656cb683eb3746b77d13b89401edeee7363077a6392f70fa088a`.

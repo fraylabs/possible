@@ -1,4 +1,8 @@
-# `@possible/evals`
+# Historical `@possible/evals`
+
+This package reproduces the completed 2026-07-17 typed-graph evaluation. Its
+node-based contract is intentionally frozen as historical evidence and is not
+part of the page-only wiki build, tests, or primary verifier.
 
 Deterministic evaluation for the two Possible MVP prompts. The package never
 runs an LLM and never infers quality from prose or tool-name mentions. It
@@ -23,7 +27,7 @@ references the exact SHA-256 digest of its transcript. Both files identify the
 same scenario digest, pair ID, arm, run kind, and controlled-environment
 fingerprint.
 
-Production evaluation loads the real `@possible/knowledge` graph. Locked
+The original production evaluation loaded the then-current `@possible/knowledge` graph. Locked
 knowledge requirements must reference existing nodes, and every Possible node
 retrieval in a real run records the SHA-256 revision of the exact node payload.
 
@@ -31,30 +35,10 @@ Production evaluation accepts only `real-agent-run`. Hand-authored scorer data
 must use `test-fixture`, and is accepted only through the explicit
 `allowTestFixtures` test option or `--allow-test-fixtures` CLI flag.
 
-## Commands
+## Reproduction boundary
 
-From the repository root:
-
-```bash
-npm run test -w @possible/evals
-npm run build -w @possible/evals
-npm run eval -w @possible/evals
-```
-
-`npm run eval` permits an entirely empty receipt directory so the harness can
-land before fresh agent runs. If even one receipt is present, every transcript
-must be referenced, every pair must contain exactly one baseline and one
-Possible arm, and every locked scenario must have a pair.
-
-To score real runs directly:
-
-```bash
-node packages/evals/src/cli.js evaluate \
-  --scenario-dir evals/scenarios/v1 \
-  --receipt-dir evals/receipts \
-  --output evals/reports/latest.json
-```
-
-Positive deltas mean the Possible arm improved the metric. Reports preserve raw
-counts and evidence IDs beside rubric points so a reviewer need not trust the
-aggregate score.
+Use the historical commit recorded in the 2026-07-17 production receipt to
+re-run this node-based package. The current page-only runtime intentionally no
+longer carries the types that old scorer consumed. The retained report,
+transcripts, hashes, and schemas remain inspectable without making this package
+part of the new product verifier.

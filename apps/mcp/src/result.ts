@@ -1,7 +1,7 @@
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 
 export type RetrievalErrorCode =
-  | "NODE_NOT_FOUND"
+  | "PAGE_NOT_FOUND"
   | "RETRIEVAL_FAILED";
 
 export interface RetrievalError {

@@ -1,56 +1,50 @@
-# Possible MVP Goal
+# Possible KISS Wiki Goal
 
 ## User-facing promise
 
-An existing agent can receive an outcome-only request, consult Possible, inherit
-maintained contributor knowledge, and choose an appropriate technical starting
-point or provider capability without pushing implementation choices onto the
-user. Humans can inspect the same knowledge and its provenance in a polished
-graph explorer.
+Possible is a sourced, linked wiki of what people and agents can make possible.
+A human can search or click any page, read it in the left-hand article panel,
+and continue through the related-page graph on the right. An agent can search
+and read the same canonical pages without learning a separate ontology.
+
+Possible has one content primitive: a page. Pages contain links and sources.
+The graph, backlinks, related pages, search index, HTML, and machine-readable
+responses are derived projections of that corpus.
 
 ## Baseline
 
-The repository began empty on 2026-07-17. Agents currently rely on model priors,
-ad hoc search, scattered documentation, or private knowledge silos. No shared
-Possible graph, agent interface, contribution format, or controlled comparison
-exists yet.
+The completed first MVP is live and verified, but its canonical model contains
+five node types, six relationship types, nested recommendation contracts,
+provider capability matching, action semantics, and four MCP tools. That model
+proves retrieval, but it asks Possible to formalize planning work that capable
+agents can already perform from clear, maintained prose.
 
-## Supported MVP scope
+## Supported scope
 
-### Web branch
-
-- Browser applications, dashboards, and 3D web experiences.
-- Practical framework, UI, rendering, hosting, and verification knowledge.
-- Read-only capability records and an approval-gated deployment handoff.
-
-### Custom-parts branch
-
-- Parametric CAD, interchange formats, manufacturing-process selection,
-  tolerances, manufacturability, and inspection.
-- Read-only manufacturer capability records and an approval-gated quote/order
-  handoff.
-
-### Product surfaces
-
-- Version-controlled contributor knowledge with deterministic validation.
-- A read-only, remote-ready MCP server and installable Agent Skill.
-- A responsive graph website generated from the same validated source.
-- Controlled baseline-versus-Possible evaluations and two golden demos.
+- One version-controlled page format with stable slug, title, summary, body,
+  review date, sources, and optional tags.
+- Internal page links are the source of graph edges and backlinks.
+- Existing useful Web and custom-part knowledge is preserved as pages or
+  intentionally consolidated without losing its sourced guidance.
+- The website has one navigation action: selecting a page updates the article
+  and refocuses the graph.
+- Desktop presents a readable left article/sidebar and right graph; mobile
+  presents the graph with the article as an accessible sheet.
+- Public pages have stable, shareable URLs and machine-readable content.
+- The read-only MCP surface contains only `search` and `read` operations over
+  the same page corpus.
+- Contributions remain ordinary source-controlled page edits reviewed through
+  GitHub.
 
 ## Explicit non-scope
 
-- A universal ontology or broad AI-generated encyclopedia.
-- A Possible-hosted LLM, planner, autonomous agent, or credential proxy.
-- Accounts, payments, marketplace rankings, automated orders, DNS changes, or
-  production deployment without explicit user approval.
-- Claims that popularity alone means a tool is best.
-
-## Knowledge trust contract
-
-Every recommendation must state its applicability, counterconditions,
-alternatives, provenance, contributor, and review date. Every provider record
-must distinguish supported capabilities from unverified or unknown claims.
-Generated prose without traceable sources does not count as seeded knowledge.
+- A planner, chat interface, workflow builder, marketplace, execution engine,
+  credential proxy, or agent-hosted LLM.
+- Capability contracts, artifact typing, provider ranking, trust scores,
+  formal decision engines, or a universal ontology.
+- Accounts, payments, autonomous purchases, deployments, fabrication, or
+  physical actions.
+- Unsourced generated filler added only to make the graph appear comprehensive.
 
 ## Primary verifier
 
@@ -61,52 +55,59 @@ npm install
 npm run check
 ```
 
-The command must validate the graph and skill, test MCP retrieval and package
-logic, build the website and server, verify the exact production-preview bundle
-and its runtime route contract, and run deterministic evaluation fixtures.
+The check must validate page metadata and sources, reject broken internal
+links, prove graph/backlink derivation, test search and exact page reads through
+the real MCP transports, build the website, and verify the reviewed production
+artifact.
 
-## Independent completion proof
+## Completion proof
 
-The MVP is complete only when all of the following exist:
+The reset is complete only when all of the following are true:
 
-1. At least 24 validated knowledge nodes across both supported branches.
-2. Working MCP operations for search, node retrieval, graph expansion, and
-   capability discovery, with tests proving read-only behavior.
-3. An Agent Skill that tells compatible agents when and how to consult Possible.
-4. A visually reviewed website where users can search, navigate, and inspect
-   recommendations, alternatives, contributors, sources, and freshness.
-5. Baseline and Possible-assisted runs for:
-   - "Build and deploy an inventory dashboard."
-   - "Design a custom motor bracket and find a suitable manufacturer."
-6. A scored receipt showing whether Possible reduced implementation-level user
-   questions and improved use of relevant contributor knowledge.
-7. A fresh-context reviewer confirms the claims in `RESULT.md` against the
-   commands and artifacts rather than trusting the implementing agents.
+1. The canonical runtime model exposes pages, links, and sources without the
+   previous capability-planner contract.
+2. All retained pages have stable slugs, readable prose, a review date, and at
+   least one source; every internal link resolves.
+3. The website search and graph both navigate the same pages, with the selected
+   article readable in the left panel on desktop and an accessible sheet on
+   mobile.
+4. Every page has a stable browser URL and a machine-readable representation.
+5. The MCP server exposes exactly `search` and `read`, and real-client tests
+   prove both use the canonical corpus and remain read-only.
+6. A fresh agent given only an outcome can retrieve and cite relevant Possible
+   pages without requiring knowledge of legacy node types or capability fields.
+7. A fresh-context reviewer confirms that Possible is materially simpler,
+   useful sourced knowledge was not silently discarded, and public claims match
+   the shipped behavior.
+8. The reviewed build is deployed to `possible.sh` and passes live desktop and
+   mobile acceptance without console errors.
 
 ## Iteration loop
 
-Inspect the narrowest failing verifier, change one meaningful thing, rerun that
-verifier, and record evidence in `WORKLOG.md`. Run the full primary verifier at
-integration checkpoints and before completion.
+Inspect the narrowest failing check, make one meaningful correction, rerun that
+check, and record material evidence in `WORKLOG.md`. Run the full verifier at
+integration checkpoints and before deployment.
 
 ## Anti-cheating constraints
 
-- Do not weaken schemas, fixtures, scoring rubrics, or minimum node counts.
-- Do not substitute mocked knowledge results for the actual graph in demos.
-- Do not describe a hand-authored ideal response as an agent run.
-- Do not hide failed or unsupported provider conditions.
-- Do not mark completion from screenshots alone.
+- Do not keep legacy complexity behind renamed types while claiming a page-only
+  model.
+- Do not hand-author graph edges separately from page links.
+- Do not weaken source, broken-link, accessibility, MCP, or artifact checks.
+- Do not delete difficult knowledge merely to simplify the schema; consolidate
+  it explicitly and preserve provenance.
+- Do not use screenshots or visual polish as a substitute for readable content
+  and working agent retrieval.
+
+## Review pressure
+
+Knowledge, web, and agent surfaces receive independent lane checks. Before
+completion, a fresh-context reviewer audits the final repository and live site
+against this file rather than trusting implementation summaries.
 
 ## Blocker standard
 
 A blocker requires concrete evidence that an external dependency or missing
-authorization prevents all meaningful in-scope progress, plus the smallest next
-action needed from the user. Difficulty, incomplete polish, or a failing check
-is not a blocker.
-
-## Completion receipt
-
-The supported MVP promise was completed on 2026-07-17. `RESULT.md` records the
-claim boundary and evaluation evidence; `deployment/PRODUCTION.md` records the
-public repository, exact production artifact, custom-domain delivery, and live
-desktop/tablet/mobile acceptance. The explicit non-scope above remains in force.
+authorization prevents all meaningful in-scope progress, plus the smallest
+action needed from the user. Difficulty, migration work, failing tests, or
+design uncertainty are not blockers.

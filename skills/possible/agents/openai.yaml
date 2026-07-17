@@ -1,9 +1,9 @@
 interface:
   display_name: "Possible"
-  short_description: "Consult shared operational knowledge"
-  default_prompt: "Use $possible to retrieve current operational knowledge before choosing the stack and providers for this outcome."
+  short_description: "Search maintained wiki knowledge"
+  default_prompt: "Use $possible to search maintained wiki pages, read the relevant guidance, follow links as needed, and cite sources."
 dependencies:
   tools:
     - type: "mcp"
       value: "possible"
-      description: "Read-only Possible operational knowledge server"
+      description: "Read-only Possible wiki retrieval server"

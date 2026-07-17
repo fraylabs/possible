@@ -1,24 +1,36 @@
 # Possible contributor knowledge
 
-This directory is the source of truth for Possible. Collections are reviewed
-human contributions, not generated answers. They compile into
-`@possible/knowledge`; the website and agent interface must not maintain a
-second knowledge corpus.
+`knowledge/pages/` is the source of truth for Possible. Each canonical page is
+one reviewed Markdown file with prose, internal links, and sources. The website
+and agent interface consume the same compiled corpus and must not maintain a
+second knowledge model.
 
-## Contribution contract
+## Page format
 
-Every recommendation must say when it applies, when it does not, which
-alternatives to compare, who contributed it, which primary sources support it,
-its confidence, and when it must be reviewed again. “Popular” or “best” without
-conditions is not acceptable.
+```markdown
+---
+slug: make-a-static-site
+title: Make a static site
+summary: Publish a small website without a server-side application.
+tags: [web, publishing]
+reviewedAt: 2026-07-18
+sources:
+  - title: MDN — Publishing your website
+    url: https://developer.mozilla.org/en-US/docs/Learn_web_development/Getting_started/Your_first_website/Publishing_your_website
+---
 
-Provider capabilities are conservative. A supported claim needs official
-provenance. Prices, lead times, material or plan availability, shipping promises,
-regional access, and account entitlements are live facts and belong in
-`unknowns`. Every provider record requires a live check at handoff. Uploading
-proprietary files, creating deployments, changing production, requesting quotes,
-ordering, paying, or starting fabrication remains approval-gated in the user's
-agent host.
+Write useful, sourced prose here. Continue through [hosting options](/wiki/choose-web-hosting).
+```
+
+Frontmatter keys are `slug`, `title`, `summary`, `tags`, `reviewedAt`, and
+`sources`. Slugs use lowercase kebab-case. Tags may be empty; sources may not.
+Every source has only a title and an HTTPS URL. `reviewedAt` is a real calendar
+date in `YYYY-MM-DD` form.
+
+Only Markdown links whose destination is exactly `/wiki/<slug>` generate graph
+edges. All such links must resolve to another canonical page. Backlinks and
+related pages are derived from those links; contributors never author a second
+edge list.
 
 Run after editing:
 
