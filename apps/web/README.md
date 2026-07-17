@@ -2,9 +2,18 @@
 
 Responsive human projection of the validated `@possible/knowledge` wiki.
 The atlas adds no editorial knowledge of its own: search, articles, graph
-neighbors, backlinks, sources, and routes all derive from the shared page
-corpus. Selecting a search result, article link, or graph node performs the same
-page-navigation action.
+neighbors, sources, and routes all derive from the shared page corpus.
+
+The interface has two modes:
+
+- **Explore** — search, a concise selected-page summary, and a small related
+  map.
+- **Read** — the full selected article, review date, sources, and one return to
+  the map.
+
+Desktop and mobile use the same full-page model. Selecting a search result,
+article link, graph node, or browser-history entry performs the same page
+navigation action and preserves the active mode.
 
 Production builds also generate public agent-readable files from that corpus:
 

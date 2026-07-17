@@ -3,9 +3,9 @@
 ## User-facing promise
 
 Possible is a sourced, linked wiki of what people and agents can make possible.
-A human can search or click any page, read it in the left-hand article panel,
-and continue through the related-page graph on the right. An agent can search
-and read the same canonical pages without learning a separate ontology.
+A human can search or click through a calm map in Explore mode, then open the
+selected page in a focused Read mode. An agent can search and read the same
+canonical pages without learning a separate ontology.
 
 Possible has one content primitive: a page. Pages contain links and sources.
 The graph, backlinks, related pages, search index, HTML, and machine-readable
@@ -26,10 +26,13 @@ agents can already perform from clear, maintained prose.
 - Internal page links are the source of graph edges and backlinks.
 - Existing useful Web and custom-part knowledge is preserved as pages or
   intentionally consolidated without losing its sourced guidance.
-- The website has one navigation action: selecting a page updates the article
-  and refocuses the graph.
-- Desktop presents a readable left article/sidebar and right graph; mobile
-  presents the graph with the article as an accessible sheet.
+- The website has one page-selection action across search, graph nodes, article
+  links, and browser history.
+- The human interface has only two presentation modes: Explore shows search,
+  concise selected-page context, and a related-page map; Read shows the full
+  article, review date, and sources with one obvious return to the map.
+- Desktop and mobile use the same full-page Explore/Read model. There is no
+  modal, drawer, metadata rail, agent panel, or separate mobile interaction.
 - Public pages have stable, shareable URLs and machine-readable content.
 - The read-only MCP surface contains only `search` and `read` operations over
   the same page corpus.
@@ -68,9 +71,9 @@ The reset is complete only when all of the following are true:
    previous capability-planner contract.
 2. All retained pages have stable slugs, readable prose, a review date, and at
    least one source; every internal link resolves.
-3. The website search and graph both navigate the same pages, with the selected
-   article readable in the left panel on desktop and an accessible sheet on
-   mobile.
+3. The website search and graph both navigate the same pages. Explore remains
+   sparse and map-first; Read presents the selected article and provenance
+   without dashboard chrome, and both modes work the same way on mobile.
 4. Every page has a stable browser URL and a machine-readable representation.
 5. The MCP server exposes exactly `search` and `read`, and real-client tests
    prove both use the canonical corpus and remain read-only.

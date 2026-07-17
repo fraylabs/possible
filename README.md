@@ -12,10 +12,11 @@ Possible deliberately keeps the product small:
 - A page's internal **links** generate the graph and backlinks.
 - Its **sources** make the knowledge inspectable and maintainable.
 
-Humans search and read the pages beside a visual map. Agents search and read the
-same corpus through a two-tool, read-only MCP server. Possible supplies useful
-knowledge; the host agent still reasons, plans, asks the user for meaningful
-decisions, and executes through other tools.
+Humans search and follow a visual map in Explore mode, then open one page in a
+focused Read mode. Agents search and read the same corpus through a two-tool,
+read-only MCP server. Possible supplies useful knowledge; the host agent still
+reasons, plans, asks the user for meaningful decisions, and executes through
+other tools.
 
 ## Run it
 

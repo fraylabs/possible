@@ -1,39 +1,26 @@
-import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { within } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import axe from "axe-core";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { App } from "./App";
-
-const installMatchMedia = (width: number) => {
-  Object.defineProperty(window, "matchMedia", {
-    writable: true,
-    value: vi.fn().mockImplementation((query: string) => ({
-      matches: query.includes("max-width: 960px") ? width <= 960 : false,
-      media: query,
-      onchange: null,
-      addEventListener: vi.fn(),
-      removeEventListener: vi.fn(),
-      dispatchEvent: vi.fn(),
-    })),
-  });
-};
 
 describe("Possible wiki", () => {
   afterEach(() => cleanup());
 
   beforeEach(() => {
-    installMatchMedia(1280);
     window.history.replaceState(null, "", "/");
   });
 
-  it("loads the shared wiki, redirects root, and lets search and graph select pages", async () => {
+  it("opens in a calm Explore view and lets search and graph select pages", async () => {
     const user = userEvent.setup();
     render(<App />);
 
     expect(screen.getByText("Loading Possible")).toBeInTheDocument();
     await screen.findByRole("heading", { level: 1, name: "Web" });
     expect(window.location.pathname).toBe("/wiki/web");
+    expect(screen.getByRole("button", { name: "Read page" })).toBeInTheDocument();
+    expect(screen.queryByText(/Start with the primary surface/i)).not.toBeInTheDocument();
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
 
     const search = screen.getByRole("searchbox", { name: "Search pages" });
     await user.type(search, "vite");
@@ -42,52 +29,108 @@ describe("Possible wiki", () => {
     expect(window.location.pathname).toBe("/wiki/vite-react");
 
     const graph = screen.getByRole("region", { name: "Related page graph" });
-    const browserGraphNode = within(graph).getByRole("button", { name: /Browser applications, linked both ways/i });
+    const browserGraphNode = within(graph).getByRole("button", {
+      name: "Browser applications, related page",
+    });
     await user.click(browserGraphNode);
     expect(await screen.findByRole("heading", { level: 1, name: "Browser applications" })).toBeInTheDocument();
     expect(window.location.pathname).toBe("/wiki/browser-applications");
+    await waitFor(() => expect(screen.getByRole("heading", { level: 1 })).toHaveFocus());
   });
 
-  it("uses article links for the same selection action and keeps raw HTML inert", async () => {
+  it("uses a focused Read view with article links, provenance, and one way back", async () => {
     const user = userEvent.setup();
     window.history.replaceState(null, "", "/wiki/vite-react");
     render(<App />);
 
     await screen.findByRole("heading", { level: 1, name: "Vite with React" });
+    expect(screen.queryByRole("link", { name: "Browser applications" })).not.toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: "Read page" }));
+    expect(await screen.findByRole("link", { name: "Browser applications" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 2, name: "Sources" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Vite guide/i })).toHaveAttribute(
+      "href",
+      "https://vite.dev/guide/",
+    );
+    expect(screen.getByText(/Reviewed July 17, 2026/i)).toBeInTheDocument();
     expect(screen.queryByTestId("unsafe-html")).not.toBeInTheDocument();
+    expect(screen.getByText(/<span data-testid="unsafe-html">unsafe html<\/span>/i)).toBeInTheDocument();
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
 
     await user.click(screen.getByRole("link", { name: "Browser applications" }));
     expect(await screen.findByRole("heading", { level: 1, name: "Browser applications" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 2, name: "Sources" })).toBeInTheDocument();
+    expect(window.location.pathname).toBe("/wiki/browser-applications");
+
+    await user.click(screen.getByRole("button", { name: "Back to map" }));
+    expect(await screen.findByRole("button", { name: "Read page" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 1, name: "Browser applications" })).toBeInTheDocument();
     expect(window.location.pathname).toBe("/wiki/browser-applications");
   });
 
-  it("tracks browser history and exposes a mobile article sheet", async () => {
+  it("tracks browser history without changing the active mode", async () => {
     const user = userEvent.setup();
-    installMatchMedia(390);
     render(<App />);
 
-    const dialog = await screen.findByRole("dialog", { name: "Web" });
-    await user.click(within(dialog).getByRole("button", { name: "Close article" }));
-    expect(screen.queryByRole("dialog", { name: "Web" })).not.toBeInTheDocument();
-
-    await user.click(screen.getByRole("button", { name: "Open article" }));
-    expect(await screen.findByRole("dialog", { name: "Web" })).toBeInTheDocument();
+    await screen.findByRole("heading", { level: 1, name: "Web" });
+    await user.click(screen.getByRole("button", { name: "Read page" }));
+    expect(await screen.findByRole("button", { name: "Back to map" })).toBeInTheDocument();
 
     window.history.pushState(null, "", "/wiki/browser-applications");
     fireEvent.popState(window);
-    expect(await screen.findByRole("dialog", { name: "Browser applications" })).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { level: 1, name: "Browser applications" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Back to map" })).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: "Back to map" }));
+    window.history.pushState(null, "", "/wiki/vite-react");
+    fireEvent.popState(window);
+    expect(await screen.findByRole("heading", { level: 1, name: "Vite with React" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Read page" })).toBeInTheDocument();
   });
 
-  it("focuses search with slash and has no detectable semantic accessibility violations", async () => {
+  it("uses the same full-page Explore and Read modes on mobile", async () => {
+    const user = userEvent.setup();
+    Object.defineProperty(window, "innerWidth", { configurable: true, value: 390 });
+    render(<App />);
+
+    await screen.findByRole("heading", { level: 1, name: "Web" });
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /open article|close article/i })).not.toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: "Read page" }));
+    expect(await screen.findByRole("button", { name: "Back to map" })).toBeInTheDocument();
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 2, name: "Sources" })).toBeInTheDocument();
+  });
+
+  it("supports keyboard shortcuts and has no detectable semantic accessibility violations", async () => {
+    const user = userEvent.setup();
     render(<App />);
     await screen.findByRole("heading", { level: 1, name: "Web" });
 
     fireEvent.keyDown(window, { key: "/" });
     expect(screen.getByRole("searchbox", { name: "Search pages" })).toHaveFocus();
 
-    const results = await axe.run(document.body, {
+    const exploreResults = await axe.run(document.body, {
       rules: { "color-contrast": { enabled: false } },
     });
-    expect(results.violations).toEqual([]);
+    expect(exploreResults.violations).toEqual([]);
+
+    await user.click(screen.getByRole("button", { name: "Read page" }));
+    await screen.findByRole("button", { name: "Back to map" });
+    const readResults = await axe.run(document.body, {
+      rules: { "color-contrast": { enabled: false } },
+    });
+    expect(readResults.violations).toEqual([]);
+
+    fireEvent.keyDown(window, { key: "Escape" });
+    expect(await screen.findByRole("button", { name: "Read page" })).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: "Read page" }));
+    fireEvent.keyDown(window, { key: "/" });
+    await waitFor(() => {
+      expect(screen.getByRole("searchbox", { name: "Search pages" })).toHaveFocus();
+    });
   });
 });

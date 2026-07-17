@@ -25,7 +25,7 @@ export interface RelatedGraphModel {
   hiddenCount: number;
 }
 
-const MAX_GRAPH_PAGES = 10;
+const MAX_GRAPH_PAGES = 6;
 
 const byTitle = (left: WikiPage, right: WikiPage): number =>
   left.title.localeCompare(right.title) || left.slug.localeCompare(right.slug);

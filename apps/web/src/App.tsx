@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import {
+  BookOpenText,
   CircleAlert,
   LoaderCircle,
   Search,
@@ -11,43 +12,28 @@ import {
   searchPages,
   type WikiCorpus,
 } from "@possible/knowledge";
-import { ArticleSheet } from "./components/ArticleSheet";
+import { ArticleView } from "./components/ArticleView";
 import { RelatedGraph } from "./components/RelatedGraph";
-import { buildRelatedGraph, routeSlug, wikiPath } from "./wiki";
+import { buildRelatedGraph, formatReviewedAt, routeSlug, wikiPath } from "./wiki";
 
 type LoadState =
   | { status: "loading" }
   | { status: "ready"; corpus: WikiCorpus }
   | { status: "error"; message: string };
 
-function useMediaQuery(query: string): boolean {
-  const getMatches = () =>
-    typeof window !== "undefined" && typeof window.matchMedia === "function"
-      ? window.matchMedia(query).matches
-      : false;
-
-  const [matches, setMatches] = useState(getMatches);
-
-  useEffect(() => {
-    if (typeof window.matchMedia !== "function") return undefined;
-    const media = window.matchMedia(query);
-    const update = () => setMatches(media.matches);
-    update();
-    media.addEventListener("change", update);
-    return () => media.removeEventListener("change", update);
-  }, [query]);
-
-  return matches;
-}
+type ViewMode = "explore" | "read";
+type FocusTarget = "explore" | "read" | "search";
 
 export function App() {
   const [loadState, setLoadState] = useState<LoadState>({ status: "loading" });
   const [loadAttempt, setLoadAttempt] = useState(0);
-  const [selectedSlug, setSelectedSlug] = useState<string | undefined>(undefined);
+  const [selectedSlug, setSelectedSlug] = useState<string | undefined>();
   const [query, setQuery] = useState("");
-  const [mobileArticleOpen, setMobileArticleOpen] = useState(false);
+  const [mode, setMode] = useState<ViewMode>("explore");
   const searchRef = useRef<HTMLInputElement>(null);
-  const isMobile = useMediaQuery("(max-width: 960px)");
+  const exploreTitleRef = useRef<HTMLHeadingElement>(null);
+  const readTitleRef = useRef<HTMLHeadingElement>(null);
+  const pendingFocusRef = useRef<FocusTarget | undefined>(undefined);
 
   useEffect(() => {
     let active = true;
@@ -90,21 +76,23 @@ export function App() {
     hiddenCount: 0,
   };
   const searchResults = corpus && query.trim()
-    ? searchPages(corpus, query, { limit: 8 })
+    ? searchPages(corpus, query, { limit: 5 })
     : [];
-  const outgoingPages = graph.outgoingPages;
-  const backlinkPages = graph.backlinkPages;
-  const relatedPages = graph.relatedPages;
 
   useEffect(() => {
-    if (!isMobile) {
-      setMobileArticleOpen(false);
-      return;
-    }
-    if (selectedSlug) {
-      setMobileArticleOpen(true);
-    }
-  }, [isMobile, selectedSlug]);
+    const target = pendingFocusRef.current;
+    if (!target) return;
+    pendingFocusRef.current = undefined;
+
+    const frame = window.requestAnimationFrame(() => {
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+      if (target === "search") searchRef.current?.focus({ preventScroll: true });
+      if (target === "explore") exploreTitleRef.current?.focus({ preventScroll: true });
+      if (target === "read") readTitleRef.current?.focus({ preventScroll: true });
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [mode, selectedSlug]);
 
   useEffect(() => {
     if (!corpus) return undefined;
@@ -113,16 +101,19 @@ export function App() {
       const nextSlug = routeSlug(window.location.pathname)
         ?? getPage(corpus, "web")?.slug
         ?? corpus.pages[0]?.slug;
+      pendingFocusRef.current = mode;
       setSelectedSlug(nextSlug);
       setQuery("");
-      if (isMobile && nextSlug) {
-        setMobileArticleOpen(true);
-      }
     };
 
     window.addEventListener("popstate", handlePopState);
     return () => window.removeEventListener("popstate", handlePopState);
-  }, [corpus, isMobile]);
+  }, [corpus, mode]);
+
+  const returnToExplore = (focus: FocusTarget = "explore") => {
+    pendingFocusRef.current = focus;
+    setMode("explore");
+  };
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -131,29 +122,38 @@ export function App() {
 
       if (event.key === "/" && !isTyping) {
         event.preventDefault();
-        searchRef.current?.focus();
+        if (mode === "read") {
+          returnToExplore("search");
+        } else {
+          searchRef.current?.focus();
+        }
       }
 
       if (event.key === "Escape") {
-        setQuery("");
-        setMobileArticleOpen(false);
+        if (mode === "read") {
+          returnToExplore();
+        } else {
+          setQuery("");
+        }
       }
     };
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
+  }, [mode]);
 
   const selectPage = (
     slug: string,
-    options?: { history?: "push" | "replace" | "none"; openMobileArticle?: boolean },
+    options?: {
+      history?: "push" | "replace" | "none";
+      focus?: FocusTarget;
+      mode?: ViewMode;
+    },
   ) => {
+    if (options?.focus) pendingFocusRef.current = options.focus;
+    if (options?.mode) setMode(options.mode);
     setSelectedSlug(slug);
     setQuery("");
-
-    if (isMobile && options?.openMobileArticle !== false) {
-      setMobileArticleOpen(true);
-    }
 
     if (options?.history === "none") return;
     const nextPath = wikiPath(slug);
@@ -163,15 +163,23 @@ export function App() {
   };
 
   const resetToFirstPage = () => {
-    if (fallbackPage) selectPage(fallbackPage.slug);
+    if (!fallbackPage) return;
+    pendingFocusRef.current = "explore";
+    setMode("explore");
+    selectPage(fallbackPage.slug);
   };
 
   const submitSearch = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const firstResult = searchResults[0]?.page;
     if (firstResult) {
-      selectPage(firstResult.slug);
+      selectPage(firstResult.slug, { focus: "explore", mode: "explore" });
     }
+  };
+
+  const openRead = () => {
+    pendingFocusRef.current = "read";
+    setMode("read");
   };
 
   if (loadState.status === "loading") {
@@ -180,7 +188,7 @@ export function App() {
         <LoaderCircle className="state-screen__spinner" />
         <p className="brand-wordmark">possible<span>.sh</span></p>
         <h1>Loading Possible</h1>
-        <p>Preparing the shared wiki corpus for search, reading, and graph navigation.</p>
+        <p>Preparing the shared wiki for search, reading, and exploration.</p>
       </main>
     );
   }
@@ -209,93 +217,116 @@ export function App() {
     );
   }
 
-  return (
-    <main className="app-shell">
-      <a className="skip-link" href="#wiki-article-title">Skip to article</a>
-
-      <header className="app-header">
-        <button type="button" className="brand-reset" onClick={resetToFirstPage}>
-          <span className="brand-wordmark">possible<span>.sh</span></span>
-          <span className="brand-tagline">A sourced wiki of what people and agents can make possible.</span>
-        </button>
-
-        <div className="search-area">
-          <form className="search-form" onSubmit={submitSearch}>
-            <label htmlFor="wiki-search" className="visually-hidden">Search pages</label>
-            <Search size={16} aria-hidden="true" />
-            <input
-              ref={searchRef}
-              id="wiki-search"
-              type="search"
-              value={query}
-              onChange={(event) => setQuery(event.target.value)}
-              placeholder="What do you want to make possible?"
-              autoComplete="off"
-            />
-            {query && (
-              <button
-                type="button"
-                className="search-clear"
-                onClick={() => setQuery("")}
-                aria-label="Clear search"
-              >
-                <X size={14} />
-              </button>
-            )}
-          </form>
-
-          {query && (
-            <div className="search-results" role="listbox" aria-label="Search results">
-              {searchResults.length > 0 ? (
-                <ul>
-                  {searchResults.map((result) => (
-                    <li key={result.page.slug}>
-                      <button type="button" onClick={() => selectPage(result.page.slug)}>
-                        <strong>{result.page.title}</strong>
-                        <span>{result.page.summary}</span>
-                        <small>{result.matchedTerms.join(" · ")}</small>
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p className="search-empty">No page matches that search yet.</p>
-              )}
-            </div>
-          )}
-        </div>
-
-        <div className="header-meta">
-          <span>{corpus.pages.length} pages</span>
-          {isMobile && (
-            <button
-              type="button"
-              className="article-toggle article-toggle--header"
-              onClick={() => setMobileArticleOpen((open) => !open)}
-            >
-              {mobileArticleOpen ? "Hide article" : "Open article"}
-            </button>
-          )}
-        </div>
-      </header>
-
-      <div className="app-content">
-        <ArticleSheet
+  if (mode === "read") {
+    return (
+      <main className="app-shell app-shell--read">
+        <a className="skip-link" href="#read-title">Skip to article</a>
+        <ArticleView
           page={selectedPage}
           routeSlug={selectedSlug}
-          outgoingPages={outgoingPages}
-          backlinkPages={backlinkPages}
-          relatedCount={relatedPages.length}
           fallbackPage={fallbackPage}
-          isMobile={isMobile}
-          isOpen={mobileArticleOpen}
-          onClose={() => setMobileArticleOpen(false)}
-          onSelectPage={selectPage}
+          titleRef={readTitleRef}
+          onBack={() => returnToExplore()}
+          onSelectPage={(slug) => selectPage(slug, { focus: "read", mode: "read" })}
         />
+      </main>
+    );
+  }
+
+  return (
+    <main className="app-shell app-shell--explore">
+      <a className="skip-link" href="#explore-title">Skip to selected page</a>
+
+      <div className="explore-view">
+        <aside className="explore-panel" aria-label="Explore Possible">
+          <button type="button" className="brand-reset" onClick={resetToFirstPage}>
+            <span className="brand-wordmark">possible<span>.sh</span></span>
+            <span className="brand-tagline">A sourced wiki of what people can make possible.</span>
+          </button>
+
+          <div className="search-area">
+            <form className="search-form" onSubmit={submitSearch}>
+              <label htmlFor="wiki-search" className="visually-hidden">Search pages</label>
+              <Search size={17} aria-hidden="true" />
+              <input
+                ref={searchRef}
+                id="wiki-search"
+                type="search"
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
+                placeholder="Search outcomes, tools, and methods"
+                autoComplete="off"
+              />
+              {query && (
+                <button
+                  type="button"
+                  className="search-clear"
+                  onClick={() => setQuery("")}
+                  aria-label="Clear search"
+                >
+                  <X size={14} />
+                </button>
+              )}
+            </form>
+
+            {query && (
+              <div className="search-results" role="listbox" aria-label="Search results">
+                {searchResults.length > 0 ? (
+                  <ul>
+                    {searchResults.map((result) => (
+                      <li key={result.page.slug}>
+                        <button
+                          type="button"
+                          onClick={() => selectPage(result.page.slug, {
+                            focus: "explore",
+                            mode: "explore",
+                          })}
+                        >
+                          <strong>{result.page.title}</strong>
+                          <span>{result.page.summary}</span>
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="search-empty">No page matches that search yet.</p>
+                )}
+              </div>
+            )}
+          </div>
+
+          <section className="selected-context" aria-labelledby="explore-title">
+            <p className="section-kicker">Explore</p>
+            <h1 id="explore-title" ref={exploreTitleRef} tabIndex={-1}>
+              {selectedPage?.title ?? "Page not found"}
+            </h1>
+            <p className="selected-summary">
+              {selectedPage?.summary
+                ?? `The page "${selectedSlug ?? "unknown"}" is not present in this build.`}
+            </p>
+            {selectedPage ? (
+              <>
+                <p className="review-note">Reviewed {formatReviewedAt(selectedPage.reviewedAt)}</p>
+                <button type="button" className="read-button" onClick={openRead}>
+                  <BookOpenText size={18} aria-hidden="true" />
+                  Read page
+                </button>
+              </>
+            ) : fallbackPage ? (
+              <button
+                type="button"
+                className="read-button"
+                onClick={() => selectPage(fallbackPage.slug, { focus: "explore" })}
+              >
+                Open {fallbackPage.title}
+              </button>
+            ) : null}
+          </section>
+        </aside>
 
         <RelatedGraph
           graph={graph}
-          onSelectPage={selectPage}
+          onSelectPage={(slug) => selectPage(slug, { focus: "explore", mode: "explore" })}
         />
       </div>
     </main>

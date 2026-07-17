@@ -240,3 +240,18 @@
   deployment was production / Ready with both aliases, reran the full check,
   reproduced both 54-file live artifacts with zero mismatches, and returned
   `ACCEPT` with no blocking finding.
+
+## 2026-07-18 — Human interface simplification activated
+
+- The captain found the first page-only atlas visually and interactionally too
+  complicated, despite the simpler knowledge model underneath it.
+- Ran four independent bounded reviews over desktop, mobile, behavior tests,
+  and KISS product scope. They converged on removing the metadata sidebar,
+  relation labels, graph legend and counts, duplicate headings, mobile modal,
+  and route/agent implementation details from the human surface.
+- Replaced the standing human-interface contract with two modes only: Explore
+  for search, selected-page context, and the related map; Read for the complete
+  article and provenance. The same full-page model applies at every viewport.
+- Preserved stable URLs, canonical pages, agent publications, search, graph
+  navigation, browser history, keyboard access, safe Markdown rendering, review
+  dates, and sources as load-bearing behavior.

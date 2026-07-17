@@ -19,5 +19,7 @@ describe("real corpus integration", () => {
 
     expect(await screen.findByRole("heading", { level: 1, name: page.title })).toBeInTheDocument();
     expect(screen.getByText(page.summary)).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Read page" })).toBeInTheDocument();
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
 });
