@@ -1,7 +1,7 @@
 # Possible KISS Wiki Result
 
-Status: implementation and local rendered acceptance pass on 2026-07-18;
-production promotion of this reviewed artifact is pending.
+Status: implementation, production delivery, and live rendered acceptance pass
+on 2026-07-18 in Asia/Singapore.
 
 ## Supported trust claim
 
@@ -46,14 +46,39 @@ the two query operations. Its one verbatim search returned `Robotic arms`
 first; it read that page, followed `Parametric CAD master`, cited both review
 dates and source URLs, and returned `ACCEPT` without legacy schema vocabulary.
 
+## Production acceptance
+
+Public Git commit
+`ebfddd9df1c55cae5148ab26a7bbd0cd9d03a94e` was deployed by Vercel as
+`dpl_7qvQGXPPR5vUSeFVHFkZycHAcb7u` and promoted to
+`https://possible.sh` and `https://www.possible.sh`. The deployment was Ready
+at 2026-07-18 00:44 Asia/Singapore.
+
+An exact live fetch at 2026-07-18 00:54 Asia/Singapore downloaded all 54
+manifested files from `https://possible.sh`: every status, byte count, and
+SHA-256 matched the reviewed artifact, for 801,787 bytes and aggregate artifact
+SHA-256
+`6aa2ddd85417656cb683eb3746b77d13b89401edeee7363077a6392f70fa088a`.
+The public index reported 49 of 49 pages, `/wiki/web` returned the HTML app,
+and the `www` wiki index returned JSON. `git ls-remote` independently matched
+the public `main` branch to the deployed implementation commit.
+
 ## Rendered acceptance
 
-The in-app Browser exercised the reviewed local production build at desktop
+The in-app Browser exercised the reviewed live deployment at desktop
 `1440 × 1000` and mobile `390 × 844`. Outcome search, result selection,
 article-link navigation, graph refocus, stable URLs, the mobile sheet, and
-graph-to-sheet navigation passed. The mobile graph was tightened after the
-first pass exposed label overlap. The accepted pass had no horizontal overflow
-and no browser warnings or errors.
+graph-to-sheet navigation passed. The literal robot-arm outcome selected
+`/wiki/robotic-arms`; tapping its `CAD Skills (text-to-cad)` graph node changed
+the route to `/wiki/text-to-cad` and opened the matching mobile article sheet.
+The accepted pass had no horizontal overflow and no browser warnings or
+errors.
+
+An independent final release gate reran the full verifier, authenticated the
+exact Vercel deployment as production and Ready, matched public `main`, and
+fetched all 54 files from both custom domains. It reproduced 801,787 bytes and
+the reviewed artifact digest with zero mismatches, then returned `ACCEPT` with
+no blocking finding.
 
 ## What this does not claim
 

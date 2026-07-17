@@ -206,3 +206,37 @@
   boundary tests, all builds, and exact verification of 54 files / 801,787
   bytes / SHA-256
   `6aa2ddd85417656cb683eb3746b77d13b89401edeee7363077a6392f70fa088a`.
+
+## 2026-07-18 — KISS wiki production acceptance
+
+- Published implementation commit
+  `ebfddd9df1c55cae5148ab26a7bbd0cd9d03a94e` to public `fraylabs/possible`
+  `main`; `git ls-remote` matched the same commit after the push.
+- Vercel Git deployment `dpl_7qvQGXPPR5vUSeFVHFkZycHAcb7u` reached Ready
+  and was promoted to `possible.sh`, `www.possible.sh`, and the existing provider
+  aliases at 2026-07-18 00:44 Asia/Singapore.
+- Fetched all 54 manifested files from the live custom domain. Every response,
+  byte count, and SHA-256 matched the reviewed artifact: 801,787 bytes and
+  aggregate artifact SHA-256
+  `6aa2ddd85417656cb683eb3746b77d13b89401edeee7363077a6392f70fa088a`.
+  The live index contained 49 of 49 pages, `/wiki/web` returned the app, and the
+  `www` machine-readable index returned JSON.
+- Exercised the live site at desktop `1440 × 1000` and mobile `390 × 844`.
+  Search selected Robotic arms from the literal outcome, graph selection kept
+  the URL and article synchronized, and the mobile text-to-cad graph node opened
+  the corresponding article sheet without overflow or page-console warnings.
+- Saved five accepted live views for media handoff under the ignored Fray
+  notification artifact directory.
+- A fresh read-only reviewer independently confirmed the implementation shape,
+  corpus counts, MCP boundary, natural-language retrieval, deterministic local
+  artifact, and clean secret scan. It correctly rejected stale release docs and
+  could not resolve DNS from its sandbox. Updated the release receipts and made
+  the Asia/Singapore date boundary explicit before the final network-enabled
+  closure review.
+- A public-network reviewer matched every live file on both custom domains but
+  kept the gate closed because the SSO-protected provider URL could not prove
+  the opaque Vercel deployment ID. A final fresh reviewer used the inherited
+  Vercel token only for authenticated read-only inspection, proved the exact
+  deployment was production / Ready with both aliases, reran the full check,
+  reproduced both 54-file live artifacts with zero mismatches, and returned
+  `ACCEPT` with no blocking finding.

@@ -101,3 +101,65 @@ and motor-bracket runs remain handoff demonstrations, not built applications,
 CAD, quotes, purchases, orders, or fabrication. Live provider suitability and
 all consequential external actions still require current checks and explicit
 approval.
+
+## 2026-07-18 — KISS wiki production reset
+
+The historical typed-graph receipt above remains accurate for that release. The
+active production contract is now the sourced, page-only wiki described in
+`GOAL.md` and `RESULT.md`.
+
+### Delivery identity
+
+- Public source commit:
+  `ebfddd9df1c55cae5148ab26a7bbd0cd9d03a94e`
+- Public branch: `fraylabs/possible` `main`; independently matched by
+  `git ls-remote origin refs/heads/main`
+- Vercel deployment: `dpl_7qvQGXPPR5vUSeFVHFkZycHAcb7u`
+- Deployment URL: `https://possible-ni3lm8onc-brainthrust.vercel.app`
+- State: production / Ready at 2026-07-18 00:44 Asia/Singapore
+- Promoted aliases: `https://possible.sh`, `https://www.possible.sh`,
+  `https://possible-three.vercel.app`, and the existing project aliases
+
+### Exact live artifact receipt
+
+At 2026-07-18 00:54 Asia/Singapore, a verifier loaded
+`deployment/preview-artifact.json`, fetched every manifested path from
+`https://possible.sh`, and compared status, byte count, and SHA-256:
+
+| Check | Result |
+| --- | --- |
+| Manifested files | 54 of 54 exact |
+| Total bytes | 801,787 exact |
+| Artifact SHA-256 | `6aa2ddd85417656cb683eb3746b77d13b89401edeee7363077a6392f70fa088a` |
+| Mismatches | 0 |
+| `/wiki/index.json` | HTTP 200; `pageCount: 49`; 49 page records |
+| `/wiki/web` | HTTP 200; `text/html; charset=utf-8` |
+| `www` `/wiki/index.json` | HTTP 200; `application/json; charset=utf-8` |
+
+Because every individual file hash matched the reviewed 54-file manifest, the
+live static deployment is byte-identical to the locally accepted artifact.
+
+### Live rendered acceptance
+
+The approved in-app Browser exercised `possible.sh` at desktop `1440 × 1000`
+and mobile `390 × 844`. It verified the default Web page, the literal outcome
+search “I want to make a robot arm.”, route and graph synchronization on
+`/wiki/robotic-arms`, the mobile article sheet, and graph navigation to
+`/wiki/text-to-cad`. The accepted views had no horizontal overflow or observed
+page-console warnings/errors. Five screenshots were retained in the ignored
+Fray notification artifact directory for Telegram handoff.
+
+All dates in this receipt use Asia/Singapore. The UTC timestamp corresponding
+to the live byte check is 2026-07-17T16:54:28Z.
+
+### Independent KISS closure audit
+
+A final fresh-context release gate ran the full primary verifier and used the
+existing Vercel token only for authenticated read-only inspection. The provider
+reported deployment `dpl_7qvQGXPPR5vUSeFVHFkZycHAcb7u`, target `production`,
+status `Ready`, creation time 2026-07-18 00:44:52 Asia/Singapore, and aliases
+including both custom domains. The reviewer independently matched public
+`main`, the literal robot-arm retrieval, and every manifested file on both
+`possible.sh` and `www.possible.sh`: 54 files, 801,787 bytes, aggregate artifact
+SHA-256 `6aa2ddd85417656cb683eb3746b77d13b89401edeee7363077a6392f70fa088a`,
+and zero mismatches. Its verdict was `ACCEPT` with no blocking finding.
