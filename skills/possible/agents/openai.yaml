@@ -1,0 +1,9 @@
+interface:
+  display_name: "Possible"
+  short_description: "Consult shared operational knowledge"
+  default_prompt: "Use $possible to retrieve current operational knowledge before choosing the stack and providers for this outcome."
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "possible"
+      description: "Read-only Possible operational knowledge server"

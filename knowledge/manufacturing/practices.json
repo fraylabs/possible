@@ -1,0 +1,219 @@
+{
+  "$schema": "../../schema/knowledge-collection.schema.json",
+  "branch": "manufacturing",
+  "nodes": [
+    {
+      "id": "manufacturing/practices/process-selection",
+      "type": "practice",
+      "domain": "manufacturing",
+      "title": "Manufacturing process selection",
+      "summary": "A requirements-led comparison of geometry, material behavior, quantity, finish, dimensional needs, inspection, and provider constraints before committing fabrication artifacts.",
+      "tags": ["process-selection", "fdm", "sls", "cnc", "sheet-cutting"],
+      "recommendations": [
+        {
+          "statement": "Select the process from functional requirements and geometry before optimizing the CAD for a provider; keep at least one viable alternative until DFM is checked.",
+          "applicability": ["A custom part can be produced by more than one process", "Material behavior, finish, geometry, or dimensional requirements affect viability"],
+          "counterconditions": ["A regulated or already-qualified process is fixed by an external requirement"],
+          "alternatives": [{ "nodeId": "manufacturing/practices/dfm-preflight", "reason": "Use DFM preflight to test the selected process against provider-specific constraints before handoff." }],
+          "sources": [
+            { "title": "FDM vs SLA vs SLS", "url": "https://formlabs.com/eu/blog/fdm-vs-sla-vs-sls-how-to-choose-the-right-3d-printing-technology/", "publisher": "Formlabs", "kind": "official-documentation", "accessedAt": "2026-07-17" },
+            { "title": "Design for machining toolkit", "url": "https://www.protolabs.com/resources/design-for-machining-toolkit/", "publisher": "Protolabs", "kind": "official-documentation", "accessedAt": "2026-07-17" }
+          ],
+          "contributors": [{ "id": "possible-foundation", "name": "Possible founding contributors" }],
+          "reviewedAt": "2026-07-17",
+          "confidence": "high",
+          "reviewIntervalDays": 90
+        }
+      ],
+      "relationships": [
+        { "type": "hierarchy", "target": "manufacturing/custom-parts", "description": "Process selection is an early custom-part practice." },
+        { "type": "relevance", "target": "manufacturing/processes/cnc-machining", "description": "CNC machining is one process family evaluated against the requirements." },
+        { "type": "relevance", "target": "manufacturing/processes/fdm", "description": "FDM is one additive process family evaluated against the requirements." }
+      ],
+      "practice": {
+        "outputs": ["A selected process with requirement fit, risks, and at least one alternative"],
+        "checks": ["No universal tolerance, material, finish, or cost claim is used across different processes"]
+      }
+    },
+    {
+      "id": "manufacturing/practices/parametric-cad",
+      "type": "practice",
+      "domain": "manufacturing",
+      "title": "Parametric CAD master",
+      "summary": "A native editable model whose named dimensions, constraints, interfaces, and revision history remain the design source of truth while process-specific files are exported as artifacts.",
+      "tags": ["parametric-cad", "source-of-truth", "revision", "automation"],
+      "recommendations": [
+        {
+          "statement": "Keep the native parametric model as the source of truth and export revision-specific STEP, mesh, drawing, or profile artifacts rather than editing downstream files independently.",
+          "applicability": ["Dimensions or interfaces may change across iterations", "More than one manufacturing or simulation artifact derives from the same geometry"],
+          "counterconditions": ["The geometry is a one-time non-parametric capture whose source cannot be reconstructed as editable CAD"],
+          "alternatives": [{ "nodeId": "manufacturing/tools/freecad", "reason": "A GUI-native parametric model in FreeCAD is an alternative to a script-authored CadQuery master." }],
+          "sources": [{ "title": "Variable Studios automate parametric modeling", "url": "https://www.onshape.com/en/resource-center/tech-tips/variable-studios-automate-parametric-modeling", "publisher": "Onshape", "kind": "official-documentation", "accessedAt": "2026-07-17" }],
+          "contributors": [{ "id": "possible-foundation", "name": "Possible founding contributors" }],
+          "reviewedAt": "2026-07-17",
+          "confidence": "high",
+          "reviewIntervalDays": 120
+        }
+      ],
+      "relationships": [
+        { "type": "hierarchy", "target": "manufacturing/custom-parts", "description": "Parametric modeling preserves controlled custom-part intent." },
+        { "type": "compatibility", "target": "manufacturing/tools/cadquery", "description": "CadQuery supports script-authored parametric solid models and exports." },
+        { "type": "relevance", "target": "manufacturing/tools/step", "description": "STEP is a revisioned exchange artifact derived from the parametric master." }
+      ],
+      "practice": {
+        "outputs": ["Native editable CAD source with named parameters and revision identity"],
+        "checks": ["Every exported artifact can be traced to the exact native-model revision and parameters"]
+      }
+    },
+    {
+      "id": "manufacturing/practices/manufacturing-drawing",
+      "type": "practice",
+      "domain": "manufacturing",
+      "title": "Manufacturing drawing",
+      "summary": "A human- and provider-readable definition of critical dimensions, tolerances, threads, finishes, datums, notes, and inspection expectations that solid geometry alone may not carry.",
+      "tags": ["drawing", "gdandt", "tolerances", "threads", "finish"],
+      "recommendations": [
+        {
+          "statement": "Attach a drawing when critical tolerances, threads, finishes, datums, or inspection requirements cannot be safely inferred from the 3D model and quote form.",
+          "applicability": ["Specific features have functional acceptance limits", "The provider accepts supporting drawings with the model"],
+          "counterconditions": ["Every required manufacturing and inspection attribute is explicitly represented and confirmed through another accepted contract"],
+          "alternatives": [{ "nodeId": "manufacturing/practices/tolerance-contract", "reason": "Use the tolerance-contract practice to decide which features actually need drawing-level controls." }],
+          "sources": [{ "title": "Quote parts with attached drawings", "url": "https://www.fictiv.com/help/getting-a-quote/how-to-get-parts-quoted-with-attached-drawings", "publisher": "Fictiv", "kind": "official-documentation", "accessedAt": "2026-07-17" }],
+          "contributors": [{ "id": "possible-foundation", "name": "Possible founding contributors" }],
+          "reviewedAt": "2026-07-17",
+          "confidence": "high",
+          "reviewIntervalDays": 120
+        }
+      ],
+      "relationships": [
+        { "type": "hierarchy", "target": "manufacturing/custom-parts", "description": "Drawings supplement geometry in custom-part packages." },
+        { "type": "relevance", "target": "manufacturing/practices/tolerance-contract", "description": "Feature tolerances and datums are communicated through the drawing." },
+        { "type": "relevance", "target": "manufacturing/tools/step", "description": "A manufacturing drawing commonly accompanies a neutral solid model." }
+      ],
+      "practice": {
+        "outputs": ["Revision-matched manufacturing drawing with critical feature controls and notes"],
+        "checks": ["Drawing revision, units, model revision, and inspection expectations agree"]
+      }
+    },
+    {
+      "id": "manufacturing/practices/dfm-preflight",
+      "type": "practice",
+      "domain": "manufacturing",
+      "title": "Design-for-manufacturing preflight",
+      "summary": "A process- and provider-specific review of inaccessible geometry, fragile or unsupported features, material assumptions, file setup, and known capability limits before external upload.",
+      "tags": ["dfm", "preflight", "geometry", "provider-constraints"],
+      "recommendations": [
+        {
+          "statement": "Run a local process-specific DFM preflight before proprietary upload, then treat provider feedback as new evidence rather than automatic permission to change function.",
+          "applicability": ["A process and provider shortlist exists", "Geometry or feature choices may violate fabrication constraints"],
+          "counterconditions": ["No external fabrication handoff is planned and the design remains a conceptual model"],
+          "alternatives": [{ "nodeId": "manufacturing/practices/process-selection", "reason": "Return to process selection when DFM failures indicate the chosen process is structurally mismatched." }],
+          "sources": [{ "title": "Design for machining toolkit", "url": "https://www.protolabs.com/resources/design-for-machining-toolkit/", "publisher": "Protolabs", "kind": "official-documentation", "accessedAt": "2026-07-17" }],
+          "contributors": [{ "id": "possible-foundation", "name": "Possible founding contributors" }],
+          "reviewedAt": "2026-07-17",
+          "confidence": "high",
+          "reviewIntervalDays": 90
+        }
+      ],
+      "relationships": [
+        { "type": "hierarchy", "target": "manufacturing/custom-parts", "description": "DFM preflight protects the custom-part handoff." },
+        { "type": "relevance", "target": "manufacturing/practices/process-selection", "description": "Preflight criteria depend on the selected manufacturing process." }
+      ],
+      "practice": {
+        "outputs": ["A local DFM report with blocking issues, assumptions, and unresolved provider checks"],
+        "checks": ["Any functional material or geometry change remains captain-approved and revisioned"]
+      }
+    },
+    {
+      "id": "manufacturing/practices/tolerance-contract",
+      "type": "practice",
+      "domain": "manufacturing",
+      "title": "Tolerance contract",
+      "summary": "A feature-level agreement that ties acceptance limits to function, datum strategy, process, provider, material, stock or thickness, and an achievable inspection method.",
+      "tags": ["tolerance", "gdandt", "critical-features", "process-specific"],
+      "recommendations": [
+        {
+          "statement": "Specify tolerances only for functionally critical features and scope every capability claim by provider, process, material, thickness or stock, feature, and inspection method.",
+          "applicability": ["Fit, alignment, motion, sealing, or load transfer depends on dimensional variation", "The chosen provider can review or quote explicit tolerances"],
+          "counterconditions": ["A universal tolerance copied across processes would replace feature-level engineering judgment"],
+          "alternatives": [{ "nodeId": "manufacturing/practices/manufacturing-drawing", "reason": "Use the manufacturing drawing to communicate the resulting feature controls and datum scheme." }],
+          "sources": [
+            { "title": "ASME Y14.5 dimensioning and tolerancing overview", "url": "https://www.asme.org/learning-development/find-course/essentials-y14-5-dimensioning-tolerancing/self-study", "publisher": "ASME", "kind": "official-standard", "accessedAt": "2026-07-17" },
+            { "title": "SendCutSend cut tolerance guidance", "url": "https://sendcutsend.com/faq/what-is-your-cut-tolerance/", "publisher": "SendCutSend", "kind": "official-documentation", "accessedAt": "2026-07-17" }
+          ],
+          "contributors": [{ "id": "possible-foundation", "name": "Possible founding contributors" }],
+          "reviewedAt": "2026-07-17",
+          "confidence": "high",
+          "reviewIntervalDays": 90
+        }
+      ],
+      "relationships": [
+        { "type": "hierarchy", "target": "manufacturing/custom-parts", "description": "Tolerance contracts define custom-part acceptance boundaries." },
+        { "type": "relevance", "target": "manufacturing/practices/inspection-plan", "description": "Specified tolerances need an achievable inspection method." }
+      ],
+      "practice": {
+        "outputs": ["A list of critical-to-quality features with scoped tolerances, datums, and rationale"],
+        "checks": ["Each tolerance maps to function and a named inspection method instead of a universal default"]
+      }
+    },
+    {
+      "id": "manufacturing/practices/inspection-plan",
+      "type": "practice",
+      "domain": "manufacturing",
+      "title": "Inspection plan",
+      "summary": "A pre-quote definition of critical-to-quality features, measurement methods, sample expectations, evidence, and acceptance decisions, distinct from generic provider inspection language.",
+      "tags": ["inspection", "ctq", "measurement", "acceptance"],
+      "recommendations": [
+        {
+          "statement": "Define critical-to-quality features and evidence before quoting; do not treat standard inspection as equivalent to CMM, FAI, PPAP, or a custom report.",
+          "applicability": ["The part has measurable functional acceptance criteria", "Provider inspection options affect quote or process selection"],
+          "counterconditions": ["The artifact is a nonfunctional visual sample with no dimensional acceptance claim"],
+          "alternatives": [{ "nodeId": "manufacturing/practices/tolerance-contract", "reason": "Return to the tolerance contract if critical features and acceptance limits are not yet defined." }],
+          "sources": [{ "title": "Protolabs inspection reports", "url": "https://www.protolabs.com/inspection-reports/", "publisher": "Protolabs", "kind": "official-capability", "accessedAt": "2026-07-17" }],
+          "contributors": [{ "id": "possible-foundation", "name": "Possible founding contributors" }],
+          "reviewedAt": "2026-07-17",
+          "confidence": "high",
+          "reviewIntervalDays": 90
+        }
+      ],
+      "relationships": [
+        { "type": "hierarchy", "target": "manufacturing/custom-parts", "description": "Inspection planning defines evidence for custom-part acceptance." },
+        { "type": "relevance", "target": "manufacturing/providers/protolabs", "description": "Provider-specific inspection options require a live capability check." }
+      ],
+      "practice": {
+        "outputs": ["Critical feature list, measurement method, sampling expectation, evidence, and acceptance owner"],
+        "checks": ["Named inspection service and evidence are confirmed live before purchase or fabrication"]
+      }
+    },
+    {
+      "id": "manufacturing/practices/manufacturing-package",
+      "type": "practice",
+      "domain": "manufacturing",
+      "title": "Revisioned manufacturing package",
+      "summary": "A traceable bundle containing the native-model revision, process-appropriate exports, drawing, material and finish intent, DFM receipt, inspection plan, and handoff record.",
+      "tags": ["package", "revision", "handoff", "traceability"],
+      "recommendations": [
+        {
+          "statement": "Create one revisioned package for each provider handoff so geometry, drawings, requirements, approvals, quote feedback, and inspection expectations cannot silently diverge.",
+          "applicability": ["Files will leave the local workspace for quote or fabrication", "More than one artifact communicates the part definition"],
+          "counterconditions": ["No external handoff or fabrication claim exists yet"],
+          "alternatives": [{ "nodeId": "manufacturing/practices/parametric-cad", "reason": "Return to the parametric master when package artifacts cannot be traced to one source revision." }],
+          "sources": [{ "title": "Procedure for Product Data Exchange Using STEP", "url": "https://tsapps.nist.gov/publication/get_pdf.cfm?pub_id=821480", "publisher": "NIST", "kind": "government-reference", "accessedAt": "2026-07-17" }],
+          "contributors": [{ "id": "possible-foundation", "name": "Possible founding contributors" }],
+          "reviewedAt": "2026-07-17",
+          "confidence": "high",
+          "reviewIntervalDays": 120
+        }
+      ],
+      "relationships": [
+        { "type": "hierarchy", "target": "manufacturing/custom-parts", "description": "The package is the controlled custom-part handoff artifact." },
+        { "type": "relevance", "target": "manufacturing/practices/manufacturing-drawing", "description": "The revision-matched drawing belongs in the package when required." },
+        { "type": "relevance", "target": "manufacturing/practices/inspection-plan", "description": "The inspection plan belongs in the provider handoff package." }
+      ],
+      "practice": {
+        "outputs": ["Immutable handoff bundle and manifest identifying source revision, exports, requirements, and approvals"],
+        "checks": ["Every file, quote response, and inspection expectation names the same package revision"]
+      }
+    }
+  ]
+}

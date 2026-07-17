@@ -1,0 +1,106 @@
+{
+  "$schema": "../../schema/knowledge-collection.schema.json",
+  "branch": "manufacturing",
+  "nodes": [
+    {
+      "id": "manufacturing",
+      "type": "topic",
+      "domain": "manufacturing",
+      "title": "Manufacturing",
+      "summary": "Operational knowledge for turning controlled design intent into process-appropriate files, provider shortlists, approval-gated handoffs, fabricated parts, and inspection evidence.",
+      "tags": ["fabrication", "cad", "process", "inspection"],
+      "recommendations": [
+        {
+          "statement": "Start in Manufacturing when the outcome includes a fabricated part, and preserve a traceable chain from native design through process-specific artifacts to inspection.",
+          "applicability": ["The requested outcome includes one or more physical custom parts", "A manufacturing provider or local fabrication process will consume exported artifacts"],
+          "counterconditions": ["The outcome is wholly digital and never produces a physical component"],
+          "alternatives": [{ "nodeId": "web", "reason": "Use the Web branch when the deliverable is a browser experience rather than a physical part." }],
+          "sources": [{ "title": "Procedure for Product Data Exchange Using STEP", "url": "https://tsapps.nist.gov/publication/get_pdf.cfm?pub_id=821480", "publisher": "NIST", "kind": "government-reference", "accessedAt": "2026-07-17" }],
+          "contributors": [{ "id": "possible-foundation", "name": "Possible founding contributors" }],
+          "reviewedAt": "2026-07-17",
+          "confidence": "high",
+          "reviewIntervalDays": 180
+        }
+      ],
+      "relationships": [{ "type": "relevance", "target": "web", "description": "Web interfaces often initiate or monitor custom-part workflows." }]
+    },
+    {
+      "id": "manufacturing/custom-parts",
+      "type": "topic",
+      "domain": "manufacturing",
+      "title": "Custom manufactured parts",
+      "summary": "One-off or low-volume physical components whose geometry, material, process, tolerances, drawings, provider constraints, and inspection plan must agree before fabrication.",
+      "tags": ["custom-parts", "prototype", "fabrication", "quote"],
+      "recommendations": [
+        {
+          "statement": "Treat a custom part as a controlled manufacturing package, not merely a mesh upload: preserve native design, select the process, export revisioned files, and define critical checks.",
+          "applicability": ["A custom geometry will be quoted or fabricated", "Fit, function, material, or inspection matters to acceptance"],
+          "counterconditions": ["A catalog component already satisfies the requirement without custom fabrication"],
+          "alternatives": [{ "nodeId": "manufacturing/outcomes/motor-brackets", "reason": "Use the motor-bracket outcome branch when mount interfaces and loading define the custom part." }],
+          "sources": [{ "title": "Take CAD files from design to production", "url": "https://sendcutsend.com/blog/take-your-cad-files-from-design-to-production/", "publisher": "SendCutSend", "kind": "official-documentation", "accessedAt": "2026-07-17" }],
+          "contributors": [{ "id": "possible-foundation", "name": "Possible founding contributors" }],
+          "reviewedAt": "2026-07-17",
+          "confidence": "high",
+          "reviewIntervalDays": 90
+        }
+      ],
+      "relationships": [
+        { "type": "hierarchy", "target": "manufacturing", "description": "Custom parts are a primary branch of manufacturing knowledge." },
+        { "type": "relevance", "target": "manufacturing/practices/process-selection", "description": "Part requirements must be mapped to a viable manufacturing process." }
+      ]
+    },
+    {
+      "id": "manufacturing/outcomes/motor-brackets",
+      "type": "topic",
+      "domain": "manufacturing",
+      "title": "Custom motor brackets",
+      "summary": "Structural interface parts that locate and restrain a motor while respecting mounting geometry, loads, clearances, fasteners, material behavior, fabrication access, and inspection needs.",
+      "tags": ["motor-bracket", "mounting", "robotics", "structural-part"],
+      "recommendations": [
+        {
+          "statement": "Define motor interface geometry, load cases, clearances, fasteners, environment, and critical dimensions before choosing a bracket process or generating fabrication files.",
+          "applicability": ["A motor must be mounted in a custom assembly", "Fit and structural behavior affect the mechanism outcome"],
+          "counterconditions": ["A validated catalog bracket already fits the motor, structure, loads, and environment"],
+          "alternatives": [{ "nodeId": "manufacturing/custom-parts", "reason": "Use the general custom-part route when the component is not specifically a motor mounting interface." }],
+          "sources": [{ "title": "ASME Y14.5 dimensioning and tolerancing overview", "url": "https://www.asme.org/learning-development/find-course/essentials-y14-5-dimensioning-tolerancing/self-study", "publisher": "ASME", "kind": "official-standard", "accessedAt": "2026-07-17" }],
+          "contributors": [{ "id": "possible-foundation", "name": "Possible founding contributors" }],
+          "reviewedAt": "2026-07-17",
+          "confidence": "medium",
+          "reviewIntervalDays": 120
+        }
+      ],
+      "relationships": [
+        { "type": "hierarchy", "target": "manufacturing/custom-parts", "description": "Motor brackets are a constrained custom-part outcome." },
+        { "type": "relevance", "target": "manufacturing/practices/parametric-cad", "description": "Parametric interfaces make bracket variants and revisions reproducible." },
+        { "type": "relevance", "target": "manufacturing/tools/mujoco", "description": "Robot mechanism simulations can expose motion and load assumptions before fabrication." }
+      ]
+    },
+    {
+      "id": "manufacturing/outcomes/robot-arms",
+      "type": "topic",
+      "domain": "manufacturing",
+      "title": "Robotic arms",
+      "summary": "Articulated robotic arm outcomes combining work-envelope and payload requirements, mechanism architecture, actuators, parametric CAD, simulation, fabrication, controls, calibration, safety, and physical tests.",
+      "tags": ["robotic-arm", "robotics", "manipulator", "mechanism"],
+      "recommendations": [
+        {
+          "statement": "Start a robotic arm from measurable payload, reach, repeatability, environment, budget, and manufacturing constraints, then reuse verified CAD, simulation, and custom-part knowledge instead of rediscovering each discipline.",
+          "applicability": ["The outcome is an articulated manipulator or robot arm", "Mechanical design, simulation, fabrication, and physical verification must connect"],
+          "counterconditions": ["A qualified commercial arm already satisfies the outcome and custom mechanism development is unnecessary"],
+          "alternatives": [{ "nodeId": "manufacturing/outcomes/motor-brackets", "reason": "Use the narrower motor-bracket route when only one mounting interface is being designed." }],
+          "sources": [{ "title": "MuJoCo overview", "url": "https://mujoco.readthedocs.io/en/stable/overview.html", "publisher": "Google DeepMind", "kind": "official-project-docs", "accessedAt": "2026-07-17" }],
+          "contributors": [{ "id": "possible-foundation", "name": "Possible founding contributors" }],
+          "reviewedAt": "2026-07-17",
+          "confidence": "medium",
+          "reviewIntervalDays": 90
+        }
+      ],
+      "relationships": [
+        { "type": "hierarchy", "target": "manufacturing/custom-parts", "description": "Robotic arms compose multiple custom parts and purchased components." },
+        { "type": "relevance", "target": "manufacturing/tools/mujoco", "description": "MuJoCo can test articulated dynamics and control assumptions before fabrication." },
+        { "type": "relevance", "target": "manufacturing/practices/parametric-cad", "description": "Parametric CAD preserves interfaces and design variants across the mechanism." },
+        { "type": "relevance", "target": "manufacturing/outcomes/motor-brackets", "description": "Motor mounting interfaces are reusable subproblems within a robotic arm." }
+      ]
+    }
+  ]
+}

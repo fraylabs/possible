@@ -1,0 +1,35 @@
+{
+  "name": "@possible/mcp",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "description": "Read-only MCP projection of Possible operational knowledge",
+  "bin": {
+    "possible-mcp": "./dist/stdio.js"
+  },
+  "exports": {
+    ".": "./dist/index.js",
+    "./http": "./dist/http.js",
+    "./stdio": "./dist/stdio.js"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsx src/stdio.ts",
+    "dev:http": "tsx src/http.ts",
+    "test": "tsc -p tsconfig.test.json && node --import tsx --test test/*.test.ts"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "1.29.0",
+    "@possible/knowledge": "0.1.0",
+    "zod": "4.4.3"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^24.10.1",
+    "tsx": "4.23.1",
+    "typescript": "^5.9.3"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

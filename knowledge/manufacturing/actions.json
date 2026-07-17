@@ -1,0 +1,108 @@
+{
+  "$schema": "../../schema/knowledge-collection.schema.json",
+  "branch": "manufacturing",
+  "nodes": [
+    {
+      "id": "manufacturing/actions/request-sendcutsend-quote",
+      "type": "action",
+      "domain": "manufacturing",
+      "title": "Request a SendCutSend quote",
+      "summary": "An approval-gated handoff of a revisioned manufacturing package to SendCutSend for live process configuration and pricing, without authorizing payment, order, or fabrication.",
+      "tags": ["quote", "sendcutsend", "upload", "captain-approval"],
+      "recommendations": [
+        {
+          "statement": "Upload to SendCutSend only after local preflight and explicit approval of the files, intellectual-property exposure, account, and quote request; stop before ordering.",
+          "applicability": ["SendCutSend remains on the live provider shortlist", "A revisioned accepted-format package has passed local DFM preflight"],
+          "counterconditions": ["The selected file, process, material, feature, destination, or tolerance conditions are not confirmed live"],
+          "alternatives": [{ "nodeId": "manufacturing/actions/request-protolabs-quote", "reason": "Use the Protolabs quote path when its live service and file support fit the package better." }],
+          "sources": [{ "title": "SendCutSend getting started", "url": "https://sendcutsend.com/guidelines/getting-started/", "publisher": "SendCutSend", "kind": "official-capability", "accessedAt": "2026-07-17" }],
+          "contributors": [{ "id": "possible-foundation", "name": "Possible founding contributors" }],
+          "reviewedAt": "2026-07-17",
+          "confidence": "high",
+          "reviewIntervalDays": 30
+        }
+      ],
+      "relationships": [
+        { "type": "hierarchy", "target": "manufacturing/custom-parts", "description": "A quote request is an external custom-part handoff action." },
+        { "type": "invocation", "target": "manufacturing/providers/sendcutsend", "description": "The action uploads the approved package into SendCutSend's web quote flow." },
+        { "type": "relevance", "target": "manufacturing/practices/manufacturing-package", "description": "The approved revisioned package is the handoff input." }
+      ],
+      "action": {
+        "access": "external-approval",
+        "providerId": "manufacturing/providers/sendcutsend",
+        "requiresApproval": true,
+        "approvalReason": "The upload discloses proprietary design files and creates account-bound external quote state.",
+        "steps": ["Live-check accepted files and process, material, thickness, feature, tolerance, and destination constraints", "Present the exact revisioned package and intellectual-property exposure for captain approval", "Upload only the approved package and configure a quote without ordering", "Return the quote, advisories, assumptions, and package revision for review"],
+        "produces": ["Live quote receipt", "Provider advisories", "Handoff audit record"]
+      }
+    },
+    {
+      "id": "manufacturing/actions/request-protolabs-quote",
+      "type": "action",
+      "domain": "manufacturing",
+      "title": "Request a Protolabs quote",
+      "summary": "An approval-gated upload of a revisioned model and drawing package to Protolabs for current DFM feedback and quote configuration, stopping before payment or fabrication.",
+      "tags": ["quote", "protolabs", "dfm", "captain-approval"],
+      "recommendations": [
+        {
+          "statement": "Request a Protolabs quote only after live process and file checks plus captain approval of proprietary upload; review DFM feedback before accepting functional changes.",
+          "applicability": ["Protolabs remains on the live process-specific shortlist", "A revisioned model, drawing, and inspection intent are ready"],
+          "counterconditions": ["The route assumes live material, inspection, tolerance, facility, or geography support that has not been confirmed"],
+          "alternatives": [{ "nodeId": "manufacturing/actions/request-xometry-quote", "reason": "Use the Xometry quote path when its live process and supplier route fits better." }],
+          "sources": [{ "title": "Protolabs services", "url": "https://www.protolabs.com/services/", "publisher": "Protolabs", "kind": "official-capability", "accessedAt": "2026-07-17" }],
+          "contributors": [{ "id": "possible-foundation", "name": "Possible founding contributors" }],
+          "reviewedAt": "2026-07-17",
+          "confidence": "high",
+          "reviewIntervalDays": 30
+        }
+      ],
+      "relationships": [
+        { "type": "hierarchy", "target": "manufacturing/custom-parts", "description": "A quote request is an external custom-part handoff action." },
+        { "type": "invocation", "target": "manufacturing/providers/protolabs", "description": "The action invokes Protolabs' approved web quote flow." },
+        { "type": "relevance", "target": "manufacturing/practices/inspection-plan", "description": "Inspection requirements must be selected and confirmed during quote review." }
+      ],
+      "action": {
+        "access": "external-approval",
+        "providerId": "manufacturing/providers/protolabs",
+        "requiresApproval": true,
+        "approvalReason": "The upload discloses proprietary design files and creates external DFM and quote state.",
+        "steps": ["Live-check process, file, material, facility, inspection, tolerance, and destination constraints", "Present the exact package and external disclosure for captain approval", "Upload only the approved revision and request DFM plus quote without ordering", "Return feedback, quote assumptions, inspection options, and revision identity"],
+        "produces": ["Live quote receipt", "DFM feedback", "Handoff audit record"]
+      }
+    },
+    {
+      "id": "manufacturing/actions/request-xometry-quote",
+      "type": "action",
+      "domain": "manufacturing",
+      "title": "Request a Xometry quote",
+      "summary": "An approval-gated handoff of process-compatible CAD and drawings to Xometry's web quote flow, capturing live supplier assumptions without authorizing an order or fabrication.",
+      "tags": ["quote", "xometry", "supplier-network", "captain-approval"],
+      "recommendations": [
+        {
+          "statement": "Request a Xometry quote only after process-specific format checks and captain approval of proprietary upload, then preserve supplier and quote assumptions with the package revision.",
+          "applicability": ["Xometry remains on the live process-specific shortlist", "The package uses a currently accepted format and includes required drawings"],
+          "counterconditions": ["Supplier, process, inspection, material, geography, or API assumptions have not been verified live"],
+          "alternatives": [{ "nodeId": "manufacturing/actions/request-protolabs-quote", "reason": "Use Protolabs when its current service, DFM, and inspection path fits better." }],
+          "sources": [{ "title": "Xometry capabilities", "url": "https://www.xometry.com/capabilities/", "publisher": "Xometry", "kind": "official-capability", "accessedAt": "2026-07-17" }],
+          "contributors": [{ "id": "possible-foundation", "name": "Possible founding contributors" }],
+          "reviewedAt": "2026-07-17",
+          "confidence": "high",
+          "reviewIntervalDays": 30
+        }
+      ],
+      "relationships": [
+        { "type": "hierarchy", "target": "manufacturing/custom-parts", "description": "A quote request is an external custom-part handoff action." },
+        { "type": "invocation", "target": "manufacturing/providers/xometry", "description": "The action invokes Xometry's approved web quote flow." },
+        { "type": "relevance", "target": "manufacturing/practices/manufacturing-package", "description": "The package revision anchors quote and supplier assumptions." }
+      ],
+      "action": {
+        "access": "external-approval",
+        "providerId": "manufacturing/providers/xometry",
+        "requiresApproval": true,
+        "approvalReason": "The upload discloses proprietary design files and creates external supplier-network quote state.",
+        "steps": ["Live-check process, accepted format, material, inspection, supplier, geography, and destination conditions", "Present the exact package and disclosure for captain approval", "Upload only the approved revision and configure a quote without ordering", "Return quote, supplier assumptions, DFM feedback, and package revision"],
+        "produces": ["Live quote receipt", "Supplier and DFM assumptions", "Handoff audit record"]
+      }
+    }
+  ]
+}

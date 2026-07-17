@@ -1,0 +1,362 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://possible.sh/schema/knowledge-collection.schema.json",
+  "title": "Possible knowledge collection",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["branch", "nodes"],
+  "properties": {
+    "$schema": { "type": "string", "format": "uri-reference" },
+    "branch": { "enum": ["web", "manufacturing"] },
+    "nodes": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/node" }
+    }
+  },
+  "$defs": {
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["title", "url", "publisher", "kind", "accessedAt"],
+      "properties": {
+        "title": { "type": "string", "minLength": 3 },
+        "url": { "type": "string", "format": "uri", "pattern": "^https://" },
+        "publisher": { "type": "string", "minLength": 2 },
+        "kind": {
+          "enum": [
+            "official-documentation",
+            "official-project-docs",
+            "official-capability",
+            "official-standard",
+            "government-reference"
+          ]
+        },
+        "accessedAt": { "type": "string", "format": "date" }
+      }
+    },
+    "contributor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+        "name": { "type": "string", "minLength": 2 },
+        "url": { "type": "string", "format": "uri", "pattern": "^https://" }
+      }
+    },
+    "alternative": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["nodeId", "reason"],
+      "properties": {
+        "nodeId": { "$ref": "#/$defs/nodeId" },
+        "reason": { "type": "string", "minLength": 20 }
+      }
+    },
+    "recommendation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "statement",
+        "applicability",
+        "counterconditions",
+        "alternatives",
+        "sources",
+        "contributors",
+        "reviewedAt",
+        "confidence",
+        "reviewIntervalDays"
+      ],
+      "properties": {
+        "statement": { "type": "string", "minLength": 40 },
+        "applicability": {
+          "type": "array",
+          "minItems": 2,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 12 }
+        },
+        "counterconditions": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 12 }
+        },
+        "alternatives": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/alternative" }
+        },
+        "sources": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/source" }
+        },
+        "contributors": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/contributor" }
+        },
+        "reviewedAt": { "type": "string", "format": "date" },
+        "confidence": { "enum": ["low", "medium", "high"] },
+        "reviewIntervalDays": { "type": "integer", "minimum": 1, "maximum": 365 }
+      }
+    },
+    "relationship": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "target", "description"],
+      "properties": {
+        "type": {
+          "enum": [
+            "hierarchy",
+            "relevance",
+            "compatibility",
+            "alternatives",
+            "support",
+            "invocation"
+          ]
+        },
+        "target": { "$ref": "#/$defs/nodeId" },
+        "description": { "type": "string", "minLength": 12 }
+      }
+    },
+    "providerCapability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["key", "label", "category", "description", "status"],
+      "properties": {
+        "key": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+        "label": { "type": "string", "minLength": 3 },
+        "category": { "type": "string", "minLength": 3 },
+        "description": { "type": "string", "minLength": 40 },
+        "status": { "enum": ["supported", "unknown"] },
+        "accepts": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 2 }
+        },
+        "outputs": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 2 }
+        },
+        "source": { "$ref": "#/$defs/source" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "status": { "const": "supported" } } },
+          "then": { "required": ["source"] }
+        }
+      ]
+    },
+    "providerUnknown": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["field", "statement"],
+      "properties": {
+        "field": { "type": "string", "minLength": 3 },
+        "statement": { "type": "string", "minLength": 30 }
+      }
+    },
+    "providerConstraint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["statement", "source"],
+      "properties": {
+        "statement": { "type": "string", "minLength": 30 },
+        "source": { "$ref": "#/$defs/source" }
+      }
+    },
+    "providerHandoff": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "channel",
+        "purpose",
+        "authRequired",
+        "externalEffect",
+        "approvalRequired",
+        "source"
+      ],
+      "properties": {
+        "channel": { "enum": ["website", "cli", "git-integration", "api"] },
+        "purpose": { "type": "string", "minLength": 20 },
+        "authRequired": { "type": "boolean" },
+        "externalEffect": { "type": "boolean" },
+        "approvalRequired": { "type": "boolean" },
+        "source": { "$ref": "#/$defs/source" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "externalEffect": { "const": true } } },
+          "then": { "properties": { "approvalRequired": { "const": true } } }
+        }
+      ]
+    },
+    "provider": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "officialUrl",
+        "checkedAt",
+        "liveCheckRequired",
+        "capabilities",
+        "knownConstraints",
+        "handoffs",
+        "unknowns"
+      ],
+      "properties": {
+        "officialUrl": { "type": "string", "format": "uri", "pattern": "^https://" },
+        "checkedAt": { "type": "string", "format": "date" },
+        "liveCheckRequired": { "const": true },
+        "capabilities": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/providerCapability" }
+        },
+        "knownConstraints": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/providerConstraint" }
+        },
+        "handoffs": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/providerHandoff" }
+        },
+        "unknowns": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/providerUnknown" }
+        }
+      }
+    },
+    "tool": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["officialUrl", "categories"],
+      "properties": {
+        "officialUrl": { "type": "string", "format": "uri", "pattern": "^https://" },
+        "categories": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 2 }
+        }
+      }
+    },
+    "practice": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["outputs", "checks"],
+      "properties": {
+        "outputs": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 8 }
+        },
+        "checks": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 8 }
+        }
+      }
+    },
+    "action": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["access", "requiresApproval", "steps", "produces"],
+      "properties": {
+        "access": { "enum": ["informational", "read-only", "external-approval"] },
+        "providerId": { "$ref": "#/$defs/nodeId" },
+        "requiresApproval": { "type": "boolean" },
+        "approvalReason": { "type": "string", "minLength": 20 },
+        "steps": {
+          "type": "array",
+          "minItems": 2,
+          "items": { "type": "string", "minLength": 10 }
+        },
+        "produces": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 5 }
+        }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "access": { "const": "external-approval" } } },
+          "then": {
+            "required": ["providerId", "approvalReason"],
+            "properties": { "requiresApproval": { "const": true } }
+          }
+        }
+      ]
+    },
+    "nodeId": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:[/-][a-z0-9]+)*$"
+    },
+    "node": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "type",
+        "domain",
+        "title",
+        "summary",
+        "tags",
+        "recommendations",
+        "relationships"
+      ],
+      "properties": {
+        "id": { "$ref": "#/$defs/nodeId" },
+        "type": { "enum": ["topic", "practice", "tool", "provider", "action"] },
+        "domain": { "enum": ["web", "manufacturing"] },
+        "title": { "type": "string", "minLength": 3 },
+        "summary": { "type": "string", "minLength": 60 },
+        "tags": {
+          "type": "array",
+          "minItems": 2,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 2 }
+        },
+        "recommendations": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/recommendation" }
+        },
+        "relationships": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/relationship" }
+        },
+        "provider": { "$ref": "#/$defs/provider" },
+        "tool": { "$ref": "#/$defs/tool" },
+        "practice": { "$ref": "#/$defs/practice" },
+        "action": { "$ref": "#/$defs/action" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "type": { "const": "provider" } } },
+          "then": { "required": ["provider"] }
+        },
+        {
+          "if": { "properties": { "type": { "const": "tool" } } },
+          "then": { "required": ["tool"] }
+        },
+        {
+          "if": { "properties": { "type": { "const": "practice" } } },
+          "then": { "required": ["practice"] }
+        },
+        {
+          "if": { "properties": { "type": { "const": "action" } } },
+          "then": { "required": ["action"] }
+        }
+      ]
+    }
+  }
+}

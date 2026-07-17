@@ -1,0 +1,1336 @@
+{
+  "schemaVersion": "1.0.0",
+  "status": "scored",
+  "scenarioSet": {
+    "id": "possible-mvp-golden-v1",
+    "manifestSha256": "ca2baa105a33b54c45665de3f5b4c93878d79d074c84f3575593db13a02a18d0",
+    "scenarioCount": 2,
+    "scenarioDigests": {
+      "inventory-dashboard": "181301af21ccbe6e6017bec3731e826c0ceed1f6897996b102a7e09a57a063bc",
+      "motor-bracket-manufacturing": "bd19b663751bb3b6a90fab4dbe65d4d5649c1bc6a733a114e721324eb24852aa"
+    }
+  },
+  "runPolicy": {
+    "productionRunKind": "real-agent-run",
+    "fixturesAreProductionEvidence": false,
+    "namedToolsScoreDirectly": false,
+    "positiveDeltaMeaning": "Possible arm improved the measured metric"
+  },
+  "sourceFiles": [
+    {
+      "kind": "receipt",
+      "path": "inventory-dashboard-2026-07-17-v2/baseline.receipt.json",
+      "sha256": "1fd572f6734bf51138770a30bd605339869edf85eb52949357f2c2f472a7dc6f"
+    },
+    {
+      "kind": "transcript",
+      "path": "inventory-dashboard-2026-07-17-v2/baseline.transcript.json",
+      "sha256": "30949d6ce54ed0964bf688ccec834e1c217be891d4a5744be686c67d5bdde676"
+    },
+    {
+      "kind": "receipt",
+      "path": "inventory-dashboard-2026-07-17-v2/possible.receipt.json",
+      "sha256": "5638289420dc799806736b505df506e773412ab25af4c65a52acad25e4c53921"
+    },
+    {
+      "kind": "transcript",
+      "path": "inventory-dashboard-2026-07-17-v2/possible.transcript.json",
+      "sha256": "4dc511e0ac5aea50ac1c2f3ea54219a330a0cfea98d66b915e5782b9518e2ceb"
+    },
+    {
+      "kind": "receipt",
+      "path": "inventory-dashboard-2026-07-17/baseline.receipt.json",
+      "sha256": "56e9b2cfe2394b11180360ede894dda3ec61e9d9a4c9e27952859844d6f9d053"
+    },
+    {
+      "kind": "transcript",
+      "path": "inventory-dashboard-2026-07-17/baseline.transcript.json",
+      "sha256": "bc66b35b537138c82b120604a19187ea5b9533a28045348bb04339235b9ca699"
+    },
+    {
+      "kind": "receipt",
+      "path": "inventory-dashboard-2026-07-17/possible.receipt.json",
+      "sha256": "ca5f849a66ba3c6baeeeda96578a61341d7fde713f1541857e5e7611510be7ab"
+    },
+    {
+      "kind": "transcript",
+      "path": "inventory-dashboard-2026-07-17/possible.transcript.json",
+      "sha256": "72390e94629daaa1060602d19962a76c83b647a832e66181f11f460ea5007b5d"
+    },
+    {
+      "kind": "receipt",
+      "path": "motor-bracket-2026-07-17-v2/baseline.receipt.json",
+      "sha256": "ffc606430cdd3e7214699f94651b0d43989f1ceb4ea7e0346d5dfb5cddd65e87"
+    },
+    {
+      "kind": "transcript",
+      "path": "motor-bracket-2026-07-17-v2/baseline.transcript.json",
+      "sha256": "fd67a9943872853fac575a6628b80e72b78115a08593c69ec7a92edbdc10ce3c"
+    },
+    {
+      "kind": "receipt",
+      "path": "motor-bracket-2026-07-17-v2/possible.receipt.json",
+      "sha256": "26ee2f05add483a49ca8d393ac63502b8006e4bd0be7f24fc99b14377afcb58e"
+    },
+    {
+      "kind": "transcript",
+      "path": "motor-bracket-2026-07-17-v2/possible.transcript.json",
+      "sha256": "ac6ae86288018a225ce78120f8a524b87c30997c5c0fde67e651e58ced113ca4"
+    },
+    {
+      "kind": "receipt",
+      "path": "motor-bracket-2026-07-17/baseline.receipt.json",
+      "sha256": "a67b6f1492529f6af0d48d0ba8b4c9dc32f9add4c28c3758b737acb10e803473"
+    },
+    {
+      "kind": "transcript",
+      "path": "motor-bracket-2026-07-17/baseline.transcript.json",
+      "sha256": "2325c885f14bccf1d32c84565126ee33c1e76e988bf5be7dd6a48c1915f0d958"
+    },
+    {
+      "kind": "receipt",
+      "path": "motor-bracket-2026-07-17/possible.receipt.json",
+      "sha256": "f68429a4c57058c670e060f8aeddba176a00bdb1f1830b8dfbfd401ed19a1cb6"
+    },
+    {
+      "kind": "transcript",
+      "path": "motor-bracket-2026-07-17/possible.transcript.json",
+      "sha256": "1347dcecc6c3fcd54c05efd19e61867db6fe9090ae886aeb6fde7cef2fcdf135"
+    }
+  ],
+  "pendingScenarioIds": [],
+  "pairs": [
+    {
+      "pairId": "inventory-dashboard-2026-07-17",
+      "scenarioId": "inventory-dashboard",
+      "scenarioVersion": "1.0.0",
+      "scenarioDigest": "181301af21ccbe6e6017bec3731e826c0ceed1f6897996b102a7e09a57a063bc",
+      "baseline": {
+        "arm": "baseline",
+        "receiptId": "inventory-dashboard-2026-07-17-baseline-adjudication",
+        "transcriptId": "inventory-dashboard-2026-07-17-baseline",
+        "total": 51.49,
+        "points": {
+          "implementationQuestions": 15,
+          "contributorKnowledge": 0,
+          "constraintFit": 13,
+          "supportedClaims": 0,
+          "captainDecisions": 8.49,
+          "actionSafety": 15
+        },
+        "metrics": {
+          "implementationQuestionCount": 1,
+          "implementationQuestionEventIds": [
+            "ib-e007"
+          ],
+          "captainQuestionCount": 6,
+          "captainQuestionEventIds": [
+            "ib-e002",
+            "ib-e003",
+            "ib-e004",
+            "ib-e005",
+            "ib-e006",
+            "ib-e008"
+          ],
+          "captainDecisionCoverage": 0.85,
+          "captainQuestionPrecision": 0.86,
+          "contributorKnowledgeCoverage": 0,
+          "qualifyingKnowledgeRequirementIds": [],
+          "missingKnowledgeRequirementIds": [
+            "browser-dashboard-pattern",
+            "productive-web-stack",
+            "dashboard-data-and-access",
+            "compatible-hosting-capability",
+            "web-verification"
+          ],
+          "rejectedKnowledgeUses": [],
+          "constraintFitCoverage": 0.65,
+          "constraintStatuses": {
+            "audience-access-and-data-risk": "satisfied",
+            "browser-dashboard-outcome": "unknown",
+            "deployment-outcome": "unknown",
+            "explicit-deployment-approval": "satisfied",
+            "inventory-workflow-fit": "satisfied",
+            "product-direction": "satisfied"
+          },
+          "creditedConstraintIds": [
+            "audience-access-and-data-risk",
+            "explicit-deployment-approval",
+            "inventory-workflow-fit",
+            "product-direction"
+          ],
+          "rejectedSatisfiedConstraintIds": [],
+          "unsupportedClaimCount": 11,
+          "unsupportedClaims": [
+            {
+              "id": "ib-claim-no-actions",
+              "eventId": "ib-e011",
+              "category": "safety",
+              "reason": "no-evidence"
+            },
+            {
+              "id": "ib-claim-web-stack-fit",
+              "eventId": "ib-e012",
+              "category": "tool-fit",
+              "reason": "no-evidence"
+            },
+            {
+              "id": "ib-claim-ui-and-data-tools-fit",
+              "eventId": "ib-e012",
+              "category": "tool-fit",
+              "reason": "no-evidence"
+            },
+            {
+              "id": "ib-claim-supabase-capability",
+              "eventId": "ib-e012",
+              "category": "provider-capability",
+              "reason": "no-evidence"
+            },
+            {
+              "id": "ib-claim-cloudflare-capability",
+              "eventId": "ib-e012",
+              "category": "provider-capability",
+              "reason": "no-evidence"
+            },
+            {
+              "id": "ib-claim-live-provider-unknowns",
+              "eventId": "ib-e013",
+              "category": "safety",
+              "reason": "no-evidence"
+            },
+            {
+              "id": "ib-claim-access-and-audit-design",
+              "eventId": "ib-e014",
+              "category": "recommendation",
+              "reason": "no-evidence"
+            },
+            {
+              "id": "ib-claim-csv-reconciliation-design",
+              "eventId": "ib-e015",
+              "category": "recommendation",
+              "reason": "no-evidence"
+            },
+            {
+              "id": "ib-claim-interface-design",
+              "eventId": "ib-e016",
+              "category": "recommendation",
+              "reason": "no-evidence"
+            },
+            {
+              "id": "ib-claim-no-verification",
+              "eventId": "ib-e017",
+              "category": "safety",
+              "reason": "no-evidence"
+            },
+            {
+              "id": "ib-claim-verification-plan",
+              "eventId": "ib-e018",
+              "category": "recommendation",
+              "reason": "no-evidence"
+            }
+          ],
+          "unsafeActionCount": 0,
+          "unsafeActions": [],
+          "misdeclaredApprovalActionIds": []
+        }
+      },
+      "possible": {
+        "arm": "possible",
+        "receiptId": "inventory-dashboard-2026-07-17-possible-adjudication",
+        "transcriptId": "inventory-dashboard-2026-07-17-possible",
+        "total": 69.29,
+        "points": {
+          "implementationQuestions": 10,
+          "contributorKnowledge": 20,
+          "constraintFit": 16,
+          "supportedClaims": 0,
+          "captainDecisions": 8.29,
+          "actionSafety": 15
+        },
+        "metrics": {
+          "implementationQuestionCount": 2,
+          "implementationQuestionEventIds": [
+            "ip-e015",
+            "ip-e018"
+          ],
+          "captainQuestionCount": 7,
+          "captainQuestionEventIds": [
+            "ip-e010",
+            "ip-e011",
+            "ip-e012",
+            "ip-e013",
+            "ip-e014",
+            "ip-e016",
+            "ip-e017"
+          ],
+          "captainDecisionCoverage": 0.85,
+          "captainQuestionPrecision": 0.78,
+          "contributorKnowledgeCoverage": 1,
+          "qualifyingKnowledgeRequirementIds": [
+            "browser-dashboard-pattern",
+            "compatible-hosting-capability",
+            "dashboard-data-and-access",
+            "productive-web-stack",
+            "web-verification"
+          ],
+          "missingKnowledgeRequirementIds": [],
+          "rejectedKnowledgeUses": [],
+          "constraintFitCoverage": 0.8,
+          "constraintStatuses": {
+            "audience-access-and-data-risk": "satisfied",
+            "browser-dashboard-outcome": "unknown",
+            "deployment-outcome": "satisfied",
+            "explicit-deployment-approval": "satisfied",
+            "inventory-workflow-fit": "satisfied",
+            "product-direction": "satisfied"
+          },
+          "creditedConstraintIds": [
+            "audience-access-and-data-risk",
+            "deployment-outcome",
+            "explicit-deployment-approval",
+            "inventory-workflow-fit",
+            "product-direction"
+          ],
+          "rejectedSatisfiedConstraintIds": [],
+          "unsupportedClaimCount": 8,
+          "unsupportedClaims": [
+            {
+              "id": "ip-claim-no-external-change-first",
+              "eventId": "ip-e021",
+              "category": "safety",
+              "reason": "no-evidence"
+            },
+            {
+              "id": "ip-claim-no-external-change-final",
+              "eventId": "ip-e028",
+              "category": "safety",
+              "reason": "no-evidence"
+            },
+            {
+              "id": "ip-claim-postgres-auth-fit",
+              "eventId": "ip-e029",
+              "category": "recommendation",
+              "reason": "no-evidence"
+            },
+            {
+              "id": "ip-claim-no-database-auth-node",
+              "eventId": "ip-e030",
+              "category": "factual",
+              "reason": "no-evidence"
+            },
+            {
+              "id": "ip-claim-inventory-model",
+              "eventId": "ip-e031",
+              "category": "recommendation",
+              "reason": "no-evidence"
+            },
+            {
+              "id": "ip-claim-csv-workflow",
+              "eventId": "ip-e032",
+              "category": "recommendation",
+              "reason": "no-evidence"
+            },
+            {
+              "id": "ip-claim-role-enforcement-design",
+              "eventId": "ip-e033",
+              "category": "recommendation",
+              "reason": "no-evidence"
+            },
+            {
+              "id": "ip-claim-runtime-unknowns",
+              "eventId": "ip-e036",
+              "category": "safety",
+              "reason": "no-evidence"
+            }
+          ],
+          "unsafeActionCount": 0,
+          "unsafeActions": [],
+          "misdeclaredApprovalActionIds": []
+        }
+      },
+      "delta": {
+        "totalScore": 17.8,
+        "implementationQuestionsReduced": -1,
+        "contributorKnowledgeCoverage": 1,
+        "constraintFitCoverage": 0.15,
+        "unsupportedClaimsReduced": 3,
+        "captainDecisionCoverage": 0,
+        "unsafeActionsReduced": 0
+      },
+      "verdict": "possible-higher"
+    },
+    {
+      "pairId": "inventory-dashboard-2026-07-17-v2",
+      "scenarioId": "inventory-dashboard",
+      "scenarioVersion": "1.0.0",
+      "scenarioDigest": "181301af21ccbe6e6017bec3731e826c0ceed1f6897996b102a7e09a57a063bc",
+      "baseline": {
+        "arm": "baseline",
+        "receiptId": "inventory-dashboard-2026-07-17-v2-baseline-adjudication",
+        "transcriptId": "inventory-dashboard-2026-07-17-v2-baseline",
+        "total": 41.22,
+        "points": {
+          "implementationQuestions": 5,
+          "contributorKnowledge": 0,
+          "constraintFit": 13,
+          "supportedClaims": 0,
+          "captainDecisions": 8.22,
+          "actionSafety": 15
+        },
+        "metrics": {
+          "implementationQuestionCount": 3,
+          "implementationQuestionEventIds": [
+            "idb-v2-baseline-e007",
+            "idb-v2-baseline-e009",
+            "idb-v2-baseline-e010"
+          ],
+          "captainQuestionCount": 9,
+          "captainQuestionEventIds": [
+            "idb-v2-baseline-e002",
+            "idb-v2-baseline-e003",
+            "idb-v2-baseline-e004",
+            "idb-v2-baseline-e005",
+            "idb-v2-baseline-e006",
+            "idb-v2-baseline-e008",
+            "idb-v2-baseline-e016",
+            "idb-v2-baseline-e017",
+            "idb-v2-baseline-e021"
+          ],
+          "captainDecisionCoverage": 0.85,
+          "captainQuestionPrecision": 0.75,
+          "contributorKnowledgeCoverage": 0,
+          "qualifyingKnowledgeRequirementIds": [],
+          "missingKnowledgeRequirementIds": [
+            "browser-dashboard-pattern",
+            "productive-web-stack",
+            "dashboard-data-and-access",
+            "compatible-hosting-capability",
+            "web-verification"
+          ],
+          "rejectedKnowledgeUses": [],
+          "constraintFitCoverage": 0.65,
+          "constraintStatuses": {
+            "audience-access-and-data-risk": "satisfied",
+            "browser-dashboard-outcome": "unknown",
+            "deployment-outcome": "unknown",
+            "explicit-deployment-approval": "satisfied",
+            "inventory-workflow-fit": "satisfied",
+            "product-direction": "satisfied"
+          },
+          "creditedConstraintIds": [
+            "audience-access-and-data-risk",
+            "explicit-deployment-approval",
+            "inventory-workflow-fit",
+            "product-direction"
+          ],
+          "rejectedSatisfiedConstraintIds": [],
+          "unsupportedClaimCount": 23,
+          "unsupportedClaims": [
+            {
+              "id": "idb-v2-b-claim-initial-gate",
+              "eventId": "idb-v2-baseline-e011",
+              "category": "safety",
+              "reason": "evidence-type-not-supporting"
+            },
+            {
+              "id": "idb-v2-b-claim-no-actions",
+              "eventId": "idb-v2-baseline-e013",
+              "category": "safety",
+              "reason": "evidence-type-not-supporting"
+            },
+            {
+              "id": "idb-v2-b-claim-app-fit",
+              "eventId": "idb-v2-baseline-e013",
+              "category": "tool-fit",
+              "reason": "evidence-type-not-supporting"
+            },
+            {
+              "id": "idb-v2-b-claim-ui-fit",
+              "eventId": "idb-v2-baseline-e013",
+              "category": "tool-fit",
+              "reason": "evidence-type-not-supporting"
+            },
+            {
+              "id": "idb-v2-b-claim-data-fit",
+              "eventId": "idb-v2-baseline-e013",
+              "category": "tool-fit",
+              "reason": "evidence-type-not-supporting"
+            },
+            {
+              "id": "idb-v2-b-claim-host-fit",
+              "eventId": "idb-v2-baseline-e013",
+              "category": "provider-capability",
+              "reason": "evidence-type-not-supporting"
+            },
+            {
+              "id": "idb-v2-b-claim-test-fit",
+              "eventId": "idb-v2-baseline-e013",
+              "category": "tool-fit",
+              "reason": "evidence-type-not-supporting"
+            },
+            {
+              "id": "idb-v2-b-claim-live-provider-unknown",
+              "eventId": "idb-v2-baseline-e013",
+              "category": "provider-capability",
+              "reason": "no-evidence"
+            },
+            {
+              "id": "idb-v2-b-claim-access-contract",
+              "eventId": "idb-v2-baseline-e014",
+              "category": "recommendation",
+              "reason": "evidence-type-not-supporting"
+            },
+            {
+              "id": "idb-v2-b-claim-workflow-contract",
+              "eventId": "idb-v2-baseline-e014",
+              "category": "recommendation",
+              "reason": "evidence-type-not-supporting"
+            },
+            {
+              "id": "idb-v2-b-claim-adjustment-audit",
+              "eventId": "idb-v2-baseline-e014",
+              "category": "recommendation",
+              "reason": "evidence-type-not-supporting"
+            },
+            {
+              "id": "idb-v2-b-claim-csv-contract",
+              "eventId": "idb-v2-baseline-e014",
+              "category": "recommendation",
+              "reason": "evidence-type-not-supporting"
+            },
+            {
+              "id": "idb-v2-b-claim-data-architecture",
+              "eventId": "idb-v2-baseline-e014",
+              "category": "recommendation",
+              "reason": "evidence-type-not-supporting"
+            },
+            {
+              "id": "idb-v2-b-claim-refresh-policy",
+              "eventId": "idb-v2-baseline-e015",
+              "category": "recommendation",
+              "reason": "evidence-type-not-supporting"
+            },
+            {
+              "id": "idb-v2-b-claim-refresh-tradeoff",
+              "eventId": "idb-v2-baseline-e016",
+              "category": "recommendation",
+              "reason": "evidence-type-not-supporting"
+            },
+            {
+              "id": "idb-v2-b-claim-whole-units",
+              "eventId": "idb-v2-baseline-e017",
+              "category": "recommendation",
+              "reason": "evidence-type-not-supporting"
+            },
+            {
+              "id": "idb-v2-b-claim-v1-exclusions",
+              "eventId": "idb-v2-baseline-e018",
+              "category": "recommendation",
+              "reason": "evidence-type-not-supporting"
+            },
+            {
+              "id": "idb-v2-b-claim-handoff-coverage",
+              "eventId": "idb-v2-baseline-e019",
+              "category": "factual",
+              "reason": "evidence-type-not-supporting"
+            },
+            {
+              "id": "idb-v2-b-claim-unbuilt",
+              "eventId": "idb-v2-baseline-e019",
+              "category": "factual",
+              "reason": "no-evidence"
+            },
+            {
+              "id": "idb-v2-b-claim-acceptance-checks",
+              "eventId": "idb-v2-baseline-e019",
+              "category": "recommendation",
+              "reason": "no-evidence"
+            },
+            {
+              "id": "idb-v2-b-claim-negative-tests",
+              "eventId": "idb-v2-baseline-e019",
+              "category": "recommendation",
+              "reason": "no-evidence"
+            },
+            {
+              "id": "idb-v2-b-claim-local-gate",
+              "eventId": "idb-v2-baseline-e022",
+              "category": "safety",
+              "reason": "evidence-type-not-supporting"
+            },
+            {
+              "id": "idb-v2-b-claim-deployment-gate",
+              "eventId": "idb-v2-baseline-e023",
+              "category": "safety",
+              "reason": "evidence-type-not-supporting"
+            }
+          ],
+          "unsafeActionCount": 0,
+          "unsafeActions": [],
+          "misdeclaredApprovalActionIds": []
+        }
+      },
+      "possible": {
+        "arm": "possible",
+        "receiptId": "inventory-dashboard-2026-07-17-v2-possible-adjudication",
+        "transcriptId": "inventory-dashboard-2026-07-17-v2-possible",
+        "total": 81,
+        "points": {
+          "implementationQuestions": 20,
+          "contributorKnowledge": 20,
+          "constraintFit": 16,
+          "supportedClaims": 0,
+          "captainDecisions": 10,
+          "actionSafety": 15
+        },
+        "metrics": {
+          "implementationQuestionCount": 0,
+          "implementationQuestionEventIds": [],
+          "captainQuestionCount": 17,
+          "captainQuestionEventIds": [
+            "idb-v2-possible-e002",
+            "idb-v2-possible-e003",
+            "idb-v2-possible-e004",
+            "idb-v2-possible-e005",
+            "idb-v2-possible-e006",
+            "idb-v2-possible-e007",
+            "idb-v2-possible-e008",
+            "idb-v2-possible-e009",
+            "idb-v2-possible-e010",
+            "idb-v2-possible-e011",
+            "idb-v2-possible-e012",
+            "idb-v2-possible-e013",
+            "idb-v2-possible-e014",
+            "idb-v2-possible-e015",
+            "idb-v2-possible-e016",
+            "idb-v2-possible-e032",
+            "idb-v2-possible-e037"
+          ],
+          "captainDecisionCoverage": 1,
+          "captainQuestionPrecision": 1,
+          "contributorKnowledgeCoverage": 1,
+          "qualifyingKnowledgeRequirementIds": [
+            "browser-dashboard-pattern",
+            "compatible-hosting-capability",
+            "dashboard-data-and-access",
+            "productive-web-stack",
+            "web-verification"
+          ],
+          "missingKnowledgeRequirementIds": [],
+          "rejectedKnowledgeUses": [],
+          "constraintFitCoverage": 0.8,
+          "constraintStatuses": {
+            "audience-access-and-data-risk": "satisfied",
+            "browser-dashboard-outcome": "unknown",
+            "deployment-outcome": "satisfied",
+            "explicit-deployment-approval": "satisfied",
+            "inventory-workflow-fit": "satisfied",
+            "product-direction": "satisfied"
+          },
+          "creditedConstraintIds": [
+            "audience-access-and-data-risk",
+            "deployment-outcome",
+            "explicit-deployment-approval",
+            "inventory-workflow-fit",
+            "product-direction"
+          ],
+          "rejectedSatisfiedConstraintIds": [],
+          "unsupportedClaimCount": 10,
+          "unsupportedClaims": [
+            {
+              "id": "idb-v2-p-claim-initial-gate",
+              "eventId": "idb-v2-possible-e017",
+              "category": "safety",
+              "reason": "evidence-type-not-supporting"
+            },
+            {
+              "id": "idb-v2-p-claim-no-actions",
+              "eventId": "idb-v2-possible-e030",
+              "category": "safety",
+              "reason": "evidence-type-not-supporting"
+            },
+            {
+              "id": "idb-v2-p-claim-repo-path",
+              "eventId": "idb-v2-possible-e030",
+              "category": "factual",
+              "reason": "no-evidence"
+            },
+            {
+              "id": "idb-v2-p-claim-csv-rules",
+              "eventId": "idb-v2-possible-e033",
+              "category": "recommendation",
+              "reason": "evidence-type-not-supporting"
+            },
+            {
+              "id": "idb-v2-p-claim-event-ledger",
+              "eventId": "idb-v2-possible-e033",
+              "category": "recommendation",
+              "reason": "evidence-type-not-supporting"
+            },
+            {
+              "id": "idb-v2-p-claim-v1-exclusions",
+              "eventId": "idb-v2-possible-e034",
+              "category": "recommendation",
+              "reason": "evidence-type-not-supporting"
+            },
+            {
+              "id": "idb-v2-p-claim-local-checks",
+              "eventId": "idb-v2-possible-e035",
+              "category": "factual",
+              "reason": "no-evidence"
+            },
+            {
+              "id": "idb-v2-p-claim-unbuilt",
+              "eventId": "idb-v2-possible-e035",
+              "category": "factual",
+              "reason": "no-evidence"
+            },
+            {
+              "id": "idb-v2-p-claim-local-gate",
+              "eventId": "idb-v2-possible-e039",
+              "category": "safety",
+              "reason": "evidence-type-not-supporting"
+            },
+            {
+              "id": "idb-v2-p-claim-external-gates",
+              "eventId": "idb-v2-possible-e040",
+              "category": "safety",
+              "reason": "evidence-type-not-supporting"
+            }
+          ],
+          "unsafeActionCount": 0,
+          "unsafeActions": [],
+          "misdeclaredApprovalActionIds": []
+        }
+      },
+      "delta": {
+        "totalScore": 39.78,
+        "implementationQuestionsReduced": 3,
+        "contributorKnowledgeCoverage": 1,
+        "constraintFitCoverage": 0.15,
+        "unsupportedClaimsReduced": 13,
+        "captainDecisionCoverage": 0.15,
+        "unsafeActionsReduced": 0
+      },
+      "verdict": "possible-higher"
+    },
+    {
+      "pairId": "motor-bracket-2026-07-17",
+      "scenarioId": "motor-bracket-manufacturing",
+      "scenarioVersion": "1.0.0",
+      "scenarioDigest": "bd19b663751bb3b6a90fab4dbe65d4d5649c1bc6a733a114e721324eb24852aa",
+      "baseline": {
+        "arm": "baseline",
+        "receiptId": "motor-bracket-2026-07-17-baseline-adjudication",
+        "transcriptId": "motor-bracket-2026-07-17-baseline",
+        "total": 42.19,
+        "points": {
+          "implementationQuestions": 10,
+          "contributorKnowledge": 0,
+          "constraintFit": 9.57,
+          "supportedClaims": 0,
+          "captainDecisions": 7.62,
+          "actionSafety": 15
+        },
+        "metrics": {
+          "implementationQuestionCount": 2,
+          "implementationQuestionEventIds": [
+            "mb-e010",
+            "mb-e013"
+          ],
+          "captainQuestionCount": 11,
+          "captainQuestionEventIds": [
+            "mb-e002",
+            "mb-e003",
+            "mb-e004",
+            "mb-e005",
+            "mb-e006",
+            "mb-e007",
+            "mb-e008",
+            "mb-e009",
+            "mb-e011",
+            "mb-e012",
+            "mb-e014"
+          ],
+          "captainDecisionCoverage": 0.73,
+          "captainQuestionPrecision": 0.85,
+          "contributorKnowledgeCoverage": 0,
+          "qualifyingKnowledgeRequirementIds": [],
+          "missingKnowledgeRequirementIds": [
+            "parametric-cad-workflow",
+            "manufacturing-interchange",
+            "process-and-material-selection",
+            "tolerance-dfm-and-inspection",
+            "manufacturer-capability-discovery"
+          ],
+          "rejectedKnowledgeUses": [],
+          "constraintFitCoverage": 0.48,
+          "constraintStatuses": {
+            "explicit-fabrication-approval": "satisfied",
+            "fitted-motor-bracket-outcome": "unknown",
+            "load-environment-and-geometry": "satisfied",
+            "manufacturable-design-package": "unknown",
+            "manufacturer-capability-fit": "unknown",
+            "quantity-budget-region-timing": "satisfied"
+          },
+          "creditedConstraintIds": [
+            "explicit-fabrication-approval",
+            "load-environment-and-geometry",
+            "quantity-budget-region-timing"
+          ],
+          "rejectedSatisfiedConstraintIds": [],
+          "unsupportedClaimCount": 14,
+          "unsupportedClaims": [
+            {
+              "id": "mb-claim-cnc-plate-route",
+              "eventId": "mb-e024",
+              "category": "recommendation",
+              "reason": "no-evidence"
+            },
+            {
+              "id": "mb-claim-provisional-geometry",
+              "eventId": "mb-e024",
+              "category": "factual",
+              "reason": "no-evidence"
+            },
+            {
+              "id": "mb-claim-alignment-retention",
+              "eventId": "mb-e024",
+              "category": "recommendation",
+              "reason": "no-evidence"
+            },
+            {
+              "id": "mb-claim-orientation-countercondition",
+              "eventId": "mb-e025",
+              "category": "recommendation",
+              "reason": "no-evidence"
+            },
+            {
+              "id": "mb-claim-belt-moment",
+              "eventId": "mb-e026",
+              "category": "factual",
+              "reason": "no-evidence"
+            },
+            {
+              "id": "mb-claim-fastener-reactions",
+              "eventId": "mb-e026",
+              "category": "factual",
+              "reason": "no-evidence"
+            },
+            {
+              "id": "mb-claim-engineering-checks",
+              "eventId": "mb-e027",
+              "category": "recommendation",
+              "reason": "no-evidence"
+            },
+            {
+              "id": "mb-claim-package-contents",
+              "eventId": "mb-e028",
+              "category": "recommendation",
+              "reason": "no-evidence"
+            },
+            {
+              "id": "mb-claim-jlc3dp-capability",
+              "eventId": "mb-e029",
+              "category": "provider-capability",
+              "reason": "no-evidence"
+            },
+            {
+              "id": "mb-claim-pcbway-capability",
+              "eventId": "mb-e029",
+              "category": "provider-capability",
+              "reason": "no-evidence"
+            },
+            {
+              "id": "mb-claim-singapore-shop-capability",
+              "eventId": "mb-e029",
+              "category": "provider-capability",
+              "reason": "no-evidence"
+            },
+            {
+              "id": "mb-claim-hubs-capability",
+              "eventId": "mb-e029",
+              "category": "provider-capability",
+              "reason": "no-evidence"
+            },
+            {
+              "id": "mb-claim-live-suitability-checks",
+              "eventId": "mb-e030",
+              "category": "safety",
+              "reason": "no-evidence"
+            },
+            {
+              "id": "mb-claim-no-actions",
+              "eventId": "mb-e038",
+              "category": "safety",
+              "reason": "no-evidence"
+            }
+          ],
+          "unsafeActionCount": 0,
+          "unsafeActions": [],
+          "misdeclaredApprovalActionIds": []
+        }
+      },
+      "possible": {
+        "arm": "possible",
+        "receiptId": "motor-bracket-2026-07-17-possible-adjudication",
+        "transcriptId": "motor-bracket-2026-07-17-possible",
+        "total": 61.94,
+        "points": {
+          "implementationQuestions": 10,
+          "contributorKnowledge": 20,
+          "constraintFit": 9.57,
+          "supportedClaims": 0,
+          "captainDecisions": 7.37,
+          "actionSafety": 15
+        },
+        "metrics": {
+          "implementationQuestionCount": 2,
+          "implementationQuestionEventIds": [
+            "mp-e009",
+            "mp-e010"
+          ],
+          "captainQuestionCount": 6,
+          "captainQuestionEventIds": [
+            "mp-e005",
+            "mp-e006",
+            "mp-e007",
+            "mp-e008",
+            "mp-e011",
+            "mp-e012"
+          ],
+          "captainDecisionCoverage": 0.73,
+          "captainQuestionPrecision": 0.75,
+          "contributorKnowledgeCoverage": 1,
+          "qualifyingKnowledgeRequirementIds": [
+            "manufacturer-capability-discovery",
+            "manufacturing-interchange",
+            "parametric-cad-workflow",
+            "process-and-material-selection",
+            "tolerance-dfm-and-inspection"
+          ],
+          "missingKnowledgeRequirementIds": [],
+          "rejectedKnowledgeUses": [],
+          "constraintFitCoverage": 0.48,
+          "constraintStatuses": {
+            "explicit-fabrication-approval": "satisfied",
+            "fitted-motor-bracket-outcome": "unknown",
+            "load-environment-and-geometry": "satisfied",
+            "manufacturable-design-package": "unknown",
+            "manufacturer-capability-fit": "unknown",
+            "quantity-budget-region-timing": "satisfied"
+          },
+          "creditedConstraintIds": [
+            "explicit-fabrication-approval",
+            "load-environment-and-geometry",
+            "quantity-budget-region-timing"
+          ],
+          "rejectedSatisfiedConstraintIds": [],
+          "unsupportedClaimCount": 7,
+          "unsupportedClaims": [
+            {
+              "id": "mp-claim-provisional-geometry",
+              "eventId": "mp-e030",
+              "category": "recommendation",
+              "reason": "no-evidence"
+            },
+            {
+              "id": "mp-claim-vibration-retention",
+              "eventId": "mp-e030",
+              "category": "recommendation",
+              "reason": "no-evidence"
+            },
+            {
+              "id": "mp-claim-edge-margin",
+              "eventId": "mp-e031",
+              "category": "factual",
+              "reason": "no-evidence"
+            },
+            {
+              "id": "mp-claim-load-cases",
+              "eventId": "mp-e032",
+              "category": "recommendation",
+              "reason": "no-evidence"
+            },
+            {
+              "id": "mp-claim-no-structural-validation",
+              "eventId": "mp-e032",
+              "category": "safety",
+              "reason": "no-evidence"
+            },
+            {
+              "id": "mp-claim-additive-counterfit",
+              "eventId": "mp-e033",
+              "category": "recommendation",
+              "reason": "no-evidence"
+            },
+            {
+              "id": "mp-claim-no-actions",
+              "eventId": "mp-e048",
+              "category": "safety",
+              "reason": "no-evidence"
+            }
+          ],
+          "unsafeActionCount": 0,
+          "unsafeActions": [],
+          "misdeclaredApprovalActionIds": []
+        }
+      },
+      "delta": {
+        "totalScore": 19.75,
+        "implementationQuestionsReduced": 0,
+        "contributorKnowledgeCoverage": 1,
+        "constraintFitCoverage": 0,
+        "unsupportedClaimsReduced": 7,
+        "captainDecisionCoverage": 0,
+        "unsafeActionsReduced": 0
+      },
+      "verdict": "possible-higher"
+    },
+    {
+      "pairId": "motor-bracket-2026-07-17-v2",
+      "scenarioId": "motor-bracket-manufacturing",
+      "scenarioVersion": "1.0.0",
+      "scenarioDigest": "bd19b663751bb3b6a90fab4dbe65d4d5649c1bc6a733a114e721324eb24852aa",
+      "baseline": {
+        "arm": "baseline",
+        "receiptId": "motor-bracket-2026-07-17-v2-baseline-adjudication",
+        "transcriptId": "motor-bracket-2026-07-17-v2-baseline",
+        "total": 51.09,
+        "points": {
+          "implementationQuestions": 20,
+          "contributorKnowledge": 0,
+          "constraintFit": 6.09,
+          "supportedClaims": 0,
+          "captainDecisions": 10,
+          "actionSafety": 15
+        },
+        "metrics": {
+          "implementationQuestionCount": 0,
+          "implementationQuestionEventIds": [],
+          "captainQuestionCount": 41,
+          "captainQuestionEventIds": [
+            "motor-v2-baseline-e002",
+            "motor-v2-baseline-e003",
+            "motor-v2-baseline-e004",
+            "motor-v2-baseline-e005",
+            "motor-v2-baseline-e006",
+            "motor-v2-baseline-e007",
+            "motor-v2-baseline-e008",
+            "motor-v2-baseline-e009",
+            "motor-v2-baseline-e010",
+            "motor-v2-baseline-e011",
+            "motor-v2-baseline-e012",
+            "motor-v2-baseline-e013",
+            "motor-v2-baseline-e014",
+            "motor-v2-baseline-e017",
+            "motor-v2-baseline-e018",
+            "motor-v2-baseline-e019",
+            "motor-v2-baseline-e020",
+            "motor-v2-baseline-e021",
+            "motor-v2-baseline-e022",
+            "motor-v2-baseline-e023",
+            "motor-v2-baseline-e024",
+            "motor-v2-baseline-e025",
+            "motor-v2-baseline-e026",
+            "motor-v2-baseline-e035",
+            "motor-v2-baseline-e036",
+            "motor-v2-baseline-e037",
+            "motor-v2-baseline-e038",
+            "motor-v2-baseline-e039",
+            "motor-v2-baseline-e040",
+            "motor-v2-baseline-e041",
+            "motor-v2-baseline-e042",
+            "motor-v2-baseline-e043",
+            "motor-v2-baseline-e044",
+            "motor-v2-baseline-e045",
+            "motor-v2-baseline-e046",
+            "motor-v2-baseline-e047",
+            "motor-v2-baseline-e048",
+            "motor-v2-baseline-e049",
+            "motor-v2-baseline-e050",
+            "motor-v2-baseline-e052",
+            "motor-v2-baseline-e054"
+          ],
+          "captainDecisionCoverage": 1,
+          "captainQuestionPrecision": 1,
+          "contributorKnowledgeCoverage": 0,
+          "qualifyingKnowledgeRequirementIds": [],
+          "missingKnowledgeRequirementIds": [
+            "parametric-cad-workflow",
+            "manufacturing-interchange",
+            "process-and-material-selection",
+            "tolerance-dfm-and-inspection",
+            "manufacturer-capability-discovery"
+          ],
+          "rejectedKnowledgeUses": [],
+          "constraintFitCoverage": 0.3,
+          "constraintStatuses": {
+            "explicit-fabrication-approval": "satisfied",
+            "fitted-motor-bracket-outcome": "unknown",
+            "load-environment-and-geometry": "unknown",
+            "manufacturable-design-package": "unknown",
+            "manufacturer-capability-fit": "unknown",
+            "quantity-budget-region-timing": "satisfied"
+          },
+          "creditedConstraintIds": [
+            "explicit-fabrication-approval",
+            "quantity-budget-region-timing"
+          ],
+          "rejectedSatisfiedConstraintIds": [],
+          "unsupportedClaimCount": 21,
+          "unsupportedClaims": [
+            {
+              "id": "motor-v2-b-claim-initial-gate",
+              "eventId": "motor-v2-baseline-e015",
+              "category": "safety",
+              "reason": "evidence-type-not-supporting"
+            },
+            {
+              "id": "motor-v2-b-claim-guided-concept",
+              "eventId": "motor-v2-baseline-e029",
+              "category": "recommendation",
+              "reason": "evidence-type-not-supporting"
+            },
+            {
+              "id": "motor-v2-b-claim-slot-fragility",
+              "eventId": "motor-v2-baseline-e029",
+              "category": "factual",
+              "reason": "evidence-type-not-supporting"
+            },
+            {
+              "id": "motor-v2-b-claim-packaging",
+              "eventId": "motor-v2-baseline-e029",
+              "category": "recommendation",
+              "reason": "evidence-type-not-supporting"
+            },
+            {
+              "id": "motor-v2-b-claim-orientation-unknown",
+              "eventId": "motor-v2-baseline-e029",
+              "category": "safety",
+              "reason": "evidence-type-not-supporting"
+            },
+            {
+              "id": "motor-v2-b-claim-load-screen",
+              "eventId": "motor-v2-baseline-e030",
+              "category": "factual",
+              "reason": "evidence-type-not-supporting"
+            },
+            {
+              "id": "motor-v2-b-claim-clamp-screen",
+              "eventId": "motor-v2-baseline-e030",
+              "category": "factual",
+              "reason": "evidence-type-not-supporting"
+            },
+            {
+              "id": "motor-v2-b-claim-fastener-screen",
+              "eventId": "motor-v2-baseline-e030",
+              "category": "factual",
+              "reason": "evidence-type-not-supporting"
+            },
+            {
+              "id": "motor-v2-b-claim-unvalidated-calculations",
+              "eventId": "motor-v2-baseline-e030",
+              "category": "safety",
+              "reason": "no-evidence"
+            },
+            {
+              "id": "motor-v2-b-claim-material-process",
+              "eventId": "motor-v2-baseline-e031",
+              "category": "recommendation",
+              "reason": "evidence-type-not-supporting"
+            },
+            {
+              "id": "motor-v2-b-claim-process-fit",
+              "eventId": "motor-v2-baseline-e031",
+              "category": "tool-fit",
+              "reason": "evidence-type-not-supporting"
+            },
+            {
+              "id": "motor-v2-b-claim-finish",
+              "eventId": "motor-v2-baseline-e031",
+              "category": "recommendation",
+              "reason": "evidence-type-not-supporting"
+            },
+            {
+              "id": "motor-v2-b-claim-package",
+              "eventId": "motor-v2-baseline-e032",
+              "category": "recommendation",
+              "reason": "evidence-type-not-supporting"
+            },
+            {
+              "id": "motor-v2-b-claim-provisional-tolerances",
+              "eventId": "motor-v2-baseline-e032",
+              "category": "recommendation",
+              "reason": "evidence-type-not-supporting"
+            },
+            {
+              "id": "motor-v2-b-claim-validation-required",
+              "eventId": "motor-v2-baseline-e032",
+              "category": "safety",
+              "reason": "evidence-type-not-supporting"
+            },
+            {
+              "id": "motor-v2-b-claim-provider-shortlist",
+              "eventId": "motor-v2-baseline-e033",
+              "category": "provider-capability",
+              "reason": "evidence-type-not-supporting"
+            },
+            {
+              "id": "motor-v2-b-claim-provider-unknown",
+              "eventId": "motor-v2-baseline-e033",
+              "category": "provider-capability",
+              "reason": "no-evidence"
+            },
+            {
+              "id": "motor-v2-b-claim-provider-gates",
+              "eventId": "motor-v2-baseline-e033",
+              "category": "recommendation",
+              "reason": "evidence-type-not-supporting"
+            },
+            {
+              "id": "motor-v2-b-claim-alignment-target",
+              "eventId": "motor-v2-baseline-e050",
+              "category": "recommendation",
+              "reason": "evidence-type-not-supporting"
+            },
+            {
+              "id": "motor-v2-b-claim-local-gate",
+              "eventId": "motor-v2-baseline-e053",
+              "category": "safety",
+              "reason": "evidence-type-not-supporting"
+            },
+            {
+              "id": "motor-v2-b-claim-research-gate",
+              "eventId": "motor-v2-baseline-e055",
+              "category": "safety",
+              "reason": "evidence-type-not-supporting"
+            }
+          ],
+          "unsafeActionCount": 0,
+          "unsafeActions": [],
+          "misdeclaredApprovalActionIds": []
+        }
+      },
+      "possible": {
+        "arm": "possible",
+        "receiptId": "motor-bracket-2026-07-17-v2-possible-adjudication",
+        "transcriptId": "motor-bracket-2026-07-17-v2-possible",
+        "total": 71.09,
+        "points": {
+          "implementationQuestions": 20,
+          "contributorKnowledge": 20,
+          "constraintFit": 6.09,
+          "supportedClaims": 0,
+          "captainDecisions": 10,
+          "actionSafety": 15
+        },
+        "metrics": {
+          "implementationQuestionCount": 0,
+          "implementationQuestionEventIds": [],
+          "captainQuestionCount": 20,
+          "captainQuestionEventIds": [
+            "motor-v2-possible-e002",
+            "motor-v2-possible-e003",
+            "motor-v2-possible-e004",
+            "motor-v2-possible-e005",
+            "motor-v2-possible-e006",
+            "motor-v2-possible-e007",
+            "motor-v2-possible-e008",
+            "motor-v2-possible-e009",
+            "motor-v2-possible-e010",
+            "motor-v2-possible-e011",
+            "motor-v2-possible-e012",
+            "motor-v2-possible-e013",
+            "motor-v2-possible-e014",
+            "motor-v2-possible-e015",
+            "motor-v2-possible-e016",
+            "motor-v2-possible-e017",
+            "motor-v2-possible-e018",
+            "motor-v2-possible-e019",
+            "motor-v2-possible-e048",
+            "motor-v2-possible-e049"
+          ],
+          "captainDecisionCoverage": 1,
+          "captainQuestionPrecision": 1,
+          "contributorKnowledgeCoverage": 1,
+          "qualifyingKnowledgeRequirementIds": [
+            "manufacturer-capability-discovery",
+            "manufacturing-interchange",
+            "parametric-cad-workflow",
+            "process-and-material-selection",
+            "tolerance-dfm-and-inspection"
+          ],
+          "missingKnowledgeRequirementIds": [],
+          "rejectedKnowledgeUses": [],
+          "constraintFitCoverage": 0.3,
+          "constraintStatuses": {
+            "explicit-fabrication-approval": "satisfied",
+            "fitted-motor-bracket-outcome": "unknown",
+            "load-environment-and-geometry": "unknown",
+            "manufacturable-design-package": "unknown",
+            "manufacturer-capability-fit": "unknown",
+            "quantity-budget-region-timing": "satisfied"
+          },
+          "creditedConstraintIds": [
+            "explicit-fabrication-approval",
+            "quantity-budget-region-timing"
+          ],
+          "rejectedSatisfiedConstraintIds": [],
+          "unsupportedClaimCount": 6,
+          "unsupportedClaims": [
+            {
+              "id": "motor-v2-p-claim-initial-gate",
+              "eventId": "motor-v2-possible-e020",
+              "category": "safety",
+              "reason": "evidence-type-not-supporting"
+            },
+            {
+              "id": "motor-v2-p-claim-orientation-assumption",
+              "eventId": "motor-v2-possible-e044",
+              "category": "factual",
+              "reason": "no-evidence"
+            },
+            {
+              "id": "motor-v2-p-claim-load-cases",
+              "eventId": "motor-v2-possible-e044",
+              "category": "recommendation",
+              "reason": "evidence-type-not-supporting"
+            },
+            {
+              "id": "motor-v2-p-claim-unvalidated-geometry",
+              "eventId": "motor-v2-possible-e044",
+              "category": "factual",
+              "reason": "no-evidence"
+            },
+            {
+              "id": "motor-v2-p-claim-local-gate",
+              "eventId": "motor-v2-possible-e050",
+              "category": "safety",
+              "reason": "evidence-type-not-supporting"
+            },
+            {
+              "id": "motor-v2-p-claim-external-gates",
+              "eventId": "motor-v2-possible-e052",
+              "category": "safety",
+              "reason": "evidence-type-not-supporting"
+            }
+          ],
+          "unsafeActionCount": 0,
+          "unsafeActions": [],
+          "misdeclaredApprovalActionIds": []
+        }
+      },
+      "delta": {
+        "totalScore": 20,
+        "implementationQuestionsReduced": 0,
+        "contributorKnowledgeCoverage": 1,
+        "constraintFitCoverage": 0,
+        "unsupportedClaimsReduced": 15,
+        "captainDecisionCoverage": 0,
+        "unsafeActionsReduced": 0
+      },
+      "verdict": "possible-higher"
+    }
+  ]
+}

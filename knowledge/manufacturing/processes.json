@@ -1,0 +1,110 @@
+{
+  "$schema": "../../schema/knowledge-collection.schema.json",
+  "branch": "manufacturing",
+  "nodes": [
+    {
+      "id": "manufacturing/processes/fdm",
+      "type": "topic",
+      "domain": "manufacturing",
+      "title": "FDM additive manufacturing",
+      "summary": "Material-extrusion additive manufacturing commonly suited to inexpensive concepts, fixtures, and fit checks, with layer behavior and surface limitations that must match the function.",
+      "tags": ["fdm", "additive", "prototype", "fit-check"],
+      "recommendations": [
+        {
+          "statement": "Use FDM as a candidate for low-cost concepts, fixtures, and fit checks when layer-dependent behavior and achievable finish are acceptable.",
+          "applicability": ["Fast, inexpensive geometric learning matters more than isotropic material behavior", "The geometry can be oriented and supported for the selected machine and material"],
+          "counterconditions": ["Fine finish, isotropy, watertightness, or validated production properties are essential without further qualification"],
+          "alternatives": [{ "nodeId": "manufacturing/processes/sls", "reason": "SLS can better suit complex nylon parts when supportless powder-bed production and more uniform behavior justify it." }],
+          "sources": [{ "title": "FDM vs SLA vs SLS", "url": "https://formlabs.com/eu/blog/fdm-vs-sla-vs-sls-how-to-choose-the-right-3d-printing-technology/", "publisher": "Formlabs", "kind": "official-documentation", "accessedAt": "2026-07-17" }],
+          "contributors": [{ "id": "possible-foundation", "name": "Possible founding contributors" }],
+          "reviewedAt": "2026-07-17",
+          "confidence": "medium",
+          "reviewIntervalDays": 120
+        }
+      ],
+      "relationships": [
+        { "type": "hierarchy", "target": "manufacturing/custom-parts", "description": "FDM is one process option for custom parts." },
+        { "type": "alternatives", "target": "manufacturing/processes/sls", "description": "SLS is an additive alternative with different material and support behavior." },
+        { "type": "compatibility", "target": "manufacturing/tools/stl", "description": "STL is a common triangulated handoff when the selected FDM workflow accepts it." }
+      ]
+    },
+    {
+      "id": "manufacturing/processes/sls",
+      "type": "topic",
+      "domain": "manufacturing",
+      "title": "SLS additive manufacturing",
+      "summary": "Powder-bed polymer additive manufacturing suited to complex durable nylon geometry and supportless nesting, with surface texture and powder-removal constraints.",
+      "tags": ["sls", "additive", "nylon", "powder-bed"],
+      "recommendations": [
+        {
+          "statement": "Use SLS as a candidate for complex durable nylon parts when supportless nesting helps and grainy surface plus powder removal are acceptable.",
+          "applicability": ["Complex geometry benefits from surrounding powder support", "Nylon material options and batch nesting fit the functional route"],
+          "counterconditions": ["Fine cosmetic surface, sealed internal cavities, or trapped-powder geometry conflicts with the provider process"],
+          "alternatives": [{ "nodeId": "manufacturing/processes/fdm", "reason": "FDM may be faster and cheaper for early concepts and simple fit checks." }],
+          "sources": [{ "title": "What is selective laser sintering", "url": "https://formlabs.com/blog/what-is-selective-laser-sintering/", "publisher": "Formlabs", "kind": "official-documentation", "accessedAt": "2026-07-17" }],
+          "contributors": [{ "id": "possible-foundation", "name": "Possible founding contributors" }],
+          "reviewedAt": "2026-07-17",
+          "confidence": "medium",
+          "reviewIntervalDays": 120
+        }
+      ],
+      "relationships": [
+        { "type": "hierarchy", "target": "manufacturing/custom-parts", "description": "SLS is one process option for custom parts." },
+        { "type": "alternatives", "target": "manufacturing/processes/fdm", "description": "FDM is an additive alternative for inexpensive concepts and fit checks." },
+        { "type": "compatibility", "target": "manufacturing/tools/3mf", "description": "3MF can carry additive model units and metadata when the selected workflow accepts it." }
+      ]
+    },
+    {
+      "id": "manufacturing/processes/cnc-machining",
+      "type": "topic",
+      "domain": "manufacturing",
+      "title": "CNC machining",
+      "summary": "Subtractive production from stock with strong control over material, dimensions, and finish, bounded by cutter access, internal radii, workholding, depth, and fragile-feature constraints.",
+      "tags": ["cnc", "subtractive", "machining", "stock-material"],
+      "recommendations": [
+        {
+          "statement": "Use CNC machining when stock material properties, dimensional control, and machined finish justify subtractive access and workholding constraints.",
+          "applicability": ["The part is compatible with available stock and cutter access", "Material, dimensional, or finish requirements favor machining"],
+          "counterconditions": ["The geometry depends on inaccessible cavities, perfectly sharp internal corners, or deep fragile features without a qualified method"],
+          "alternatives": [{ "nodeId": "manufacturing/processes/laser-sheet-cutting", "reason": "Laser sheet cutting can be more direct for constant-thickness 2D profiles and bent sheet parts." }],
+          "sources": [{ "title": "Design for machining toolkit", "url": "https://www.protolabs.com/resources/design-for-machining-toolkit/", "publisher": "Protolabs", "kind": "official-documentation", "accessedAt": "2026-07-17" }],
+          "contributors": [{ "id": "possible-foundation", "name": "Possible founding contributors" }],
+          "reviewedAt": "2026-07-17",
+          "confidence": "high",
+          "reviewIntervalDays": 90
+        }
+      ],
+      "relationships": [
+        { "type": "hierarchy", "target": "manufacturing/custom-parts", "description": "CNC machining is one process option for custom parts." },
+        { "type": "alternatives", "target": "manufacturing/processes/laser-sheet-cutting", "description": "Sheet cutting is an alternative for planar constant-thickness geometry." },
+        { "type": "compatibility", "target": "manufacturing/tools/step", "description": "STEP solid geometry is a common neutral CNC quote and handoff artifact." }
+      ]
+    },
+    {
+      "id": "manufacturing/processes/laser-sheet-cutting",
+      "type": "topic",
+      "domain": "manufacturing",
+      "title": "Laser sheet cutting and bending",
+      "summary": "Fabrication of constant-thickness 2D profiles, optionally followed by provider-supported bending, where flat geometry, closed contours, stock thickness, and bend setup define viability.",
+      "tags": ["laser-cutting", "sheet-metal", "bending", "flat-profile"],
+      "recommendations": [
+        {
+          "statement": "Use laser sheet cutting for clean constant-thickness 2D profiles and provider-supported bends, with revisioned flat geometry and live material-thickness constraints.",
+          "applicability": ["The part can be represented as a planar cut profile or supported bent sheet", "Constant stock thickness is compatible with the design"],
+          "counterconditions": ["The geometry requires enclosed 3D volumes, partial-depth features, or unsupported forming operations"],
+          "alternatives": [{ "nodeId": "manufacturing/processes/cnc-machining", "reason": "CNC machining is an alternative when solid 3D features or partial-depth machining are required." }],
+          "sources": [{ "title": "SendCutSend 3D file guidelines", "url": "https://sendcutsend.com/guidelines/3d-files/", "publisher": "SendCutSend", "kind": "official-documentation", "accessedAt": "2026-07-17" }],
+          "contributors": [{ "id": "possible-foundation", "name": "Possible founding contributors" }],
+          "reviewedAt": "2026-07-17",
+          "confidence": "high",
+          "reviewIntervalDays": 90
+        }
+      ],
+      "relationships": [
+        { "type": "hierarchy", "target": "manufacturing/custom-parts", "description": "Sheet cutting is one process option for custom parts." },
+        { "type": "alternatives", "target": "manufacturing/processes/cnc-machining", "description": "CNC machining is an alternative for non-planar solid geometry." },
+        { "type": "compatibility", "target": "manufacturing/tools/dxf", "description": "DXF is a common 1:1 profile artifact for 2D cutting workflows." }
+      ]
+    }
+  ]
+}

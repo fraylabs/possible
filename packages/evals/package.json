@@ -1,0 +1,30 @@
+{
+  "name": "@possible/evals",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "description": "Deterministic baseline-versus-Possible evaluation receipts and scoring",
+  "main": "dist/index.js",
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "bin": {
+    "possible-eval": "./dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "test": "node --test test/*.test.js",
+    "preeval": "npm run build -w @possible/knowledge",
+    "eval": "node src/cli.js evaluate --scenario-dir ../../evals/scenarios/v1 --receipt-dir ../../evals/receipts --output ../../evals/reports/latest.json --allow-empty"
+  },
+  "dependencies": {
+    "@possible/knowledge": "0.1.0"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

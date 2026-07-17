@@ -1,0 +1,129 @@
+{
+  "$schema": "../../schema/knowledge-collection.schema.json",
+  "branch": "web",
+  "nodes": [
+    {
+      "id": "web/practices/framework-selection",
+      "type": "practice",
+      "domain": "web",
+      "title": "Framework selection",
+      "summary": "A constraint-first comparison of routing, rendering, server data, deployment targets, ecosystem fit, and maintenance ownership before committing an application stack.",
+      "tags": ["framework", "architecture", "constraints", "trade-offs"],
+      "recommendations": [
+        {
+          "statement": "Choose a web framework from the required runtime and delivery model, and record the rejected alternative so agents do not mistake a default for a universal rule.",
+          "applicability": ["A new browser application needs an implementation starting point", "Routing, server execution, static output, or deployment compatibility affects the choice"],
+          "counterconditions": ["An existing maintained application already fixes the framework and migration is outside scope"],
+          "alternatives": [{ "nodeId": "web/tools/vite-react", "reason": "Compare a client-oriented Vite setup whenever server framework features are not required." }],
+          "sources": [
+            { "title": "Sunsetting Create React App", "url": "https://react.dev/blog/2025/02/14/sunsetting-create-react-app", "publisher": "React", "kind": "official-project-docs", "accessedAt": "2026-07-17" },
+            { "title": "Deploying Next.js", "url": "https://nextjs.org/docs/app/getting-started/deploying", "publisher": "Next.js", "kind": "official-documentation", "accessedAt": "2026-07-17" }
+          ],
+          "contributors": [{ "id": "possible-foundation", "name": "Possible founding contributors" }],
+          "reviewedAt": "2026-07-17",
+          "confidence": "high",
+          "reviewIntervalDays": 60
+        }
+      ],
+      "relationships": [
+        { "type": "hierarchy", "target": "web/browser-applications", "description": "Framework selection is an architecture practice for browser applications." },
+        { "type": "relevance", "target": "web/tools/nextjs", "description": "Next.js is one framework candidate evaluated by this practice." }
+      ],
+      "practice": {
+        "outputs": ["A selected framework with explicit applicability and rejected alternatives"],
+        "checks": ["Required rendering and deployment modes are supported by current official documentation"]
+      }
+    },
+    {
+      "id": "web/practices/renderer-selection",
+      "type": "practice",
+      "domain": "web",
+      "title": "3D renderer selection",
+      "summary": "A decision record covering direct scene control, React integration, target browser APIs, asset pipeline, interaction model, and expected rendering complexity.",
+      "tags": ["renderer", "threejs", "webgl", "webgpu"],
+      "recommendations": [
+        {
+          "statement": "Use stable WebGL-backed Three.js as the conservative browser baseline and treat WebGPU renderer adoption as an explicit, revalidated compatibility decision.",
+          "applicability": ["The outcome requires interactive browser 3D", "Broad, predictable browser behavior matters more than experimental renderer features"],
+          "counterconditions": ["A controlled environment has validated WebGPU requirements and accepts experimental renderer limitations"],
+          "alternatives": [{ "nodeId": "web/tools/react-three-fiber", "reason": "Use React Three Fiber when the application is React-led and declarative scene composition improves maintainability." }],
+          "sources": [{ "title": "Three.js WebGPU renderer", "url": "https://threejs.org/manual/en/webgpurenderer.html", "publisher": "Three.js", "kind": "official-project-docs", "accessedAt": "2026-07-17" }],
+          "contributors": [{ "id": "possible-foundation", "name": "Possible founding contributors" }],
+          "reviewedAt": "2026-07-17",
+          "confidence": "medium",
+          "reviewIntervalDays": 45
+        }
+      ],
+      "relationships": [
+        { "type": "hierarchy", "target": "web/outcomes/3d-experiences", "description": "Renderer selection is a defining practice for browser 3D outcomes." },
+        { "type": "relevance", "target": "web/tools/threejs", "description": "Three.js provides the baseline rendering primitives considered here." }
+      ],
+      "practice": {
+        "outputs": ["A renderer decision with browser target, framework boundary, and fallback"],
+        "checks": ["The selected renderer is exercised in every supported browser class before commitment"]
+      }
+    },
+    {
+      "id": "web/practices/production-verification",
+      "type": "practice",
+      "domain": "web",
+      "title": "Production web verification",
+      "summary": "Evidence that a deployed browser outcome builds, supports critical user flows, meets its accessibility target, protects sensitive boundaries, and records performance behavior.",
+      "tags": ["testing", "accessibility", "performance", "security", "browser-flows"],
+      "recommendations": [
+        {
+          "statement": "Require build, critical browser-flow, accessibility, security-boundary, and measured performance evidence before calling a web deployment complete.",
+          "applicability": ["The application will be used beyond local development", "The route includes a preview or production deployment"],
+          "counterconditions": ["A disposable visual spike is explicitly scoped without a production trust claim"],
+          "alternatives": [{ "nodeId": "web/practices/3d-runtime-verification", "reason": "Add the 3D runtime verifier when scene correctness and frame behavior are part of the outcome." }],
+          "sources": [
+            { "title": "Next.js production checklist", "url": "https://nextjs.org/docs/app/guides/production-checklist", "publisher": "Next.js", "kind": "official-documentation", "accessedAt": "2026-07-17" },
+            { "title": "Web Content Accessibility Guidelines 2.2", "url": "https://www.w3.org/TR/WCAG22/", "publisher": "W3C", "kind": "official-standard", "accessedAt": "2026-07-17" },
+            { "title": "Web Vitals", "url": "https://web.dev/articles/vitals", "publisher": "Google", "kind": "official-documentation", "accessedAt": "2026-07-17" }
+          ],
+          "contributors": [{ "id": "possible-foundation", "name": "Possible founding contributors" }],
+          "reviewedAt": "2026-07-17",
+          "confidence": "high",
+          "reviewIntervalDays": 60
+        }
+      ],
+      "relationships": [
+        { "type": "hierarchy", "target": "web/browser-applications", "description": "Production verification applies to browser application delivery." },
+        { "type": "relevance", "target": "web/actions/deploy-vercel-preview", "description": "A preview deployment provides an environment for verification before production." }
+      ],
+      "practice": {
+        "outputs": ["Build log, browser-flow results, accessibility evidence, security review, and measured performance receipt"],
+        "checks": ["No production claim relies only on an agent success message or a screenshot"]
+      }
+    },
+    {
+      "id": "web/practices/3d-runtime-verification",
+      "type": "practice",
+      "domain": "web",
+      "title": "3D runtime verification",
+      "summary": "Browser and device checks for scene load, camera and input behavior, asset failures, fallback behavior, visual correctness, and representative frame-time stability.",
+      "tags": ["3d", "runtime", "frame-time", "browser-testing"],
+      "recommendations": [
+        {
+          "statement": "Verify the actual 3D scene on representative target browsers and devices; a successful build does not prove assets, input, fallback, or frame behavior.",
+          "applicability": ["The application renders an interactive Three.js scene", "Asset loading or device graphics capability can change the experience"],
+          "counterconditions": ["The outcome contains no real-time renderer and standard browser-flow checks cover all behavior"],
+          "alternatives": [{ "nodeId": "web/practices/production-verification", "reason": "Use the general production verifier when no interactive renderer-specific behavior exists." }],
+          "sources": [{ "title": "Three.js fundamentals", "url": "https://threejs.org/manual/en/fundamentals.html", "publisher": "Three.js", "kind": "official-project-docs", "accessedAt": "2026-07-17" }],
+          "contributors": [{ "id": "possible-foundation", "name": "Possible founding contributors" }],
+          "reviewedAt": "2026-07-17",
+          "confidence": "high",
+          "reviewIntervalDays": 60
+        }
+      ],
+      "relationships": [
+        { "type": "hierarchy", "target": "web/outcomes/3d-experiences", "description": "Renderer-specific verification belongs to the 3D outcome branch." },
+        { "type": "compatibility", "target": "web/tools/threejs", "description": "The verifier targets behavior produced through Three.js rendering pipelines." }
+      ],
+      "practice": {
+        "outputs": ["Scene-load, interaction, fallback, visual, and frame-behavior evidence"],
+        "checks": ["Representative browser and device classes complete the critical 3D route without hidden asset errors"]
+      }
+    }
+  ]
+}

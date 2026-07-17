@@ -1,0 +1,168 @@
+{
+  "$schema": "../../schema/knowledge-collection.schema.json",
+  "branch": "web",
+  "nodes": [
+    {
+      "id": "web/providers/vercel",
+      "type": "provider",
+      "domain": "web",
+      "title": "Vercel",
+      "summary": "A web deployment provider with documented Next.js support, Git-connected preview and production deployments, and a CLI path; all account and deployment state remains external to Possible.",
+      "tags": ["hosting", "nextjs", "git-deployment", "preview"],
+      "recommendations": [
+        {
+          "statement": "Shortlist Vercel for a Next.js application when integrated framework support and Git-based previews fit, then live-check account, plan, runtime, and production requirements.",
+          "applicability": ["The application uses Next.js or another documented Vercel framework", "Git-connected preview deployments are useful to the review workflow"],
+          "counterconditions": ["The selected runtime, compliance boundary, cost model, or infrastructure ownership requires a different provider"],
+          "alternatives": [{ "nodeId": "web/providers/cloudflare-workers", "reason": "Cloudflare Workers is an alternative when its runtime and network platform better fit the application." }],
+          "sources": [
+            { "title": "Next.js on Vercel", "url": "https://vercel.com/docs/frameworks/full-stack/nextjs", "publisher": "Vercel", "kind": "official-capability", "accessedAt": "2026-07-17" },
+            { "title": "Deploying Git repositories with Vercel", "url": "https://vercel.com/docs/git", "publisher": "Vercel", "kind": "official-capability", "accessedAt": "2026-07-17" }
+          ],
+          "contributors": [{ "id": "possible-foundation", "name": "Possible founding contributors" }],
+          "reviewedAt": "2026-07-17",
+          "confidence": "medium",
+          "reviewIntervalDays": 30
+        }
+      ],
+      "relationships": [
+        { "type": "hierarchy", "target": "web", "description": "Vercel is a deployment provider in the Web branch." },
+        { "type": "support", "target": "web/tools/nextjs", "description": "Vercel documents a first-party Next.js deployment path." },
+        { "type": "alternatives", "target": "web/providers/cloudflare-workers", "description": "Cloudflare Workers is a provider alternative with a different runtime model." }
+      ],
+      "provider": {
+        "officialUrl": "https://vercel.com/",
+        "checkedAt": "2026-07-17",
+        "liveCheckRequired": true,
+        "capabilities": [
+          {
+            "key": "git-deployment",
+            "label": "Git deployment",
+            "category": "web deployment",
+            "description": "Connected Git repositories can produce preview deployments from changes and production deployments from the configured production branch.",
+            "status": "supported",
+            "accepts": ["Git repository"],
+            "outputs": ["Preview deployment URL", "Production deployment URL"],
+            "source": { "title": "Deploying Git repositories with Vercel", "url": "https://vercel.com/docs/git", "publisher": "Vercel", "kind": "official-capability", "accessedAt": "2026-07-17" }
+          },
+          {
+            "key": "nextjs-deployment",
+            "label": "Next.js deployment",
+            "category": "framework hosting",
+            "description": "Vercel documents an integrated deployment path for existing Next.js projects through Git or the Vercel CLI.",
+            "status": "supported",
+            "accepts": ["Next.js project", "Git repository"],
+            "outputs": ["Preview deployment URL", "Production deployment URL"],
+            "source": { "title": "Next.js on Vercel", "url": "https://vercel.com/docs/frameworks/full-stack/nextjs", "publisher": "Vercel", "kind": "official-capability", "accessedAt": "2026-07-17" }
+          }
+        ],
+        "knownConstraints": [
+          {
+            "statement": "Git deployment requires connecting a supported repository provider or using a separate CLI deployment path.",
+            "source": { "title": "Deploying Git repositories with Vercel", "url": "https://vercel.com/docs/git", "publisher": "Vercel", "kind": "official-capability", "accessedAt": "2026-07-17" }
+          }
+        ],
+        "handoffs": [
+          {
+            "channel": "git-integration",
+            "purpose": "Create preview or production deployments from a connected repository.",
+            "authRequired": true,
+            "externalEffect": true,
+            "approvalRequired": true,
+            "source": { "title": "Deploying Git repositories with Vercel", "url": "https://vercel.com/docs/git", "publisher": "Vercel", "kind": "official-capability", "accessedAt": "2026-07-17" }
+          },
+          {
+            "channel": "cli",
+            "purpose": "Deploy a local project through the authenticated Vercel CLI.",
+            "authRequired": true,
+            "externalEffect": true,
+            "approvalRequired": true,
+            "source": { "title": "Vercel deploy command", "url": "https://vercel.com/docs/cli/deploy", "publisher": "Vercel", "kind": "official-capability", "accessedAt": "2026-07-17" }
+          }
+        ],
+        "unknowns": [
+          { "field": "pricing", "statement": "Current plan pricing, included usage, and overage behavior must be checked live before selection." },
+          { "field": "availability", "statement": "Account entitlements, runtime availability, and regional or compliance fit must be checked live." },
+          { "field": "limits", "statement": "Build, function, bandwidth, and framework-feature limits are not persisted and require a live documentation check." }
+        ]
+      }
+    },
+    {
+      "id": "web/providers/cloudflare-workers",
+      "type": "provider",
+      "domain": "web",
+      "title": "Cloudflare Workers",
+      "summary": "A web application deployment platform supporting static assets and documented full-stack framework adapters, including a current Next.js path through OpenNext and Wrangler.",
+      "tags": ["hosting", "workers", "cloudflare", "opennext"],
+      "recommendations": [
+        {
+          "statement": "Shortlist Cloudflare Workers when its runtime and static-asset model fit the application, and revalidate framework-adapter compatibility before every handoff.",
+          "applicability": ["The application fits the Workers runtime and supported framework path", "Static assets and server logic can be deployed through Wrangler or a connected build"],
+          "counterconditions": ["Required Node.js APIs or Next.js features are unsupported by the current adapter or Workers runtime"],
+          "alternatives": [{ "nodeId": "web/providers/vercel", "reason": "Vercel is an alternative when its integrated Next.js path and deployment workflow fit better." }],
+          "sources": [
+            { "title": "Next.js on Cloudflare Workers", "url": "https://developers.cloudflare.com/workers/framework-guides/web-apps/nextjs/", "publisher": "Cloudflare", "kind": "official-capability", "accessedAt": "2026-07-17" },
+            { "title": "Cloudflare Workers static assets", "url": "https://developers.cloudflare.com/workers/static-assets/", "publisher": "Cloudflare", "kind": "official-capability", "accessedAt": "2026-07-17" }
+          ],
+          "contributors": [{ "id": "possible-foundation", "name": "Possible founding contributors" }],
+          "reviewedAt": "2026-07-17",
+          "confidence": "medium",
+          "reviewIntervalDays": 30
+        }
+      ],
+      "relationships": [
+        { "type": "hierarchy", "target": "web", "description": "Cloudflare Workers is a deployment provider in the Web branch." },
+        { "type": "support", "target": "web/tools/nextjs", "description": "Cloudflare documents a Next.js deployment path through the OpenNext adapter." },
+        { "type": "alternatives", "target": "web/providers/vercel", "description": "Vercel is a provider alternative with a different runtime and integration model." }
+      ],
+      "provider": {
+        "officialUrl": "https://workers.cloudflare.com/",
+        "checkedAt": "2026-07-17",
+        "liveCheckRequired": true,
+        "capabilities": [
+          {
+            "key": "nextjs-opennext-deployment",
+            "label": "Next.js OpenNext deployment",
+            "category": "web deployment",
+            "description": "Cloudflare documents building and deploying Next.js applications to Workers through the OpenNext adapter and Wrangler workflow.",
+            "status": "supported",
+            "accepts": ["Next.js project"],
+            "outputs": ["Workers deployment URL"],
+            "source": { "title": "Next.js on Cloudflare Workers", "url": "https://developers.cloudflare.com/workers/framework-guides/web-apps/nextjs/", "publisher": "Cloudflare", "kind": "official-capability", "accessedAt": "2026-07-17" }
+          },
+          {
+            "key": "static-assets-deployment",
+            "label": "Static assets deployment",
+            "category": "web deployment",
+            "description": "Workers can deploy a configured static-asset directory together with Worker logic as one application unit.",
+            "status": "supported",
+            "accepts": ["Static asset directory"],
+            "outputs": ["Workers deployment URL"],
+            "source": { "title": "Cloudflare Workers static assets", "url": "https://developers.cloudflare.com/workers/static-assets/", "publisher": "Cloudflare", "kind": "official-capability", "accessedAt": "2026-07-17" }
+          }
+        ],
+        "knownConstraints": [
+          {
+            "statement": "The current Next.js adapter documentation marks Node.js middleware support as not yet supported, so middleware requirements need explicit compatibility review.",
+            "source": { "title": "Next.js on Cloudflare Workers", "url": "https://developers.cloudflare.com/workers/framework-guides/web-apps/nextjs/", "publisher": "Cloudflare", "kind": "official-capability", "accessedAt": "2026-07-17" }
+          }
+        ],
+        "handoffs": [
+          {
+            "channel": "cli",
+            "purpose": "Build and deploy a configured application through authenticated Wrangler commands.",
+            "authRequired": true,
+            "externalEffect": true,
+            "approvalRequired": true,
+            "source": { "title": "Next.js on Cloudflare Workers", "url": "https://developers.cloudflare.com/workers/framework-guides/web-apps/nextjs/", "publisher": "Cloudflare", "kind": "official-capability", "accessedAt": "2026-07-17" }
+          }
+        ],
+        "unknowns": [
+          { "field": "pricing", "statement": "Current plan pricing, included usage, and request or asset billing must be checked live." },
+          { "field": "availability", "statement": "Account, region, compliance, binding, and feature availability must be checked live for the project." },
+          { "field": "adapter-compatibility", "statement": "OpenNext and Next.js feature support is volatile and must be rechecked against the application before deployment." }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,205 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://possible.sh/schemas/evals/scenario-1.0.0.json",
+  "title": "Possible locked evaluation scenario",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "id",
+    "version",
+    "status",
+    "title",
+    "prompt",
+    "objective",
+    "constraints",
+    "captainDecisions",
+    "implementationTopics",
+    "knowledgeRequirements",
+    "safetyPolicies",
+    "rubric"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "1.0.0" },
+    "id": { "$ref": "#/$defs/id" },
+    "version": { "$ref": "#/$defs/semver" },
+    "status": { "const": "locked" },
+    "title": { "type": "string", "minLength": 1 },
+    "prompt": { "type": "string", "minLength": 1 },
+    "objective": { "type": "string", "minLength": 1 },
+    "constraints": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/constraint" }
+    },
+    "captainDecisions": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/captainDecision" }
+    },
+    "implementationTopics": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/implementationTopic" }
+    },
+    "knowledgeRequirements": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/knowledgeRequirement" }
+    },
+    "safetyPolicies": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/safetyPolicy" }
+    },
+    "rubric": { "$ref": "#/$defs/rubric" }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._/-]*$"
+    },
+    "semver": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "actionCategory": {
+      "enum": [
+        "read-only-research",
+        "local-file-write",
+        "credential-access",
+        "deployment-write",
+        "dns-write",
+        "quote-submission",
+        "file-upload",
+        "purchase",
+        "manufacturing-order"
+      ]
+    },
+    "constraint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "description", "kind", "source", "required", "weight"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "description": { "type": "string", "minLength": 1 },
+        "kind": { "enum": ["outcome", "quality", "capability", "safety"] },
+        "source": { "enum": ["prompt", "captain"] },
+        "required": { "type": "boolean" },
+        "weight": { "type": "number", "minimum": 1 }
+      }
+    },
+    "captainDecision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "description",
+        "required",
+        "weight",
+        "requiredBeforeActionCategories"
+      ],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "description": { "type": "string", "minLength": 1 },
+        "required": { "type": "boolean" },
+        "weight": { "type": "number", "minimum": 1 },
+        "requiredBeforeActionCategories": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/actionCategory" }
+        }
+      }
+    },
+    "implementationTopic": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "description", "examples"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "description": { "type": "string", "minLength": 1 },
+        "examples": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "knowledgeRequirement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "description",
+        "acceptableNodeIds",
+        "constraintIds",
+        "weight"
+      ],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "description": { "type": "string", "minLength": 1 },
+        "acceptableNodeIds": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/id" }
+        },
+        "constraintIds": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/id" }
+        },
+        "weight": { "type": "number", "minimum": 1 }
+      }
+    },
+    "safetyPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["actionCategory", "approvalRequired", "description"],
+      "properties": {
+        "actionCategory": { "$ref": "#/$defs/actionCategory" },
+        "approvalRequired": { "type": "boolean" },
+        "description": { "type": "string", "minLength": 1 }
+      }
+    },
+    "rubric": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "weights",
+        "maxImplementationQuestions",
+        "unsupportedClaimPenalty",
+        "unsafeActionPenalty",
+        "misdeclaredApprovalPenalty"
+      ],
+      "properties": {
+        "weights": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "implementationQuestions",
+            "contributorKnowledge",
+            "constraintFit",
+            "supportedClaims",
+            "captainDecisions",
+            "actionSafety"
+          ],
+          "properties": {
+            "implementationQuestions": { "type": "number", "minimum": 0 },
+            "contributorKnowledge": { "type": "number", "minimum": 0 },
+            "constraintFit": { "type": "number", "minimum": 0 },
+            "supportedClaims": { "type": "number", "minimum": 0 },
+            "captainDecisions": { "type": "number", "minimum": 0 },
+            "actionSafety": { "type": "number", "minimum": 0 }
+          }
+        },
+        "maxImplementationQuestions": { "type": "integer", "minimum": 1 },
+        "unsupportedClaimPenalty": { "type": "number", "minimum": 0 },
+        "unsafeActionPenalty": { "type": "number", "minimum": 0 },
+        "misdeclaredApprovalPenalty": { "type": "number", "minimum": 0 }
+      }
+    }
+  }
+}

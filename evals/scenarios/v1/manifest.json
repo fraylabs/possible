@@ -1,0 +1,19 @@
+{
+  "schemaVersion": "1.0.0",
+  "setId": "possible-mvp-golden-v1",
+  "status": "locked",
+  "scenarios": [
+    {
+      "id": "inventory-dashboard",
+      "version": "1.0.0",
+      "file": "inventory-dashboard.json",
+      "sha256": "181301af21ccbe6e6017bec3731e826c0ceed1f6897996b102a7e09a57a063bc"
+    },
+    {
+      "id": "motor-bracket-manufacturing",
+      "version": "1.0.0",
+      "file": "motor-bracket-manufacturing.json",
+      "sha256": "bd19b663751bb3b6a90fab4dbe65d4d5649c1bc6a733a114e721324eb24852aa"
+    }
+  ]
+}

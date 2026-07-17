@@ -1,0 +1,150 @@
+{
+  "$schema": "../../schema/knowledge-collection.schema.json",
+  "branch": "web",
+  "nodes": [
+    {
+      "id": "web/tools/nextjs",
+      "type": "tool",
+      "domain": "web",
+      "title": "Next.js",
+      "summary": "A React framework with file-system routing, server and client component boundaries, multiple deployment modes, and an ecosystem suited to full-stack browser applications.",
+      "tags": ["react", "framework", "routing", "server-components"],
+      "recommendations": [
+        {
+          "statement": "Use Next.js App Router as a productive candidate when a React application benefits from routing, server data, and framework-integrated rendering, then verify deployment-mode support.",
+          "applicability": ["React is an accepted implementation constraint", "Routing or server-side application behavior is materially useful"],
+          "counterconditions": ["The outcome is intentionally client-only, non-React, or depends on features unsupported by the selected static or provider deployment mode"],
+          "alternatives": [{ "nodeId": "web/tools/vite-react", "reason": "Vite with React provides a smaller client-oriented setup when Next.js server and routing conventions are unnecessary." }],
+          "sources": [
+            { "title": "Next.js App Router", "url": "https://nextjs.org/docs/app", "publisher": "Next.js", "kind": "official-documentation", "accessedAt": "2026-07-17" },
+            { "title": "Deploying Next.js", "url": "https://nextjs.org/docs/app/getting-started/deploying", "publisher": "Next.js", "kind": "official-documentation", "accessedAt": "2026-07-17" }
+          ],
+          "contributors": [{ "id": "possible-foundation", "name": "Possible founding contributors" }],
+          "reviewedAt": "2026-07-17",
+          "confidence": "medium",
+          "reviewIntervalDays": 60
+        }
+      ],
+      "relationships": [
+        { "type": "hierarchy", "target": "web/browser-applications", "description": "Next.js is a framework option for browser applications." },
+        { "type": "alternatives", "target": "web/tools/vite-react", "description": "Vite React is a client-oriented alternative when server framework features are unnecessary." },
+        { "type": "compatibility", "target": "web/tools/shadcn-ui", "description": "shadcn/ui documents a supported Next.js installation path." }
+      ],
+      "tool": { "officialUrl": "https://nextjs.org/", "categories": ["framework", "react", "full-stack-web"] }
+    },
+    {
+      "id": "web/tools/vite-react",
+      "type": "tool",
+      "domain": "web",
+      "title": "Vite with React",
+      "summary": "A client-oriented React development and build setup that keeps framework policy light while providing a fast development server and production asset build.",
+      "tags": ["react", "vite", "client-only", "build-tool"],
+      "recommendations": [
+        {
+          "statement": "Prefer a Vite React setup when the product is intentionally client-rendered and the team wants to choose routing and server services independently.",
+          "applicability": ["The browser application does not require integrated server rendering", "A lightweight client build with independently selected services is desirable"],
+          "counterconditions": ["The route needs framework-integrated server data, server rendering, or file-system routing conventions"],
+          "alternatives": [{ "nodeId": "web/tools/nextjs", "reason": "Next.js is the stronger candidate when integrated routing and server execution reduce overall system work." }],
+          "sources": [
+            { "title": "Sunsetting Create React App", "url": "https://react.dev/blog/2025/02/14/sunsetting-create-react-app", "publisher": "React", "kind": "official-project-docs", "accessedAt": "2026-07-17" },
+            { "title": "Vite guide", "url": "https://vite.dev/guide/", "publisher": "Vite", "kind": "official-project-docs", "accessedAt": "2026-07-17" }
+          ],
+          "contributors": [{ "id": "possible-foundation", "name": "Possible founding contributors" }],
+          "reviewedAt": "2026-07-17",
+          "confidence": "medium",
+          "reviewIntervalDays": 60
+        }
+      ],
+      "relationships": [
+        { "type": "hierarchy", "target": "web/browser-applications", "description": "Vite React is a tooling option for client-oriented browser applications." },
+        { "type": "alternatives", "target": "web/tools/nextjs", "description": "Next.js is an integrated framework alternative for server-aware React applications." },
+        { "type": "compatibility", "target": "web/tools/react-three-fiber", "description": "React Three Fiber can run inside a Vite React application." }
+      ],
+      "tool": { "officialUrl": "https://vite.dev/", "categories": ["framework", "react", "client-web"] }
+    },
+    {
+      "id": "web/tools/shadcn-ui",
+      "type": "tool",
+      "domain": "web",
+      "title": "shadcn/ui",
+      "summary": "An open-code React component distribution model whose CLI adds component source into the application, making customization productive while leaving maintenance with the project.",
+      "tags": ["ui", "components", "tailwind", "open-code"],
+      "recommendations": [
+        {
+          "statement": "Use shadcn/ui to accelerate React interface composition when Tailwind and local ownership of component source are acceptable maintenance choices.",
+          "applicability": ["The application uses React and a compatible Tailwind setup", "Owning and customizing component source is preferred over consuming a sealed library"],
+          "counterconditions": ["The team rejects Tailwind, does not want local component maintenance, or requires a centrally versioned design-system package"],
+          "alternatives": [{ "nodeId": "web/tools/vite-react", "reason": "A custom component layer in a Vite React application avoids adopting shadcn/ui's Tailwind and local-source model." }],
+          "sources": [
+            { "title": "shadcn/ui documentation", "url": "https://ui.shadcn.com/docs", "publisher": "shadcn/ui", "kind": "official-project-docs", "accessedAt": "2026-07-17" },
+            { "title": "Base UI is now the default", "url": "https://ui.shadcn.com/docs/changelog/2026-07-base-ui-default", "publisher": "shadcn/ui", "kind": "official-project-docs", "accessedAt": "2026-07-17" }
+          ],
+          "contributors": [{ "id": "possible-foundation", "name": "Possible founding contributors" }],
+          "reviewedAt": "2026-07-17",
+          "confidence": "medium",
+          "reviewIntervalDays": 30
+        }
+      ],
+      "relationships": [
+        { "type": "hierarchy", "target": "web/browser-applications", "description": "shadcn/ui is an interface composition option for React browser applications." },
+        { "type": "compatibility", "target": "web/tools/nextjs", "description": "The project documents adding its components to Next.js applications." },
+        { "type": "relevance", "target": "web/outcomes/dashboards", "description": "Its source-owned primitives can accelerate common dashboard interfaces." }
+      ],
+      "tool": { "officialUrl": "https://ui.shadcn.com/", "categories": ["ui-components", "react", "tailwind"] }
+    },
+    {
+      "id": "web/tools/threejs",
+      "type": "tool",
+      "domain": "web",
+      "title": "Three.js",
+      "summary": "A JavaScript 3D engine exposing scenes, cameras, renderers, geometry, materials, loaders, animation, and controls for browser graphics applications.",
+      "tags": ["threejs", "webgl", "3d", "renderer"],
+      "recommendations": [
+        {
+          "statement": "Use Three.js directly when the project benefits from explicit scene lifecycle and renderer control without coupling scene composition to React.",
+          "applicability": ["The outcome needs interactive browser 3D", "Direct imperative control of scene objects and render lifecycle fits the architecture"],
+          "counterconditions": ["A React-led application would benefit from declarative scene composition and React lifecycle integration"],
+          "alternatives": [{ "nodeId": "web/tools/react-three-fiber", "reason": "React Three Fiber is a maintained React renderer for Three.js when React composition is the desired abstraction." }],
+          "sources": [{ "title": "Three.js fundamentals", "url": "https://threejs.org/manual/en/fundamentals.html", "publisher": "Three.js", "kind": "official-project-docs", "accessedAt": "2026-07-17" }],
+          "contributors": [{ "id": "possible-foundation", "name": "Possible founding contributors" }],
+          "reviewedAt": "2026-07-17",
+          "confidence": "high",
+          "reviewIntervalDays": 60
+        }
+      ],
+      "relationships": [
+        { "type": "hierarchy", "target": "web/outcomes/3d-experiences", "description": "Three.js is a renderer tool for browser 3D experiences." },
+        { "type": "alternatives", "target": "web/tools/react-three-fiber", "description": "React Three Fiber supplies a React renderer over Three.js." },
+        { "type": "compatibility", "target": "web/tools/vite-react", "description": "Three.js can be bundled into a Vite browser project." }
+      ],
+      "tool": { "officialUrl": "https://threejs.org/", "categories": ["renderer", "3d", "webgl"] }
+    },
+    {
+      "id": "web/tools/react-three-fiber",
+      "type": "tool",
+      "domain": "web",
+      "title": "React Three Fiber",
+      "summary": "A React renderer for Three.js that expresses scene graphs as React components while retaining access to the underlying Three.js ecosystem and objects.",
+      "tags": ["react", "threejs", "3d", "renderer"],
+      "recommendations": [
+        {
+          "statement": "Use React Three Fiber when React already owns the application and declarative scene composition is more valuable than a framework-neutral imperative scene lifecycle.",
+          "applicability": ["The surrounding application is React-based", "Scene state and UI state benefit from one component composition model"],
+          "counterconditions": ["The scene is framework-neutral, highly imperative, or must avoid React runtime coupling"],
+          "alternatives": [{ "nodeId": "web/tools/threejs", "reason": "Direct Three.js keeps the renderer independent of React and exposes the imperative lifecycle explicitly." }],
+          "sources": [{ "title": "React Three Fiber introduction", "url": "https://r3f.docs.pmnd.rs/getting-started/introduction", "publisher": "pmndrs", "kind": "official-project-docs", "accessedAt": "2026-07-17" }],
+          "contributors": [{ "id": "possible-foundation", "name": "Possible founding contributors" }],
+          "reviewedAt": "2026-07-17",
+          "confidence": "medium",
+          "reviewIntervalDays": 60
+        }
+      ],
+      "relationships": [
+        { "type": "hierarchy", "target": "web/outcomes/3d-experiences", "description": "React Three Fiber is a renderer option for React-based 3D experiences." },
+        { "type": "alternatives", "target": "web/tools/threejs", "description": "Direct Three.js is the framework-neutral renderer alternative." },
+        { "type": "compatibility", "target": "web/tools/nextjs", "description": "React Three Fiber can be composed in client-side React boundaries within Next.js." }
+      ],
+      "tool": { "officialUrl": "https://r3f.docs.pmnd.rs/", "categories": ["renderer", "react", "3d"] }
+    }
+  ]
+}

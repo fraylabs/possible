@@ -1,0 +1,201 @@
+{
+  "$schema": "../../schema/knowledge-collection.schema.json",
+  "branch": "manufacturing",
+  "nodes": [
+    {
+      "id": "manufacturing/tools/cadquery",
+      "type": "tool",
+      "domain": "manufacturing",
+      "title": "CadQuery",
+      "summary": "A Python library for script-authored parametric solid CAD, suited to agent-readable models, repeatable parameter changes, and export of manufacturing exchange formats.",
+      "tags": ["cadquery", "python", "parametric-cad", "step"],
+      "recommendations": [
+        {
+          "statement": "Use CadQuery when a plain-text Python parametric model and repeatable agent edits are valuable, while validating geometry and exports with real CAD checks.",
+          "applicability": ["The part can be expressed through parametric solid modeling", "Source-level diff, automation, and repeatable variants are useful"],
+          "counterconditions": ["The design depends on interactive surfacing or specialist workflows better served by a mature GUI CAD system"],
+          "alternatives": [{ "nodeId": "manufacturing/tools/freecad", "reason": "FreeCAD provides a GUI-native parametric workflow when interactive feature modeling is preferred." }],
+          "sources": [{ "title": "CadQuery documentation", "url": "https://cadquery.readthedocs.io/en/latest/", "publisher": "CadQuery", "kind": "official-project-docs", "accessedAt": "2026-07-17" }],
+          "contributors": [{ "id": "possible-foundation", "name": "Possible founding contributors" }],
+          "reviewedAt": "2026-07-17",
+          "confidence": "medium",
+          "reviewIntervalDays": 90
+        }
+      ],
+      "relationships": [
+        { "type": "hierarchy", "target": "manufacturing/practices/parametric-cad", "description": "CadQuery is one implementation tool for a parametric CAD master." },
+        { "type": "alternatives", "target": "manufacturing/tools/freecad", "description": "FreeCAD is a GUI-native parametric modeling alternative." },
+        { "type": "compatibility", "target": "manufacturing/tools/step", "description": "CadQuery documents STEP export for downstream exchange." }
+      ],
+      "tool": { "officialUrl": "https://cadquery.readthedocs.io/", "categories": ["parametric-cad", "python", "solid-modeling"] }
+    },
+    {
+      "id": "manufacturing/tools/freecad",
+      "type": "tool",
+      "domain": "manufacturing",
+      "title": "FreeCAD",
+      "summary": "An open-source parametric 3D modeler with editable feature history, real-world units, solid modeling, drawings, and export paths for fabrication workflows.",
+      "tags": ["freecad", "parametric-cad", "gui", "open-source"],
+      "recommendations": [
+        {
+          "statement": "Use FreeCAD when an open-source GUI parametric workflow and editable feature history fit better than a script-first CAD source.",
+          "applicability": ["Interactive constrained modeling and drawing tools are useful", "An open-source native CAD environment fits the contributor workflow"],
+          "counterconditions": ["Automated textual generation and code review are the primary modeling requirements"],
+          "alternatives": [{ "nodeId": "manufacturing/tools/cadquery", "reason": "CadQuery is a script-first alternative that exposes the parametric model as Python source." }],
+          "sources": [{ "title": "FreeCAD parametric modeler", "url": "https://www.freecad.org/index.php?lang=eng_EN", "publisher": "FreeCAD", "kind": "official-project-docs", "accessedAt": "2026-07-17" }],
+          "contributors": [{ "id": "possible-foundation", "name": "Possible founding contributors" }],
+          "reviewedAt": "2026-07-17",
+          "confidence": "medium",
+          "reviewIntervalDays": 120
+        }
+      ],
+      "relationships": [
+        { "type": "hierarchy", "target": "manufacturing/practices/parametric-cad", "description": "FreeCAD is one implementation tool for a parametric CAD master." },
+        { "type": "alternatives", "target": "manufacturing/tools/cadquery", "description": "CadQuery is a script-authored parametric modeling alternative." },
+        { "type": "compatibility", "target": "manufacturing/tools/step", "description": "FreeCAD supports solid geometry export for neutral exchange workflows." }
+      ],
+      "tool": { "officialUrl": "https://www.freecad.org/", "categories": ["parametric-cad", "gui", "solid-modeling"] }
+    },
+    {
+      "id": "manufacturing/tools/step",
+      "type": "tool",
+      "domain": "manufacturing",
+      "title": "STEP solid exchange",
+      "summary": "A neutral ISO 10303 product-data exchange family used to transfer part and assembly geometry and related product information between CAD, manufacturing, analysis, and inspection systems.",
+      "tags": ["step", "iso-10303", "solid", "cad-exchange"],
+      "recommendations": [
+        {
+          "statement": "Use a revisioned STEP export for neutral solid handoff when accepted, but keep the native parametric model and drawing because STEP is not the native feature history.",
+          "applicability": ["The receiving provider or tool accepts STEP solid geometry", "Editable native feature history is retained separately as the design source"],
+          "counterconditions": ["The target workflow explicitly requires a mesh, 2D profile, or native CAD format instead"],
+          "alternatives": [{ "nodeId": "manufacturing/tools/stl", "reason": "STL is a mesh alternative for additive workflows that explicitly accept triangulated geometry." }],
+          "sources": [
+            { "title": "ISO 10303-21:2016", "url": "https://www.iso.org/standard/63141.html", "publisher": "ISO", "kind": "official-standard", "accessedAt": "2026-07-17" },
+            { "title": "NIST STEP File Analyzer", "url": "https://www.nist.gov/services-resources/software/step-file-analyzer-and-viewer", "publisher": "NIST", "kind": "government-reference", "accessedAt": "2026-07-17" }
+          ],
+          "contributors": [{ "id": "possible-foundation", "name": "Possible founding contributors" }],
+          "reviewedAt": "2026-07-17",
+          "confidence": "high",
+          "reviewIntervalDays": 180
+        }
+      ],
+      "relationships": [
+        { "type": "hierarchy", "target": "manufacturing/custom-parts", "description": "STEP is a common neutral solid artifact in custom-part workflows." },
+        { "type": "alternatives", "target": "manufacturing/tools/stl", "description": "STL is a triangulated mesh alternative for selected additive workflows." },
+        { "type": "compatibility", "target": "manufacturing/processes/cnc-machining", "description": "Many CNC quote workflows accept STEP solid models." }
+      ],
+      "tool": { "officialUrl": "https://www.iso.org/standard/63141.html", "categories": ["cad-format", "solid-exchange", "manufacturing-artifact"] }
+    },
+    {
+      "id": "manufacturing/tools/stl",
+      "type": "tool",
+      "domain": "manufacturing",
+      "title": "STL mesh exchange",
+      "summary": "A simple triangulated surface format widely used in additive workflows, with no intrinsic unit declaration or parametric feature history and limited manufacturing metadata.",
+      "tags": ["stl", "mesh", "additive", "unitless"],
+      "recommendations": [
+        {
+          "statement": "Use STL only when the additive workflow accepts it, declare units out of band, choose sufficient mesh refinement, and never treat it as precision-editable native CAD.",
+          "applicability": ["The selected additive workflow explicitly accepts STL", "Units, orientation, and mesh refinement are recorded in the package"],
+          "counterconditions": ["Neutral solid exchange, exact editable geometry, units, color, materials, or richer manufacturing metadata are required"],
+          "alternatives": [{ "nodeId": "manufacturing/tools/3mf", "reason": "3MF is an additive alternative with defined units and extensible manufacturing metadata." }],
+          "sources": [
+            { "title": "STL file format family", "url": "https://www.loc.gov/preservation/digital/formats/fdd/fdd000504.shtml", "publisher": "Library of Congress", "kind": "government-reference", "accessedAt": "2026-07-17" },
+            { "title": "Fusion export mesh guidance", "url": "https://help.autodesk.com/cloudhelp/ENU/Fusion-Model/files/SLD-3D-PRINT.htm", "publisher": "Autodesk", "kind": "official-documentation", "accessedAt": "2026-07-17" }
+          ],
+          "contributors": [{ "id": "possible-foundation", "name": "Possible founding contributors" }],
+          "reviewedAt": "2026-07-17",
+          "confidence": "high",
+          "reviewIntervalDays": 180
+        }
+      ],
+      "relationships": [
+        { "type": "hierarchy", "target": "manufacturing/custom-parts", "description": "STL is a mesh artifact for selected custom-part workflows." },
+        { "type": "alternatives", "target": "manufacturing/tools/3mf", "description": "3MF is a richer additive mesh container alternative." },
+        { "type": "compatibility", "target": "manufacturing/processes/fdm", "description": "FDM slicer workflows commonly consume triangulated mesh artifacts." }
+      ],
+      "tool": { "officialUrl": "https://www.loc.gov/preservation/digital/formats/fdd/fdd000504.shtml", "categories": ["mesh-format", "additive", "manufacturing-artifact"] }
+    },
+    {
+      "id": "manufacturing/tools/3mf",
+      "type": "tool",
+      "domain": "manufacturing",
+      "title": "3MF additive exchange",
+      "summary": "An additive manufacturing package format with defined units, mesh geometry, transforms, metadata, and published extensions for materials and production workflows.",
+      "tags": ["3mf", "additive", "units", "metadata"],
+      "recommendations": [
+        {
+          "statement": "Use 3MF as an additive alternative when the toolchain supports it and units or richer print metadata matter; do not use it as a replacement for neutral STEP solids.",
+          "applicability": ["The selected additive workflow explicitly supports 3MF", "Defined units or supported color, material, or production metadata are useful"],
+          "counterconditions": ["The recipient requires exact neutral solid geometry for CAD or machining exchange"],
+          "alternatives": [{ "nodeId": "manufacturing/tools/stl", "reason": "STL remains a simpler mesh alternative when the target accepts only triangulated surface geometry." }],
+          "sources": [{ "title": "3MF specification suite", "url": "https://3mf.io/spec/", "publisher": "3MF Consortium", "kind": "official-standard", "accessedAt": "2026-07-17" }],
+          "contributors": [{ "id": "possible-foundation", "name": "Possible founding contributors" }],
+          "reviewedAt": "2026-07-17",
+          "confidence": "high",
+          "reviewIntervalDays": 180
+        }
+      ],
+      "relationships": [
+        { "type": "hierarchy", "target": "manufacturing/custom-parts", "description": "3MF is an additive manufacturing artifact option." },
+        { "type": "alternatives", "target": "manufacturing/tools/stl", "description": "STL is a simpler triangulated mesh alternative." },
+        { "type": "compatibility", "target": "manufacturing/processes/sls", "description": "3MF can serve additive workflows when the selected SLS provider accepts it." }
+      ],
+      "tool": { "officialUrl": "https://3mf.io/spec/", "categories": ["mesh-format", "additive", "manufacturing-artifact"] }
+    },
+    {
+      "id": "manufacturing/tools/dxf",
+      "type": "tool",
+      "domain": "manufacturing",
+      "title": "DXF profile exchange",
+      "summary": "A 2D drawing exchange format commonly used to hand off clean, closed, one-to-one cut profiles or flat patterns to sheet cutting workflows.",
+      "tags": ["dxf", "2d", "laser-cutting", "flat-pattern"],
+      "recommendations": [
+        {
+          "statement": "Use DXF for a clean 1:1 2D cut profile when accepted, with explicit units, closed contours, no duplicate geometry, and only process-relevant entities.",
+          "applicability": ["The target process consumes a planar cut profile or flat pattern", "The provider explicitly accepts DXF for the selected service"],
+          "counterconditions": ["The part definition requires solid 3D geometry, partial-depth features, or unsupported annotations"],
+          "alternatives": [{ "nodeId": "manufacturing/tools/step", "reason": "STEP is the appropriate neutral solid alternative when the process requires 3D geometry." }],
+          "sources": [{ "title": "SendCutSend getting started", "url": "https://sendcutsend.com/guidelines/getting-started/", "publisher": "SendCutSend", "kind": "official-documentation", "accessedAt": "2026-07-17" }],
+          "contributors": [{ "id": "possible-foundation", "name": "Possible founding contributors" }],
+          "reviewedAt": "2026-07-17",
+          "confidence": "high",
+          "reviewIntervalDays": 90
+        }
+      ],
+      "relationships": [
+        { "type": "hierarchy", "target": "manufacturing/custom-parts", "description": "DXF is a profile artifact for selected custom-part processes." },
+        { "type": "alternatives", "target": "manufacturing/tools/step", "description": "STEP is a solid-model alternative for 3D process handoff." },
+        { "type": "compatibility", "target": "manufacturing/processes/laser-sheet-cutting", "description": "DXF is commonly accepted for planar sheet cutting profiles." }
+      ],
+      "tool": { "officialUrl": "https://sendcutsend.com/guidelines/getting-started/", "categories": ["2d-format", "sheet-cutting", "manufacturing-artifact"] }
+    },
+    {
+      "id": "manufacturing/tools/mujoco",
+      "type": "tool",
+      "domain": "manufacturing",
+      "title": "MuJoCo",
+      "summary": "A general-purpose physics engine for articulated structures and contact, useful for robot mechanism studies while remaining a model-dependent simulation rather than physical proof.",
+      "tags": ["mujoco", "robotics", "simulation", "dynamics"],
+      "recommendations": [
+        {
+          "statement": "Use MuJoCo to test articulated motion, contact, and control assumptions before fabrication when a calibrated model exists, while preserving physical verification as a separate requirement.",
+          "applicability": ["The custom part belongs to an articulated robot mechanism", "Kinematics, contact, or controller behavior can invalidate the mechanical route"],
+          "counterconditions": ["Material stress, manufacturing defects, and physical performance are being inferred from an uncalibrated simulation alone"],
+          "alternatives": [{ "nodeId": "manufacturing/practices/inspection-plan", "reason": "Physical measurement and acceptance remain necessary after fabrication even when simulation is used." }],
+          "sources": [{ "title": "MuJoCo overview", "url": "https://mujoco.readthedocs.io/en/stable/overview.html", "publisher": "Google DeepMind", "kind": "official-project-docs", "accessedAt": "2026-07-17" }],
+          "contributors": [{ "id": "possible-foundation", "name": "Possible founding contributors" }],
+          "reviewedAt": "2026-07-17",
+          "confidence": "medium",
+          "reviewIntervalDays": 90
+        }
+      ],
+      "relationships": [
+        { "type": "hierarchy", "target": "manufacturing/custom-parts", "description": "MuJoCo supports robot-related custom-part reasoning before fabrication." },
+        { "type": "relevance", "target": "manufacturing/outcomes/motor-brackets", "description": "Motor bracket interfaces may participate in an articulated mechanism model." },
+        { "type": "alternatives", "target": "manufacturing/practices/inspection-plan", "description": "Physical inspection supplies evidence that simulation cannot establish." }
+      ],
+      "tool": { "officialUrl": "https://mujoco.org/", "categories": ["simulation", "robotics", "physics"] }
+    }
+  ]
+}

@@ -1,0 +1,108 @@
+{
+  "$schema": "../../schema/knowledge-collection.schema.json",
+  "branch": "web",
+  "nodes": [
+    {
+      "id": "web/actions/deploy-vercel-preview",
+      "type": "action",
+      "domain": "web",
+      "title": "Create a Vercel preview deployment",
+      "summary": "An approval-gated handoff that sends project source or a connected Git revision to Vercel and returns a preview URL for verification without promoting production.",
+      "tags": ["vercel", "preview", "deployment", "external-effect"],
+      "recommendations": [
+        {
+          "statement": "Create a preview only after the captain approves the external source handoff, then verify the returned deployment before any production promotion.",
+          "applicability": ["Vercel was selected after a live provider check", "A review environment is needed before production"],
+          "counterconditions": ["Repository access, secrets, provider terms, or the deployment target have not been approved"],
+          "alternatives": [{ "nodeId": "web/actions/deploy-cloudflare-preview", "reason": "Use a Cloudflare preview path when Workers is the selected compatible provider." }],
+          "sources": [{ "title": "Deploying Git repositories with Vercel", "url": "https://vercel.com/docs/git", "publisher": "Vercel", "kind": "official-capability", "accessedAt": "2026-07-17" }],
+          "contributors": [{ "id": "possible-foundation", "name": "Possible founding contributors" }],
+          "reviewedAt": "2026-07-17",
+          "confidence": "high",
+          "reviewIntervalDays": 30
+        }
+      ],
+      "relationships": [
+        { "type": "hierarchy", "target": "web", "description": "Preview deployment is an external Web delivery action." },
+        { "type": "invocation", "target": "web/providers/vercel", "description": "The action hands source or a Git revision to Vercel." },
+        { "type": "relevance", "target": "web/practices/production-verification", "description": "The resulting preview is the environment for production-oriented checks." }
+      ],
+      "action": {
+        "access": "external-approval",
+        "providerId": "web/providers/vercel",
+        "requiresApproval": true,
+        "approvalReason": "The handoff grants provider access or uploads source and creates external deployment state.",
+        "steps": ["Live-check provider compatibility, account, plan, and target configuration", "Ask the captain to approve source access and preview deployment", "Create the preview through the selected official Vercel path", "Return the preview URL and verification evidence"],
+        "produces": ["Preview deployment URL", "Deployment verification receipt"]
+      }
+    },
+    {
+      "id": "web/actions/deploy-cloudflare-preview",
+      "type": "action",
+      "domain": "web",
+      "title": "Create a Cloudflare preview deployment",
+      "summary": "An approval-gated handoff that deploys a compatible project to a non-production Cloudflare target and returns the external URL for runtime verification.",
+      "tags": ["cloudflare", "preview", "workers", "external-effect"],
+      "recommendations": [
+        {
+          "statement": "Create a Cloudflare preview only after rechecking runtime and adapter compatibility and obtaining captain approval for authentication and external deployment state.",
+          "applicability": ["Cloudflare Workers was selected after a live compatibility check", "A non-production environment is needed for browser verification"],
+          "counterconditions": ["Required Next.js or Node runtime features are unsupported by the current adapter"],
+          "alternatives": [{ "nodeId": "web/actions/deploy-vercel-preview", "reason": "Use a Vercel preview when Vercel is the selected compatible provider." }],
+          "sources": [{ "title": "Next.js on Cloudflare Workers", "url": "https://developers.cloudflare.com/workers/framework-guides/web-apps/nextjs/", "publisher": "Cloudflare", "kind": "official-capability", "accessedAt": "2026-07-17" }],
+          "contributors": [{ "id": "possible-foundation", "name": "Possible founding contributors" }],
+          "reviewedAt": "2026-07-17",
+          "confidence": "medium",
+          "reviewIntervalDays": 30
+        }
+      ],
+      "relationships": [
+        { "type": "hierarchy", "target": "web", "description": "Preview deployment is an external Web delivery action." },
+        { "type": "invocation", "target": "web/providers/cloudflare-workers", "description": "The action invokes the authenticated Cloudflare deployment path." },
+        { "type": "relevance", "target": "web/practices/production-verification", "description": "The resulting preview supports runtime and browser-flow checks." }
+      ],
+      "action": {
+        "access": "external-approval",
+        "providerId": "web/providers/cloudflare-workers",
+        "requiresApproval": true,
+        "approvalReason": "Wrangler authentication and deployment create externally reachable provider state.",
+        "steps": ["Live-check Workers runtime and framework-adapter compatibility", "Ask the captain to approve authentication and preview deployment", "Deploy to the approved non-production target", "Return the preview URL and verification evidence"],
+        "produces": ["Preview deployment URL", "Deployment verification receipt"]
+      }
+    },
+    {
+      "id": "web/actions/promote-vercel-production",
+      "type": "action",
+      "domain": "web",
+      "title": "Promote a verified Vercel deployment to production",
+      "summary": "A separately approval-gated production action that occurs only after preview evidence is reviewed and the captain explicitly accepts the target, domain, cost, and release impact.",
+      "tags": ["vercel", "production", "promotion", "captain-approval"],
+      "recommendations": [
+        {
+          "statement": "Treat production promotion as a new captain decision, never as an implied continuation of preview approval or a successful build.",
+          "applicability": ["A Vercel preview has passed the declared production checks", "The captain has reviewed target, domain, configuration, cost, and release impact"],
+          "counterconditions": ["Verification is incomplete or production scope differs from the approved preview"],
+          "alternatives": [{ "nodeId": "web/actions/deploy-vercel-preview", "reason": "Remain on a preview deployment when production approval or evidence is incomplete." }],
+          "sources": [{ "title": "Deploying to Vercel", "url": "https://vercel.com/docs/deployments/overview", "publisher": "Vercel", "kind": "official-capability", "accessedAt": "2026-07-17" }],
+          "contributors": [{ "id": "possible-foundation", "name": "Possible founding contributors" }],
+          "reviewedAt": "2026-07-17",
+          "confidence": "high",
+          "reviewIntervalDays": 30
+        }
+      ],
+      "relationships": [
+        { "type": "hierarchy", "target": "web/actions/deploy-vercel-preview", "description": "Production promotion follows a separately verified preview route." },
+        { "type": "invocation", "target": "web/providers/vercel", "description": "The action changes external Vercel production deployment state." },
+        { "type": "relevance", "target": "web/practices/production-verification", "description": "Promotion requires the production verification receipt." }
+      ],
+      "action": {
+        "access": "external-approval",
+        "providerId": "web/providers/vercel",
+        "requiresApproval": true,
+        "approvalReason": "Production promotion changes the user-facing release and may affect domains, traffic, usage, and cost.",
+        "steps": ["Present the preview verification receipt and exact production target", "Ask for explicit captain approval of production promotion", "Promote only the approved deployment and configuration", "Verify the production URL and record the resulting deployment identity"],
+        "produces": ["Production deployment URL", "Production verification receipt"]
+      }
+    }
+  ]
+}

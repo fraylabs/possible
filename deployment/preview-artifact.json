@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "artifactDirectory": "apps/web/dist",
+  "buildCommand": "npm run preview:build",
+  "verificationCommand": "npm run preview:verify",
+  "sha256": "8b8165a9e7cdcc6999ea99e4c52457da706650ff3f50ed3d46f280688dbf6c95",
+  "totalBytes": 390944,
+  "files": [
+    {
+      "path": "assets/index-BuReXpX3.js",
+      "bytes": 364154,
+      "sha256": "65917305a39c4d3deb2b5cecbcf3674cd50cd6c355c57f6dc3ea9b00b06ade3c"
+    },
+    {
+      "path": "assets/index-CuuU0_vw.css",
+      "bytes": 26176,
+      "sha256": "27a361aa0e32a29b4c973d736b276446f0c2bcee4dfb17a0918c4252df65eec8"
+    },
+    {
+      "path": "index.html",
+      "bytes": 614,
+      "sha256": "71795cae8d77cf2b2d0783b93f023225d46351307f961d88f400a4ff19f8ba6d"
+    }
+  ],
+  "runtimeContract": {
+    "entrypoint": "index.html",
+    "spaFallback": true,
+    "sourceMapsPublished": false,
+    "contentTypesVerified": true,
+    "symbolicLinksAllowed": false,
+    "artifactRootSymbolicLinkAllowed": false,
+    "missingAssetStatus": 404,
+    "pathTraversalStatus": 404
+  },
+  "publication": {
+    "state": "not-published",
+    "allowedNextAction": "Explicit captain approval for one non-production provider-generated preview URL",
+    "requiresSeparateApproval": [
+      "provider authentication or repository access",
+      "cost or paid-plan exposure",
+      "custom DNS",
+      "production promotion"
+    ]
+  }
+}
