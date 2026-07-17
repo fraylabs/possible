@@ -29,5 +29,8 @@
   },
   "devDependencies": {
     "jsdom": "^29.1.1"
+  },
+  "optionalDependencies": {
+    "@rolldown/binding-linux-x64-gnu": "1.1.5"
   }
 }
