@@ -1,4 +1,5 @@
 import { getBacklinks, getPage, getRelatedPages, type WikiCorpus, type WikiPage } from "@possible/knowledge";
+import { sectionForSlug } from "./atlas";
 
 export type GraphRelation = "selected" | "outgoing" | "incoming" | "mutual";
 
@@ -92,13 +93,17 @@ export function buildRelatedGraph(corpus: WikiCorpus, slug: string): RelatedGrap
     };
   }
 
+  const selectedSection = sectionForSlug(selected.slug);
+  const isInSelectedSection = (page: WikiPage): boolean =>
+    !selectedSection || sectionForSlug(page.slug) === selectedSection;
+
   const outgoingPages = uniquePages(
     selected.links
       .map((linkSlug) => getPage(corpus, linkSlug))
-      .filter((page): page is WikiPage => Boolean(page)),
+      .filter((page): page is WikiPage => page !== undefined && isInSelectedSection(page)),
   ).sort(byTitle);
-  const backlinkPages = uniquePages(getBacklinks(corpus, slug)).sort(byTitle);
-  const relatedPages = uniquePages(getRelatedPages(corpus, slug)).sort(byTitle);
+  const backlinkPages = uniquePages(getBacklinks(corpus, slug).filter(isInSelectedSection)).sort(byTitle);
+  const relatedPages = uniquePages(getRelatedPages(corpus, slug).filter(isInSelectedSection)).sort(byTitle);
 
   const outgoingSlugs = new Set(outgoingPages.map((page) => page.slug));
   const backlinkSlugs = new Set(backlinkPages.map((page) => page.slug));

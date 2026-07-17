@@ -12,7 +12,9 @@ import {
   searchPages,
   type WikiCorpus,
 } from "@possible/knowledge";
+import { buildAtlasBranches } from "./atlas";
 import { ArticleView } from "./components/ArticleView";
+import { AtlasGraph } from "./components/AtlasGraph";
 import { RelatedGraph } from "./components/RelatedGraph";
 import { buildRelatedGraph, formatReviewedAt, routeSlug, wikiPath } from "./wiki";
 
@@ -44,12 +46,7 @@ export function App() {
         if (!active) return;
         setLoadState({ status: "ready", corpus });
         const requestedSlug = routeSlug(window.location.pathname);
-        const initialSlug = requestedSlug ?? getPage(corpus, "web")?.slug ?? corpus.pages[0]?.slug;
-        setSelectedSlug(initialSlug);
-
-        if (!requestedSlug && initialSlug) {
-          window.history.replaceState(null, "", wikiPath(initialSlug));
-        }
+        setSelectedSlug(requestedSlug);
       })
       .catch((error: unknown) => {
         if (!active) return;
@@ -66,7 +63,8 @@ export function App() {
 
   const corpus = loadState.status === "ready" ? loadState.corpus : undefined;
   const selectedPage = corpus && selectedSlug ? getPage(corpus, selectedSlug) : undefined;
-  const fallbackPage = corpus ? getPage(corpus, "web") ?? corpus.pages[0] : undefined;
+  const branches = corpus ? buildAtlasBranches(corpus) : [];
+  const fallbackPage = branches[0]?.page ?? (corpus ? corpus.pages[0] : undefined);
   const graph = corpus && selectedSlug ? buildRelatedGraph(corpus, selectedSlug) : {
     nodes: [],
     edges: [],
@@ -98,10 +96,9 @@ export function App() {
     if (!corpus) return undefined;
 
     const handlePopState = () => {
-      const nextSlug = routeSlug(window.location.pathname)
-        ?? getPage(corpus, "web")?.slug
-        ?? corpus.pages[0]?.slug;
-      pendingFocusRef.current = mode;
+      const nextSlug = routeSlug(window.location.pathname);
+      pendingFocusRef.current = nextSlug ? mode : "explore";
+      if (!nextSlug) setMode("explore");
       setSelectedSlug(nextSlug);
       setQuery("");
     };
@@ -162,11 +159,14 @@ export function App() {
     window.history[method](null, "", nextPath);
   };
 
-  const resetToFirstPage = () => {
-    if (!fallbackPage) return;
+  const resetToAtlas = () => {
     pendingFocusRef.current = "explore";
     setMode("explore");
-    selectPage(fallbackPage.slug);
+    setSelectedSlug(undefined);
+    setQuery("");
+    if (window.location.pathname !== "/") {
+      window.history.pushState(null, "", "/");
+    }
   };
 
   const submitSearch = (event: FormEvent<HTMLFormElement>) => {
@@ -227,6 +227,7 @@ export function App() {
           fallbackPage={fallbackPage}
           titleRef={readTitleRef}
           onBack={() => returnToExplore()}
+          onHome={resetToAtlas}
           onSelectPage={(slug) => selectPage(slug, { focus: "read", mode: "read" })}
         />
       </main>
@@ -235,11 +236,13 @@ export function App() {
 
   return (
     <main className="app-shell app-shell--explore">
-      <a className="skip-link" href="#explore-title">Skip to selected page</a>
+      <a className="skip-link" href="#explore-title">
+        {selectedSlug ? "Skip to selected page" : "Skip to atlas"}
+      </a>
 
       <div className="explore-view">
         <aside className="explore-panel" aria-label="Explore Possible">
-          <button type="button" className="brand-reset" onClick={resetToFirstPage}>
+          <button type="button" className="brand-reset" onClick={resetToAtlas}>
             <span className="brand-wordmark">possible<span>.sh</span></span>
             <span className="brand-tagline">A sourced wiki of what people can make possible.</span>
           </button>
@@ -296,38 +299,60 @@ export function App() {
           </div>
 
           <section className="selected-context" aria-labelledby="explore-title">
-            <p className="section-kicker">Explore</p>
-            <h1 id="explore-title" ref={exploreTitleRef} tabIndex={-1}>
-              {selectedPage?.title ?? "Page not found"}
-            </h1>
-            <p className="selected-summary">
-              {selectedPage?.summary
-                ?? `The page "${selectedSlug ?? "unknown"}" is not present in this build.`}
-            </p>
-            {selectedPage ? (
+            {selectedSlug ? (
               <>
-                <p className="review-note">Reviewed {formatReviewedAt(selectedPage.reviewedAt)}</p>
-                <button type="button" className="read-button" onClick={openRead}>
-                  <BookOpenText size={18} aria-hidden="true" />
-                  Read page
-                </button>
+                <p className="section-kicker">Explore</p>
+                <h1 id="explore-title" ref={exploreTitleRef} tabIndex={-1}>
+                  {selectedPage?.title ?? "Page not found"}
+                </h1>
+                <p className="selected-summary">
+                  {selectedPage?.summary
+                    ?? `The page "${selectedSlug}" is not present in this build.`}
+                </p>
+                {selectedPage ? (
+                  <>
+                    <p className="review-note">Reviewed {formatReviewedAt(selectedPage.reviewedAt)}</p>
+                    <button type="button" className="read-button" onClick={openRead}>
+                      <BookOpenText size={18} aria-hidden="true" />
+                      Read page
+                    </button>
+                  </>
+                ) : fallbackPage ? (
+                  <button
+                    type="button"
+                    className="read-button"
+                    onClick={() => selectPage(fallbackPage.slug, { focus: "explore" })}
+                  >
+                    Open {fallbackPage.title}
+                  </button>
+                ) : null}
               </>
-            ) : fallbackPage ? (
-              <button
-                type="button"
-                className="read-button"
-                onClick={() => selectPage(fallbackPage.slug, { focus: "explore" })}
-              >
-                Open {fallbackPage.title}
-              </button>
-            ) : null}
+            ) : (
+              <>
+                <p className="section-kicker">Atlas</p>
+                <h1 className="atlas-title" id="explore-title" ref={exploreTitleRef} tabIndex={-1}>
+                  What do you want to make possible?
+                </h1>
+                <p className="selected-summary">
+                  Choose a field to enter its knowledge branch. Search still reaches every sourced page.
+                </p>
+                <p className="atlas-note">{branches.length} fields · {corpus.pages.length} sourced pages</p>
+              </>
+            )}
           </section>
         </aside>
 
-        <RelatedGraph
-          graph={graph}
-          onSelectPage={(slug) => selectPage(slug, { focus: "explore", mode: "explore" })}
-        />
+        {selectedSlug ? (
+          <RelatedGraph
+            graph={graph}
+            onSelectPage={(slug) => selectPage(slug, { focus: "explore", mode: "explore" })}
+          />
+        ) : (
+          <AtlasGraph
+            branches={branches}
+            onSelectBranch={(slug) => selectPage(slug, { focus: "explore", mode: "explore" })}
+          />
+        )}
       </div>
     </main>
   );

@@ -4,8 +4,13 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "generate:atlas": "node scripts/build-atlas.mjs --write",
+    "validate:atlas": "node scripts/build-atlas.mjs --check",
+    "prebuild": "npm run generate:atlas",
+    "predev": "npm run generate:atlas",
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "pretest": "npm run validate:atlas",
     "test": "vitest run",
     "test:data": "vitest run --mode integration src/data-contract.test.ts",
     "test:watch": "vitest"

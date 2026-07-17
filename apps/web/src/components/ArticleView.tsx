@@ -10,6 +10,7 @@ interface ArticleViewProps {
   fallbackPage: WikiPage | undefined;
   titleRef: RefObject<HTMLHeadingElement | null>;
   onBack: () => void;
+  onHome: () => void;
   onSelectPage: (slug: string) => void;
 }
 
@@ -28,12 +29,15 @@ export function ArticleView({
   fallbackPage,
   titleRef,
   onBack,
+  onHome,
   onSelectPage,
 }: ArticleViewProps) {
   return (
     <div className="read-view">
       <header className="read-nav">
-        <p className="brand-wordmark">possible<span>.sh</span></p>
+        <button type="button" className="brand-reset" onClick={onHome} aria-label="Return to Possible atlas">
+          <span className="brand-wordmark">possible<span>.sh</span></span>
+        </button>
         <button type="button" className="back-button" onClick={onBack}>
           <ArrowLeft size={17} aria-hidden="true" />
           Back to map

@@ -11,16 +11,28 @@ describe("Possible wiki", () => {
     window.history.replaceState(null, "", "/");
   });
 
-  it("opens in a calm Explore view and lets search and graph select pages", async () => {
+  it("opens on the atlas, keeps fields as siblings, and lets search and graph select pages", async () => {
     const user = userEvent.setup();
     render(<App />);
 
     expect(screen.getByText("Loading Possible")).toBeInTheDocument();
-    await screen.findByRole("heading", { level: 1, name: "Web" });
-    expect(window.location.pathname).toBe("/wiki/web");
-    expect(screen.getByRole("button", { name: "Read page" })).toBeInTheDocument();
+    await screen.findByRole("heading", { level: 1, name: "What do you want to make possible?" });
+    expect(window.location.pathname).toBe("/");
+    expect(screen.queryByRole("button", { name: "Read page" })).not.toBeInTheDocument();
     expect(screen.queryByText(/Start with the primary surface/i)).not.toBeInTheDocument();
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+
+    const atlas = screen.getByRole("region", { name: "Possible knowledge atlas" });
+    expect(within(atlas).getByRole("button", { name: "Web, 3 pages" })).toBeInTheDocument();
+    expect(within(atlas).getByRole("button", { name: "Manufacturing, 2 pages" })).toBeInTheDocument();
+    await user.click(within(atlas).getByRole("button", { name: "Web, 3 pages" }));
+
+    expect(await screen.findByRole("heading", { level: 1, name: "Web" })).toBeInTheDocument();
+    expect(window.location.pathname).toBe("/wiki/web");
+    expect(screen.getByRole("button", { name: "Read page" })).toBeInTheDocument();
+    const webGraph = screen.getByRole("region", { name: "Related page graph" });
+    expect(within(webGraph).queryByRole("button", { name: /Manufacturing/i })).not.toBeInTheDocument();
+    expect(within(webGraph).queryByRole("button", { name: /Custom manufactured parts/i })).not.toBeInTheDocument();
 
     const search = screen.getByRole("searchbox", { name: "Search pages" });
     await user.type(search, "vite");
@@ -73,6 +85,8 @@ describe("Possible wiki", () => {
     const user = userEvent.setup();
     render(<App />);
 
+    await screen.findByRole("heading", { level: 1, name: "What do you want to make possible?" });
+    await user.click(screen.getByRole("button", { name: "Web, 3 pages" }));
     await screen.findByRole("heading", { level: 1, name: "Web" });
     await user.click(screen.getByRole("button", { name: "Read page" }));
     expect(await screen.findByRole("button", { name: "Back to map" })).toBeInTheDocument();
@@ -94,10 +108,12 @@ describe("Possible wiki", () => {
     Object.defineProperty(window, "innerWidth", { configurable: true, value: 390 });
     render(<App />);
 
-    await screen.findByRole("heading", { level: 1, name: "Web" });
+    await screen.findByRole("heading", { level: 1, name: "What do you want to make possible?" });
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: /open article|close article/i })).not.toBeInTheDocument();
 
+    await user.click(screen.getByRole("button", { name: "Web, 3 pages" }));
+    await screen.findByRole("heading", { level: 1, name: "Web" });
     await user.click(screen.getByRole("button", { name: "Read page" }));
     expect(await screen.findByRole("button", { name: "Back to map" })).toBeInTheDocument();
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
@@ -107,7 +123,7 @@ describe("Possible wiki", () => {
   it("supports keyboard shortcuts and has no detectable semantic accessibility violations", async () => {
     const user = userEvent.setup();
     render(<App />);
-    await screen.findByRole("heading", { level: 1, name: "Web" });
+    await screen.findByRole("heading", { level: 1, name: "What do you want to make possible?" });
 
     fireEvent.keyDown(window, { key: "/" });
     expect(screen.getByRole("searchbox", { name: "Search pages" })).toHaveFocus();
@@ -117,6 +133,8 @@ describe("Possible wiki", () => {
     });
     expect(exploreResults.violations).toEqual([]);
 
+    await user.click(screen.getByRole("button", { name: "Web, 3 pages" }));
+    await screen.findByRole("heading", { level: 1, name: "Web" });
     await user.click(screen.getByRole("button", { name: "Read page" }));
     await screen.findByRole("button", { name: "Back to map" });
     const readResults = await axe.run(document.body, {
@@ -132,5 +150,23 @@ describe("Possible wiki", () => {
     await waitFor(() => {
       expect(screen.getByRole("searchbox", { name: "Search pages" })).toHaveFocus();
     });
+  });
+
+  it("returns to the top-level atlas from both Explore and Read", async () => {
+    const user = userEvent.setup();
+    window.history.replaceState(null, "", "/wiki/web");
+    render(<App />);
+
+    await screen.findByRole("heading", { level: 1, name: "Web" });
+    await user.click(screen.getByRole("button", { name: /possible\.sh/i }));
+    expect(await screen.findByRole("heading", { level: 1, name: "What do you want to make possible?" })).toBeInTheDocument();
+    expect(window.location.pathname).toBe("/");
+
+    await user.click(screen.getByRole("button", { name: "Manufacturing, 2 pages" }));
+    await user.click(screen.getByRole("button", { name: "Read page" }));
+    await screen.findByRole("button", { name: "Back to map" });
+    await user.click(screen.getByRole("button", { name: "Return to Possible atlas" }));
+    expect(await screen.findByRole("heading", { level: 1, name: "What do you want to make possible?" })).toBeInTheDocument();
+    expect(window.location.pathname).toBe("/");
   });
 });

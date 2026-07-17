@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { WikiCorpus } from "@possible/knowledge";
+import { buildAtlasBranches } from "./atlas";
 import { parseMarkdown } from "./markdown";
 import { buildRelatedGraph, formatReviewedAt, hrefToSlug, routeSlug, wikiPath } from "./wiki";
 
@@ -13,7 +14,7 @@ const corpus: WikiCorpus = {
       tags: ["browser"],
       reviewedAt: "2026-07-17",
       sources: [{ title: "React", url: "https://react.dev/" }],
-      links: ["browser-applications"],
+      links: ["browser-applications", "custom-manufactured-parts"],
     },
     {
       slug: "browser-applications",
@@ -34,6 +35,26 @@ const corpus: WikiCorpus = {
       reviewedAt: "2026-07-17",
       sources: [{ title: "Vite", url: "https://vite.dev/" }],
       links: ["browser-applications"],
+    },
+    {
+      slug: "manufacturing",
+      title: "Manufacturing",
+      summary: "Fabricated physical outcomes.",
+      body: "Continue with [Custom manufactured parts](/wiki/custom-manufactured-parts).",
+      tags: ["fabrication"],
+      reviewedAt: "2026-07-17",
+      sources: [{ title: "NIST", url: "https://example.com/nist" }],
+      links: ["custom-manufactured-parts", "web"],
+    },
+    {
+      slug: "custom-manufactured-parts",
+      title: "Custom manufactured parts",
+      summary: "Controlled fabrication work.",
+      body: "Return to [Manufacturing](/wiki/manufacturing).",
+      tags: ["fabrication"],
+      reviewedAt: "2026-07-17",
+      sources: [{ title: "Manufacturing", url: "https://example.com/manufacturing" }],
+      links: ["manufacturing"],
     },
   ],
 };
@@ -57,6 +78,19 @@ describe("wiki helpers", () => {
     expect(graph.backlinkPages.map((page) => page.slug)).toEqual(["vite-react", "web"]);
     expect(graph.relatedPages.map((page) => page.slug)).toEqual(["vite-react", "web"]);
     expect(graph.nodes.find((node) => node.page.slug === "browser-applications")?.relation).toBe("selected");
+  });
+
+  it("derives sibling atlas branches and keeps local graphs inside their field", () => {
+    const branches = buildAtlasBranches(corpus);
+    expect(branches.map((branch) => [branch.page.slug, branch.pageCount])).toEqual([
+      ["manufacturing", 2],
+      ["web", 3],
+    ]);
+
+    const webGraph = buildRelatedGraph(corpus, "web");
+    expect(webGraph.relatedPages.map((page) => page.slug)).toEqual(["browser-applications"]);
+    expect(webGraph.relatedPages.map((page) => page.slug)).not.toContain("manufacturing");
+    expect(webGraph.relatedPages.map((page) => page.slug)).not.toContain("custom-manufactured-parts");
   });
 });
 
