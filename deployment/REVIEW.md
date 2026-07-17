@@ -6,6 +6,9 @@ Audited base: Git `10141eacb2756063cb1a88f19ac0555608bec89c`
 Implementation diff SHA-256, excluding this review:
 `771cb7ed8236bd19c520950e94870259b36f411fd772ff7acc36f6a8b7f0dc9a`
 
+> This is the retained pre-publication artifact audit. Publication and rendered
+> acceptance were completed later and are recorded in `PRODUCTION.md`.
+
 ## Verdict
 
 **LOCAL ARTIFACT AND PERMANENT INVARIANT CLOSURE PASS; PUBLICATION AND

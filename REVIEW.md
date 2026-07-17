@@ -3,6 +3,9 @@
 Review date: 2026-07-17
 Scope: the standalone Possible repository and its current Fray-root registration.
 
+> This is the retained pre-publication audit. The later production and rendered
+> acceptance closure is recorded in `deployment/PRODUCTION.md` and `RESULT.md`.
+
 ## Verdict
 
 **LOCAL CLOSURE PASS; ONLY RENDERED VISUAL ACCEPTANCE REMAINS.** The current

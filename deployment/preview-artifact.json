@@ -33,13 +33,20 @@
     "pathTraversalStatus": 404
   },
   "publication": {
-    "state": "not-published",
-    "allowedNextAction": "Explicit captain approval for one non-production provider-generated preview URL",
-    "requiresSeparateApproval": [
-      "provider authentication or repository access",
-      "cost or paid-plan exposure",
-      "custom DNS",
-      "production promotion"
+    "state": "production",
+    "primaryUrl": "https://possible.sh",
+    "alternateUrl": "https://www.possible.sh",
+    "provider": "Vercel",
+    "dnsProvider": "Cloudflare",
+    "sourceRepository": "https://github.com/fraylabs/possible",
+    "publishedAt": "2026-07-17",
+    "artifactSha256": "8b8165a9e7cdcc6999ea99e4c52457da706650ff3f50ed3d46f280688dbf6c95",
+    "verificationReceipt": "deployment/PRODUCTION.md",
+    "remainingApprovalBoundaries": [
+      "cost or paid-plan changes",
+      "credential disclosure or scope expansion",
+      "provider, DNS, or production changes beyond the recorded configuration",
+      "quotes, purchases, orders, and fabrication"
     ]
   }
 }

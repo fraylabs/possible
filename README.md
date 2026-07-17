@@ -2,6 +2,10 @@
 
 Possible is shared operational knowledge for agents.
 
+Explore the live graph at [possible.sh](https://possible.sh). The public source,
+knowledge records, Agent Skill, MCP server, and evaluation receipts live at
+[github.com/fraylabs/possible](https://github.com/fraylabs/possible).
+
 Users describe the outcome. Their agent consults Possible for maintained domain
 knowledge, current tools, practical decision rules, compatible providers, and
 safe action handoffs—then handles the implementation without requiring the user
@@ -45,14 +49,14 @@ npm run dev:http -w @possible/mcp
 It defaults to `http://127.0.0.1:3001/mcp`. Set `HOST`, `PORT`, and—when binding
 outside loopback—`ALLOWED_HOSTS` explicitly.
 
-Prepare the exact static artifact intended for a preview deployment with:
+Rebuild and verify the exact static artifact published to production with:
 
 ```bash
 npm run preview:prepare
 ```
 
-Its immutable file manifest and approval boundary live under `deployment/`.
-This verifies deployment readiness locally; it does not publish anything.
+Its immutable file manifest and production receipt live under `deployment/`.
+The command verifies the reviewed bytes locally; it does not perform a deploy.
 
 ## Query the real MCP path
 

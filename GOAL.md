@@ -103,3 +103,10 @@ A blocker requires concrete evidence that an external dependency or missing
 authorization prevents all meaningful in-scope progress, plus the smallest next
 action needed from the user. Difficulty, incomplete polish, or a failing check
 is not a blocker.
+
+## Completion receipt
+
+The supported MVP promise was completed on 2026-07-17. `RESULT.md` records the
+claim boundary and evaluation evidence; `deployment/PRODUCTION.md` records the
+public repository, exact production artifact, custom-domain delivery, and live
+desktop/tablet/mobile acceptance. The explicit non-scope above remains in force.

@@ -107,3 +107,38 @@
 - Kept the manifest publication state `not-published`; provider access, cost,
   custom DNS, production promotion, and the public visual-review step remain
   approval-gated.
+
+## 2026-07-17 — Public production closure
+
+- Received explicit captain approval to use the existing Cloudflare and Vercel
+  access, publish `possible.sh`, and create a public Fray Labs repository.
+- Audited the current tree and full local history for tracked env files,
+  high-confidence credential patterns, and oversized artifacts; no publication
+  blocker was found.
+- Created public `fraylabs/possible` and published the exact verified tree as a
+  clean initial commit, retaining the richer internal jj history locally.
+- Added a deterministic Vercel build and SPA routing contract. Vercel's prebuilt
+  static output matched all three reviewed file hashes exactly.
+- Deployed from public commit
+  `6378e10d4ca2909ce1ff4535e4399706b196ce8f`, connected the Vercel project to
+  the GitHub repository, and retained the public provider fallback
+  `https://possible-three.vercel.app`.
+- Added only DNS-only A records for `possible.sh` and `www.possible.sh` to the
+  previously empty Cloudflare zone, using Vercel's requested `76.76.21.21`
+  target. Both hosts returned HTTPS 200 with valid certificates.
+- Independent live fetches matched the reviewed HTML, JavaScript, and CSS
+  hashes; `/knowledge/web` returned the SPA entry point with HTTP 200.
+- Completed rendered acceptance at desktop `1440 × 1000`, mobile `390 × 844`,
+  and tablet `834 × 1112`. Search, result selection, graph refocus, path/history,
+  overview, mobile drawer, graph/detail transitions, and provenance presentation
+  passed with no browser console warning or error.
+- Recorded production state and remaining approval boundaries without claiming
+  a hosted remote MCP service, built dashboard, CAD model, quote, purchase,
+  order, or fabrication.
+- A fresh-context read-only verifier reran the complete child check, Git diff
+  validation, GitHub visibility/head checks, credential scan, live TLS fetches,
+  and live hash comparison. It returned `PASS WITH NON-BLOCKING LIMITS` and no
+  blocking finding.
+- Recorded its provider-edge distinction: local negative-route guarantees remain
+  valid, while Vercel's SPA catch-all returns the app shell for an unknown asset
+  and rejects the tested encoded traversal with HTTP 400 without exposing files.

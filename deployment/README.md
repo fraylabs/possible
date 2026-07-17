@@ -1,7 +1,7 @@
-# Preview deployment handoff
+# Production deployment
 
 Possible's website is packaged as a static Vite artifact. Build and verify the
-exact reviewed bundle with:
+exact production bundle with:
 
 ```bash
 npm run preview:prepare
@@ -15,12 +15,14 @@ symbolic links and public source maps. A preflight rejects a linked artifact
 root before the build, and parsed HTML must contain an active module script and
 stylesheet for the declared assets.
 
-This is deployment-readiness evidence, not publication evidence. The manifest
-must remain `not-published` until the captain explicitly approves one named
-non-production preview handoff. Provider authentication, repository access,
-cost exposure, custom DNS, and production promotion each remain outside that
-approval unless separately stated.
+The reviewed bundle is published at [possible.sh](https://possible.sh) through
+Vercel, with Cloudflare retaining authoritative DNS. `preview-artifact.json`
+records the production state, URLs, provider boundary, and immutable artifact
+digest. `PRODUCTION.md` records the public repository, source commit, provider
+handoff, DNS shape, live byte checks, responsive browser acceptance, and
+remaining limits.
 
-After an approved provider returns a preview URL, record the provider-generated
-deployment identity and visually inspect desktop, tablet, and mobile
-search/path/graph/detail flows before changing Possible's completion status.
+`npm run preview:prepare` is deliberately local and provider-state read-only. It
+rewrites generated local build outputs, but does not authenticate, change DNS,
+or deploy. Future provider, DNS, production, credential-scope, or paid-plan
+changes remain separately approval-gated.

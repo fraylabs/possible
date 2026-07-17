@@ -1,7 +1,6 @@
 # Possible MVP Result
 
-Status: implementation and agent-evaluation proof complete; rendered visual
-review pending an approved public preview.
+Status: MVP complete, publicly delivered, and visually accepted on 2026-07-17.
 
 ## Supported trust claim
 
@@ -56,6 +55,36 @@ safe missing-asset and encoded-traversal 404 responses, real-path containment,
 correct content types, parsed active asset references, and the absence of linked
 artifact roots, descendant symbolic links, and public source maps.
 
+## Production delivery receipt
+
+The same reviewed static artifact is publicly reachable at
+[possible.sh](https://possible.sh), with [www.possible.sh](https://www.possible.sh)
+serving the same project. Source is public on
+[github.com/fraylabs/possible](https://github.com/fraylabs/possible), and Vercel
+is connected to the repository for future Git deployments.
+
+The production build was made from public commit
+`6378e10d4ca2909ce1ff4535e4399706b196ce8f`. Vercel's prebuilt static output was
+byte-identical to `apps/web/dist`. Independent HTTPS fetches reproduced all
+three reviewed hashes, including `index.html`; the client route
+`/knowledge/web` returned HTTP 200 with the expected HTML content type. Both the
+apex and `www` returned HTTPS 200 with valid certificates.
+
+Rendered acceptance used the in-app Browser against the live custom domain:
+
+- desktop `1440 × 1000`: search, exact result selection, graph refocus, current
+  path, Back, Overview, and detail/provenance inspection passed;
+- mobile `390 × 844`: graph/detail transition, knowledge drawer, search, result
+  selection, and responsive detail presentation passed;
+- tablet `834 × 1112`: split graph/detail presentation and responsive controls
+  passed;
+- the live browser reported no console warnings or errors.
+
+Cloudflare retained authoritative DNS and received only two DNS-only A records,
+for the apex and `www`, both using Vercel's requested target. No existing record,
+plan, paid feature, or unrelated provider configuration was changed. The full
+receipt is in `deployment/PRODUCTION.md`.
+
 ## Controlled agent evidence
 
 The locked scenarios are:
@@ -94,11 +123,12 @@ evidence remain under `evals/receipts/`.
 
 ## What the evidence does not prove
 
-- No dashboard application, motor-bracket CAD, deployed preview, live quote,
-  purchase, order, or fabrication was produced by the evaluation runs; they are
-  handoff demonstrations.
-- The immutable preview bundle and local runtime checks prove deployment
-  readiness, not a reachable provider deployment or rendered visual quality.
+- No dashboard application, motor-bracket CAD, live quote, purchase, order, or
+  fabrication was produced by the evaluation runs; they are handoff
+  demonstrations. The deployed artifact is the Possible website itself.
+- The public deployment proves the static human explorer, not a hosted remote
+  MCP service. The MCP remains remote-ready source with tested stdio and HTTP
+  transports and must be deployed separately if a shared endpoint is desired.
 - The outcome constraints for a built dashboard and fitted bracket remain
   unknown because no corresponding artifacts or verifiers exist.
 - Live provider price, plan, region, account, material, inspection, destination,
@@ -114,12 +144,11 @@ evidence remain under `evals/receipts/`.
   reconstructions around source-capture time rather than original model
   timestamps.
 
-## Remaining completion gate
+## Completion statement
 
-Local HTTP and automated UI checks pass, but the approved in-app browser rejected
-the localhost URL under its URL policy. No alternate browser automation was used
-to bypass that boundary. A human-visible rendered review therefore requires an
-approved non-production public preview. That approval would cover only hosting
-the current reviewed website build on a provider-generated URL with no custom
-DNS, production promotion, credentials beyond the named preview handoff, or
-cost exposure.
+Possible is trusted as a narrow public MVP for Web and custom-part knowledge:
+the shared graph, read-only agent interface, Agent Skill, human explorer,
+controlled evaluation mechanism, public source, custom-domain deployment, and
+live responsive interaction paths are all verified. It is not trusted as a
+universal knowledge base, a hosted autonomous agent, a production remote MCP
+service, or proof that the two golden-example outcomes were physically built.
