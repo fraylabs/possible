@@ -723,120 +723,172 @@ function DemoArtifacts() {
 function DocsPage() {
   return (
     <main className="docs-page">
-      <SiteNav label="Documentation / V0.1" />
+      <SiteNav label="Docs / Getting started" />
 
-      <section className="docs-hero" id="top">
-        <div>
-          <p className="eyebrow">POSSIBLE / DOCUMENTATION</p>
-          <h1>Start with an idea.<br /><em>Not a configuration.</em></h1>
-        </div>
-        <div>
-          <p>Possible is one conversational Codex skill that discovers the outcome with you, explains a complete path, and waits for approval before beginning any work.</p>
-          <a className="text-link" href="#quickstart">Install in two commands ↓</a>
-        </div>
-      </section>
-
-      <div className="docs-layout">
-        <aside className="docs-index" aria-label="Documentation sections">
-          <span>ON THIS PAGE</span>
-          <a href="#mental-model">01 / Mental model</a>
-          <a href="#quickstart">02 / Quickstart</a>
-          <a href="#conversation">03 / Conversation</a>
-          <a href="#recommendation">04 / Recommendation</a>
-          <a href="#confirmation">05 / Confirmation</a>
-          <a href="#execution">06 / Execution</a>
-          <a href="#safety">07 / Safety</a>
+      <div className="docs-shell">
+        <aside className="docs-sidebar" aria-label="Documentation navigation">
+          <div className="docs-sidebar-title"><strong>Documentation</strong><span>V0.1</span></div>
+          <nav aria-label="Getting started">
+            <span>GETTING STARTED</span>
+            <a className="is-active" href="#overview">Overview</a>
+            <a href="#installation">Installation</a>
+            <a href="#invoke">Invoke Possible</a>
+          </nav>
+          <nav aria-label="Core workflow">
+            <span>CORE WORKFLOW</span>
+            <a href="#brainstorm">Brainstorm</a>
+            <a href="#recommend">Recommendation</a>
+            <a href="#confirm">Confirmation</a>
+            <a href="#execute">Execution</a>
+          </nav>
+          <nav aria-label="Reference">
+            <span>REFERENCE</span>
+            <a href="#files">Project files</a>
+            <a href="#safety">Safety boundary</a>
+            <a href="#troubleshooting">Troubleshooting</a>
+            <a href="/packs">Pack gallery ↗</a>
+          </nav>
         </aside>
 
-        <article className="docs-content">
-          <section id="mental-model">
-            <p className="eyebrow">01 / MENTAL MODEL</p>
-            <h2>One skill.<br />Complete outcomes.</h2>
-            <p>You do not install a Hardware Launch skill or choose a workflow up front. You install Possible once. Possible talks through what you want, then recommends one transparent outcome pack containing the specialists, workstreams, outputs, checks, and safety gates needed to finish it.</p>
-            <ol className="docs-principles">
-              <li><span>01</span><strong>Discover what is possible</strong><p>Bring a rough ambition. Possible asks one useful question at a time.</p></li>
-              <li><span>02</span><strong>Learn how it&apos;s possible</strong><p>Inspect the recommended pack and understand exactly what it will produce.</p></li>
-              <li><span>03</span><strong>Make it possible</strong><p>Approve the path. Codex coordinates the work and an independent review.</p></li>
-            </ol>
+        <article className="docs-article">
+          <div className="docs-breadcrumb"><a href="/docs">DOCS</a><span>/</span><strong>GETTING STARTED</strong></div>
+
+          <header className="docs-title" id="overview">
+            <p className="eyebrow">GETTING STARTED</p>
+            <h1>Build complete outcomes with Possible</h1>
+            <p>Possible is a conversational Codex skill. Start with a rough idea, clarify the outcome one question at a time, inspect a recommended pack, and approve it before any work begins.</p>
+          </header>
+
+          <aside className="docs-callout docs-callout--info">
+            <strong>THE SHORT VERSION</strong>
+            <p>Install Possible once. Type <code>$possible</code>. Describe what you want to make. Possible handles pack discovery with you.</p>
+          </aside>
+
+          <section id="installation">
+            <h2>Installation</h2>
+            <p>Run the installer from the root of the project where you want to use Possible.</p>
+            <div className="docs-command">
+              <header><span>TERMINAL</span><strong>BASH</strong></header>
+              <pre><code>{installCommand}</code></pre>
+              <CopyButton label="Copy" value={installCommand} />
+            </div>
+            <p>The command installs three reviewed files under <code>.agents/skills/possible</code>. It does not select a pack, install ingredient skills, create outcome state, or modify unrelated skills.</p>
+            <h3>Requirements</h3>
+            <ul>
+              <li>Node.js 22 or newer</li>
+              <li>A project you can open in Codex</li>
+              <li>Write access to the project&apos;s <code>.agents/skills</code> directory</li>
+            </ul>
           </section>
 
-          <section id="quickstart">
-            <p className="eyebrow">02 / QUICKSTART</p>
-            <h2>Install. Invoke.<br />Start rough.</h2>
-            <div className="docs-command">
-              <header><span>TERMINAL / PROJECT ROOT</span><strong>01</strong></header>
-              <pre><code>{installCommand}</code></pre>
-              <CopyButton label="Copy install command" value={installCommand} />
-            </div>
+          <section id="invoke">
+            <h2>Invoke Possible</h2>
+            <p>Open or reload the project in Codex, then invoke the installed skill.</p>
             <div className="docs-command docs-command--invoke">
-              <header><span>CODEX / SAME PROJECT</span><strong>02</strong></header>
+              <header><span>CODEX</span><strong>PROMPT</strong></header>
               <pre><code>$possible</code></pre>
             </div>
-            <p>The installer only adds the Possible skill to <code>.agents/skills/possible</code>. It does not choose a pack, install ingredient skills, create a brief, or begin outcome work.</p>
+            <p>Possible opens with a single question:</p>
+            <blockquote>What would you like to make possible today? A rough idea is enough — we can brainstorm it together.</blockquote>
           </section>
 
-          <section id="conversation">
-            <p className="eyebrow">03 / CONVERSATION</p>
-            <h2>A rough idea<br />is enough.</h2>
-            <div className="docs-thread" aria-label="Example intake conversation">
-              <p><strong>YOU</strong><span>$possible</span></p>
-              <p><strong>POSSIBLE</strong><span>What would you like to make possible today? A rough idea is enough — we can brainstorm it together.</span></p>
-              <p><strong>YOU</strong><span>I want to make a small device that helps me focus without opening my phone.</span></p>
-              <p><strong>POSSIBLE</strong><span>Interesting. When this is finished, what would make it feel real to you?</span></p>
+          <section id="brainstorm">
+            <h2>Brainstorm the outcome</h2>
+            <p>You do not need a finished brief. Describe the idea in your own words. Possible reflects what it heard and asks one useful question per turn until the desired end state is clear enough to recommend a path.</p>
+            <div className="docs-do-dont">
+              <div><strong>DURING INTAKE</strong><ul><li>Reflect the user&apos;s intent</li><li>Ask one question at a time</li><li>Preserve assumptions as assumptions</li></ul></div>
+              <div><strong>NOT DURING INTAKE</strong><ul><li>Name or install packs</li><li>Edit files or create state</li><li>Spawn specialists</li></ul></div>
             </div>
-            <p>During intake, Possible reflects your intent and asks one question per turn. It does not name packs, install dependencies, edit files, create state, or spawn specialists.</p>
           </section>
 
-          <section id="recommendation">
-            <p className="eyebrow">04 / RECOMMENDATION</p>
-            <h2>One path.<br />Fully inspectable.</h2>
-            <p>When the desired outcome is clear enough, Possible recommends one primary pack and links its public recipe. The recommendation includes what it understood, why the pack fits, what will exist, how success will be checked, and what remains outside the authorization boundary.</p>
-            <a className="docs-pack-link" href="/packs/hardware-launch"><span>EXAMPLE RECOMMENDATION</span><strong>Hardware Launch</strong><i>VIEW PACK ↗</i></a>
-            <p>Browse every available recipe in the <a className="inline-link" href="/packs">pack gallery</a>. You never need to choose one before starting.</p>
+          <section id="recommend">
+            <h2>Review the recommendation</h2>
+            <p>Possible recommends one primary outcome pack and links its public recipe. Every recommendation should answer four questions:</p>
+            <ol>
+              <li><strong>What does Possible think you want to make?</strong><span>A concise outcome statement and any material assumptions.</span></li>
+              <li><strong>Why does this pack fit?</strong><span>A link to the pack and a short explanation.</span></li>
+              <li><strong>What will exist afterward?</strong><span>Concrete outputs and the most important acceptance checks.</span></li>
+              <li><strong>What remains unauthorized?</strong><span>External actions and claims that still require separate approval.</span></li>
+            </ol>
+            <a className="docs-reference-link" href="/packs/hardware-launch"><span>EXAMPLE PACK</span><strong>Hardware Launch</strong><i>View recipe →</i></a>
           </section>
 
-          <section id="confirmation">
-            <p className="eyebrow">05 / CONFIRMATION</p>
-            <h2>Nothing begins<br />until you say yes.</h2>
-            <div className="docs-approval">
-              <span>WHAT YES AUTHORIZES</span>
+          <section id="confirm">
+            <h2>Confirm before execution</h2>
+            <p>Possible waits for direct confirmation such as “yes, proceed,” “use this pack,” or “go ahead.” A question, correction, or enthusiastic reaction is not confirmation.</p>
+            <aside className="docs-callout docs-callout--approval">
+              <strong>WHAT “YES” AUTHORIZES</strong>
               <p>{approvalDisclosure}</p>
-              <strong>Want me to proceed with this pack?</strong>
-            </div>
-            <p>Questions, corrections, and general enthusiasm are not confirmation. If the recommendation is wrong, correct it and keep brainstorming.</p>
+            </aside>
+            <p>If the recommendation is wrong, correct the understanding and continue the conversation. Possible should recommend again instead of defending the first answer.</p>
           </section>
 
-          <section id="execution">
-            <p className="eyebrow">06 / EXECUTION</p>
-            <h2>Codex becomes<br />the captain.</h2>
-            <p>After confirmation, Codex inspects and installs the pack&apos;s reviewed ingredient skills, writes a shared outcome brief, coordinates parallel workstreams, integrates their artifacts, runs the pack&apos;s acceptance checks, and assigns a fresh reviewer.</p>
-            <div className="docs-files">
-              <code>.possible/outcome-brief.md</code><span>Confirmed intent, constraints, interfaces, checks, and unknowns.</span>
-              <code>.possible/pack.json</code><span>The exact recommended pack snapshot.</span>
-              <code>.possible/skills-lock.json</code><span>Resolved sources, revisions, and content hashes.</span>
+          <section id="execute">
+            <h2>Execute the pack</h2>
+            <p>After confirmation, Codex becomes the captain for the outcome:</p>
+            <ol>
+              <li><strong>Inspect and install</strong><span>Resolve the pack&apos;s reviewed ingredient skills and inspect them before use.</span></li>
+              <li><strong>Write shared state</strong><span>Record the confirmed brief, exact pack snapshot, and resolved skill versions.</span></li>
+              <li><strong>Coordinate workstreams</strong><span>Run independent specialist work in parallel where appropriate.</span></li>
+              <li><strong>Integrate and verify</strong><span>Combine artifacts, run acceptance checks, and assign a fresh reviewer.</span></li>
+            </ol>
+            <a className="docs-text-link" href="/demo">See a complete recorded Hardware Launch run →</a>
+          </section>
+
+          <section id="files">
+            <h2>Project files</h2>
+            <p>Possible creates outcome state only after confirmation.</p>
+            <div className="docs-table" role="table" aria-label="Possible project files">
+              <div role="row"><strong role="columnheader">Path</strong><strong role="columnheader">Purpose</strong></div>
+              <div role="row"><code role="cell">.possible/outcome-brief.md</code><span role="cell">Confirmed intent, constraints, interfaces, acceptance checks, gates, and unknowns.</span></div>
+              <div role="row"><code role="cell">.possible/pack.json</code><span role="cell">The exact outcome pack snapshot approved for this run.</span></div>
+              <div role="row"><code role="cell">.possible/skills-lock.json</code><span role="cell">Resolved sources, revisions, paths, and content hashes.</span></div>
             </div>
-            <a className="button-link" href="/demo">Watch a complete recorded run <span>→</span></a>
           </section>
 
           <section id="safety">
-            <p className="eyebrow">07 / SAFETY</p>
-            <h2>Local approval is not<br />real-world permission.</h2>
-            <p>Approving a pack authorizes repository-local preparation and outcome work. It never authorizes deployment, publishing, purchases, outreach, fabrication, data collection, credentials, private data sharing, or unsupported claims. Those actions remain separately gated.</p>
-            <ul className="docs-boundaries">
-              <li>Inspect external skills before following their instructions.</li>
+            <h2>Safety boundary</h2>
+            <p>Pack confirmation authorizes local project work. It never grants real-world permission.</p>
+            <aside className="docs-callout docs-callout--warning">
+              <strong>SEPARATE APPROVAL REQUIRED</strong>
+              <p>Deployment, publishing, spending, outreach, fabrication, data collection, credential use, private-data sharing, and unsupported claims remain separately gated.</p>
+            </aside>
+            <ul>
+              <li>Inspect external skill instructions before following them.</li>
               <li>Preserve unknowns instead of inventing facts.</li>
               <li>Separate generated artifacts from independently verified claims.</li>
-              <li>Stop for explicit approval before any consequential external action.</li>
+              <li>Stop before any consequential external action.</li>
             </ul>
           </section>
-        </article>
-      </div>
 
-      <section className="docs-cta">
-        <p className="eyebrow">READY WHEN YOU ARE</p>
-        <h2>What would you like<br />to make possible?</h2>
-        <a className="button-link" href="/#start">Install Possible <span>→</span></a>
-      </section>
+          <section id="troubleshooting">
+            <h2>Troubleshooting</h2>
+            <div className="docs-faq">
+              <details><summary>The installer reports conflicting files</summary><p>Possible never overwrites a different existing skill. Inspect <code>.agents/skills/possible</code>, preserve anything you need, then resolve the conflict manually before rerunning the installer.</p></details>
+              <details><summary>Codex does not recognize $possible</summary><p>Confirm the skill exists at <code>.agents/skills/possible/SKILL.md</code>, then reopen or reload the project so Codex can discover it.</p></details>
+              <details><summary>The recommended pack feels wrong</summary><p>Do not confirm it. Correct Possible&apos;s understanding or continue brainstorming until the recommendation matches the outcome you actually want.</p></details>
+            </div>
+          </section>
+
+          <nav className="docs-next" aria-label="Next documentation page">
+            <span>NEXT</span>
+            <a href="/packs">Explore outcome packs <b>→</b></a>
+          </nav>
+        </article>
+
+        <aside className="docs-toc" aria-label="On this page">
+          <span>ON THIS PAGE</span>
+          <a href="#installation">Installation</a>
+          <a href="#invoke">Invoke Possible</a>
+          <a href="#brainstorm">Brainstorm</a>
+          <a href="#recommend">Recommendation</a>
+          <a href="#confirm">Confirmation</a>
+          <a href="#execute">Execution</a>
+          <a href="#files">Project files</a>
+          <a href="#safety">Safety boundary</a>
+          <a href="#troubleshooting">Troubleshooting</a>
+        </aside>
+      </div>
       <SiteFooter />
     </main>
   );

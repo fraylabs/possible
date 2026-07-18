@@ -51,17 +51,22 @@ describe("Possible", () => {
     expect(screen.getByRole("heading", { name: "Open-Source Release" })).toBeInTheDocument();
   });
 
-  it("documents the complete conversation-first journey and its safety boundary", () => {
+  it("documents the complete conversation-first journey and its safety boundary", async () => {
     window.history.pushState({}, "", "/docs");
     const { container } = render(<App />);
-    expect(screen.getByRole("heading", { name: /Start with an idea.*Not a configuration/i })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /Build complete outcomes with Possible/i })).toBeInTheDocument();
+    expect(screen.getByRole("complementary", { name: /Documentation navigation/i })).toBeInTheDocument();
+    expect(screen.getByRole("complementary", { name: /On this page/i })).toBeInTheDocument();
     expect(screen.getByText("npx @possible/cli init", { selector: ".docs-command code" })).toBeInTheDocument();
     expect(screen.getByText("$possible", { selector: ".docs-command--invoke code" })).toBeInTheDocument();
-    expect(container.querySelectorAll(".docs-principles li")).toHaveLength(3);
-    expect(screen.getByRole("link", { name: /Hardware Launch/i })).toHaveAttribute("href", "/packs/hardware-launch");
-    expect(screen.getByText(/WHAT YES AUTHORIZES/i)).toBeInTheDocument();
-    expect(screen.getByText(/never authorizes deployment, publishing, purchases/i)).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /Watch a complete recorded run/i })).toHaveAttribute("href", "/demo");
+    expect(container.querySelectorAll(".docs-article > section")).toHaveLength(9);
+    expect(screen.getByRole("link", { name: /EXAMPLE PACKHardware LaunchView recipe/i })).toHaveAttribute("href", "/packs/hardware-launch");
+    expect(screen.getByText(/WHAT.*YES.*AUTHORIZES/i)).toBeInTheDocument();
+    expect(screen.getByText(/Deployment, publishing, spending, outreach, fabrication/i)).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /complete recorded Hardware Launch run/i })).toHaveAttribute("href", "/demo");
+    expect(screen.getByRole("columnheader", { name: "Path" })).toBeInTheDocument();
+    expect(screen.getByText("Codex does not recognize $possible")).toBeInTheDocument();
+    expect(await axe(container)).toHaveNoViolations();
   });
 
   it("presents each pack as a transparent recommendation, not a starting form", () => {
