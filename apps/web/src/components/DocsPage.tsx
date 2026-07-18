@@ -115,6 +115,9 @@ export function DocsPage() {
                 The graph is the human interface. The same pages are also available as structured
                 wiki data and an <a href="/llms.txt">agent-readable index</a>.
               </p>
+              <a className="docs-source-link" href="/proof">
+                See the outcome-routing proof
+              </a>
             </div>
           </section>
 
@@ -138,7 +141,7 @@ export function DocsPage() {
                 Possible is early. Its job is not to know everything; it is to make the best
                 available starting points easier to find and easier for agents to use.
               </p>
-              <a className="docs-source-link" href="https://github.com/brainthrust/possible" target="_blank" rel="noreferrer">
+              <a className="docs-source-link" href="https://github.com/fraylabs/possible" target="_blank" rel="noreferrer">
                 View the public repository <ExternalLink size={14} aria-hidden="true" />
               </a>
             </div>

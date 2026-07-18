@@ -3,8 +3,8 @@
   "artifactDirectory": "apps/web/dist",
   "buildCommand": "npm run preview:build",
   "verificationCommand": "npm run preview:verify",
-  "sha256": "7d342ec4ed7b55b574fa449c0cd5414a9da0c82009d45a8516f656d3fe465a9a",
-  "totalBytes": 2711325,
+  "sha256": "148fc327731373d66bfd422b64497e683b27eca965844977822100a97d4bc3dc",
+  "totalBytes": 2738415,
   "files": [
     {
       "path": "agent/protocol.json",
@@ -627,19 +627,19 @@
       "sha256": "29306687d7db6bec454404124b33996136aa067d4f43dd564a96cdcb368f304a"
     },
     {
-      "path": "assets/index-B5C23w0_.css",
-      "bytes": 28841,
-      "sha256": "9a624dbc3ae025eca2a8fd46601da53c0d46313eebab588ad3b5e16fa36ab06d"
+      "path": "assets/index-CBtRw7uh.js",
+      "bytes": 394623,
+      "sha256": "aafeecaa3ef3314b4d9134bf44dd177ed252a598986a5eec6c77b2576044634a"
     },
     {
-      "path": "assets/index-Bq8pxfKr.js",
-      "bytes": 383677,
-      "sha256": "0c175efe3b8b92f20a74d79c2961185995781841ca28f11cb5e1d44937657770"
+      "path": "assets/index-RHNZRdf9.css",
+      "bytes": 44985,
+      "sha256": "a3ab54c7673640b20b03c60f7a28e7306524daa7d3f9d83073896c5f79ff31c3"
     },
     {
       "path": "index.html",
       "bytes": 803,
-      "sha256": "a0c5a0fdf01ba75a47395da3f28ca59b64ae3aeb34f64501bbf0952d3ca6ac23"
+      "sha256": "4b27dcf25f378a20759fc2fc4a66a75869b051922abd250c8907c5ce22dc7249"
     },
     {
       "path": "llms.txt",
@@ -989,7 +989,7 @@
     "dnsProvider": "Cloudflare",
     "sourceRepository": "https://github.com/fraylabs/possible",
     "publishedAt": "2026-07-18",
-    "artifactSha256": "7d342ec4ed7b55b574fa449c0cd5414a9da0c82009d45a8516f656d3fe465a9a",
+    "artifactSha256": "148fc327731373d66bfd422b64497e683b27eca965844977822100a97d4bc3dc",
     "verificationReceipt": "deployment/PRODUCTION.md",
     "remainingApprovalBoundaries": [
       "cost or paid-plan changes",

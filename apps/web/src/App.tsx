@@ -17,6 +17,7 @@ import { buildAtlasBranches } from "./atlas";
 import { ArticleView } from "./components/ArticleView";
 import { AtlasGraph } from "./components/AtlasGraph";
 import { DocsPage } from "./components/DocsPage";
+import { ProofPage } from "./components/ProofPage";
 import { MarkdownRenderer } from "./markdown";
 import {
   DEFAULT_GRAPH_VIEWPORT,
@@ -297,6 +298,10 @@ export function App() {
     return <DocsPage />;
   }
 
+  if (window.location.pathname.replace(/\/+$/, "") === "/proof") {
+    return <ProofPage />;
+  }
+
   if (loadState.status === "loading") {
     return (
       <main className="state-screen" aria-busy="true" aria-live="polite">
@@ -411,7 +416,10 @@ export function App() {
                 )}
               </div>
             )}
-            <a className="docs-link" href="/docs">How Possible works</a>
+            <div className="docs-links">
+              <a className="docs-link" href="/docs">How Possible works</a>
+              <a className="docs-link" href="/proof">See it work</a>
+            </div>
           </div>
 
           <section className={`selected-context${expandedPage ? " selected-context--expanded" : ""}`} aria-labelledby="explore-title">
