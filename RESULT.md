@@ -65,8 +65,8 @@ npm run check
 
 The exact candidate artifact is recorded in
 `deployment/preview-artifact.json`. Its publication state is
-`not-published`: 194 regular files totaling 2,661,591 bytes match aggregate
-SHA-256 `25bb2ec97f071f9f61d4b5daa5fd90a1dbc3a321e3cfbde3db2afe0964c4526a`.
+`not-published`: 194 regular files totaling 2,661,613 bytes match aggregate
+SHA-256 `e4983e4af7f4bd7bd17a5e9ae94ac2d7ad4a423d058891786ea622ced9dc8659`.
 `deployment/PRODUCTION.md` and the separately retained historical digest
 describe an earlier authorized release, not this candidate.
 

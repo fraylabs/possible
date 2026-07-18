@@ -91,6 +91,8 @@ describe("retrieval examples", () => {
       "/wiki/robotic-arms",
     );
     expect(loadWiki).toHaveBeenCalledTimes(1);
+    expect(screen.getByText("Bundled corpus examples")).toBeInTheDocument();
+    expect(screen.queryByText(/live corpus examples|published guide library/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/route status|verified route|partial route/i)).not.toBeInTheDocument();
   });
 

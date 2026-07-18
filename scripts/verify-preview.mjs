@@ -494,9 +494,17 @@ export async function verifyPreview() {
     dnsProvider: "Cloudflare",
     sourceRepository: "https://github.com/fraylabs/possible",
     publishedAt: "2026-07-18",
-    artifactSha256: "54ff8c2e8409909bcc7540d0a43654b3a89d136a6975a8b01c6bc3b2d3fb7d04",
+    artifactSha256: "57945bd9ed262d2cf4d411c9787394cee1d1f76282d111268adc68fe9010117f",
     verificationReceipt: "deployment/PRODUCTION.md",
   });
+  const historicalReceipt = await readFile(
+    resolve(repositoryRoot, historicalProductionReceipt.verificationReceipt),
+    "utf8",
+  );
+  assert(
+    historicalReceipt.includes(historicalProductionReceipt.artifactSha256),
+    "The historical production digest must appear in its cited verification receipt.",
+  );
 
   const actual = await describeArtifact();
   assert(

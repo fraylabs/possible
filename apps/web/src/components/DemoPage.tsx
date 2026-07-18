@@ -39,7 +39,7 @@ export function DemoPage() {
           <p className="section-kicker">Transparent retrieval example</p>
           <h1 id="demo-title">Context for an agent—not a project plan.</h1>
           <p>
-            This example runs a plain query against the published guide library, opens the first
+            This example runs a plain query against the bundled guide library, opens the first
             result, and shows its authored references and sources. Nothing is composed or executed.
           </p>
         </header>

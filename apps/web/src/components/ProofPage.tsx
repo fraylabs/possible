@@ -178,10 +178,10 @@ export function ProofPage() {
           <a className="proof-brand" href="/">possible.sh</a>
           <a className="proof-back" href="/">Back to atlas</a>
         </nav>
-        <p className="proof-kicker">Live corpus examples</p>
+        <p className="proof-kicker">Bundled corpus examples</p>
         <h1 className="proof-title">Two questions, with the reading left inspectable.</h1>
         <p className="proof-intro">
-          This page runs both searches against the same published guide library used by the site.
+          This page runs both searches against the same bundled guide library used by the site.
           It shows retrieval, sources, and related reading—not a project assessment or validation.
         </p>
       </header>

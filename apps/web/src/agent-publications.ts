@@ -299,7 +299,7 @@ export function buildAgentProtocol(): AgentProtocolDocument {
         },
         notes: [
           "The slug must be one returned by the search index or the canonical guide index.",
-          "The guide body, review date, sources, links, backlinks, and related guides come from the published corpus.",
+          "The guide body, review date, sources, links, backlinks, and related guides come from the generated corpus bundled with this site.",
           "The consuming agent remains responsible for project-specific reasoning, decisions, actions, and validation.",
         ],
       },

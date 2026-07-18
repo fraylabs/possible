@@ -3,13 +3,13 @@
   "artifactDirectory": "apps/web/dist",
   "buildCommand": "npm run preview:build",
   "verificationCommand": "npm run preview:verify",
-  "sha256": "25bb2ec97f071f9f61d4b5daa5fd90a1dbc3a321e3cfbde3db2afe0964c4526a",
-  "totalBytes": 2661591,
+  "sha256": "e4983e4af7f4bd7bd17a5e9ae94ac2d7ad4a423d058891786ea622ced9dc8659",
+  "totalBytes": 2661613,
   "files": [
     {
       "path": "agent/protocol.json",
-      "bytes": 2922,
-      "sha256": "38c3c9c8c57879998028999cd1f7b1efdc306decb503852ecd1e2c03e4df59b7"
+      "bytes": 2945,
+      "sha256": "867211f2c3fb072cecc25e4b634eeb6925a050843a85ffac77bf83c8afb6f013"
     },
     {
       "path": "agent/read/3d-renderer-selection.json",
@@ -627,9 +627,9 @@
       "sha256": "68e6298737e7f44badfb9896b42fac07c01aa6af005c7d93d13c62120ccb451f"
     },
     {
-      "path": "assets/index-C-wcOV0y.js",
-      "bytes": 398018,
-      "sha256": "c9c0e9d3bc80d8364e6fd5d9e6ed24500efece72675d422039ea6e41491ded0d"
+      "path": "assets/index-BLL-IjVA.js",
+      "bytes": 398017,
+      "sha256": "85c01c70bbd2c2fa24ca576bbc6c60d9c28ff1488d222df8d9bfd298b559299f"
     },
     {
       "path": "assets/index-bl-OQRqr.css",
@@ -639,7 +639,7 @@
     {
       "path": "index.html",
       "bytes": 795,
-      "sha256": "8f803a79c40f824eeda92e35560f82e6ff06728529653d6bcd97f537fbdd185f"
+      "sha256": "3e33375395f131a7eaab2c841c17ebb2b174daaffed5aa2b76960fff4a9076a7"
     },
     {
       "path": "llms.txt",
@@ -993,7 +993,7 @@
   },
   "publication": {
     "state": "not-published",
-    "artifactSha256": "25bb2ec97f071f9f61d4b5daa5fd90a1dbc3a321e3cfbde3db2afe0964c4526a",
+    "artifactSha256": "e4983e4af7f4bd7bd17a5e9ae94ac2d7ad4a423d058891786ea622ced9dc8659",
     "allowedNextAction": "Explicit authorization to publish this exact candidate artifact",
     "requiresSeparateApproval": [
       "provider authentication or credential-scope changes",
@@ -1008,7 +1008,7 @@
       "dnsProvider": "Cloudflare",
       "sourceRepository": "https://github.com/fraylabs/possible",
       "publishedAt": "2026-07-18",
-      "artifactSha256": "54ff8c2e8409909bcc7540d0a43654b3a89d136a6975a8b01c6bc3b2d3fb7d04",
+      "artifactSha256": "57945bd9ed262d2cf4d411c9787394cee1d1f76282d111268adc68fe9010117f",
       "verificationReceipt": "deployment/PRODUCTION.md"
     }
   }

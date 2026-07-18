@@ -116,6 +116,10 @@ describe("static agent publication", () => {
     );
     expect(protocol.operations.search.request).toEqual({ query: null, body: null });
     expect(protocol.operations.read.path).toBe("/agent/read/{slug}.json");
+    expect(protocol.operations.read.notes).toContain(
+      "The guide body, review date, sources, links, backlinks, and related guides come from the generated corpus bundled with this site.",
+    );
+    expect(protocol.operations.read.notes.join(" ")).not.toMatch(/published corpus/i);
     expect(protocol.operations.related.path).toBe("/agent/related/{slug}.json");
   });
 });

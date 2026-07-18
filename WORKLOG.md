@@ -41,9 +41,19 @@
   `not-published` and the previous production digest is retained only as
   historical evidence. No provider authentication, deployment, promotion, DNS
   change, purchase, quote, or fabrication was performed.
-- Recorded the final local bundle as 194 regular files, 2,661,591 bytes, with
+- The first exact-revision reviewer rejected commit `fd14c405a76ebabf5405275b710b3c60dfeb3559`:
+  active manifested copy called the new corpus live or published despite its
+  `not-published` state, and the manifest's retained historical digest did not
+  occur in its cited production receipt.
+- Replaced the active publication claims with “bundled” or “generated” corpus
+  language. Corrected the historical digest to the exact prior production
+  artifact recorded in `deployment/PRODUCTION.md`, and made preview verification
+  require that the historical digest appear in the cited receipt instead of
+  merely matching a duplicated literal.
+- Recorded the superseding local bundle as 194 regular files, 2,661,613 bytes,
+  with
   aggregate SHA-256
-  `25bb2ec97f071f9f61d4b5daa5fd90a1dbc3a321e3cfbde3db2afe0964c4526a`.
+  `e4983e4af7f4bd7bd17a5e9ae94ac2d7ad4a423d058891786ea622ced9dc8659`.
 
 ## 2026-07-18 — Persistent knowledge universe activated
 
