@@ -10,6 +10,22 @@ Skills.sh distributes individual agent skills. Possible publishes opinionated ou
 - **Software Launch** — production product, launch site, demo film, deployment plan, and evidence report.
 - **Open-Source Release** — release-ready package, documentation, examples, hardened CI, changelog, and evidence report.
 
+## Use Possible
+
+Install the skill once:
+
+```bash
+npx skills add fraylabs/possible --skill possible -g
+```
+
+Then open any project in Codex and invoke:
+
+```text
+$possible
+```
+
+Possible first walks through what the user wants to make real. It inspects the project when useful, creates no files during intake, recommends one outcome only after it understands the desired end state, and installs or runs nothing until the user confirms. After confirmation it writes the shared brief, installs the reviewed repo-local ingredient skills, coordinates workstreams, integrates their artifacts, and assigns a fresh verifier.
+
 ## The demo
 
 `/demo` replays a real local Hardware Launch run for Still, a fictional palm-sized e-ink focus device. It shows the original brief, five installed skills, three parallel workstreams, the resulting website, launch film, prototype CAD, integrated launch room, and the independent review that found and verified a real asset-path repair. The complete public Codex transcript is readable and copyable in the demo, and “Show output” opens the actual generated launch room.

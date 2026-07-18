@@ -43,3 +43,11 @@
 - Linked the replay to 58/58 artifact checks, the initial failure trace, the final receipt, and the complete local launch room.
 - Exported all 31 public messages from the real captain and four specialist Codex threads, with an explicit boundary excluding private reasoning, system instructions, encrypted handoffs, and raw tool output.
 - Added a full-screen readable/copyable transcript and prominent “Show output” handoffs to the actual generated launch room.
+
+## 2026-07-19 — Interview-first skill
+
+- Changed `$possible` from a pack selector into the conversational entry point for defining an outcome.
+- Made a bare invocation ask only “What are you trying to make real?” and prohibited pack names, installation, file writes, and subagents during intake.
+- Added one-question-at-a-time discovery, a single recommended outcome, explicit ingredient and boundary disclosure, and a confirmation gate.
+- Bundled a self-contained three-pack runtime reference so the globally installed skill can work without the Possible MCP, while still preferring newer MCP definitions when available.
+- Added resumable `.possible/` state and retained independent workstream, integration, fresh-review, and external-action gates.

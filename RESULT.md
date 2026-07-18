@@ -2,6 +2,8 @@
 
 Possible now publishes three complete outcome contracts: Hardware Launch, Software Launch, and Open-Source Release. The same registry drives the brief composer, curated pack catalog, individual pack pages, static JSON/text publications, MCP tools, grouped install commands, and personalized Codex prompts.
 
+The installable `$possible` skill is now interview-first: a bare invocation begins with “What are you trying to make real?”, asks one material question per turn, keeps packs hidden during discovery, recommends one outcome with disclosed ingredients and boundaries, and requires confirmation before any project mutation or installation.
+
 ## Verification receipt
 
 - `npm run check`: passed.

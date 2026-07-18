@@ -1,0 +1,105 @@
+# Possible pack catalog
+
+Use this bundled snapshot when the Possible MCP tools are unavailable. Show the relevant source list and reviewed revisions before asking the user to proceed.
+
+## Hardware Launch
+
+Slug: `hardware-launch`
+
+Use for a physical-product idea or prototype that needs one coherent launch presentation.
+
+Outputs: launch site, launch film, prototype CAD, honest waitlist contract, evidence report.
+
+Workstreams:
+
+- Launch site — `frontend-design`, `vercel-react-best-practices`; owns `site/` and the waitlist contract.
+- Launch film — `remotion-best-practices`; owns `film/` and the rendered preview.
+- Prototype CAD — `cad`; owns `hardware/` and the geometry report.
+- Fresh review — `webapp-testing`; verifies the integrated outcome after production.
+
+Sources:
+
+- `anthropics/skills`: `frontend-design`, `webapp-testing`; reviewed `fa0fa64bdc967915dc8399e803be67759e1e62b8`.
+- `vercel-labs/agent-skills`: `vercel-react-best-practices`; reviewed `f8a72b9603728bb92a217a879b7e62e43ad76c81`.
+- `remotion-dev/skills`: `remotion-best-practices`; reviewed `ab22f5fa89962ec943eaa18797cbf38c9d727743`.
+- `earthtojake/text-to-cad`: `cad`; reviewed `fdbb4b4fb62d95ae298cfe9a46fdc7092bdaf423`.
+
+Install:
+
+```bash
+npx skills@1.5.19 add anthropics/skills --skill frontend-design --skill webapp-testing --agent codex
+npx skills@1.5.19 add vercel-labs/agent-skills --skill vercel-react-best-practices --agent codex
+npx skills@1.5.19 add remotion-dev/skills --skill remotion-best-practices --agent codex
+npx skills@1.5.19 add earthtojake/text-to-cad --skill cad --agent codex
+```
+
+Never imply manufacturing readiness, physical validation, certification, or customer demand. Deployment, fabrication, purchasing, outreach, and real waitlist collection remain separate gates.
+
+## Software Launch
+
+Slug: `software-launch`
+
+Use for an existing software idea or repository that needs a coherent product release and launch presentation.
+
+Outputs: production product, launch site, demo film, deployment plan, evidence report.
+
+Workstreams:
+
+- Production product — `vercel-react-best-practices`; owns `product/` and its test receipt.
+- Launch site — `frontend-design`; owns `site/` and the launch narrative.
+- Demo film — `remotion-best-practices`; owns `film/` and the rendered preview.
+- Release readiness — `web-design-guidelines`, `deploy-to-vercel`; owns `release/` and the deployment plan.
+- Fresh review — `webapp-testing`, `web-design-guidelines`; verifies the integrated outcome.
+
+Sources:
+
+- `anthropics/skills`: `frontend-design`, `webapp-testing`; reviewed `fa0fa64bdc967915dc8399e803be67759e1e62b8`.
+- `vercel-labs/agent-skills`: `vercel-react-best-practices`, `web-design-guidelines`, `deploy-to-vercel`; reviewed `f8a72b9603728bb92a217a879b7e62e43ad76c81`.
+- `remotion-dev/skills`: `remotion-best-practices`; reviewed `ab22f5fa89962ec943eaa18797cbf38c9d727743`.
+
+Install:
+
+```bash
+npx skills@1.5.19 add anthropics/skills --skill frontend-design --skill webapp-testing --agent codex
+npx skills@1.5.19 add vercel-labs/agent-skills --skill vercel-react-best-practices --skill web-design-guidelines --skill deploy-to-vercel --agent codex
+npx skills@1.5.19 add remotion-dev/skills --skill remotion-best-practices --agent codex
+```
+
+Never imply demand, uptime, security, performance, or production readiness. Deployment, DNS, analytics, outreach, and real data collection remain separate gates.
+
+## Open-Source Release
+
+Slug: `open-source-release`
+
+Use for an existing repository that needs a trustworthy, usable release package without publishing it.
+
+Outputs: release-ready package, README and docs, runnable examples, hardened CI, changelog and release plan, evidence report.
+
+Workstreams:
+
+- Release engineering — `github-release`; owns `release/`, versioning, and the changelog plan.
+- Documentation and examples — `create-readme`, `documentation-writer`; owns `README.md`, `docs/`, and `examples/`.
+- CI and security assurance — `github-actions-hardening`, `security-review`; owns workflow changes and the risk report.
+- Fresh review — `security-review`, `github-actions-hardening`; verifies the release outcome.
+
+Sources:
+
+- `github/awesome-copilot`: all five skills below; reviewed `26fe2d126bf79aafb38f43344d450b69632200f8`.
+
+Install:
+
+```bash
+npx skills@1.5.19 add github/awesome-copilot --skill github-release --skill create-readme --skill documentation-writer --skill github-actions-hardening --skill security-review --agent codex
+```
+
+Never imply security, compatibility, production readiness, or release authority. Pushing, tagging, publishing packages, creating releases, and changing repository settings remain separate gates.
+
+## Selection rule
+
+Recommend the pack whose finished outputs most closely match the user's desired end state:
+
+- Physical product plus launch presentation → Hardware Launch.
+- Software product plus release and launch presentation → Software Launch.
+- Existing repository plus trustworthy public release materials → Open-Source Release.
+
+If none fits, say so. Do not force a pack or invent a new one during intake.

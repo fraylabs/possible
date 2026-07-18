@@ -1,9 +1,4 @@
 interface:
   display_name: "Possible"
-  short_description: "Compile skills into complete outcomes"
-  default_prompt: "Use $possible to select and compile the right outcome pack, inspect its external skill sources, install only with authorization, then run its captain workflow and verification contract."
-dependencies:
-  tools:
-    - type: "mcp"
-      value: "possible"
-      description: "Read-only Possible outcome-pack compiler"
+  short_description: "Turn a conversation into a complete outcome"
+  default_prompt: "Use $possible to walk me through what I want to make real, recommend the right outcome, and run it only after I confirm."

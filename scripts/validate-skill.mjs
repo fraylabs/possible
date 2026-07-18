@@ -4,9 +4,10 @@ import { fileURLToPath } from "node:url";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const directory = join(root, "skills", "possible");
-const [skill, metadata, entries] = await Promise.all([
+const [skill, metadata, catalog, entries] = await Promise.all([
   readFile(join(directory, "SKILL.md"), "utf8"),
   readFile(join(directory, "agents", "openai.yaml"), "utf8"),
+  readFile(join(directory, "references", "packs.md"), "utf8"),
   readdir(directory),
 ]);
 const errors = [];
@@ -17,16 +18,22 @@ if (frontmatter) {
   const keys = [...frontmatter[1].matchAll(/^([a-z]+):/gm)].map((match) => match[1]).sort();
   check(JSON.stringify(keys) === JSON.stringify(["description", "name"]), "frontmatter must contain only name and description");
 }
-for (const phrase of ["list_packs", "compile_pack", "reviewed revisions", "workstream", "fresh verification subagent", "hardware-launch", "software-launch", "open-source-release"]) {
+for (const phrase of ["What are you trying to make real?", "one question per turn", "Do not mention pack names", "Recommend one primary pack", "Proceed with this outcome?", "outcome-brief.md", "fresh verification subagent", "$possible resume"]) {
   check(skill.toLowerCase().includes(phrase.toLowerCase()), `SKILL.md must include '${phrase}'`);
 }
 for (const gate of ["credentials", "deployment", "DNS", "email", "purchases", "spending money", "fabrication"]) {
   check(skill.toLowerCase().includes(gate.toLowerCase()), `SKILL.md must retain the ${gate} gate`);
 }
-check(/short_description: "Compile skills into complete outcomes"/.test(metadata), "metadata must state the outcome compiler");
+for (const slug of ["hardware-launch", "software-launch", "open-source-release"]) {
+  check(catalog.includes(`Slug: \`${slug}\``), `pack reference must include ${slug}`);
+}
+for (const source of ["anthropics/skills", "vercel-labs/agent-skills", "remotion-dev/skills", "earthtojake/text-to-cad", "github/awesome-copilot"]) {
+  check(catalog.includes(source), `pack reference must include ${source}`);
+}
+check((catalog.match(/npx skills@1\.5\.19 add/g) ?? []).length === 8, "pack reference must include all eight grouped install commands");
+check(/short_description: "Turn a conversation into a complete outcome"/.test(metadata), "metadata must state the guided outcome promise");
 check(metadata.includes("$possible"), "default prompt must mention $possible");
-check(/value: "possible"/.test(metadata), "metadata must declare the Possible MCP");
-check(entries.every((entry) => ["SKILL.md", "agents"].includes(entry)), "skill directory contains unexpected top-level files");
+check(entries.every((entry) => ["SKILL.md", "agents", "references"].includes(entry)), "skill directory contains unexpected top-level files");
 check(skill.split("\n").length <= 500, "SKILL.md must stay under 500 lines");
 if (errors.length) throw new Error(`Possible skill validation failed:\n- ${errors.join("\n- ")}`);
 console.log("Possible skill is valid.");
