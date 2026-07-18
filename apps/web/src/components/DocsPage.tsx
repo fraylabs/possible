@@ -1,4 +1,4 @@
-import { ArrowLeft, ExternalLink } from "lucide-react";
+import { ArrowLeft, ArrowRight, ExternalLink } from "lucide-react";
 
 const sections = [
   ["What Possible is", "what-possible-is"],
@@ -16,10 +16,16 @@ export function DocsPage() {
           <span className="brand-wordmark">possible<span>.sh</span></span>
           <span className="brand-tagline">A sourced wiki of what people and agents can make possible.</span>
         </a>
-        <a className="back-button docs-back" href="/">
-          <ArrowLeft size={17} aria-hidden="true" />
-          Back to atlas
-        </a>
+        <div className="route-nav-actions">
+          <a className="back-button docs-back" href="/">
+            <ArrowLeft size={17} aria-hidden="true" />
+            Atlas
+          </a>
+          <a className="route-primary-link" href="/demo">
+            Try the demo
+            <ArrowRight size={16} aria-hidden="true" />
+          </a>
+        </div>
       </nav>
 
       <div className="docs-layout">
@@ -40,12 +46,15 @@ export function DocsPage() {
         <article className="docs-article">
           <header className="docs-header">
             <p className="section-kicker">How Possible works</p>
-            <h1>Start with what you want to make.</h1>
+            <h1>Tell the agent the outcome—not the stack.</h1>
             <p>
-              Possible is a sourced wiki of what people and agents can make possible. It collects
-              the tools, methods, services, and decisions that help turn an outcome into a real
-              starting point.
+              Possible gives people and agents a maintained, sourced route from “I want to make
+              this” to the tools, methods, services, and missing evidence needed to begin.
             </p>
+            <a className="docs-hero-cta" href="/demo">
+              Try an outcome now
+              <ArrowRight size={17} aria-hidden="true" />
+            </a>
           </header>
 
           <section id="what-possible-is" className="docs-section">
@@ -53,14 +62,18 @@ export function DocsPage() {
             <div>
               <h2>What Possible is</h2>
               <p>
-                When someone says “I want to build a robot arm” or “I want to ship a web app,”
-                they should not have to begin with an empty folder. Possible maps the proven
-                knowledge around that outcome so the next question is easier to answer.
+                When someone says “make me a robot arm” or “ship me a web app,” an agent should
+                not guess a stack from scratch. It asks Possible whether a maintained route exists.
               </p>
               <p>
-                Each page is a compact, reviewed piece of practical knowledge: what it is, when
-                to use it, what it connects to, and where the claim came from.
+                Possible returns the closest authored outcome, its route status, the connected
+                capabilities and providers, primary sources, and what still has to be proven.
               </p>
+              <div className="how-flow" aria-label="Possible workflow">
+                <div><span>01</span><strong>Ask</strong><p>“I want to make a robotic arm.”</p></div>
+                <div><span>02</span><strong>Route</strong><p>Find the maintained outcome and connected knowledge.</p></div>
+                <div><span>03</span><strong>Make</strong><p>Start from sourced work, while keeping gaps explicit.</p></div>
+              </div>
             </div>
           </section>
 

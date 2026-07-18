@@ -107,7 +107,9 @@ export const wikiPublications = (): Plugin => ({
 
     const sitemapUrls = [
       "https://possible.sh/",
-      "https://possible.sh/docs",
+      "https://possible.sh/how-it-works",
+      "https://possible.sh/demo",
+      "https://possible.sh/proof",
       ...wikiCorpusData.pages.map((page) => `https://possible.sh/wiki/${page.slug}`),
     ];
     this.emitFile({

@@ -1,6 +1,7 @@
 import type {
   PageSearchOptions,
   PageSearchResult,
+  SearchAssessment,
   WikiCorpus,
   WikiPage,
 } from "@possible/knowledge";
@@ -117,6 +118,39 @@ export function searchPages(
         left.page.slug.localeCompare(right.page.slug),
     )
     .slice(0, limit);
+}
+
+export function assessSearchResults(results: PageSearchResult[]): SearchAssessment {
+  const outcomeResults = results.filter(({ page }) => page.kind === "outcome");
+  const verifiedRoutes = outcomeResults
+    .filter(({ page }) => page.routeStatus === "verified")
+    .map(({ page }) => page.slug);
+  const partialRoutes = outcomeResults
+    .filter(({ page }) => page.routeStatus !== "verified")
+    .map(({ page }) => page.slug);
+
+  if (verifiedRoutes.length > 0) {
+    return {
+      status: "verified",
+      reason: "Possible found an explicitly verified outcome route.",
+      verifiedRoutes,
+      partialRoutes,
+    };
+  }
+  if (partialRoutes.length > 0) {
+    return {
+      status: "partial",
+      reason: "Possible found an outcome page, but no explicitly verified route.",
+      verifiedRoutes,
+      partialRoutes,
+    };
+  }
+  return {
+    status: "no-maintained-route",
+    reason: "Possible found no maintained outcome matching every meaningful query term.",
+    verifiedRoutes,
+    partialRoutes,
+  };
 }
 
 export function getBacklinks(corpus: WikiCorpus, slug: string): WikiPage[] {

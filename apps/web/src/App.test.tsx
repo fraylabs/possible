@@ -11,14 +11,41 @@ describe("Possible wiki", () => {
     window.history.replaceState(null, "", "/");
   });
 
-  it("provides product documentation without entering the graph", () => {
-    window.history.replaceState(null, "", "/docs");
+  it("explains how Possible works without entering the graph", () => {
+    window.history.replaceState(null, "", "/how-it-works");
     render(<App />);
 
-    expect(screen.getByRole("heading", { level: 1, name: "Start with what you want to make." })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Back to atlas" })).toHaveAttribute("href", "/");
+    expect(screen.getByRole("heading", { level: 1, name: "Tell the agent the outcome—not the stack." })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Atlas" })).toHaveAttribute("href", "/");
+    expect(screen.getAllByRole("link", { name: /Try (the demo|an outcome now)/i })).toHaveLength(2);
     expect(screen.getByRole("heading", { level: 2, name: "For agents" })).toBeInTheDocument();
     expect(screen.queryByRole("region", { name: "Possible knowledge atlas" })).not.toBeInTheDocument();
+  });
+
+  it("demonstrates outcome routing and refuses to invent a missing route", async () => {
+    const user = userEvent.setup();
+    window.history.replaceState(null, "", "/demo");
+    render(<App />);
+
+    expect(screen.getByRole("heading", { level: 1, name: "What do you want to make possible?" })).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { level: 2, name: "No maintained outcome" })).toBeInTheDocument();
+    const query = screen.getByRole("textbox", { name: "Outcome" });
+    await user.clear(query);
+    await user.type(query, "I want to make custom manufactured parts");
+    await user.click(screen.getByRole("button", { name: /Find a route/i }));
+
+    expect(await screen.findByRole("heading", { level: 2, name: "Custom manufactured parts" })).toBeInTheDocument();
+    expect(screen.getByText("Partial route")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Read the outcome" })).toHaveAttribute("href", "/wiki/custom-manufactured-parts");
+    expect(screen.getByRole("link", { name: "Agent JSON" })).toHaveAttribute("href", "/agent/read/custom-manufactured-parts.json");
+
+    await user.clear(query);
+    await user.type(query, "interstellar unicorn teleporter");
+    await user.click(screen.getByRole("button", { name: /Find a route/i }));
+
+    expect(await screen.findByRole("heading", { level: 2, name: "No maintained outcome" })).toBeInTheDocument();
+    expect(screen.getByText("No maintained route")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 3, name: "Possible will not invent an answer." })).toBeInTheDocument();
   });
 
   it("opens on the atlas, keeps fields as siblings, and lets search and graph select pages", async () => {

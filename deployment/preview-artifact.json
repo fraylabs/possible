@@ -3,8 +3,8 @@
   "artifactDirectory": "apps/web/dist",
   "buildCommand": "npm run preview:build",
   "verificationCommand": "npm run preview:verify",
-  "sha256": "c192b5d9a837cbc148ec441dcd5166acfb95fc2fe18d0cb1aee10c2d00323d6e",
-  "totalBytes": 2747745,
+  "sha256": "b904894d59a8e79b927c746102a12d5ac24c4d3b562bcac07d30a88cca051e41",
+  "totalBytes": 2761347,
   "files": [
     {
       "path": "agent/protocol.json",
@@ -627,19 +627,19 @@
       "sha256": "29306687d7db6bec454404124b33996136aa067d4f43dd564a96cdcb368f304a"
     },
     {
-      "path": "assets/index-D2HWbRWp.js",
-      "bytes": 395063,
-      "sha256": "d71c98bc1b99e12a96d5ad7ef6ed6a379a4b01b2fa5e99704ae6696e5fc5534d"
+      "path": "assets/index-DIIbww_P.css",
+      "bytes": 51938,
+      "sha256": "e12cd440cb57628ebc9adac4c91eee4920dffe9581d6552af01932ffe5d3bcce"
     },
     {
-      "path": "assets/index-RHNZRdf9.css",
-      "bytes": 44985,
-      "sha256": "a3ab54c7673640b20b03c60f7a28e7306524daa7d3f9d83073896c5f79ff31c3"
+      "path": "assets/index-XtFQjak8.js",
+      "bytes": 401605,
+      "sha256": "a68a32927664746b5331d0b4416cac33df80674efa6c7bfdae962bbcddcc0799"
     },
     {
       "path": "index.html",
       "bytes": 803,
-      "sha256": "487b99a185c49562c56585dac1565060cc2a687fb09a5e393e0f4e2ed5867b5b"
+      "sha256": "1d97e6e9c351631cff8feba9b905b46ca5d954cc20e3dcfd75cea94be3a3fd53"
     },
     {
       "path": "llms.txt",
@@ -663,8 +663,8 @@
     },
     {
       "path": "sitemap.xml",
-      "bytes": 4356,
-      "sha256": "221d212cdd648f247e28b0d90beaa61b1d763b193815aced3f9431d0c2992d20"
+      "bytes": 4463,
+      "sha256": "a98c3e4f06a902bd90c222121089f40d9ba2545b84f7f52bad1c7061e1d26659"
     },
     {
       "path": "wiki/3d-renderer-selection.json",
@@ -999,7 +999,7 @@
     "dnsProvider": "Cloudflare",
     "sourceRepository": "https://github.com/fraylabs/possible",
     "publishedAt": "2026-07-18",
-    "artifactSha256": "c192b5d9a837cbc148ec441dcd5166acfb95fc2fe18d0cb1aee10c2d00323d6e",
+    "artifactSha256": "b904894d59a8e79b927c746102a12d5ac24c4d3b562bcac07d30a88cca051e41",
     "verificationReceipt": "deployment/PRODUCTION.md",
     "remainingApprovalBoundaries": [
       "cost or paid-plan changes",

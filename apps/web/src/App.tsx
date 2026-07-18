@@ -17,6 +17,7 @@ import { buildAtlasBranches } from "./atlas";
 import { ArticleView } from "./components/ArticleView";
 import { AtlasGraph } from "./components/AtlasGraph";
 import { DocsPage } from "./components/DocsPage";
+import { DemoPage } from "./components/DemoPage";
 import { ProofPage } from "./components/ProofPage";
 import { MarkdownRenderer } from "./markdown";
 import {
@@ -294,8 +295,12 @@ export function App() {
     setExpandedSlug(slug);
   };
 
-  if (window.location.pathname.replace(/\/+$/, "") === "/docs") {
+  if (["/docs", "/how-it-works"].includes(window.location.pathname.replace(/\/+$/, ""))) {
     return <DocsPage />;
+  }
+
+  if (window.location.pathname.replace(/\/+$/, "") === "/demo") {
+    return <DemoPage />;
   }
 
   if (window.location.pathname.replace(/\/+$/, "") === "/proof") {
@@ -417,8 +422,9 @@ export function App() {
               </div>
             )}
             <div className="docs-links">
-              <a className="docs-link" href="/docs">How Possible works</a>
-              <a className="docs-link" href="/proof">See it work</a>
+              <a className="docs-link docs-link--primary" href="/demo">Try the demo</a>
+              <a className="docs-link" href="/how-it-works">How it works</a>
+              <a className="docs-link docs-link--quiet" href="/proof">Proof</a>
             </div>
           </div>
 

@@ -2793,6 +2793,481 @@ h1[tabindex="-1"]:focus {
   gap: 10px 16px;
 }
 
+.docs-links .docs-link {
+  min-height: 36px;
+  align-items: center;
+  margin-top: 10px;
+  padding: 0 12px;
+  border: 1px solid var(--paper-line);
+  border-radius: 999px;
+}
+
+.docs-links .docs-link--primary {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #fffaf2;
+}
+
+.docs-links .docs-link--primary:hover,
+.docs-links .docs-link--primary:focus-visible {
+  color: #fff;
+  text-decoration: none;
+}
+
+.docs-links .docs-link--quiet {
+  border-color: transparent;
+  padding-right: 4px;
+  padding-left: 4px;
+}
+
+.route-nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.route-primary-link,
+.route-secondary-link,
+.docs-hero-cta {
+  display: inline-flex;
+  min-height: 42px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.route-primary-link,
+.docs-hero-cta {
+  padding: 0 16px;
+  background: var(--accent);
+  color: #fffaf2;
+}
+
+.route-primary-link:hover,
+.route-primary-link:focus-visible,
+.docs-hero-cta:hover,
+.docs-hero-cta:focus-visible {
+  background: #963f20;
+  color: #fff;
+}
+
+.route-secondary-link {
+  padding: 0 8px;
+  color: var(--ink-soft);
+}
+
+.route-secondary-link:hover,
+.route-secondary-link:focus-visible {
+  color: var(--accent);
+}
+
+.docs-hero-cta {
+  width: fit-content;
+  margin-top: 28px;
+}
+
+.how-flow {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 30px;
+}
+
+.how-flow > div {
+  min-height: 160px;
+  padding: 18px;
+  border: 1px solid var(--paper-line);
+  border-radius: 12px;
+  background: var(--paper-bright);
+}
+
+.how-flow span,
+.how-flow strong {
+  display: block;
+}
+
+.how-flow span {
+  color: var(--accent);
+  font: 0.62rem "DM Mono", monospace;
+}
+
+.how-flow strong {
+  margin-top: 20px;
+  color: var(--ink);
+  font-family: "Instrument Serif", Georgia, serif;
+  font-size: 1.45rem;
+  font-weight: 400;
+}
+
+.how-flow p {
+  margin: 8px 0 0;
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+
+/* Outcome demo */
+.demo-page {
+  min-height: 100dvh;
+  background:
+    radial-gradient(circle at 76% 5%, rgba(180, 85, 40, 0.1), transparent 30rem),
+    var(--paper);
+  color: var(--ink);
+}
+
+.demo-nav,
+.demo-hero,
+.demo-output {
+  width: min(1120px, calc(100% - 48px));
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.demo-nav {
+  display: flex;
+  min-height: 96px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  border-bottom: 1px solid var(--paper-line);
+}
+
+.demo-hero {
+  padding: clamp(70px, 10vw, 128px) 0 58px;
+}
+
+.demo-hero h1 {
+  max-width: 900px;
+  margin: 10px 0 0;
+  font-family: "Instrument Serif", Georgia, serif;
+  font-size: clamp(3.8rem, 8vw, 7.4rem);
+  font-weight: 400;
+  letter-spacing: -0.05em;
+  line-height: 0.9;
+}
+
+.demo-hero > p:not(.section-kicker) {
+  max-width: 650px;
+  margin: 30px 0 0;
+  color: var(--ink-soft);
+  font-family: "Instrument Serif", Georgia, serif;
+  font-size: clamp(1.2rem, 2vw, 1.5rem);
+  line-height: 1.45;
+}
+
+.demo-search {
+  display: grid;
+  min-height: 72px;
+  grid-template-columns: 22px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  max-width: 900px;
+  margin-top: 42px;
+  padding: 8px 9px 8px 20px;
+  border: 1px solid rgba(48, 40, 28, 0.18);
+  border-radius: 18px;
+  background: var(--paper-bright);
+  box-shadow: 0 18px 60px rgba(55, 39, 23, 0.08);
+}
+
+.demo-search:focus-within {
+  border-color: rgba(180, 85, 40, 0.55);
+  box-shadow: 0 0 0 4px rgba(180, 85, 40, 0.08), 0 18px 60px rgba(55, 39, 23, 0.08);
+}
+
+.demo-search svg {
+  color: var(--accent);
+}
+
+.demo-search input {
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--ink);
+  font-family: "Instrument Serif", Georgia, serif;
+  font-size: clamp(1.05rem, 2vw, 1.35rem);
+}
+
+.demo-search button {
+  display: inline-flex;
+  min-height: 52px;
+  align-items: center;
+  gap: 8px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--accent);
+  color: #fffaf2;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.demo-examples {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.demo-examples span {
+  color: var(--ink-quiet);
+  font: 0.62rem "DM Mono", monospace;
+  text-transform: uppercase;
+}
+
+.demo-examples button {
+  padding: 6px 9px;
+  border: 0;
+  border-radius: 7px;
+  background: rgba(180, 85, 40, 0.06);
+  color: var(--ink-soft);
+  cursor: pointer;
+  font-size: 0.72rem;
+}
+
+.demo-examples button:hover,
+.demo-examples button:focus-visible {
+  background: rgba(180, 85, 40, 0.12);
+  color: var(--accent);
+}
+
+.demo-output {
+  padding: 0 0 110px;
+}
+
+.demo-state,
+.demo-result-header,
+.demo-no-route {
+  border-top: 1px solid var(--paper-line);
+}
+
+.demo-state {
+  margin: 0;
+  padding: 50px 0;
+  color: var(--ink-soft);
+}
+
+.demo-state--error { color: #a3312a; }
+
+.demo-result-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 48px 0 28px;
+}
+
+.demo-result-header h2 {
+  margin: 7px 0 0;
+  font-family: "Instrument Serif", Georgia, serif;
+  font-size: clamp(2.8rem, 6vw, 5.2rem);
+  font-weight: 400;
+  letter-spacing: -0.04em;
+  line-height: 0.95;
+}
+
+.demo-status {
+  display: inline-flex;
+  min-height: 34px;
+  align-items: center;
+  padding: 0 12px;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  font: 0.64rem "DM Mono", monospace;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.demo-status--verified { color: #28704b; }
+.demo-status--partial { color: #9a5c16; }
+.demo-status--no-maintained-route { color: #9c3933; }
+
+.demo-result-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 14px;
+}
+
+.demo-route-card {
+  padding: clamp(22px, 3vw, 32px);
+  border: 1px solid var(--paper-line);
+  border-radius: 16px;
+  background: rgba(251, 248, 241, 0.72);
+}
+
+.demo-route-card--sources {
+  grid-column: 1 / -1;
+}
+
+.demo-card-label {
+  margin: 0;
+  color: var(--accent);
+  font: 0.62rem "DM Mono", monospace;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.demo-outcome-summary {
+  margin: 18px 0 0;
+  color: var(--ink);
+  font-family: "Instrument Serif", Georgia, serif;
+  font-size: 1.45rem;
+  line-height: 1.4;
+}
+
+.demo-assessment,
+.demo-source-note {
+  color: var(--ink-soft);
+  font-size: 0.82rem;
+  line-height: 1.6;
+}
+
+.demo-assessment { margin: 16px 0 0; }
+
+.demo-coverage {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 20px;
+}
+
+.demo-coverage span {
+  padding: 5px 8px;
+  border: 1px solid var(--paper-line);
+  border-radius: 999px;
+  color: var(--ink-soft);
+  font: 0.58rem "DM Mono", monospace;
+}
+
+.demo-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 26px;
+}
+
+.demo-card-actions a,
+.demo-no-route a {
+  display: inline-flex;
+  min-height: 38px;
+  align-items: center;
+  padding: 0 12px;
+  border: 1px solid var(--paper-line);
+  border-radius: 999px;
+  color: var(--accent);
+  font-size: 0.76rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.demo-next-pages,
+.demo-source-list {
+  display: grid;
+  gap: 14px;
+  margin: 18px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.demo-next-pages li {
+  padding-bottom: 13px;
+  border-bottom: 1px solid var(--paper-line);
+}
+
+.demo-next-pages a,
+.demo-source-list a {
+  color: var(--ink);
+  font-size: 0.88rem;
+  font-weight: 600;
+  text-decoration-color: rgba(180, 85, 40, 0.32);
+  text-underline-offset: 0.2em;
+}
+
+.demo-next-pages span {
+  display: block;
+  margin-top: 4px;
+  color: var(--ink-soft);
+  font-size: 0.7rem;
+  line-height: 1.5;
+}
+
+.demo-source-list {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px 24px;
+}
+
+.demo-source-note { margin: 24px 0 0; }
+
+.demo-no-route {
+  padding: 56px 0;
+}
+
+.demo-no-route h3 {
+  margin: 0;
+  font-family: "Instrument Serif", Georgia, serif;
+  font-size: 2.4rem;
+  font-weight: 400;
+}
+
+.demo-no-route p {
+  max-width: 640px;
+  margin: 15px 0 24px;
+  color: var(--ink-soft);
+  line-height: 1.7;
+}
+
+@media (max-width: 760px) {
+  .how-flow,
+  .demo-result-grid,
+  .demo-source-list {
+    grid-template-columns: 1fr;
+  }
+
+  .route-nav-actions .route-primary-link,
+  .demo-nav .route-secondary-link {
+    display: none;
+  }
+
+  .demo-nav,
+  .demo-hero,
+  .demo-output {
+    width: min(100% - 32px, 1120px);
+  }
+
+  .demo-hero {
+    padding-top: 58px;
+  }
+
+  .demo-hero h1 {
+    font-size: clamp(3.2rem, 16vw, 5rem);
+  }
+
+  .demo-search {
+    min-height: 0;
+    grid-template-columns: 20px minmax(0, 1fr);
+    padding: 15px;
+  }
+
+  .demo-search button {
+    grid-column: 1 / -1;
+    justify-content: center;
+  }
+
+  .demo-result-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .demo-route-card--sources {
+    grid-column: auto;
+  }
+}
+
 @media (max-width: 800px) {
   .proof-results { grid-template-columns: 1fr; }
   .proof-agent-header { align-items: flex-start; flex-direction: column; }
