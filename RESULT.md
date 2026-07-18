@@ -1,101 +1,71 @@
-# Possible KISS Wiki Result
+# Possible Persistent Knowledge Universe Result
 
-Status: implementation, production delivery, and live rendered acceptance pass
-on 2026-07-18 in Asia/Singapore.
+Status: implemented, verified, and live in production on 2026-07-18 in
+Asia/Singapore.
 
 ## Supported trust claim
 
-Possible is a sourced, linked wiki that humans and agents can read without a
-separate planning ontology.
+Possible now presents its sourced wiki as one persistent spatial universe.
 
-- The canonical corpus contains 49 Markdown pages and 146 resolved internal
-  links across Web and custom-part manufacturing.
-- A page has a stable slug, readable prose, tags, a review date, and at least
-  one HTTPS source. Links derive graph edges, backlinks, and related pages.
-- The human atlas has two presentation modes only. Explore contains the brand,
-  search, concise selected-page context, and a small related-page map. Read
-  contains the full article, review date, sources, and one Back to map action.
-- Desktop and mobile use that same full-page model. There is no mobile sheet,
-  modal, metadata rail, relation legend, page-facts panel, or agent dashboard.
-- Search, graph nodes, article links, browser history, and stable URLs share one
-  page-selection action. Mode changes do not change the selected page URL.
-- The MCP server still exposes exactly two read-only operations: `search` and
-  `read`. Production builds still generate `/llms.txt`, `/wiki/index.json`, and
-  one `/wiki/<slug>.json` representation per page from the same corpus.
+- Explore always renders the complete 49-page atlas derived from the corpus's
+  146 authored internal links. Selecting a page marks it and its authored
+  neighborhood without swapping in a truncated local graph or changing the
+  camera.
+- Zooming out keeps every page present while revealing folder-derived Web and
+  Manufacturing clouds; closer zoom progressively reveals ordinary labels.
+- A floating inspector contains search, focused-page context, clear focus, and
+  the explicit Read action while the graph remains the primary full-screen
+  surface.
+- Pan, pointer-centered wheel zoom, 44 px mobile zoom controls, keyboard
+  `+`/`-`/`0`, Escape, search, stable wiki URLs, and browser Back/Forward share
+  the same selection and camera state.
+- Returning from Read restores the previous selection and graph camera.
+- The canonical KISS model remains pages, internal links, and sources. The
+  `/llms.txt`, wiki JSON, command helper, and exactly two read-only MCP tools
+  remain unchanged.
 
 ## Verification receipt
 
-`npm run check` passed from a clean jj workspace with:
+A clean detached checkout of implementation commit
+`716bec3583059b166dff18a013b673319d36b315` passed `npm ci` and the complete
+`npm run check` after recording the reviewed artifact:
 
-- 49 pages and 146 internal links validated from 49 Markdown files;
-- 14 knowledge tests, including malformed metadata, source, date, and link
-  negatives;
-- 7 real MCP tests across in-memory, stdio, and Streamable HTTP transports;
-- 10 web behavior, graph, accessibility, and fixture-corpus tests plus one
-  integration-mode real-corpus test;
-- 1 real stdio helper test using “I want to make a robot arm.”;
-- 5 preview-boundary tests;
-- all TypeScript and production builds; and
-- exact verification of 54 production files totaling 801,118 bytes with
-  aggregate SHA-256
-  `44c578af4c389a5b2ee1730c57459dfb49afd341d6f4e47b0159511ccde48058`.
+- 49 Markdown pages and 146 resolved links validated;
+- 14 knowledge tests and 7 MCP transport/contract tests passed;
+- 15 web behavior, graph, and accessibility tests plus the real-corpus
+  integration test passed;
+- the real stdio agent helper and 5 artifact-boundary negative tests passed;
+- TypeScript and production builds passed; and
+- 54 regular files totaling 1,342,983 bytes matched aggregate SHA-256
+  `57945bd9ed262d2cf4d411c9787394cee1d1f76282d111268adc68fe9010117f`.
 
-The verifier checked exact bytes and content types, the `/wiki/web` SPA
-fallback, all generated page documents and relations, symbolic-link and unsafe
-path negatives, and the absence of public source maps. The simplified UI range
-does not contain the seven unrelated manufacturing-page edits retained in the
-captain's working copy.
+The focused web suite proves the same atlas DOM instance survives selection,
+both sibling fields remain present, universe zoom persists through selection,
+Read returns to the preserved camera, browser history restores a recorded
+camera, visible labels remain clickable, and mobile/keyboard semantics remain
+operable. The seven unrelated manufacturing drafts in the captain's working
+copy were excluded from both commits and the clean build.
 
 ## Production acceptance
 
-Public Git commit
-`3c78279fd7956624c3d2345b7ebb3e2b3180b9ee` was deployed by Vercel as
-`dpl_5DK9yJkZGaf1dMJ6giKwHdPwptb3` and reached production / Ready at
-2026-07-18 12:02 Asia/Singapore. Vercel attached `https://possible.sh`,
-`https://www.possible.sh`, and the existing project aliases.
+Public `fraylabs/possible` `main` commit
+`4702fd12993136e640f25b96f1798d08f80a9432` was deployed by Vercel as
+`dpl_4Dy6FGnYBAZBjrqYvGHijMEuXB5p` and reached production / Ready at
+2026-07-18 13:50 Asia/Singapore. Its provider URL is
+`https://possible-dam3wnyid-brainthrust.vercel.app`; Vercel attached
+`https://possible.sh`, `https://www.possible.sh`, and the existing project
+aliases.
 
-At 2026-07-18 12:04 Asia/Singapore, exact live fetches downloaded all 54
-manifested files from both custom domains. Every status, byte count, and
-SHA-256 matched the reviewed artifact: 801,118 bytes,
-`44c578af4c389a5b2ee1730c57459dfb49afd341d6f4e47b0159511ccde48058`,
-and zero mismatches on either host. Authenticated provider metadata matched the
-deployment to public `main` and the release commit above.
-
-## Rendered acceptance
-
-The in-app Browser exercised the live deployment at desktop `1440 × 1000` and
-mobile `390 × 844`.
-
-- Desktop Explore rendered the editorial context and six-node map without
-  overflow; Read rendered the focused article without the previous sidebars.
-- The literal robot-arm outcome selected `/wiki/robotic-arms`; its
-  `CAD Skills (text-to-cad)` graph node selected `/wiki/text-to-cad`; Read and
-  Back to map preserved that URL.
-- At 390 px, the full graph stayed inside the viewport with zero pairwise node
-  collisions and no horizontal overflow.
-- Entering Read after scrolling the map reset to the article start, kept the
-  title below the sticky bar, and exposed no dialog semantics.
-- The exercised live paths produced zero browser warnings or errors.
-
-Ten accepted local and live previews are retained in the ignored Fray
-notification artifact directory for Telegram media handoff.
-
-A fresh read-only reviewer audited the exact public release range and returned
-`ACCEPT`. It independently confirmed the two-mode surface, deletion of the old
-sheet and metadata UI, behavior-test coverage, unchanged agent contracts, and
-the absence of all `knowledge/**/*.md` files from the release. Its only limit
-was intentionally not rerunning checks or browser automation; the clean primary
-verifier and live acceptance above supply that evidence. It also correctly
-flagged the old receipt in its isolated workspace, which this result replaces.
+Independent HTTPS reads fetched every one of the 54 manifested files from both
+custom domains. Both hosts returned 1,342,983 exact bytes with zero status,
+size, or SHA-256 mismatches, and `/wiki/web` returned the expected 200 SPA
+route.
 
 ## What this does not claim
 
-Possible supplies maintained starting knowledge. It does not plan a project,
-rank providers, hold credentials, execute deployments, make purchases, order
-parts, or prove that a website, CAD model, robot arm, quote, or fabricated part
-has been completed. The host agent remains responsible for reasoning, current
-external checks, user decisions, execution, and artifact verification.
-
-The original 2026-07-17 typed-graph MVP and the first 2026-07-18 page-only UI
-remain in Git history and `deployment/PRODUCTION.md` as historical evidence.
-They are not the active human-interface contract.
+Possible does not yet provide a typed ontology, route planner, recommendation
+engine, trust score, accounts, marketplace, or autonomous execution. The field
+clouds are visual orientation derived from folders, not hidden knowledge or a
+new canonical schema. At this corpus size the graph still uses a client-side
+force layout and DOM node labels; larger corpora will require precomputed
+positions, label collision management, and a reduced accessibility projection.

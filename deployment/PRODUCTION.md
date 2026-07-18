@@ -361,3 +361,43 @@ A clean isolated checkout passed the complete repository verifier, including
 14 web tests. Independent HTTPS reads matched all 54 artifact paths exactly on
 both `possible.sh` and `www.possible.sh`. Existing manufacturing drafts were
 excluded from the release.
+
+## 2026-07-18 — Persistent semantic-zoom universe
+
+Possible now keeps the complete 49-page atlas mounted throughout Explore.
+Selecting a node highlights that page and its authored neighborhood while all
+other fields, nodes, links, coordinates, and the camera remain present. The
+full-screen graph uses folder-derived cloud regions and universe, field, and
+detail zoom bands; a floating inspector exposes search, focused-page context,
+clear focus, and Read without turning selection into route-like graph drilling.
+
+Pan, pointer-centered wheel zoom, mobile-sized controls, `+`/`-`/`0`, Escape,
+browser history, and the Read round-trip all preserve the same selection and
+camera contract. The KISS page/link/source corpus and agent-facing wiki, JSON,
+helper, and two-tool read-only MCP contract are unchanged.
+
+### Delivery identity
+
+- Public source commit:
+  `4702fd12993136e640f25b96f1798d08f80a9432`
+- Public branch: `fraylabs/possible` `main`
+- Vercel deployment: `dpl_4Dy6FGnYBAZBjrqYvGHijMEuXB5p`
+- Deployment URL: `https://possible-dam3wnyid-brainthrust.vercel.app`
+- State: production / Ready at 2026-07-18 13:50 Asia/Singapore
+- Aliases: `https://possible.sh`, `https://www.possible.sh`, and the existing
+  Vercel project aliases
+
+### Exact live artifact receipt
+
+A clean isolated checkout passed `npm ci` and the complete `npm run check`.
+The reviewed production artifact contains 54 regular files totaling 1,342,983
+bytes with aggregate SHA-256
+`57945bd9ed262d2cf4d411c9787394cee1d1f76282d111268adc68fe9010117f`.
+Independent HTTPS reads matched all 54 paths, byte counts, and hashes on both
+custom domains with zero mismatches; `/wiki/web` returned 200 on each host.
+
+The web suite contains 15 passing tests, including regression proof that the
+same global graph instance survives selection, zoomed-out context persists,
+Read restores the camera, history restores camera state, and mobile/keyboard
+controls remain operable. The seven unrelated manufacturing drafts in the
+working copy were excluded from this release.

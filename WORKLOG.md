@@ -13,6 +13,21 @@
 - Started four goal-backed parallel lanes for UX red-team, frontend state
   architecture, semantic-zoom/cloud rendering, and adversarial verification;
   the parent thread retains integration and production ownership.
+- Replaced selection-driven graph swapping with one always-mounted global
+  atlas, hoisted camera state, and history snapshots.
+- Added pointer-centered zoom, semantic universe/field/detail bands,
+  folder-derived clouds, persistent selection and authored-neighbor emphasis,
+  keyboard controls, and 44 px mobile controls.
+- Made the graph a full-screen surface with a floating search/inspection panel
+  rather than a fixed split-screen diagram.
+- Added regressions proving global graph identity, no truncation after
+  selection, semantic zoom continuity, Read round-trips, and history camera
+  restoration; all 15 web tests pass.
+- A clean isolated checkout passed the complete verifier and recorded the
+  54-file artifact `57945bd9ed262d2cf4d411c9787394cee1d1f76282d111268adc68fe9010117f`.
+- Public commit `4702fd12993136e640f25b96f1798d08f80a9432` reached Vercel production as
+  `dpl_4Dy6FGnYBAZBjrqYvGHijMEuXB5p`; exact live reads matched all 54 files on
+  both custom domains with zero mismatches.
 
 ## 2026-07-17 — Activation
 
