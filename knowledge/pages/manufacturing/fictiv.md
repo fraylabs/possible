@@ -18,6 +18,6 @@ Fictiv is a manufacturing network that documents machining, molding, additive, c
 
 Shortlist Fictiv only when the current process and file guidance fit the part and supporting drawings can satisfy the route. Supported file formats and assembly handling vary by process, so current official guidance must be checked before upload. Choose [Xometry](/wiki/xometry) when its supplier network or current process fit is better.
 
-This page reflects provider documentation checked on 2026-07-17 and still requires a live check. Price, minimums, taxes, quote validity, supplier and capacity availability, shipping geography and terms, and the exact inspection or documentation path are live unknowns until quote configuration.
+This page reflects provider documentation checked on 2026-07-17 and still requires a live check. Price, minimums, taxes, and quote validity; supplier, process, material, finish, inspection, and capacity availability; supplier and shipping geography, timing, terms, and destination eligibility; and the exact inspection service, sampling, documentation, and process eligibility are live unknowns until quote configuration.
 
 The handoff channel is the authenticated website upload flow for proprietary CAD and drawings. That upload can return DFM feedback, creates external quote state, and requires explicit approval before the request is made.

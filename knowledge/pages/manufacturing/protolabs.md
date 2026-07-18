@@ -18,6 +18,6 @@ Protolabs is a provider candidate for multiple custom-part processes, including 
 
 Shortlist Protolabs when its current service and accepted-file documentation fits the part, then confirm facility, material, tolerance, inspection, geography, and quote details live. Protolabs states that it does not provide part-design services, so the user still needs a manufacturable 3D CAD model before upload. Choose [Xometry](/wiki/xometry) when its supplier network or process route fits better.
 
-This page reflects provider documentation checked on 2026-07-17 and still requires a live check. Price, minimums, taxes, quote validity, facility and material availability, shipping terms, and the exact inspection report or sampling path are not stable provider facts here.
+This page reflects provider documentation checked on 2026-07-17 and still requires a live check. Price, minimums, taxes, and quote validity; process, facility, network, material, finish, and production availability; shipping eligibility, destination, timing, and provider terms, including applicable account terms; and the exact inspection report, sampling, evidence, and eligibility are not stable provider facts here.
 
 The handoff channel is the authenticated website upload flow for proprietary models and drawings. That upload creates external DFM feedback and quote state and requires explicit approval before any quote request.

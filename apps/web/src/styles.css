@@ -681,7 +681,7 @@ h1[tabindex="-1"]:focus {
 }
 
 .knowledge-node.is-prominent .knowledge-node__label {
-  opacity: 0.88;
+  opacity: 0.96;
 }
 
 .knowledge-node.is-selected {
@@ -768,7 +768,7 @@ h1[tabindex="-1"]:focus {
 
 .graph-world[data-zoom-band="field"] .graph-cloud span,
 .graph-world[data-zoom-band="field"] .graph-cloud small {
-  opacity: 0.24;
+  opacity: 0;
 }
 
 .graph-world[data-zoom-band="field"] .knowledge-node:not(.is-prominent, .is-selected) .knowledge-node__label {

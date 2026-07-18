@@ -18,6 +18,6 @@ SendCutSend is a provider candidate for custom-part work that fits its documente
 
 Shortlist SendCutSend only after matching the exact service, file, material, thickness, feature, and tolerance guidance live. Its official 3D-file guidance requires STEP or STP for supported 3D services and explicitly does not accept STL on that path. Choose [Protolabs](/wiki/protolabs) when a different mix of machining, additive, molding, or sheet services fits better.
 
-This page reflects provider documentation checked on 2026-07-17 and still requires a live quote-flow check. Pricing, minimums, taxes, quote validity, material and service availability, shipping and timing terms, and exact tolerance capability all remain live unknowns until the current quote is configured.
+This page reflects provider documentation checked on 2026-07-17 and still requires a live quote-flow check. Pricing, minimums, taxes, and quote validity; process, material, thickness, finish, and service availability; shipping destination, eligibility, timing, and terms; and exact tolerance capability all remain live unknowns until the current quote is configured.
 
 The handoff channel is the website upload flow. It requires authentication, discloses proprietary files, produces a live quote, creates external quote state, and needs explicit approval before a quote request.

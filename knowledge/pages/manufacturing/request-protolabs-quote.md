@@ -16,6 +16,8 @@ Requesting a Protolabs quote is an external custom-part handoff through [Protola
 
 Use this action only after live process and file checks and explicit approval of the proprietary upload. It applies when Protolabs remains on the process-specific shortlist and a revisioned model, drawing, and inspection intent are ready. Choose [Request a Xometry quote](/wiki/request-xometry-quote) when Xometry fits the live route better.
 
+Review returned DFM feedback before accepting any functional change. Select and confirm the [Inspection plan](/wiki/inspection-plan) requirements during quote review rather than assuming a generic inspection option will satisfy them.
+
 Do not proceed if the route assumes unconfirmed material, inspection, tolerance, facility, or geography support. The approval gate exists because the upload discloses proprietary design files and creates external DFM and quote state.
 
 Steps:

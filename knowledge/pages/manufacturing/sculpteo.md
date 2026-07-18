@@ -16,8 +16,8 @@ sources:
 ---
 Sculpteo is a provider candidate for additive custom-part work through an online 3D-printing service. Its documented upload path accepts formats including [STL mesh exchange](/wiki/stl-mesh-exchange), OBJ, [3MF additive exchange](/wiki/3mf-additive-exchange), and [STEP solid exchange](/wiki/step-solid-exchange).
 
-Shortlist Sculpteo only after confirming the exact additive process, model format, material, finish, geography, and live quote. Its public API description is framed as a partner offering that requires contact, so API eligibility, authentication, supported operations, and external effects cannot be assumed from public documentation alone. Choose [Protolabs](/wiki/protolabs) when its additive service path fits better.
+Shortlist Sculpteo only after confirming the exact additive process, model format, material, finish, certification, geography, and live quote. Its public API description is framed as a partner offering that requires contact, so API eligibility, authentication, supported operations, and external effects cannot be assumed from public documentation alone. Choose [Protolabs](/wiki/protolabs) when its additive service path fits better.
 
-This page reflects provider documentation checked on 2026-07-17 and still requires a live check. Price, minimums, taxes, quote validity, process and material availability, shipping terms, and partner API access remain live unknowns until directly confirmed.
+This page reflects provider documentation checked on 2026-07-17 and still requires a live check. Price, minimums, taxes, and quote validity; process, material, color, finish, inspection, and production availability; shipping destination, timing, eligibility, and terms; and partner API access remain live unknowns until directly confirmed.
 
 The handoff channel is the authenticated website upload flow for proprietary additive models. That upload creates external quote state and requires explicit approval before any request is made.
