@@ -1,6 +1,6 @@
 # Possible
 
-Possible is a sourced, linked wiki of what humans and agents can make possible.
+Possible is a sourced wiki of what people and agents can make possible.
 
 Explore the public atlas at [possible.sh](https://possible.sh). Its source and
 pages live at

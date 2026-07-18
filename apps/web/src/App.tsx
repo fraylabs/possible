@@ -359,7 +359,7 @@ export function App() {
         <aside className={`explore-panel${expandedPage ? " is-expanded" : ""}`} aria-label="Explore Possible">
           <button type="button" className="brand-reset" onClick={resetToAtlas}>
             <span className="brand-wordmark">possible<span>.sh</span></span>
-            <span className="brand-tagline">A sourced wiki of what people can make possible.</span>
+            <span className="brand-tagline">A sourced wiki of what people and agents can make possible.</span>
           </button>
 
           <div className="search-area">

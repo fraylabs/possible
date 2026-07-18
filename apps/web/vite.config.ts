@@ -73,7 +73,7 @@ export const wikiPublications = (): Plugin => ({
       source: [
         "# Possible",
         "",
-        "Possible is a sourced, linked wiki of what people and agents can make possible.",
+        "A sourced wiki of what people and agents can make possible.",
         "",
         "- Agent protocol (static; no backend or query-aware endpoint): https://possible.sh/agent/protocol.json",
         "- Search index: https://possible.sh/agent/search.json",

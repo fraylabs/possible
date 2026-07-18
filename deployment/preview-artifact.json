@@ -3,8 +3,8 @@
   "artifactDirectory": "apps/web/dist",
   "buildCommand": "npm run preview:build",
   "verificationCommand": "npm run preview:verify",
-  "sha256": "8dafc3a408baaae83818c665888bf6f51309b5c8b5e77f709716614ad730a68b",
-  "totalBytes": 1831633,
+  "sha256": "c110419428796681d398e40f9767ac14aaf90f7a22dff2d382e41e253938e34d",
+  "totalBytes": 1831612,
   "files": [
     {
       "path": "agent/protocol.json",
@@ -507,24 +507,24 @@
       "sha256": "f0d06e1696c10d2febaf25e386d13880c92b772665f13224d071510d1ee9a768"
     },
     {
+      "path": "assets/index-44junZb4.js",
+      "bytes": 337601,
+      "sha256": "3167b18a54c8eb34fd3741110dd280f53da71185d529600ff45e073bf2760637"
+    },
+    {
       "path": "assets/index-B5C23w0_.css",
       "bytes": 28841,
       "sha256": "9a624dbc3ae025eca2a8fd46601da53c0d46313eebab588ad3b5e16fa36ab06d"
     },
     {
-      "path": "assets/index-BB9WnBnR.js",
-      "bytes": 337578,
-      "sha256": "2b322c8e7c259b3377278bb5cd022fdad0e38af452f5863b6a5cab6e22868cfb"
-    },
-    {
       "path": "index.html",
-      "bytes": 614,
-      "sha256": "9de5f66a1682b47203697d99cd31deb0947b38f1cb307643f08f237f02a2acba"
+      "bytes": 590,
+      "sha256": "4a59c2387577d5d891b0883bb2d00f69126b2834f1fb3be875e2bd111d511159"
     },
     {
       "path": "llms.txt",
-      "bytes": 1268,
-      "sha256": "930a7fc66eb559c8122fb403aaccd9a3913936bd0f8a2b9542c71925a8564b94"
+      "bytes": 1248,
+      "sha256": "fb192eb8f7ffbd025f14cd3c0108eb89c9da7eb0b418b80faec43063ae2ab947"
     },
     {
       "path": "wiki/3d-renderer-selection.json",
@@ -799,7 +799,7 @@
     "dnsProvider": "Cloudflare",
     "sourceRepository": "https://github.com/fraylabs/possible",
     "publishedAt": "2026-07-18",
-    "artifactSha256": "8dafc3a408baaae83818c665888bf6f51309b5c8b5e77f709716614ad730a68b",
+    "artifactSha256": "c110419428796681d398e40f9767ac14aaf90f7a22dff2d382e41e253938e34d",
     "verificationReceipt": "deployment/PRODUCTION.md",
     "remainingApprovalBoundaries": [
       "cost or paid-plan changes",

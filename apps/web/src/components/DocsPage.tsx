@@ -14,7 +14,7 @@ export function DocsPage() {
       <nav className="docs-nav" aria-label="Documentation navigation">
         <a className="brand-reset" href="/">
           <span className="brand-wordmark">possible<span>.sh</span></span>
-          <span className="brand-tagline">A sourced wiki of what people can make possible.</span>
+          <span className="brand-tagline">A sourced wiki of what people and agents can make possible.</span>
         </a>
         <a className="back-button docs-back" href="/">
           <ArrowLeft size={17} aria-hidden="true" />
@@ -42,7 +42,7 @@ export function DocsPage() {
             <p className="section-kicker">How Possible works</p>
             <h1>Start with what you want to make.</h1>
             <p>
-              Possible is a sourced, navigable knowledge base for people and agents. It collects
+              Possible is a sourced wiki of what people and agents can make possible. It collects
               the tools, methods, services, and decisions that help turn an outcome into a real
               starting point.
             </p>
