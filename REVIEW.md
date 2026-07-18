@@ -4,21 +4,21 @@ Review status: **local candidate**.
 
 ## Product test
 
-The active product can now be explained in one sentence:
-
 > Skills.sh gives agents individual skills. Possible compiles them into complete outcomes.
 
-The MVP proves that sentence with exactly one pack, Hardware Launch, rather than a broad catalog.
+The candidate proves that sentence across three distinct outcomes without becoming a skill catalog:
+
+- Hardware Launch composes web, film, and CAD work.
+- Software Launch composes product, site, film, and release-readiness work.
+- Open-Source Release composes release engineering, documentation, examples, CI, and security assurance.
 
 ## Acceptance checks
 
-- One typed manifest drives web, static publications, MCP, and prompt output.
-- Five skill sources expose repository and reviewed revision.
-- Four install commands are deterministic and do not hide upstream ownership.
-- Three workstreams map to site, film, and prototype CAD.
-- One captain owns shared facts and integration.
-- One fresh reviewer enters after integration.
-- External actions and unsupported real-world claims remain gated.
+- Three typed manifests drive the website, static publications, MCP, and prompts.
+- Every external skill exposes its repository and reviewed revision.
+- Install commands are grouped deterministically by upstream repository.
+- Every pack delegates by independent workstream, then uses a fresh reviewer.
+- Pack-specific external actions and unsupported claims remain gated.
 - `npm run check` passes.
 
 ## Known limitation

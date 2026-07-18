@@ -1,7 +1,7 @@
 interface:
   display_name: "Possible"
   short_description: "Compile skills into complete outcomes"
-  default_prompt: "Use $possible to compile the Hardware Launch outcome: list and inspect its external skill sources, install only with authorization, then run its workstream-based captain workflow and verification contract."
+  default_prompt: "Use $possible to select and compile the right outcome pack, inspect its external skill sources, install only with authorization, then run its captain workflow and verification contract."
 dependencies:
   tools:
     - type: "mcp"

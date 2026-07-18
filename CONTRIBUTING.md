@@ -1,6 +1,6 @@
 # Contributing to Possible
 
-Possible accepts focused outcome packs and improvements to existing packs. The Buildweek product intentionally ships only Hardware Launch.
+Possible accepts focused outcome packs and improvements to the three current packs. Hardware Launch remains the Buildweek hero demo.
 
 A pack contribution must:
 

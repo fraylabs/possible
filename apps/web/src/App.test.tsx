@@ -16,6 +16,20 @@ describe("Possible", () => {
     expect(await screen.findByText("READY TO RUN")).toBeInTheDocument();
   });
 
+  it("switches between three complete outcome packs", async () => {
+    const { container } = render(<App />);
+    await userEvent.click(screen.getByRole("button", { name: /Software Launch/i }));
+    expect(screen.getByRole("heading", { name: "Software Launch" })).toBeInTheDocument();
+    expect(container.querySelectorAll(".ingredient-list a")).toHaveLength(6);
+    expect(screen.getByDisplayValue("Prepare my SaaS product for launch.")).toBeInTheDocument();
+
+    const openSourceChoices = screen.getAllByRole("button", { name: /Open-Source Release/i });
+    expect(openSourceChoices).toHaveLength(1);
+    await userEvent.click(openSourceChoices[0]!);
+    expect(screen.getByRole("heading", { name: "Open-Source Release" })).toBeInTheDocument();
+    expect(container.querySelectorAll(".ingredient-list a")).toHaveLength(5);
+  });
+
   it("copies a prompt containing the user's brief", async () => {
     const writeText = vi.fn().mockResolvedValue(undefined);
     Object.assign(navigator, { clipboard: { writeText } });

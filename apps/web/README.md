@@ -2,7 +2,7 @@
 
 The interactive Possible surface.
 
-A builder writes one product brief, inspects the Hardware Launch pack, and copies:
+A builder chooses Hardware Launch, Software Launch, or Open-Source Release, writes one brief, inspects the selected pack, and copies:
 
 1. the external skill install commands;
 2. a compiled Codex prompt containing their brief.

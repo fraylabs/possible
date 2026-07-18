@@ -82,6 +82,7 @@ export const hardwareLaunchPack: OutcomePack = {
       brief: "Create a reviewable concept model and clearly label every unverified physical assumption.",
     },
   ],
+  reviewSkills: ["webapp-testing"],
   outputs: ["Launch site", "Launch film", "Prototype CAD", "Waitlist contract", "Evidence report"],
   guardrails: [
     "Do not deploy, purchase, fabricate, email, or collect real customer data without explicit approval.",

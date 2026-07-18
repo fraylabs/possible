@@ -2,26 +2,30 @@
 
 **Skills are ingredients. Possible compiles the outcome.**
 
-Skills.sh distributes individual agent skills. Possible publishes opinionated outcome packs: the selected skills, workstream ownership, integration order, safety gates, and definition of done needed to turn one goal into a coordinated result.
+Skills.sh distributes individual agent skills. Possible publishes opinionated outcome packs: selected skills, workstream ownership, integration order, safety gates, and the definition of done for a complete result.
 
-The Buildweek MVP contains one pack: **Hardware Launch**. It turns a hardware product brief into a launch site, programmatic film, prototype CAD package, waitlist contract, and evidence report.
+## Outcome packs
+
+- **Hardware Launch** — launch site, programmatic film, prototype CAD, waitlist contract, and evidence report.
+- **Software Launch** — production product, launch site, demo film, deployment plan, and evidence report.
+- **Open-Source Release** — release-ready package, documentation, examples, hardened CI, changelog, and evidence report.
 
 ## The demo
 
-1. Type: “Create a launch for my hardware app startup.”
-2. Possible compiles the Hardware Launch pack around that brief.
-3. Inspect the five external skill sources and copy four install commands.
+1. Choose an outcome and describe what you want to ship.
+2. Possible compiles the selected pack around that brief.
+3. Inspect every external skill source and copy the grouped install commands.
 4. Reload Codex, then copy the personalized run prompt.
-5. Codex creates three independent workstreams, integrates their receipts, then assigns a fresh browser reviewer.
+5. Codex runs isolated workstreams, integrates their receipts, and assigns a fresh reviewer.
 
-Possible is not a skill registry, a universal mega-skill, or a claim that installing skills guarantees an outcome. It is the missing composition layer between capability discovery and accountable execution.
+Possible is the composition layer between capability discovery and accountable execution. A pack is named after a finished outcome, never a technology or visual style.
 
 ## Repository
 
-- `packages/packs` — typed pack manifest and deterministic compiler
-- `apps/web` — possible.sh experience and static pack publications
+- `packages/packs` — typed manifests, registry, and deterministic compiler
+- `apps/web` — interactive composer and static pack publications
 - `apps/mcp` — read-only `list_packs` and `compile_pack` tools
-- `skills/possible` — Codex workflow for safely using packs
+- `skills/possible` — Codex workflow for safely choosing and running packs
 
 ## Verify
 
@@ -30,13 +34,8 @@ npm install
 npm run check
 ```
 
-Generated web artifacts include:
-
-- `/packs/hardware-launch.json`
-- `/packs/hardware-launch/install.txt`
-- `/packs/hardware-launch/run.txt`
-- `/llms.txt`
+Production builds emit `/packs/index.json`, plus JSON, install text, and run text for every pack.
 
 ## Trust boundary
 
-Reviewed revisions record the snapshots Possible inspected. The generated Skills CLI commands resolve external repositories at install time; users must inspect the resolved skill contents. Packs never authorize deployment, spending, outreach, fabrication, data collection, or unsupported real-world claims.
+Reviewed revisions record the snapshots Possible inspected. The generated Skills CLI commands resolve external repositories at install time; users must inspect the resolved skill contents. Packs never authorize deployment, spending, publishing, outreach, fabrication, data collection, or unsupported real-world claims.

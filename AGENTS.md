@@ -1,6 +1,6 @@
 # Possible
 
-Possible compiles existing skills into outcome packs. The active MVP is one pack: Hardware Launch.
+Possible compiles existing skills into three outcome packs: Hardware Launch, Software Launch, and Open-Source Release.
 
 Before editing:
 

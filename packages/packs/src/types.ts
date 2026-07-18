@@ -27,6 +27,7 @@ export interface OutcomePack {
   reviewedAt: string;
   skills: SkillSource[];
   workstreams: Workstream[];
+  reviewSkills: string[];
   outputs: string[];
   guardrails: string[];
   verification: string[];

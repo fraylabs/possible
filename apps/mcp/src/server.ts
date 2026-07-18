@@ -1,4 +1,4 @@
-import { compilePack, hardwareLaunchPack } from "@possible/packs";
+import { compilePack, getPack, outcomePacks } from "@possible/packs";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod/v4";
 import { errorResult, successResult } from "./result.js";
@@ -14,7 +14,7 @@ export async function createPossibleServer(): Promise<McpServer> {
     description: "List the reviewed outcome packs currently published by Possible.",
     annotations: READ_ONLY,
   }, async () => successResult({
-    packs: [{ slug: hardwareLaunchPack.slug, name: hardwareLaunchPack.name, promise: hardwareLaunchPack.promise, reviewedAt: hardwareLaunchPack.reviewedAt }],
+    packs: outcomePacks.map(({ slug, name, promise, reviewedAt }) => ({ slug, name, promise, reviewedAt })),
   }));
   server.registerTool("compile_pack", {
     title: "Compile a Possible outcome pack",
@@ -22,8 +22,9 @@ export async function createPossibleServer(): Promise<McpServer> {
     inputSchema: { slug: z.string().trim().min(1) },
     annotations: READ_ONLY,
   }, async ({ slug }) => {
-    if (slug !== hardwareLaunchPack.slug) return errorResult("PACK_NOT_FOUND", `Outcome pack '${slug}' does not exist.`, { slug });
-    return successResult(compilePack(hardwareLaunchPack));
+    const pack = getPack(slug);
+    if (pack === undefined) return errorResult("PACK_NOT_FOUND", `Outcome pack '${slug}' does not exist.`, { slug });
+    return successResult(compilePack(pack));
   });
   return server;
 }

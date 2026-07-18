@@ -1,7 +1,13 @@
 import { useMemo, useState } from "react";
-import { compilePack, hardwareLaunchPack } from "@possible/packs";
+import { compilePack, outcomePacks } from "@possible/packs";
 
 type CopyState = "idle" | "copied" | "failed";
+
+const exampleBriefs: Record<string, string> = {
+  "hardware-launch": "Create a launch for my hardware app startup.",
+  "software-launch": "Prepare my SaaS product for launch.",
+  "open-source-release": "Turn this repository into a trustworthy open-source release.",
+};
 
 function CopyButton({ label, value }: { label: string; value: string }) {
   const [state, setState] = useState<CopyState>("idle");
@@ -25,8 +31,10 @@ function CopyButton({ label, value }: { label: string; value: string }) {
 }
 
 function App() {
-  const compiled = useMemo(() => compilePack(hardwareLaunchPack), []);
-  const [brief, setBrief] = useState("Create a launch for my hardware app startup.");
+  const [selectedSlug, setSelectedSlug] = useState<string>(outcomePacks[0].slug);
+  const selectedPack = outcomePacks.find((pack) => pack.slug === selectedSlug) ?? outcomePacks[0];
+  const compiled = useMemo(() => compilePack(selectedPack), [selectedPack]);
+  const [brief, setBrief] = useState(exampleBriefs[selectedSlug] ?? "");
   const [isCompiled, setIsCompiled] = useState(false);
   const installText = compiled.installCommands.join("\n");
   const runPrompt = compiled.runPrompt.replace(
@@ -44,11 +52,17 @@ function App() {
     }, 0);
   }
 
+  function selectPack(slug: string) {
+    setSelectedSlug(slug);
+    setBrief(exampleBriefs[slug] ?? "");
+    setIsCompiled(false);
+  }
+
   return (
     <main>
       <nav>
         <a className="wordmark" href="#top">possible<span>.sh</span></a>
-        <div className="nav-meta"><span>OUTCOME PACK</span><strong>HARDWARE LAUNCH / 01</strong></div>
+        <div className="nav-meta"><span>OUTCOME PACK</span><strong>{selectedPack.name.toUpperCase()} / 0{outcomePacks.indexOf(selectedPack) + 1}</strong></div>
         <a className="source-link" href="https://github.com/fraylabs/possible" target="_blank" rel="noreferrer">SOURCE ↗</a>
       </nav>
 
@@ -60,6 +74,21 @@ function App() {
         </div>
 
         <div className="brief-card">
+          <div className="pack-picker" aria-label="Choose an outcome pack">
+            <span>CHOOSE AN OUTCOME</span>
+            <div>
+              {outcomePacks.map((pack, index) => (
+                <button
+                  type="button"
+                  aria-pressed={pack.slug === selectedSlug}
+                  onClick={() => selectPack(pack.slug)}
+                  key={pack.slug}
+                >
+                  <small>0{index + 1}</small>{pack.name}
+                </button>
+              ))}
+            </div>
+          </div>
           <label htmlFor="product-brief">WHAT DO YOU WANT TO SHIP?</label>
           <textarea
             id="product-brief"
@@ -71,14 +100,14 @@ function App() {
             rows={4}
           />
           <button className="compile-button" type="button" onClick={compileOutcome} disabled={!brief.trim()}>
-            <span>Compile Hardware Launch</span><span aria-hidden="true">→</span>
+            <span>Compile {selectedPack.name}</span><span aria-hidden="true">→</span>
           </button>
         </div>
       </section>
 
       <section className={`compiled ${isCompiled ? "compiled--ready" : ""}`} id="compiled" aria-live="polite">
         <header className="compiled-header">
-          <div><p className="eyebrow">COMPILED OUTCOME</p><h2>Hardware Launch</h2></div>
+          <div><p className="eyebrow">COMPILED OUTCOME</p><h2>{selectedPack.name}</h2></div>
           <span className="ready-state"><i /> {isCompiled ? "READY TO RUN" : "PACK PREVIEW"}</span>
         </header>
 
@@ -98,10 +127,14 @@ function App() {
             </article>
           ))}
           <article className="workstream-review">
-            <span>04</span>
+            <span>0{compiled.pack.workstreams.length + 1}</span>
             <div><strong>Independent review</strong><p>Inspect the integrated result and return evidence, failures, and unproven claims.</p></div>
-            <small>$webapp-testing</small>
+            <small>{compiled.pack.reviewSkills.map((skill) => `$${skill}`).join(" + ")}</small>
           </article>
+        </div>
+
+        <div className="outputs" aria-label="Compiled outputs">
+          {compiled.pack.outputs.map((output) => <span key={output}>{output}</span>)}
         </div>
 
         <div className="actions">

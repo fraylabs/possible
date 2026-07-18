@@ -23,6 +23,13 @@ describe("Possible MCP", () => {
     assert.equal(client.getInstructions(), POSSIBLE_SERVER_INSTRUCTIONS);
   });
 
+  it("lists all three outcome packs", async () => {
+    const result = await client.callTool({ name: "list_packs", arguments: {} });
+    const envelope = result.structuredContent as { ok: boolean; data: { packs: Array<{ slug: string }> } };
+    assert.equal(envelope.ok, true);
+    assert.deepEqual(envelope.data.packs.map((pack) => pack.slug), ["hardware-launch", "software-launch", "open-source-release"]);
+  });
+
   it("compiles Hardware Launch", async () => {
     const result = await client.callTool({ name: "compile_pack", arguments: { slug: "hardware-launch" } });
     assert.equal(result.isError, undefined);
@@ -30,5 +37,13 @@ describe("Possible MCP", () => {
     assert.equal(envelope.ok, true);
     assert.equal(envelope.data.installCommands.length, 4);
     assert.match(envelope.data.runPrompt, /CAPTAIN WORKFLOW/);
+  });
+
+  it("compiles Open-Source Release", async () => {
+    const result = await client.callTool({ name: "compile_pack", arguments: { slug: "open-source-release" } });
+    const envelope = result.structuredContent as { ok: boolean; data: { installCommands: string[]; runPrompt: string } };
+    assert.equal(envelope.ok, true);
+    assert.equal(envelope.data.installCommands.length, 1);
+    assert.match(envelope.data.runPrompt, /\$github-release/);
   });
 });
