@@ -4,25 +4,33 @@ import type { Plugin } from "vite";
 import { defineConfig } from "vitest/config";
 
 const json = (value: unknown) => `${JSON.stringify(value, null, 2)}\n`;
+const cleanDemoDirectories = new Set([
+  "/demo/still",
+  "/demo/still/site",
+  "/demo/still/film",
+  "/demo/still/hardware",
+  "/demo/still/evidence",
+  "/demo/still/verification",
+]);
+const rewriteCleanDemoRoute = (url: string | undefined) => {
+  if (!url) return url;
+  const queryStart = url.indexOf("?");
+  const pathname = queryStart === -1 ? url : url.slice(0, queryStart);
+  const query = queryStart === -1 ? "" : url.slice(queryStart);
+  const directory = pathname.endsWith("/") ? pathname.slice(0, -1) : pathname;
+  return cleanDemoDirectories.has(directory) ? `${directory}/index.html${query}` : url;
+};
 const cleanDemoRoute = (): Plugin => ({
   name: "possible-clean-demo-route",
   configureServer(server) {
     server.middlewares.use((request, _response, next) => {
-      if (request.url === "/demo/still" || request.url?.startsWith("/demo/still?")) {
-        request.url = request.url.replace("/demo/still", "/demo/still/index.html");
-      } else if (request.url === "/demo/still/" || request.url?.startsWith("/demo/still/?")) {
-        request.url = request.url.replace("/demo/still/", "/demo/still/index.html");
-      }
+      request.url = rewriteCleanDemoRoute(request.url);
       next();
     });
   },
   configurePreviewServer(server) {
     server.middlewares.use((request, _response, next) => {
-      if (request.url === "/demo/still" || request.url?.startsWith("/demo/still?")) {
-        request.url = request.url.replace("/demo/still", "/demo/still/index.html");
-      } else if (request.url === "/demo/still/" || request.url?.startsWith("/demo/still/?")) {
-        request.url = request.url.replace("/demo/still/", "/demo/still/index.html");
-      }
+      request.url = rewriteCleanDemoRoute(request.url);
       next();
     });
   },

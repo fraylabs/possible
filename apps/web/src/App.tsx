@@ -433,7 +433,7 @@ function ThreadTranscript({ onClose }: { onClose: () => void }) {
           <div className="thread-header-actions">
             <button type="button" onClick={copyThread}>{copyState === "copied" ? "COPIED ✓" : copyState === "failed" ? "COPY FAILED" : "COPY THREAD"}</button>
             <a href="/demo/still/CODEX-THREAD.md" target="_blank" rel="noreferrer">RAW .MD ↗</a>
-            <a className="thread-output-button" href="/demo/still/" target="_blank" rel="noreferrer">SHOW OUTPUT ↗</a>
+            <a className="thread-output-button" href="#artifacts" onClick={onClose}>SHOW OUTPUT ↓</a>
             <button className="thread-close" type="button" aria-label="Close full Codex thread" onClick={onClose}>×</button>
           </div>
         </header>
@@ -487,8 +487,8 @@ function DemoPage() {
     { actor: "POSSIBLE", title: "Pack compiled", detail: "Five reviewed skills composed into one Hardware Launch recipe." },
     { actor: "CAPTAIN", title: "Workstreams spawned", detail: "Site, film, and CAD assigned to isolated subagents." },
     { actor: "SUBAGENTS", title: "Artifacts returned", detail: "Three specialists returned real outputs and receipts." },
-    { actor: "CAPTAIN", title: "Outcome integrated", detail: "Every artifact assembled into one local launch room." },
-    { actor: "REVIEWER", title: "Failure found", detail: "Embedded site assets returned 404 inside the integrated room." },
+    { actor: "CAPTAIN", title: "Outcome assembled", detail: "Website, film, CAD, and evidence collected into one inspectable result." },
+    { actor: "REVIEWER", title: "Failure found", detail: "Embedded site assets returned 404 when reviewed from the combined output." },
     { actor: "REVIEWER", title: "Repair verified", detail: "Relative asset base fixed; browser and artifact audits passed." },
   ] as const;
   const [step, setStep] = useState(0);
@@ -496,6 +496,14 @@ function DemoPage() {
   const [threadOpen, setThreadOpen] = useState(false);
   const lastStep = events.length - 1;
   const currentEvent = events[step] ?? events[0];
+
+  useEffect(() => {
+    const target = new Set(["artifacts", "film-output", "hardware-output", "evidence-output"])
+      .has(window.location.hash.slice(1))
+      ? document.querySelector(window.location.hash)
+      : null;
+    if (target) window.requestAnimationFrame(() => target.scrollIntoView());
+  }, []);
 
   useEffect(() => {
     if (!isPlaying) return;
@@ -513,7 +521,7 @@ function DemoPage() {
   }
 
   return (
-    <main className="replay-page">
+    <main className="replay-page" id="top">
       <SiteNav label="Recorded run / Still" />
       <section className="replay-stage">
         <header className="replay-title">
@@ -526,7 +534,7 @@ function DemoPage() {
             <div><span><i /> LOCAL RUN COMPLETE</span><strong>58 / 58 ARTIFACT CHECKS</strong></div>
             <div className="replay-proof-actions">
               <button type="button" onClick={() => setThreadOpen(true)}>VIEW FULL CODEX THREAD <span>31 MESSAGES</span></button>
-              <a href="/demo/still/" target="_blank" rel="noreferrer">SHOW OUTPUT ↗</a>
+              <a href="#artifacts">SHOW OUTPUT ↓</a>
             </div>
           </div>
         </header>
@@ -557,7 +565,7 @@ function DemoPage() {
             <footer>
               <button type="button" onClick={() => setThreadOpen(true)}>VIEW FULL THREAD →</button>
               <a href="/demo/still/OUTCOME-RECEIPT.md" target="_blank" rel="noreferrer">VIEW RECEIPT ↗</a>
-              <a href="/demo/still/" target="_blank" rel="noreferrer">OPEN LAUNCH ROOM ↗</a>
+              <a href="#artifacts">VIEW ARTIFACTS ↓</a>
             </footer>
           </aside>
 
@@ -600,10 +608,16 @@ function DemoPage() {
                 </article>
               </div>
 
-              <figure className="replay-integration">
-                <img src="/demo/still/evidence/screenshots/outcome-room-desktop.png" alt="The integrated Still outcome room" />
-                <figcaption><span>CAPTAIN / INTEGRATED OUTCOME</span><strong>ONE LOCAL LAUNCH ROOM</strong></figcaption>
-              </figure>
+              <article className="replay-integration">
+                <header><span>CAPTAIN / ASSEMBLED OUTCOME</span><strong>5 OUTPUTS PRESENT</strong></header>
+                <div>
+                  <p><span>01</span><strong>Launch website</strong><i>PASS</i></p>
+                  <p><span>02</span><strong>Launch film</strong><i>PASS</i></p>
+                  <p><span>03</span><strong>Prototype CAD</strong><i>PASS*</i></p>
+                  <p><span>04</span><strong>Evidence receipts</strong><i>PASS</i></p>
+                  <p><span>05</span><strong>Verification traces</strong><i>PASS</i></p>
+                </div>
+              </article>
 
               <article className="replay-review-card replay-review-card--failure">
                 <span>FRESH REVIEW / MATERIAL FAILURE</span>
@@ -623,7 +637,7 @@ function DemoPage() {
                 </div>
                 <div className="replay-final-actions">
                   <button type="button" onClick={() => setThreadOpen(true)}>VIEW FULL THREAD →</button>
-                  <a href="/demo/still/" target="_blank" rel="noreferrer">SHOW OUTPUT ↗</a>
+                  <a href="#artifacts">SHOW OUTPUT ↓</a>
                 </div>
               </article>
             </div>
@@ -642,8 +656,69 @@ function DemoPage() {
           </section>
         </div>
       </section>
+      <DemoArtifacts />
       {threadOpen ? <ThreadTranscript onClose={() => setThreadOpen(false)} /> : null}
     </main>
+  );
+}
+
+function DemoArtifacts() {
+  return (
+    <section className="demo-artifacts" id="artifacts">
+      <header className="demo-artifacts-title">
+        <div>
+          <p className="eyebrow">ARTIFACTS PRODUCED</p>
+          <h2>One prompt.<br /><em>Real outputs.</em></h2>
+        </div>
+        <div>
+          <p>The output is here, inside the demo—not hidden behind another presentation layer. Open the website, play the film, download the CAD, and inspect every receipt.</p>
+          <span>STILL / HARDWARE-LAUNCH@1 / LOCAL EVALUATION</span>
+        </div>
+      </header>
+
+      <article className="demo-site-output">
+        <header>
+          <span>01 / LAUNCH WEBSITE</span>
+          <a href="/demo/still/site/" target="_blank" rel="noreferrer">OPEN FULL SITE ↗</a>
+        </header>
+        <iframe src="/demo/still/site/" title="Still launch website" loading="lazy" />
+        <footer><p>Responsive launch story with a deliberately local-only waitlist interaction.</p><a href="/demo/still/evidence/site-receipt.md" target="_blank" rel="noreferrer">SITE RECEIPT ↗</a></footer>
+      </article>
+
+      <div className="demo-output-grid">
+        <article className="demo-output-card demo-output-card--film" id="film-output">
+          <header><span>02 / LAUNCH FILM</span><strong>24 SEC / 1080P</strong></header>
+          <video controls muted playsInline preload="metadata" poster="/demo/still/film/still-launch-preview.png" src="/demo/still/film/still-launch.mp4" />
+          <footer><p>Deterministic product film with preserved review frames.</p><a href="/demo/still/evidence/film-receipt.md" target="_blank" rel="noreferrer">FILM RECEIPT ↗</a></footer>
+        </article>
+
+        <article className="demo-output-card demo-output-card--cad" id="hardware-output">
+          <header><span>03 / PROTOTYPE CAD</span><strong>STEP-FIRST / CONCEPT</strong></header>
+          <img src="/demo/still/hardware/still-iso.png" alt="Isometric CAD view of the Still focus device concept" />
+          <footer>
+            <p>Measured exterior geometry in portable review formats.</p>
+            <div><a href="/demo/still/hardware/still.step" download>STEP ↓</a><a href="/demo/still/hardware/still.glb" download>GLB ↓</a><a href="/demo/still/hardware/still.stl" download>STL ↓</a></div>
+          </footer>
+        </article>
+      </div>
+
+      <section className="demo-evidence-output" id="evidence-output">
+        <header><span>04 / EVIDENCE + VERIFICATION</span><strong>58 / 58 ARTIFACT CHECKS · 50 / 50 BROWSER CHECKS</strong></header>
+        <div>
+          <a href="/demo/still/OUTCOME-RECEIPT.md" target="_blank" rel="noreferrer"><span>01 / OUTCOME</span><strong>Outcome receipt</strong><i>MARKDOWN ↗</i></a>
+          <a href="/demo/still/evidence/final-receipt.md" target="_blank" rel="noreferrer"><span>02 / REVIEW</span><strong>Independent final receipt</strong><i>MARKDOWN ↗</i></a>
+          <a href="/demo/still/verification/artifact-results.json" target="_blank" rel="noreferrer"><span>03 / TEST</span><strong>Artifact results</strong><i>JSON ↗</i></a>
+          <a href="/demo/still/verification/browser-results.json" target="_blank" rel="noreferrer"><span>04 / TEST</span><strong>Browser results</strong><i>JSON ↗</i></a>
+          <a href="/demo/still/verification/browser-results-initial-failure.json" target="_blank" rel="noreferrer"><span>05 / FAILURE</span><strong>Initial failed trace</strong><i>JSON ↗</i></a>
+          <a href="/demo/still/manifest.json" target="_blank" rel="noreferrer"><span>06 / MANIFEST</span><strong>All generated files</strong><i>JSON ↗</i></a>
+        </div>
+      </section>
+
+      <footer className="demo-artifacts-footer">
+        <p>Fictional concept. Nothing was deployed, fabricated, purchased, emailed, or connected to real data collection.</p>
+        <a href="#top">BACK TO TOP ↑</a>
+      </footer>
+    </section>
   );
 }
 

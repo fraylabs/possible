@@ -28,9 +28,9 @@ Possible first walks through what the user wants to make real. It inspects the p
 
 ## The demo
 
-`/demo` replays a real local Hardware Launch run for Still, a fictional palm-sized e-ink focus device. It shows the original brief, five installed skills, three parallel workstreams, the resulting website, launch film, prototype CAD, integrated launch room, and the independent review that found and verified a real asset-path repair. The complete public Codex transcript is readable and copyable in the demo, and “Show output” opens the actual generated launch room.
+`/demo` replays a real local Hardware Launch run for Still, a fictional palm-sized e-ink focus device. It shows the original brief, five installed skills, three parallel workstreams, the resulting website, launch film, prototype CAD, and the independent review that found and verified a real asset-path repair. The complete public Codex transcript is readable and copyable in the demo, and “Show output” jumps directly to the actual artifacts on the same page.
 
-The replay links directly to its evidence: 58/58 artifact checks, 50/50 browser checks, zero waitlist network writes, and the preserved initial failure trace. Its public output is intentionally flat: `/demo/still/` is the launch room, with `/site/`, `/film/`, `/hardware/`, and `/evidence/` directly beneath it.
+The artifacts section embeds the generated site and film, exposes the CAD downloads, and links directly to its evidence: 58/58 artifact checks, 50/50 browser checks, zero waitlist network writes, and the preserved initial failure trace.
 
 Possible is the composition layer between capability discovery and accountable execution. A pack is named after a finished outcome, never a technology or visual style.
 

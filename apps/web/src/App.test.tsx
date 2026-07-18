@@ -90,7 +90,9 @@ describe("Possible", () => {
     expect(screen.getByRole("heading", { name: /Watch the outcome/i })).toBeInTheDocument();
     expect(screen.getByText("RECORDED REAL RUN")).toBeInTheDocument();
     expect(screen.getByText("Brief locked", { selector: ".replay-controls strong" })).toBeInTheDocument();
-    expect(screen.getAllByRole("link", { name: /Show output/i })[0]).toHaveAttribute("href", "/demo/still/");
+    expect(screen.getAllByRole("link", { name: /Show output/i })[0]).toHaveAttribute("href", "#artifacts");
+    expect(screen.getByRole("heading", { name: /One prompt.*Real outputs/i })).toBeInTheDocument();
+    expect(screen.getByTitle("Still launch website")).toHaveAttribute("src", "/demo/still/site/");
 
     await userEvent.click(screen.getByRole("button", { name: /View full Codex thread/i }));
     expect(screen.getByRole("dialog", { name: /full Codex thread/i })).toBeInTheDocument();
@@ -104,9 +106,9 @@ describe("Possible", () => {
     const next = screen.getByRole("button", { name: "Next event" });
     for (let index = 0; index < 6; index += 1) await userEvent.click(next);
 
-    expect(screen.getByRole("heading", { name: /Real outputs/i })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /Real outputs.*Real review/i })).toBeInTheDocument();
     expect(screen.getByText("58 / 58", { selector: ".replay-review-card strong" })).toBeInTheDocument();
     expect(screen.getByText("0", { selector: ".replay-review-card strong" })).toBeInTheDocument();
-    expect(screen.getAllByRole("link", { name: /Show output/i })[0]).toHaveAttribute("href", "/demo/still/");
+    expect(screen.getAllByRole("link", { name: /Show output/i })[0]).toHaveAttribute("href", "#artifacts");
   });
 });
