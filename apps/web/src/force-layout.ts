@@ -1,3 +1,14 @@
+import {
+  forceCollide,
+  forceLink,
+  forceManyBody,
+  forceSimulation,
+  forceX,
+  forceY,
+  type SimulationLinkDatum,
+  type SimulationNodeDatum,
+} from "d3-force";
+
 export interface ForceLayoutNode {
   id: string;
   group: string;
@@ -14,11 +25,16 @@ export interface ForceLayoutPosition {
   y: number;
 }
 
-interface SimulationNode extends ForceLayoutNode, ForceLayoutPosition {
-  vx: number;
-  vy: number;
+interface SimulationNode extends ForceLayoutNode, SimulationNodeDatum {
+  x: number;
+  y: number;
   anchorX: number;
   anchorY: number;
+}
+
+interface SimulationLink extends SimulationLinkDatum<SimulationNode> {
+  source: string | SimulationNode;
+  target: string | SimulationNode;
 }
 
 const hashString = (value: string): number => {
@@ -49,10 +65,21 @@ const groupCenters = (groups: string[]): Map<string, ForceLayoutPosition> => {
   return centers;
 };
 
+const positionFor = (node: ForceLayoutNode, center: ForceLayoutPosition): ForceLayoutPosition => {
+  if (node.anchor) return center;
+  const angle = fractionFromHash(`${node.id}:angle`) * Math.PI * 2;
+  const radius = 12 + fractionFromHash(`${node.id}:radius`) * 15;
+  return {
+    x: center.x + Math.cos(angle) * radius,
+    y: center.y + Math.sin(angle) * radius,
+  };
+};
+
 /**
- * Produces a deterministic, force-settled layout without making the wiki's
- * presentation dependent on a runtime graph library. Group anchors create
- * fields; authored wiki links provide the springs between individual pages.
+ * Produces a deterministic Obsidian-style force layout. The simulation is
+ * settled off-screen, then the browser only renders the resulting positions.
+ * Group forces preserve top-level fields while charge and collision forces
+ * keep dense knowledge clusters readable.
  */
 export function buildForceLayout(
   nodes: ForceLayoutNode[],
@@ -64,76 +91,47 @@ export function buildForceLayout(
   const centers = groupCenters(groups);
   const simulationNodes: SimulationNode[] = nodes.map((node) => {
     const center = centers.get(node.group) ?? { x: 50, y: 50 };
-    const angle = fractionFromHash(`${node.id}:angle`) * Math.PI * 2;
-    const radius = node.anchor ? 0 : 7 + fractionFromHash(`${node.id}:radius`) * 12;
-    return {
-      ...node,
-      x: center.x + Math.cos(angle) * radius,
-      y: center.y + Math.sin(angle) * radius,
-      vx: 0,
-      vy: 0,
-      anchorX: center.x,
-      anchorY: center.y,
-    };
+    const position = positionFor(node, center);
+    return { ...node, ...position, anchorX: center.x, anchorY: center.y };
   });
   const nodeById = new Map(simulationNodes.map((node) => [node.id, node]));
-  const edgePairs = edges.flatMap((edge) => {
-    const source = nodeById.get(edge.source);
-    const target = nodeById.get(edge.target);
-    return source && target ? [{ source, target }] : [];
+  const simulationLinks: SimulationLink[] = edges.flatMap((edge) => {
+    if (!nodeById.has(edge.source) || !nodeById.has(edge.target)) return [];
+    return [{ source: edge.source, target: edge.target }];
   });
 
-  for (let tick = 0; tick < 240; tick += 1) {
-    const alpha = 1 - tick / 240;
+  const simulation = forceSimulation<SimulationNode>(simulationNodes)
+    .randomSource(() => 0.5)
+    .velocityDecay(0.42)
+    .force(
+      "link",
+      forceLink<SimulationNode, SimulationLink>(simulationLinks)
+        .id((node) => node.id)
+        .distance((link) => {
+          const source = typeof link.source === "string" ? nodeById.get(link.source) : link.source;
+          const target = typeof link.target === "string" ? nodeById.get(link.target) : link.target;
+          return source?.group === target?.group ? 13 : 28;
+        })
+        .strength(0.36),
+    )
+    .force("charge", forceManyBody<SimulationNode>().strength(-72).distanceMax(72))
+    .force("collide", forceCollide<SimulationNode>().radius(2.7).strength(0.9).iterations(2))
+    .force("x", forceX<SimulationNode>((node) => node.anchorX).strength((node) => node.anchor ? 0.34 : 0.035))
+    .force("y", forceY<SimulationNode>((node) => node.anchorY).strength((node) => node.anchor ? 0.34 : 0.035))
+    .stop();
 
-    for (let leftIndex = 0; leftIndex < simulationNodes.length; leftIndex += 1) {
-      const left = simulationNodes[leftIndex];
-      if (!left) continue;
-      for (let rightIndex = leftIndex + 1; rightIndex < simulationNodes.length; rightIndex += 1) {
-        const right = simulationNodes[rightIndex];
-        if (!right) continue;
-        let dx = right.x - left.x;
-        let dy = right.y - left.y;
-        if (Math.abs(dx) + Math.abs(dy) < 0.01) {
-          dx = 0.1;
-          dy = 0.05;
-        }
-        const distanceSquared = Math.max(0.7, dx * dx + dy * dy);
-        const distance = Math.sqrt(distanceSquared);
-        const force = (left.group === right.group ? 2.3 : 1.25) * alpha / distanceSquared;
-        const forceX = (dx / distance) * force;
-        const forceY = (dy / distance) * force;
-        left.vx -= forceX;
-        left.vy -= forceY;
-        right.vx += forceX;
-        right.vy += forceY;
-      }
-    }
+  simulationNodes.forEach((node) => {
+    if (!node.anchor) return;
+    node.fx = node.anchorX;
+    node.fy = node.anchorY;
+  });
+  simulation.tick(360);
 
-    edgePairs.forEach(({ source, target }) => {
-      const dx = target.x - source.x;
-      const dy = target.y - source.y;
-      const distance = Math.max(0.1, Math.sqrt(dx * dx + dy * dy));
-      const idealDistance = source.group === target.group ? 8.5 : 18;
-      const force = (distance - idealDistance) * 0.018 * alpha;
-      const forceX = (dx / distance) * force;
-      const forceY = (dy / distance) * force;
-      source.vx += forceX;
-      source.vy += forceY;
-      target.vx -= forceX;
-      target.vy -= forceY;
-    });
-
-    simulationNodes.forEach((node) => {
-      const anchorStrength = node.anchor ? 0.12 : 0.006;
-      node.vx += (node.anchorX - node.x) * anchorStrength * alpha;
-      node.vy += (node.anchorY - node.y) * anchorStrength * alpha;
-      node.vx *= 0.82;
-      node.vy *= 0.82;
-      node.x = Math.min(94, Math.max(6, node.x + node.vx));
-      node.y = Math.min(92, Math.max(8, node.y + node.vy));
-    });
-  }
-
-  return new Map(simulationNodes.map((node) => [node.id, { x: node.x, y: node.y }]));
+  return new Map(simulationNodes.map((node) => [
+    node.id,
+    {
+      x: Math.min(94, Math.max(6, node.x)),
+      y: Math.min(92, Math.max(8, node.y)),
+    },
+  ]));
 }
