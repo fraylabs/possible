@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { compilePack, getPack, outcomePacks } from "@possible/packs";
+import type { CSSProperties } from "react";
 import type { OutcomePack } from "@possible/packs";
 
 type CopyState = "idle" | "copied" | "failed";
@@ -39,6 +40,7 @@ function SiteNav({ label }: { label?: string }) {
       <div className="nav-links">
         <a href="/">CREATE</a>
         <a href="/packs">PACKS</a>
+        <a href="/demo">DEMO</a>
         <a href="https://github.com/fraylabs/possible" target="_blank" rel="noreferrer">SOURCE ↗</a>
       </div>
     </nav>
@@ -363,6 +365,103 @@ function Boundary() {
   );
 }
 
+function DemoPage() {
+  const pack = outcomePacks[0];
+  const compiled = useMemo(() => compilePack(pack), [pack]);
+  const [brief, setBrief] = useState(exampleBriefs[pack.slug] ?? "");
+  const [isReady, setIsReady] = useState(false);
+  const [runKey, setRunKey] = useState(0);
+  const runPrompt = compiled.runPrompt.replace(
+    "[Replace this line with the product, audience, constraints, and any existing repository or assets.]",
+    brief.trim() || "[Add your product brief here.]",
+  );
+
+  function runDemo() {
+    setRunKey((value) => value + 1);
+    setIsReady(true);
+  }
+
+  function resetDemo() {
+    setBrief(exampleBriefs[pack.slug] ?? "");
+    setIsReady(false);
+  }
+
+  return (
+    <main className="demo-page">
+      <SiteNav label="Live demo / Hardware Launch" />
+      <section className={`demo-stage ${isReady ? "demo-stage--ready" : ""}`}>
+        <header className="demo-title">
+          <div>
+            <p className="eyebrow">LIVE OUTCOME COMPILER / 01</p>
+            <h1>One brief.<br /><em>A whole launch team.</em></h1>
+          </div>
+          <p>Possible turns a desired outcome into coordinated specialist work, integrated deliverables, and an independent review.</p>
+        </header>
+
+        <div className="demo-console">
+          <div className="demo-input">
+            <header><span>INPUT / OUTCOME</span><i className={isReady ? "is-live" : ""} /> </header>
+            <label htmlFor="demo-brief">WHAT SHOULD CODEX SHIP?</label>
+            <textarea
+              id="demo-brief"
+              value={brief}
+              onChange={(event) => { setBrief(event.target.value); setIsReady(false); }}
+              rows={5}
+            />
+            <div className="demo-input-meta">
+              <span>SELECTED RECIPE</span><strong>{pack.name}</strong>
+            </div>
+            <button type="button" className="demo-run" onClick={runDemo} disabled={!brief.trim()}>
+              <span>{isReady ? "Run it again" : "Compile live outcome"}</span><b aria-hidden="true">{isReady ? "↻" : "→"}</b>
+            </button>
+            {isReady ? <button className="demo-reset" type="button" onClick={resetDemo}>Reset demo</button> : null}
+          </div>
+
+          <div className="demo-pipeline" key={runKey} aria-live="polite">
+            <div className="demo-pipeline-head">
+              <div><span>COMPILER STATUS</span><strong><i /> {isReady ? "OUTCOME READY" : "WAITING FOR BRIEF"}</strong></div>
+              <div><span>RECIPE</span><strong>HARDWARE-LAUNCH@1</strong></div>
+              <div><span>EXECUTION</span><strong>PARALLEL + REVIEW</strong></div>
+            </div>
+
+            <div className="demo-equation" aria-label={`${pack.skills.length} skills become ${pack.workstreams.length} parallel workstreams and one review`}>
+              <div><strong>{pack.skills.length}</strong><span>SKILLS</span></div><b>→</b>
+              <div><strong>{pack.workstreams.length}</strong><span>SUBAGENTS</span></div><b>→</b>
+              <div><strong>{pack.outputs.length}</strong><span>OUTPUTS</span></div><b>+</b>
+              <div><strong>1</strong><span>REVIEW</span></div>
+            </div>
+
+            <div className="demo-team">
+              {pack.workstreams.map((stream, index) => (
+                <article style={{ "--demo-index": index } as CSSProperties} key={stream.id}>
+                  <header><span>0{index + 1}</span><i /></header>
+                  <div><small>SUBAGENT</small><h2>{stream.name}</h2><p>{stream.brief}</p></div>
+                  <div className="demo-agent-skills">{stream.skills.map((skill) => `$${skill}`).join(" + ")}</div>
+                </article>
+              ))}
+              <article className="demo-review" style={{ "--demo-index": pack.workstreams.length } as CSSProperties}>
+                <header><span>0{pack.workstreams.length + 1}</span><i /></header>
+                <div><small>FRESH CONTEXT</small><h2>Independent review</h2><p>Challenge the integrated result and return evidence, failures, and unproven claims.</p></div>
+                <div className="demo-agent-skills">{pack.reviewSkills.map((skill) => `$${skill}`).join(" + ")}</div>
+              </article>
+            </div>
+
+            <div className="demo-output">
+              <span>INTEGRATED OUTCOME</span>
+              <div>{pack.outputs.map((output) => <strong key={output}>✓ {output}</strong>)}</div>
+            </div>
+
+            <div className="demo-handoff">
+              <p><i /> Captain prompt compiled around your brief. Approval gates preserved.</p>
+              <CopyButton label="Copy full Codex run" value={runPrompt} />
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  );
+}
+
 function NotFoundPage() {
   return (
     <main>
@@ -381,6 +480,7 @@ function App() {
   const path = window.location.pathname.replace(/\/+$/, "") || "/";
   if (path === "/") return <CreatePage />;
   if (path === "/packs") return <PacksPage />;
+  if (path === "/demo") return <DemoPage />;
   if (path.startsWith("/packs/")) {
     const pack = getPack(path.slice("/packs/".length));
     return pack ? <PackDetailPage pack={pack} /> : <NotFoundPage />;

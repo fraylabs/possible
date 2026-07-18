@@ -83,4 +83,20 @@ describe("Possible", () => {
     expect(screen.getByRole("heading", { name: /not possible yet/i })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /Browse the three packs/i })).toHaveAttribute("href", "/packs");
   });
+
+  it("runs the presentation demo from one brief to a complete team", async () => {
+    window.history.pushState({}, "", "/demo");
+    render(<App />);
+    expect(screen.getByRole("heading", { name: /One brief/i })).toBeInTheDocument();
+    expect(screen.getByDisplayValue("Create a launch for my hardware app startup.")).toBeInTheDocument();
+    expect(screen.getByText("WAITING FOR BRIEF")).toBeInTheDocument();
+
+    await userEvent.click(screen.getByRole("button", { name: /Compile live outcome/i }));
+    expect(screen.getByText("OUTCOME READY")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Launch site" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Launch film" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Prototype CAD" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Independent review" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Copy full Codex run/i })).toBeInTheDocument();
+  });
 });

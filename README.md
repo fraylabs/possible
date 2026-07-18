@@ -36,7 +36,7 @@ npm run check
 
 Production builds emit `/packs/index.json`, plus JSON, install text, and run text for every pack.
 
-The web surface keeps creation and discovery separate: `/` is the outcome composer, `/packs` is the curated catalog, and `/packs/:slug` explains and personalizes one complete pack.
+The web surface keeps creation, discovery, and presentation separate: `/` is the outcome composer, `/packs` is the curated gallery, `/packs/:slug` explains and personalizes one complete pack, and `/demo` is the live Hardware Launch walkthrough.
 
 ## Trust boundary
 

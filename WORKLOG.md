@@ -27,3 +27,9 @@
 - Added `/packs` as an editorial gallery rather than a marketplace, with an asymmetric poster wall and a distinct visual cover for every outcome.
 - Added a complete page for every pack with its promise, outputs, workstreams, sources, guardrails, verification, and personalized compiler.
 - Added useful not-found handling and route-level tests without adding a routing dependency.
+
+## 2026-07-18 — Live demo
+
+- Added `/demo` as a deterministic presentation surface centered on Hardware Launch.
+- Made the core thesis visible as an equation: five skills become three parallel subagents, five integrated outputs, and one independent review.
+- Kept the demo real: the editable brief compiles into the canonical pack prompt and can be copied directly into Codex.
