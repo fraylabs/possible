@@ -24,6 +24,6 @@
 ## 2026-07-18 — Pack gallery
 
 - Kept `/` focused on creating a compiled outcome.
-- Added `/packs` as a curated catalog rather than a marketplace.
+- Added `/packs` as an editorial gallery rather than a marketplace, with an asymmetric poster wall and a distinct visual cover for every outcome.
 - Added a complete page for every pack with its promise, outputs, workstreams, sources, guardrails, verification, and personalized compiler.
 - Added useful not-found handling and route-level tests without adding a routing dependency.

@@ -91,25 +91,65 @@ footer .wordmark span { color: #151411; }
 .button-link { width: fit-content; min-width: 230px; padding: 17px 19px; border: 1px solid #151411; display: flex; justify-content: space-between; align-items: center; gap: 35px; font: 500 10px "DM Mono", monospace; text-transform: uppercase; transition: background .18s ease, color .18s ease; }
 .button-link:hover, .button-link:focus-visible { background: #151411; color: #f3f0e8; }
 
-.catalog-hero { min-height: 650px; padding: 8vw 3.5vw 5vw; border-bottom: 1px solid #aaa59a; display: flex; flex-direction: column; justify-content: space-between; }
-.catalog-hero h1 { margin: 45px 0 7vw; max-width: 1200px; font-size: clamp(60px, 8.4vw, 135px); font-weight: 500; line-height: .87; letter-spacing: -.075em; }
+.catalog-hero { min-height: 590px; padding: 7vw 3.5vw 5vw; display: flex; flex-direction: column; justify-content: space-between; }
+.catalog-hero h1 { margin: 45px 0 6vw; max-width: 1250px; font-size: clamp(60px, 8.4vw, 135px); font-weight: 500; line-height: .87; letter-spacing: -.075em; }
 .catalog-hero h1 em, .not-found h1 em { color: #ff4d00; font-style: normal; }
 .catalog-intro { display: grid; grid-template-columns: 1fr 1fr; gap: 8vw; align-items: end; }
 .catalog-intro p { max-width: 660px; margin: 0; color: #5e5952; font-size: clamp(19px, 1.8vw, 27px); line-height: 1.45; }
 .catalog-intro .button-link { justify-self: end; }
 
-.pack-grid { padding: 0 3.5vw 8vw; }
-.pack-card { min-height: 410px; padding: 32px 0; border-bottom: 1px solid #aaa59a; display: grid; grid-template-columns: 44% 34% 22%; grid-template-rows: auto 1fr auto; transition: color .2s ease, padding .2s ease; }
-.pack-card:first-child { border-top: 1px solid #aaa59a; }
-.pack-card:hover, .pack-card:focus-visible { color: #ff4d00; padding-inline: 18px; }
-.pack-card header { grid-column: 1 / -1; display: grid; grid-template-columns: 44% 34% 22%; color: #736e65; font: 10px "DM Mono", monospace; letter-spacing: .06em; }
-.pack-card header b { justify-self: end; color: #ff4d00; font-weight: 500; }
-.pack-card-copy { align-self: center; padding-right: 5vw; }
-.pack-card-copy h2 { margin: 0 0 26px; font-size: clamp(47px, 5.6vw, 92px); font-weight: 500; line-height: .9; letter-spacing: -.065em; }
-.pack-card-copy p { max-width: 520px; margin: 0; color: #625d55; font-size: 16px; line-height: 1.5; }
-.pack-card-stats { align-self: center; display: flex; flex-direction: column; gap: 18px; color: #736e65; font: 10px "DM Mono", monospace; }
-.pack-card-outputs { align-self: center; display: flex; flex-direction: column; border-top: 1px solid #aaa59a; }
-.pack-card-outputs span { padding: 10px 0; border-bottom: 1px solid #aaa59a; color: #625d55; font: 9px "DM Mono", monospace; text-transform: uppercase; }
+.pack-grid { padding: 0 3.5vw 8vw; display: grid; grid-template-columns: 1.25fr .75fr; grid-template-rows: 1fr 1fr; gap: 20px; }
+.pack-card { min-width: 0; border: 1px solid #151411; display: flex; flex-direction: column; overflow: hidden; background: #f3f0e8; transition: transform .22s ease, box-shadow .22s ease; }
+.pack-card--hardware-launch { grid-row: 1 / 3; }
+.pack-card:hover, .pack-card:focus-visible { transform: translate(-5px, -5px); box-shadow: 10px 10px 0 #151411; }
+.pack-cover { min-height: 315px; padding: 20px; position: relative; display: flex; flex: 1; flex-direction: column; overflow: hidden; border-bottom: 1px solid currentColor; }
+.pack-card--hardware-launch .pack-cover { min-height: 695px; background: #ff4d00; }
+.pack-card--software-launch .pack-cover { background: #151411; color: #f3f0e8; }
+.pack-card--open-source-release .pack-cover { background: #a8ff52; }
+.pack-cover header { z-index: 2; display: grid; grid-template-columns: 1fr auto auto; gap: 20px; align-items: center; font: 9px "DM Mono", monospace; letter-spacing: .07em; }
+.pack-cover header small { opacity: .7; }
+.pack-cover header b { font-size: 16px; font-weight: 400; }
+.pack-cover-title { z-index: 2; margin-top: auto; }
+.pack-cover-title small { font: 9px "DM Mono", monospace; letter-spacing: .08em; }
+.pack-cover-title h2 { max-width: 730px; margin: 10px 0 -0.07em; font-size: clamp(48px, 6vw, 98px); font-weight: 500; line-height: .82; letter-spacing: -.075em; }
+.pack-card:not(.pack-card--hardware-launch) .pack-cover-title h2 { max-width: 420px; font-size: clamp(40px, 4.1vw, 65px); }
+.pack-card-body { min-height: 160px; padding: 22px; display: grid; grid-template-columns: 1fr auto; gap: 28px; align-items: end; }
+.pack-card-body > p { max-width: 650px; margin: 0; color: #5e5952; font-size: 13px; line-height: 1.55; }
+.pack-card-stats { display: flex; flex-direction: column; gap: 8px; white-space: nowrap; color: #736e65; font: 9px "DM Mono", monospace; text-align: right; }
+
+.pack-art { position: absolute; inset: 55px 20px 115px; }
+.pack-art--hardware { border: 1px solid rgba(21,20,17,.45); }
+.pack-art--hardware::before, .pack-art--hardware::after { content: ""; position: absolute; background: rgba(21,20,17,.35); }
+.pack-art--hardware::before { top: 50%; right: 0; left: 0; height: 1px; }
+.pack-art--hardware::after { top: 0; bottom: 0; left: 50%; width: 1px; }
+.hardware-orbit { width: min(28vw, 420px); aspect-ratio: 1; border: 1px solid #151411; border-radius: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+.hardware-orbit::before, .hardware-orbit::after { content: ""; position: absolute; border: 1px solid rgba(21,20,17,.45); border-radius: 50%; inset: 16%; }
+.hardware-orbit::after { inset: 34%; background: #151411; }
+.hardware-device { width: min(9vw, 130px); aspect-ratio: .72; position: absolute; top: 50%; left: 50%; border: 1px solid #f3f0e8; background: #ff4d00; transform: translate(-50%, -50%) rotate(14deg); box-shadow: 7px 7px 0 #151411; }
+.pack-art--hardware span { position: absolute; padding: 5px 7px; border: 1px solid #151411; background: #ff4d00; font: 8px "DM Mono", monospace; }
+.pack-art--hardware span:nth-of-type(1) { top: 8%; left: 8%; }
+.pack-art--hardware span:nth-of-type(2) { top: 22%; right: 7%; }
+.pack-art--hardware span:nth-of-type(3) { right: 11%; bottom: 8%; }
+
+.pack-art--software { bottom: 90px; display: flex; align-items: center; justify-content: center; }
+.software-window { width: 72%; aspect-ratio: 1.7; padding: 38px 15px 15px; border: 1px solid #f3f0e8; display: grid; grid-template-columns: 1.2fr .8fr; gap: 8px; position: relative; transform: rotate(-3deg); box-shadow: 9px 9px 0 #ff4d00; }
+.software-window::before { content: ""; position: absolute; top: 12px; left: 15px; width: 6px; height: 6px; border-radius: 50%; background: #ff4d00; box-shadow: 12px 0 #f3f0e8, 24px 0 #a8ff52; }
+.software-window i { border: 1px solid #736e65; }
+.software-window i:first-child { grid-row: span 3; }
+.software-window b { display: none; }
+.pack-art--software > span { position: absolute; color: #ff4d00; font: 8px "DM Mono", monospace; }
+.pack-art--software > span:nth-of-type(1) { top: 15%; left: 1%; }
+.pack-art--software > span:nth-of-type(2) { top: 15%; right: 1%; }
+.pack-art--software > span:nth-of-type(3) { right: 1%; bottom: 5%; }
+
+.pack-art--release { bottom: 100px; }
+.release-ring { width: 195px; height: 195px; position: absolute; top: 50%; left: 50%; border: 20px solid #151411; border-radius: 50%; transform: translate(-50%, -50%); }
+.release-ring::before { content: ""; position: absolute; inset: 20px; border: 1px solid #151411; border-radius: 50%; }
+.release-dot { width: 30px; height: 30px; position: absolute; top: 50%; left: 50%; border-radius: 50%; background: #ff4d00; transform: translate(-50%, -50%); }
+.pack-art--release code { position: absolute; padding: 5px 7px; border: 1px solid #151411; background: #a8ff52; font: 8px "DM Mono", monospace; }
+.pack-art--release code:nth-of-type(1) { top: 5%; left: 3%; }
+.pack-art--release code:nth-of-type(2) { top: 20%; right: 1%; }
+.pack-art--release code:nth-of-type(3) { right: 8%; bottom: 2%; background: #151411; color: #a8ff52; }
 .catalog-principle { padding: 8vw 3.5vw; background: #151411; color: #f3f0e8; display: grid; grid-template-columns: 1fr 2fr; gap: 5vw; }
 .catalog-principle span { color: #ff4d00; font: 10px "DM Mono", monospace; }
 .catalog-principle p { max-width: 1050px; margin: 0; font-size: clamp(30px, 4vw, 62px); line-height: 1.07; letter-spacing: -.05em; }
@@ -170,9 +210,11 @@ footer .wordmark span { color: #151411; }
   .ingredients-title { position: static; }
   .catalog-intro, .pack-promise, .detail-grid, .deliverables, .detail-compiler { grid-template-columns: 1fr; }
   .catalog-intro .button-link { justify-self: start; }
-  .pack-card { grid-template-columns: 1fr 1fr; }
-  .pack-card header { grid-template-columns: 1fr 1fr auto; }
-  .pack-card-copy { grid-column: 1 / -1; }
+  .pack-grid { grid-template-columns: 1fr; grid-template-rows: auto; }
+  .pack-card--hardware-launch { grid-row: auto; }
+  .pack-card--hardware-launch .pack-cover, .pack-cover { min-height: 520px; }
+  .hardware-orbit { width: min(52vw, 420px); }
+  .hardware-device { width: min(17vw, 130px); }
   .pack-hero { min-height: auto; padding-block: 50px 80px; }
   .pack-breadcrumb { margin-bottom: 80px; }
   .detail-grid header { margin-bottom: 45px; }
@@ -205,11 +247,20 @@ footer .wordmark span { color: #151411; }
   footer strong { display: none; }
   .catalog-hero { min-height: auto; padding-block: 70px; }
   .catalog-hero h1 { margin-block: 35px 60px; }
-  .pack-grid { padding-bottom: 70px; }
-  .pack-card { min-height: 0; padding-block: 28px; display: block; }
-  .pack-card header { margin-bottom: 55px; }
-  .pack-card-copy { margin-bottom: 45px; padding: 0; }
-  .pack-card-stats { margin-bottom: 30px; }
+  .pack-grid { padding-bottom: 70px; gap: 14px; }
+  .pack-card { min-height: 0; }
+  .pack-card--hardware-launch .pack-cover, .pack-cover { min-height: 440px; }
+  .pack-cover { padding: 15px; }
+  .pack-cover header { gap: 10px; font-size: 7px; }
+  .pack-cover header small { max-width: 120px; text-align: right; }
+  .pack-cover-title h2, .pack-card:not(.pack-card--hardware-launch) .pack-cover-title h2 { font-size: 15vw; }
+  .pack-card-body { min-height: 185px; padding: 18px; grid-template-columns: 1fr; }
+  .pack-card-stats { flex-direction: row; flex-wrap: wrap; text-align: left; }
+  .pack-art { inset-inline: 15px; }
+  .hardware-orbit { width: 62vw; }
+  .hardware-device { width: 21vw; }
+  .software-window { width: 86%; }
+  .release-ring { width: 170px; height: 170px; }
   .catalog-principle { grid-template-columns: 1fr; padding-block: 70px; }
   .pack-hero h1 { margin-block: 22px 55px; font-size: 20vw; }
   .pack-promise { gap: 40px; }

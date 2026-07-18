@@ -55,7 +55,7 @@ describe("Possible", () => {
   it("shows every outcome in the packs catalog", () => {
     window.history.pushState({}, "", "/packs");
     render(<App />);
-    expect(screen.getByRole("heading", { name: /Three outcomes/i })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /Outcome gallery/i })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Hardware Launch" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Software Launch" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Open-Source Release" })).toBeInTheDocument();

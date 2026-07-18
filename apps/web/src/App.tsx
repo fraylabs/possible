@@ -213,22 +213,49 @@ function CreatePage() {
 
 function PackCard({ pack, index }: { pack: OutcomePack; index: number }) {
   return (
-    <a className="pack-card" href={`/packs/${pack.slug}`}>
-      <header><span>0{index + 1}</span><small>{pack.eyebrow}</small><b>↗</b></header>
-      <div className="pack-card-copy">
-        <h2>{pack.name}</h2>
+    <a className={`pack-card pack-card--${pack.slug}`} href={`/packs/${pack.slug}`}>
+      <div className="pack-cover">
+        <header><span>PACK / 0{index + 1}</span><small>{pack.eyebrow}</small><b>↗</b></header>
+        <PackArtwork slug={pack.slug} />
+        <div className="pack-cover-title">
+          <small>POSSIBLE OUTCOME</small>
+          <h2>{pack.name}</h2>
+        </div>
+      </div>
+      <div className="pack-card-body">
         <p>{pack.promise}</p>
-      </div>
-      <div className="pack-card-stats">
-        <span>{pack.skills.length} SKILLS</span>
-        <span>{pack.workstreams.length} WORKSTREAMS</span>
-        <span>{pack.outputs.length} OUTPUTS</span>
-      </div>
-      <div className="pack-card-outputs">
-        {pack.outputs.slice(0, 3).map((output) => <span key={output}>{output}</span>)}
-        {pack.outputs.length > 3 ? <span>+{pack.outputs.length - 3} MORE</span> : null}
+        <div className="pack-card-stats">
+          <span>{pack.skills.length} SKILLS</span>
+          <span>{pack.workstreams.length} WORKSTREAMS</span>
+          <span>{pack.outputs.length} OUTPUTS</span>
+        </div>
       </div>
     </a>
+  );
+}
+
+function PackArtwork({ slug }: { slug: string }) {
+  if (slug === "hardware-launch") {
+    return (
+      <div className="pack-art pack-art--hardware" aria-hidden="true">
+        <i className="hardware-orbit" /><i className="hardware-device" />
+        <span>FORM</span><span>FILM</span><span>FRONTEND</span>
+      </div>
+    );
+  }
+  if (slug === "software-launch") {
+    return (
+      <div className="pack-art pack-art--software" aria-hidden="true">
+        <div className="software-window"><i /><i /><i /><b /><b /><b /></div>
+        <span>BUILD</span><span>TEST</span><span>SHIP</span>
+      </div>
+    );
+  }
+  return (
+    <div className="pack-art pack-art--release" aria-hidden="true">
+      <i className="release-ring" /><i className="release-dot" />
+      <code>README.md</code><code>CI / PASS</code><code>v1.0.0</code>
+    </div>
   );
 }
 
@@ -237,8 +264,8 @@ function PacksPage() {
     <main>
       <SiteNav label="Catalog / 03" />
       <section className="catalog-hero">
-        <p className="eyebrow">CURATED OUTCOME PACKS</p>
-        <h1>Three outcomes.<br /><em>Not three hundred skills.</em></h1>
+        <p className="eyebrow">CURATED OUTCOME GALLERY / 03</p>
+        <h1>Outcome gallery.<br /><em>Pick what ships next.</em></h1>
         <div className="catalog-intro">
           <p>Pick what you want to ship. Possible selects the specialists, splits the work, defines the handoffs, and adds an independent review.</p>
           <a className="button-link" href="/">Create an outcome <span>→</span></a>
