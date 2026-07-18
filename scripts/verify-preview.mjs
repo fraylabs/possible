@@ -236,7 +236,16 @@ async function verifyMachineReadableWiki(baseUrl, files) {
   assert.match(discoveryText, /https:\/\/possible\.sh\/agent\/protocol\.json/);
   assert.match(discoveryText, /https:\/\/possible\.sh\/agent\/search\.json/);
   assert.match(discoveryText, /bundled guide index/i);
-  assert.doesNotMatch(discoveryText, /\bpublished\b/i);
+  assert.doesNotMatch(discoveryText, /\b(?:public|published)\b/i);
+
+  for (const receiptPath of [
+    "proof/receipts/digital-photo-frame.md",
+    "proof/receipts/robotic-arm.md",
+  ]) {
+    const receipt = await requestBytes(`${baseUrl}/${receiptPath}`);
+    assert.equal(receipt.response.status, 200);
+    assert.doesNotMatch(receipt.bytes.toString("utf8"), /\b(?:public|published)\b/i);
+  }
 
   const robots = await requestBytes(`${baseUrl}/robots.txt`);
   assert.match(robots.bytes.toString("utf8"), /^User-agent: \*\nAllow: \/\nSitemap: https:\/\/possible\.sh\/sitemap\.xml\n$/);
@@ -322,7 +331,7 @@ async function verifyMachineReadableWiki(baseUrl, files) {
   assert.match(protocol.operations.search.notes[0], /static search index/);
   assert.equal(protocol.operations.read.path, "/agent/read/{slug}.json");
   assert.equal(protocol.operations.related.path, "/agent/related/{slug}.json");
-  assert.doesNotMatch(JSON.stringify(protocol.operations), /\bpublished\b/i);
+  assert.doesNotMatch(JSON.stringify(protocol.operations), /\b(?:public|published)\b/i);
 
   const searchResponse = await requestBytes(`${baseUrl}/agent/search.json`);
   assert.equal(searchResponse.response.status, 200);

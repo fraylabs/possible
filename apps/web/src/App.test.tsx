@@ -19,6 +19,7 @@ describe("Possible field guides", () => {
     expect(screen.getByRole("link", { name: "Atlas" })).toHaveAttribute("href", "/");
     expect(screen.getAllByRole("link", { name: /See (an example|guide retrieval)/i })).toHaveLength(2);
     expect(screen.getByRole("heading", { level: 2, name: "For agents" })).toBeInTheDocument();
+    expect(document.body).not.toHaveTextContent(/\b(?:public|published)\b/i);
     expect(screen.queryByRole("region", { name: "Possible field guide atlas" })).not.toBeInTheDocument();
   });
 

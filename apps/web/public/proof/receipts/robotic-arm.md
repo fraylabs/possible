@@ -2,7 +2,7 @@
 
 - Date: 2026-07-18
 - Query: `robotic arm`
-- Surface: public Possible guide index and exact guide reads
+- Surface: bundled Possible guide index and exact guide reads
 
 ## Retrieved guide
 
@@ -16,11 +16,11 @@ select an arm architecture, compose a bill of materials, plan the work, execute
 tools, or validate a design. The consuming agent must reason from the actual
 user requirements and remains responsible for every recommendation and action.
 
-## Public guide resources
+## Bundled guide resources
 
-- https://possible.sh/agent/read/robotic-arms.json
-- https://possible.sh/agent/related/robotic-arms.json
-- https://possible.sh/wiki/robotic-arms
+- /agent/read/robotic-arms.json
+- /agent/related/robotic-arms.json
+- /wiki/robotic-arms
 
 ## Example source links
 

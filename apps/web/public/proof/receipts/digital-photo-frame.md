@@ -2,7 +2,7 @@
 
 - Date: 2026-07-18
 - Query: `digital photo frame`
-- Surface: public Possible guide index and exact guide reads
+- Surface: bundled Possible guide index and exact guide reads
 
 ## Retrieved guide
 
@@ -15,11 +15,11 @@ validated device. The consuming person or agent remains responsible for asking
 about the real requirements, checking current external facts, choosing an
 approach, performing the work, and evaluating the result.
 
-## Public guide resources
+## Bundled guide resources
 
-- https://possible.sh/agent/read/digital-photo-frame.json
-- https://possible.sh/agent/related/digital-photo-frame.json
-- https://possible.sh/wiki/digital-photo-frame
+- /agent/read/digital-photo-frame.json
+- /agent/related/digital-photo-frame.json
+- /wiki/digital-photo-frame
 
 ## Example source links
 

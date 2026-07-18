@@ -59,9 +59,14 @@
   source and generated agent copy. Added tests over the rendered pages,
   protocol, and built `llms.txt` so the local publication boundary cannot drift
   back through adjacent wording.
-- Recorded the next local bundle as 194 regular files, 2,661,600 bytes, with
+- The second review's final receipt also identified “public corpus” language in
+  the documentation and public-resource labels in the bundled example receipts.
+  Replaced those with “bundled” language and relative artifact paths, then made
+  preview verification reject both public and published descriptors in
+  `llms.txt`, the protocol operations, and both example receipts.
+- Recorded the next local bundle as 194 regular files, 2,661,491 bytes, with
   aggregate SHA-256
-  `0006a1820e23c839ccb8d8f54d13982e8e3f445067df09a6f19187b48b1a3338`.
+  `d56b42ee78166140354a52dda48ea80d4a7dac03cbbaf4db5040132d393beef6`.
 
 ## 2026-07-18 — Persistent knowledge universe activated
 

@@ -18,7 +18,7 @@ contains a root guide with the same slug, such as `web/web.md` and
 `manufacturing/manufacturing.md`. The deterministic graph adds no editorial
 knowledge beyond authored links and folder placement.
 
-Production builds retain stable public paths for people and agents:
+Production builds retain stable output paths for people and agents:
 
 - `/llms.txt`
 - `/wiki/index.json`
@@ -41,4 +41,4 @@ npm run dev -w @possible/web
 
 The shared knowledge workspace must be built before a standalone production
 build. The root verifier handles that dependency order and verifies the emitted
-public files against the reviewed artifact.
+emitted files against the reviewed artifact.

@@ -115,7 +115,7 @@ export function DocsPage() {
                 <code>Reason from that context, ask the user, and own the project decisions.</code>
               </div>
               <p>
-                The public corpus is also available as structured guide data and an
+                The bundled corpus is also available as structured guide data and an
                 {" "}<a href="/llms.txt">agent-readable index</a>.
               </p>
               <a className="docs-source-link" href="/proof">

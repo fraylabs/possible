@@ -3,8 +3,8 @@
   "artifactDirectory": "apps/web/dist",
   "buildCommand": "npm run preview:build",
   "verificationCommand": "npm run preview:verify",
-  "sha256": "0006a1820e23c839ccb8d8f54d13982e8e3f445067df09a6f19187b48b1a3338",
-  "totalBytes": 2661600,
+  "sha256": "d56b42ee78166140354a52dda48ea80d4a7dac03cbbaf4db5040132d393beef6",
+  "totalBytes": 2661491,
   "files": [
     {
       "path": "agent/protocol.json",
@@ -627,9 +627,9 @@
       "sha256": "68e6298737e7f44badfb9896b42fac07c01aa6af005c7d93d13c62120ccb451f"
     },
     {
-      "path": "assets/index-C9PSsUAr.js",
-      "bytes": 398006,
-      "sha256": "6d72fa511c5b4042dc4c2b4310a045cb03e46ae35b5e3cb8adff947880e5cdd5"
+      "path": "assets/index-DgfWQXOA.js",
+      "bytes": 398007,
+      "sha256": "d6d53febd80fda01a899c8083318e2b246f686d2cbaf5072f33f5d8ab650f88e"
     },
     {
       "path": "assets/index-bl-OQRqr.css",
@@ -639,7 +639,7 @@
     {
       "path": "index.html",
       "bytes": 795,
-      "sha256": "eb782dfd0d7b1fd628781c55917e45b1e59fa89fc99fd81fd035c3cfc216519e"
+      "sha256": "dd90017afdd14ebe00f20889547d9b0c11cedd246a1c0e5c8635aedf21f09a7b"
     },
     {
       "path": "llms.txt",
@@ -648,13 +648,13 @@
     },
     {
       "path": "proof/receipts/digital-photo-frame.md",
-      "bytes": 1278,
-      "sha256": "e194213ed43b8f8164b2eacf6b6f833168d473c5a981930041d9607113084225"
+      "bytes": 1223,
+      "sha256": "ef533b5ce37755cc7ceabefaa0b46ffb1b2e0dac283e9485c0cd08b39e4396e5"
     },
     {
       "path": "proof/receipts/robotic-arm.md",
-      "bytes": 1412,
-      "sha256": "c00bce5a284d122d284662f7bff42ef48ade8afbfadb26a5ee7d820c116ffc12"
+      "bytes": 1357,
+      "sha256": "e22e9877e79a9abf5a0c4abb9ed26c24162c460a9d238187e61a0622612c9b6c"
     },
     {
       "path": "robots.txt",
@@ -993,7 +993,7 @@
   },
   "publication": {
     "state": "not-published",
-    "artifactSha256": "0006a1820e23c839ccb8d8f54d13982e8e3f445067df09a6f19187b48b1a3338",
+    "artifactSha256": "d56b42ee78166140354a52dda48ea80d4a7dac03cbbaf4db5040132d393beef6",
     "allowedNextAction": "Explicit authorization to publish this exact candidate artifact",
     "requiresSeparateApproval": [
       "provider authentication or credential-scope changes",
