@@ -223,3 +223,42 @@ unchanged agent publication/contract paths, and the absence of every
 `knowledge/**/*.md` file from the release. The reviewer intentionally did not
 rerun commands; the clean primary verifier and live browser receipts above are
 the execution evidence.
+
+## 2026-07-18 — Top-level atlas correction
+
+This release makes `/` a real atlas instead of treating the Web article as the
+root. Web and Manufacturing are sibling fields, selecting either field enters
+its own page neighborhood, and cross-field links remain available in article
+prose without appearing as local graph children. The Possible wordmark returns
+to the atlas from both Explore and Read.
+
+The navigation fields are a web projection of the existing top-level folders
+under `knowledge/pages/`; they do not add a second authored ontology. The
+49-page corpus, 146 internal links, generated agent publications, and two-tool
+read-only MCP contract remain unchanged.
+
+### Delivery identity
+
+- Public source commit:
+  `f4f8caf03ce9cdebda1347d352b00f42d23b4ce5`
+- Public branch: `fraylabs/possible` `main`
+- Vercel deployment: `dpl_52V6eV6y28jfx52b1gGUzyxAVRbg`
+- Deployment URL: `https://possible-bgf7maws8-brainthrust.vercel.app`
+- State: production / Ready on 2026-07-18 Asia/Singapore
+- Aliases: `https://possible.sh`, `https://www.possible.sh`, and the existing
+  Vercel project aliases
+
+### Exact live artifact receipt
+
+A clean isolated checkout passed `npm run check` and recorded a 54-file static
+artifact totaling 807,096 bytes with aggregate SHA-256
+`0ef15a21ad41eb737358e7bd49536ca1ed5dffd0b16605ec8ac08d6715fa2ab5`.
+Independent HTTPS reads then matched all 54 paths, byte counts, and hashes on
+both `possible.sh` and `www.possible.sh`, with zero mismatches.
+
+The web tests cover the root atlas, sibling Web and Manufacturing fields,
+field-scoped related graphs, global search, stable routes, browser history,
+mobile behavior, keyboard shortcuts, accessible semantics, and wordmark return
+from both presentation modes. The complete repository verifier also passed the
+knowledge, MCP, agent retrieval, build, negative-route, and exact-artifact
+checks.
