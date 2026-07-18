@@ -27,32 +27,56 @@ describe("Possible wiki", () => {
     expect(within(atlas).getByRole("button", { name: "Manufacturing, 2 pages" })).toBeInTheDocument();
     expect(within(atlas).getByRole("button", { name: "Vite with React, Web page" })).toBeInTheDocument();
     await user.click(within(atlas).getByRole("button", { name: "Zoom in graph" }));
-    expect(within(atlas).getByText("Graph zoom 118%")).toBeInTheDocument();
-    await user.click(within(atlas).getByRole("button", { name: "Reset graph view" }));
-    expect(within(atlas).getByText("Graph zoom 100%")).toBeInTheDocument();
+    expect(within(atlas).getByText(/Graph zoom 118%/)).toBeInTheDocument();
+    await user.click(within(atlas).getByRole("button", { name: "Fit entire graph" }));
+    expect(within(atlas).getByText(/Graph zoom 100%/)).toBeInTheDocument();
     await user.click(within(atlas).getByRole("button", { name: "Web, 3 pages" }));
 
     expect(await screen.findByRole("heading", { level: 1, name: "Web" })).toBeInTheDocument();
     expect(window.location.pathname).toBe("/wiki/web");
     expect(screen.getByRole("button", { name: "Read page" })).toBeInTheDocument();
-    const webGraph = screen.getByRole("region", { name: "Related page graph" });
-    expect(within(webGraph).queryByRole("button", { name: /Manufacturing/i })).not.toBeInTheDocument();
-    expect(within(webGraph).queryByRole("button", { name: /Custom manufactured parts/i })).not.toBeInTheDocument();
+    const webGraph = screen.getByRole("region", { name: "Possible knowledge atlas" });
+    expect(webGraph).toBe(atlas);
+    expect(within(webGraph).getByRole("button", { name: "Manufacturing, 2 pages" })).toBeInTheDocument();
+    expect(within(webGraph).getByRole("button", { name: "Custom manufactured parts, Manufacturing page" })).toBeInTheDocument();
+    expect(within(webGraph).getByRole("button", { name: "Web, 3 pages" })).toHaveAttribute("aria-pressed", "true");
 
     const search = screen.getByRole("searchbox", { name: "Search pages" });
     await user.type(search, "vite");
-    await user.click(screen.getByRole("button", { name: /Vite with React/i }));
+    await user.click(within(screen.getByRole("listbox", { name: "Search results" })).getByRole("button", { name: /Vite with React/i }));
     expect(await screen.findByRole("heading", { level: 1, name: "Vite with React" })).toBeInTheDocument();
     expect(window.location.pathname).toBe("/wiki/vite-react");
 
-    const graph = screen.getByRole("region", { name: "Related page graph" });
+    const graph = screen.getByRole("region", { name: "Possible knowledge atlas" });
+    expect(graph).toBe(atlas);
+    expect(within(graph).getByRole("button", { name: "Vite with React, Web page" })).toHaveAttribute("aria-pressed", "true");
     const browserGraphNode = within(graph).getByRole("button", {
-      name: "Browser applications, related page",
+      name: "Browser applications, Web page",
     });
     await user.click(browserGraphNode);
     expect(await screen.findByRole("heading", { level: 1, name: "Browser applications" })).toBeInTheDocument();
     expect(window.location.pathname).toBe("/wiki/browser-applications");
     await waitFor(() => expect(screen.getByRole("heading", { level: 1 })).toHaveFocus());
+  });
+
+  it("reveals the whole universe when zoomed out and preserves that camera through selection", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    await screen.findByRole("heading", { level: 1, name: "What do you want to make possible?" });
+    const atlas = screen.getByRole("region", { name: "Possible knowledge atlas" });
+    const zoomOut = within(atlas).getByRole("button", { name: "Zoom out graph" });
+    await user.click(zoomOut);
+    await user.click(zoomOut);
+
+    expect(within(atlas).getByText("Graph zoom 67%, Universe view")).toBeInTheDocument();
+    expect(within(atlas).getByRole("button", { name: "Web, 3 pages" })).toBeInTheDocument();
+    expect(within(atlas).getByRole("button", { name: "Manufacturing, 2 pages" })).toBeInTheDocument();
+
+    await user.click(within(atlas).getByRole("button", { name: "Vite with React, Web page" }));
+    await screen.findByRole("heading", { level: 1, name: "Vite with React" });
+    expect(screen.getByRole("region", { name: "Possible knowledge atlas" })).toBe(atlas);
+    expect(within(atlas).getByText("Graph zoom 67%, Universe view")).toBeInTheDocument();
   });
 
   it("opens a graph page when its visible label is clicked", async () => {
@@ -74,6 +98,9 @@ describe("Possible wiki", () => {
 
     await screen.findByRole("heading", { level: 1, name: "Vite with React" });
     expect(screen.queryByRole("link", { name: "Browser applications" })).not.toBeInTheDocument();
+    const atlas = screen.getByRole("region", { name: "Possible knowledge atlas" });
+    await user.click(within(atlas).getByRole("button", { name: "Zoom out graph" }));
+    expect(within(atlas).getByText("Graph zoom 82%, Field view")).toBeInTheDocument();
 
     await user.click(screen.getByRole("button", { name: "Read page" }));
     expect(await screen.findByRole("link", { name: "Browser applications" })).toBeInTheDocument();
@@ -95,6 +122,7 @@ describe("Possible wiki", () => {
     await user.click(screen.getByRole("button", { name: "Back to map" }));
     expect(await screen.findByRole("button", { name: "Read page" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { level: 1, name: "Browser applications" })).toBeInTheDocument();
+    expect(within(screen.getByRole("region", { name: "Possible knowledge atlas" })).getByText("Graph zoom 82%, Field view")).toBeInTheDocument();
     expect(window.location.pathname).toBe("/wiki/browser-applications");
   });
 
@@ -114,10 +142,14 @@ describe("Possible wiki", () => {
     expect(screen.getByRole("button", { name: "Back to map" })).toBeInTheDocument();
 
     await user.click(screen.getByRole("button", { name: "Back to map" }));
-    window.history.pushState(null, "", "/wiki/vite-react");
-    fireEvent.popState(window);
+    const restoredState = {
+      possible: { version: 1, graphViewport: { x: 24, y: -16, scale: 0.67 } },
+    };
+    window.history.pushState(restoredState, "", "/wiki/vite-react");
+    fireEvent.popState(window, { state: restoredState });
     expect(await screen.findByRole("heading", { level: 1, name: "Vite with React" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Read page" })).toBeInTheDocument();
+    expect(screen.getByText("Graph zoom 67%, Universe view")).toBeInTheDocument();
   });
 
   it("uses the same full-page Explore and Read modes on mobile", async () => {
@@ -144,6 +176,12 @@ describe("Possible wiki", () => {
 
     fireEvent.keyDown(window, { key: "/" });
     expect(screen.getByRole("searchbox", { name: "Search pages" })).toHaveFocus();
+    fireEvent.keyDown(window, { key: "Escape" });
+    fireEvent.keyDown(window, { key: "-" });
+    fireEvent.keyDown(window, { key: "-" });
+    expect(screen.getByText("Graph zoom 67%, Universe view")).toBeInTheDocument();
+    fireEvent.keyDown(window, { key: "0" });
+    expect(screen.getByText("Graph zoom 100%, Field view")).toBeInTheDocument();
 
     const exploreResults = await axe.run(document.body, {
       rules: { "color-contrast": { enabled: false } },

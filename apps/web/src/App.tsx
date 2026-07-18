@@ -15,8 +15,11 @@ import {
 import { buildAtlasBranches } from "./atlas";
 import { ArticleView } from "./components/ArticleView";
 import { AtlasGraph } from "./components/AtlasGraph";
-import { RelatedGraph } from "./components/RelatedGraph";
-import { buildRelatedGraph, formatReviewedAt, routeSlug, wikiPath } from "./wiki";
+import {
+  DEFAULT_GRAPH_VIEWPORT,
+  type GraphViewport,
+} from "./components/KnowledgeGraph";
+import { formatReviewedAt, routeSlug, wikiPath } from "./wiki";
 
 type LoadState =
   | { status: "loading" }
@@ -26,12 +29,39 @@ type LoadState =
 type ViewMode = "explore" | "read";
 type FocusTarget = "explore" | "read" | "search";
 
+interface PossibleHistoryState {
+  possible?: {
+    version: 1;
+    graphViewport: GraphViewport;
+  };
+}
+
+const validGraphViewport = (value: unknown): value is GraphViewport => {
+  if (!value || typeof value !== "object") return false;
+  const viewport = value as Partial<GraphViewport>;
+  return typeof viewport.x === "number" && Number.isFinite(viewport.x)
+    && typeof viewport.y === "number" && Number.isFinite(viewport.y)
+    && typeof viewport.scale === "number" && Number.isFinite(viewport.scale)
+    && viewport.scale >= 0.42 && viewport.scale <= 2.8;
+};
+
+const viewportFromHistory = (state: unknown): GraphViewport | undefined => {
+  if (!state || typeof state !== "object") return undefined;
+  const viewport = (state as PossibleHistoryState).possible?.graphViewport;
+  return validGraphViewport(viewport) ? viewport : undefined;
+};
+
+const historyStateFor = (graphViewport: GraphViewport): PossibleHistoryState => ({
+  possible: { version: 1, graphViewport },
+});
+
 export function App() {
   const [loadState, setLoadState] = useState<LoadState>({ status: "loading" });
   const [loadAttempt, setLoadAttempt] = useState(0);
   const [selectedSlug, setSelectedSlug] = useState<string | undefined>();
   const [query, setQuery] = useState("");
   const [mode, setMode] = useState<ViewMode>("explore");
+  const [graphViewport, setGraphViewport] = useState<GraphViewport>({ ...DEFAULT_GRAPH_VIEWPORT });
   const searchRef = useRef<HTMLInputElement>(null);
   const exploreTitleRef = useRef<HTMLHeadingElement>(null);
   const readTitleRef = useRef<HTMLHeadingElement>(null);
@@ -47,6 +77,8 @@ export function App() {
         setLoadState({ status: "ready", corpus });
         const requestedSlug = routeSlug(window.location.pathname);
         setSelectedSlug(requestedSlug);
+        const restoredViewport = viewportFromHistory(window.history.state);
+        if (restoredViewport) setGraphViewport(restoredViewport);
       })
       .catch((error: unknown) => {
         if (!active) return;
@@ -65,14 +97,6 @@ export function App() {
   const selectedPage = corpus && selectedSlug ? getPage(corpus, selectedSlug) : undefined;
   const branches = corpus ? buildAtlasBranches(corpus) : [];
   const fallbackPage = branches[0]?.page ?? (corpus ? corpus.pages[0] : undefined);
-  const graph = corpus && selectedSlug ? buildRelatedGraph(corpus, selectedSlug) : {
-    nodes: [],
-    edges: [],
-    outgoingPages: [],
-    backlinkPages: [],
-    relatedPages: [],
-    hiddenCount: 0,
-  };
   const searchResults = corpus && query.trim()
     ? searchPages(corpus, query, { limit: 5 })
     : [];
@@ -95,17 +119,24 @@ export function App() {
   useEffect(() => {
     if (!corpus) return undefined;
 
-    const handlePopState = () => {
+    const handlePopState = (event: PopStateEvent) => {
       const nextSlug = routeSlug(window.location.pathname);
+      const restoredViewport = viewportFromHistory(event.state);
       pendingFocusRef.current = nextSlug ? mode : "explore";
       if (!nextSlug) setMode("explore");
       setSelectedSlug(nextSlug);
+      if (restoredViewport) setGraphViewport(restoredViewport);
       setQuery("");
     };
 
     window.addEventListener("popstate", handlePopState);
     return () => window.removeEventListener("popstate", handlePopState);
   }, [corpus, mode]);
+
+  useEffect(() => {
+    if (!corpus || mode !== "explore") return;
+    window.history.replaceState(historyStateFor(graphViewport), "", window.location.href);
+  }, [corpus, graphViewport, mode, selectedSlug]);
 
   const returnToExplore = (focus: FocusTarget = "explore") => {
     pendingFocusRef.current = focus;
@@ -129,15 +160,40 @@ export function App() {
       if (event.key === "Escape") {
         if (mode === "read") {
           returnToExplore();
+        } else if (query) {
+          setQuery("");
+        } else if (selectedSlug) {
+          clearSelection();
         } else {
           setQuery("");
         }
+      }
+
+      if (!isTyping && mode === "explore" && event.key === "0") {
+        event.preventDefault();
+        setGraphViewport({ ...DEFAULT_GRAPH_VIEWPORT });
+      }
+
+      if (!isTyping && mode === "explore" && (event.key === "+" || event.key === "=")) {
+        event.preventDefault();
+        setGraphViewport((viewport) => ({
+          ...viewport,
+          scale: Math.min(2.8, viewport.scale * 1.18),
+        }));
+      }
+
+      if (!isTyping && mode === "explore" && event.key === "-") {
+        event.preventDefault();
+        setGraphViewport((viewport) => ({
+          ...viewport,
+          scale: Math.max(0.42, viewport.scale * 0.82),
+        }));
       }
     };
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [mode]);
+  }, [graphViewport, mode, query, selectedSlug]);
 
   const selectPage = (
     slug: string,
@@ -156,16 +212,29 @@ export function App() {
     const nextPath = wikiPath(slug);
     if (window.location.pathname === nextPath) return;
     const method = options?.history === "replace" ? "replaceState" : "pushState";
-    window.history[method](null, "", nextPath);
+    window.history[method](historyStateFor(graphViewport), "", nextPath);
   };
 
-  const resetToAtlas = () => {
+  function clearSelection() {
     pendingFocusRef.current = "explore";
-    setMode("explore");
     setSelectedSlug(undefined);
     setQuery("");
     if (window.location.pathname !== "/") {
-      window.history.pushState(null, "", "/");
+      window.history.pushState(historyStateFor(graphViewport), "", "/");
+    }
+  }
+
+  const resetToAtlas = () => {
+    const resetViewport = { ...DEFAULT_GRAPH_VIEWPORT };
+    pendingFocusRef.current = "explore";
+    setMode("explore");
+    setSelectedSlug(undefined);
+    setGraphViewport(resetViewport);
+    setQuery("");
+    if (window.location.pathname !== "/") {
+      window.history.pushState(historyStateFor(resetViewport), "", "/");
+    } else {
+      window.history.replaceState(historyStateFor(resetViewport), "", "/");
     }
   };
 
@@ -301,7 +370,12 @@ export function App() {
           <section className="selected-context" aria-labelledby="explore-title">
             {selectedSlug ? (
               <>
-                <p className="section-kicker">Explore</p>
+                <div className="inspector-heading">
+                  <p className="section-kicker">Focused page</p>
+                  <button type="button" className="inspector-clear" onClick={clearSelection} aria-label="Clear graph focus">
+                    <X size={15} aria-hidden="true" />
+                  </button>
+                </div>
                 <h1 id="explore-title" ref={exploreTitleRef} tabIndex={-1}>
                   {selectedPage?.title ?? "Page not found"}
                 </h1>
@@ -312,6 +386,7 @@ export function App() {
                 {selectedPage ? (
                   <>
                     <p className="review-note">Reviewed {formatReviewedAt(selectedPage.reviewedAt)}</p>
+                    <p className="atlas-note">Its authored connections are highlighted in the full universe.</p>
                     <button type="button" className="read-button" onClick={openRead}>
                       <BookOpenText size={18} aria-hidden="true" />
                       Read page
@@ -334,7 +409,7 @@ export function App() {
                   What do you want to make possible?
                 </h1>
                 <p className="selected-summary">
-                  Choose a field to enter its knowledge branch. Search still reaches every sourced page.
+                  Zoom from fields into individual pages. Selecting something focuses its authored connections without replacing the wider map.
                 </p>
                 <p className="atlas-note">{branches.length} fields · {corpus.pages.length} sourced pages</p>
               </>
@@ -342,18 +417,14 @@ export function App() {
           </section>
         </aside>
 
-        {selectedSlug ? (
-          <RelatedGraph
-            graph={graph}
-            onSelectPage={(slug) => selectPage(slug, { focus: "explore", mode: "explore" })}
-          />
-        ) : (
-          <AtlasGraph
-            corpus={corpus}
-            branches={branches}
-            onSelectPage={(slug) => selectPage(slug, { focus: "explore", mode: "explore" })}
-          />
-        )}
+        <AtlasGraph
+          corpus={corpus}
+          branches={branches}
+          selectedSlug={selectedSlug}
+          viewport={graphViewport}
+          onViewportChange={setGraphViewport}
+          onSelectPage={(slug) => selectPage(slug, { focus: "explore", mode: "explore" })}
+        />
       </div>
     </main>
   );

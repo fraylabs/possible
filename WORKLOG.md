@@ -1,5 +1,19 @@
 # Worklog
 
+## 2026-07-18 — Persistent knowledge universe activated
+
+- The captain approved replacing route-like graph drilling with one persistent
+  Obsidian-inspired universe.
+- Activated a goal whose trust claim is spatial continuity: the full graph
+  remains present, semantic zoom changes detail, selection opens inspection,
+  and Read returns to the prior camera and focus.
+- Preserved the KISS page/link/source model and explicitly excluded typed-edge
+  planning, invented graph content, and the captain's seven unrelated
+  manufacturing drafts.
+- Started four goal-backed parallel lanes for UX red-team, frontend state
+  architecture, semantic-zoom/cloud rendering, and adversarial verification;
+  the parent thread retains integration and production ownership.
+
 ## 2026-07-17 — Activation
 
 - Created the standalone Possible repository.
