@@ -86,7 +86,7 @@ export const wikiPublications = (): Plugin => ({
         "Each guide includes contributor-authored prose, sources, a review date, authored aliases when available, directional links, backlinks, and related guides.",
         "The static search response is a downloadable index; apply its documented normalization and ranking locally. Query parameters are not evaluated.",
         "Search results are relevant reading, not project plans, recommendations, or validation. Authored links are related reading, not ordered steps.",
-        "Read and related accept only slugs present in the published guide index. Unknown slugs have no JSON error contract on the static SPA deployment.",
+        "Read and related accept only slugs present in the bundled guide index. Unknown slugs have no JSON error contract on the static SPA deployment.",
         "Possible supplies source-backed context; the consuming agent remains responsible for project-specific reasoning, decisions, actions, and validation.",
         "",
       ].join("\n"),

@@ -129,7 +129,7 @@ export function DocsPage() {
             <div>
               <h2>Trust boundary</h2>
               <div className="docs-definitions">
-                <div><strong>Reviewed</strong><span>A contributor checked the guide and its cited sources on the published date.</span></div>
+                <div><strong>Reviewed</strong><span>A contributor checked the guide and its cited sources on the listed review date.</span></div>
                 <div><strong>Related</strong><span>Another guide is linked for context; it is not automatically a next step.</span></div>
                 <div><strong>Source-backed</strong><span>Important factual claims can be inspected at their cited sources.</span></div>
                 <div><strong>Not certified</strong><span>A guide does not validate a design, project, provider, or completed result.</span></div>

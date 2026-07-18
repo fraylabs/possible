@@ -50,10 +50,18 @@
   artifact recorded in `deployment/PRODUCTION.md`, and made preview verification
   require that the historical digest appear in the cited receipt instead of
   merely matching a duplicated literal.
-- Recorded the superseding local bundle as 194 regular files, 2,661,613 bytes,
-  with
+- A second exact-revision review rejected commit
+  `796f4278cbd341dfc579040441ae4fbc7d0bb8d5` because remaining headings,
+  prompt text, protocol text, and `llms.txt` still described the current guide
+  index, sources, or data as published. The clean verifier and product boundary
+  otherwise passed.
+- Removed all live/published descriptors for the current corpus from active web
+  source and generated agent copy. Added tests over the rendered pages,
+  protocol, and built `llms.txt` so the local publication boundary cannot drift
+  back through adjacent wording.
+- Recorded the next local bundle as 194 regular files, 2,661,600 bytes, with
   aggregate SHA-256
-  `e4983e4af7f4bd7bd17a5e9ae94ac2d7ad4a423d058891786ea622ced9dc8659`.
+  `0006a1820e23c839ccb8d8f54d13982e8e3f445067df09a6f19187b48b1a3338`.
 
 ## 2026-07-18 — Persistent knowledge universe activated
 

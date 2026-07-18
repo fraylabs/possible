@@ -3,8 +3,8 @@
   "artifactDirectory": "apps/web/dist",
   "buildCommand": "npm run preview:build",
   "verificationCommand": "npm run preview:verify",
-  "sha256": "e4983e4af7f4bd7bd17a5e9ae94ac2d7ad4a423d058891786ea622ced9dc8659",
-  "totalBytes": 2661613,
+  "sha256": "0006a1820e23c839ccb8d8f54d13982e8e3f445067df09a6f19187b48b1a3338",
+  "totalBytes": 2661600,
   "files": [
     {
       "path": "agent/protocol.json",
@@ -627,9 +627,9 @@
       "sha256": "68e6298737e7f44badfb9896b42fac07c01aa6af005c7d93d13c62120ccb451f"
     },
     {
-      "path": "assets/index-BLL-IjVA.js",
-      "bytes": 398017,
-      "sha256": "85c01c70bbd2c2fa24ca576bbc6c60d9c28ff1488d222df8d9bfd298b559299f"
+      "path": "assets/index-C9PSsUAr.js",
+      "bytes": 398006,
+      "sha256": "6d72fa511c5b4042dc4c2b4310a045cb03e46ae35b5e3cb8adff947880e5cdd5"
     },
     {
       "path": "assets/index-bl-OQRqr.css",
@@ -639,12 +639,12 @@
     {
       "path": "index.html",
       "bytes": 795,
-      "sha256": "3e33375395f131a7eaab2c841c17ebb2b174daaffed5aa2b76960fff4a9076a7"
+      "sha256": "eb782dfd0d7b1fd628781c55917e45b1e59fa89fc99fd81fd035c3cfc216519e"
     },
     {
       "path": "llms.txt",
-      "bytes": 1309,
-      "sha256": "1133fa72bb8954ecae357cf2d6c42e5154b4a96b43ad9e7e2b7848289b3eb4c4"
+      "bytes": 1307,
+      "sha256": "b561fff16eee2336e45fdbc857cf2e87cdd497ffb04ddc750bc05269cb0936cd"
     },
     {
       "path": "proof/receipts/digital-photo-frame.md",
@@ -993,7 +993,7 @@
   },
   "publication": {
     "state": "not-published",
-    "artifactSha256": "e4983e4af7f4bd7bd17a5e9ae94ac2d7ad4a423d058891786ea622ced9dc8659",
+    "artifactSha256": "0006a1820e23c839ccb8d8f54d13982e8e3f445067df09a6f19187b48b1a3338",
     "allowedNextAction": "Explicit authorization to publish this exact candidate artifact",
     "requiresSeparateApproval": [
       "provider authentication or credential-scope changes",

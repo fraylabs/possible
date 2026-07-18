@@ -235,6 +235,8 @@ async function verifyMachineReadableWiki(baseUrl, files) {
   const discoveryText = discovery.bytes.toString("utf8");
   assert.match(discoveryText, /https:\/\/possible\.sh\/agent\/protocol\.json/);
   assert.match(discoveryText, /https:\/\/possible\.sh\/agent\/search\.json/);
+  assert.match(discoveryText, /bundled guide index/i);
+  assert.doesNotMatch(discoveryText, /\bpublished\b/i);
 
   const robots = await requestBytes(`${baseUrl}/robots.txt`);
   assert.match(robots.bytes.toString("utf8"), /^User-agent: \*\nAllow: \/\nSitemap: https:\/\/possible\.sh\/sitemap\.xml\n$/);
@@ -253,12 +255,12 @@ async function verifyMachineReadableWiki(baseUrl, files) {
   assert.equal(index.schemaVersion, 2);
   assert.equal(index.title, "Possible field guides");
   assert(Array.isArray(index.pages), "Wiki index pages must be an array.");
-  assert(index.pages.length > 0, "The published wiki must contain pages.");
+  assert(index.pages.length > 0, "The bundled wiki must contain pages.");
   assert.equal(index.pageCount, index.pages.length);
   assert.equal(index.guideCount, index.pages.length);
 
   const slugs = index.pages.map((page) => page.slug);
-  assert.equal(new Set(slugs).size, slugs.length, "Published wiki slugs must be unique.");
+  assert.equal(new Set(slugs).size, slugs.length, "Bundled wiki slugs must be unique.");
   const expectedPageFiles = slugs.map((slug) => `wiki/${slug}.json`).sort();
   const actualPageFiles = files
     .map((file) => file.path)
@@ -320,6 +322,7 @@ async function verifyMachineReadableWiki(baseUrl, files) {
   assert.match(protocol.operations.search.notes[0], /static search index/);
   assert.equal(protocol.operations.read.path, "/agent/read/{slug}.json");
   assert.equal(protocol.operations.related.path, "/agent/related/{slug}.json");
+  assert.doesNotMatch(JSON.stringify(protocol.operations), /\bpublished\b/i);
 
   const searchResponse = await requestBytes(`${baseUrl}/agent/search.json`);
   assert.equal(searchResponse.response.status, 200);

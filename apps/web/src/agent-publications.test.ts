@@ -119,7 +119,7 @@ describe("static agent publication", () => {
     expect(protocol.operations.read.notes).toContain(
       "The guide body, review date, sources, links, backlinks, and related guides come from the generated corpus bundled with this site.",
     );
-    expect(protocol.operations.read.notes.join(" ")).not.toMatch(/published corpus/i);
+    expect(protocol.operations.read.notes.join(" ")).not.toMatch(/\bpublished\b/i);
     expect(protocol.operations.related.path).toBe("/agent/related/{slug}.json");
   });
 });

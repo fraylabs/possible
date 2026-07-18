@@ -15,7 +15,7 @@ const EXAMPLE_QUERIES = [
 const AGENT_PROMPT = `Use Possible as source-backed reading, not as a project planner.
 
 1. Read https://possible.sh/llms.txt and follow its static retrieval protocol.
-2. Search the published guide index locally with a short subject query.
+2. Search the bundled guide index locally with a short subject query.
 3. Read only the guides relevant to the user's question.
 4. Treat link adjacency and display order as related reading, not a complete workflow; judge any conditional sequence stated in prose against the project.
 5. Cite the guide title, review date, and sources when the retrieved context matters.
@@ -75,7 +75,7 @@ function RetrievalArticle({ example, index }: { example: RetrievalExample; index
       </section>
 
       <section className="proof-section">
-        <h3 className="proof-section-title">Published sources</h3>
+        <h3 className="proof-section-title">Cited sources</h3>
         {guide && guide.sources.length > 0 ? (
           <ol className="proof-source-list">
             {guide.sources.map((source) => {
@@ -92,7 +92,7 @@ function RetrievalArticle({ example, index }: { example: RetrievalExample; index
             })}
           </ol>
         ) : (
-          <p className="proof-empty">No sources are published for this guide.</p>
+          <p className="proof-empty">No cited sources are listed for this guide.</p>
         )}
       </section>
 
@@ -108,7 +108,7 @@ function RetrievalArticle({ example, index }: { example: RetrievalExample; index
             ))}
           </ol>
         ) : (
-          <p className="proof-empty">No authored related reading is published for this guide.</p>
+          <p className="proof-empty">No authored related reading is bundled for this guide.</p>
         )}
         <p className="proof-retrieval-boundary">
           Related guides provide context. Possible does not order them into a project workflow.
@@ -116,8 +116,8 @@ function RetrievalArticle({ example, index }: { example: RetrievalExample; index
       </section>
 
       {guide && (
-        <nav className="proof-json" aria-label={`Published data for ${guide.title}`}>
-          <h3 className="proof-section-title">Published guide data</h3>
+        <nav className="proof-json" aria-label={`Bundled data for ${guide.title}`}>
+          <h3 className="proof-section-title">Bundled guide data</h3>
           <ul className="proof-json-list">
             <li className="proof-json-item">
               <a className="proof-json-link" href={`/agent/read/${guide.slug}.json`}>Agent read JSON</a>

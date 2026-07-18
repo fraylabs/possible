@@ -20,7 +20,7 @@ describe("transparent guide retrieval example", () => {
     expect(screen.getByRole("link", { name: /Robotic arms/i })).toHaveAttribute("href", "/wiki/robotic-arms");
     expect(screen.getByRole("heading", { name: "Related reading, not ordered steps." })).toBeInTheDocument();
     expect(screen.getByText(/Possible supplied reading; it did not plan/i)).toBeInTheDocument();
-    expect(screen.queryByText(/published guide library/i)).not.toBeInTheDocument();
+    expect(document.body).not.toHaveTextContent(/\bpublished\b/i);
     expect(screen.queryByText(/route ready|execution workspace|sourced execution/i)).not.toBeInTheDocument();
   });
 });

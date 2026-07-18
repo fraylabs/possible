@@ -60,7 +60,7 @@ export function DemoPage() {
             </div>
             <p>
               The agent reduces the user&apos;s sentence to a short retrieval query. Possible ranks
-              authored guides by their published text and aliases; it does not assess the project.
+              authored guides by their bundled text and aliases; it does not assess the project.
             </p>
           </article>
 
@@ -77,7 +77,7 @@ export function DemoPage() {
                 <p>{guide.summary}</p>
                 <p className="review-note">Reviewed {guide.reviewedAt}</p>
                 <div className="guide-demo-sources">
-                  <h3>Published sources</h3>
+                  <h3>Cited sources</h3>
                   <ul>
                     {guide.sources.map((source) => (
                       <li key={source.url}>

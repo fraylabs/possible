@@ -92,7 +92,7 @@ describe("retrieval examples", () => {
     );
     expect(loadWiki).toHaveBeenCalledTimes(1);
     expect(screen.getByText("Bundled corpus examples")).toBeInTheDocument();
-    expect(screen.queryByText(/live corpus examples|published guide library/i)).not.toBeInTheDocument();
+    expect(document.body).not.toHaveTextContent(/\bpublished\b/i);
     expect(screen.queryByText(/route status|verified route|partial route/i)).not.toBeInTheDocument();
   });
 
@@ -104,6 +104,8 @@ describe("retrieval examples", () => {
 
     const prompt = screen.getByRole("textbox", { name: "Agent prompt" });
     expect((prompt as HTMLTextAreaElement).value).toContain("not as a project planner");
+    expect((prompt as HTMLTextAreaElement).value).toContain("bundled guide index");
+    expect((prompt as HTMLTextAreaElement).value).not.toMatch(/\bpublished\b/i);
     expect((prompt as HTMLTextAreaElement).value).toContain("link adjacency and display order as related reading");
     expect((prompt as HTMLTextAreaElement).value).toContain("conditional sequence stated in prose");
 
