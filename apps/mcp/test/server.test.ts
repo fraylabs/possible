@@ -82,7 +82,11 @@ interface SearchResponse {
   query: string;
   count: number;
   assessment: ReturnType<typeof assessSearchResults>;
-  results: Array<PageSummary & { matchedTerms: string[] }>;
+  results: Array<PageSummary & {
+    matchedTerms: string[];
+    kind?: WikiPage["kind"];
+    routeStatus?: WikiPage["routeStatus"];
+  }>;
 }
 
 interface ReadResponse {
@@ -238,10 +242,10 @@ describe("Possible MCP", () => {
       arguments: { query, limit: 5 },
     });
 
-    assert.deepEqual(
-      successData<SearchResponse>(response),
-      expectedSearchResponse(fixtureWiki, query, 5),
-    );
+    const data = successData<SearchResponse>(response);
+    assert.deepEqual(data, expectedSearchResponse(fixtureWiki, query, 5));
+    assert.equal(data.results[0]?.kind, "outcome");
+    assert.equal(data.assessment.status, "verified");
   });
 
   it("reports verified, partial, and no-maintained-route honestly", async () => {
@@ -260,6 +264,7 @@ describe("Possible MCP", () => {
     const relatedData = successData<SearchResponse>(relatedOnly);
     assert.equal(relatedData.assessment.status, "no-maintained-route");
     assert.ok(relatedData.results.length > 0);
+    assert.notEqual(relatedData.results[0]?.kind, "outcome");
 
     const missing = await activeClient.callTool({
       name: "search",

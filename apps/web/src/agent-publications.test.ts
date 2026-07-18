@@ -56,6 +56,42 @@ describe("static agent publication", () => {
       { field: "body", weight: 2 },
       { field: "sourceTitles", weight: 1 },
     ]);
+    expect(search.search.outcomePreference).toEqual({
+      kind: "outcome",
+      queryTerms: [
+        "achieve",
+        "accomplish",
+        "build",
+        "create",
+        "deliver",
+        "design",
+        "develop",
+        "deploy",
+        "fabricate",
+        "generate",
+        "implement",
+        "launch",
+        "make",
+        "manufacture",
+        "need",
+        "produce",
+        "publish",
+        "render",
+        "ship",
+        "want",
+        "write",
+      ],
+      queryPhrases: [
+        "help me",
+        "i am looking for",
+        "i want",
+        "i need",
+        "looking for",
+        "trying to",
+      ],
+      match: "any-normalized-term-or-phrase",
+      order: "before-text-score",
+    });
 
     const page = corpus.pages[0]!;
     const indexedPage = search.pages.find((candidate) => candidate.slug === page.slug)!;
@@ -111,6 +147,9 @@ describe("static agent publication", () => {
     expect(protocol.static).toBe(true);
     expect(Object.keys(protocol.operations)).toEqual(["search", "read", "related"]);
     expect(protocol.operations.search.notes[0]).toMatch(/static search index/);
+    expect(protocol.operations.search.notes).toContain(
+      "For an outcome-like query, rank kind: outcome pages before supporting methods, providers, concepts, and other page kinds.",
+    );
     expect(protocol.operations.search.request).toEqual({ query: null, body: null });
     expect(protocol.operations.read.path).toBe("/agent/read/{slug}.json");
     expect(protocol.operations.related.path).toBe("/agent/related/{slug}.json");

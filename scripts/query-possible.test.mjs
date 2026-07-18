@@ -24,6 +24,6 @@ test("plain outcome search and slug read work through the real stdio helper", ()
   const read = query("read", search.data.results[0].slug);
   assert.equal(read.ok, true);
   assert.equal(read.data.page.title, "Robotic arms");
-  assert.equal(read.data.page.reviewedAt, "2026-07-17");
+  assert.equal(read.data.page.reviewedAt, "2026-07-18");
   assert(read.data.page.sources.length > 0);
 });

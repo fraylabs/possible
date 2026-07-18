@@ -15,6 +15,39 @@ export interface SearchAssessment {
   partialRoutes: string[];
 }
 
+export const OUTCOME_INTENT_TERMS = [
+  "achieve",
+  "accomplish",
+  "build",
+  "create",
+  "deliver",
+  "design",
+  "develop",
+  "deploy",
+  "fabricate",
+  "generate",
+  "implement",
+  "launch",
+  "make",
+  "manufacture",
+  "need",
+  "produce",
+  "publish",
+  "render",
+  "ship",
+  "want",
+  "write",
+] as const;
+
+export const OUTCOME_INTENT_PHRASES = [
+  "help me",
+  "i am looking for",
+  "i want",
+  "i need",
+  "looking for",
+  "trying to",
+] as const;
+
 const normalize = (value: string): string =>
   value
     .normalize("NFKD")
@@ -60,6 +93,13 @@ const termsFor = (value: string): string[] => {
   return meaningfulTerms.length > 0 ? meaningfulTerms : terms;
 };
 
+export function isOutcomeLikeQuery(query: string): boolean {
+  const normalizedQuery = normalize(query);
+  const queryTerms = new Set(normalizedQuery.split(/\s+/).filter(Boolean));
+  return OUTCOME_INTENT_PHRASES.some((phrase) => normalizedQuery.includes(phrase)) ||
+    OUTCOME_INTENT_TERMS.some((term) => queryTerms.has(term));
+}
+
 const compareText = (left: string, right: string): number =>
   left < right ? -1 : left > right ? 1 : 0;
 
@@ -96,6 +136,7 @@ export function searchPages(
   const requestedTags = new Set((options.tags ?? []).map(normalize).filter(Boolean));
   const requestedCoverage = new Set((options.coverage ?? []).map(normalize).filter(Boolean));
   const limit = Math.max(0, Math.min(options.limit ?? 20, 100));
+  const outcomeLikeQuery = isOutcomeLikeQuery(query);
 
   return corpus.pages
     .filter((page) => {
@@ -126,6 +167,9 @@ export function searchPages(
     .filter((result) => result.matchedTerms.length === terms.length)
     .sort(
       (left, right) =>
+        (outcomeLikeQuery
+          ? Number(right.page.kind === "outcome") - Number(left.page.kind === "outcome")
+          : 0) ||
         right.score - left.score ||
         compareText(left.page.title, right.page.title) ||
         compareText(left.page.slug, right.page.slug),

@@ -99,6 +99,42 @@ export const wikiCorpusData: WikiCorpus = {
       ]
     },
     {
+      "slug": "actuator-transmission-sizing",
+      "title": "Actuator and transmission sizing",
+      "summary": "A requirements-led method for relating robot joint loads, speed, duty cycle, motor characteristics, transmission behavior, sensing, and thermal limits before selecting hardware.",
+      "tags": [
+        "robotics",
+        "actuation",
+        "transmission",
+        "sizing",
+        "motors"
+      ],
+      "kind": "method",
+      "coverage": [
+        "robotics",
+        "actuation",
+        "mechanical-design"
+      ],
+      "reviewedAt": "2026-07-18",
+      "sources": [
+        {
+          "title": "2.12 Introduction to Robotics: Chapter 2",
+          "url": "https://ocw.mit.edu/courses/2-12-introduction-to-robotics-fall-2005/resources/chapter2/"
+        },
+        {
+          "title": "Optimal Actuator Design",
+          "url": "https://biomimetics.mit.edu/research/1a9ba04b-d200-4743-b8fc-bf231f3231f0/"
+        }
+      ],
+      "body": "## What this makes possible\n\nA traceable first-pass actuator and transmission requirement for each joint: output torque, speed, motion range, duty cycle, sensing, inertia, thermal behavior, and relevant failure or holding cases.\n\n## A common approach\n\nStart with the arm’s payload, link inertias, reach, acceleration, gravity direction, external forces, motion profile, and environment. Convert those requirements into joint torque and speed envelopes, then account for transmission ratio, efficiency, reflected inertia, backlash, compliance, bearing and shaft loads, and thermal duty. Compare continuous and peak requirements with real motor and drive data rather than stall torque alone. MIT’s robotics material treats motor, gearbox, power, and control as a coupled drive-system problem; actuator design also exposes the tradeoff between motor size, gear ratio, torque density, and force-control behavior.\n\nKeep the result as assumptions and margins attached to the [parametric CAD master](/wiki/parametric-cad-master). Check mounting, fasteners, brakes, encoders, cable routing, and service access through [custom motor brackets](/wiki/custom-motor-brackets). Exercise the resulting inertias and limits in [MuJoCo](/wiki/mujoco), while keeping measured friction, compliance, backlash, and thermal data separate from nominal model values.\n\n## Use this when\n\nUse this method when a robot arm is being designed around a new actuator, gearbox, belt, harmonic drive, series-elastic element, or other joint transmission, or when a catalog actuator must be shown to meet a specific task envelope.\n\n## Consider another route when\n\nIf a complete commercial joint or arm already has validated ratings and the application stays within its documented envelope, use the supplier’s integration and acceptance process. Do not infer suitability from a motor’s nominal voltage, no-load speed, or stall torque alone.\n\n## Important decisions\n\nRecord the load cases, safety factors, continuous-versus-peak interpretation, duty cycle, allowable temperature, transmission efficiency and backlash assumptions, reflected inertia, holding or back-drive behavior, brake requirements, encoder location, power and drive limits, and the evidence required to replace each assumption with a measurement. A sizing sheet is not a verified actuator design and does not establish safe operation.\n\n## How to verify\n\nCheck the selected motor, drive, transmission, bearings, shafts, fasteners, and power supply against the same load cases and duty cycle. Bench-test representative joints for torque, speed, temperature, sensing, backlash, and fault behavior, then update the simulation and acceptance limits with measured values. Link the resulting interfaces to [robot control and electronics](/wiki/robot-control-electronics) before fabrication or powered motion.",
+      "links": [
+        "parametric-cad-master",
+        "custom-motor-brackets",
+        "mujoco",
+        "robot-control-electronics"
+      ]
+    },
+    {
       "slug": "art",
       "title": "Art",
       "summary": "Operational knowledge for creating visual, expressive, and time-based artifacts with a clear brief, deliberate medium, and reviewable source material.",
@@ -402,6 +438,98 @@ export const wikiCorpusData: WikiCorpus = {
       "body": "## What this makes possible\n\nDesign systems make repeated interface decisions explicit and reusable: design tokens, typography, color roles, spacing, components, interaction states, accessibility behavior, and guidance for when a pattern should not be used.\n\n## A common approach\n\nStart from the product’s recurring decisions rather than drawing a large component catalog. Define semantic tokens, establish a small set of primitives, document states and composition rules, and keep the design source aligned with the implemented components. [shadcn/ui](/wiki/shadcn-ui) is one code-owned component route for React projects; it does not remove the need for product-specific design decisions.\n\n## Use this when\n\nUse this method when several pages or products need to feel coherent, or when repeated visual changes would otherwise be copied inconsistently across screens.\n\n## Consider another route when\n\nFor a one-screen disposable experiment, a full system may cost more than it saves. Do not create abstractions before repeated behavior is understood, and do not confuse a component library with a complete design system.\n\n## Important decisions\n\nDecide who owns tokens and components, how design and code revisions are matched, which states are mandatory, how accessibility is tested, and how exceptions are recorded. Keep content, layout, behavior, and brand expression distinct enough to evolve independently.\n\n## How to verify\n\nExercise the system through representative pages and edge states, not only isolated component snapshots. Confirm token changes propagate intentionally, keyboard and contrast behavior remain valid, and the documented composition rules match the shipped implementation.",
       "links": [
         "shadcn-ui"
+      ]
+    },
+    {
+      "slug": "digital-photo-frame",
+      "title": "Digital photo frame",
+      "summary": "A local-first photo display that combines a browser-based photo experience with a kiosk device, durable image storage, and a manufacturable enclosure, while leaving the physical end-to-end route explicit.",
+      "tags": [
+        "web",
+        "device",
+        "kiosk",
+        "offline",
+        "photos",
+        "cad",
+        "manufacturing",
+        "privacy"
+      ],
+      "aliases": [
+        "digital picture frame",
+        "offline photo frame",
+        "networked photo frame"
+      ],
+      "kind": "outcome",
+      "coverage": [
+        "display-device-architecture",
+        "image-ingestion",
+        "local-storage",
+        "kiosk-offline",
+        "enclosure-cad",
+        "manufacturing",
+        "power-thermal",
+        "privacy",
+        "verification"
+      ],
+      "routeStatus": "partial",
+      "reviewedAt": "2026-07-18",
+      "sources": [
+        {
+          "title": "Raspberry Pi — How to use a Raspberry Pi in kiosk mode",
+          "url": "https://www.raspberrypi.com/tutorials/how-to-use-a-raspberry-pi-in-kiosk-mode/"
+        },
+        {
+          "title": "Raspberry Pi computer hardware documentation",
+          "url": "https://www.raspberrypi.com/documentation/computers/raspberry-pi.html"
+        },
+        {
+          "title": "Raspberry Pi display documentation",
+          "url": "https://www.raspberrypi.com/documentation/accessories/display.html"
+        },
+        {
+          "title": "W3C File API",
+          "url": "https://www.w3.org/TR/FileAPI/"
+        },
+        {
+          "title": "W3C Indexed Database API 3.0",
+          "url": "https://www.w3.org/TR/IndexedDB/"
+        },
+        {
+          "title": "W3C Service Workers",
+          "url": "https://www.w3.org/TR/service-workers/"
+        },
+        {
+          "title": "W3C Privacy Principles",
+          "url": "https://www.w3.org/TR/privacy-principles/"
+        },
+        {
+          "title": "Playwright — Service workers",
+          "url": "https://playwright.dev/docs/service-workers"
+        },
+        {
+          "title": "ISO 10303-1:2024",
+          "url": "https://www.iso.org/standard/83105.html"
+        },
+        {
+          "title": "NIST STEP File Analyzer and Viewer",
+          "url": "https://www.nist.gov/services-resources/software/step-file-analyzer-and-viewer"
+        }
+      ],
+      "body": "## What this makes possible\n\nA digital photo frame can be approached as a local-first [Web](/wiki/web) experience running on a dedicated display device: a browser application presents a slideshow, a nearby admin surface ingests images, local storage keeps the frame useful without a network, and a custom enclosure holds the display, computer, power, and cables. A Raspberry Pi with a supported display is one concrete candidate platform because its official material documents display setup, kiosk startup, power, and thermal behavior.\n\nThis is a partial route, not a verified product recipe. The corpus supports the browser, storage primitives, kiosk mechanics, CAD exchange, and verification practices below; it does not contain a tested device image, a chosen panel and controller, a completed enclosure, an electrical design, or a physical end-to-end receipt.\n\n## Candidate architecture\n\nSeparate the outcome into four contracts:\n\n1. **Display and device:** a panel and driver, a Linux-capable single-board computer, persistent boot media, power input, and a serviceable enclosure. Specify aspect ratio, native resolution, brightness, viewing angle, orientation, bezel clearance, connector placement, and whether the screen should dim or sleep.\n2. **Photo application:** a [Browser application](/wiki/browser-applications) with a slideshow route and a separate, access-controlled ingestion route. Keep the display route deterministic: it should have a known ordering, a defined transition policy, and a visible empty or error state.\n3. **Local media store:** retain image records and image bytes locally, with thumbnails or decoded dimensions available for predictable rendering. Keep the original filename, content type, orientation policy, and a content hash if deduplication or reproducible ordering matters.\n4. **Mechanical package:** a revisioned enclosure model, process-specific exports, drawings, and a fit/inspection plan. The physical package is part of [Manufacturing](/wiki/manufacturing), not an afterthought to the browser route.\n\n## Display, device, and kiosk behavior\n\nChoose the panel and computer together. The display interface, driver board, cable bend radius, available current, heat path, and access to service ports all affect the enclosure. A display that renders a browser page is not automatically suitable for continuous unattended use: test startup timing, scaling, color and brightness behavior, image retention expectations, and recovery after an abrupt power loss.\n\nThe Raspberry Pi kiosk guide demonstrates booting into a full-screen Chromium page and calls out unattended-device concerns such as exposed USB ports, SSH hardening, and SD-card corruption. Those facts establish a candidate kiosk mechanism, not a photo-frame implementation. A real route still needs a fixed local entry point, no-network startup behavior, an update and rollback path, a controlled way to exit kiosk mode, and a recovery strategy if the browser or storage fails.\n\n## Image ingestion and storage\n\nThe browser can accept user-selected files through the Web [File API](https://www.w3.org/TR/FileAPI/), which represents selected images as `File`/`Blob` data. A [Browser application](/wiki/browser-applications) can use IndexedDB for structured photo metadata and image blobs, but that API is not a separate maintained Possible capability. Use a service worker to cache the application shell, while keeping the photo library in an explicitly managed store rather than assuming that an HTTP cache is a media database.\n\nIngestion should define supported formats and sizes, EXIF orientation handling, thumbnail generation, duplicate behavior, ordering, deletion, export, and what happens when storage is full. A local network upload page or removable-media import can be added, but either creates an authentication and trust boundary. Do not imply cloud sync, multi-user accounts, durable capacity, or cross-device synchronization: no such route is maintained here.\n\n## Offline contract\n\nThe intended offline contract is narrow: after provisioning and a successful first load, the frame can boot to its local slideshow and continue showing already imported photos with no external network. Service workers provide the browser mechanism for caching application resources, and IndexedDB can hold photo records and blobs, but browser storage quotas, eviction, browser upgrades, and filesystem wear still need target-device tests.\n\nVerify at least these transitions: first provisioning online, reload with the network disconnected, cold boot with the network disconnected, image import while disconnected, storage-full behavior, interrupted writes, browser restart, and application update with rollback. The current sources do not prove that a Raspberry Pi kiosk, a selected browser version, and a chosen storage layout satisfy those transitions together.\n\n## Enclosure CAD and manufacturing\n\nModel the display aperture, bezel overlap, panel retention, board standoffs, cable exits, power entry, ventilation, service access, wall mount or stand, fasteners, and light leaks as named interfaces in a [Parametric CAD master](/wiki/parametric-cad-master). [CAD Skills (text-to-cad)](/wiki/text-to-cad), FreeCAD, or CadQuery can be selected as the modeling route; retain the native source and use [STEP solid exchange](/wiki/step-solid-exchange) for a neutral solid handoff. Use [3MF additive exchange](/wiki/3mf-additive-exchange) or [STL mesh exchange](/wiki/stl-mesh-exchange) only for a selected additive workflow, and [DXF profile exchange](/wiki/dxf-profile-exchange) for suitable flat-cut parts.\n\nBefore a quote or build, continue through [Design-for-manufacturing preflight](/wiki/design-for-manufacturing-preflight), [Custom manufactured parts](/wiki/custom-manufactured-parts), and an [Inspection plan](/wiki/inspection-plan). The required missing evidence is concrete: measured panel and board envelopes, a revisioned enclosure model and drawing, material and process choice, tolerances for the aperture and mounts, provider or slicer acceptance, a physical fit check, and inspection results. Neither a rendered enclosure nor a valid STEP export proves that a panel fits, that cables can be serviced, or that heat can escape.\n\n## Power and thermal concerns\n\nBudget the panel, computer, storage, fans, USB devices, and supply as one system. Raspberry Pi documentation gives model-specific supply guidance and describes thermal management and throttling; it also notes that peripheral current and fan power share a budget on some models. Use those documents to frame the design, then measure the selected hardware rather than copying a nominal wattage into a product claim.\n\nThe enclosure should provide a deliberate heat path, strain relief, safe cable routing, ventilation that does not admit unacceptable dust, and access for service. Record cold-start current, steady-state current, surface and SoC temperature, ambient temperature, brightness setting, and behavior during the longest intended slideshow. This page does not establish electrical safety, fire compliance, touch-safety, EMC, power-supply certification, battery operation, or an acceptable temperature margin.\n\n## Privacy boundary\n\nTreat photographs, filenames, metadata, thumbnails, and upload logs as potentially personal data. A privacy-preserving default is local-only storage, no analytics or third-party image requests, explicit import/delete/export controls, a documented retention policy, and no remote administration unless it is deliberately enabled and authenticated. W3C privacy guidance supports minimizing collection and transmission, but local storage is not encryption and a person with physical access to the boot media may still copy the library.\n\nThe missing privacy evidence is a threat model for physical access, Wi-Fi/LAN access, browser origin compromise, backups, updates, and disposal; a decision on encryption at rest; credential and key handling; retention and deletion behavior; and an accessibility review for the admin flow. Do not advertise “private” or “secure” until those decisions are implemented and tested.\n\n## Verification and completion boundary\n\nUse [Production web verification](/wiki/production-web-verification) for the browser route and preserve a receipt covering file import, orientation, ordering, deletion, slideshow looping, empty/error states, offline reload, storage-full behavior, accessibility, and the absence of unexpected network requests. Playwright’s service-worker guidance is useful for designing the offline tests, but a passing browser test is not a device or manufacturing receipt.\n\nFor the physical route, retain the CAD source, revisioned [STEP solid exchange](/wiki/step-solid-exchange), any additive or flat-profile exports, DFM result, fit photographs or measurements, power and thermal log, cold-boot/offline log, and inspection evidence. A route can be promoted from `partial` only when a named device and software revision have passed those tests and the enclosure has passed fit, serviceability, thermal, and electrical review. Until then, this page establishes a sourced composition of capabilities and an honest verification plan—not a claim that anyone can already build and operate a verified end-to-end frame from the maintained corpus.",
+      "links": [
+        "web",
+        "browser-applications",
+        "manufacturing",
+        "parametric-cad-master",
+        "text-to-cad",
+        "step-solid-exchange",
+        "3mf-additive-exchange",
+        "stl-mesh-exchange",
+        "dxf-profile-exchange",
+        "design-for-manufacturing-preflight",
+        "custom-manufactured-parts",
+        "inspection-plan",
+        "production-web-verification"
       ]
     },
     {
@@ -1083,6 +1211,84 @@ export const wikiCorpusData: WikiCorpus = {
       ]
     },
     {
+      "slug": "robot-calibration-safety-physical-verification",
+      "title": "Robot calibration, safety, and physical verification",
+      "summary": "A bounded verification method for calibrating robot geometry and frames, assessing application hazards, and measuring physical performance without confusing simulation or inspection with safe operation.",
+      "tags": [
+        "robotics",
+        "calibration",
+        "safety",
+        "verification",
+        "inspection",
+        "metrology"
+      ],
+      "kind": "method",
+      "coverage": [
+        "robotics",
+        "calibration",
+        "safety",
+        "physical-verification",
+        "inspection"
+      ],
+      "reviewedAt": "2026-07-18",
+      "sources": [
+        {
+          "title": "Tools for Robotics in SME Workcells: Challenges and Approaches for Calibration and Registration",
+          "url": "https://www.nist.gov/publications/tools-robotics-sme-workcells-challenges-and-approaches-calibration-and-registration"
+        },
+        {
+          "title": "ISO 9283:1998 - Manipulating industrial robots — Performance criteria and related test methods",
+          "url": "https://www.iso.org/standard/22244.html"
+        },
+        {
+          "title": "OSHA Technical Manual: Industrial Robot Systems and Industrial Robot System Safety",
+          "url": "https://www.osha.gov/otm/section-4-safety-hazards/chapter-4"
+        }
+      ],
+      "body": "## What this makes possible\n\nA physical evidence boundary for a robot arm: calibrated frames and joint references, a declared performance test, a documented safety and risk-assessment scope, and an acceptance record tied to the actual hardware revision.\n\n## A common approach\n\nState the task, workspace, payload, speed, environment, and accuracy or repeatability claim first. Choose a calibration model and reference frame, collect measurements with an appropriate external instrument, estimate or compensate the relevant errors, and retain uncertainty and setup conditions. NIST describes calibration and registration as measurement-driven activities rather than a single software switch. For industrial robot performance, use an applicable test method such as the criteria and related methods cataloged by ISO 9283, while recognizing that the standard’s scope and the project’s application must be checked.\n\nTreat safety as an application and integration problem. Identify hazards during programming, setup, testing, operation, maintenance, and foreseeable faults; define safeguards, limits, stop behavior, training, and authorization; and consult the applicable jurisdictional and machine-safety requirements. OSHA’s technical guidance points to risk assessment and relevant robot-system standards, but this page is not a certification or legal-compliance determination.\n\n## Use this when\n\nUse this method when a fabricated arm is expected to perform a real task, when a calibrated model will drive offline or sensor-guided motion, or when payload, accuracy, repeatability, speed, or human proximity is part of the claim.\n\n## Consider another route when\n\nIf the result is only a CAD or [MuJoCo](/wiki/mujoco) study, report it as a model or simulation and stop before powered hardware claims. If a complete commercial arm is integrated, use its documented commissioning, safety, and performance procedures rather than inventing a substitute acceptance protocol.\n\n## Important decisions\n\nDefine the reference frames, calibration target and instrument, sampling poses, uncertainty treatment, payload and thermal conditions, performance metrics, stop and safeguarding behavior, test operator, acceptance owner, and evidence retention. Manufacturing inspection can establish part dimensions through an [inspection plan](/wiki/inspection-plan), but it does not by itself establish robot kinematic accuracy, safe integration, or task performance.\n\n## How to verify\n\nRun calibration and registration on the actual assembled revision, then measure the declared performance under representative loads and operating conditions. Preserve raw measurements, transformed results, uncertainty or tolerances, safety/risk-assessment records, stop-test results, inspection reports, and the exact software, firmware, and configuration revisions. Only claim the tested envelope; untested payloads, speeds, environments, and human-interaction modes remain evidence gaps.",
+      "links": [
+        "mujoco",
+        "inspection-plan"
+      ]
+    },
+    {
+      "slug": "robot-control-electronics",
+      "title": "Robot control and electronics",
+      "summary": "The control, sensing, power, communications, limits, and fault-handling boundary that connects robot joints to a testable hardware system without pretending to be a universal electronics recipe.",
+      "tags": [
+        "robotics",
+        "controls",
+        "electronics",
+        "embedded",
+        "hardware-integration"
+      ],
+      "kind": "method",
+      "coverage": [
+        "robotics",
+        "controls",
+        "electronics",
+        "hardware-integration"
+      ],
+      "reviewedAt": "2026-07-18",
+      "sources": [
+        {
+          "title": "ros2_control hardware components",
+          "url": "https://docs.ros.org/en/rolling/p/hardware_interface/doc/hardware_components_userdoc.html"
+        },
+        {
+          "title": "Controller Manager",
+          "url": "https://docs.ros.org/en/ros2_packages/iron/api/controller_manager/doc/userdoc.html"
+        }
+      ],
+      "body": "## What this makes possible\n\nA written control-system boundary for a robot arm: what each actuator and sensor exposes, how commands and state are exchanged, what limits and timing apply, and how power, communications, watchdogs, and faults are handled.\n\n## A common approach\n\nDefine the joint state and command interfaces before choosing boards or drivers. `ros2_control` documents hardware components as actuator, sensor, or system abstractions and requires the controlled joints to agree with the robot description; its controller manager coordinates hardware access, controller lifecycle, and the update loop. Use that kind of explicit contract whether the implementation uses ROS 2, a fieldbus, a microcontroller, or a custom stack.\n\nSeparate simulation interfaces from physical interfaces. Connect [MuJoCo](/wiki/mujoco) to the same named joints and limits where practical, but specify what simulation omits: encoder quantization, latency, current limits, thermal derating, cable or power faults, saturation, backlash, and emergency-stop behavior. Use [actuator and transmission sizing](/wiki/actuator-transmission-sizing) to provide the physical limits and [parametric CAD master](/wiki/parametric-cad-master) to keep connector, mounting, and cable-clearance interfaces revisioned.\n\n## Use this when\n\nUse this method when a custom arm must move under closed-loop control, expose telemetry, coordinate multiple joints, or transition from simulation to powered hardware.\n\n## Consider another route when\n\nIf a complete commercial arm and controller are being used inside their documented operating and integration envelope, focus on the vendor’s configuration, safety, and acceptance evidence. A software-only kinematic demo does not need a physical control-electronics route, but it must not be described as a working arm.\n\n## Important decisions\n\nRecord command and state interfaces, sensor placement, calibration and homing behavior, update rates and latency, trajectory and effort limits, power domains, grounding and communications, startup and shutdown states, watchdogs, fault containment, manual or teach modes, emergency stop, and who is allowed to energize motion. The source material documents framework contracts; it does not select a safe board, wiring topology, drive, or protective circuit for a particular arm.\n\n## How to verify\n\nTest the interface contract without motion, then test one joint at a time with current, speed, temperature, limit, watchdog, and stop protections active. Exercise communication loss, sensor disagreement, saturation, restart, and power removal. Compare commanded and measured motion under the intended load, and feed the evidence into [robot calibration, safety, and physical verification](/wiki/robot-calibration-safety-physical-verification) before claiming a physical control route.",
+      "links": [
+        "mujoco",
+        "actuator-transmission-sizing",
+        "parametric-cad-master",
+        "robot-calibration-safety-physical-verification"
+      ]
+    },
+    {
       "slug": "robotic-arms",
       "title": "Robotic arms",
       "summary": "Articulated robotic arm outcomes combining work-envelope and payload requirements, mechanism architecture, actuators, parametric CAD, simulation, fabrication, controls, calibration, safety, and physical tests.",
@@ -1092,20 +1298,56 @@ export const wikiCorpusData: WikiCorpus = {
         "manipulator",
         "mechanism"
       ],
-      "reviewedAt": "2026-07-17",
+      "aliases": [
+        "robot arm",
+        "articulated robot arm",
+        "robotic manipulator"
+      ],
+      "kind": "outcome",
+      "coverage": [
+        "mechanism",
+        "actuation",
+        "simulation",
+        "manufacturing",
+        "controls",
+        "calibration",
+        "safety",
+        "inspection"
+      ],
+      "routeStatus": "partial",
+      "reviewedAt": "2026-07-18",
       "sources": [
         {
           "title": "MuJoCo overview",
           "url": "https://mujoco.readthedocs.io/en/stable/overview.html"
+        },
+        {
+          "title": "ros2_control hardware components",
+          "url": "https://docs.ros.org/en/rolling/p/hardware_interface/doc/hardware_components_userdoc.html"
+        },
+        {
+          "title": "Tools for Robotics in SME Workcells: Challenges and Approaches for Calibration and Registration",
+          "url": "https://www.nist.gov/publications/tools-robotics-sme-workcells-challenges-and-approaches-calibration-and-registration"
+        },
+        {
+          "title": "OSHA Technical Manual: Industrial Robot Systems and Industrial Robot System Safety",
+          "url": "https://www.osha.gov/otm/section-4-safety-hazards/chapter-4"
         }
       ],
-      "body": "## What this makes possible\n\nThis page covers articulated arm outcomes that have to connect work-envelope and payload requirements with mechanism architecture, actuators, CAD, simulation, fabrication, controls, calibration, safety, and physical tests.\n\n## A common approach\n\nStart from measurable payload, reach, repeatability, environment, budget, and manufacturing constraints. Reuse verified CAD, simulation, and custom-part knowledge instead of rediscovering each discipline independently.\n\n## Use this when\n\nUse this route when the outcome is an articulated manipulator or robot arm and the mechanical design, simulation, fabrication, and physical verification all need to connect.\n\n## Consider another route when\n\nIf a qualified commercial arm already satisfies the outcome, custom mechanism development is unnecessary. When only one mounting interface is being designed, continue with [Custom motor brackets](/wiki/custom-motor-brackets).\n\n## Important decisions\n\nRobotic arms compose multiple custom parts and purchased components under [Custom manufactured parts](/wiki/custom-manufactured-parts). [Parametric CAD master](/wiki/parametric-cad-master) preserves interfaces and design variants across the mechanism, while [CAD Skills (text-to-cad)](/wiki/text-to-cad) is one open-source agent workflow for producing and inspecting those artifacts. [MuJoCo](/wiki/mujoco) remains relevant because it can test articulated dynamics and control assumptions before fabrication.",
+      "body": "## What this makes possible\n\nThis page covers articulated arm outcomes that have to connect work-envelope and payload requirements with mechanism architecture, actuators, CAD, simulation, fabrication, controls, calibration, safety, and physical tests. It is a maintained route map, not a complete design recipe.\n\n## A common approach\n\nStart from measurable payload, reach, repeatability, environment, budget, and manufacturing constraints. Size the [actuator and transmission](/wiki/actuator-transmission-sizing) against joint loads and duty cycle, keep the [parametric CAD master](/wiki/parametric-cad-master) as the source of truth, and use [MuJoCo](/wiki/mujoco) to exercise articulated motion and contact assumptions before fabrication. Then follow the [Manufacturing](/wiki/manufacturing) branch: choose a [manufacturing process](/wiki/manufacturing-process-selection), run a [design-for-manufacturing preflight](/wiki/design-for-manufacturing-preflight), and preserve the [custom manufactured parts](/wiki/custom-manufactured-parts) package.\n\n## Use this when\n\nUse this route when the outcome is an articulated manipulator or robot arm and the mechanical design, simulation, fabrication, control system, and physical verification all need to connect.\n\n## Consider another route when\n\nIf a qualified commercial arm already satisfies the outcome, custom mechanism development is unnecessary. When only one mounting interface is being designed, continue with [Custom motor brackets](/wiki/custom-motor-brackets).\n\n## Important decisions\n\nRobotic arms compose multiple custom parts and purchased components under [Custom manufactured parts](/wiki/custom-manufactured-parts). [Parametric CAD master](/wiki/parametric-cad-master) preserves interfaces and design variants across the mechanism, while [CAD Skills (text-to-cad)](/wiki/text-to-cad) is one open-source agent workflow for producing and inspecting those artifacts. [MuJoCo](/wiki/mujoco) can test articulated dynamics and control assumptions before fabrication, but it does not prove material strength, controller behavior, safety, or physical accuracy.\n\nThe control and power boundary remains a separate capability: define hardware interfaces, feedback, limits, timing, power, fault handling, and the controller architecture in [Robot control and electronics](/wiki/robot-control-electronics). The physical boundary is also separate: [Robot calibration, safety, and physical verification](/wiki/robot-calibration-safety-physical-verification) covers measurement, risk assessment, and acceptance evidence. [Inspection plan](/wiki/inspection-plan) supplies the manufacturing acceptance layer.\n\n## Current coverage and gaps\n\nThe route currently covers the handoff between mechanism requirements, editable CAD, simulation, process selection, custom fabrication, controls architecture, calibration, safety, and inspection. It does not establish a specific actuator bill of materials, transmission design, electronics schematic, safety certification, calibrated robot model, or demonstrated payload and repeatability. Those remain project-specific evidence gaps.\n\n## How to verify\n\nDo not call the arm complete from a CAD file, simulation, quote, or successful controller startup alone. Retain the requirement set, revisioned CAD and manufacturing package, actuator and control assumptions, simulation inputs, measured calibration data, safety/risk assessment, inspection results, and physical task tests. Mark the route verified only when those records support the claimed payload, reach, repeatability, operating environment, and safety scope.",
       "links": [
-        "custom-motor-brackets",
-        "custom-manufactured-parts",
+        "actuator-transmission-sizing",
         "parametric-cad-master",
+        "mujoco",
+        "manufacturing",
+        "manufacturing-process-selection",
+        "design-for-manufacturing-preflight",
+        "custom-manufactured-parts",
+        "custom-motor-brackets",
         "text-to-cad",
-        "mujoco"
+        "robot-control-electronics",
+        "robot-calibration-safety-physical-verification",
+        "inspection-plan"
       ]
     },
     {

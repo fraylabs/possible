@@ -7,6 +7,7 @@ import {
   getRelatedPages,
   loadWiki,
   assessSearchResults,
+  isOutcomeLikeQuery,
   searchPages,
 } from "../dist/index.js";
 import { wikiCorpusData } from "../dist/data.js";
@@ -52,6 +53,35 @@ const corpus = {
   ],
 };
 
+const outcomeFirstCorpus = {
+  pages: [
+    {
+      slug: "robot-arm",
+      title: "Robot arm",
+      summary: "A complete route for a robot arm.",
+      body: "The route can build a robot arm.",
+      tags: ["robotics"],
+      aliases: ["build a robot arm"],
+      kind: "outcome",
+      routeStatus: "verified",
+      reviewedAt: "2026-07-18",
+      sources: [{ title: "Robot arm route", url: "https://example.com/robot-arm" }],
+      links: ["build-robot-arm-method"],
+    },
+    {
+      slug: "build-robot-arm-method",
+      title: "Build a robot arm method",
+      summary: "A method to build a robot arm.",
+      body: "Assemble a robot arm with this build method.",
+      tags: ["build", "robot", "arm"],
+      kind: "method",
+      reviewedAt: "2026-07-18",
+      sources: [{ title: "Build robot arm method", url: "https://example.com/robot-arm-method" }],
+      links: [],
+    },
+  ],
+};
+
 test("loadWiki isolates callers from the browser-safe canonical export", async () => {
   const first = await loadWiki();
   const canonicalLength = wikiCorpusData.pages.length;
@@ -75,6 +105,35 @@ test("searchPages is deterministic, weighted, filterable, and bounded", () => {
   assert.equal(searchPages(corpus, "website", { tags: ["web"], limit: 1 }).length, 1);
   assert.deepEqual(searchPages(corpus, "  "), []);
   assert.deepEqual(searchPages(corpus, "website", { limit: 0 }), []);
+});
+
+test("outcome-like searches prefer an outcome over a stronger supporting method match", () => {
+  assert.equal(isOutcomeLikeQuery("I want to build a robot arm"), true);
+  const results = searchPages(outcomeFirstCorpus, "I want to build a robot arm", { limit: 1 });
+
+  assert.equal(results[0]?.page.slug, "robot-arm");
+  assert.deepEqual(assessSearchResults(results), {
+    status: "verified",
+    reason: "Possible found an explicitly verified outcome route.",
+    verifiedRoutes: ["robot-arm"],
+    partialRoutes: [],
+  });
+});
+
+test("subject searches are not classified as outcome-like", () => {
+  assert.equal(isOutcomeLikeQuery("robot arm"), false);
+});
+
+test("a related method never becomes a verified route", () => {
+  const results = searchPages(outcomeFirstCorpus, "assemble a robot arm");
+
+  assert.deepEqual(results.map((result) => result.page.slug), ["build-robot-arm-method"]);
+  assert.deepEqual(assessSearchResults(results), {
+    status: "no-maintained-route",
+    reason: "Possible found related knowledge, but no maintained outcome route for this query.",
+    verifiedRoutes: [],
+    partialRoutes: [],
+  });
 });
 
 test("searchPages routes through explicit aliases, kind, and coverage", () => {

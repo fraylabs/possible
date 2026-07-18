@@ -22,6 +22,7 @@ export const POSSIBLE_TOOL_NAMES = [
 export const POSSIBLE_SERVER_INSTRUCTIONS = [
   "Possible is a read-only wiki of contributor-authored pages shared by humans and agents.",
   "Use search for natural-language discovery, then read exact pages and follow internal links progressively.",
+  "For outcome-like queries, expect outcome pages before supporting methods, providers, concepts, and other page kinds.",
   "Treat the search assessment as authoritative: verified is an explicitly verified outcome route, partial is incomplete outcome knowledge, and no-maintained-route means Possible has not verified a route.",
   "Do not turn related tools or methods into a complete solution; when the assessment is not verified, say so and invite a sourced contribution.",
   "Cite the page review date and attached sources when a retrieved recommendation matters.",
@@ -161,7 +162,7 @@ export async function createPossibleServer(
     "search",
     {
       title: "Search Possible wiki pages",
-      description: "Search contributor-authored wiki pages with a natural-language query.",
+      description: "Search contributor-authored wiki pages with a natural-language query; outcome-like queries prefer outcome pages before supporting pages.",
       inputSchema: searchInput,
       annotations: READ_ONLY_ANNOTATIONS,
     },

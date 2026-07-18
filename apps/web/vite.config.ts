@@ -93,6 +93,34 @@ export const wikiPublications = (): Plugin => ({
         "",
       ].join("\n"),
     });
+
+    this.emitFile({
+      type: "asset",
+      fileName: "robots.txt",
+      source: [
+        "User-agent: *",
+        "Allow: /",
+        "Sitemap: https://possible.sh/sitemap.xml",
+        "",
+      ].join("\n"),
+    });
+
+    const sitemapUrls = [
+      "https://possible.sh/",
+      "https://possible.sh/docs",
+      ...wikiCorpusData.pages.map((page) => `https://possible.sh/wiki/${page.slug}`),
+    ];
+    this.emitFile({
+      type: "asset",
+      fileName: "sitemap.xml",
+      source: [
+        '<?xml version="1.0" encoding="UTF-8"?>',
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+        ...sitemapUrls.map((url) => `  <url><loc>${url}</loc></url>`),
+        "</urlset>",
+        "",
+      ].join("\n"),
+    });
   },
 });
 

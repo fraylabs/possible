@@ -18,6 +18,7 @@ const contentTypes = new Map([
   [".json", "application/json; charset=utf-8"],
   [".map", "application/json; charset=utf-8"],
   [".txt", "text/plain; charset=utf-8"],
+  [".xml", "application/xml; charset=utf-8"],
 ]);
 
 export async function assertRealArtifactDirectory(directory, { allowMissing = false } = {}) {
@@ -216,6 +217,8 @@ async function verifyNotFound(url, label) {
 
 const machineReadablePublicationFile = (path) =>
   path === "llms.txt"
+  || path === "robots.txt"
+  || path === "sitemap.xml"
   || (path.startsWith("wiki/") && path.endsWith(".json"))
   || path === "agent/protocol.json"
   || path === "agent/search.json"
@@ -230,6 +233,13 @@ async function verifyMachineReadableWiki(baseUrl, files) {
   const discoveryText = discovery.bytes.toString("utf8");
   assert.match(discoveryText, /https:\/\/possible\.sh\/agent\/protocol\.json/);
   assert.match(discoveryText, /https:\/\/possible\.sh\/agent\/search\.json/);
+
+  const robots = await requestBytes(`${baseUrl}/robots.txt`);
+  assert.match(robots.bytes.toString("utf8"), /^User-agent: \*\nAllow: \/\nSitemap: https:\/\/possible\.sh\/sitemap\.xml\n$/);
+
+  const sitemap = await requestBytes(`${baseUrl}/sitemap.xml`);
+  assert.match(sitemap.bytes.toString("utf8"), /<urlset xmlns="http:\/\/www\.sitemaps\.org\/schemas\/sitemap\/0\.9">/);
+  assert.match(sitemap.bytes.toString("utf8"), /https:\/\/possible\.sh\/wiki\/digital-photo-frame/);
   assert.match(discoveryText, /https:\/\/possible\.sh\/agent\/read\/\{slug\}\.json/);
   assert.match(discoveryText, /https:\/\/possible\.sh\/agent\/related\/\{slug\}\.json/);
   assert.match(discoveryText, /https:\/\/possible\.sh\/wiki\/index\.json/);

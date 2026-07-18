@@ -1,6 +1,8 @@
 import {
   getBacklinks,
   getRelatedPages,
+  OUTCOME_INTENT_PHRASES,
+  OUTCOME_INTENT_TERMS,
   type WikiCorpus,
   type WikiPage,
 } from "@possible/knowledge";
@@ -112,6 +114,13 @@ export interface AgentSearchIndex {
       field: string;
       weight: number;
     }[];
+    outcomePreference: {
+      kind: "outcome";
+      queryTerms: readonly string[];
+      queryPhrases: readonly string[];
+      match: "any-normalized-term-or-phrase";
+      order: "before-text-score";
+    };
     phraseBonus: 20;
     defaultLimit: 20;
     maximumLimit: 100;
@@ -222,6 +231,13 @@ export function buildAgentSearchIndex(corpus: WikiCorpus): AgentSearchIndex {
         { field: "body", weight: 2 },
         { field: "sourceTitles", weight: 1 },
       ],
+      outcomePreference: {
+        kind: "outcome",
+        queryTerms: OUTCOME_INTENT_TERMS,
+        queryPhrases: OUTCOME_INTENT_PHRASES,
+        match: "any-normalized-term-or-phrase",
+        order: "before-text-score",
+      },
       phraseBonus: 20,
       defaultLimit: 20,
       maximumLimit: 100,
@@ -293,6 +309,7 @@ export function buildAgentProtocol(): AgentProtocolDocument {
           "This is a static search index; query parameters are not evaluated by the deployment.",
           "Normalize and rank locally using the search configuration and fields in the response.",
           "Require every meaningful query term to match, then apply the documented weights and limit.",
+          "For an outcome-like query, rank kind: outcome pages before supporting methods, providers, concepts, and other page kinds.",
           "Treat aliases as contributor-authored vocabulary, not generated synonyms.",
           "Report no-maintained-route when no exact or authored route is supported by the retrieved pages; do not turn similarity into a claim.",
         ],

@@ -6,6 +6,39 @@ import type {
 } from "@possible/knowledge";
 import { testWikiCorpus } from "./knowledge-data";
 
+export const OUTCOME_INTENT_TERMS = [
+  "achieve",
+  "accomplish",
+  "build",
+  "create",
+  "deliver",
+  "design",
+  "develop",
+  "deploy",
+  "fabricate",
+  "generate",
+  "implement",
+  "launch",
+  "make",
+  "manufacture",
+  "need",
+  "produce",
+  "publish",
+  "render",
+  "ship",
+  "want",
+  "write",
+] as const;
+
+export const OUTCOME_INTENT_PHRASES = [
+  "help me",
+  "i am looking for",
+  "i want",
+  "i need",
+  "looking for",
+  "trying to",
+] as const;
+
 const normalize = (value: string): string =>
   value
     .normalize("NFKD")
