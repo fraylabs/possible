@@ -137,7 +137,7 @@ h1[tabindex="-1"]:focus {
 }
 
 .explore-panel.is-expanded {
-  width: min(620px, 52vw);
+  width: min(820px, 68vw);
 }
 
 .brand-reset {
