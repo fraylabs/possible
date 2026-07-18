@@ -297,3 +297,45 @@ Read mode, history, mobile behavior, keyboard shortcuts, and accessibility.
 The complete verifier also passed the canonical knowledge, MCP, agent
 retrieval, build, negative-route, and exact-artifact checks. The existing
 49-page corpus and agent-facing contract are unchanged by the visual layer.
+
+## 2026-07-18 — Obsidian-style knowledge graph
+
+This release replaces the staged card diagram with a dense, explorable map of
+the actual wiki. All 49 sourced pages appear as nodes, and the 146 authored
+internal links determine their relationships. A deterministic force-settled
+layout clusters pages under their top-level fields without creating a second
+ontology: Web and Manufacturing remain sibling folder-derived groups.
+
+Nodes are compact colored points with progressively disclosed labels. Hover or
+keyboard focus isolates a page and its neighbors; selecting a node opens that
+page. The graph supports drag-to-pan, scroll or button zoom, and viewport reset.
+The local page graph uses the same interaction language. Three.js supplies
+subtle depth, link lines, and node glow while semantic HTML supplies every
+label and control; SVG links and a still reduced-motion scene remain available
+as fallbacks.
+
+### Delivery identity
+
+- Public source commit:
+  `abb167b21db40edb40f5cace80ee3e6b0bcb1ba7`
+- Public branch: `fraylabs/possible` `main`
+- Vercel deployment: `dpl_32yTCyQFJwPkfxEC2cuGVGQRSwK1`
+- Deployment URL: `https://possible-bmo52z2rt-brainthrust.vercel.app`
+- State: production / Ready on 2026-07-18 Asia/Singapore
+- Aliases: `https://possible.sh`, `https://www.possible.sh`, and the existing
+  Vercel project aliases
+
+### Exact live artifact receipt
+
+A clean isolated checkout passed `npm run check` and recorded a 54-file static
+artifact totaling 1,339,892 bytes with aggregate SHA-256
+`f0800e14a7c43209a44ec1e0d34e89c3afdb7a2f0018c22b9450c3344a6f1e7b`.
+Independent HTTPS reads matched all 54 paths, byte counts, and hashes on both
+custom domains with zero mismatches.
+
+The web suite now includes 13 tests covering complete graph projection,
+deterministic bounded layout, zoom/reset controls, field and page selection,
+local graph isolation, search, Read mode, history, mobile behavior, keyboard
+shortcuts, and accessible semantics. The canonical knowledge, MCP, agent
+retrieval, build, negative-route, and artifact verifiers also passed. Existing
+manufacturing drafts in the working copy were excluded from the release.
