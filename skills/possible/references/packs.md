@@ -1,10 +1,12 @@
 # Possible pack catalog
 
-Use this bundled snapshot when the Possible MCP tools are unavailable. Show the relevant source list and reviewed revisions before asking the user to proceed.
+Use this bundled snapshot when the Possible MCP tools are unavailable. Link the recommended pack's public page during the recommendation; disclose its relevant source list and reviewed revisions before installing it.
 
 ## Hardware Launch
 
 Slug: `hardware-launch`
+
+Public page: `https://possible.sh/packs/hardware-launch`
 
 Use for a physical-product idea or prototype that needs one coherent launch presentation.
 
@@ -39,6 +41,8 @@ Never imply manufacturing readiness, physical validation, certification, or cust
 
 Slug: `software-launch`
 
+Public page: `https://possible.sh/packs/software-launch`
+
 Use for an existing software idea or repository that needs a coherent product release and launch presentation.
 
 Outputs: production product, launch site, demo film, deployment plan, evidence report.
@@ -70,6 +74,8 @@ Never imply demand, uptime, security, performance, or production readiness. Depl
 ## Open-Source Release
 
 Slug: `open-source-release`
+
+Public page: `https://possible.sh/packs/open-source-release`
 
 Use for an existing repository that needs a trustworthy, usable release package without publishing it.
 
