@@ -11,6 +11,8 @@ const cleanDemoDirectories = new Set([
   "/demo/still/hardware",
   "/demo/still/evidence",
   "/demo/still/verification",
+  "/demo/three/product",
+  "/demo/three/site",
 ]);
 const rewriteCleanDemoRoute = (url: string | undefined) => {
   if (!url) return url;

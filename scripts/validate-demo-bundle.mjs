@@ -64,4 +64,82 @@ const events = JSON.parse(eventsSource);
 for (const event of events) await requirePath(event.evidence.replace(/^\.\//, ""));
 
 if (failures.length) throw new Error(`Still demo validation failed:\n- ${failures.join("\n- ")}`);
-console.log("Still demo presentation and artifact routes are complete.");
+
+const threeRoot = path.join(repository, "apps/web/public/demo/three");
+const releaseRoot = path.join(repository, "apps/web/public/demo/tiny-slug");
+
+async function requireExamplePath(exampleRoot, relative, label) {
+  const target = path.join(exampleRoot, relative);
+  try {
+    return await stat(target);
+  } catch {
+    failures.push(`Missing ${label} path: ${relative}`);
+    return null;
+  }
+}
+
+for (const route of ["/demo/three/product", "/demo/three/site"]) {
+  if (!viteConfig.includes(`"${route}"`)) failures.push(`Vite must serve ${route}/ before the SPA fallback`);
+}
+
+for (const relative of [
+  "product/index.html",
+  "site/index.html",
+  "film/three-demo.mp4",
+  "film/stills/04-done.png",
+  ".possible/outcome-brief.md",
+  "evidence/product-test-receipt.md",
+  "evidence/site-test-receipt.md",
+  "evidence/film-render-receipt.md",
+  "evidence/final-verification.md",
+  "evidence/failed-review-01/README.md",
+  "evidence/integration-repairs.md",
+  "evidence/runtime/integrated-verifier.json",
+  "release/release-plan.md",
+  "CODEX-THREAD.md",
+]) await requireExamplePath(threeRoot, relative, "Software Launch demo");
+
+for (const directory of ["product", "site"]) {
+  const html = await readFile(path.join(threeRoot, directory, "index.html"), "utf8");
+  if (!html.includes('src="./assets/') || !html.includes('href="./assets/')) {
+    failures.push(`Software Launch ${directory} build must use nested-route-safe relative assets`);
+  }
+}
+
+const film = await requireExamplePath(threeRoot, "film/three-demo.mp4", "Software Launch demo");
+if (film && film.size < 1_000_000) failures.push("Software Launch film is unexpectedly small");
+
+const integratedReceipt = JSON.parse(await readFile(path.join(threeRoot, "evidence/runtime/integrated-verifier.json"), "utf8"));
+if (integratedReceipt.result !== "passed") failures.push("Software Launch integrated verifier did not pass");
+const finalVerification = await readFile(path.join(threeRoot, "evidence/final-verification.md"), "utf8");
+if (!/L0[^\n]*L8|L0.L8/s.test(finalVerification) || !/pass|ready/i.test(finalVerification)) {
+  failures.push("Software Launch final verification does not record an L0–L8 passing decision");
+}
+
+for (const relative of [
+  "index.js",
+  "index.d.ts",
+  "index.test.js",
+  "package.json",
+  "README.md",
+  ".github/workflows/ci.yml",
+  ".possible/outcome-receipt.md",
+  "release/security-review.md",
+  "CODEX-THREAD.md",
+]) await requireExamplePath(releaseRoot, relative, "Open-Source Release demo");
+
+const packageJson = JSON.parse(await readFile(path.join(releaseRoot, "package.json"), "utf8"));
+if (packageJson.name !== "tiny-slug" || packageJson.type !== "module") {
+  failures.push("Open-Source Release package contract is not the verified tiny-slug ESM package");
+}
+
+const publicTranscripts = await Promise.all([
+  readFile(path.join(threeRoot, "CODEX-THREAD.md"), "utf8"),
+  readFile(path.join(releaseRoot, "CODEX-THREAD.md"), "utf8"),
+]);
+if (publicTranscripts.some((source) => /\/Users\/|\/private\/tmp|\/tmp\//.test(source))) {
+  failures.push("A public example transcript leaks a local filesystem path");
+}
+
+if (failures.length) throw new Error(`Demo bundle validation failed:\n- ${failures.join("\n- ")}`);
+console.log("Hardware, Software, and Open-Source demo presentations and artifact routes are complete.");

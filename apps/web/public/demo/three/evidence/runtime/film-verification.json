@@ -1,0 +1,60 @@
+{
+  "checked_at_utc": "2026-07-18T21:00:55.909Z",
+  "result": "passed",
+  "video": {
+    "path": "film/out/three-demo.mp4",
+    "codec": "h264",
+    "width": 1920,
+    "height": 1080,
+    "fps": "30/1",
+    "frames": 660,
+    "container_duration_seconds": 22.058667,
+    "size": 2915965,
+    "sha256": "cfe5453a9adda811d950fadbb3913537f8cfb1a2acdd86e49a9d990a61ee7824",
+    "full_decode": "passed"
+  },
+  "source_sha256": "c544a3f60a63aa9266ddc7ba21e5bcdca174cff887690a5219e13875562a51f6",
+  "stills": [
+    {
+      "name": "01-overload.png",
+      "size": 152161,
+      "sha256": "dcb94880ccf1eeb50862c088a20469a65ad757a9910a626bc76dda3d1e2d365c"
+    },
+    {
+      "name": "02-choose.png",
+      "size": 145571,
+      "sha256": "231b8ea7bc7fcb023d5cc56ebee20deb0da76cfa0739b262d69de4e1e036434b"
+    },
+    {
+      "name": "03-complete.png",
+      "size": 149541,
+      "sha256": "7a9c84a5849b3be14d1878537f39c2c1d16cca15754edc144fd67f73a06ab4d3"
+    },
+    {
+      "name": "03b-product-closed.png",
+      "size": 150611,
+      "sha256": "d21428ca66f208455163ae2a92752c2e55e8ef77cc27e2916c8dba726235f784"
+    },
+    {
+      "name": "04-done.png",
+      "size": 95370,
+      "sha256": "82e46177810174a317820dc9407a36194e9f5159137af88ab0d7da683a9d3049"
+    },
+    {
+      "name": "05-transition-overload-to-choose.png",
+      "size": 86656,
+      "sha256": "8239981086e694f0f4994fe5fbf817e5a2b389a899d546dd821f960482a26346"
+    },
+    {
+      "name": "06-transition-choose-to-complete.png",
+      "size": 104995,
+      "sha256": "dbdfdf950c2418f465b1d1f2e5df0ad6352a0bb329934f63bf0f199d435b2cfa"
+    },
+    {
+      "name": "07-transition-complete-to-done.png",
+      "size": 54639,
+      "sha256": "1799ff95742f6bd9492c9db1dd2da0a1f389b70cc8ce8083d3cdb33432656cab"
+    }
+  ],
+  "visual_inspection": "See film/RENDER-RECEIPT.md and fresh reviewer receipt."
+}

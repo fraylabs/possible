@@ -1,0 +1,35 @@
+{
+  "checked_at_utc": "2026-07-18T21:00:21.265225+00:00",
+  "browser": "chromium",
+  "browser_version": "149.0.7827.55",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "steps": [
+    "started from empty localStorage",
+    "added exactly three; fourth composer was absent at capacity",
+    "completed all three and reached the conclusive closed state",
+    "reloaded and retained all text plus completion state",
+    "returned one completed commitment to incomplete",
+    "confirmed removal and reused the freed third line"
+  ],
+  "done_screenshot_state": {
+    "role": "status",
+    "aria_live": "polite",
+    "opacity": 1,
+    "transform": "matrix(1, 0, 0, 1, 0, 0)",
+    "visibility": "visible",
+    "active_animations": 0,
+    "completed_controls": 3,
+    "capacity_text": "Day closed",
+    "message": "Docket closed.Nothing else is owed today."
+  },
+  "storage_key": "three:today:v1",
+  "final_item_count": 3,
+  "request_count": 42,
+  "external_requests": [],
+  "console_errors": [],
+  "page_errors": [],
+  "result": "passed"
+}

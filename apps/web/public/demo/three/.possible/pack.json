@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "pack": {
+    "name": "Software Launch",
+    "slug": "software-launch",
+    "public_page": "https://possible.sh/packs/software-launch",
+    "catalog_source": ".agents/skills/possible/references/packs.md",
+    "selected_on": "2026-07-19",
+    "selection_reason": "The confirmed outcome combines a real browser product, launch site, demo film, release plan, and fresh evidence-based review."
+  },
+  "outputs": [
+    "production product",
+    "launch site",
+    "demo film",
+    "deployment and release plan",
+    "evidence report"
+  ],
+  "workstreams": [
+    {
+      "name": "Production product",
+      "skills": ["vercel-react-best-practices"],
+      "owns": ["product/", "product test receipt"]
+    },
+    {
+      "name": "Launch site",
+      "skills": ["frontend-design"],
+      "owns": ["site/", "launch narrative"]
+    },
+    {
+      "name": "Demo film",
+      "skills": ["remotion-best-practices"],
+      "owns": ["film/", "rendered preview"]
+    },
+    {
+      "name": "Release readiness",
+      "skills": ["web-design-guidelines", "deploy-to-vercel"],
+      "owns": ["release/", "release plan"]
+    },
+    {
+      "name": "Fresh review",
+      "skills": ["webapp-testing", "web-design-guidelines"],
+      "owns": ["integrated verification receipt"]
+    }
+  ],
+  "sources": [
+    {
+      "repository": "anthropics/skills",
+      "skills": ["frontend-design", "webapp-testing"],
+      "reviewed_revision": "fa0fa64bdc967915dc8399e803be67759e1e62b8"
+    },
+    {
+      "repository": "vercel-labs/agent-skills",
+      "skills": ["vercel-react-best-practices", "web-design-guidelines", "deploy-to-vercel"],
+      "reviewed_revision": "f8a72b9603728bb92a217a879b7e62e43ad76c81"
+    },
+    {
+      "repository": "remotion-dev/skills",
+      "skills": ["remotion-best-practices"],
+      "reviewed_revision": "ab22f5fa89962ec943eaa18797cbf38c9d727743"
+    }
+  ],
+  "install_commands": [
+    "npx skills@1.5.19 add anthropics/skills --skill frontend-design --skill webapp-testing --agent codex",
+    "npx skills@1.5.19 add vercel-labs/agent-skills --skill vercel-react-best-practices --skill web-design-guidelines --skill deploy-to-vercel --agent codex",
+    "npx skills@1.5.19 add remotion-dev/skills --skill remotion-best-practices --agent codex"
+  ],
+  "external_actions_authorized": false
+}
+

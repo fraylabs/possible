@@ -63,7 +63,7 @@ describe("Possible", () => {
     expect(screen.getByRole("link", { name: /EXAMPLE PACKHardware LaunchView recipe/i })).toHaveAttribute("href", "/packs/hardware-launch");
     expect(screen.getByText(/WHAT.*YES.*AUTHORIZES/i)).toBeInTheDocument();
     expect(screen.getByText(/Deployment, publishing, spending, outreach, fabrication/i)).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /complete recorded Hardware Launch run/i })).toHaveAttribute("href", "/demo");
+    expect(screen.getByRole("link", { name: /complete recorded Hardware Launch run/i })).toHaveAttribute("href", "/demo/hardware");
     expect(screen.getByRole("columnheader", { name: "Path" })).toBeInTheDocument();
     expect(screen.getByText("Codex does not recognize $possible")).toBeInTheDocument();
     expect(await axe(container)).toHaveNoViolations();
@@ -90,8 +90,17 @@ describe("Possible", () => {
     expect(screen.getByRole("link", { name: /Browse the three packs/i })).toHaveAttribute("href", "/packs");
   });
 
-  it("replays the real Hardware Launch run from brief to verified outcome", async () => {
+  it("shows all three recorded runs in the demo gallery", () => {
     window.history.pushState({}, "", "/demo");
+    render(<App />);
+    expect(screen.getByRole("heading", { name: /Don’t imagine the outcome.*Open it/i })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /HARDWARE LAUNCH.*STILL/i })).toHaveAttribute("href", "/demo/hardware");
+    expect(screen.getByRole("link", { name: /SOFTWARE LAUNCH.*THREE/i })).toHaveAttribute("href", "/demo/software");
+    expect(screen.getByRole("link", { name: /OPEN-SOURCE RELEASE.*TINY-SLUG/i })).toHaveAttribute("href", "/demo/open-source");
+  });
+
+  it("replays the real Hardware Launch run from brief to verified outcome", async () => {
+    window.history.pushState({}, "", "/demo/hardware");
     render(<App />);
     expect(screen.getByRole("heading", { name: /After the yes/i })).toBeInTheDocument();
     expect(screen.getByText("CURRENT ENTRY FLOW / ILLUSTRATIVE INTAKE")).toBeInTheDocument();
@@ -124,5 +133,30 @@ describe("Possible", () => {
     expect(screen.getByText("58 / 58", { selector: ".replay-review-card strong" })).toBeInTheDocument();
     expect(screen.getByText("0", { selector: ".replay-review-card strong" })).toBeInTheDocument();
     expect(screen.getAllByRole("link", { name: /Show output/i })[0]).toHaveAttribute("href", "#artifacts");
+  });
+
+  it("shows the real Software Launch product, site, film, evidence, and thread", async () => {
+    window.history.pushState({}, "", "/demo/software");
+    render(<App />);
+    expect(screen.getByRole("heading", { name: /An empty repo became.*a complete launch/i })).toBeInTheDocument();
+    expect(screen.getByTitle("Three local-first product")).toHaveAttribute("src", "/demo/three/product/");
+    expect(screen.getByTitle("Three launch website")).toHaveAttribute("src", "/demo/three/site/");
+    expect(document.querySelector("video source")).toHaveAttribute("src", "/demo/three/film/three-demo.mp4");
+    expect(screen.getByRole("link", { name: /15-test receipt/i })).toHaveAttribute("href", "/demo/three/evidence/product-test-receipt.md");
+    expect(screen.getByRole("link", { name: /L0–L8 decision/i })).toHaveAttribute("href", "/demo/three/evidence/final-verification.md");
+    expect(screen.getByRole("link", { name: /What review caught/i })).toHaveAttribute("href", "/demo/three/evidence/failed-review-01/README.md");
+    await userEvent.click(screen.getByRole("button", { name: /View full Codex thread/i }));
+    expect(screen.getByRole("dialog", { name: /full Codex thread/i })).toBeInTheDocument();
+    expect(screen.getByText(/exact public messages across \d+ real agent threads/i)).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Raw \.md/i })).toHaveAttribute("href", "/demo/three/CODEX-THREAD.md");
+  });
+
+  it("shows the real Open-Source Release repository and review evidence", () => {
+    window.history.pushState({}, "", "/demo/open-source");
+    render(<App />);
+    expect(screen.getByRole("heading", { name: /Three files became.*a release people can trust/i })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /OPEN SOURCE/i })).toHaveAttribute("href", "/demo/tiny-slug/index.js");
+    expect(screen.getByRole("link", { name: /OPEN OUTCOME RECEIPT/i })).toHaveAttribute("href", "/demo/tiny-slug/.possible/outcome-receipt.md");
+    expect(screen.getByRole("link", { name: /Complete public run/i })).toHaveAttribute("href", "/demo/tiny-slug/CODEX-THREAD.md");
   });
 });

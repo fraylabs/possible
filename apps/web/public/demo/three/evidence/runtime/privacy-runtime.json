@@ -1,0 +1,160 @@
+{
+  "checked_at_utc": "2026-07-18T21:00:40.536271+00:00",
+  "browser": "chromium",
+  "results": [
+    {
+      "target": "product",
+      "request_count": 14,
+      "requests": [
+        {
+          "method": "GET",
+          "resource_type": "document",
+          "url": "http://127.0.0.1:4173/"
+        },
+        {
+          "method": "GET",
+          "resource_type": "script",
+          "url": "http://127.0.0.1:4173/@vite/client"
+        },
+        {
+          "method": "GET",
+          "resource_type": "script",
+          "url": "http://127.0.0.1:4173/src/main.tsx"
+        },
+        {
+          "method": "GET",
+          "resource_type": "script",
+          "url": "http://127.0.0.1:4173/@react-refresh"
+        },
+        {
+          "method": "GET",
+          "resource_type": "script",
+          "url": "http://127.0.0.1:4173/node_modules/vite/dist/client/env.mjs"
+        },
+        {
+          "method": "GET",
+          "resource_type": "script",
+          "url": "http://127.0.0.1:4173/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=c02d529b"
+        },
+        {
+          "method": "GET",
+          "resource_type": "script",
+          "url": "http://127.0.0.1:4173/node_modules/.vite/deps/react.js?v=c02d529b"
+        },
+        {
+          "method": "GET",
+          "resource_type": "script",
+          "url": "http://127.0.0.1:4173/node_modules/.vite/deps/react-dom_client.js?v=c02d529b"
+        },
+        {
+          "method": "GET",
+          "resource_type": "script",
+          "url": "http://127.0.0.1:4173/src/App.tsx"
+        },
+        {
+          "method": "GET",
+          "resource_type": "script",
+          "url": "http://127.0.0.1:4173/src/styles.css"
+        },
+        {
+          "method": "GET",
+          "resource_type": "script",
+          "url": "http://127.0.0.1:4173/node_modules/.vite/deps/chunk-USMGBKC7.js?v=c02d529b"
+        },
+        {
+          "method": "GET",
+          "resource_type": "script",
+          "url": "http://127.0.0.1:4173/src/model.ts"
+        },
+        {
+          "method": "GET",
+          "resource_type": "script",
+          "url": "http://127.0.0.1:4173/src/storage.ts"
+        },
+        {
+          "method": "GET",
+          "resource_type": "script",
+          "url": "http://127.0.0.1:4173/node_modules/.vite/deps/chunk-KNBTRAFC.js?v=c02d529b"
+        }
+      ],
+      "external_requests": [],
+      "local_storage_keys": [
+        "three:today:v1"
+      ],
+      "cookie_count": 0,
+      "document_cookie": ""
+    },
+    {
+      "target": "site",
+      "request_count": 12,
+      "requests": [
+        {
+          "method": "GET",
+          "resource_type": "document",
+          "url": "http://127.0.0.1:4174/"
+        },
+        {
+          "method": "GET",
+          "resource_type": "script",
+          "url": "http://127.0.0.1:4174/@vite/client"
+        },
+        {
+          "method": "GET",
+          "resource_type": "script",
+          "url": "http://127.0.0.1:4174/src/main.tsx"
+        },
+        {
+          "method": "GET",
+          "resource_type": "script",
+          "url": "http://127.0.0.1:4174/@react-refresh"
+        },
+        {
+          "method": "GET",
+          "resource_type": "script",
+          "url": "http://127.0.0.1:4174/node_modules/.vite/deps/react.js?v=383fd427"
+        },
+        {
+          "method": "GET",
+          "resource_type": "script",
+          "url": "http://127.0.0.1:4174/node_modules/.vite/deps/react-dom_client.js?v=383fd427"
+        },
+        {
+          "method": "GET",
+          "resource_type": "script",
+          "url": "http://127.0.0.1:4174/src/App.tsx"
+        },
+        {
+          "method": "GET",
+          "resource_type": "script",
+          "url": "http://127.0.0.1:4174/src/styles.css"
+        },
+        {
+          "method": "GET",
+          "resource_type": "script",
+          "url": "http://127.0.0.1:4174/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=383fd427"
+        },
+        {
+          "method": "GET",
+          "resource_type": "script",
+          "url": "http://127.0.0.1:4174/node_modules/.vite/deps/rolldown-runtime-BvCyGRYZ.js?v=383fd427"
+        },
+        {
+          "method": "GET",
+          "resource_type": "script",
+          "url": "http://127.0.0.1:4174/@fs/private/tmp/possible-software-example.ubjQBf/node_modules/vite/dist/client/env.mjs"
+        },
+        {
+          "method": "GET",
+          "resource_type": "script",
+          "url": "http://127.0.0.1:4174/node_modules/.vite/deps/react-dom.js?v=383fd427"
+        }
+      ],
+      "external_requests": [],
+      "local_storage_keys": [],
+      "cookie_count": 0,
+      "document_cookie": ""
+    }
+  ],
+  "result": "passed",
+  "scope": "local development runtime; host request logs and any future deployed origin remain unproven"
+}

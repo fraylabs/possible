@@ -1,0 +1,38 @@
+{
+  "checked_at_utc": "2026-07-18T21:00:36.755Z",
+  "files": [
+    "product/index.html",
+    "product/src/App.tsx",
+    "product/src/main.tsx",
+    "product/src/model.ts",
+    "product/src/storage.ts",
+    "product/src/styles.css",
+    "site/index.html",
+    "site/src/App.tsx",
+    "site/src/main.tsx",
+    "site/src/styles.css",
+    "film/src/Composition.tsx",
+    "film/src/Root.tsx",
+    "film/src/index.ts",
+    "film/src/index.css"
+  ],
+  "hashes": {
+    "product/index.html": "bcbc7e2bc6ec2e7be14578b62c1decc225fbe18f696f913d2093b821e699d42d",
+    "product/src/App.tsx": "7aca1b9e1d616472ad68076444797c59d5b8ed1031faf9ecbcf30d3fb01e9cd6",
+    "product/src/main.tsx": "77aaa85d0a532963cd63d1c6171a833f73b608dd83b4085f855b279dbe922939",
+    "product/src/model.ts": "10cfad9b15c01f7d4ff081a540db9552d77f9993d8c253c4fc8469ffaefc2fca",
+    "product/src/storage.ts": "034f41546161199f9df99ab5a1e50f978d9c23657da73a124eb82d0e9c07554f",
+    "product/src/styles.css": "806bc3fed2a2199350e4d0d3566210f3abcb1d6dd19b220909c6cc652360a40e",
+    "site/index.html": "e4ccb395a55c22cb6f80a4e8286310b226c5a5e39d6d404eb020349c09e00648",
+    "site/src/App.tsx": "3bb50dd43d890faac3fc27d8fa0ad4ac20862bdcbee3ad83061616e053c3066b",
+    "site/src/main.tsx": "77aaa85d0a532963cd63d1c6171a833f73b608dd83b4085f855b279dbe922939",
+    "site/src/styles.css": "5e29f96e505fab5ae4ec5404800f2d04d88be15baf3a75c15dc4cf79bb98e3de",
+    "film/src/Composition.tsx": "c544a3f60a63aa9266ddc7ba21e5bcdca174cff887690a5219e13875562a51f6",
+    "film/src/Root.tsx": "2174af3b47cac8bfa1c4b5d5fe7fd2f93393aeafdf2de575f86feed1a1acc0e7",
+    "film/src/index.ts": "957e481dd33a29b4a55ae0e95dbf763b7e48c37c427ca4bd1275faf34bc07a74",
+    "film/src/index.css": "ff4021c0c7c4a9d82c47981d346a99ff434a5e717f8b4c846043448b2c06f04d"
+  },
+  "forbidden_findings": [],
+  "allowed_non_network_identifier": "http://www.w3.org/2000/svg inside an embedded data-URI favicon",
+  "result": "passed"
+}

@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "generated_on": "2026-07-19",
+  "hash_method": "sha256 over sorted per-file sha256 records using paths relative to each installed skill directory",
+  "skills": [
+    {
+      "name": "frontend-design",
+      "source": "https://github.com/anthropics/skills.git",
+      "skill_path": "skills/frontend-design",
+      "installed_path": ".agents/skills/frontend-design",
+      "reviewed_revision": "fa0fa64bdc967915dc8399e803be67759e1e62b8",
+      "resolved_revision": "fa0fa64bdc967915dc8399e803be67759e1e62b8",
+      "content_hash_sha256": "1c85d2efae03f05ebef44501999cefe6d294a8ad310705506fdfe08f19c36a47",
+      "source_drift": false
+    },
+    {
+      "name": "webapp-testing",
+      "source": "https://github.com/anthropics/skills.git",
+      "skill_path": "skills/webapp-testing",
+      "installed_path": ".agents/skills/webapp-testing",
+      "reviewed_revision": "fa0fa64bdc967915dc8399e803be67759e1e62b8",
+      "resolved_revision": "fa0fa64bdc967915dc8399e803be67759e1e62b8",
+      "content_hash_sha256": "8824b080a1d66ffdc8dc876eb3b677822c0781e813eaa4d8cc93a0292515ec86",
+      "source_drift": false
+    },
+    {
+      "name": "vercel-react-best-practices",
+      "source": "https://github.com/vercel-labs/agent-skills.git",
+      "skill_path": "skills/react-best-practices",
+      "installed_path": ".agents/skills/vercel-react-best-practices",
+      "reviewed_revision": "f8a72b9603728bb92a217a879b7e62e43ad76c81",
+      "resolved_revision": "f8a72b9603728bb92a217a879b7e62e43ad76c81",
+      "content_hash_sha256": "99c51ec5786b76eb4690ba47a2b0e06ff7a7be43057f21036fc5025f038debd9",
+      "source_drift": false
+    },
+    {
+      "name": "web-design-guidelines",
+      "source": "https://github.com/vercel-labs/agent-skills.git",
+      "skill_path": "skills/web-design-guidelines",
+      "installed_path": ".agents/skills/web-design-guidelines",
+      "reviewed_revision": "f8a72b9603728bb92a217a879b7e62e43ad76c81",
+      "resolved_revision": "f8a72b9603728bb92a217a879b7e62e43ad76c81",
+      "content_hash_sha256": "e9596b4d8c877954a9350596c1f885b2e4112485a202f3e9848416d8fa30b19f",
+      "source_drift": false,
+      "note": "The skill requests a fresh unpinned guideline document at review time; the fetched document must be hashed in the evidence receipt."
+    },
+    {
+      "name": "deploy-to-vercel",
+      "source": "https://github.com/vercel-labs/agent-skills.git",
+      "skill_path": "skills/deploy-to-vercel",
+      "installed_path": ".agents/skills/deploy-to-vercel",
+      "reviewed_revision": "f8a72b9603728bb92a217a879b7e62e43ad76c81",
+      "resolved_revision": "f8a72b9603728bb92a217a879b7e62e43ad76c81",
+      "content_hash_sha256": "1d144aea68764a5be6b2d265f11639cf6e2e88d1603063086d906ea4c903d384",
+      "source_drift": false,
+      "note": "Source Archive.zip was not copied by the installer. Deployment actions in this skill conflict with the confirmed local-only boundary and are prohibited; the skill is used only as planning input."
+    },
+    {
+      "name": "remotion-best-practices",
+      "source": "https://github.com/remotion-dev/skills.git",
+      "skill_path": "skills/remotion-best-practices",
+      "installed_path": ".agents/skills/remotion-best-practices",
+      "reviewed_revision": "ab22f5fa89962ec943eaa18797cbf38c9d727743",
+      "resolved_revision": "ad2321d187d2b15f65cdbfb9cb9f9a57e1a75e8c",
+      "content_hash_sha256": "12c0a48a8bf9d3dfee5facaa93dcc44fa6c68466fb201aa866eab622919e7612",
+      "source_drift": true,
+      "drift_assessment": "Changes since the reviewed revision are limited to Mediabunny guidance and advanced html-in-canvas/video-editing references. The main skill and the creation, layout, timing, sequencing, composition, image, and render resources selected for this film are unchanged. The installer also rewrote three internal parent links to their correct bundled paths."
+    }
+  ]
+}

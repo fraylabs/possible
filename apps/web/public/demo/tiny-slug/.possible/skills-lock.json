@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-07-19",
+  "hashAlgorithm": "sha256 of sorted per-file sha256 records",
+  "source": {
+    "repository": "https://github.com/github/awesome-copilot.git",
+    "reviewedRevision": "26fe2d126bf79aafb38f43344d450b69632200f8",
+    "resolvedRevision": "26fe2d126bf79aafb38f43344d450b69632200f8",
+    "sourceDrift": false
+  },
+  "skills": [
+    {
+      "name": "github-release",
+      "path": ".agents/skills/github-release",
+      "revision": "26fe2d126bf79aafb38f43344d450b69632200f8",
+      "contentHash": "acb69e4b449b9856224e5e2c972fc51db5889b40226ef16d830c6ccd13119d12"
+    },
+    {
+      "name": "create-readme",
+      "path": ".agents/skills/create-readme",
+      "revision": "26fe2d126bf79aafb38f43344d450b69632200f8",
+      "contentHash": "fae3a50820c0c4f4f04aa1061d32845670a28450d62cdef4ef05011981c45352"
+    },
+    {
+      "name": "documentation-writer",
+      "path": ".agents/skills/documentation-writer",
+      "revision": "26fe2d126bf79aafb38f43344d450b69632200f8",
+      "contentHash": "f0b1bc3bf6d31fa5dc842af658a2e9b0851ab860085ba43a06a02b6152e7de86"
+    },
+    {
+      "name": "github-actions-hardening",
+      "path": ".agents/skills/github-actions-hardening",
+      "revision": "26fe2d126bf79aafb38f43344d450b69632200f8",
+      "contentHash": "5c987aad135a8fbbd983675a2533bf9c4c0d47db39c6460a3947d8fa3bbd43e4"
+    },
+    {
+      "name": "security-review",
+      "path": ".agents/skills/security-review",
+      "revision": "26fe2d126bf79aafb38f43344d450b69632200f8",
+      "contentHash": "bc688aafe8922cfc80182c0e88ace40cf1c60fb0f68f2a06f5c91e3c68c4c0a2"
+    }
+  ]
+}

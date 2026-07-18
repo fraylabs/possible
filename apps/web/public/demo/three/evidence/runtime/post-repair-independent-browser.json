@@ -1,0 +1,84 @@
+{
+  "checked_at_utc": "2026-07-18T20:56:36.762104+00:00",
+  "browser": "chromium",
+  "browser_version": "149.0.7827.55",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "reduced_motion": "reduce",
+  "product_first_focus": {
+    "tag": "A",
+    "text": "Skip to today\u2019s docket",
+    "ariaLabel": null,
+    "href": "#today",
+    "outlineStyle": "solid",
+    "outlineWidth": "3px"
+  },
+  "site_first_focus": {
+    "tag": "A",
+    "text": "Skip to main content",
+    "ariaLabel": null,
+    "href": "#main",
+    "outlineStyle": "solid",
+    "outlineWidth": "3px"
+  },
+  "input_names": [
+    "commitment-1",
+    "commitment-2",
+    "commitment-3"
+  ],
+  "product_headings": [
+    {
+      "level": 1,
+      "text": "Three things.Then you\u2019re done."
+    },
+    {
+      "level": 2,
+      "text": "Today\u2019s commitments"
+    }
+  ],
+  "site_headings": [
+    {
+      "level": 1,
+      "text": "Three things.Then you\u2019re done."
+    },
+    {
+      "level": 2,
+      "text": "The day has an ending."
+    },
+    {
+      "level": 3,
+      "text": "Commit to up to three."
+    },
+    {
+      "level": 3,
+      "text": "Work the list you chose."
+    },
+    {
+      "level": 3,
+      "text": "Let complete mean complete."
+    },
+    {
+      "level": 2,
+      "text": "Your list stays on this device."
+    },
+    {
+      "level": 2,
+      "text": "Run it here. Not out there."
+    }
+  ],
+  "keyboard_flow": [
+    "skip link",
+    "add 3 with Enter",
+    "complete 3 with Space",
+    "reload persisted closed state",
+    "uncomplete/recomplete with Space",
+    "cancel and confirm removal with Enter/Tab",
+    "reuse freed line"
+  ],
+  "external_requests": [],
+  "console_errors": [],
+  "page_errors": [],
+  "result": "passed"
+}

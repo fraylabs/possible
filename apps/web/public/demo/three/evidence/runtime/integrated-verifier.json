@@ -1,0 +1,71 @@
+{
+  "checked_at_utc": "2026-07-18T21:00:55.918Z",
+  "result": "passed",
+  "results": [
+    {
+      "script": "release:verify",
+      "started_at_utc": "2026-07-18T21:00:08.069Z",
+      "finished_at_utc": "2026-07-18T21:00:08.233Z",
+      "exit_code": 0,
+      "signal": null,
+      "status": "passed"
+    },
+    {
+      "script": "test:unit",
+      "started_at_utc": "2026-07-18T21:00:08.233Z",
+      "finished_at_utc": "2026-07-18T21:00:10.408Z",
+      "exit_code": 0,
+      "signal": null,
+      "status": "passed"
+    },
+    {
+      "script": "build",
+      "started_at_utc": "2026-07-18T21:00:10.408Z",
+      "finished_at_utc": "2026-07-18T21:00:15.817Z",
+      "exit_code": 0,
+      "signal": null,
+      "status": "passed"
+    },
+    {
+      "script": "test:browser",
+      "started_at_utc": "2026-07-18T21:00:15.817Z",
+      "finished_at_utc": "2026-07-18T21:00:21.342Z",
+      "exit_code": 0,
+      "signal": null,
+      "status": "passed"
+    },
+    {
+      "script": "verify:ui",
+      "started_at_utc": "2026-07-18T21:00:21.342Z",
+      "finished_at_utc": "2026-07-18T21:00:36.575Z",
+      "exit_code": 0,
+      "signal": null,
+      "status": "passed"
+    },
+    {
+      "script": "verify:privacy",
+      "started_at_utc": "2026-07-18T21:00:36.575Z",
+      "finished_at_utc": "2026-07-18T21:00:40.607Z",
+      "exit_code": 0,
+      "signal": null,
+      "status": "passed"
+    },
+    {
+      "script": "film:render",
+      "started_at_utc": "2026-07-18T21:00:40.607Z",
+      "finished_at_utc": "2026-07-18T21:00:53.665Z",
+      "exit_code": 0,
+      "signal": null,
+      "status": "passed"
+    },
+    {
+      "script": "film:verify",
+      "started_at_utc": "2026-07-18T21:00:53.665Z",
+      "finished_at_utc": "2026-07-18T21:00:55.918Z",
+      "exit_code": 0,
+      "signal": null,
+      "status": "passed"
+    }
+  ],
+  "missing": []
+}

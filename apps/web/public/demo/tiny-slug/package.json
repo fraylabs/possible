@@ -1,0 +1,38 @@
+{
+  "name": "tiny-slug",
+  "version": "1.0.0",
+  "description": "A tiny, dependency-free ASCII slugifier for ESM.",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js"
+    }
+  },
+  "types": "./index.d.ts",
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "test": "node --test",
+    "verify": "npm test && node scripts/verify-package.mjs"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "keywords": [
+    "ascii",
+    "esm",
+    "slug",
+    "slugify"
+  ],
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  }
+}

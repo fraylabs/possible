@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { getPack, outcomePacks } from "@possible/packs";
 import type { OutcomePack } from "@possible/packs";
 import demoThreadData from "./demo-thread.json";
+import openSourceThreadData from "./open-source-thread.json";
+import softwareThreadData from "./software-thread.json";
 
 type CopyState = "idle" | "copied" | "failed";
 
@@ -23,6 +25,8 @@ type DemoThread = {
 };
 
 const demoThread = demoThreadData as DemoThread;
+const openSourceThread = openSourceThreadData as DemoThread;
+const softwareThread = softwareThreadData as DemoThread;
 
 const installCommand = "npx @fraylabs/possible init";
 const approvalDisclosure = "Saying yes authorizes repo-local ingredient skill installation, the shared outcome brief and state files, and local outcome work. External actions still require separate approval.";
@@ -345,7 +349,17 @@ function Boundary() {
   );
 }
 
-function ThreadTranscript({ onClose }: { onClose: () => void }) {
+function ThreadTranscript({
+  thread,
+  rawHref,
+  outputHref = "#artifacts",
+  onClose,
+}: {
+  thread: DemoThread;
+  rawHref: string;
+  outputHref?: string;
+  onClose: () => void;
+}) {
   const [copyState, setCopyState] = useState<CopyState>("idle");
 
   useEffect(() => {
@@ -362,12 +376,12 @@ function ThreadTranscript({ onClose }: { onClose: () => void }) {
   }, [onClose]);
 
   const copyableThread = [
-    `# ${demoThread.title} — Codex thread`,
-    demoThread.disclosure,
+    `# ${thread.title} — Codex thread`,
+    thread.disclosure,
     "## Run prompt",
-    demoThread.prompt,
+    thread.prompt,
     "## Public thread",
-    ...demoThread.messages.map((message) =>
+    ...thread.messages.map((message) =>
       `### ${new Date(message.timestamp).toISOString().slice(11, 19)} UTC — ${message.agent} / ${message.role}\n${message.message}`,
     ),
   ].join("\n\n");
@@ -387,20 +401,20 @@ function ThreadTranscript({ onClose }: { onClose: () => void }) {
       <section className="thread-panel" role="dialog" aria-modal="true" aria-labelledby="thread-title">
         <header className="thread-header">
           <div>
-            <span>ACTUAL RUN LOG / {demoThread.runId.slice(0, 8)}</span>
+            <span>ACTUAL RUN LOG / {thread.runId.slice(0, 8)}</span>
             <h2 id="thread-title">The full Codex thread.</h2>
-            <p>{demoThread.messages.length} exact public messages across {demoThread.agents.length} real agent threads.</p>
+            <p>{thread.messages.length} exact public messages across {thread.agents.length} real agent threads.</p>
           </div>
           <div className="thread-header-actions">
             <button type="button" onClick={copyThread}>{copyState === "copied" ? "COPIED ✓" : copyState === "failed" ? "COPY FAILED" : "COPY THREAD"}</button>
-            <a href="/demo/still/CODEX-THREAD.md" target="_blank" rel="noreferrer">RAW .MD ↗</a>
-            <a className="thread-output-button" href="#artifacts" onClick={onClose}>SHOW OUTPUT ↓</a>
+            <a href={rawHref} target="_blank" rel="noreferrer">RAW .MD ↗</a>
+            <a className="thread-output-button" href={outputHref} onClick={onClose}>SHOW OUTPUT ↓</a>
             <button className="thread-close" type="button" aria-label="Close full Codex thread" onClick={onClose}>×</button>
           </div>
         </header>
 
         <div className="thread-agents" aria-label="Agents in this run">
-          {demoThread.agents.map((agent, index) => (
+          {thread.agents.map((agent, index) => (
             <div key={agent.name} className={`thread-agent thread-agent-${index}`}>
               <i /><span>{agent.name}</span><strong>{agent.role}</strong>
             </div>
@@ -409,14 +423,14 @@ function ThreadTranscript({ onClose }: { onClose: () => void }) {
 
         <div className="thread-scroll">
           <article className="thread-prompt">
-            <header><span>USER / RUN PROMPT</span><strong>HARDWARE-LAUNCH@1</strong></header>
-            <pre>{demoThread.prompt}</pre>
+            <header><span>USER / RUN PROMPT</span><strong>{thread.title.split(" / ").at(-1)?.toUpperCase().replaceAll(" ", "-")}@1</strong></header>
+            <pre>{thread.prompt}</pre>
           </article>
 
           <div className="thread-divider"><span>PARALLEL EXECUTION BEGINS</span><i /></div>
 
-          {demoThread.messages.map((message, index) => {
-            const agentIndex = demoThread.agents.findIndex((agent) => agent.name === message.agent);
+          {thread.messages.map((message, index) => {
+            const agentIndex = thread.agents.findIndex((agent) => agent.name === message.agent);
             return (
               <article className={`thread-message thread-agent-${agentIndex}`} key={`${message.timestamp}-${message.agent}`}>
                 <aside><span>{String(index + 1).padStart(2, "0")}</span><i /></aside>
@@ -434,7 +448,7 @@ function ThreadTranscript({ onClose }: { onClose: () => void }) {
 
           <div className="thread-disclosure">
             <span>EXPORT BOUNDARY</span>
-            <p>{demoThread.disclosure}</p>
+            <p>{thread.disclosure}</p>
           </div>
         </div>
       </section>
@@ -465,7 +479,209 @@ function DemoIntakePrelude() {
   );
 }
 
-function DemoPage() {
+function DemoGalleryPage() {
+  return (
+    <main className="demo-gallery-page">
+      <SiteNav label="Examples / 03" />
+      <section className="demo-gallery-hero">
+        <p className="eyebrow">THREE PACKS / THREE PRESERVED CODEX RUNS</p>
+        <h1>Don’t imagine the outcome.<br /><em>Open it.</em></h1>
+        <div>
+          <p>Each example began in a clean project with <code>$possible</code>, passed through conversation and confirmation, then preserved its real artifacts, public thread, failures, and verification evidence.</p>
+          <span><i /> ALL RUNS LOCAL · NO EXTERNAL RELEASE ACTIONS</span>
+        </div>
+      </section>
+
+      <section className="demo-gallery-grid" aria-label="Recorded Possible examples">
+        <a className="demo-example-card demo-example-card--hardware" href="/demo/hardware">
+          <header><span>01 / HARDWARE LAUNCH</span><strong>VERIFIED RUN ↗</strong></header>
+          <div className="demo-example-visual demo-example-visual--hardware">
+            <img src="/demo/still/hardware/still-iso.png" alt="Still e-ink focus device CAD concept" />
+          </div>
+          <div className="demo-example-copy">
+            <p>STILL / E-INK FOCUS DEVICE</p>
+            <h2>Idea to site,<br />film, and CAD.</h2>
+            <div><span>{demoThread.agents.length} agent threads</span><span>{demoThread.messages.length} public messages</span><span>58 artifact checks</span></div>
+          </div>
+        </a>
+
+        <a className="demo-example-card demo-example-card--software" href="/demo/software">
+          <header><span>02 / SOFTWARE LAUNCH</span><strong>VERIFIED RUN ↗</strong></header>
+          <div className="demo-example-visual demo-example-visual--software" aria-hidden="true">
+            <div className="three-card"><span>THREE / TODAY</span><b>1</b><i /><b>2</b><i /><b>3</b><i /><strong>THEN YOU’RE DONE.</strong></div>
+          </div>
+          <div className="demo-example-copy">
+            <p>THREE / LOCAL-FIRST WEB APP</p>
+            <h2>Empty repo to a<br />complete launch.</h2>
+            <div><span>{softwareThread.agents.length} agent threads</span><span>{softwareThread.messages.length} public messages</span><span>14 / 14 tests</span></div>
+          </div>
+        </a>
+
+        <a className="demo-example-card demo-example-card--open-source" href="/demo/open-source">
+          <header><span>03 / OPEN-SOURCE RELEASE</span><strong>VERIFIED RUN ↗</strong></header>
+          <div className="demo-example-visual demo-example-visual--release" aria-hidden="true">
+            <code><span>export function</span> slugify(value) {'{'}<br />&nbsp;&nbsp;return value<br />&nbsp;&nbsp;&nbsp;&nbsp;.toLowerCase()<br />&nbsp;&nbsp;&nbsp;&nbsp;.replace(…);<br />{'}'}</code>
+          </div>
+          <div className="demo-example-copy">
+            <p>TINY-SLUG / ESM PACKAGE</p>
+            <h2>Three files to a<br />trustworthy release.</h2>
+            <div><span>{openSourceThread.agents.length} agent threads</span><span>{openSourceThread.messages.length} public messages</span><span>9 / 9 tests</span></div>
+          </div>
+        </a>
+      </section>
+      <SiteFooter />
+    </main>
+  );
+}
+
+function OpenSourceDemoPage() {
+  const [threadOpen, setThreadOpen] = useState(false);
+
+  return (
+    <main className="example-detail example-detail--release" id="top">
+      <SiteNav label="Recorded run / tiny-slug" />
+      <section className="example-detail-hero">
+        <div>
+          <p className="eyebrow">REAL CLEAN-ROOM RUN / OPEN-SOURCE RELEASE</p>
+          <h1>Three files became<br /><em>a release people can trust.</em></h1>
+        </div>
+        <aside>
+          <p>A tiny ASCII-only slugifier entered as one function and one test. Possible prepared the package, documentation, examples, hardened CI, changelog, release plan, and independent security evidence—without publishing it.</p>
+          <div><span><i /> LOCAL RUN COMPLETE</span><strong>9 / 9 TESTS · 0 REMAINING FINDINGS</strong></div>
+          <button type="button" onClick={() => setThreadOpen(true)}>VIEW FULL CODEX THREAD <span>{openSourceThread.messages.length} MESSAGES</span></button>
+        </aside>
+      </section>
+
+      <section className="example-run-strip">
+        <p><span>BRIEF</span><strong>Make a tiny ESM utility understandable, installable, testable, and contributor-ready.</strong></p>
+        <p><span>PACK</span><strong><a href="/packs/open-source-release">Open-Source Release ↗</a></strong></p>
+        <p><span>BOUNDARY</span><strong>No publish, push, tag, release, or repository-setting changes.</strong></p>
+      </section>
+
+      <section className="release-artifacts" id="artifacts">
+        <header>
+          <div><p className="eyebrow">ARTIFACTS PRODUCED</p><h2>Inspect the<br /><em>actual repository.</em></h2></div>
+          <p>The package contract, source, documentation, workflows, release evidence, and complete public Codex transcript are preserved below.</p>
+        </header>
+
+        <div className="release-artifact-grid">
+          <article className="release-code-card">
+            <header><span>01 / PUBLIC API</span><strong>INDEX.JS</strong></header>
+            <pre><code>{`export function slugify(value) {
+  if (typeof value !== "string") {
+    throw new TypeError("slugify() expects a string");
+  }
+
+  return value
+    .replace(/[^A-Za-z0-9]+/g, "-")
+    .toLowerCase()
+    .replace(/^-|-$/g, "");
+}`}</code></pre>
+            <a href="/demo/tiny-slug/index.js" target="_blank" rel="noreferrer">OPEN SOURCE ↗</a>
+          </article>
+
+          <article className="release-package-card">
+            <header><span>02 / PACKAGE CONTRACT</span><strong>1.0.0 / ESM</strong></header>
+            <div><p><span>RUNTIME DEPS</span><strong>0</strong></p><p><span>PUBLIC EXPORTS</span><strong>1</strong></p><p><span>PACKED FILES</span><strong>6</strong></p><p><span>TESTS</span><strong>9 / 9</strong></p></div>
+            <a href="/demo/tiny-slug/package.json" target="_blank" rel="noreferrer">OPEN PACKAGE.JSON ↗</a>
+          </article>
+
+          <article className="release-verification-card">
+            <header><span>03 / INDEPENDENT REVIEW</span><strong>PASS</strong></header>
+            <h3>Offline install.<br />Clean consumer.<br />Zero remaining findings.</h3>
+            <p>The verifier packed the exact release artifact, installed it offline into a fresh project, imported the named ESM API, parsed JSON and YAML, checked documentation links, and reran the security review.</p>
+            <a href="/demo/tiny-slug/.possible/outcome-receipt.md" target="_blank" rel="noreferrer">OPEN OUTCOME RECEIPT ↗</a>
+          </article>
+        </div>
+
+        <div className="release-file-index">
+          <a href="/demo/tiny-slug/README.md" target="_blank" rel="noreferrer"><span>README</span><strong>Project entry point</strong><i>MD ↗</i></a>
+          <a href="/demo/tiny-slug/docs/api.md" target="_blank" rel="noreferrer"><span>DOCS</span><strong>API contract</strong><i>MD ↗</i></a>
+          <a href="/demo/tiny-slug/examples/basic.js" target="_blank" rel="noreferrer"><span>EXAMPLE</span><strong>Runnable usage</strong><i>JS ↗</i></a>
+          <a href="/demo/tiny-slug/.github/workflows/ci.yml" target="_blank" rel="noreferrer"><span>CI</span><strong>SHA-pinned workflow</strong><i>YML ↗</i></a>
+          <a href="/demo/tiny-slug/release/security-review.md" target="_blank" rel="noreferrer"><span>REVIEW</span><strong>Security evidence</strong><i>MD ↗</i></a>
+          <a href="/demo/tiny-slug/CODEX-THREAD.md" target="_blank" rel="noreferrer"><span>THREAD</span><strong>Complete public run</strong><i>MD ↗</i></a>
+        </div>
+      </section>
+
+      <footer className="example-detail-footer"><a href="/demo">← ALL EXAMPLES</a><p>Prepared locally. Nothing was published, pushed, tagged, or changed externally.</p><a href="#top">BACK TO TOP ↑</a></footer>
+      {threadOpen ? <ThreadTranscript thread={openSourceThread} rawHref="/demo/tiny-slug/CODEX-THREAD.md" onClose={() => setThreadOpen(false)} /> : null}
+    </main>
+  );
+}
+
+function SoftwareDemoPage() {
+  const [threadOpen, setThreadOpen] = useState(false);
+
+  return (
+    <main className="example-detail example-detail--software" id="top">
+      <SiteNav label="Recorded run / Three" />
+      <section className="example-detail-hero">
+        <div>
+          <p className="eyebrow">REAL CLEAN-ROOM RUN / SOFTWARE LAUNCH</p>
+          <h1>An empty repo became<br /><em>a complete launch.</em></h1>
+        </div>
+        <aside>
+          <p>Three began as a name and one sentence: a local-first app for choosing exactly three things today. Possible asked what “launched” meant, recommended the Software Launch pack, waited for approval, then produced the browser product, launch site, film, release plan, and independent evidence.</p>
+          <div><span><i /> LOCAL RUN COMPLETE</span><strong>14 / 14 TESTS · 22 SECOND FILM</strong></div>
+          <button type="button" onClick={() => setThreadOpen(true)}>VIEW FULL CODEX THREAD <span>{softwareThread.messages.length} MESSAGES</span></button>
+        </aside>
+      </section>
+
+      <section className="example-run-strip">
+        <p><span>BRIEF</span><strong>Give overloaded solo builders a hard three-item boundary and a conclusive end to the day.</strong></p>
+        <p><span>PACK</span><strong><a href="/packs/software-launch">Software Launch ↗</a></strong></p>
+        <p><span>BOUNDARY</span><strong>Local-only. No accounts, backend, analytics, deployment, publishing, or outreach.</strong></p>
+      </section>
+
+      <section className="software-artifacts" id="artifacts">
+        <header>
+          <div><p className="eyebrow">ARTIFACTS PRODUCED</p><h2>Use the product.<br /><em>Watch the launch.</em></h2></div>
+          <p>These are the actual production builds and rendered film from the throwaway project. The browser app remains interactive inside this page and stores only its versioned record in local storage.</p>
+        </header>
+
+        <div className="software-live-grid">
+          <article className="software-live-card software-live-card--product">
+            <header><span>01 / BROWSER PRODUCT</span><strong>INTERACTIVE BUILD</strong></header>
+            <iframe title="Three local-first product" src="/demo/three/product/" loading="lazy" />
+            <footer><p><strong>Three / Today</strong><span>Add, complete, reload, remove, and reuse up to three lines.</span></p><a href="/demo/three/product/" target="_blank" rel="noreferrer">OPEN PRODUCT ↗</a></footer>
+          </article>
+
+          <article className="software-live-card software-live-card--site">
+            <header><span>02 / LAUNCH SITE</span><strong>PRODUCTION BUILD</strong></header>
+            <iframe title="Three launch website" src="/demo/three/site/" loading="lazy" />
+            <footer><p><strong>Three things. Then you’re done.</strong><span>Truthful local-only positioning with no fake waitlist or demand claims.</span></p><a href="/demo/three/site/" target="_blank" rel="noreferrer">OPEN SITE ↗</a></footer>
+          </article>
+        </div>
+
+        <article className="software-film-card">
+          <header><span>03 / PRODUCT FILM</span><strong>1920 × 1080 · 30 FPS · 22.06S</strong></header>
+          <video controls preload="metadata" poster="/demo/three/film/stills/04-done.png">
+            <source src="/demo/three/film/three-demo.mp4" type="video/mp4" />
+          </video>
+          <footer><p><strong>From overload to done.</strong><span>Four scenes, eight inspected frames, full-file decode passed.</span></p><a href="/demo/three/film/three-demo.mp4" target="_blank" rel="noreferrer">OPEN MP4 ↗</a></footer>
+        </article>
+
+        <div className="software-evidence-index">
+          <a href="/demo/three/.possible/outcome-brief.md" target="_blank" rel="noreferrer"><span>BRIEF</span><strong>Confirmed outcome</strong><i>MD ↗</i></a>
+          <a href="/demo/three/evidence/product-test-receipt.md" target="_blank" rel="noreferrer"><span>PRODUCT</span><strong>15-test receipt</strong><i>MD ↗</i></a>
+          <a href="/demo/three/evidence/site-test-receipt.md" target="_blank" rel="noreferrer"><span>SITE</span><strong>Build receipt</strong><i>MD ↗</i></a>
+          <a href="/demo/three/evidence/film-render-receipt.md" target="_blank" rel="noreferrer"><span>FILM</span><strong>Render receipt</strong><i>MD ↗</i></a>
+          <a href="/demo/three/release/release-plan.md" target="_blank" rel="noreferrer"><span>RELEASE</span><strong>Gated plan</strong><i>MD ↗</i></a>
+          <a href="/demo/three/evidence/final-verification.md" target="_blank" rel="noreferrer"><span>FINAL</span><strong>L0–L8 decision</strong><i>MD ↗</i></a>
+          <a href="/demo/three/evidence/failed-review-01/README.md" target="_blank" rel="noreferrer"><span>FAILED PASS</span><strong>What review caught</strong><i>MD ↗</i></a>
+          <a href="/demo/three/evidence/integration-repairs.md" target="_blank" rel="noreferrer"><span>REPAIRS</span><strong>Failure history</strong><i>MD ↗</i></a>
+          <a href="/demo/three/CODEX-THREAD.md" target="_blank" rel="noreferrer"><span>THREAD</span><strong>Complete public run</strong><i>MD ↗</i></a>
+        </div>
+      </section>
+
+      <footer className="example-detail-footer"><a href="/demo">← ALL EXAMPLES</a><p>Prepared and verified locally. Nothing was deployed, published, or sent externally.</p><a href="#top">BACK TO TOP ↑</a></footer>
+      {threadOpen ? <ThreadTranscript thread={softwareThread} rawHref="/demo/three/CODEX-THREAD.md" onClose={() => setThreadOpen(false)} /> : null}
+    </main>
+  );
+}
+
+function HardwareDemoPage() {
   const events = [
     { actor: "CAPTAIN", title: "Brief locked", detail: "Confirmed facts and boundaries written to outcome-brief.md." },
     { actor: "POSSIBLE", title: "Pack compiled", detail: "Five reviewed skills composed into one Hardware Launch recipe." },
@@ -642,7 +858,7 @@ function DemoPage() {
         </div>
       </section>
       <DemoArtifacts />
-      {threadOpen ? <ThreadTranscript onClose={() => setThreadOpen(false)} /> : null}
+      {threadOpen ? <ThreadTranscript thread={demoThread} rawHref="/demo/still/CODEX-THREAD.md" onClose={() => setThreadOpen(false)} /> : null}
     </main>
   );
 }
@@ -832,7 +1048,7 @@ function DocsPage() {
               <li><strong>Coordinate workstreams</strong><span>Run independent specialist work in parallel where appropriate.</span></li>
               <li><strong>Integrate and verify</strong><span>Combine artifacts, run acceptance checks, and assign a fresh reviewer.</span></li>
             </ol>
-            <a className="docs-text-link" href="/demo">See a complete recorded Hardware Launch run →</a>
+            <a className="docs-text-link" href="/demo/hardware">See a complete recorded Hardware Launch run →</a>
           </section>
 
           <section id="files">
@@ -913,7 +1129,10 @@ function App() {
   if (path === "/") return <CreatePage />;
   if (path === "/packs") return <PacksPage />;
   if (path === "/docs") return <DocsPage />;
-  if (path === "/demo") return <DemoPage />;
+  if (path === "/demo") return <DemoGalleryPage />;
+  if (path === "/demo/hardware") return <HardwareDemoPage />;
+  if (path === "/demo/software") return <SoftwareDemoPage />;
+  if (path === "/demo/open-source") return <OpenSourceDemoPage />;
   if (path.startsWith("/packs/")) {
     const pack = getPack(path.slice("/packs/".length));
     return pack ? <PackDetailPage pack={pack} /> : <NotFoundPage />;
