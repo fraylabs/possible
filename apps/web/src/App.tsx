@@ -150,14 +150,17 @@ function CreatePage() {
 
       <section className="journey">
         <header>
-          <p className="eyebrow">THE POSSIBLE PROCESS</p>
-          <h2>Discover what is possible.<br />Learn how it&apos;s possible.<br />Make it possible.</h2>
+          <p className="eyebrow">THE WHOLE PROCESS</p>
+          <h2>No forms.<br />No pack knowledge required.</h2>
         </header>
         <ol>
           {[
-            ["Discover what is possible", "Start rough. Possible listens, reflects what it heard, and asks one useful question at a time."],
-            ["Learn how it’s possible", "Possible links one complete outcome pack so you can inspect the outputs, specialists, checks, and boundaries."],
-            ["Make it possible", "Say yes when the path feels right. Codex installs the reviewed ingredients, coordinates the work, and verifies the result."],
+            ["Install", "Add Possible to the project."],
+            ["Invoke", "Type $possible in Codex."],
+            ["Brainstorm", "Start rough. Possible asks one useful question at a time."],
+            ["Recommend", "Possible links the outcome pack that best fits."],
+            ["Confirm", "No ingredient skills install and no outcome work starts until you say yes."],
+            ["Execute", "Codex coordinates the specialists and verifies the result."],
           ].map(([title, detail], index) => <li key={title}><span>0{index + 1}</span><strong>{title}</strong><p>{detail}</p></li>)}
         </ol>
       </section>

@@ -18,11 +18,12 @@ describe("Possible", () => {
     expect(screen.getByText("What would you like to make possible today?")).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: /Compile Hardware Launch/i })).not.toBeInTheDocument();
     expect(screen.getByRole("link", { name: "DOCS" })).toHaveAttribute("href", "/docs");
-    expect(screen.getByRole("heading", { name: /Discover what is possible.*Learn how it's possible.*Make it possible/i })).toBeInTheDocument();
-    expect(container.querySelectorAll(".journey li")).toHaveLength(3);
+    expect(screen.getByRole("heading", { name: /No forms.*No pack knowledge required/i })).toBeInTheDocument();
+    expect(container.querySelectorAll(".journey li")).toHaveLength(6);
     expect([...container.querySelectorAll(".journey li strong")].map((node) => node.textContent)).toEqual([
-      "Discover what is possible", "Learn how it’s possible", "Make it possible",
+      "Install", "Invoke", "Brainstorm", "Recommend", "Confirm", "Execute",
     ]);
+    expect(screen.getByText(/No ingredient skills install and no outcome work starts/i)).toBeInTheDocument();
     expect(screen.getByText(/Saying yes authorizes repo-local ingredient skill installation/i)).toBeInTheDocument();
   });
 
