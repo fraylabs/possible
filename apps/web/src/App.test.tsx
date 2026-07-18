@@ -93,7 +93,7 @@ describe("Possible wiki", () => {
     await screen.findByRole("heading", { level: 1, name: "Vite with React" });
     expect(screen.getByRole("region", { name: "Possible knowledge atlas" })).toBe(atlas);
     expect(within(atlas).getByText("Graph zoom 150%, Page detail")).toBeInTheDocument();
-    expect(within(atlas).getByText("Use > to expand the page card · Esc clears focus")).toBeInTheDocument();
+    expect(within(atlas).getByText("Use > to expand the sidebar · Esc clears focus")).toBeInTheDocument();
   });
 
   it("opens a graph page when its visible label is clicked", async () => {
@@ -108,7 +108,7 @@ describe("Possible wiki", () => {
     expect(window.location.pathname).toBe("/wiki/vite-react");
   });
 
-  it("expands the selected page inside the graph card", async () => {
+  it("expands the selected page inside the left sidebar", async () => {
     const user = userEvent.setup();
     window.history.replaceState(null, "", "/wiki/vite-react");
     render(<App />);
@@ -118,11 +118,12 @@ describe("Possible wiki", () => {
     await user.click(within(atlas).getByRole("button", { name: "Zoom out graph" }));
     expect(within(atlas).getByText("Graph zoom 82%, Field view")).toBeInTheDocument();
 
-    const card = within(atlas).getByRole("complementary", { name: "Related nodes" });
-    await user.click(within(card).getByRole("button", { name: "Expand page card" }));
-    expect(within(card).getByRole("button", { name: "Collapse page card" })).toBeInTheDocument();
-    expect(within(card).getByRole("heading", { level: 3, name: "Vite with React" })).toBeInTheDocument();
-    expect(within(card).getByText(/A lightweight setup for client-rendered applications/i)).toBeInTheDocument();
+    const sidebar = screen.getByRole("region", { name: "Vite with React" });
+    await user.click(within(sidebar).getByRole("button", { name: "Expand page in sidebar" }));
+    expect(within(sidebar).getByRole("button", { name: "Collapse page in sidebar" })).toBeInTheDocument();
+    expect(within(sidebar).getByText(/A lightweight setup for client-rendered applications/i)).toBeInTheDocument();
+    expect(within(atlas).getByRole("complementary", { name: "Related nodes" })).toBeInTheDocument();
+    expect(within(atlas).queryByRole("button", { name: "Expand page card" })).not.toBeInTheDocument();
     expect(within(atlas).getByText("Graph zoom 82%, Field view")).toBeInTheDocument();
   });
 
@@ -160,7 +161,7 @@ describe("Possible wiki", () => {
 
     await user.click(screen.getByRole("button", { name: "Web, 3 pages" }));
     await screen.findByRole("heading", { level: 1, name: "Web" });
-    expect(await screen.findByRole("button", { name: "Expand page card" })).toBeInTheDocument();
+    expect(await screen.findByRole("button", { name: "Expand page in sidebar" })).toBeInTheDocument();
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
 

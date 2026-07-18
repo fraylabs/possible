@@ -6,7 +6,6 @@ import {
   type GraphViewport,
   type KnowledgeGraphCluster,
   type KnowledgeGraphConnections,
-  type KnowledgeGraphExpandedPage,
   type KnowledgeGraphNode,
 } from "./KnowledgeGraph";
 
@@ -48,11 +47,6 @@ export function AtlasGraph({
       })
       .map((page) => ({ id: page.slug, title: page.title }))
       .sort((left, right) => left.title.localeCompare(right.title)),
-  } : undefined;
-  const expandedPage: KnowledgeGraphExpandedPage | undefined = selectedPage ? {
-    title: selectedPage.title,
-    summary: selectedPage.summary,
-    body: selectedPage.body,
   } : undefined;
   const pageCountBySection = new Map(branches.map((branch) => [branch.section, branch.pageCount]));
   const sectionTitleBySection = new Map(branches.map((branch) => [branch.section, branch.page.title]));
@@ -116,7 +110,6 @@ export function AtlasGraph({
           guide="Global knowledge graph"
           clusters={clusters}
           connections={connections}
-          expandedPage={expandedPage}
           selectedId={selectedSlug}
           viewport={viewport}
           onViewportChange={onViewportChange}

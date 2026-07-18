@@ -8,7 +8,6 @@ import {
   type WheelEvent,
 } from "react";
 import { LocateFixed, Minus, Plus } from "lucide-react";
-import { MarkdownRenderer } from "../markdown";
 export type GraphNodeRole = "field" | "page" | "selected" | "related";
 
 export interface KnowledgeGraphNode {
@@ -55,12 +54,6 @@ export interface KnowledgeGraphConnections {
   related: KnowledgeGraphConnection[];
 }
 
-export interface KnowledgeGraphExpandedPage {
-  title: string;
-  summary: string;
-  body: string;
-}
-
 export interface GraphViewport {
   x: number;
   y: number;
@@ -84,7 +77,6 @@ interface KnowledgeGraphProps {
   legend?: KnowledgeGraphLegendItem[];
   clusters?: KnowledgeGraphCluster[];
   connections?: KnowledgeGraphConnections | undefined;
-  expandedPage?: KnowledgeGraphExpandedPage | undefined;
   selectedId?: string | undefined;
   viewport?: GraphViewport | undefined;
   onViewportChange?: ((viewport: GraphViewport) => void) | undefined;
@@ -125,7 +117,6 @@ export function KnowledgeGraph({
   legend = [],
   clusters = [],
   connections,
-  expandedPage,
   selectedId,
   viewport: controlledViewport,
   onViewportChange,
@@ -134,7 +125,6 @@ export function KnowledgeGraph({
   const [internalViewport, setInternalViewport] = useState<GraphViewport>({ ...DEFAULT_GRAPH_VIEWPORT });
   const [hoveredId, setHoveredId] = useState<string | undefined>();
   const [isPanning, setIsPanning] = useState(false);
-  const [isConnectionsExpanded, setIsConnectionsExpanded] = useState(false);
   const panGesture = useRef<PanGesture | undefined>(undefined);
   const worldRef = useRef<HTMLDivElement>(null);
   const viewport = controlledViewport ?? internalViewport;
@@ -145,12 +135,7 @@ export function KnowledgeGraph({
   useEffect(() => {
     if (!isControlled) setInternalViewport({ ...DEFAULT_GRAPH_VIEWPORT });
     setHoveredId(undefined);
-    setIsConnectionsExpanded(false);
   }, [graphKey, isControlled]);
-
-  useEffect(() => {
-    setIsConnectionsExpanded(false);
-  }, [selectedId]);
 
   const commitViewport = (nextViewport: GraphViewport) => {
     if (onViewportChange) onViewportChange(nextViewport);
@@ -399,45 +384,25 @@ export function KnowledgeGraph({
         </ul>
       )}
       {selectedId && connections && (
-        <aside className={`graph-connections${isConnectionsExpanded ? " is-expanded" : ""}`} aria-label="Related nodes">
+        <aside className="graph-connections" aria-label="Related nodes">
           <div className="graph-connections__header">
             <p className="graph-connections__title">Related nodes</p>
-            {expandedPage && (
-              <button
-                type="button"
-                className="graph-connections__toggle"
-                onClick={() => setIsConnectionsExpanded((expanded) => !expanded)}
-                aria-label={isConnectionsExpanded ? "Collapse page card" : "Expand page card"}
-                aria-expanded={isConnectionsExpanded}
-              >
-                {isConnectionsExpanded ? "<" : ">"}
-              </button>
-            )}
           </div>
-          {isConnectionsExpanded && expandedPage && (
-            <div className="graph-connections__page">
-              <h3>{expandedPage.title}</h3>
-              <p className="graph-connections__summary">{expandedPage.summary}</p>
-              <MarkdownRenderer markdown={expandedPage.body} onSelectPage={onSelectNode} />
-            </div>
-          )}
-          {!isConnectionsExpanded && (
-            connections.related.length > 0 ? (
-              <ul className="graph-connections__related">
-                {connections.related.map((connection) => (
-                  <li key={connection.id}>
-                    <button type="button" onClick={() => onSelectNode(connection.id)}>
-                      {connection.title}
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            ) : <p className="graph-connections__empty">No authored connections yet.</p>
-          )}
+          {connections.related.length > 0 ? (
+            <ul className="graph-connections__related">
+              {connections.related.map((connection) => (
+                <li key={connection.id}>
+                  <button type="button" onClick={() => onSelectNode(connection.id)}>
+                    {connection.title}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          ) : <p className="graph-connections__empty">No authored connections yet.</p>}
         </aside>
       )}
       <p className="graph-hint">
-        {selectedId ? "Use > to expand the page card · Esc clears focus" : "Click a node to focus it · Scroll to explore"}
+        {selectedId ? "Use > to expand the sidebar · Esc clears focus" : "Click a node to focus it · Scroll to explore"}
       </p>
       <span className="visually-hidden" aria-live="polite">
         Graph zoom {Math.round(viewport.scale * 100)}%, {zoomBandLabel(zoomBand)}

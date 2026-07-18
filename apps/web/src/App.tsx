@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import {
+  BookOpenText,
   CircleAlert,
+  ExternalLink,
   LoaderCircle,
   Search,
   X,
@@ -15,6 +17,7 @@ import { buildAtlasBranches } from "./atlas";
 import { ArticleView } from "./components/ArticleView";
 import { AtlasGraph } from "./components/AtlasGraph";
 import { DocsPage } from "./components/DocsPage";
+import { MarkdownRenderer } from "./markdown";
 import {
   DEFAULT_GRAPH_VIEWPORT,
   type GraphViewport,
@@ -28,6 +31,36 @@ type LoadState =
 
 type ViewMode = "explore" | "read";
 type FocusTarget = "explore" | "read" | "search";
+
+interface ExpandedSidebarPageProps {
+  page: WikiCorpus["pages"][number];
+  onSelectPage: (slug: string) => void;
+}
+
+function ExpandedSidebarPage({ page, onSelectPage }: ExpandedSidebarPageProps) {
+  return (
+    <>
+      <p className="selected-summary">{page.summary}</p>
+      <p className="review-note">Reviewed {formatReviewedAt(page.reviewedAt)}</p>
+      <div className="sidebar-article-body">
+        <MarkdownRenderer markdown={page.body} onSelectPage={onSelectPage} />
+      </div>
+      <footer className="sidebar-sources">
+        <p className="section-kicker">Sources</p>
+        <ul>
+          {page.sources.map((source) => (
+            <li key={source.url}>
+              <a href={source.url} target="_blank" rel="noreferrer">
+                {source.title}
+                <ExternalLink size={13} aria-hidden="true" />
+              </a>
+            </li>
+          ))}
+        </ul>
+      </footer>
+    </>
+  );
+}
 
 interface PossibleHistoryState {
   possible?: {
@@ -59,6 +92,7 @@ export function App() {
   const [loadState, setLoadState] = useState<LoadState>({ status: "loading" });
   const [loadAttempt, setLoadAttempt] = useState(0);
   const [selectedSlug, setSelectedSlug] = useState<string | undefined>();
+  const [expandedSlug, setExpandedSlug] = useState<string | undefined>();
   const [query, setQuery] = useState("");
   const [mode, setMode] = useState<ViewMode>("explore");
   const [graphViewport, setGraphViewport] = useState<GraphViewport>({ ...DEFAULT_GRAPH_VIEWPORT });
@@ -95,6 +129,7 @@ export function App() {
 
   const corpus = loadState.status === "ready" ? loadState.corpus : undefined;
   const selectedPage = corpus && selectedSlug ? getPage(corpus, selectedSlug) : undefined;
+  const expandedPage = expandedSlug && expandedSlug === selectedSlug ? selectedPage : undefined;
   const branches = corpus ? buildAtlasBranches(corpus) : [];
   const fallbackPage = branches[0]?.page ?? (corpus ? corpus.pages[0] : undefined);
   const searchResults = corpus && query.trim()
@@ -206,6 +241,7 @@ export function App() {
     if (options?.focus) pendingFocusRef.current = options.focus;
     if (options?.mode) setMode(options.mode);
     setSelectedSlug(slug);
+    setExpandedSlug(undefined);
     setQuery("");
 
     if (options?.history === "none") return;
@@ -218,6 +254,7 @@ export function App() {
   function clearSelection() {
     pendingFocusRef.current = "explore";
     setSelectedSlug(undefined);
+    setExpandedSlug(undefined);
     setQuery("");
     if (window.location.pathname !== "/") {
       window.history.pushState(historyStateFor(graphViewport), "", "/");
@@ -229,6 +266,7 @@ export function App() {
     pendingFocusRef.current = "explore";
     setMode("explore");
     setSelectedSlug(undefined);
+    setExpandedSlug(undefined);
     setGraphViewport(resetViewport);
     setQuery("");
     if (window.location.pathname !== "/") {
@@ -244,6 +282,15 @@ export function App() {
     if (firstResult) {
       selectPage(firstResult.slug, { focus: "explore", mode: "explore" });
     }
+  };
+
+  const expandPage = () => {
+    if (selectedPage) setExpandedSlug((slug) => slug ? undefined : selectedPage.slug);
+  };
+
+  const selectExpandedPage = (slug: string) => {
+    selectPage(slug, { focus: "explore", mode: "explore" });
+    setExpandedSlug(slug);
   };
 
   if (window.location.pathname.replace(/\/+$/, "") === "/docs") {
@@ -309,7 +356,7 @@ export function App() {
       </a>
 
       <div className="explore-view">
-        <aside className="explore-panel" aria-label="Explore Possible">
+        <aside className={`explore-panel${expandedPage ? " is-expanded" : ""}`} aria-label="Explore Possible">
           <button type="button" className="brand-reset" onClick={resetToAtlas}>
             <span className="brand-wordmark">possible<span>.sh</span></span>
             <span className="brand-tagline">A sourced wiki of what people can make possible.</span>
@@ -367,19 +414,34 @@ export function App() {
             <a className="docs-link" href="/docs">How Possible works</a>
           </div>
 
-          <section className="selected-context" aria-labelledby="explore-title">
+          <section className={`selected-context${expandedPage ? " selected-context--expanded" : ""}`} aria-labelledby="explore-title">
             {selectedSlug ? (
               <>
                 <div className="inspector-heading">
-                  <p className="section-kicker">Focused page</p>
-                  <button type="button" className="inspector-clear" onClick={clearSelection} aria-label="Clear graph focus">
-                    <X size={15} aria-hidden="true" />
-                  </button>
+                  <p className="section-kicker">{expandedPage ? "Expanded page" : "Focused page"}</p>
+                  <div className="inspector-actions">
+                    {selectedPage && (
+                      <button
+                        type="button"
+                        className="sidebar-expand"
+                        onClick={expandPage}
+                        aria-label={expandedPage ? "Collapse page in sidebar" : "Expand page in sidebar"}
+                        aria-expanded={Boolean(expandedPage)}
+                      >
+                        {expandedPage ? "<" : ">"}
+                      </button>
+                    )}
+                    <button type="button" className="inspector-clear" onClick={clearSelection} aria-label="Clear graph focus">
+                      <X size={15} aria-hidden="true" />
+                    </button>
+                  </div>
                 </div>
                 <h1 id="explore-title" ref={exploreTitleRef} tabIndex={-1}>
                   {selectedPage?.title ?? "Page not found"}
                 </h1>
-                {selectedPage ? (
+                {expandedPage ? (
+                  <ExpandedSidebarPage page={expandedPage} onSelectPage={selectExpandedPage} />
+                ) : selectedPage ? (
                   <>
                     <p className="selected-summary">{selectedPage.summary}</p>
                     <p className="review-note">Reviewed {formatReviewedAt(selectedPage.reviewedAt)}</p>

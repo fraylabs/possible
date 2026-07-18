@@ -136,6 +136,10 @@ h1[tabindex="-1"]:focus {
   backdrop-filter: blur(22px);
 }
 
+.explore-panel.is-expanded {
+  width: min(620px, 52vw);
+}
+
 .brand-reset {
   display: grid;
   justify-items: start;
@@ -317,6 +321,7 @@ h1[tabindex="-1"]:focus {
 
 .selected-context--expanded {
   align-content: start;
+  max-width: 42rem;
   padding-top: 28px;
 }
 
@@ -330,6 +335,32 @@ h1[tabindex="-1"]:focus {
 
 .inspector-heading .section-kicker {
   margin: 0;
+}
+
+.inspector-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sidebar-expand {
+  display: grid;
+  width: 36px;
+  height: 36px;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid var(--paper-line);
+  border-radius: 50%;
+  color: var(--ink-quiet);
+  font-family: "DM Mono", monospace;
+  font-size: 0.9rem;
+  transition: background 150ms ease, color 150ms ease;
+}
+
+.sidebar-expand:hover,
+.sidebar-expand:focus-visible {
+  background: var(--paper-bright);
+  color: var(--ink);
 }
 
 .inspector-clear {
@@ -1613,6 +1644,11 @@ h1[tabindex="-1"]:focus {
     max-height: min(44dvh, 420px);
     padding: 16px 17px 18px;
     border-radius: 19px;
+  }
+
+  .explore-panel.is-expanded {
+    width: auto;
+    max-height: min(72dvh, 680px);
   }
 
   .brand-tagline {
