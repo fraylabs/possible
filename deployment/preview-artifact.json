@@ -3,8 +3,8 @@
   "artifactDirectory": "apps/web/dist",
   "buildCommand": "npm run preview:build",
   "verificationCommand": "npm run preview:verify",
-  "sha256": "c110419428796681d398e40f9767ac14aaf90f7a22dff2d382e41e253938e34d",
-  "totalBytes": 1831612,
+  "sha256": "c94ff8a6dd6e8e875b3680ace288c8e36e85b7f35d654ece491549939d861434",
+  "totalBytes": 2104508,
   "files": [
     {
       "path": "agent/protocol.json",
@@ -32,9 +32,14 @@
       "sha256": "80f33c74c5a89eb3e8b869d667e0188497d481515cbcc7a96d96b3af331ae5f0"
     },
     {
+      "path": "agent/read/art.json",
+      "bytes": 8714,
+      "sha256": "4ab74ba962f367cc04a38270512e7e8a4dfffb5f82080d508a0cad8169bf90cd"
+    },
+    {
       "path": "agent/read/browser-applications.json",
-      "bytes": 18977,
-      "sha256": "5f5cb8c8fa80044671a12be2995f21804bcd89329c5f57cc24e3620fbbbc511b"
+      "bytes": 21393,
+      "sha256": "1af5ad5ce3b180a58d1c7941eb305d9e497c444a9f963c8e23010d7c9e4d12f7"
     },
     {
       "path": "agent/read/cadquery.json",
@@ -82,6 +87,11 @@
       "sha256": "2006e8f54e310bcf86889d3a40a40c233b73b37f3a5624d018da9973112efded"
     },
     {
+      "path": "agent/read/design-systems.json",
+      "bytes": 5998,
+      "sha256": "19014188ca178f1b831d2821947af526ddfc9f5ed21839dd3dc74f1130a86386"
+    },
+    {
       "path": "agent/read/dxf-profile-exchange.json",
       "bytes": 7927,
       "sha256": "f9b51b654a9d49962ec2557a74b7dd8bfa12f982082183efa10ba030b04d8885"
@@ -98,13 +108,18 @@
     },
     {
       "path": "agent/read/framework-selection.json",
-      "bytes": 6504,
-      "sha256": "f5021ddccb3c4418021f23ca2a4b0ebdf5286f41b67d2b41fc12da63d2349f05"
+      "bytes": 8920,
+      "sha256": "0b0acd16147e9cfae5f760a0a152d006828679dca645b670858a2b377733fae7"
     },
     {
       "path": "agent/read/freecad.json",
       "bytes": 8970,
       "sha256": "3905258d4798f126d762e58275184a8ae1142fdd426d1a2e20dc4b4026e8ae36"
+    },
+    {
+      "path": "agent/read/image-generation.json",
+      "bytes": 8258,
+      "sha256": "45c6228dce3a4257a295976378391751fd00585474be7529445c4c715e11182c"
     },
     {
       "path": "agent/read/inspection-plan.json",
@@ -128,8 +143,8 @@
     },
     {
       "path": "agent/read/manufacturing.json",
-      "bytes": 4853,
-      "sha256": "36d6a36f85768a1ad8ff80d267dc8465358d62c16caa4045816a22c5727ac244"
+      "bytes": 6607,
+      "sha256": "c99b2f35c366efef93d81d97d321629dfd0b23389c3eafa76f974042177986a1"
     },
     {
       "path": "agent/read/mujoco.json",
@@ -147,9 +162,19 @@
       "sha256": "ad89f8460424f89430830ccb822dfd59475b6631d888be6fdf041faace733d87"
     },
     {
+      "path": "agent/read/presentations.json",
+      "bytes": 9667,
+      "sha256": "5b2f26b3d507cd723999018ea9d72447a6fe96cbc6d4bf657f39bc9f8c8973c5"
+    },
+    {
       "path": "agent/read/production-web-verification.json",
-      "bytes": 12128,
-      "sha256": "54e98e11cb8a33fe160d26f324aa4cffe59ddaae8d535a6d863f84ab4009bde9"
+      "bytes": 14544,
+      "sha256": "224a0638eb6640332b397692dd60d6049463d95caf1436e876682f6427cb63e8"
+    },
+    {
+      "path": "agent/read/programmatic-video.json",
+      "bytes": 10155,
+      "sha256": "c27b5fd181ab27ae737fb5c3f6cbbdc55079ae5e949d7c571d305be868d36994"
     },
     {
       "path": "agent/read/promote-vercel-deployment-to-production.json",
@@ -167,6 +192,11 @@
       "sha256": "8db9b8fd7338b399c869f1af2ed67475334ba227cc0e08b5ec878f0ab8d0afa7"
     },
     {
+      "path": "agent/read/remotion.json",
+      "bytes": 6913,
+      "sha256": "77d37ee70fc52c727b0d29aa9b6d2d9b03a92f6be1f64ef972c10554056bc940"
+    },
+    {
       "path": "agent/read/request-protolabs-quote.json",
       "bytes": 8079,
       "sha256": "1a8ddc2830ac1d8fe28edb6e3e7dcc40cafb023877b523bda6d9de76c3ae9243"
@@ -180,6 +210,11 @@
       "path": "agent/read/request-xometry-quote.json",
       "bytes": 5200,
       "sha256": "16ec56f9818656066743fa17f4d98bc30c41fa726bdb1f722a305e588b05cd00"
+    },
+    {
+      "path": "agent/read/revealjs.json",
+      "bytes": 8096,
+      "sha256": "7e71efd1cef16d45dccc3b2efa83f8591d6a22b523ec50813a74b6a817c7750b"
     },
     {
       "path": "agent/read/revisioned-manufacturing-package.json",
@@ -203,8 +238,8 @@
     },
     {
       "path": "agent/read/shadcn-ui.json",
-      "bytes": 8966,
-      "sha256": "4cfb405868f4d5021edf5f534b665dabd0076264f51f16731e2dbd575e11e2b0"
+      "bytes": 10928,
+      "sha256": "7584f4365ead8e55b17f27a879ca7b507d2ba2f7fb22859e1a09420b25f1948f"
     },
     {
       "path": "agent/read/sls-additive-manufacturing.json",
@@ -248,8 +283,13 @@
     },
     {
       "path": "agent/read/web.json",
-      "bytes": 15917,
-      "sha256": "c6961ffbcdfac1b3e30cba78f89c74ad10cc714b03531d3c640063c1364618bb"
+      "bytes": 20087,
+      "sha256": "63f580b61037bc96113243fe027ad3325f1baa21fc68e34b46c48915e9a41cbe"
+    },
+    {
+      "path": "agent/read/website-design.json",
+      "bytes": 15117,
+      "sha256": "d5fff5a1db3fc3def06beaf70c0b1fc5c6c0dd82dfb3127a7ae0206325baf490"
     },
     {
       "path": "agent/read/xometry.json",
@@ -277,9 +317,14 @@
       "sha256": "39ece3ec13d3cbe0c628246c648fcb265e084f58c0a467cb141e8c528cad2067"
     },
     {
+      "path": "agent/related/art.json",
+      "bytes": 6938,
+      "sha256": "e80ed2a2279d60e24ad52d1cfaf192d755f6d04e21d769db2b937042f5be506f"
+    },
+    {
       "path": "agent/related/browser-applications.json",
-      "bytes": 9355,
-      "sha256": "c7e8bbeed27a1d0438ff0526d810c676fcaecc4d8a9183ab6c0f4b245b88df61"
+      "bytes": 10563,
+      "sha256": "702be68d88f811217568482d41e70a4f7e6c75811cca53982c7c6733dc30e54f"
     },
     {
       "path": "agent/related/cadquery.json",
@@ -327,6 +372,11 @@
       "sha256": "433195642e5c867dcc43728e8279875f311feccd0adff8b67097d40724be81f8"
     },
     {
+      "path": "agent/related/design-systems.json",
+      "bytes": 3290,
+      "sha256": "c77d2b88b40033762c2472babd548e90e12bb32270aa692634d4deed032e6784"
+    },
+    {
       "path": "agent/related/dxf-profile-exchange.json",
       "bytes": 4190,
       "sha256": "cda7a6fcf6f044f5b751a80bbd507e42941c7cab8933de43169e6866ef5cced6"
@@ -343,13 +393,18 @@
     },
     {
       "path": "agent/related/framework-selection.json",
-      "bytes": 4081,
-      "sha256": "b6680b4c31fcf34e0a43aee5a911722dd9d85d03964b56be7faa744ea1efef3c"
+      "bytes": 5289,
+      "sha256": "b13775ea0e66217e2096df41cd7cc291d38a0303c2c2ea68e5b2be9b6f045ad2"
     },
     {
       "path": "agent/related/freecad.json",
       "bytes": 5195,
       "sha256": "ff36a723538fca3c6dc94de443138b29299b17996bb66d2e56f44d97dd725b3c"
+    },
+    {
+      "path": "agent/related/image-generation.json",
+      "bytes": 4211,
+      "sha256": "5e3b313562c50957c0683c14d2355648a2ffd061305744154742a60c99f5e6cc"
     },
     {
       "path": "agent/related/inspection-plan.json",
@@ -373,8 +428,8 @@
     },
     {
       "path": "agent/related/manufacturing.json",
-      "bytes": 2896,
-      "sha256": "946373167d480122dd66c3590a9256d69693f30ab056fdc4f81987d909bbea4a"
+      "bytes": 3773,
+      "sha256": "e21545e43146f907ac36d904ed089c41e9daec2dbe4a64d7cc49d0d708c747c1"
     },
     {
       "path": "agent/related/mujoco.json",
@@ -392,9 +447,19 @@
       "sha256": "b2c755d594a6357938de5e8291099031b4fa0f66313cf92cbfd2afa8b5d53daa"
     },
     {
+      "path": "agent/related/presentations.json",
+      "bytes": 5190,
+      "sha256": "2bac533d892b7035f653f6bec33da7d7a564114e123d6483aab1807dab95eacc"
+    },
+    {
       "path": "agent/related/production-web-verification.json",
-      "bytes": 6553,
-      "sha256": "876ac3f971d5bead8cf32c88032131efff1f712d7c0dcb89d6e068a5e623ab71"
+      "bytes": 7761,
+      "sha256": "acc18f0935ffb02b34efd85ae2753f02f9617071b2187392ddfb7f6e57fb4d89"
+    },
+    {
+      "path": "agent/related/programmatic-video.json",
+      "bytes": 4896,
+      "sha256": "0080e7544d62b8126fd9a97c022dc2b3d84818651cb46372d24a3406e1fb56fc"
     },
     {
       "path": "agent/related/promote-vercel-deployment-to-production.json",
@@ -412,6 +477,11 @@
       "sha256": "5fd95f3ca31bbcdd74b49cbf75e3753f9ded3984ac2ce8004708da99053cdf5f"
     },
     {
+      "path": "agent/related/remotion.json",
+      "bytes": 2994,
+      "sha256": "7e9a7578a0246145c1844bd8dc7a91c4a6febb4dcb7e5b66587db9ae6bf71b3a"
+    },
+    {
       "path": "agent/related/request-protolabs-quote.json",
       "bytes": 4929,
       "sha256": "0f310b9cd583581f9f9039443de8ee57f30d1082917ab5f07df32542faca5e7f"
@@ -425,6 +495,11 @@
       "path": "agent/related/request-xometry-quote.json",
       "bytes": 3181,
       "sha256": "cdd4d43471ca1a182e0528c1387fd3bf9e03d45c134d79dce35fa6a18256be6e"
+    },
+    {
+      "path": "agent/related/revealjs.json",
+      "bytes": 4200,
+      "sha256": "330567bd5ae1b8b3c8c0b1dd6f36fa2c664c967ddfa51eb0f73030c4fd65ec31"
     },
     {
       "path": "agent/related/revisioned-manufacturing-package.json",
@@ -448,8 +523,8 @@
     },
     {
       "path": "agent/related/shadcn-ui.json",
-      "bytes": 5137,
-      "sha256": "030a023b70d91d50c68062d62ca097f7607c86bafbc87105faddb07e1fe471bb"
+      "bytes": 6118,
+      "sha256": "c9ead56a6bbd3f4c136b2d0decf0669472db1b6487b6d8360848d32ed7b744a8"
     },
     {
       "path": "agent/related/sls-additive-manufacturing.json",
@@ -493,8 +568,13 @@
     },
     {
       "path": "agent/related/web.json",
-      "bytes": 8190,
-      "sha256": "41a060d4a82bd7236d70937c93b03de6daba307d7804d6de7285563fbd9d3056"
+      "bytes": 10275,
+      "sha256": "984019998115dd9f85ce8bb77e895454509030ec74f038157f832253be4873e7"
+    },
+    {
+      "path": "agent/related/website-design.json",
+      "bytes": 10419,
+      "sha256": "94b58e9a8462363607ad0f3155216b0dae4c835599249cd0ece9b10a5042a4a8"
     },
     {
       "path": "agent/related/xometry.json",
@@ -503,13 +583,8 @@
     },
     {
       "path": "agent/search.json",
-      "bytes": 144256,
-      "sha256": "f0d06e1696c10d2febaf25e386d13880c92b772665f13224d071510d1ee9a768"
-    },
-    {
-      "path": "assets/index-44junZb4.js",
-      "bytes": 337601,
-      "sha256": "3167b18a54c8eb34fd3741110dd280f53da71185d529600ff45e073bf2760637"
+      "bytes": 171375,
+      "sha256": "75fa10ef0eaba190f3e65b7d4e5ae79011e631682a3b8ec3f0c9588e9a616f67"
     },
     {
       "path": "assets/index-B5C23w0_.css",
@@ -517,9 +592,14 @@
       "sha256": "9a624dbc3ae025eca2a8fd46601da53c0d46313eebab588ad3b5e16fa36ab06d"
     },
     {
+      "path": "assets/index-kiXL6rvW.js",
+      "bytes": 357257,
+      "sha256": "4b709890f6db792045b6c989403c24b8968c39d07065d43e5ebb0fe6a38ad306"
+    },
+    {
       "path": "index.html",
       "bytes": 590,
-      "sha256": "4a59c2387577d5d891b0883bb2d00f69126b2834f1fb3be875e2bd111d511159"
+      "sha256": "ea935b6597df252651263fa94abd7ac737bf8b5fbb57b8ea11f4d97719bd230f"
     },
     {
       "path": "llms.txt",
@@ -547,9 +627,14 @@
       "sha256": "b515c58bb3667084fbaa3844e63f9ef8c5da63ecc1e9aed06aa3bb54fd4c7474"
     },
     {
+      "path": "wiki/art.json",
+      "bytes": 8045,
+      "sha256": "8803e54cb3abfda54b3740ec02b050c41b32f35d48a1705f981846fe95b401c7"
+    },
+    {
       "path": "wiki/browser-applications.json",
-      "bytes": 17190,
-      "sha256": "0567cbb583c8c23bdd8eb38b4176102e294f4773cf986f4f034140a4b54c7c7c"
+      "bytes": 19386,
+      "sha256": "0e61566d7d5dc8cc5a8d4b82fbba642121c53db1c908b6b1d4ef2b2edf293315"
     },
     {
       "path": "wiki/cadquery.json",
@@ -597,6 +682,11 @@
       "sha256": "074421339f30a5e24d72c43eb930be36fbccf05958d5aa4ae4a705626f349a18"
     },
     {
+      "path": "wiki/design-systems.json",
+      "bytes": 5655,
+      "sha256": "42c8bc82e6abf26d884f8657a546d8c59032be1e05a4cc8b69c42745442ae21a"
+    },
+    {
       "path": "wiki/dxf-profile-exchange.json",
       "bytes": 7168,
       "sha256": "6aaf8495e477e92deedd3ebdc18894b59347a12a547d2fa941207fbf6c03e1ba"
@@ -613,8 +703,8 @@
     },
     {
       "path": "wiki/framework-selection.json",
-      "bytes": 6041,
-      "sha256": "49bd9d3ad4ceafd6be9a9d73813c0d1282a7e6321204d7bf30535e428efc9c4f"
+      "bytes": 8237,
+      "sha256": "45bda8ef053a4951b92f00c67888dc043adec29222a7581db54d6e266fee1b40"
     },
     {
       "path": "wiki/freecad.json",
@@ -622,9 +712,14 @@
       "sha256": "ffa0efec0f47144610e401cf798f43a7f080f4254e6b4ba73a658f2f2d96c6e9"
     },
     {
+      "path": "wiki/image-generation.json",
+      "bytes": 7721,
+      "sha256": "94e23a43ef5afbc52f3f3f6b507792087ffd9b6aea7613ec7c95dd00283ccda3"
+    },
+    {
       "path": "wiki/index.json",
-      "bytes": 44388,
-      "sha256": "0099b704061bd759f9d5aa6f504dce865f2e273332b7786b05e6390282bb8ff4"
+      "bytes": 51582,
+      "sha256": "d443fd48cf074fb2085d16596ae2be09e722f532f42d2852e42e0e60407632f0"
     },
     {
       "path": "wiki/inspection-plan.json",
@@ -648,8 +743,8 @@
     },
     {
       "path": "wiki/manufacturing.json",
-      "bytes": 4478,
-      "sha256": "a155c2d49585b64023376c0b7437e6970323db545b72c755be5c0bbd7d3c999b"
+      "bytes": 6056,
+      "sha256": "4bea3b1c63519e1d8c772e3e02b2c00d5cbe19004f9a00a67350d153e6ec55af"
     },
     {
       "path": "wiki/mujoco.json",
@@ -667,9 +762,19 @@
       "sha256": "f4bc18ff7891a12276f7f15d35d00c50d2e2fb7b57b23c12547c680d37fefe54"
     },
     {
+      "path": "wiki/presentations.json",
+      "bytes": 8926,
+      "sha256": "828d8f2f9f575ff7f172f026157dfbce98dc6002b5f1f20c8bf799503c17d76d"
+    },
+    {
       "path": "wiki/production-web-verification.json",
-      "bytes": 10807,
-      "sha256": "97b487536b3a9bf2c9f467c7d80fcf79e7e310e862ff7e6385cb8c568376c724"
+      "bytes": 13003,
+      "sha256": "d3a905e535881ddac03f0d4ff6d1d6ea2a7afb8944d85d2d886cf274b4150f93"
+    },
+    {
+      "path": "wiki/programmatic-video.json",
+      "bytes": 9316,
+      "sha256": "4d2c68993ceada6025f9f192b2ecc9fa0a1bd055c832da3098fdbd61b14092fe"
     },
     {
       "path": "wiki/promote-vercel-deployment-to-production.json",
@@ -687,6 +792,11 @@
       "sha256": "a099a8780edd5fd0d318557b88b6da824126c86e1ba44f8aaea467a2bfdc991a"
     },
     {
+      "path": "wiki/remotion.json",
+      "bytes": 6458,
+      "sha256": "b2906e0e6fcc795bf829ce234e0414c49f8d57bd0b1e3f55dff4bd954d011d28"
+    },
+    {
       "path": "wiki/request-protolabs-quote.json",
       "bytes": 7332,
       "sha256": "09319ad9f471e594a20aedcc603ae769d5ecc490deaa818d2d1ffd1f8b967af8"
@@ -700,6 +810,11 @@
       "path": "wiki/request-xometry-quote.json",
       "bytes": 4825,
       "sha256": "be7e0e8727104b912d3e87b852fafff9ec468975cbf66c7c1cff791f49ae84f2"
+    },
+    {
+      "path": "wiki/revealjs.json",
+      "bytes": 7551,
+      "sha256": "4e5595fe6f5448c5eceea6a49e418b8c4906a4d9b3bb1b0b2ede25be814834b2"
     },
     {
       "path": "wiki/revisioned-manufacturing-package.json",
@@ -723,8 +838,8 @@
     },
     {
       "path": "wiki/shadcn-ui.json",
-      "bytes": 8283,
-      "sha256": "033eb5aad21fa089c61cc530ed569a769e7b4ebdd382017eaf2fac4239c1c7c9"
+      "bytes": 10025,
+      "sha256": "f8b6f12835150e6564fa44d9f487c8872bfb8786b5369833824d4001c0a3f6da"
     },
     {
       "path": "wiki/sls-additive-manufacturing.json",
@@ -768,8 +883,13 @@
     },
     {
       "path": "wiki/web.json",
-      "bytes": 14278,
-      "sha256": "066a5833da03b2773b718747b0dbd3099f41fa4dadc017664a9bb39f554b60c8"
+      "bytes": 18052,
+      "sha256": "09942550489e6205a94209b89d97c7004bd2b1111336a69581aecf5e0a56812d"
+    },
+    {
+      "path": "wiki/website-design.json",
+      "bytes": 13816,
+      "sha256": "8bef47aa78157bf2a1f7b351c2f5516bcc09fe25cd59e1af1f60bf6d144a73db"
     },
     {
       "path": "wiki/xometry.json",
@@ -799,7 +919,7 @@
     "dnsProvider": "Cloudflare",
     "sourceRepository": "https://github.com/fraylabs/possible",
     "publishedAt": "2026-07-18",
-    "artifactSha256": "c110419428796681d398e40f9767ac14aaf90f7a22dff2d382e41e253938e34d",
+    "artifactSha256": "c94ff8a6dd6e8e875b3680ace288c8e36e85b7f35d654ece491549939d861434",
     "verificationReceipt": "deployment/PRODUCTION.md",
     "remainingApprovalBoundaries": [
       "cost or paid-plan changes",

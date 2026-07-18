@@ -99,6 +99,33 @@ export const wikiCorpusData: WikiCorpus = {
       ]
     },
     {
+      "slug": "art",
+      "title": "Art",
+      "summary": "Operational knowledge for creating visual, expressive, and time-based artifacts with a clear brief, deliberate medium, and reviewable source material.",
+      "tags": [
+        "art",
+        "visual",
+        "creative",
+        "media"
+      ],
+      "reviewedAt": "2026-07-18",
+      "sources": [
+        {
+          "title": "p5.js reference and learning resources",
+          "url": "https://p5js.org/learn/"
+        }
+      ],
+      "body": "## What this makes possible\n\nArt knowledge supports visual outcomes such as generated images, designed interfaces, presentation worlds, illustrations, motion pieces, and other authored media.\n\n## A common approach\n\nStart with the intended artifact and audience, then choose the medium that gives the work the right control surface: a hand-authored asset, a generative image workflow, a browser composition, a presentation system, or a parameterized video pipeline. Keep the brief, references, source files, licenses, and final export connected.\n\nContinue into [Image generation](/wiki/image-generation) when the artifact is a raster image, [Website design](/wiki/website-design) when the interface is the work, [Presentations](/wiki/presentations) when the narrative is delivered as slides, or [Programmatic video](/wiki/programmatic-video) when motion and rendering are central.\n\n## Use this when\n\nUse the Art branch when the desired result is primarily expressive or visual and the choice of medium will materially change what can be made, revised, or verified.\n\n## Consider another route when\n\nIf the primary result is an ordinary data-driven browser application, start with [Web](/wiki/web). If it ends in a physical component, start with [Manufacturing](/wiki/manufacturing). Art can still be part of either project without defining the whole delivery route.\n\n## Important decisions\n\nRecord the audience, visual intent, reference material, authorship or generation method, editable source, output format, dimensions or timing, licensing constraints, and review standard. A visually convincing draft is not automatically a deliverable or a rights-cleared asset.\n\n## How to verify\n\nVerify the exact exported artifact, its dimensions or playback behavior, the source revision that produced it, and any required human review. Preserve source references and generation inputs when they affect reproducibility or ownership.",
+      "links": [
+        "image-generation",
+        "website-design",
+        "presentations",
+        "programmatic-video",
+        "web",
+        "manufacturing"
+      ]
+    },
+    {
       "slug": "browser-applications",
       "title": "Browser applications",
       "summary": "Interactive browser software whose architecture must account for navigation, client and server boundaries, data mutation, state, accessibility, testing, and deployment.",
@@ -350,6 +377,34 @@ export const wikiCorpusData: WikiCorpus = {
       ]
     },
     {
+      "slug": "design-systems",
+      "title": "Design systems",
+      "summary": "A reusable visual and interaction vocabulary of tokens, components, states, and usage rules that keeps a website coherent as it grows.",
+      "tags": [
+        "art",
+        "web",
+        "design",
+        "components",
+        "systems"
+      ],
+      "kind": "method",
+      "reviewedAt": "2026-07-18",
+      "sources": [
+        {
+          "title": "Material Design 3 foundations",
+          "url": "https://m3.material.io/foundations"
+        },
+        {
+          "title": "W3C Web Content Accessibility Guidelines 2.2",
+          "url": "https://www.w3.org/TR/WCAG22/"
+        }
+      ],
+      "body": "## What this makes possible\n\nDesign systems make repeated interface decisions explicit and reusable: design tokens, typography, color roles, spacing, components, interaction states, accessibility behavior, and guidance for when a pattern should not be used.\n\n## A common approach\n\nStart from the product’s recurring decisions rather than drawing a large component catalog. Define semantic tokens, establish a small set of primitives, document states and composition rules, and keep the design source aligned with the implemented components. [shadcn/ui](/wiki/shadcn-ui) is one code-owned component route for React projects; it does not remove the need for product-specific design decisions.\n\n## Use this when\n\nUse this method when several pages or products need to feel coherent, or when repeated visual changes would otherwise be copied inconsistently across screens.\n\n## Consider another route when\n\nFor a one-screen disposable experiment, a full system may cost more than it saves. Do not create abstractions before repeated behavior is understood, and do not confuse a component library with a complete design system.\n\n## Important decisions\n\nDecide who owns tokens and components, how design and code revisions are matched, which states are mandatory, how accessibility is tested, and how exceptions are recorded. Keep content, layout, behavior, and brand expression distinct enough to evolve independently.\n\n## How to verify\n\nExercise the system through representative pages and edge states, not only isolated component snapshots. Confirm token changes propagate intentionally, keyboard and contrast behavior remain valid, and the documented composition rules match the shipped implementation.",
+      "links": [
+        "shadcn-ui"
+      ]
+    },
+    {
       "slug": "dxf-profile-exchange",
       "title": "DXF profile exchange",
       "summary": "A 2D drawing exchange format commonly used to hand off clean, closed, one-to-one cut profiles or flat patterns to sheet cutting workflows.",
@@ -471,6 +526,34 @@ export const wikiCorpusData: WikiCorpus = {
       "links": [
         "cadquery",
         "step-solid-exchange"
+      ]
+    },
+    {
+      "slug": "image-generation",
+      "title": "Image generation",
+      "summary": "A controlled workflow for creating or editing raster images from text and reference inputs while preserving review, provenance, and output constraints.",
+      "tags": [
+        "art",
+        "image",
+        "generation",
+        "editing",
+        "raster"
+      ],
+      "kind": "method",
+      "reviewedAt": "2026-07-18",
+      "sources": [
+        {
+          "title": "OpenAI image generation guide",
+          "url": "https://platform.openai.com/docs/guides/images"
+        },
+        {
+          "title": "OpenAI image generation API reference",
+          "url": "https://platform.openai.com/docs/api-reference/images"
+        }
+      ],
+      "body": "## What this makes possible\n\nImage generation can produce or edit raster assets from a written brief and, where supported, reference images. It is useful for concept exploration, illustrations, campaign variants, storyboards, textures, and interface or product visual studies.\n\n## A common approach\n\nDefine the subject, composition, aspect ratio, visual language, exclusions, reference inputs, and intended use before generating. Create a small set of deliberate variants, select against the brief, then edit or regenerate only the failing parts. Keep the prompt, references, model or service, output settings, selected result, and human approval with the asset.\n\nUse an image-generation API or application that supports the required generation and editing operations. The [OpenAI image API](https://platform.openai.com/docs/guides/images) is one documented implementation route; it is not a universal answer for every style, privacy, latency, or cost constraint.\n\n## Use this when\n\nUse this method when a raster image is the desired artifact and variation or reference-guided editing is more valuable than manually drawing every pixel.\n\n## Consider another route when\n\nUse a vector or parametric design workflow when the asset needs exact geometry, reusable constraints, or reliable text. Use [Programmatic video](/wiki/programmatic-video) when timing and animation are core requirements. Do not use generated imagery as a substitute for factual diagrams, technical drawings, or unreviewed product claims.\n\n## Important decisions\n\nDecide whether references contain private or restricted material, whether the service terms fit the intended use, how much variation is acceptable, and which details require deterministic editing. Small text, logos, hands, repeated patterns, and exact product geometry need explicit inspection rather than assumed correctness.\n\n## How to verify\n\nInspect the selected image at its delivery size, compare it with the brief and references, check text and structural details, confirm the output format and dimensions, and record the generation inputs plus any edits. Treat provenance, rights, and factual accuracy as separate review questions.",
+      "links": [
+        "programmatic-video"
       ]
     },
     {
@@ -674,6 +757,36 @@ export const wikiCorpusData: WikiCorpus = {
       ]
     },
     {
+      "slug": "presentations",
+      "title": "Presentations",
+      "summary": "A structured visual narrative delivered as slides, with an explicit audience, argument, pacing, source material, and export or presentation target.",
+      "tags": [
+        "art",
+        "presentations",
+        "slides",
+        "narrative",
+        "communication"
+      ],
+      "kind": "outcome",
+      "reviewedAt": "2026-07-18",
+      "sources": [
+        {
+          "title": "reveal.js",
+          "url": "https://revealjs.com/"
+        },
+        {
+          "title": "Marpit documentation",
+          "url": "https://marpit.marp.app/"
+        }
+      ],
+      "body": "## What this makes possible\n\nPresentation work turns a message, lesson, proposal, or demonstration into a sequence of visual frames that an audience can follow live or consume as an exported deck.\n\n## A common approach\n\nDefine the audience, decision or understanding the deck must produce, delivery time, presentation environment, and evidence required. Build an argument with one job per slide, use visuals that carry meaning rather than decoration, and keep speaker notes or source material attached to the deck. Choose a format based on the delivery constraint: an office-native deck, a Markdown-to-slides workflow, or an HTML presentation such as [reveal.js](/wiki/revealjs).\n\n## Use this when\n\nUse this outcome when the result must guide an audience through a sequence rather than exist as a single page, poster, or image.\n\n## Consider another route when\n\nUse [Website design](/wiki/website-design) for an interactive site whose audience navigates at its own pace. Use [Programmatic video](/wiki/programmatic-video) when timing, audio, or continuous playback is central. Do not treat an automatically generated slide list as a finished presentation without narrative and visual review.\n\n## Important decisions\n\nRecord the narrative arc, slide count or duration, aspect ratio, typography scale, chart and image sources, presenter notes, fallback fonts, export target, and accessibility expectations. A deck that looks correct on one laptop may fail in a projector, PDF export, or remote presentation environment.\n\n## How to verify\n\nPresent or export the actual deck in its target environment. Check reading order, legibility at distance, animation and media behavior, citations, speaker notes, PDF or image export, and the time required to deliver the argument.",
+      "links": [
+        "revealjs",
+        "website-design",
+        "programmatic-video"
+      ]
+    },
+    {
       "slug": "production-web-verification",
       "title": "Production web verification",
       "summary": "Evidence that a deployed browser outcome builds, supports critical user flows, meets its accessibility target, protects sensitive boundaries, and records performance behavior.",
@@ -704,6 +817,35 @@ export const wikiCorpusData: WikiCorpus = {
         "browser-applications",
         "create-vercel-preview-deployment",
         "3d-runtime-verification"
+      ]
+    },
+    {
+      "slug": "programmatic-video",
+      "title": "Programmatic video",
+      "summary": "A reproducible video workflow where scenes, timing, assets, and variations are represented as code or structured data before rendering.",
+      "tags": [
+        "art",
+        "video",
+        "motion",
+        "rendering",
+        "automation"
+      ],
+      "kind": "outcome",
+      "reviewedAt": "2026-07-18",
+      "sources": [
+        {
+          "title": "Remotion",
+          "url": "https://www.remotion.dev/"
+        },
+        {
+          "title": "FFmpeg documentation",
+          "url": "https://ffmpeg.org/documentation.html"
+        }
+      ],
+      "body": "## What this makes possible\n\nProgrammatic video can produce repeatable videos, animations, captions, visualizations, and personalized variants from a shared scene definition and structured inputs.\n\n## A common approach\n\nDefine the story, frame rate, dimensions, duration, audio behavior, asset rights, and output formats. Model scenes and timing as data or components, preview representative frames, then render the exact approved revision. [Remotion](/wiki/remotion) is one React-based route; FFmpeg can handle media transformation and encoding tasks around the render pipeline.\n\n## Use this when\n\nUse this outcome when many videos share a visual grammar, when data changes the rendered result, or when deterministic revision and batch rendering matter.\n\n## Consider another route when\n\nUse [Presentations](/wiki/presentations) for a presenter-controlled sequence of slides. Use a conventional timeline editor when an artist needs direct, frame-level manipulation of a small number of one-off pieces and code would slow the work.\n\n## Important decisions\n\nRecord the composition inputs, frame rate, dimensions, timing model, fonts, audio licenses, image and footage sources, render environment, and output codec. Separate preview rendering from final rendering and do not assume a successful render proves visual or audio correctness.\n\n## How to verify\n\nRender the approved revision, inspect the beginning, middle, transitions, captions, and end at full resolution, listen through the audio, confirm duration and frame rate, and validate playback in each required delivery environment. Preserve the render inputs and output checksum when reproducibility matters.",
+      "links": [
+        "remotion",
+        "presentations"
       ]
     },
     {
@@ -783,6 +925,35 @@ export const wikiCorpusData: WikiCorpus = {
       ]
     },
     {
+      "slug": "remotion",
+      "title": "Remotion",
+      "summary": "A React-based route for building, previewing, and rendering parameterized videos and video applications.",
+      "tags": [
+        "art",
+        "video",
+        "react",
+        "rendering",
+        "remotion"
+      ],
+      "kind": "method",
+      "reviewedAt": "2026-07-18",
+      "sources": [
+        {
+          "title": "Remotion",
+          "url": "https://www.remotion.dev/"
+        },
+        {
+          "title": "Remotion documentation",
+          "url": "https://www.remotion.dev/docs/"
+        }
+      ],
+      "body": "[Remotion](https://www.remotion.dev/) is a React-based video creation framework. It provides compositions that can be previewed in a browser and rendered to video or image outputs, with props and code controlling the content and timing.\n\n## What this makes possible\n\nRemotion can turn React components, structured inputs, assets, and frame timing into repeatable video compositions. That supports motion graphics, data-driven clips, captioned videos, explainers, and applications that let another person customize a video before rendering.\n\n## A common approach\n\nStart with [Programmatic video](/wiki/programmatic-video), define a composition with explicit dimensions, frame rate, duration, and inputs, then preview it in Remotion Studio or the Player. Render only after checking representative frames and media behavior. Keep composition code, input data, asset revisions, and render settings together.\n\n## Use this when\n\nUse Remotion when the surrounding application is React or when composition logic, reusable layouts, parameterized content, and repeatable rendering are central to the video workflow.\n\n## Consider another route when\n\nUse [reveal.js](/wiki/revealjs) for an interactive slide deck rather than a continuous rendered video. Use a conventional editor when the work is a one-off timeline whose value depends on direct manual manipulation more than reusable composition logic.\n\n## Important decisions\n\nDecide where rendering happens, how fonts and media are packaged, how input data is validated, which output formats are required, and whether the current Remotion license and deployment terms fit the project. Treat cloud rendering, credentials, and external asset access as separate operational decisions.\n\n## How to verify\n\nPreview the composition with representative and boundary inputs, render the exact revision, inspect visual timing and audio, verify the output dimensions and codec, and test the final file in its intended player. A successful JavaScript build is not evidence that every frame, asset, or audio transition is correct.",
+      "links": [
+        "programmatic-video",
+        "revealjs"
+      ]
+    },
+    {
       "slug": "request-protolabs-quote",
       "title": "Request a Protolabs quote",
       "summary": "An approval-gated upload of a revisioned model and drawing package to Protolabs for current DFM feedback and quote configuration, stopping before payment or fabrication.",
@@ -850,6 +1021,40 @@ export const wikiCorpusData: WikiCorpus = {
       "links": [
         "xometry",
         "request-protolabs-quote"
+      ]
+    },
+    {
+      "slug": "revealjs",
+      "title": "reveal.js",
+      "summary": "An open web-based presentation framework for authoring interactive slide decks with HTML, Markdown, CSS, and JavaScript.",
+      "tags": [
+        "art",
+        "presentations",
+        "web",
+        "javascript",
+        "slides"
+      ],
+      "kind": "method",
+      "reviewedAt": "2026-07-18",
+      "sources": [
+        {
+          "title": "reveal.js",
+          "url": "https://revealjs.com/"
+        },
+        {
+          "title": "reveal.js markup",
+          "url": "https://revealjs.com/markup/"
+        },
+        {
+          "title": "reveal.js PDF export",
+          "url": "https://revealjs.com/pdf-export/"
+        }
+      ],
+      "body": "reveal.js is an open-source HTML presentation framework. Slides are expressed with web technologies, so CSS, JavaScript, Markdown, embedded content, speaker notes, and interactive behavior can all be part of the deck.\n\n## What this makes possible\n\nreveal.js can produce browser-delivered presentations with nested slides, Markdown support, custom styling, code highlighting, speaker notes, and PDF export. It is a route for teams that want a deck to remain inspectable and programmable rather than locked inside a desktop editor.\n\n## A common approach\n\nCreate a minimal slide structure, establish the theme and layout rules, then add the narrative and interactive elements. Keep content and visual tokens separate from framework initialization. Test the live presentation and the PDF export as separate artifacts; a browser presentation can behave correctly while its print layout fails.\n\nUse [Presentations](/wiki/presentations) to define the communication outcome before choosing reveal.js. Use [Website design](/wiki/website-design) when the work is becoming a general interactive website rather than a slide sequence.\n\n## Use this when\n\nUse reveal.js when web-native styling, source control, embedded demos, custom JavaScript, or a repeatable build is more important than office-suite interoperability.\n\n## Consider another route when\n\nChoose an office-native format when collaborators must edit through a standard presentation suite or when its review and export workflow is a hard requirement. Choose [Remotion](/wiki/remotion) when the final artifact is a rendered video rather than a navigable deck.\n\n## Important decisions\n\nDecide whether the deliverable is a live URL, PDF, or both; how fonts and media are packaged; whether external content is allowed; how the deck behaves offline; and which controls the presenter needs. Keep a static fallback for critical claims and media.\n\n## How to verify\n\nRun the deck in the intended browser and presentation environment, exercise keyboard navigation and speaker notes, check embedded media and external links, and export the final PDF. Review both artifacts for legibility, clipping, citations, and correct slide order.",
+      "links": [
+        "presentations",
+        "website-design",
+        "remotion"
       ]
     },
     {
@@ -1234,6 +1439,39 @@ export const wikiCorpusData: WikiCorpus = {
       "links": [
         "browser-applications",
         "custom-manufactured-parts"
+      ]
+    },
+    {
+      "slug": "website-design",
+      "title": "Website design",
+      "summary": "The visual and interaction design of a website, including hierarchy, responsive behavior, component language, accessibility, and a handoff that survives implementation.",
+      "tags": [
+        "art",
+        "web",
+        "design",
+        "interface",
+        "accessibility"
+      ],
+      "kind": "outcome",
+      "reviewedAt": "2026-07-18",
+      "sources": [
+        {
+          "title": "Web Content Accessibility Guidelines 2.2",
+          "url": "https://www.w3.org/TR/WCAG22/"
+        },
+        {
+          "title": "MDN CSS styling basics",
+          "url": "https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Styling_basics"
+        }
+      ],
+      "body": "## What this makes possible\n\nWebsite design turns a product brief into a visual and interaction system that can guide a browser implementation: page hierarchy, layout, typography, color, controls, responsive states, content structure, and accessibility expectations.\n\n## A common approach\n\nStart with the audience, primary action, content hierarchy, and supported viewport range. Establish a small visual language, then design the important states rather than only the ideal landing screen: loading, empty, error, focus, hover, validation, mobile, and long content. Express repeated choices as tokens and reusable components through [Design systems](/wiki/design-systems), then implement and verify the result as a [Browser application](/wiki/browser-applications).\n\n## Use this when\n\nUse this outcome when the website’s visual language, information hierarchy, and interaction behavior are part of what must be delivered—not merely decoration added after engineering.\n\n## Consider another route when\n\nIf the primary challenge is data flow, routing, or server behavior, continue with [Web](/wiki/web) and [Framework selection](/wiki/framework-selection). If the result is a standalone image or campaign asset, use [Image generation](/wiki/image-generation) or another art workflow instead.\n\n## Important decisions\n\nRecord the content model, responsive breakpoints, type scale, color and contrast rules, interaction states, keyboard path, motion behavior, component boundaries, and implementation owner. A polished static mockup does not define how the design behaves with real content or assistive technology.\n\n## How to verify\n\nReview representative pages at supported widths with real-length content. Test keyboard navigation, focus visibility, contrast, reduced motion, form errors, screen-reader structure, and direct navigation in the implemented browser experience. Use [Production web verification](/wiki/production-web-verification) when the claim is production readiness.",
+      "links": [
+        "design-systems",
+        "browser-applications",
+        "web",
+        "framework-selection",
+        "image-generation",
+        "production-web-verification"
       ]
     },
     {
