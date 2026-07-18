@@ -5,7 +5,7 @@ The interactive Possible surface has three layers:
 - `/` — choose an outcome, write one brief, and compile it.
 - `/packs` — compare the curated outcome catalog.
 - `/packs/:slug` — inspect and personalize a complete pack.
-- `/demo` — present the Hardware Launch compilation from one brief to a reviewed team outcome.
+- `/demo` — replay a real Hardware Launch run from one brief through parallel execution, integration, failure, repair, and verified evidence.
 
 A builder chooses Hardware Launch, Software Launch, or Open-Source Release, writes one brief, inspects the selected pack, and copies:
 

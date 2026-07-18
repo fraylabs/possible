@@ -1,0 +1,409 @@
+{
+  "summary": {
+    "status": "passed",
+    "failure_count": 0,
+    "failures": [],
+    "check_count": 58,
+    "manifest_review_status_at_audit": "passed-after-repair",
+    "manifest_evidence_output_status_at_audit": "passed-after-repair"
+  },
+  "checks": [
+    {
+      "name": "artifact-nonempty",
+      "path": "PRODUCT-BRIEF.md",
+      "status": "passed",
+      "size": 2529
+    },
+    {
+      "name": "artifact-nonempty",
+      "path": "outcome-brief.md",
+      "status": "passed",
+      "size": 2928
+    },
+    {
+      "name": "artifact-nonempty",
+      "path": "site/src/App.tsx",
+      "status": "passed",
+      "size": 6404
+    },
+    {
+      "name": "artifact-nonempty",
+      "path": "site/WAITLIST-CONTRACT.md",
+      "status": "passed",
+      "size": 1171
+    },
+    {
+      "name": "artifact-nonempty",
+      "path": "site/dist/index.html",
+      "status": "passed",
+      "size": 612
+    },
+    {
+      "name": "artifact-nonempty",
+      "path": "site/dist/assets/index-CbZgcUBE.js",
+      "status": "passed",
+      "size": 196819
+    },
+    {
+      "name": "artifact-nonempty",
+      "path": "site/dist/assets/index-CovCuj17.css",
+      "status": "passed",
+      "size": 11972
+    },
+    {
+      "name": "artifact-nonempty",
+      "path": "film/src/StillLaunch.tsx",
+      "status": "passed",
+      "size": 16100
+    },
+    {
+      "name": "artifact-nonempty",
+      "path": "film/out/still-launch.mp4",
+      "status": "passed",
+      "size": 19372593
+    },
+    {
+      "name": "artifact-nonempty",
+      "path": "film/out/still-launch-preview.png",
+      "status": "passed",
+      "size": 316467
+    },
+    {
+      "name": "artifact-nonempty",
+      "path": "film/out/still-launch-interaction.png",
+      "status": "passed",
+      "size": 314412
+    },
+    {
+      "name": "artifact-nonempty",
+      "path": "film/out/still-launch-contact-sheet.png",
+      "status": "passed",
+      "size": 269764
+    },
+    {
+      "name": "artifact-nonempty",
+      "path": "hardware/still.py",
+      "status": "passed",
+      "size": 5136
+    },
+    {
+      "name": "artifact-nonempty",
+      "path": "hardware/still.step",
+      "status": "passed",
+      "size": 235185
+    },
+    {
+      "name": "artifact-nonempty",
+      "path": "hardware/exports/still.glb",
+      "status": "passed",
+      "size": 93928
+    },
+    {
+      "name": "artifact-nonempty",
+      "path": "hardware/exports/still.stl",
+      "status": "passed",
+      "size": 119484
+    },
+    {
+      "name": "artifact-nonempty",
+      "path": "hardware/GEOMETRY-REPORT.md",
+      "status": "passed",
+      "size": 4060
+    },
+    {
+      "name": "artifact-nonempty",
+      "path": "hardware/snapshots/front-ortho_20260718T143834Z.png",
+      "status": "passed",
+      "size": 58159
+    },
+    {
+      "name": "artifact-nonempty",
+      "path": "hardware/snapshots/iso-opposite_20260718T143834Z.png",
+      "status": "passed",
+      "size": 381875
+    },
+    {
+      "name": "artifact-nonempty",
+      "path": "hardware/snapshots/iso_20260718T143834Z.png",
+      "status": "passed",
+      "size": 306777
+    },
+    {
+      "name": "artifact-nonempty",
+      "path": "hardware/snapshots/top-ortho_20260718T143834Z.png",
+      "status": "passed",
+      "size": 89424
+    },
+    {
+      "name": "artifact-nonempty",
+      "path": "outcome-room/index.html",
+      "status": "passed",
+      "size": 10682
+    },
+    {
+      "name": "artifact-nonempty",
+      "path": "outcome-room/app.js",
+      "status": "passed",
+      "size": 1072
+    },
+    {
+      "name": "artifact-nonempty",
+      "path": "outcome-room/styles.css",
+      "status": "passed",
+      "size": 13059
+    },
+    {
+      "name": "artifact-nonempty",
+      "path": "outcome-room/manifest.json",
+      "status": "passed",
+      "size": 1645
+    },
+    {
+      "name": "artifact-nonempty",
+      "path": "outcome-room/run-events.json",
+      "status": "passed",
+      "size": 984
+    },
+    {
+      "name": "artifact-nonempty",
+      "path": "outcome-room/evidence/site-receipt.md",
+      "status": "passed",
+      "size": 1681
+    },
+    {
+      "name": "artifact-nonempty",
+      "path": "outcome-room/evidence/waitlist-contract.md",
+      "status": "passed",
+      "size": 1171
+    },
+    {
+      "name": "artifact-nonempty",
+      "path": "outcome-room/evidence/film-receipt.md",
+      "status": "passed",
+      "size": 3260
+    },
+    {
+      "name": "artifact-nonempty",
+      "path": "outcome-room/evidence/geometry-report.md",
+      "status": "passed",
+      "size": 4060
+    },
+    {
+      "name": "artifact-nonempty",
+      "path": "outcome-room/evidence/hardware-receipt.md",
+      "status": "passed",
+      "size": 5938
+    },
+    {
+      "name": "integrated-copy-integrity",
+      "source": "site/dist/index.html",
+      "copy": "outcome-room/assets/site/index.html",
+      "status": "passed",
+      "source_sha256": "a2662fa81430ae922b4ec8b80324f31a168bc35b2cd7f04f6d2e0f7d7d661b71",
+      "copy_sha256": "a2662fa81430ae922b4ec8b80324f31a168bc35b2cd7f04f6d2e0f7d7d661b71"
+    },
+    {
+      "name": "integrated-copy-integrity",
+      "source": "site/dist/assets/index-CbZgcUBE.js",
+      "copy": "outcome-room/assets/site/assets/index-CbZgcUBE.js",
+      "status": "passed",
+      "source_sha256": "e79a798ad779347d76dbe051a9d7972413cff6e0c71595fda29fca27ed70d2b9",
+      "copy_sha256": "e79a798ad779347d76dbe051a9d7972413cff6e0c71595fda29fca27ed70d2b9"
+    },
+    {
+      "name": "integrated-copy-integrity",
+      "source": "site/dist/assets/index-CovCuj17.css",
+      "copy": "outcome-room/assets/site/assets/index-CovCuj17.css",
+      "status": "passed",
+      "source_sha256": "c436225a092656b8eaac717ca6359b695dcc35c4454abd91e4c56081199193fa",
+      "copy_sha256": "c436225a092656b8eaac717ca6359b695dcc35c4454abd91e4c56081199193fa"
+    },
+    {
+      "name": "integrated-copy-integrity",
+      "source": "film/out/still-launch.mp4",
+      "copy": "outcome-room/assets/film/still-launch.mp4",
+      "status": "passed",
+      "source_sha256": "5da0102cd1daabd74680938432696aaa45d85ac17ec5f73fbc1ce3f2492b4ce1",
+      "copy_sha256": "5da0102cd1daabd74680938432696aaa45d85ac17ec5f73fbc1ce3f2492b4ce1"
+    },
+    {
+      "name": "integrated-copy-integrity",
+      "source": "film/out/still-launch-preview.png",
+      "copy": "outcome-room/assets/film/still-launch-preview.png",
+      "status": "passed",
+      "source_sha256": "1539bcc51bedda99c3e0939f6e9990b53388bde9af6638144bac23b8f3888a35",
+      "copy_sha256": "1539bcc51bedda99c3e0939f6e9990b53388bde9af6638144bac23b8f3888a35"
+    },
+    {
+      "name": "integrated-copy-integrity",
+      "source": "film/out/still-launch-interaction.png",
+      "copy": "outcome-room/assets/film/still-launch-interaction.png",
+      "status": "passed",
+      "source_sha256": "5259c1aee1dabd7141b77d2904018f5fcbdc7b58b6dd7a430d338ace67be5dc1",
+      "copy_sha256": "5259c1aee1dabd7141b77d2904018f5fcbdc7b58b6dd7a430d338ace67be5dc1"
+    },
+    {
+      "name": "integrated-copy-integrity",
+      "source": "film/out/still-launch-contact-sheet.png",
+      "copy": "outcome-room/assets/film/still-launch-contact-sheet.png",
+      "status": "passed",
+      "source_sha256": "ca18eae648e0c63cb7144976a87f0910735be26ba109f28a796ffa0a1e6eb93a",
+      "copy_sha256": "ca18eae648e0c63cb7144976a87f0910735be26ba109f28a796ffa0a1e6eb93a"
+    },
+    {
+      "name": "integrated-copy-integrity",
+      "source": "hardware/still.py",
+      "copy": "outcome-room/assets/hardware/still.py",
+      "status": "passed",
+      "source_sha256": "dae709e42c4e719d17d586e04851b8d98679414df5fdbf19d0c43786262f42ec",
+      "copy_sha256": "dae709e42c4e719d17d586e04851b8d98679414df5fdbf19d0c43786262f42ec"
+    },
+    {
+      "name": "integrated-copy-integrity",
+      "source": "hardware/still.step",
+      "copy": "outcome-room/assets/hardware/still.step",
+      "status": "passed",
+      "source_sha256": "f22d316dfd2cb4ac16ca048bb2a87f28a13997079fa517442cf97a79ff529cd2",
+      "copy_sha256": "f22d316dfd2cb4ac16ca048bb2a87f28a13997079fa517442cf97a79ff529cd2"
+    },
+    {
+      "name": "integrated-copy-integrity",
+      "source": "hardware/exports/still.glb",
+      "copy": "outcome-room/assets/hardware/still.glb",
+      "status": "passed",
+      "source_sha256": "954e91343487ccc90faaba9d78b30be1c4c8b256570851cb571fd87263a943e0",
+      "copy_sha256": "954e91343487ccc90faaba9d78b30be1c4c8b256570851cb571fd87263a943e0"
+    },
+    {
+      "name": "integrated-copy-integrity",
+      "source": "hardware/exports/still.stl",
+      "copy": "outcome-room/assets/hardware/still.stl",
+      "status": "passed",
+      "source_sha256": "01d6a78de0a5853ec8ed439213fce531d71699a7edabc8a9c33d3dae0544da6f",
+      "copy_sha256": "01d6a78de0a5853ec8ed439213fce531d71699a7edabc8a9c33d3dae0544da6f"
+    },
+    {
+      "name": "integrated-copy-integrity",
+      "source": "hardware/snapshots/front-ortho_20260718T143834Z.png",
+      "copy": "outcome-room/assets/hardware/still-front.png",
+      "status": "passed",
+      "source_sha256": "57ab6012dac387d1f01db8f7fb92b2bcabc95d54131c2bfae738164e42b95e62",
+      "copy_sha256": "57ab6012dac387d1f01db8f7fb92b2bcabc95d54131c2bfae738164e42b95e62"
+    },
+    {
+      "name": "integrated-copy-integrity",
+      "source": "hardware/snapshots/iso-opposite_20260718T143834Z.png",
+      "copy": "outcome-room/assets/hardware/still-rear.png",
+      "status": "passed",
+      "source_sha256": "d5868b41573f6553361a8fcc590d409ec5afbc4d058c227f6ca37797c6d2cc84",
+      "copy_sha256": "d5868b41573f6553361a8fcc590d409ec5afbc4d058c227f6ca37797c6d2cc84"
+    },
+    {
+      "name": "integrated-copy-integrity",
+      "source": "hardware/snapshots/iso_20260718T143834Z.png",
+      "copy": "outcome-room/assets/hardware/still-iso.png",
+      "status": "passed",
+      "source_sha256": "b6ad34c0251dec7f901ba8e9b3cc56e44c0891d2e8c05e7121e0cc0f0c1f9216",
+      "copy_sha256": "b6ad34c0251dec7f901ba8e9b3cc56e44c0891d2e8c05e7121e0cc0f0c1f9216"
+    },
+    {
+      "name": "integrated-copy-integrity",
+      "source": "hardware/snapshots/top-ortho_20260718T143834Z.png",
+      "copy": "outcome-room/assets/hardware/still-top.png",
+      "status": "passed",
+      "source_sha256": "7e27ba5294092ced3765c84e06f48a7c8a699049958a0eb9d5e6641c255811ac",
+      "copy_sha256": "7e27ba5294092ced3765c84e06f48a7c8a699049958a0eb9d5e6641c255811ac"
+    },
+    {
+      "name": "manifest-json-shape",
+      "status": "passed"
+    },
+    {
+      "name": "run-events-json-shape",
+      "status": "passed"
+    },
+    {
+      "name": "skills-lock-json-shape",
+      "status": "passed"
+    },
+    {
+      "name": "ffprobe-film-facts",
+      "status": "passed",
+      "command": "ffprobe -v error -show_entries stream=codec_name,width,height,r_frame_rate,duration -show_entries format=size,duration,format_name -of json /Users/brianlim/coding/fray/repos/possible-hardware-demo-run/outcome-room/assets/film/still-launch.mp4",
+      "facts": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "width": 1920,
+            "height": 1080,
+            "r_frame_rate": "30/1",
+            "duration": "24.000000",
+            "side_data_list": [
+              {}
+            ]
+          },
+          {
+            "codec_name": "aac",
+            "r_frame_rate": "0/0",
+            "duration": "24.042667"
+          }
+        ],
+        "format": {
+          "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
+          "duration": "24.042667",
+          "size": "19372593"
+        }
+      }
+    },
+    {
+      "name": "silent-film-audio-track",
+      "status": "passed",
+      "command": "ffmpeg -hide_banner -i /Users/brianlim/coding/fray/repos/possible-hardware-demo-run/outcome-room/assets/film/still-launch.mp4 -map 0:a:0 -af volumedetect -f null -",
+      "evidence": "max_volume: -91.0 dB"
+    },
+    {
+      "name": "cross-artifact-fact",
+      "fact": "promise",
+      "status": "passed",
+      "missing_from": []
+    },
+    {
+      "name": "cross-artifact-fact",
+      "fact": "dimensions",
+      "status": "passed",
+      "missing_from": []
+    },
+    {
+      "name": "cross-artifact-fact",
+      "fact": "interaction-turn",
+      "status": "passed",
+      "missing_from": []
+    },
+    {
+      "name": "cross-artifact-fact",
+      "fact": "interaction-press",
+      "status": "passed",
+      "missing_from": []
+    },
+    {
+      "name": "cross-artifact-fact",
+      "fact": "interaction-glance",
+      "status": "passed",
+      "missing_from": []
+    },
+    {
+      "name": "cross-artifact-fact",
+      "fact": "companion-local-history",
+      "status": "passed",
+      "missing_from": []
+    },
+    {
+      "name": "cross-artifact-fact",
+      "fact": "fictional-boundary",
+      "status": "passed",
+      "missing_from": []
+    }
+  ]
+}

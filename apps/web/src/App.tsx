@@ -1,6 +1,5 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { compilePack, getPack, outcomePacks } from "@possible/packs";
-import type { CSSProperties } from "react";
 import type { OutcomePack } from "@possible/packs";
 
 type CopyState = "idle" | "copied" | "failed";
@@ -366,96 +365,155 @@ function Boundary() {
 }
 
 function DemoPage() {
-  const pack = outcomePacks[0];
-  const compiled = useMemo(() => compilePack(pack), [pack]);
-  const [brief, setBrief] = useState(exampleBriefs[pack.slug] ?? "");
-  const [isReady, setIsReady] = useState(false);
-  const [runKey, setRunKey] = useState(0);
-  const runPrompt = compiled.runPrompt.replace(
-    "[Replace this line with the product, audience, constraints, and any existing repository or assets.]",
-    brief.trim() || "[Add your product brief here.]",
-  );
+  const events = [
+    { actor: "CAPTAIN", title: "Brief locked", detail: "Confirmed facts and boundaries written to outcome-brief.md." },
+    { actor: "POSSIBLE", title: "Pack compiled", detail: "Five reviewed skills composed into one Hardware Launch recipe." },
+    { actor: "CAPTAIN", title: "Workstreams spawned", detail: "Site, film, and CAD assigned to isolated subagents." },
+    { actor: "SUBAGENTS", title: "Artifacts returned", detail: "Three specialists returned real outputs and receipts." },
+    { actor: "CAPTAIN", title: "Outcome integrated", detail: "Every artifact assembled into one local launch room." },
+    { actor: "REVIEWER", title: "Failure found", detail: "Embedded site assets returned 404 inside the integrated room." },
+    { actor: "REVIEWER", title: "Repair verified", detail: "Relative asset base fixed; browser and artifact audits passed." },
+  ] as const;
+  const [step, setStep] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const lastStep = events.length - 1;
+  const currentEvent = events[step] ?? events[0];
 
-  function runDemo() {
-    setRunKey((value) => value + 1);
-    setIsReady(true);
-  }
+  useEffect(() => {
+    if (!isPlaying) return;
+    if (step >= lastStep) {
+      setIsPlaying(false);
+      return;
+    }
+    const timer = window.setTimeout(() => setStep((value) => Math.min(value + 1, lastStep)), 1900);
+    return () => window.clearTimeout(timer);
+  }, [isPlaying, lastStep, step]);
 
-  function resetDemo() {
-    setBrief(exampleBriefs[pack.slug] ?? "");
-    setIsReady(false);
+  function togglePlayback() {
+    if (step >= lastStep) setStep(0);
+    setIsPlaying((value) => !value);
   }
 
   return (
-    <main className="demo-page">
-      <SiteNav label="Live demo / Hardware Launch" />
-      <section className={`demo-stage ${isReady ? "demo-stage--ready" : ""}`}>
-        <header className="demo-title">
+    <main className="replay-page">
+      <SiteNav label="Recorded run / Still" />
+      <section className="replay-stage">
+        <header className="replay-title">
           <div>
-            <p className="eyebrow">LIVE OUTCOME COMPILER / 01</p>
-            <h1>One brief.<br /><em>A whole launch team.</em></h1>
+            <p className="eyebrow">RECORDED FROM A REAL CODEX RUN</p>
+            <h1>Watch the outcome<br /><em>become real.</em></h1>
           </div>
-          <p>Possible turns a desired outcome into coordinated specialist work, integrated deliverables, and an independent review.</p>
+          <div className="replay-title-meta">
+            <p>A fresh Codex captain ran Possible’s Hardware Launch pack against one fictional e-ink product brief. Every event and artifact below comes from that run.</p>
+            <div><span><i /> LOCAL RUN COMPLETE</span><strong>58 / 58 ARTIFACT CHECKS</strong></div>
+          </div>
         </header>
 
-        <div className="demo-console">
-          <div className="demo-input">
-            <header><span>INPUT / OUTCOME</span><i className={isReady ? "is-live" : ""} /> </header>
-            <label htmlFor="demo-brief">WHAT SHOULD CODEX SHIP?</label>
-            <textarea
-              id="demo-brief"
-              value={brief}
-              onChange={(event) => { setBrief(event.target.value); setIsReady(false); }}
-              rows={5}
-            />
-            <div className="demo-input-meta">
-              <span>SELECTED RECIPE</span><strong>{pack.name}</strong>
-            </div>
-            <button type="button" className="demo-run" onClick={runDemo} disabled={!brief.trim()}>
-              <span>{isReady ? "Run it again" : "Compile live outcome"}</span><b aria-hidden="true">{isReady ? "↻" : "→"}</b>
-            </button>
-            {isReady ? <button className="demo-reset" type="button" onClick={resetDemo}>Reset demo</button> : null}
-          </div>
+        <div className="replay-window">
+          <header className="replay-window-bar">
+            <div><i /><i /><i /></div>
+            <strong>CODEX / POSSIBLE / HARDWARE-LAUNCH</strong>
+            <span>RECORDED REAL RUN</span>
+          </header>
 
-          <div className="demo-pipeline" key={runKey} aria-live="polite">
-            <div className="demo-pipeline-head">
-              <div><span>COMPILER STATUS</span><strong><i /> {isReady ? "OUTCOME READY" : "WAITING FOR BRIEF"}</strong></div>
-              <div><span>RECIPE</span><strong>HARDWARE-LAUNCH@1</strong></div>
-              <div><span>EXECUTION</span><strong>PARALLEL + REVIEW</strong></div>
-            </div>
-
-            <div className="demo-equation" aria-label={`${pack.skills.length} skills become ${pack.workstreams.length} parallel workstreams and one review`}>
-              <div><strong>{pack.skills.length}</strong><span>SKILLS</span></div><b>→</b>
-              <div><strong>{pack.workstreams.length}</strong><span>SUBAGENTS</span></div><b>→</b>
-              <div><strong>{pack.outputs.length}</strong><span>OUTPUTS</span></div><b>+</b>
-              <div><strong>1</strong><span>REVIEW</span></div>
-            </div>
-
-            <div className="demo-team">
-              {pack.workstreams.map((stream, index) => (
-                <article style={{ "--demo-index": index } as CSSProperties} key={stream.id}>
-                  <header><span>0{index + 1}</span><i /></header>
-                  <div><small>SUBAGENT</small><h2>{stream.name}</h2><p>{stream.brief}</p></div>
-                  <div className="demo-agent-skills">{stream.skills.map((skill) => `$${skill}`).join(" + ")}</div>
-                </article>
+          <aside className="replay-activity">
+            <header><span>CODEX ACTIVITY</span><strong>0{step + 1} / 0{events.length}</strong></header>
+            <div className="replay-event-list">
+              {events.map((event, index) => (
+                <button
+                  type="button"
+                  className={index === step ? "is-current" : index < step ? "is-past" : ""}
+                  aria-current={index === step ? "step" : undefined}
+                  onClick={() => { setStep(index); setIsPlaying(false); }}
+                  key={event.title}
+                >
+                  <span>0{index + 1}</span>
+                  <div><small>{event.actor}</small><strong>{event.title}</strong><p>{event.detail}</p></div>
+                </button>
               ))}
-              <article className="demo-review" style={{ "--demo-index": pack.workstreams.length } as CSSProperties}>
-                <header><span>0{pack.workstreams.length + 1}</span><i /></header>
-                <div><small>FRESH CONTEXT</small><h2>Independent review</h2><p>Challenge the integrated result and return evidence, failures, and unproven claims.</p></div>
-                <div className="demo-agent-skills">{pack.reviewSkills.map((skill) => `$${skill}`).join(" + ")}</div>
+            </div>
+            <footer>
+              <a href="/demo/still/OUTCOME-RECEIPT.md" target="_blank" rel="noreferrer">VIEW RECEIPT ↗</a>
+              <a href="/demo/still/outcome-room/index.html" target="_blank" rel="noreferrer">OPEN LAUNCH ROOM ↗</a>
+            </footer>
+          </aside>
+
+          <section className={`replay-canvas replay-step-${step}`} aria-live="polite">
+            <header><span>ARTIFACT CANVAS</span><strong>{currentEvent.actor} / {currentEvent.title.toUpperCase()}</strong></header>
+            <div className="replay-scene">
+              <article className="replay-brief-card">
+                <span>OUTCOME BRIEF / STILL</span>
+                <h2>Create a launch for a palm-sized e-ink focus device.</h2>
+                <p>Start a focused block without opening your phone.</p>
+              </article>
+
+              <article className="replay-recipe-card">
+                <header><span>POSSIBLE PACK</span><strong>HARDWARE-LAUNCH@1</strong></header>
+                <div><b>5</b><span>REVIEWED<br />SKILLS</span><i>→</i><b>3</b><span>PARALLEL<br />SUBAGENTS</span><i>→</i><b>5</b><span>INTEGRATED<br />OUTPUTS</span></div>
+              </article>
+
+              <div className="replay-artifacts">
+                <article className="replay-artifact replay-artifact--site">
+                  <header><span>01 / SITE</span><strong>{step >= 3 ? "PASS" : "RUNNING"}</strong></header>
+                  <img src="/demo/still/outcome-room/evidence/screenshots/embedded-site-desktop.png" alt="Still launch website produced by the site workstream" />
+                  <p>Responsive launch story + local-only waitlist</p>
+                </article>
+                <article className="replay-artifact replay-artifact--film">
+                  <header><span>02 / FILM</span><strong>{step >= 3 ? "PASS" : "RUNNING"}</strong></header>
+                  <video
+                    controls
+                    muted
+                    playsInline
+                    preload="metadata"
+                    poster="/demo/still/outcome-room/assets/film/still-launch-preview.png"
+                    src="/demo/still/outcome-room/assets/film/still-launch.mp4"
+                  />
+                  <p>24 seconds · 1080p · deterministic Remotion source</p>
+                </article>
+                <article className="replay-artifact replay-artifact--cad">
+                  <header><span>03 / CAD</span><strong>{step >= 3 ? "PASS*" : "RUNNING"}</strong></header>
+                  <img src="/demo/still/outcome-room/assets/hardware/still-iso.png" alt="Still STEP-first exterior CAD concept" />
+                  <p>STEP + STL + GLB · measured geometry receipt</p>
+                </article>
+              </div>
+
+              <figure className="replay-integration">
+                <img src="/demo/still/outcome-room/evidence/screenshots/outcome-room-desktop.png" alt="The integrated Still outcome room" />
+                <figcaption><span>CAPTAIN / INTEGRATED OUTCOME</span><strong>ONE LOCAL LAUNCH ROOM</strong></figcaption>
+              </figure>
+
+              <article className="replay-review-card replay-review-card--failure">
+                <span>FRESH REVIEW / MATERIAL FAILURE</span>
+                <h2>Embedded site assets returned 404.</h2>
+                <p>The site passed alone but failed inside the integrated room. The reviewer rejected the outcome.</p>
+                <a href="/demo/still/verification/browser-results-initial-failure.json" target="_blank" rel="noreferrer">OPEN FAILED TRACE ↗</a>
+              </article>
+
+              <article className="replay-review-card replay-review-card--passed">
+                <span>REPAIR VERIFIED / OUTCOME COMPLETE</span>
+                <h2>Real outputs.<br />Real review.</h2>
+                <div>
+                  <p><strong>58 / 58</strong><span>ARTIFACT CHECKS</span></p>
+                  <p><strong>50 / 50</strong><span>BROWSER RESPONSES</span></p>
+                  <p><strong>0</strong><span>NETWORK WRITES</span></p>
+                  <p><strong>1</strong><span>FAILURE REPAIRED</span></p>
+                </div>
+                <a href="/demo/still/outcome-room/index.html" target="_blank" rel="noreferrer">EXPLORE THE REAL OUTCOME →</a>
               </article>
             </div>
 
-            <div className="demo-output">
-              <span>INTEGRATED OUTCOME</span>
-              <div>{pack.outputs.map((output) => <strong key={output}>✓ {output}</strong>)}</div>
-            </div>
-
-            <div className="demo-handoff">
-              <p><i /> Captain prompt compiled around your brief. Approval gates preserved.</p>
-              <CopyButton label="Copy full Codex run" value={runPrompt} />
-            </div>
-          </div>
+            <footer className="replay-controls">
+              <div><span>NOW PLAYING</span><strong>{currentEvent.title}</strong></div>
+              <div className="replay-progress" aria-label={`Replay step ${step + 1} of ${events.length}`}>
+                {events.map((event, index) => <i className={index <= step ? "is-filled" : ""} key={event.title} />)}
+              </div>
+              <div className="replay-buttons">
+                <button type="button" aria-label="Previous event" onClick={() => { setStep((value) => Math.max(0, value - 1)); setIsPlaying(false); }} disabled={step === 0}>←</button>
+                <button type="button" className="replay-play" onClick={togglePlayback}>{isPlaying ? "Pause" : step === lastStep ? "Replay" : "Play real run"}</button>
+                <button type="button" aria-label="Next event" onClick={() => { setStep((value) => Math.min(lastStep, value + 1)); setIsPlaying(false); }} disabled={step === lastStep}>→</button>
+              </div>
+            </footer>
+          </section>
         </div>
       </section>
     </main>

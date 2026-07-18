@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="A local, recorded outcome room from Possible's Hardware Launch pack."
+    />
+    <title>Still — Hardware Launch outcome room</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="masthead">
+      <a class="brand" href="#top" aria-label="Possible outcome room home">
+        possible<span>/</span>still
+      </a>
+      <nav aria-label="Outcome room sections">
+        <a href="#site">Site</a>
+        <a href="#film">Film</a>
+        <a href="#hardware">Hardware</a>
+        <a href="#evidence">Evidence</a>
+      </nav>
+      <p class="run-state"><span aria-hidden="true"></span> recorded local run</p>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="kicker">Hardware Launch / outcome 001</p>
+          <h1>One idea.<br /><em>Launch room.</em></h1>
+          <p class="promise">Start a focused block without opening your phone.</p>
+          <div class="scope-note">
+            <span>Still is fictional.</span>
+            <span>Everything here was created and checked locally.</span>
+          </div>
+        </div>
+        <div class="hero-visual" aria-label="Still launch film preview">
+          <video
+            controls
+            playsinline
+            preload="metadata"
+            poster="./assets/film/still-launch-preview.png"
+          >
+            <source src="./assets/film/still-launch.mp4" type="video/mp4" />
+            Your browser does not support embedded video.
+          </video>
+          <p><span>Launch film</span><span>24 sec / 1080p / local render</span></p>
+        </div>
+      </section>
+
+      <section class="run-strip" aria-label="Run summary">
+        <article><strong>5</strong><span>installed skills</span></article>
+        <article><strong>3</strong><span>parallel workstreams</span></article>
+        <article><strong>5</strong><span>integrated outputs</span></article>
+        <article><strong id="verification-count">1</strong><span>fresh review</span></article>
+      </section>
+
+      <section class="artifact-section site-section" id="site">
+        <header class="section-head">
+          <div>
+            <p class="kicker">01 / Launch site</p>
+            <h2>A calm place to begin.</h2>
+          </div>
+          <div class="section-meta">
+            <p>Responsive React launch story</p>
+            <p>Local-only waitlist</p>
+            <p>No backend or analytics</p>
+          </div>
+        </header>
+
+        <div class="browser-shell">
+          <div class="browser-bar">
+            <div class="browser-dots" aria-hidden="true"><i></i><i></i><i></i></div>
+            <span>still.local</span>
+            <div class="viewport-controls" aria-label="Site preview width">
+              <button type="button" class="active" data-width="desktop" aria-pressed="true">Desktop</button>
+              <button type="button" data-width="mobile" aria-pressed="false">Mobile</button>
+              <a href="./assets/site/index.html" target="_blank" rel="noreferrer">Open ↗</a>
+            </div>
+          </div>
+          <div class="site-stage">
+            <iframe
+              id="site-preview"
+              title="Still local launch site"
+              src="./assets/site/index.html"
+              loading="lazy"
+            ></iframe>
+          </div>
+        </div>
+
+        <div class="artifact-note">
+          <p><strong>Waitlist behavior</strong></p>
+          <p>A valid demo address is immediately cleared. Nothing is saved, sent, reserved, or subscribed.</p>
+          <a href="./evidence/waitlist-contract.md" target="_blank" rel="noreferrer">Read the contract ↗</a>
+        </div>
+      </section>
+
+      <section class="artifact-section film-section" id="film">
+        <header class="section-head inverse">
+          <div>
+            <p class="kicker">02 / Launch film</p>
+            <h2>Turn. Press. Glance.</h2>
+          </div>
+          <div class="section-meta">
+            <p>Programmatic Remotion source</p>
+            <p>720 frames at 30 fps</p>
+            <p>H.264 visual preview</p>
+          </div>
+        </header>
+
+        <div class="film-grid">
+          <video controls playsinline preload="metadata" poster="./assets/film/still-launch-interaction.png">
+            <source src="./assets/film/still-launch.mp4" type="video/mp4" />
+          </video>
+          <div class="film-copy">
+            <p class="kicker">Same facts, a different medium</p>
+            <h3>The full launch story in twenty-four seconds.</h3>
+            <p>The film uses only React, CSS, and SVG. It introduces the promise, demonstrates the desk interaction, frames the companion app, and closes on an explicitly unvalidated design target.</p>
+            <a href="./evidence/film-receipt.md" target="_blank" rel="noreferrer">Inspect render evidence ↗</a>
+          </div>
+        </div>
+        <figure class="contact-sheet">
+          <img src="./assets/film/still-launch-contact-sheet.png" alt="Six representative frames from the Still launch film" />
+          <figcaption>Six-frame whole-film visual review</figcaption>
+        </figure>
+      </section>
+
+      <section class="artifact-section hardware-section" id="hardware">
+        <header class="section-head">
+          <div>
+            <p class="kicker">03 / Prototype CAD</p>
+            <h2>Exterior concept,<br />measured honestly.</h2>
+          </div>
+          <div class="section-meta">
+            <p>Primary STEP assembly</p>
+            <p>STL + native GLB sidecars</p>
+            <p>Four-view review packet</p>
+          </div>
+        </header>
+
+        <div class="cad-stage">
+          <figure>
+            <img id="cad-image" src="./assets/hardware/still-iso.png" alt="Isometric CAD review of the Still exterior concept" />
+            <figcaption id="cad-caption">Isometric exterior review</figcaption>
+          </figure>
+          <div class="cad-thumbs" aria-label="CAD review views">
+            <button class="active" type="button" data-image="still-iso.png" data-label="Isometric exterior review" data-alt="Isometric CAD review of the Still exterior concept">
+              <img src="./assets/hardware/still-iso.png" alt="" /><span>ISO</span>
+            </button>
+            <button type="button" data-image="still-rear.png" data-label="Opposed view with rear concept opening" data-alt="Opposed isometric CAD review showing the rear concept opening">
+              <img src="./assets/hardware/still-rear.png" alt="" /><span>REAR</span>
+            </button>
+            <button type="button" data-image="still-top.png" data-label="Top orthographic placement review" data-alt="Top orthographic CAD review of display and dial placement">
+              <img src="./assets/hardware/still-top.png" alt="" /><span>TOP</span>
+            </button>
+            <button type="button" data-image="still-front.png" data-label="Front orthographic height review" data-alt="Front orthographic CAD review of body and dial height">
+              <img src="./assets/hardware/still-front.png" alt="" /><span>FRONT</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="geometry-grid">
+          <article><span>Body target</span><strong>72 × 72 × 18</strong><small>mm / unvalidated concept</small></article>
+          <article><span>Full envelope</span><strong>72 × 72 × 23</strong><small>mm / dial included</small></article>
+          <article><span>Assembly</span><strong>5 occurrences</strong><small>labeled STEP geometry</small></article>
+          <article><span>Faceplate mate</span><strong>[0, 0, 0]</strong><small>mm / flush delta</small></article>
+        </div>
+
+        <div class="download-row" aria-label="CAD downloads">
+          <a href="./assets/hardware/still.step" download>STEP <span>primary</span></a>
+          <a href="./assets/hardware/still.glb" download>GLB <span>review</span></a>
+          <a href="./assets/hardware/still.stl" download>STL <span>review</span></a>
+          <a href="./assets/hardware/still.py" download>PY <span>source</span></a>
+        </div>
+      </section>
+
+      <section class="artifact-section evidence-section" id="evidence">
+        <header class="section-head inverse">
+          <div>
+            <p class="kicker">04 / Evidence</p>
+            <h2>Proof, not polish alone.</h2>
+          </div>
+          <div class="section-meta">
+            <p>Raw workstreams preserved</p>
+            <p>Failures remain visible</p>
+            <p>No external actions taken</p>
+          </div>
+        </header>
+
+        <div class="evidence-grid">
+          <a href="./evidence/site-receipt.md" target="_blank" rel="noreferrer">
+            <span>Site</span><strong>Build + interaction receipt</strong><i>Open ↗</i>
+          </a>
+          <a href="./evidence/waitlist-contract.md" target="_blank" rel="noreferrer">
+            <span>Waitlist</span><strong>Local data contract</strong><i>Open ↗</i>
+          </a>
+          <a href="./evidence/film-receipt.md" target="_blank" rel="noreferrer">
+            <span>Film</span><strong>Render + provenance receipt</strong><i>Open ↗</i>
+          </a>
+          <a href="./evidence/geometry-report.md" target="_blank" rel="noreferrer">
+            <span>Hardware</span><strong>Measured geometry report</strong><i>Open ↗</i>
+          </a>
+          <a href="./evidence/hardware-receipt.md" target="_blank" rel="noreferrer">
+            <span>Hardware</span><strong>Generation + review receipt</strong><i>Open ↗</i>
+          </a>
+          <a href="./manifest.json" target="_blank" rel="noreferrer">
+            <span>Outcome</span><strong>Machine-readable manifest</strong><i>Open ↗</i>
+          </a>
+        </div>
+
+        <div class="boundary">
+          <p class="kicker">Known boundary</p>
+          <p>The live CAD Viewer handoff failed because the installed viewer package lacks its documented launcher script. STEP inspection, measured geometry, GLB/STL exports, and four reviewed snapshots remain available. Physical fit, electronics, battery, thermal behavior, tolerances, manufacturability, certification, demand, and production readiness remain unproven.</p>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p class="brand">possible<span>/</span>still</p>
+      <p>One hardware idea, compiled into a local launch room.</p>
+      <p>Fictional concept / no deployment / no real data</p>
+    </footer>
+
+    <script src="./app.js" defer></script>
+  </body>
+</html>

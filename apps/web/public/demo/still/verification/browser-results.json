@@ -1,0 +1,719 @@
+{
+  "base_url": "http://127.0.0.1:4177/",
+  "console_messages": [],
+  "page_errors": [],
+  "requests": [
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/",
+      "path": "/",
+      "resource_type": "document"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/styles.css",
+      "path": "/styles.css",
+      "resource_type": "stylesheet"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/film/still-launch-preview.png",
+      "path": "/assets/film/still-launch-preview.png",
+      "resource_type": "image"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/film/still-launch-interaction.png",
+      "path": "/assets/film/still-launch-interaction.png",
+      "resource_type": "image"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/film/still-launch-contact-sheet.png",
+      "path": "/assets/film/still-launch-contact-sheet.png",
+      "resource_type": "image"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/hardware/still-iso.png",
+      "path": "/assets/hardware/still-iso.png",
+      "resource_type": "image"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/hardware/still-rear.png",
+      "path": "/assets/hardware/still-rear.png",
+      "resource_type": "image"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/hardware/still-top.png",
+      "path": "/assets/hardware/still-top.png",
+      "resource_type": "image"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/hardware/still-front.png",
+      "path": "/assets/hardware/still-front.png",
+      "resource_type": "image"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/app.js",
+      "path": "/app.js",
+      "resource_type": "script"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/site/index.html",
+      "path": "/assets/site/index.html",
+      "resource_type": "document"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/film/still-launch.mp4",
+      "path": "/assets/film/still-launch.mp4",
+      "resource_type": "media"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/site/assets/index-CbZgcUBE.js",
+      "path": "/assets/site/assets/index-CbZgcUBE.js",
+      "resource_type": "script"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/site/assets/index-CovCuj17.css",
+      "path": "/assets/site/assets/index-CovCuj17.css",
+      "resource_type": "stylesheet"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/film/still-launch.mp4",
+      "path": "/assets/film/still-launch.mp4",
+      "resource_type": "media"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/film/still-launch.mp4",
+      "path": "/assets/film/still-launch.mp4",
+      "resource_type": "media"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/",
+      "path": "/",
+      "resource_type": "document"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/styles.css",
+      "path": "/styles.css",
+      "resource_type": "stylesheet"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/film/still-launch-preview.png",
+      "path": "/assets/film/still-launch-preview.png",
+      "resource_type": "image"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/film/still-launch-interaction.png",
+      "path": "/assets/film/still-launch-interaction.png",
+      "resource_type": "image"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/film/still-launch-contact-sheet.png",
+      "path": "/assets/film/still-launch-contact-sheet.png",
+      "resource_type": "image"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/hardware/still-iso.png",
+      "path": "/assets/hardware/still-iso.png",
+      "resource_type": "image"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/hardware/still-rear.png",
+      "path": "/assets/hardware/still-rear.png",
+      "resource_type": "image"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/hardware/still-top.png",
+      "path": "/assets/hardware/still-top.png",
+      "resource_type": "image"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/hardware/still-front.png",
+      "path": "/assets/hardware/still-front.png",
+      "resource_type": "image"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/app.js",
+      "path": "/app.js",
+      "resource_type": "script"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/film/still-launch.mp4",
+      "path": "/assets/film/still-launch.mp4",
+      "resource_type": "media"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/film/still-launch.mp4",
+      "path": "/assets/film/still-launch.mp4",
+      "resource_type": "media"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/site/index.html",
+      "path": "/assets/site/index.html",
+      "resource_type": "document"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/site/assets/index-CbZgcUBE.js",
+      "path": "/assets/site/assets/index-CbZgcUBE.js",
+      "resource_type": "script"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/site/assets/index-CovCuj17.css",
+      "path": "/assets/site/assets/index-CovCuj17.css",
+      "resource_type": "stylesheet"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4178/",
+      "path": "/",
+      "resource_type": "document"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4178/assets/index-CbZgcUBE.js",
+      "path": "/assets/index-CbZgcUBE.js",
+      "resource_type": "script"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4178/assets/index-CovCuj17.css",
+      "path": "/assets/index-CovCuj17.css",
+      "resource_type": "stylesheet"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/",
+      "path": "/",
+      "resource_type": "document"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/styles.css",
+      "path": "/styles.css",
+      "resource_type": "stylesheet"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/film/still-launch-preview.png",
+      "path": "/assets/film/still-launch-preview.png",
+      "resource_type": "image"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/film/still-launch-interaction.png",
+      "path": "/assets/film/still-launch-interaction.png",
+      "resource_type": "image"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/film/still-launch-contact-sheet.png",
+      "path": "/assets/film/still-launch-contact-sheet.png",
+      "resource_type": "image"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/hardware/still-iso.png",
+      "path": "/assets/hardware/still-iso.png",
+      "resource_type": "image"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/hardware/still-rear.png",
+      "path": "/assets/hardware/still-rear.png",
+      "resource_type": "image"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/hardware/still-top.png",
+      "path": "/assets/hardware/still-top.png",
+      "resource_type": "image"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/hardware/still-front.png",
+      "path": "/assets/hardware/still-front.png",
+      "resource_type": "image"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/app.js",
+      "path": "/app.js",
+      "resource_type": "script"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/film/still-launch.mp4",
+      "path": "/assets/film/still-launch.mp4",
+      "resource_type": "media"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/film/still-launch.mp4",
+      "path": "/assets/film/still-launch.mp4",
+      "resource_type": "media"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/site/index.html",
+      "path": "/assets/site/index.html",
+      "resource_type": "document"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/site/assets/index-CbZgcUBE.js",
+      "path": "/assets/site/assets/index-CbZgcUBE.js",
+      "resource_type": "script"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/site/assets/index-CovCuj17.css",
+      "path": "/assets/site/assets/index-CovCuj17.css",
+      "resource_type": "stylesheet"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/film/still-launch.mp4",
+      "path": "/assets/film/still-launch.mp4",
+      "resource_type": "media"
+    }
+  ],
+  "responses": [
+    {
+      "url": "http://127.0.0.1:4177/",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4177/styles.css",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4177/assets/film/still-launch-interaction.png",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4177/assets/film/still-launch-preview.png",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4177/assets/film/still-launch-contact-sheet.png",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4177/assets/hardware/still-iso.png",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4177/assets/hardware/still-front.png",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4177/assets/hardware/still-rear.png",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4177/assets/hardware/still-top.png",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4177/app.js",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4177/assets/site/index.html",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4177/assets/film/still-launch.mp4",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4177/assets/site/assets/index-CovCuj17.css",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4177/assets/site/assets/index-CbZgcUBE.js",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4177/assets/film/still-launch.mp4",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4177/assets/film/still-launch.mp4",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4177/",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4177/styles.css",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4177/assets/film/still-launch-preview.png",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4177/assets/film/still-launch-interaction.png",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4177/assets/film/still-launch-contact-sheet.png",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4177/assets/hardware/still-iso.png",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4177/assets/hardware/still-rear.png",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4177/assets/hardware/still-top.png",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4177/assets/hardware/still-front.png",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4177/app.js",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4177/assets/film/still-launch.mp4",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4177/assets/film/still-launch.mp4",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4177/assets/site/index.html",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4177/assets/site/assets/index-CbZgcUBE.js",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4177/assets/site/assets/index-CovCuj17.css",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4178/",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4178/assets/index-CovCuj17.css",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4178/assets/index-CbZgcUBE.js",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4177/",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4177/styles.css",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4177/assets/film/still-launch-preview.png",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4177/assets/film/still-launch-interaction.png",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4177/assets/film/still-launch-contact-sheet.png",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4177/assets/hardware/still-iso.png",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4177/assets/hardware/still-rear.png",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4177/assets/hardware/still-top.png",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4177/assets/hardware/still-front.png",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4177/assets/film/still-launch.mp4",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4177/app.js",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4177/assets/film/still-launch.mp4",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4177/assets/site/index.html",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4177/assets/site/assets/index-CovCuj17.css",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4177/assets/site/assets/index-CbZgcUBE.js",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4177/assets/film/still-launch.mp4",
+      "status": 200,
+      "ok": true
+    }
+  ],
+  "request_failures": [
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/film/still-launch.mp4",
+      "path": "/assets/film/still-launch.mp4",
+      "resource_type": "media",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/film/still-launch.mp4",
+      "path": "/assets/film/still-launch.mp4",
+      "resource_type": "media",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/film/still-launch.mp4",
+      "path": "/assets/film/still-launch.mp4",
+      "resource_type": "media",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/film/still-launch.mp4",
+      "path": "/assets/film/still-launch.mp4",
+      "resource_type": "media",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/film/still-launch.mp4",
+      "path": "/assets/film/still-launch.mp4",
+      "resource_type": "media",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/film/still-launch.mp4",
+      "path": "/assets/film/still-launch.mp4",
+      "resource_type": "media",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/film/still-launch.mp4",
+      "path": "/assets/film/still-launch.mp4",
+      "resource_type": "media",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/film/still-launch.mp4",
+      "path": "/assets/film/still-launch.mp4",
+      "resource_type": "media",
+      "failure": "net::ERR_ABORTED"
+    }
+  ],
+  "checks": [
+    {
+      "name": "desktop-embedded-site",
+      "status": "passed"
+    },
+    {
+      "name": "desktop-room",
+      "status": "passed"
+    },
+    {
+      "name": "integrated-waitlist-local-only",
+      "status": "passed"
+    },
+    {
+      "name": "raw-site-waitlist-local-only",
+      "status": "passed"
+    },
+    {
+      "name": "mobile-embedded-site",
+      "status": "passed"
+    },
+    {
+      "name": "mobile-room",
+      "status": "passed"
+    }
+  ],
+  "desktop_film_metadata": {
+    "status": "unavailable-under-python-static-server",
+    "playback_status": "unavailable-under-python-static-server",
+    "players": [
+      {
+        "duration": NaN,
+        "width": 0,
+        "height": 0,
+        "readyState": 0,
+        "error": null
+      },
+      {
+        "duration": NaN,
+        "width": 0,
+        "height": 0,
+        "readyState": 0,
+        "error": null
+      }
+    ]
+  },
+  "integrated_waitlist": {
+    "tested_url": "http://127.0.0.1:4177/",
+    "embedded": true,
+    "invalid_submit_requests": [],
+    "valid_submit_requests": [],
+    "storage_after_submit": {
+      "local": [],
+      "session": [],
+      "cookies": ""
+    },
+    "valid_value_cleared": true
+  },
+  "raw_site_waitlist": {
+    "tested_url": "http://127.0.0.1:4178/",
+    "embedded": false,
+    "invalid_submit_requests": [],
+    "valid_submit_requests": [],
+    "storage_after_submit": {
+      "local": [],
+      "session": [],
+      "cookies": ""
+    },
+    "valid_value_cleared": true
+  },
+  "mobile_film_metadata": {
+    "status": "unavailable-under-python-static-server",
+    "playback_status": "unavailable-under-python-static-server",
+    "players": [
+      {
+        "duration": NaN,
+        "width": 0,
+        "height": 0,
+        "readyState": 0,
+        "error": null
+      },
+      {
+        "duration": NaN,
+        "width": 0,
+        "height": 0,
+        "readyState": 0,
+        "error": null
+      }
+    ]
+  },
+  "summary": {
+    "status": "passed",
+    "failure_count": 0,
+    "failures": [],
+    "request_count": 50,
+    "response_count": 50,
+    "console_error_count": 0,
+    "page_error_count": 0,
+    "request_failure_count": 0,
+    "ignored_media_abort_count": 8,
+    "bad_response_count": 0
+  }
+}

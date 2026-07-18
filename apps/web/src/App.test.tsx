@@ -84,19 +84,19 @@ describe("Possible", () => {
     expect(screen.getByRole("link", { name: /Browse the three packs/i })).toHaveAttribute("href", "/packs");
   });
 
-  it("runs the presentation demo from one brief to a complete team", async () => {
+  it("replays the real Hardware Launch run from brief to verified outcome", async () => {
     window.history.pushState({}, "", "/demo");
     render(<App />);
-    expect(screen.getByRole("heading", { name: /One brief/i })).toBeInTheDocument();
-    expect(screen.getByDisplayValue("Create a launch for my hardware app startup.")).toBeInTheDocument();
-    expect(screen.getByText("WAITING FOR BRIEF")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /Watch the outcome/i })).toBeInTheDocument();
+    expect(screen.getByText("RECORDED REAL RUN")).toBeInTheDocument();
+    expect(screen.getByText("Brief locked", { selector: ".replay-controls strong" })).toBeInTheDocument();
 
-    await userEvent.click(screen.getByRole("button", { name: /Compile live outcome/i }));
-    expect(screen.getByText("OUTCOME READY")).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Launch site" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Launch film" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Prototype CAD" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Independent review" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /Copy full Codex run/i })).toBeInTheDocument();
+    const next = screen.getByRole("button", { name: "Next event" });
+    for (let index = 0; index < 6; index += 1) await userEvent.click(next);
+
+    expect(screen.getByRole("heading", { name: /Real outputs/i })).toBeInTheDocument();
+    expect(screen.getByText("58 / 58", { selector: ".replay-review-card strong" })).toBeInTheDocument();
+    expect(screen.getByText("0", { selector: ".replay-review-card strong" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Explore the real outcome/i })).toHaveAttribute("href", "/demo/still/outcome-room/index.html");
   });
 });

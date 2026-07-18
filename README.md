@@ -12,11 +12,9 @@ Skills.sh distributes individual agent skills. Possible publishes opinionated ou
 
 ## The demo
 
-1. Choose an outcome and describe what you want to ship.
-2. Possible compiles the selected pack around that brief.
-3. Inspect every external skill source and copy the grouped install commands.
-4. Reload Codex, then copy the personalized run prompt.
-5. Codex runs isolated workstreams, integrates their receipts, and assigns a fresh reviewer.
+`/demo` replays a real local Hardware Launch run for Still, a fictional palm-sized e-ink focus device. It shows the original brief, five installed skills, three parallel workstreams, the resulting website, launch film, prototype CAD, integrated launch room, and the independent review that found and verified a real asset-path repair.
+
+The replay links directly to its evidence: 58/58 artifact checks, 50/50 browser checks, zero waitlist network writes, and the preserved initial failure trace.
 
 Possible is the composition layer between capability discovery and accountable execution. A pack is named after a finished outcome, never a technology or visual style.
 
@@ -36,7 +34,7 @@ npm run check
 
 Production builds emit `/packs/index.json`, plus JSON, install text, and run text for every pack.
 
-The web surface keeps creation, discovery, and presentation separate: `/` is the outcome composer, `/packs` is the curated gallery, `/packs/:slug` explains and personalizes one complete pack, and `/demo` is the live Hardware Launch walkthrough.
+The web surface keeps creation, discovery, and presentation separate: `/` is the outcome composer, `/packs` is the curated gallery, `/packs/:slug` explains and personalizes one complete pack, and `/demo` is the recorded Hardware Launch replay.
 
 ## Trust boundary
 
