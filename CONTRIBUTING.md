@@ -12,6 +12,6 @@ A pack contribution must:
 - generate deterministic install commands and one runnable prompt; and
 - include tests for sources, required skills, outputs, guardrails, and proof.
 
-Do not add a pack merely to grow a catalog. Do not describe Possible as a skill registry, wiki, knowledge graph, universal skill, or guarantee. Do not call an upstream revision pinned unless the installer actually resolves that revision.
+Do not add a pack merely to grow a catalog. Every pack must prove a complete outcome contract. Do not call an upstream revision pinned unless the installer actually resolves that revision.
 
 Run `npm run check` before handing off a change.

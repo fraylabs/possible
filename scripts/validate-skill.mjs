@@ -23,7 +23,6 @@ for (const phrase of ["list_packs", "compile_pack", "reviewed revisions", "works
 for (const gate of ["credentials", "deployment", "DNS", "email", "purchases", "spending money", "fabrication"]) {
   check(skill.toLowerCase().includes(gate.toLowerCase()), `SKILL.md must retain the ${gate} gate`);
 }
-check(!/field[- ]guide|knowledge graph|wiki/i.test(skill + metadata), "active skill must not use obsolete field-guide framing");
 check(/short_description: "Compile skills into complete outcomes"/.test(metadata), "metadata must state the outcome compiler");
 check(metadata.includes("$possible"), "default prompt must mention $possible");
 check(/value: "possible"/.test(metadata), "metadata must declare the Possible MCP");

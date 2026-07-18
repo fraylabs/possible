@@ -3,66 +3,148 @@ import { compilePack, hardwareLaunchPack } from "@possible/packs";
 
 type CopyState = "idle" | "copied" | "failed";
 
-function CopyButton({ label, value, tone = "dark" }: { label: string; value: string; tone?: "dark" | "light" }) {
+function CopyButton({ label, value }: { label: string; value: string }) {
   const [state, setState] = useState<CopyState>("idle");
+
   async function copy() {
     try {
       await navigator.clipboard.writeText(value);
       setState("copied");
-      window.setTimeout(() => setState("idle"), 1800);
+      window.setTimeout(() => setState("idle"), 1600);
     } catch {
       setState("failed");
     }
   }
-  return <button className={`copy-button copy-button--${tone}`} type="button" onClick={copy}><span>{state === "copied" ? "Copied" : state === "failed" ? "Copy failed" : label}</span><span aria-hidden="true">{state === "copied" ? "✓" : "↗"}</span></button>;
+
+  return (
+    <button className="copy-button" type="button" onClick={copy}>
+      <span>{state === "copied" ? "Copied" : state === "failed" ? "Copy failed" : label}</span>
+      <span aria-hidden="true">{state === "copied" ? "✓" : "↗"}</span>
+    </button>
+  );
 }
 
 function App() {
   const compiled = useMemo(() => compilePack(hardwareLaunchPack), []);
+  const [brief, setBrief] = useState("Create a launch for my hardware app startup.");
+  const [isCompiled, setIsCompiled] = useState(false);
   const installText = compiled.installCommands.join("\n");
+  const runPrompt = compiled.runPrompt.replace(
+    "[Replace this line with the product, audience, constraints, and any existing repository or assets.]",
+    brief.trim() || "[Add your product brief here.]",
+  );
+
+  function compileOutcome() {
+    setIsCompiled(true);
+    window.setTimeout(() => {
+      const target = document.querySelector("#compiled");
+      if (target && typeof target.scrollIntoView === "function") {
+        target.scrollIntoView({ behavior: "smooth" });
+      }
+    }, 0);
+  }
+
   return (
     <main>
-      <nav className="nav" aria-label="Primary navigation">
-        <a className="wordmark" href="#top" aria-label="Possible home">possible<span>.sh</span></a>
-        <div className="nav-links"><a href="#pack">The pack</a><a href="#sources">Sources</a><a className="nav-cta" href="#run">Run it <span aria-hidden="true">↘</span></a></div>
+      <nav>
+        <a className="wordmark" href="#top">possible<span>.sh</span></a>
+        <div className="nav-meta"><span>OUTCOME PACK</span><strong>HARDWARE LAUNCH / 01</strong></div>
+        <a className="source-link" href="https://github.com/fraylabs/possible" target="_blank" rel="noreferrer">SOURCE ↗</a>
       </nav>
-      <section className="hero" id="top">
-        <div className="hero-kicker"><span>OUTCOME COMPILER</span><span>ONE PACK / FIVE SKILLS</span></div>
-        <h1>Skills are ingredients.<br /><em>Possible compiles<br />the outcome.</em></h1>
-        <div className="hero-foot"><p>Skills.sh gives agents individual capabilities. Possible turns the right ones into a coordinated, verifiable result.</p><a href="#pack" className="circle-link" aria-label="Explore Hardware Launch pack">↓</a></div>
-      </section>
-      <section className="manifesto" aria-label="Product definition">
-        <p className="section-label">THE SIMPLE VERSION</p>
-        <p className="manifesto-copy">You describe what you want. Possible gives Codex the skills, team structure, merge order, guardrails, and definition of done.</p>
-        <div className="equation" aria-label="Skills dot sh plus Possible equals a complete launch"><span>SKILLS.SH</span><b>+</b><span>POSSIBLE</span><b>=</b><span className="equation-result">A COMPLETE LAUNCH</span></div>
-      </section>
-      <section className="pack" id="pack">
-        <header className="pack-header"><p className="section-label section-label--light">{compiled.pack.eyebrow}</p><span className="status"><i /> REVIEWED {compiled.pack.reviewedAt}</span></header>
-        <div className="pack-title"><div><h2>{compiled.pack.name}</h2><p>{compiled.pack.promise}</p></div><span className="pack-number">01</span></div>
-        <div className="flow" aria-label="Pack workflow">
-          <div className="flow-node"><small>INPUT</small><strong>Your product brief</strong></div><span className="flow-arrow">→</span>
-          <div className="flow-center"><small>POSSIBLE PACK</small><strong>Captain</strong><span>shared brief · contracts · merge</span></div><span className="flow-arrow">→</span>
-          <div className="flow-streams">{compiled.pack.workstreams.map((stream, index) => <article key={stream.id}><small>0{index + 1}</small><strong>{stream.name}</strong><span>{stream.skills.length} skill{stream.skills.length > 1 ? "s" : ""}</span></article>)}</div>
-          <span className="flow-arrow">→</span><div className="flow-node"><small>OUTPUT</small><strong>Launch room</strong><span>tested together</span></div>
+
+      <section className="composer" id="top">
+        <div className="composer-copy">
+          <p className="eyebrow">FOR CODEX · BUILT ON SKILLS.SH</p>
+          <h1>Describe the outcome.<br /><em>Get the whole team.</em></h1>
+          <p className="thesis">Possible compiles individual skills into one coordinated, verifiable run.</p>
         </div>
-        <div className="deliverables">{compiled.pack.outputs.map((output, index) => <div key={output}><span>0{index + 1}</span><strong>{output}</strong></div>)}</div>
-      </section>
-      <section className="sources" id="sources">
-        <div className="sources-intro"><p className="section-label">WHAT'S INSIDE</p><h2>Five specialist skills.<br />One opinionated recipe.</h2><p>Every source is visible before you install. Possible owns the composition—not the ingredients.</p></div>
-        <div className="source-list">{compiled.pack.skills.map((source, index) => <article className="source-row" key={source.id}><span className="source-index">0{index + 1}</span><div><strong>{source.name}</strong><p>{source.role}</p></div><code>{source.repository}</code><a href={source.reviewUrl} target="_blank" rel="noreferrer" aria-label={`Review ${source.name} source at revision ${source.reviewedRevision.slice(0, 7)}`}>{source.reviewedRevision.slice(0, 7)} ↗</a></article>)}</div>
-      </section>
-      <section className="run" id="run">
-        <div className="run-copy"><p className="section-label section-label--light">RUN THE PACK</p><h2>Two copies.<br />One launch.</h2><p>Install the reviewed skill set. Start a fresh Codex session so it can see them. Then paste the compiled run prompt with your product brief.</p>
-          <ol><li><span>1</span><div><strong>Install skills</strong><small>Review each external source first</small></div></li><li><span>2</span><div><strong>Reload Codex</strong><small>Confirm all five skills are visible</small></div></li><li><span>3</span><div><strong>Paste the run prompt</strong><small>Replace the product brief placeholder</small></div></li></ol>
-        </div>
-        <div className="terminal-stack">
-          <article className="terminal"><header><span>01 / INSTALL</span><i /><i /><i /></header><pre>{installText}</pre><CopyButton label="Copy install commands" value={installText} /></article>
-          <article className="terminal terminal--prompt"><header><span>02 / RUN</span><i /><i /><i /></header><pre>{compiled.runPrompt}</pre><CopyButton label="Copy run prompt" value={compiled.runPrompt} tone="light" /></article>
+
+        <div className="brief-card">
+          <label htmlFor="product-brief">WHAT DO YOU WANT TO SHIP?</label>
+          <textarea
+            id="product-brief"
+            value={brief}
+            onChange={(event) => {
+              setBrief(event.target.value);
+              setIsCompiled(false);
+            }}
+            rows={4}
+          />
+          <button className="compile-button" type="button" onClick={compileOutcome} disabled={!brief.trim()}>
+            <span>Compile Hardware Launch</span><span aria-hidden="true">→</span>
+          </button>
         </div>
       </section>
-      <section className="boundary"><p className="section-label">HONEST BY DESIGN</p><h2>A recipe is not a guarantee.</h2><p>The listed revisions are the snapshots Possible reviewed. The install commands fetch external repositories, so inspect the resolved skill contents before running them. The pack never authorizes deployment, purchases, fabrication, outreach, or claims of real-world validation.</p></section>
-      <footer><a className="wordmark" href="#top">possible<span>.sh</span></a><p>COMPILE WHAT'S POSSIBLE.</p><a href="https://github.com/fraylabs/possible" target="_blank" rel="noreferrer">SOURCE ↗</a></footer>
+
+      <section className={`compiled ${isCompiled ? "compiled--ready" : ""}`} id="compiled" aria-live="polite">
+        <header className="compiled-header">
+          <div><p className="eyebrow">COMPILED OUTCOME</p><h2>Hardware Launch</h2></div>
+          <span className="ready-state"><i /> {isCompiled ? "READY TO RUN" : "PACK PREVIEW"}</span>
+        </header>
+
+        <div className="pack-metrics" aria-label="Pack contents">
+          <div><strong>{compiled.pack.skills.length}</strong><span>specialist skills</span></div>
+          <div><strong>{compiled.pack.workstreams.length}</strong><span>parallel workstreams</span></div>
+          <div><strong>{compiled.pack.outputs.length}</strong><span>integrated outputs</span></div>
+          <div><strong>1</strong><span>independent review</span></div>
+        </div>
+
+        <div className="workstreams">
+          {compiled.pack.workstreams.map((stream, index) => (
+            <article key={stream.id}>
+              <span>0{index + 1}</span>
+              <div><strong>{stream.name}</strong><p>{stream.brief}</p></div>
+              <small>{stream.skills.map((skill) => `$${skill}`).join(" + ")}</small>
+            </article>
+          ))}
+          <article className="workstream-review">
+            <span>04</span>
+            <div><strong>Independent review</strong><p>Inspect the integrated result and return evidence, failures, and unproven claims.</p></div>
+            <small>$webapp-testing</small>
+          </article>
+        </div>
+
+        <div className="actions">
+          <article>
+            <header><span>STEP 01</span><strong>Install the ingredients</strong></header>
+            <pre>{installText}</pre>
+            <CopyButton label="Copy install commands" value={installText} />
+          </article>
+          <article className="actions-run">
+            <header><span>STEP 02</span><strong>Run the recipe</strong></header>
+            <pre>{runPrompt}</pre>
+            <CopyButton label="Copy compiled prompt" value={runPrompt} />
+          </article>
+        </div>
+        <p className="reload-note">Install → reload Codex → paste the compiled prompt.</p>
+      </section>
+
+      <section className="ingredients">
+        <div className="ingredients-title">
+          <p className="eyebrow">INSPECT BEFORE INSTALL</p>
+          <h2>Visible ingredients.<br />Opinionated recipe.</h2>
+          <p>Skills remain owned by their source repositories. Possible owns how they work together.</p>
+        </div>
+        <div className="ingredient-list">
+          {compiled.pack.skills.map((source, index) => (
+            <a href={source.reviewUrl} target="_blank" rel="noreferrer" key={source.id}>
+              <span>0{index + 1}</span>
+              <div><strong>{source.name}</strong><small>{source.role}</small></div>
+              <code>{source.repository}</code>
+              <b>{source.reviewedRevision.slice(0, 7)} ↗</b>
+            </a>
+          ))}
+        </div>
+      </section>
+
+      <section className="boundary">
+        <span>THE BOUNDARY</span>
+        <p>A pack coordinates work. It does not authorize deployment, spending, outreach, fabrication, data collection, or unsupported claims.</p>
+      </section>
+
+      <footer><a className="wordmark" href="#top">possible<span>.sh</span></a><strong>SKILLS ARE INGREDIENTS.<br />POSSIBLE COMPILES THE OUTCOME.</strong><span>BUILDWEEK 2026</span></footer>
     </main>
   );
 }
+
 export default App;

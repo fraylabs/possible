@@ -7,19 +7,25 @@ import App from "./App";
 afterEach(cleanup);
 
 describe("Possible", () => {
-  it("explains and exposes the Hardware Launch pack", () => {
+  it("turns one brief into the Hardware Launch pack", async () => {
     const { container } = render(<App />);
-    expect(screen.getByRole("heading", { name: /Skills are ingredients/i })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /Describe the outcome/i })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Hardware Launch" })).toBeInTheDocument();
-    expect(container.querySelectorAll(".source-row")).toHaveLength(5);
+    expect(container.querySelectorAll(".ingredient-list a")).toHaveLength(5);
+    await userEvent.click(screen.getByRole("button", { name: /Compile Hardware Launch/i }));
+    expect(await screen.findByText("READY TO RUN")).toBeInTheDocument();
   });
 
-  it("copies the compiled run prompt", async () => {
+  it("copies a prompt containing the user's brief", async () => {
     const writeText = vi.fn().mockResolvedValue(undefined);
     Object.assign(navigator, { clipboard: { writeText } });
     render(<App />);
-    await userEvent.click(screen.getByRole("button", { name: /Copy run prompt/i }));
+    const brief = screen.getByLabelText("WHAT DO YOU WANT TO SHIP?");
+    await userEvent.clear(brief);
+    await userEvent.type(brief, "Launch my desk robot for remote design teams.");
+    await userEvent.click(screen.getByRole("button", { name: /Copy compiled prompt/i }));
     expect(writeText).toHaveBeenCalledOnce();
+    expect(writeText.mock.calls[0]?.[0]).toMatch(/Launch my desk robot for remote design teams/);
     expect(writeText.mock.calls[0]?.[0]).toMatch(/CAPTAIN WORKFLOW/);
     expect(await screen.findByText("Copied")).toBeInTheDocument();
   });

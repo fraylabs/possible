@@ -8,10 +8,10 @@ The Buildweek MVP contains one pack: **Hardware Launch**. It turns a hardware pr
 
 ## The demo
 
-1. Open possible.sh and inspect the Hardware Launch sources.
-2. Copy four Skills CLI install commands.
-3. Reload Codex so the five installed skills are visible.
-4. Copy the compiled run prompt and replace its product-brief placeholder.
+1. Type: “Create a launch for my hardware app startup.”
+2. Possible compiles the Hardware Launch pack around that brief.
+3. Inspect the five external skill sources and copy four install commands.
+4. Reload Codex, then copy the personalized run prompt.
 5. Codex creates three independent workstreams, integrates their receipts, then assigns a fresh browser reviewer.
 
 Possible is not a skill registry, a universal mega-skill, or a claim that installing skills guarantees an outcome. It is the missing composition layer between capability discovery and accountable execution.
@@ -22,8 +22,6 @@ Possible is not a skill registry, a universal mega-skill, or a claim that instal
 - `apps/web` — possible.sh experience and static pack publications
 - `apps/mcp` — read-only `list_packs` and `compile_pack` tools
 - `skills/possible` — Codex workflow for safely using packs
-
-The older `knowledge/`, `evals/`, and `packages/knowledge` directories are retained research from the pre-reset field-guide prototype. They are not part of the active product contract or build.
 
 ## Verify
 
