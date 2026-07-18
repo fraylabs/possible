@@ -1,81 +1,59 @@
-import type { AtlasBranch } from "../atlas";
-import { ThreeGraphScene, type ThreeGraphEdge, type ThreeGraphNode } from "./ThreeGraphScene";
+import { useMemo } from "react";
+import type { WikiCorpus } from "@possible/knowledge";
+import { buildAtlasGraph, colorForSection, type AtlasBranch } from "../atlas";
+import { KnowledgeGraph, type KnowledgeGraphNode } from "./KnowledgeGraph";
 
 interface AtlasGraphProps {
+  corpus: WikiCorpus;
   branches: AtlasBranch[];
-  onSelectBranch: (slug: string) => void;
+  onSelectPage: (slug: string) => void;
 }
 
-export function AtlasGraph({ branches, onSelectBranch }: AtlasGraphProps) {
-  const rootId = "possible-atlas-root";
-  const sceneNodes: ThreeGraphNode[] = [
-    { id: rootId, x: 50, y: 50, role: "root" },
-    ...branches.map((branch) => ({
-      id: branch.page.slug,
-      x: branch.x,
-      y: branch.y,
-      role: "branch" as const,
-    })),
-  ];
-  const sceneEdges: ThreeGraphEdge[] = branches.map((branch) => ({
-    source: rootId,
-    target: branch.page.slug,
-  }));
+export function AtlasGraph({ corpus, branches, onSelectPage }: AtlasGraphProps) {
+  const graph = useMemo(() => buildAtlasGraph(corpus), [corpus]);
+  const pageCountBySection = new Map(branches.map((branch) => [branch.section, branch.pageCount]));
+  const sectionTitleBySection = new Map(branches.map((branch) => [branch.section, branch.page.title]));
+  const nodes: KnowledgeGraphNode[] = graph.nodes.map((node) => {
+    const pageCount = pageCountBySection.get(node.section) ?? 1;
+    return {
+      id: node.page.slug,
+      title: node.page.title,
+      meta: node.role === "field" ? `${pageCount} pages` : "",
+      x: node.x,
+      y: node.y,
+      role: node.role,
+      color: colorForSection(node.section),
+      degree: node.degree,
+      prominent: node.role === "field" || node.degree >= 4,
+      interactive: true,
+      ariaLabel: node.role === "field"
+        ? `${node.page.title}, ${pageCount} pages`
+        : `${node.page.title}, ${sectionTitleBySection.get(node.section) ?? node.section} page`,
+    };
+  });
 
   return (
     <section className="graph-shell graph-shell--atlas" aria-labelledby="atlas-graph-title">
       <h2 id="atlas-graph-title" className="visually-hidden">Knowledge fields</h2>
-      <p className="graph-guide">Choose a field</p>
-      <div className="graph-field graph-field--atlas" role="region" aria-label="Possible knowledge atlas">
-        {branches.length > 0 ? (
-          <>
-            <ThreeGraphScene nodes={sceneNodes} edges={sceneEdges} variant="atlas" />
-            <svg className="graph-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-              {branches.map((branch) => (
-                <line
-                  key={branch.section}
-                  x1="50"
-                  y1="50"
-                  x2={branch.x}
-                  y2={branch.y}
-                  className="graph-edge atlas-edge"
-                />
-              ))}
-            </svg>
-
-            <div className="graph-nodes">
-              <div
-                className="graph-node atlas-core"
-                style={{ left: "50%", top: "50%" }}
-                role="img"
-                aria-label="Possible, atlas root"
-              >
-                <strong>Possible</strong>
-                <span>{branches.length} fields</span>
-              </div>
-
-              {branches.map((branch) => (
-                <button
-                  key={branch.section}
-                  type="button"
-                  className="graph-node atlas-node"
-                  style={{ left: `${branch.x}%`, top: `${branch.y}%` }}
-                  onClick={() => onSelectBranch(branch.page.slug)}
-                  aria-label={`${branch.page.title}, ${branch.pageCount} pages`}
-                >
-                  <strong>{branch.page.title}</strong>
-                  <span>{branch.pageCount} pages</span>
-                </button>
-              ))}
-            </div>
-          </>
-        ) : (
-          <div className="graph-empty">
-            <strong>No top-level fields are available.</strong>
-            <p>Add a root page matching its knowledge folder to publish a field.</p>
-          </div>
-        )}
-      </div>
+      {nodes.length > 0 ? (
+        <KnowledgeGraph
+          nodes={nodes}
+          edges={graph.edges}
+          variant="atlas"
+          ariaLabel="Possible knowledge atlas"
+          guide="Global knowledge graph"
+          legend={branches.map((branch) => ({
+            label: branch.page.title,
+            color: colorForSection(branch.section),
+          }))}
+          onSelectNode={onSelectPage}
+        />
+      ) : (
+        <div className="graph-empty">
+          <strong>No top-level fields are available.</strong>
+          <p>Add a root page matching its knowledge folder to publish a field.</p>
+        </div>
+      )}
     </section>
   );
 }

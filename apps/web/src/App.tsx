@@ -349,8 +349,9 @@ export function App() {
           />
         ) : (
           <AtlasGraph
+            corpus={corpus}
             branches={branches}
-            onSelectBranch={(slug) => selectPage(slug, { focus: "explore", mode: "explore" })}
+            onSelectPage={(slug) => selectPage(slug, { focus: "explore", mode: "explore" })}
           />
         )}
       </div>

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { WikiCorpus } from "@possible/knowledge";
-import { buildAtlasBranches } from "./atlas";
+import { buildAtlasBranches, buildAtlasGraph } from "./atlas";
 import { parseMarkdown } from "./markdown";
 import { buildRelatedGraph, formatReviewedAt, hrefToSlug, routeSlug, wikiPath } from "./wiki";
 
@@ -91,6 +91,22 @@ describe("wiki helpers", () => {
     expect(webGraph.relatedPages.map((page) => page.slug)).toEqual(["browser-applications"]);
     expect(webGraph.relatedPages.map((page) => page.slug)).not.toContain("manufacturing");
     expect(webGraph.relatedPages.map((page) => page.slug)).not.toContain("custom-manufactured-parts");
+  });
+
+  it("settles every sourced page into a deterministic global knowledge graph", () => {
+    const atlasGraph = buildAtlasGraph(corpus);
+    const repeatedGraph = buildAtlasGraph(corpus);
+
+    expect(atlasGraph.nodes.map((node) => node.page.slug).sort()).toEqual(
+      corpus.pages.map((page) => page.slug).sort(),
+    );
+    expect(atlasGraph.edges).toHaveLength(5);
+    expect(new Set(atlasGraph.edges.map((edge) => `${edge.source}:${edge.target}`)).size).toBe(5);
+    expect(atlasGraph.nodes.every((node) =>
+      node.x >= 6 && node.x <= 94 && node.y >= 8 && node.y <= 92)).toBe(true);
+    expect(atlasGraph.nodes.map(({ page, x, y }) => [page.slug, x, y])).toEqual(
+      repeatedGraph.nodes.map(({ page, x, y }) => [page.slug, x, y]),
+    );
   });
 });
 

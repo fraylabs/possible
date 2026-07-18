@@ -1,88 +1,61 @@
+import { colorForSection, sectionForSlug } from "../atlas";
 import type { RelatedGraphModel } from "../wiki";
-import { ThreeGraphScene, type ThreeGraphEdge, type ThreeGraphNode } from "./ThreeGraphScene";
+import { KnowledgeGraph, type KnowledgeGraphNode } from "./KnowledgeGraph";
 
 interface RelatedGraphProps {
   graph: RelatedGraphModel;
   onSelectPage: (slug: string) => void;
 }
 
-export function RelatedGraph({
-  graph,
-  onSelectPage,
-}: RelatedGraphProps) {
-  const positions = new Map(graph.nodes.map((node) => [node.page.slug, node]));
-  const sceneNodes: ThreeGraphNode[] = graph.nodes.map((node) => ({
+const relationLabel = (relation: string): string => {
+  if (relation === "selected") return "Current page";
+  if (relation === "mutual") return "Linked both ways";
+  if (relation === "outgoing") return "Linked page";
+  return "Backlink";
+};
+
+export function RelatedGraph({ graph, onSelectPage }: RelatedGraphProps) {
+  const degreeBySlug = new Map<string, number>();
+  graph.edges.forEach((edge) => {
+    degreeBySlug.set(edge.source, (degreeBySlug.get(edge.source) ?? 0) + 1);
+    degreeBySlug.set(edge.target, (degreeBySlug.get(edge.target) ?? 0) + 1);
+  });
+  const nodes: KnowledgeGraphNode[] = graph.nodes.map((node) => ({
     id: node.page.slug,
+    title: node.page.title,
+    meta: relationLabel(node.relation),
     x: node.x,
     y: node.y,
     role: node.relation === "selected" ? "selected" : "related",
-  }));
-  const sceneEdges: ThreeGraphEdge[] = graph.edges.map((edge) => ({
-    source: edge.source,
-    target: edge.target,
+    color: node.relation === "selected"
+      ? "#f1f3ff"
+      : colorForSection(sectionForSlug(node.page.slug)),
+    degree: degreeBySlug.get(node.page.slug) ?? 0,
+    prominent: true,
+    interactive: node.relation !== "selected",
+    ariaLabel: node.relation === "selected"
+      ? `${node.page.title}, current page`
+      : `${node.page.title}, related page`,
   }));
 
   return (
     <section className="graph-shell" aria-labelledby="graph-title">
       <h2 id="graph-title" className="visually-hidden">Related pages</h2>
-      <p className="graph-guide">Choose a nearby page</p>
-      <div className="graph-field" role="region" aria-label="Related page graph">
-        {graph.selected ? (
-          <>
-            <ThreeGraphScene nodes={sceneNodes} edges={sceneEdges} variant="related" />
-            <svg className="graph-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-              {graph.edges.map((edge) => {
-                const source = positions.get(edge.source);
-                const target = positions.get(edge.target);
-                if (!source || !target) return null;
-
-                return (
-                  <line
-                    key={`${edge.source}:${edge.target}:${edge.relation}`}
-                    x1={source.x}
-                    y1={source.y}
-                    x2={target.x}
-                    y2={target.y}
-                    className="graph-edge"
-                  />
-                );
-              })}
-            </svg>
-
-            <div className="graph-nodes">
-              {graph.nodes.map((node) => node.relation === "selected" ? (
-                <div
-                  key={node.page.slug}
-                  className="graph-node graph-node--selected"
-                  style={{ left: `${node.x}%`, top: `${node.y}%` }}
-                  role="img"
-                  aria-label={`${node.page.title}, current page`}
-                >
-                  <span>Current page</span>
-                  <strong>{node.page.title}</strong>
-                </div>
-              ) : (
-                <button
-                  key={node.page.slug}
-                  type="button"
-                  className="graph-node graph-node--related"
-                  style={{ left: `${node.x}%`, top: `${node.y}%` }}
-                  onClick={() => onSelectPage(node.page.slug)}
-                  aria-label={`${node.page.title}, related page`}
-                >
-                  <span>Explore</span>
-                  <strong>{node.page.title}</strong>
-                </button>
-              ))}
-            </div>
-          </>
-        ) : (
-          <div className="graph-empty">
-            <strong>This page is not in the current build.</strong>
-            <p>Search for a page to restore its map.</p>
-          </div>
-        )}
-      </div>
+      {graph.selected ? (
+        <KnowledgeGraph
+          nodes={nodes}
+          edges={graph.edges}
+          variant="related"
+          ariaLabel="Related page graph"
+          guide={graph.hiddenCount > 0 ? `Local graph · ${graph.hiddenCount} more nearby` : "Local knowledge graph"}
+          onSelectNode={onSelectPage}
+        />
+      ) : (
+        <div className="graph-empty">
+          <strong>This page is not in the current build.</strong>
+          <p>Search for a page to restore its map.</p>
+        </div>
+      )}
     </section>
   );
 }

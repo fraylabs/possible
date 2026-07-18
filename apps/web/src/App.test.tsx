@@ -25,6 +25,11 @@ describe("Possible wiki", () => {
     const atlas = screen.getByRole("region", { name: "Possible knowledge atlas" });
     expect(within(atlas).getByRole("button", { name: "Web, 3 pages" })).toBeInTheDocument();
     expect(within(atlas).getByRole("button", { name: "Manufacturing, 2 pages" })).toBeInTheDocument();
+    expect(within(atlas).getByRole("button", { name: "Vite with React, Web page" })).toBeInTheDocument();
+    await user.click(within(atlas).getByRole("button", { name: "Zoom in graph" }));
+    expect(within(atlas).getByText("Graph zoom 118%")).toBeInTheDocument();
+    await user.click(within(atlas).getByRole("button", { name: "Reset graph view" }));
+    expect(within(atlas).getByText("Graph zoom 100%")).toBeInTheDocument();
     await user.click(within(atlas).getByRole("button", { name: "Web, 3 pages" }));
 
     expect(await screen.findByRole("heading", { level: 1, name: "Web" })).toBeInTheDocument();

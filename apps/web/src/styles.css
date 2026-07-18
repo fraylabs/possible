@@ -368,10 +368,9 @@ h1[tabindex="-1"]:focus {
   min-height: 100dvh;
   overflow: hidden;
   background:
-    radial-gradient(ellipse at 54% 46%, rgba(116, 156, 121, 0.15), transparent 36%),
-    radial-gradient(ellipse at 86% 9%, rgba(215, 226, 166, 0.08), transparent 27%),
-    radial-gradient(ellipse at 12% 88%, rgba(64, 99, 81, 0.11), transparent 30%),
-    linear-gradient(145deg, #0a100d 0%, #050806 68%, #080d0a 100%);
+    radial-gradient(circle at 73% 24%, rgba(87, 116, 188, 0.12), transparent 32%),
+    radial-gradient(circle at 28% 76%, rgba(203, 119, 61, 0.09), transparent 30%),
+    linear-gradient(145deg, #14171e 0%, #0f1116 58%, #0b0d11 100%);
   color: var(--night-ink);
 }
 
@@ -380,50 +379,76 @@ h1[tabindex="-1"]:focus {
   inset: 0;
   z-index: 0;
   background:
-    linear-gradient(115deg, transparent 20%, rgba(208, 222, 177, 0.025) 46%, transparent 72%),
-    radial-gradient(ellipse at 50% 110%, rgba(121, 160, 126, 0.1), transparent 48%);
+    linear-gradient(rgba(255, 255, 255, 0.012) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.012) 1px, transparent 1px);
+  background-size: 44px 44px;
   content: "";
-  opacity: 0.9;
+  mask-image: radial-gradient(circle at center, black, transparent 84%);
 }
 
 .graph-shell::after {
   position: absolute;
   inset: 0;
   z-index: 4;
-  border: 1px solid rgba(226, 235, 203, 0.035);
-  box-shadow: inset 0 0 120px rgba(0, 0, 0, 0.24);
+  border: 1px solid rgba(223, 229, 245, 0.035);
+  box-shadow: inset 0 0 140px rgba(0, 0, 0, 0.32);
   content: "";
   pointer-events: none;
 }
 
 .graph-guide {
   position: absolute;
-  top: clamp(26px, 4vw, 50px);
-  left: clamp(26px, 4vw, 56px);
-  z-index: 3;
+  top: clamp(22px, 3vw, 38px);
+  left: clamp(22px, 3vw, 42px);
+  z-index: 6;
+  display: grid;
+  gap: 5px;
   margin: 0;
-  color: var(--night-soft);
   font-family: "DM Mono", monospace;
-  font-size: 0.68rem;
-  letter-spacing: 0.1em;
+  pointer-events: none;
+}
+
+.graph-guide span {
+  color: #d8ddea;
+  font-size: 0.67rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
-.graph-guide::before {
-  display: inline-block;
-  width: 5px;
-  height: 5px;
-  margin: 0 10px 1px 0;
-  border-radius: 50%;
-  background: var(--night-accent);
-  box-shadow: 0 0 14px rgba(213, 217, 167, 0.75);
-  content: "";
+.graph-guide strong {
+  color: #747d91;
+  font-size: 0.58rem;
+  font-weight: 400;
+  letter-spacing: 0.04em;
 }
 
 .graph-field {
   position: absolute;
-  inset: clamp(72px, 8vw, 112px) clamp(24px, 5vw, 72px) clamp(28px, 5vw, 70px);
+  inset: 0;
   min-height: 0;
+}
+
+.graph-field--interactive {
+  z-index: 2;
+  cursor: grab;
+  touch-action: none;
+}
+
+.graph-field--interactive.is-panning {
+  cursor: grabbing;
+}
+
+.graph-world {
+  position: absolute;
+  inset: clamp(64px, 7vw, 92px) clamp(24px, 4vw, 58px) clamp(54px, 6vw, 82px);
+  transform-origin: center;
+  transition: transform 170ms ease-out;
+  will-change: transform;
+}
+
+.is-panning .graph-world {
+  transition: none;
 }
 
 .three-graph,
@@ -443,211 +468,243 @@ h1[tabindex="-1"]:focus {
 .graph-lines {
   z-index: 1;
   overflow: visible;
-  opacity: 0.72;
-  transition: opacity 260ms ease;
+  opacity: 0.74;
 }
 
 .three-graph[data-ready="true"] + .graph-lines {
-  opacity: 0.1;
+  opacity: 0.48;
 }
 
 .graph-edge {
-  stroke: rgba(205, 219, 197, 0.4);
-  stroke-width: 0.18;
+  stroke: rgba(149, 158, 180, 0.36);
+  stroke-width: 0.13;
   stroke-linecap: round;
-  stroke-dasharray: none;
-  animation: trace 1.2s ease-out both;
+  transition: opacity 150ms ease, stroke 150ms ease, stroke-width 150ms ease;
 }
 
-.graph-node {
+.graph-edge.is-active {
+  stroke: rgba(231, 236, 252, 0.92);
+  stroke-width: 0.24;
+}
+
+.graph-edge[data-muted="true"] {
+  opacity: 0.055;
+}
+
+.knowledge-node {
+  --node-color: #aeb7cb;
   position: absolute;
   z-index: 2;
   display: grid;
-  isolation: isolate;
-  width: clamp(124px, 12vw, 168px);
-  min-height: 64px;
-  align-content: center;
-  justify-items: center;
-  gap: 5px;
-  overflow: hidden;
-  padding: 12px 15px;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  padding: 0;
   transform: translate(-50%, -50%);
-  border: 1px solid rgba(210, 225, 205, 0.16);
-  border-radius: 18px;
-  background:
-    linear-gradient(145deg, rgba(34, 49, 40, 0.76), rgba(11, 18, 14, 0.9)),
-    rgba(13, 21, 17, 0.86);
+  border-radius: 50%;
+  color: #eef1f8;
+  overflow: visible;
+  text-align: left;
+  transition: opacity 150ms ease, filter 150ms ease, transform 150ms ease;
+  animation: graph-node-in 440ms ease-out both;
+}
+
+.knowledge-node:focus-visible {
+  outline-color: var(--node-color);
+  outline-offset: 1px;
+}
+
+.knowledge-node__dot {
+  width: 5px;
+  height: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.44);
+  border-radius: 50%;
+  background: var(--node-color);
   box-shadow:
-    0 18px 46px rgba(0, 0, 0, 0.28),
-    inset 0 1px 0 rgba(237, 244, 222, 0.06);
-  color: var(--night-ink);
-  text-align: center;
-  backdrop-filter: blur(18px) saturate(115%);
-  animation: node-in 540ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    0 0 0 3px color-mix(in srgb, var(--node-color) 11%, transparent),
+    0 0 12px color-mix(in srgb, var(--node-color) 42%, transparent);
+  transition: box-shadow 150ms ease, transform 150ms ease;
 }
 
-.graph-node::after {
+.knowledge-node__label {
   position: absolute;
-  inset: 0;
-  z-index: -1;
-  background: linear-gradient(120deg, rgba(237, 244, 219, 0.07), transparent 38%);
-  content: "";
+  top: 50%;
+  left: calc(50% + 10px);
+  display: grid;
+  width: max-content;
+  max-width: 170px;
+  gap: 2px;
+  transform: translateY(-50%);
+  opacity: 0.24;
+  color: #d8ddea;
+  font-size: clamp(0.58rem, 0.68vw, 0.72rem);
+  line-height: 1.15;
   pointer-events: none;
+  text-shadow: 0 1px 5px #0b0d11, 0 0 10px #0b0d11;
+  transition: opacity 150ms ease, color 150ms ease;
 }
 
-.graph-node span {
-  color: #829287;
-  font-family: "DM Mono", monospace;
-  font-size: 0.56rem;
+.knowledge-node__label strong {
+  overflow: hidden;
   font-weight: 500;
-  letter-spacing: 0.09em;
-  line-height: 1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.knowledge-node__label small {
+  color: #70798d;
+  font-family: "DM Mono", monospace;
+  font-size: 0.5rem;
+  font-weight: 400;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
 }
 
-.graph-node strong {
-  font-size: clamp(0.74rem, 0.9vw, 0.9rem);
-  font-weight: 500;
-  line-height: 1.24;
+.knowledge-node--related .knowledge-node__dot {
+  width: 7px;
+  height: 7px;
 }
 
-.graph-node--selected {
-  width: clamp(168px, 17vw, 226px);
-  min-height: 98px;
-  gap: 8px;
-  border-color: rgba(220, 231, 180, 0.38);
-  border-radius: 25px;
-  background:
-    linear-gradient(145deg, rgba(50, 68, 53, 0.94), rgba(18, 29, 22, 0.97)),
-    rgba(27, 39, 31, 0.98);
+.knowledge-node--field .knowledge-node__dot {
+  width: 11px;
+  height: 11px;
   box-shadow:
-    0 25px 70px rgba(0, 0, 0, 0.38),
-    0 0 0 8px rgba(213, 225, 177, 0.025),
-    inset 0 1px 0 rgba(246, 248, 222, 0.1);
-  color: #f7f3db;
+    0 0 0 5px color-mix(in srgb, var(--node-color) 12%, transparent),
+    0 0 24px color-mix(in srgb, var(--node-color) 58%, transparent);
 }
 
-.graph-node--selected::before {
+.knowledge-node--selected .knowledge-node__dot {
+  width: 13px;
+  height: 13px;
+  box-shadow:
+    0 0 0 6px rgba(241, 243, 255, 0.1),
+    0 0 28px rgba(226, 231, 255, 0.58);
+}
+
+.knowledge-node--field .knowledge-node__label,
+.knowledge-node--selected .knowledge-node__label {
+  left: calc(50% + 15px);
+  font-size: clamp(0.78rem, 0.9vw, 0.95rem);
+}
+
+.knowledge-node.is-prominent .knowledge-node__label {
+  opacity: 0.88;
+}
+
+.knowledge-node:hover,
+.knowledge-node:focus-visible,
+.knowledge-node.is-hovered {
+  z-index: 5;
+  transform: translate(-50%, -50%) scale(1.12);
+}
+
+.knowledge-node:hover .knowledge-node__dot,
+.knowledge-node:focus-visible .knowledge-node__dot,
+.knowledge-node.is-hovered .knowledge-node__dot {
+  box-shadow:
+    0 0 0 5px color-mix(in srgb, var(--node-color) 17%, transparent),
+    0 0 25px color-mix(in srgb, var(--node-color) 72%, transparent);
+}
+
+.knowledge-node:hover .knowledge-node__label,
+.knowledge-node:focus-visible .knowledge-node__label,
+.knowledge-node.is-hovered .knowledge-node__label {
+  opacity: 1;
+  color: #fff;
+}
+
+.graph-world--focused .knowledge-node[data-muted="true"] {
+  opacity: 0.09;
+  filter: saturate(0.4);
+}
+
+.graph-world[data-zoomed-out="true"] .knowledge-node:not(.is-prominent) .knowledge-node__label {
+  opacity: 0;
+}
+
+.graph-toolbar {
   position: absolute;
-  top: 14px;
-  left: 16px;
+  top: clamp(22px, 3vw, 34px);
+  right: clamp(22px, 3vw, 38px);
+  z-index: 8;
+  display: flex;
+  overflow: hidden;
+  border: 1px solid rgba(217, 224, 241, 0.1);
+  border-radius: 9px;
+  background: rgba(17, 20, 27, 0.78);
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(14px);
+}
+
+.graph-toolbar button {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border-right: 1px solid rgba(217, 224, 241, 0.08);
+  color: #919aae;
+  transition: background 140ms ease, color 140ms ease;
+}
+
+.graph-toolbar button:last-child {
+  border-right: 0;
+}
+
+.graph-toolbar button:hover,
+.graph-toolbar button:focus-visible {
+  background: rgba(255, 255, 255, 0.055);
+  color: #eef1f8;
+}
+
+.graph-legend {
+  position: absolute;
+  bottom: clamp(21px, 3vw, 34px);
+  left: clamp(22px, 3vw, 42px);
+  z-index: 7;
+  display: flex;
+  gap: 15px;
+  margin: 0;
+  padding: 0;
+  color: #7f889c;
+  font-family: "DM Mono", monospace;
+  font-size: 0.56rem;
+  letter-spacing: 0.04em;
+  list-style: none;
+  text-transform: uppercase;
+}
+
+.graph-legend li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.graph-legend span {
+  --legend-color: #aeb7cb;
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: var(--night-accent);
-  box-shadow: 0 0 11px rgba(213, 217, 167, 0.8);
-  content: "";
+  background: var(--legend-color);
+  box-shadow: 0 0 9px color-mix(in srgb, var(--legend-color) 52%, transparent);
 }
 
-.graph-node--selected strong {
-  max-width: 11rem;
-  font-family: "Instrument Serif", Georgia, serif;
-  font-size: clamp(1.2rem, 1.6vw, 1.58rem);
-  font-weight: 400;
-  line-height: 1.02;
-}
-
-.graph-node--related {
-  transition: border-color 190ms ease, background 190ms ease, box-shadow 190ms ease, transform 190ms ease;
-}
-
-.graph-node--related:hover,
-.graph-node--related:focus-visible {
-  transform: translate(-50%, calc(-50% - 5px)) scale(1.025);
-  border-color: rgba(218, 229, 180, 0.44);
-  background:
-    linear-gradient(145deg, rgba(48, 66, 52, 0.94), rgba(16, 27, 20, 0.98)),
-    rgba(25, 37, 29, 0.98);
-  box-shadow:
-    0 24px 55px rgba(0, 0, 0, 0.34),
-    0 0 30px rgba(172, 198, 155, 0.08);
-}
-
-.graph-shell--atlas {
-  background:
-    radial-gradient(ellipse at 50% 50%, rgba(187, 205, 156, 0.15), transparent 31%),
-    radial-gradient(ellipse at 84% 12%, rgba(118, 157, 124, 0.1), transparent 27%),
-    radial-gradient(ellipse at 12% 86%, rgba(56, 91, 72, 0.12), transparent 31%),
-    linear-gradient(145deg, #0a100d 0%, #050806 68%, #080d0a 100%);
-}
-
-.atlas-edge {
-  stroke: rgba(213, 217, 167, 0.42);
-  stroke-dasharray: 0.8 0.7;
-}
-
-.atlas-core {
-  width: clamp(132px, 13vw, 172px);
-  min-height: 0;
-  aspect-ratio: 1;
-  gap: 7px;
-  border-color: rgba(224, 234, 188, 0.42);
-  border-radius: 50%;
-  background:
-    radial-gradient(circle at 36% 28%, rgba(231, 239, 195, 0.16), transparent 31%),
-    linear-gradient(145deg, rgba(46, 65, 49, 0.97), rgba(16, 26, 20, 0.98));
-  box-shadow:
-    0 28px 80px rgba(0, 0, 0, 0.4),
-    0 0 0 9px rgba(213, 225, 177, 0.025),
-    inset 0 1px 0 rgba(246, 248, 222, 0.12);
-}
-
-.atlas-core::before {
+.graph-hint {
   position: absolute;
-  inset: -12px;
-  z-index: -1;
-  border: 1px solid rgba(218, 230, 183, 0.1);
-  border-radius: 50%;
-  content: "";
-}
-
-.atlas-core strong,
-.atlas-node strong {
-  font-family: "Instrument Serif", Georgia, serif;
-  font-size: clamp(1.15rem, 1.55vw, 1.48rem);
-  font-weight: 400;
-  line-height: 1;
-}
-
-.atlas-core span,
-.atlas-node span {
-  color: #8f9f92;
+  right: clamp(22px, 3vw, 42px);
+  bottom: clamp(21px, 3vw, 34px);
+  z-index: 7;
+  margin: 0;
+  color: #596174;
   font-family: "DM Mono", monospace;
-  font-size: 0.61rem;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  font-size: 0.55rem;
+  letter-spacing: 0.025em;
+  pointer-events: none;
 }
 
-.atlas-node {
-  width: clamp(138px, 14vw, 188px);
-  min-height: 82px;
-  gap: 8px;
-  border-color: rgba(211, 224, 208, 0.2);
-  border-radius: 21px;
-  background:
-    linear-gradient(145deg, rgba(34, 52, 41, 0.82), rgba(11, 19, 14, 0.94)),
-    rgba(14, 24, 18, 0.92);
-  transition: border-color 190ms ease, background 190ms ease, box-shadow 190ms ease, transform 190ms ease;
+@keyframes graph-node-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
-
-.atlas-node:hover,
-.atlas-node:focus-visible {
-  transform: translate(-50%, calc(-50% - 5px)) scale(1.025);
-  border-color: rgba(213, 217, 167, 0.5);
-  background:
-    linear-gradient(145deg, rgba(49, 69, 53, 0.96), rgba(15, 27, 19, 0.99)),
-    rgba(25, 39, 29, 0.98);
-  box-shadow:
-    0 26px 62px rgba(0, 0, 0, 0.38),
-    0 0 36px rgba(179, 205, 158, 0.1);
-}
-
-.graph-nodes > :nth-child(2) { animation-delay: 40ms; }
-.graph-nodes > :nth-child(3) { animation-delay: 80ms; }
-.graph-nodes > :nth-child(4) { animation-delay: 120ms; }
-.graph-nodes > :nth-child(5) { animation-delay: 160ms; }
-.graph-nodes > :nth-child(6) { animation-delay: 200ms; }
-.graph-nodes > :nth-child(7) { animation-delay: 240ms; }
 
 .graph-empty {
   position: absolute;
@@ -656,12 +713,12 @@ h1[tabindex="-1"]:focus {
   place-content: center;
   gap: 8px;
   justify-items: center;
-  color: var(--night-soft);
+  color: #7f889c;
   text-align: center;
 }
 
 .graph-empty strong {
-  color: var(--night-ink);
+  color: #eef1f8;
   font-weight: 500;
 }
 
@@ -896,16 +953,6 @@ h1[tabindex="-1"]:focus {
   to { transform: rotate(360deg); }
 }
 
-@keyframes trace {
-  from { stroke-dashoffset: 14; opacity: 0; }
-  to { stroke-dashoffset: 0; opacity: 1; }
-}
-
-@keyframes node-in {
-  from { opacity: 0; transform: translate(-50%, -42%) scale(0.96); }
-  to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-}
-
 @media (max-width: 800px) {
   .explore-view {
     grid-template-columns: 1fr;
@@ -954,59 +1001,46 @@ h1[tabindex="-1"]:focus {
   }
 
   .graph-guide {
-    top: 25px;
+    top: 22px;
     left: 22px;
   }
 
-  .graph-field {
-    inset: 66px 10px 20px;
+  .graph-world {
+    inset: 66px 10px 52px;
   }
 
-  .graph-node {
-    width: 98px;
-    min-height: 54px;
-    gap: 4px;
-    padding: 9px 10px;
-    border-radius: 15px;
+  .graph-toolbar {
+    top: 20px;
+    right: 18px;
   }
 
-  .graph-node strong {
-    font-size: 0.7rem;
+  .graph-toolbar button {
+    width: 31px;
+    height: 31px;
   }
 
-  .graph-node span {
-    font-size: 0.46rem;
+  .knowledge-node__label {
+    max-width: 118px;
+    font-size: 0.58rem;
   }
 
-  .graph-node--selected {
-    width: 138px;
-    min-height: 84px;
-    border-radius: 21px;
+  .knowledge-node--field .knowledge-node__label,
+  .knowledge-node--selected .knowledge-node__label {
+    font-size: 0.75rem;
   }
 
-  .graph-node--selected strong {
-    font-size: 1rem;
+  .knowledge-node:not(.is-prominent) .knowledge-node__label {
+    opacity: 0.08;
   }
 
-  .atlas-core {
-    width: 116px;
-    min-height: 0;
+  .graph-legend {
+    bottom: 22px;
+    left: 22px;
+    gap: 12px;
   }
 
-  .atlas-node {
-    width: 112px;
-    min-height: 72px;
-    border-radius: 18px;
-  }
-
-  .atlas-core strong,
-  .atlas-node strong {
-    font-size: 1rem;
-  }
-
-  .atlas-core span,
-  .atlas-node span {
-    font-size: 0.52rem;
+  .graph-hint {
+    display: none;
   }
 
   .read-nav {
@@ -1053,17 +1087,17 @@ h1[tabindex="-1"]:focus {
 }
 
 @media (max-width: 420px) {
-  .graph-field {
-    right: 4px;
-    left: 4px;
+  .graph-world {
+    right: 2px;
+    left: 2px;
   }
 
-  .graph-node {
-    width: 84px;
+  .graph-guide strong {
+    display: none;
   }
 
-  .graph-node--selected {
-    width: 118px;
+  .knowledge-node__label {
+    max-width: 96px;
   }
 }
 

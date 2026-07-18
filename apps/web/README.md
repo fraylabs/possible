@@ -9,8 +9,9 @@ contains a root page with the same slug, such as `web/web.md` and
 
 The interface has two modes:
 
-- **Explore** — `/` shows sibling top-level fields; selecting one opens its
-  concise page context and a small related map scoped to that field.
+- **Explore** — `/` shows every sourced page in one force-settled global graph,
+  clustered under sibling top-level fields. Selecting a node opens its concise
+  context and a local related-page graph scoped to that field.
 - **Read** — the full selected article, review date, sources, and one return to
   the map.
 
@@ -18,10 +19,11 @@ Desktop and mobile use the same full-page model. Selecting a search result,
 article link, graph node, or browser-history entry performs the same page
 navigation action and preserves the active mode.
 
-The map uses a Three.js canvas for atmospheric particles, node glows, and
-animated connection signals. Labels and controls remain semantic HTML above
-the canvas, and the existing static connection lines remain as a fallback when
-WebGL 2 or motion is unavailable.
+The map uses a Three.js canvas for subtle depth, link lines, and colored node
+glows. The force layout is deterministic from authored wiki links and folder
+fields. Obsidian-style pan, zoom, neighbor tracing, labels, and selection remain
+semantic HTML above the canvas; static SVG links remain available when WebGL 2
+is unavailable, and reduced-motion users receive a still scene.
 
 Production builds also generate public agent-readable files from that corpus:
 
