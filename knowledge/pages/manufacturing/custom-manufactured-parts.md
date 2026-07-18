@@ -19,9 +19,9 @@ Treat a custom part as a controlled manufacturing package rather than a mesh upl
 
 ## Use this when
 
-Use this route when a custom geometry will be quoted or fabricated, or when fit, function, material, or inspection matters to acceptance.
+Use this guide when a custom geometry will be quoted or fabricated, or when fit, function, material, or inspection matters to acceptance.
 
-## Consider another route when
+## Limits and alternatives
 
 If a catalog component already satisfies the requirement without custom fabrication, do not force a custom-part workflow. When mount interfaces and loading define the problem, continue with [Custom motor brackets](/wiki/custom-motor-brackets).
 

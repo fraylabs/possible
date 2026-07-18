@@ -27,7 +27,7 @@ Add [3D runtime verification](/wiki/3d-runtime-verification) when scene correctn
 
 Use this practice whenever the application will be used beyond local development or when delivery includes a preview or production deployment.
 
-## Consider another route when
+## Limits and alternatives
 
 A disposable visual spike can omit this production trust claim if that limitation is explicit. It should not later be described as production-ready without completing the evidence.
 

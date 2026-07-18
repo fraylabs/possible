@@ -21,7 +21,7 @@ Define critical-to-quality features and evidence before quoting. Do not treat st
 
 Use this practice when the part has measurable functional acceptance criteria and provider inspection options affect the quote or process selection.
 
-## Consider another route when
+## Limits and alternatives
 
 If the artifact is a nonfunctional visual sample with no dimensional acceptance claim, a full inspection plan may be unnecessary. Return to [Tolerance contract](/wiki/tolerance-contract) if critical features and acceptance limits are not yet defined.
 

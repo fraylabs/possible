@@ -1,31 +1,24 @@
 # @possible/web
 
-Responsive human projection of the validated `@possible/knowledge` wiki.
-The atlas adds no editorial knowledge of its own: search, articles, graph
-neighbors, sources, and routes all derive from the shared page corpus. The
-top-level folders in `knowledge/pages/` become atlas fields when each folder
-contains a root page with the same slug, such as `web/web.md` and
-`manufacturing/manufacturing.md`.
+Responsive human projection of the source-backed `@possible/knowledge` field
+guide library. Search, guide text, sources, authored links, backlinks, related
+reading, and atlas fields all derive from the same contributor-authored corpus.
 
-The interface has two modes:
+The human surface supports two reading behaviors:
 
-- **Explore** — `/` shows every sourced page in one force-settled global graph,
-  clustered under sibling top-level fields. Selecting a node opens its concise
-  context and a local related-page graph scoped to that field.
-- **Read** — the full selected article, review date, sources, and one return to
-  the map.
+- **Discover** — search with a plain subject or browse every guide in the atlas.
+- **Read** — inspect one guide, its review date, sources, and related reading.
 
-Desktop and mobile use the same full-page model. Selecting a search result,
-article link, graph node, or browser-history entry performs the same page
-navigation action and preserves the active mode.
+Possible supplies context only. Atlas links are related reading, not ordered
+steps, and the site does not plan, compose, execute, or validate projects.
+People and host agents retain every project-specific decision and action.
 
-The map uses a Three.js canvas for subtle depth, link lines, and colored node
-glows. The force layout is deterministic from authored wiki links and folder
-fields. Obsidian-style pan, zoom, neighbor tracing, labels, and selection remain
-semantic HTML above the canvas; static SVG links remain available when WebGL 2
-is unavailable, and reduced-motion users receive a still scene.
+Top-level folders in `knowledge/pages/` become atlas fields when each folder
+contains a root guide with the same slug, such as `web/web.md` and
+`manufacturing/manufacturing.md`. The deterministic graph adds no editorial
+knowledge beyond authored links and folder placement.
 
-Production builds also generate public agent-readable files from that corpus:
+Production builds retain stable public paths for people and agents:
 
 - `/llms.txt`
 - `/wiki/index.json`
@@ -35,12 +28,10 @@ Production builds also generate public agent-readable files from that corpus:
 - `/agent/read/<slug>.json`
 - `/agent/related/<slug>.json`
 
-The agent publication is deliberately static. `GET /agent/search.json` returns
-the complete searchable index and its normalization/ranking rules; it does not
-evaluate a `q` query parameter. Consumers search that response locally, then
-fetch an exact read or related representation for a slug from the published
-index. Every page representation is generated from the validated corpus and
-retains its review date, sources, and authored links.
+The agent publication is static. Consumers download the search index, apply its
+documented normalization and ranking locally, then fetch exact guide or related-
+guide representations. Search results are relevant reading, not project
+recommendations or validation.
 
 ```bash
 npm run test -w @possible/web
@@ -49,5 +40,5 @@ npm run dev -w @possible/web
 ```
 
 The shared knowledge workspace must be built before a standalone production
-build. The root verifier handles that dependency order and verifies every
-generated page representation against the reviewed artifact.
+build. The root verifier handles that dependency order and verifies the emitted
+public files against the reviewed artifact.

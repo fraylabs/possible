@@ -2,10 +2,10 @@ import { ArrowLeft, ArrowRight, ExternalLink } from "lucide-react";
 
 const sections = [
   ["What Possible is", "what-possible-is"],
-  ["How to use the atlas", "how-to-use"],
-  ["How pages work", "how-pages-work"],
+  ["Search and read", "how-to-use"],
   ["For agents", "for-agents"],
-  ["Contributing knowledge", "contributing"],
+  ["Trust boundary", "trust-boundary"],
+  ["Contributing guides", "contributing"],
 ] as const;
 
 export function DocsPage() {
@@ -14,7 +14,7 @@ export function DocsPage() {
       <nav className="docs-nav" aria-label="Documentation navigation">
         <a className="brand-reset" href="/">
           <span className="brand-wordmark">possible<span>.sh</span></span>
-          <span className="brand-tagline">A sourced wiki of what people and agents can make possible.</span>
+          <span className="brand-tagline">Source-backed field guides for people and agents.</span>
         </a>
         <div className="route-nav-actions">
           <a className="back-button docs-back" href="/">
@@ -22,7 +22,7 @@ export function DocsPage() {
             Atlas
           </a>
           <a className="route-primary-link" href="/demo">
-            Try the demo
+            See an example
             <ArrowRight size={16} aria-hidden="true" />
           </a>
         </div>
@@ -46,13 +46,13 @@ export function DocsPage() {
         <article className="docs-article">
           <header className="docs-header">
             <p className="section-kicker">How Possible works</p>
-            <h1>Tell the agent the outcome—not the stack.</h1>
+            <h1>Learn what the work involves.</h1>
             <p>
-              Possible gives people and agents a maintained, sourced route from “I want to make
-              this” to the tools, methods, services, and missing evidence needed to begin.
+              Possible helps people and agents understand unfamiliar work through maintained,
+              source-backed field guides. It informs decisions; it does not make them.
             </p>
             <a className="docs-hero-cta" href="/demo">
-              Try an outcome now
+              See guide retrieval
               <ArrowRight size={17} aria-hidden="true" />
             </a>
           </header>
@@ -62,17 +62,19 @@ export function DocsPage() {
             <div>
               <h2>What Possible is</h2>
               <p>
-                When someone says “make me a robot arm” or “ship me a web app,” an agent should
-                not guess a stack from scratch. It asks Possible whether a maintained route exists.
+                A field guide explains a subject clearly enough that a person or agent can enter
+                the work with better context: common approaches, important decisions, trade-offs,
+                failure modes, and evidence practitioners look for.
               </p>
               <p>
-                Possible returns the closest authored outcome, its route status, the connected
-                capabilities and providers, primary sources, and what still has to be proven.
+                Possible retrieves those guides and their sources. The reader or host agent still
+                interprets the context, asks project-specific questions, chooses an approach, and
+                owns every action and result.
               </p>
-              <div className="how-flow" aria-label="Possible workflow">
-                <div><span>01</span><strong>Ask</strong><p>“I want to make a robotic arm.”</p></div>
-                <div><span>02</span><strong>Route</strong><p>Find the maintained outcome and connected knowledge.</p></div>
-                <div><span>03</span><strong>Make</strong><p>Start from sourced work, while keeping gaps explicit.</p></div>
+              <div className="how-flow" aria-label="Possible learning workflow">
+                <div><span>01</span><strong>Ask</strong><p>Describe what you want to understand.</p></div>
+                <div><span>02</span><strong>Learn</strong><p>Read relevant source-backed guides.</p></div>
+                <div><span>03</span><strong>Decide</strong><p>You or your agent decide what to do.</p></div>
               </div>
             </div>
           </section>
@@ -80,82 +82,86 @@ export function DocsPage() {
           <section id="how-to-use" className="docs-section">
             <p className="docs-number">02</p>
             <div>
-              <h2>How to use the atlas</h2>
+              <h2>Search and read</h2>
               <ol className="docs-steps">
-                <li><strong>Start at a field.</strong> Web and Manufacturing are top-level areas, not one mixed path.</li>
-                <li><strong>Click a node.</strong> The graph focuses the node and highlights its authored connections.</li>
-                <li><strong>Expand the page.</strong> Read the page in the left sidebar while keeping the map in view.</li>
-                <li><strong>Follow the links.</strong> Move from a broad capability to the specific tools, methods, or services that support it.</li>
-                <li><strong>Use search when you know the term.</strong> Search is for jumping directly to a page; the atlas is for discovering context.</li>
+                <li><strong>Start with a question.</strong> Search for the thing you are trying to make or understand.</li>
+                <li><strong>Open a relevant guide.</strong> Read its scope and review date before applying its guidance.</li>
+                <li><strong>Inspect the sources.</strong> Follow primary sources when a claim matters to your decision.</li>
+                <li><strong>Follow related reading deliberately.</strong> Link adjacency and display order provide context, not a project workflow; guide prose may still explain a conditional common sequence.</li>
+                <li><strong>Stop when you have enough context.</strong> Project-specific reasoning stays outside Possible.</li>
               </ol>
               <p className="docs-callout">
-                The graph is a map of relationships, not a project plan. Use it to find the right
-                starting knowledge, then make your own decisions for the specific project.
+                The atlas is a map of related reading. Proximity and link order do not establish sequence,
+                compatibility, endorsement, or completeness. The consumer decides whether any sequence described in prose fits the project.
               </p>
-            </div>
-          </section>
-
-          <section id="how-pages-work" className="docs-section">
-            <p className="docs-number">03</p>
-            <div>
-              <h2>How pages work</h2>
-              <div className="docs-definitions">
-                <div><strong>Outcome</strong><span>The thing someone wants to make or accomplish.</span></div>
-                <div><strong>Capability</strong><span>A reusable ability, such as deploying a site or making a parametric part.</span></div>
-                <div><strong>Tool or method</strong><span>A concrete way to exercise that capability, such as Next.js, Three.js, or MuJoCo.</span></div>
-                <div><strong>Service</strong><span>An external provider that helps complete the work, such as Vercel or a manufacturer.</span></div>
-                <div><strong>Connection</strong><span>An authored link between pages that explains why they belong together.</span></div>
-              </div>
             </div>
           </section>
 
           <section id="for-agents" className="docs-section">
-            <p className="docs-number">04</p>
+            <p className="docs-number">03</p>
             <div>
               <h2>For agents</h2>
               <p>
-                Possible is designed to be useful before an agent starts building. An agent can
-                check whether an outcome has a known path, discover the current stack around it,
-                and reuse contributor knowledge instead of inventing an untested workflow.
+                Agents use the same guides as people: search with the user&apos;s question, read only
+                relevant pages, follow useful references progressively, and cite the review date
+                and sources when the retrieved context matters.
               </p>
               <div className="docs-code-block">
-                <span>Goal</span>
-                <code>I want to build a browser-based 3D configurator.</code>
-                <span>Possible check</span>
-                <code>Find the web field → 3D renderer selection → Three.js / React Three Fiber → deployment.</code>
+                <span>Question</span>
+                <code>I want to understand what goes into a robotic arm.</code>
+                <span>Possible</span>
+                <code>Search → read “Robotic arms” → inspect related guides and sources.</code>
+                <span>Agent</span>
+                <code>Reason from that context, ask the user, and own the project decisions.</code>
               </div>
               <p>
-                The graph is the human interface. The same pages are also available as structured
-                wiki data and an <a href="/llms.txt">agent-readable index</a>.
+                The public corpus is also available as structured guide data and an
+                {" "}<a href="/llms.txt">agent-readable index</a>.
               </p>
               <a className="docs-source-link" href="/proof">
-                See the outcome-routing proof
+                See transparent retrieval examples
               </a>
+            </div>
+          </section>
+
+          <section id="trust-boundary" className="docs-section">
+            <p className="docs-number">04</p>
+            <div>
+              <h2>Trust boundary</h2>
+              <div className="docs-definitions">
+                <div><strong>Reviewed</strong><span>A contributor checked the guide and its cited sources on the published date.</span></div>
+                <div><strong>Related</strong><span>Another guide is linked for context; it is not automatically a next step.</span></div>
+                <div><strong>Source-backed</strong><span>Important factual claims can be inspected at their cited sources.</span></div>
+                <div><strong>Not certified</strong><span>A guide does not validate a design, project, provider, or completed result.</span></div>
+              </div>
+              <p className="docs-callout">
+                Possible never plans or composes a project, chooses tools on someone&apos;s behalf,
+                executes actions, holds credentials, approves spending, or certifies a result.
+              </p>
             </div>
           </section>
 
           <section id="contributing" className="docs-section">
             <p className="docs-number">05</p>
             <div>
-              <h2>Contributing knowledge</h2>
+              <h2>Contributing guides</h2>
               <p>
-                A useful contribution is specific, sourced, and honest about its boundaries. Add
-                one page when you can explain a decision clearly enough that another person or
-                agent can start from it.
+                A useful contribution teaches one coherent subject, stays honest about its limits,
+                and gives another reader enough source-backed context to reason for themselves.
               </p>
               <ul className="docs-checklist">
-                <li>State what the tool, method, or service is good for.</li>
-                <li>Include the important trade-offs and prerequisites.</li>
-                <li>Link to adjacent pages that make the workflow complete.</li>
-                <li>Provide primary sources and a review date.</li>
-                <li>Do not present a preference as universal truth.</li>
+                <li>Say what the guide covers and what it does not establish.</li>
+                <li>Explain common approaches, decisions, trade-offs, and failure modes.</li>
+                <li>Describe evidence practitioners look for without claiming Possible performs the checks.</li>
+                <li>Use links for related context; explain any conditional sequence in prose instead of encoding it through adjacency.</li>
+                <li>Provide primary sources and a real review date.</li>
               </ul>
               <p className="docs-footer-note">
-                Possible is early. Its job is not to know everything; it is to make the best
-                available starting points easier to find and easier for agents to use.
+                Publishing means the guide is reviewed and inspectable. It is not an endorsement,
+                project plan, certification, or guarantee.
               </p>
               <a className="docs-source-link" href="https://github.com/fraylabs/possible" target="_blank" rel="noreferrer">
-                View the public repository <ExternalLink size={14} aria-hidden="true" />
+                Contribute a field guide <ExternalLink size={14} aria-hidden="true" />
               </a>
             </div>
           </section>

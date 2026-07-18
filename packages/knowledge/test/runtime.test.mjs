@@ -3,27 +3,27 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import {
   getBacklinks,
+  getGuide,
+  getGuideBacklinks,
   getPage,
+  getRelatedGuides,
   getRelatedPages,
+  loadGuides,
   loadWiki,
-  assessSearchResults,
-  isOutcomeLikeQuery,
+  searchGuides,
   searchPages,
 } from "../dist/index.js";
 import { wikiCorpusData } from "../dist/data.js";
 
-const corpus = {
+const library = {
   pages: [
     {
-      slug: "build-an-accessible-site",
-      title: "Build an accessible site",
-      summary: "Publish an inclusive website with semantic HTML and keyboard support.",
+      slug: "accessible-sites",
+      title: "Accessible sites",
+      summary: "Build an inclusive website with semantic HTML and keyboard support.",
       body: "Start with landmarks, headings, labels, and visible focus states.",
       tags: ["web", "accessibility"],
-      aliases: ["inclusive web page", "accessible site", "accessible website"],
-      kind: "outcome",
-      coverage: ["web", "accessibility"],
-      routeStatus: "verified",
+      aliases: ["inclusive web page", "accessible website"],
       reviewedAt: "2026-07-18",
       sources: [{ title: "Web accessibility guidance", url: "https://example.com/a11y" }],
       links: ["choose-web-hosting"],
@@ -34,8 +34,6 @@ const corpus = {
       summary: "Compare hosting constraints for a website before publishing it.",
       body: "Check deployment inputs, custom domains, observability, and rollback options.",
       tags: ["web", "publishing"],
-      kind: "provider",
-      coverage: ["web", "delivery"],
       reviewedAt: "2026-07-17",
       sources: [{ title: "Hosting reference", url: "https://example.com/hosting" }],
       links: [],
@@ -44,148 +42,82 @@ const corpus = {
       slug: "document-a-project",
       title: "Document a project",
       summary: "Write down decisions and limitations so that work can be reviewed.",
-      body: "Link the implementation guide and record verification evidence.",
+      body: "Link the implementation guide and record validation evidence.",
       tags: ["practice"],
       reviewedAt: "2026-07-16",
       sources: [{ title: "Documentation reference", url: "https://example.com/docs" }],
-      links: ["build-an-accessible-site"],
+      links: ["accessible-sites"],
     },
   ],
 };
 
-const outcomeFirstCorpus = {
-  pages: [
-    {
-      slug: "robot-arm",
-      title: "Robot arm",
-      summary: "A complete route for a robot arm.",
-      body: "The route can build a robot arm.",
-      tags: ["robotics"],
-      aliases: ["build a robot arm"],
-      kind: "outcome",
-      routeStatus: "verified",
-      reviewedAt: "2026-07-18",
-      sources: [{ title: "Robot arm route", url: "https://example.com/robot-arm" }],
-      links: ["build-robot-arm-method"],
-    },
-    {
-      slug: "build-robot-arm-method",
-      title: "Build a robot arm method",
-      summary: "A method to build a robot arm.",
-      body: "Assemble a robot arm with this build method.",
-      tags: ["build", "robot", "arm"],
-      kind: "method",
-      reviewedAt: "2026-07-18",
-      sources: [{ title: "Build robot arm method", url: "https://example.com/robot-arm-method" }],
-      links: [],
-    },
-  ],
-};
-
-test("loadWiki isolates callers from the browser-safe canonical export", async () => {
-  const first = await loadWiki();
+test("loadGuides and loadWiki isolate callers from canonical browser data", async () => {
+  const guides = await loadGuides();
+  const wiki = await loadWiki();
   const canonicalLength = wikiCorpusData.pages.length;
   assert.ok(canonicalLength > 0);
-  first.pages.push(corpus.pages[0]);
+  assert.deepEqual(guides, wiki);
+
+  guides.pages.push(library.pages[0]);
   assert.equal(wikiCorpusData.pages.length, canonicalLength);
-  first.pages[0].title = "mutated by caller";
+  guides.pages[0].title = "mutated by caller";
   assert.notEqual(wikiCorpusData.pages[0].title, "mutated by caller");
 });
 
-test("searchPages is deterministic, weighted, filterable, and bounded", () => {
-  const first = searchPages(corpus, "accessible website");
-  const second = searchPages(corpus, "accessible website");
-  assert.equal(first[0]?.page.slug, "build-an-accessible-site");
-  assert.equal(
-    searchPages(corpus, "I want to make an accessible website.")[0]?.page.slug,
-    "build-an-accessible-site",
-  );
+test("guide search is deterministic, weighted, alias-aware, filterable, and bounded", () => {
+  const first = searchGuides(library, "accessible website");
+  const second = searchGuides(library, "accessible website");
+  assert.equal(first[0]?.page.slug, "accessible-sites");
   assert.deepEqual(first, second);
-  assert.deepEqual(searchPages(corpus, "accessible website", { tags: ["publishing"] }), []);
-  assert.equal(searchPages(corpus, "website", { tags: ["web"], limit: 1 }).length, 1);
-  assert.deepEqual(searchPages(corpus, "  "), []);
-  assert.deepEqual(searchPages(corpus, "website", { limit: 0 }), []);
+  assert.equal(searchGuides(library, "inclusive web page")[0]?.page.slug, "accessible-sites");
+  assert.deepEqual(searchGuides(library, "accessible website", { tags: ["publishing"] }), []);
+  assert.equal(searchGuides(library, "website", { tags: ["web"], limit: 1 }).length, 1);
+  assert.deepEqual(searchGuides(library, "  "), []);
+  assert.deepEqual(searchGuides(library, "website", { limit: 0 }), []);
 });
 
-test("outcome-like searches prefer an outcome over a stronger supporting method match", () => {
-  assert.equal(isOutcomeLikeQuery("I want to build a robot arm"), true);
-  const results = searchPages(outcomeFirstCorpus, "I want to build a robot arm", { limit: 1 });
+test("conversational intent words do not become route or completeness semantics", () => {
+  const results = searchGuides(library, "I want help to build an accessible website.");
 
-  assert.equal(results[0]?.page.slug, "robot-arm");
-  assert.deepEqual(assessSearchResults(results), {
-    status: "verified",
-    reason: "Possible found an explicitly verified outcome route.",
-    verifiedRoutes: ["robot-arm"],
-    partialRoutes: [],
-  });
+  assert.equal(results[0]?.page.slug, "accessible-sites");
+  assert.deepEqual(results[0]?.matchedTerms, ["accessible", "website"]);
+  assert.deepEqual(Object.keys(results[0]).sort(), ["matchedTerms", "page", "score"]);
 });
 
-test("subject searches are not classified as outcome-like", () => {
-  assert.equal(isOutcomeLikeQuery("robot arm"), false);
-});
-
-test("a related method never becomes a verified route", () => {
-  const results = searchPages(outcomeFirstCorpus, "assemble a robot arm");
-
-  assert.deepEqual(results.map((result) => result.page.slug), ["build-robot-arm-method"]);
-  assert.deepEqual(assessSearchResults(results), {
-    status: "no-maintained-route",
-    reason: "Possible found related knowledge, but no maintained outcome route for this query.",
-    verifiedRoutes: [],
-    partialRoutes: [],
-  });
-});
-
-test("searchPages routes through explicit aliases, kind, and coverage", () => {
-  assert.equal(searchPages(corpus, "inclusive web page")[0]?.page.slug, "build-an-accessible-site");
-  assert.equal(
-    searchPages(corpus, "website", { kind: "provider", coverage: ["delivery"] })[0]?.page.slug,
-    "choose-web-hosting",
-  );
-  assert.deepEqual(searchPages(corpus, "website", { kind: "outcome", coverage: ["delivery"] }), []);
-  assert.deepEqual(searchPages(corpus, "website", { coverage: ["missing-scope"] }), []);
-});
-
-test("assessSearchResults reports route truth without upgrading related pages", () => {
-  const verified = searchPages(corpus, "accessible website");
-  assert.deepEqual(assessSearchResults(verified), {
-    status: "verified",
-    reason: "Possible found an explicitly verified outcome route.",
-    verifiedRoutes: ["build-an-accessible-site"],
-    partialRoutes: [],
-  });
-
-  const relatedOnly = searchPages(corpus, "hosting");
-  assert.equal(assessSearchResults(relatedOnly).status, "no-maintained-route");
-  assert.deepEqual(assessSearchResults([]), {
-    status: "no-maintained-route",
-    reason: "Possible found no maintained pages matching every query term.",
-    verifiedRoutes: [],
-    partialRoutes: [],
-  });
-});
-
-test("exact reads, backlinks, and related pages derive from page links", () => {
-  assert.equal(getPage(corpus, "choose-web-hosting")?.title, "Choose web hosting");
-  assert.equal(getPage(corpus, "missing-page"), undefined);
+test("legacy searchPages is a shape-compatible alias for guide search", () => {
   assert.deepEqual(
-    getBacklinks(corpus, "build-an-accessible-site").map((page) => page.slug),
+    searchPages(library, "web hosting", { tags: ["web"] }),
+    searchGuides(library, "web hosting", { tags: ["web"] }),
+  );
+});
+
+test("exact reads, backlinks, and related guides derive only from authored links", () => {
+  assert.equal(getGuide(library, "choose-web-hosting")?.title, "Choose web hosting");
+  assert.equal(getPage(library, "choose-web-hosting"), getGuide(library, "choose-web-hosting"));
+  assert.equal(getGuide(library, "missing-guide"), undefined);
+  assert.deepEqual(
+    getGuideBacklinks(library, "accessible-sites").map((guide) => guide.slug),
     ["document-a-project"],
   );
+  assert.deepEqual(getBacklinks(library, "accessible-sites"), getGuideBacklinks(library, "accessible-sites"));
   assert.deepEqual(
-    getRelatedPages(corpus, "build-an-accessible-site").map((page) => page.slug),
+    getRelatedGuides(library, "accessible-sites").map((guide) => guide.slug),
     ["choose-web-hosting", "document-a-project"],
   );
-  assert.deepEqual(getRelatedPages(corpus, "missing-page"), []);
+  assert.deepEqual(getRelatedPages(library, "accessible-sites"), getRelatedGuides(library, "accessible-sites"));
+  assert.deepEqual(getRelatedGuides(library, "missing-guide"), []);
 });
 
-test("browser-safe data projection contains no Node-only imports or planner contract", async () => {
+test("browser-safe declarations prefer guides and expose no planner or route contract", async () => {
   const dataSource = await readFile(new URL("../dist/data.js", import.meta.url), "utf8");
   const generatedSource = await readFile(new URL("../dist/generated-data.js", import.meta.url), "utf8");
   const declarations = await readFile(new URL("../dist/types.d.ts", import.meta.url), "utf8");
+  const runtimeDeclarations = await readFile(new URL("../dist/runtime.d.ts", import.meta.url), "utf8");
   assert.doesNotMatch(dataSource + generatedSource, /node:/);
+  assert.match(declarations, /interface Guide\b/);
+  assert.match(declarations, /type WikiPage = Guide/);
   assert.doesNotMatch(
-    declarations,
-    /KnowledgeGraph|KnowledgeNode|Recommendation|ProviderCapability|CapabilityRequirements/,
+    declarations + runtimeDeclarations,
+    /KnowledgeGraph|KnowledgeNode|Recommendation|ProviderCapability|CapabilityRequirements|SearchAssessment|SearchRouteStatus|routeStatus|WikiPageKind|WikiPageRouteStatus|assessSearchResults|isOutcomeLikeQuery/,
   );
 });

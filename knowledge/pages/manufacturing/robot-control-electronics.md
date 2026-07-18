@@ -3,8 +3,6 @@ slug: robot-control-electronics
 title: Robot control and electronics
 summary: The control, sensing, power, communications, limits, and fault-handling boundary that connects robot joints to a testable hardware system without pretending to be a universal electronics recipe.
 tags: [robotics, controls, electronics, embedded, hardware-integration]
-kind: method
-coverage: [robotics, controls, electronics, hardware-integration]
 reviewedAt: 2026-07-18
 sources:
   - title: "ros2_control hardware components"
@@ -27,9 +25,9 @@ Separate simulation interfaces from physical interfaces. Connect [MuJoCo](/wiki/
 
 Use this method when a custom arm must move under closed-loop control, expose telemetry, coordinate multiple joints, or transition from simulation to powered hardware.
 
-## Consider another route when
+## Limits and alternatives
 
-If a complete commercial arm and controller are being used inside their documented operating and integration envelope, focus on the vendor’s configuration, safety, and acceptance evidence. A software-only kinematic demo does not need a physical control-electronics route, but it must not be described as a working arm.
+If a complete commercial arm and controller are being used inside their documented operating and integration envelope, focus on the vendor’s configuration, safety, and acceptance evidence. A software-only kinematic demo does not need physical control electronics, but it must not be described as a working arm.
 
 ## Important decisions
 
@@ -37,4 +35,4 @@ Record command and state interfaces, sensor placement, calibration and homing be
 
 ## How to verify
 
-Test the interface contract without motion, then test one joint at a time with current, speed, temperature, limit, watchdog, and stop protections active. Exercise communication loss, sensor disagreement, saturation, restart, and power removal. Compare commanded and measured motion under the intended load, and feed the evidence into [robot calibration, safety, and physical verification](/wiki/robot-calibration-safety-physical-verification) before claiming a physical control route.
+Test the interface contract without motion, then test one joint at a time with current, speed, temperature, limit, watchdog, and stop protections active. Exercise communication loss, sensor disagreement, saturation, restart, and power removal. Compare commanded and measured motion under the intended load, and use [robot calibration, safety, and physical verification](/wiki/robot-calibration-safety-physical-verification) before claiming the physical control system works.

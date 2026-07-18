@@ -30,7 +30,7 @@ describe("static agent publication", () => {
     const search = buildAgentSearchIndex(corpus);
 
     expect(search).toMatchObject({
-      schemaVersion: 1,
+      schemaVersion: 2,
       operation: "search",
       static: true,
       request: {
@@ -42,11 +42,11 @@ describe("static agent publication", () => {
       corpus: { pageCount: corpus.pages.length, sourceIndexUrl: "/wiki/index.json" },
     });
     expect(search.search.match).toBe("all query terms");
-    expect(search.search.assessment.statuses).toEqual([
-      "verified",
-      "partial",
-      "no-maintained-route",
-    ]);
+    expect(search.search.interpretation).toEqual({
+      results: "relevant-field-guides",
+      links: "related-reading-not-ordered-steps",
+      boundary: "consumer-owns-project-decisions-and-actions",
+    });
     expect(search.search.ranking).toEqual([
       { field: "title", weight: 16 },
       { field: "slug", weight: 12 },
@@ -56,43 +56,6 @@ describe("static agent publication", () => {
       { field: "body", weight: 2 },
       { field: "sourceTitles", weight: 1 },
     ]);
-    expect(search.search.outcomePreference).toEqual({
-      kind: "outcome",
-      queryTerms: [
-        "achieve",
-        "accomplish",
-        "build",
-        "create",
-        "deliver",
-        "design",
-        "develop",
-        "deploy",
-        "fabricate",
-        "generate",
-        "implement",
-        "launch",
-        "make",
-        "manufacture",
-        "need",
-        "produce",
-        "publish",
-        "render",
-        "ship",
-        "want",
-        "write",
-      ],
-      queryPhrases: [
-        "help me",
-        "i am looking for",
-        "i want",
-        "i need",
-        "looking for",
-        "trying to",
-      ],
-      match: "any-normalized-term-or-phrase",
-      order: "before-text-score",
-    });
-
     const page = corpus.pages[0]!;
     const indexedPage = search.pages.find((candidate) => candidate.slug === page.slug)!;
     expect(indexedPage.searchFields).toEqual({
@@ -106,8 +69,9 @@ describe("static agent publication", () => {
     });
     expect(indexedPage.sources).toEqual(page.sources);
     expect(indexedPage.aliases).toEqual(page.aliases ?? []);
-    expect(indexedPage.coverage).toEqual(page.coverage ?? []);
-    expect(indexedPage.routeStatus).toBe(page.routeStatus);
+    expect(indexedPage).not.toHaveProperty("kind");
+    expect(indexedPage).not.toHaveProperty("coverage");
+    expect(indexedPage).not.toHaveProperty("routeStatus");
     expect(indexedPage.reviewedAt).toBe(page.reviewedAt);
   });
 
@@ -117,7 +81,7 @@ describe("static agent publication", () => {
     const related = buildAgentRelatedDocument(corpus, page);
 
     expect(read).toMatchObject({
-      schemaVersion: 1,
+      schemaVersion: 2,
       operation: "read",
       humanUrl: "/wiki/browser-applications",
       page,
@@ -129,7 +93,7 @@ describe("static agent publication", () => {
     expect(read.relatedPages.every((candidate) => candidate.sources.length > 0)).toBe(true);
 
     expect(related).toMatchObject({
-      schemaVersion: 1,
+      schemaVersion: 2,
       operation: "related",
       slug: "browser-applications",
       humanUrl: "/wiki/browser-applications",
@@ -148,7 +112,7 @@ describe("static agent publication", () => {
     expect(Object.keys(protocol.operations)).toEqual(["search", "read", "related"]);
     expect(protocol.operations.search.notes[0]).toMatch(/static search index/);
     expect(protocol.operations.search.notes).toContain(
-      "For an outcome-like query, rank kind: outcome pages before supporting methods, providers, concepts, and other page kinds.",
+      "Search results are relevant field guides, not project plans, recommendations, or validation.",
     );
     expect(protocol.operations.search.request).toEqual({ query: null, body: null });
     expect(protocol.operations.read.path).toBe("/agent/read/{slug}.json");

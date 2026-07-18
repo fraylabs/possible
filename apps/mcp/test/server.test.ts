@@ -14,7 +14,6 @@ import {
   getPage,
   getRelatedPages,
   loadWiki,
-  assessSearchResults,
   searchPages,
   type PageSource,
   type WikiCorpus,
@@ -40,9 +39,6 @@ const fixtureWiki: WikiCorpus = {
       body: "Start with landmarks, headings, labels, and visible focus states.\n\nThen compare [hosting options](/wiki/choose-web-hosting).",
       tags: ["web", "accessibility"],
       aliases: ["inclusive web page", "accessible site", "accessible website"],
-      kind: "outcome",
-      coverage: ["web", "accessibility"],
-      routeStatus: "verified",
       reviewedAt: "2026-07-17",
       sources: [{ title: "Web accessibility guidance", url: "https://example.com/a11y" }],
       links: ["choose-web-hosting"],
@@ -63,8 +59,6 @@ const fixtureWiki: WikiCorpus = {
       summary: "Write down decisions and limitations so that work can be reviewed.",
       body: "Link the implementation guide and record verification evidence.\n\nReview [build an accessible site](/wiki/build-an-accessible-site).",
       tags: ["practice"],
-      kind: "outcome",
-      routeStatus: "partial",
       reviewedAt: "2026-07-15",
       sources: [{ title: "Documentation reference", url: "https://example.com/docs" }],
       links: ["build-an-accessible-site"],
@@ -81,11 +75,9 @@ interface PageSummary {
 interface SearchResponse {
   query: string;
   count: number;
-  assessment: ReturnType<typeof assessSearchResults>;
   results: Array<PageSummary & {
     matchedTerms: string[];
-    kind?: WikiPage["kind"];
-    routeStatus?: WikiPage["routeStatus"];
+    aliases: string[];
   }>;
 }
 
@@ -93,9 +85,6 @@ interface ReadResponse {
   page: PageSummary & {
     tags: string[];
     aliases: string[];
-    kind?: WikiPage["kind"];
-    coverage: string[];
-    routeStatus?: WikiPage["routeStatus"];
     reviewedAt: string;
     markdown: string;
     links: string[];
@@ -121,9 +110,6 @@ function renderMarkdown(page: WikiPage): string {
     `summary: ${JSON.stringify(page.summary)}`,
     `tags: [${page.tags.map((tag) => JSON.stringify(tag)).join(", ")}]`,
     ...(page.aliases ? [`aliases: [${page.aliases.map((alias) => JSON.stringify(alias)).join(", ")}]`] : []),
-    ...(page.kind ? [`kind: ${JSON.stringify(page.kind)}`] : []),
-    ...(page.coverage ? [`coverage: [${page.coverage.map((scope) => JSON.stringify(scope)).join(", ")}]`] : []),
-    ...(page.routeStatus ? [`routeStatus: ${JSON.stringify(page.routeStatus)}`] : []),
     `reviewedAt: ${JSON.stringify(page.reviewedAt)}`,
     "sources:",
   ];
@@ -140,29 +126,22 @@ function expectedSearchResponse(corpus: WikiCorpus, query: string, limit: number
     ...toPageSummary(result.page),
     matchedTerms: result.matchedTerms,
     aliases: result.page.aliases ?? [],
-    ...(result.page.kind ? { kind: result.page.kind } : {}),
-    coverage: result.page.coverage ?? [],
-    ...(result.page.routeStatus ? { routeStatus: result.page.routeStatus } : {}),
   }));
   return {
     query,
     count: results.length,
-    assessment: assessSearchResults(searchPages(corpus, query, { limit })),
     results,
   };
 }
 
 function expectedReadResponse(corpus: WikiCorpus, slug: string): ReadResponse {
   const page = getPage(corpus, slug);
-  assert.ok(page, `expected wiki page '${slug}' to exist`);
+  assert.ok(page, `expected field guide '${slug}' to exist`);
   return {
     page: {
       ...toPageSummary(page),
       tags: page.tags,
       aliases: page.aliases ?? [],
-      ...(page.kind ? { kind: page.kind } : {}),
-      coverage: page.coverage ?? [],
-      ...(page.routeStatus ? { routeStatus: page.routeStatus } : {}),
       reviewedAt: page.reviewedAt,
       markdown: renderMarkdown(page),
       links: page.links,
@@ -213,7 +192,7 @@ describe("Possible MCP", () => {
     await server?.close();
   });
 
-  it("exposes exactly two explicitly read-only wiki retrieval tools", async () => {
+  it("exposes exactly two explicitly read-only field-guide retrieval tools", async () => {
     const activeClient = connectedClient(client);
     const response = await activeClient.listTools();
     const names = response.tools.map((tool) => tool.name).sort();
@@ -232,9 +211,16 @@ describe("Possible MCP", () => {
       /search_knowledge|read_node|expand_node|find_capabilities/,
     );
     assert.equal(activeClient.getInstructions(), POSSIBLE_SERVER_INSTRUCTIONS);
+    assert.match(POSSIBLE_SERVER_INSTRUCTIONS, /split compound requests into separate searches/i);
+    assert.match(POSSIBLE_SERVER_INSTRUCTIONS, /host agent.+chooses.+skills and tools.+executes.+validates/i);
+    assert.match(POSSIBLE_SERVER_INSTRUCTIONS, /no relevant guide.+no useful guidance/i);
+    assert.doesNotMatch(
+      `${POSSIBLE_SERVER_INSTRUCTIONS} ${JSON.stringify(response.tools)}`,
+      /routeStatus|no-maintained-route|\bverified\b|\bpartial\b|\bcoverage\b|\bkind\b|outcome-first/i,
+    );
   });
 
-  it("searches maintained wiki pages with natural-language queries", async () => {
+  it("searches maintained field guides with a focused natural-language query", async () => {
     const activeClient = connectedClient(client);
     const query = "I want to make an accessible website.";
     const response = await activeClient.callTool({
@@ -244,37 +230,23 @@ describe("Possible MCP", () => {
 
     const data = successData<SearchResponse>(response);
     assert.deepEqual(data, expectedSearchResponse(fixtureWiki, query, 5));
-    assert.equal(data.results[0]?.kind, "outcome");
-    assert.equal(data.assessment.status, "verified");
+    assert.equal(data.results[0]?.slug, "build-an-accessible-site");
+    assert.deepEqual(
+      Object.keys(data.results[0] ?? {}).sort(),
+      ["aliases", "matchedTerms", "slug", "summary", "title"],
+    );
+    assert.equal(Object.hasOwn(data, "assessment"), false);
   });
 
-  it("reports verified, partial, and no-maintained-route honestly", async () => {
-    const activeClient = connectedClient(client);
-
-    const partial = await activeClient.callTool({
-      name: "search",
-      arguments: { query: "document a project" },
-    });
-    assert.equal(successData<SearchResponse>(partial).assessment.status, "partial");
-
-    const relatedOnly = await activeClient.callTool({
-      name: "search",
-      arguments: { query: "hosting" },
-    });
-    const relatedData = successData<SearchResponse>(relatedOnly);
-    assert.equal(relatedData.assessment.status, "no-maintained-route");
-    assert.ok(relatedData.results.length > 0);
-    assert.notEqual(relatedData.results[0]?.kind, "outcome");
-
-    const missing = await activeClient.callTool({
+  it("returns an empty retrieval result without inventing guidance", async () => {
+    const missing = await connectedClient(client).callTool({
       name: "search",
       arguments: { query: "rocket" },
     });
-    assert.deepEqual(successData<SearchResponse>(missing).assessment, {
-      status: "no-maintained-route",
-      reason: "Possible found no maintained pages matching every query term.",
-      verifiedRoutes: [],
-      partialRoutes: [],
+    assert.deepEqual(successData<SearchResponse>(missing), {
+      query: "rocket",
+      count: 0,
+      results: [],
     });
   });
 
@@ -288,6 +260,11 @@ describe("Possible MCP", () => {
     assert.deepEqual(readData, expectedReadResponse(fixtureWiki, "build-an-accessible-site"));
     assert.match(readData.page.markdown, /^---\nslug:/);
     assert.match(readData.page.markdown, /\[hosting options\]\(\/wiki\/choose-web-hosting\)/);
+    assert.deepEqual(
+      Object.keys(readData.page).sort(),
+      ["aliases", "links", "markdown", "reviewedAt", "slug", "sources", "summary", "tags", "title"],
+    );
+    assert.doesNotMatch(readData.page.markdown, /^(?:kind|coverage|routeStatus):/m);
   });
 
   it("returns a stable structured error for missing pages", async () => {
@@ -301,7 +278,7 @@ describe("Possible MCP", () => {
       ok: false,
       error: {
         code: "PAGE_NOT_FOUND",
-        message: "Wiki page 'missing-page' does not exist.",
+        message: "Field guide 'missing-page' does not exist.",
         details: { slug: missingSlug },
       },
     });
@@ -323,7 +300,7 @@ describe("Possible MCP", () => {
       );
       await httpClient.connect(transport as unknown as Transport);
       const wiki = await loadWiki();
-      const query = wiki.pages[0]?.title ?? "nonexistent wiki page";
+      const query = wiki.pages[0]?.title ?? "nonexistent field guide";
       const limit = 5;
 
       const tools = await httpClient.listTools();
@@ -358,7 +335,7 @@ describe("Possible MCP", () => {
           ok: false,
           error: {
             code: "PAGE_NOT_FOUND",
-            message: "Wiki page 'missing-page' does not exist.",
+            message: "Field guide 'missing-page' does not exist.",
             details: { slug: missingSlug },
           },
         });
@@ -425,7 +402,7 @@ describe("Possible MCP", () => {
     try {
       await stdioClient.connect(transport);
       const wiki = await loadWiki();
-      const query = wiki.pages[0]?.title ?? "nonexistent wiki page";
+      const query = wiki.pages[0]?.title ?? "nonexistent field guide";
       const limit = 5;
 
       const tools = await stdioClient.listTools();
@@ -460,7 +437,7 @@ describe("Possible MCP", () => {
           ok: false,
           error: {
             code: "PAGE_NOT_FOUND",
-            message: "Wiki page 'missing-page' does not exist.",
+            message: "Field guide 'missing-page' does not exist.",
             details: { slug: missingSlug },
           },
         });

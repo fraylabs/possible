@@ -1,29 +1,26 @@
 import { defineConfig } from "vitest/config";
 import react from "@vitejs/plugin-react";
 import {
-  getBacklinks,
-  getRelatedPages,
+  getGuideBacklinks,
+  getRelatedGuides,
   wikiCorpusData,
-  type WikiPage,
+  type Guide,
 } from "@possible/knowledge";
 import type { Plugin } from "vite";
 import { fileURLToPath } from "node:url";
 import { buildAgentPublications } from "./src/agent-publications";
 
-const pageReference = (page: WikiPage) => ({
-  slug: page.slug,
-  title: page.title,
-  summary: page.summary,
-  tags: page.tags,
-  aliases: page.aliases ?? [],
-  ...(page.kind ? { kind: page.kind } : {}),
-  coverage: page.coverage ?? [],
-  ...(page.routeStatus ? { routeStatus: page.routeStatus } : {}),
-  reviewedAt: page.reviewedAt,
-  sources: page.sources,
-  links: page.links,
-  humanUrl: `/wiki/${page.slug}`,
-  jsonUrl: `/wiki/${page.slug}.json`,
+const guideReference = (guide: Guide) => ({
+  slug: guide.slug,
+  title: guide.title,
+  summary: guide.summary,
+  tags: guide.tags,
+  aliases: guide.aliases ?? [],
+  reviewedAt: guide.reviewedAt,
+  sources: guide.sources,
+  links: guide.links,
+  humanUrl: `/wiki/${guide.slug}`,
+  jsonUrl: `/wiki/${guide.slug}.json`,
 });
 
 const json = (value: unknown): string => `${JSON.stringify(value, null, 2)}\n`;
@@ -32,16 +29,17 @@ export const wikiPublications = (): Plugin => ({
   name: "possible-wiki-publications",
   apply: "build",
   generateBundle() {
-    const pages = wikiCorpusData.pages.map(pageReference);
+    const guides = wikiCorpusData.pages.map(guideReference);
 
     this.emitFile({
       type: "asset",
       fileName: "wiki/index.json",
       source: json({
-        schemaVersion: 1,
-        title: "Possible wiki",
-        pageCount: pages.length,
-        pages,
+        schemaVersion: 2,
+        title: "Possible field guides",
+        guideCount: guides.length,
+        pageCount: guides.length,
+        pages: guides,
       }),
     });
 
@@ -50,11 +48,11 @@ export const wikiPublications = (): Plugin => ({
         type: "asset",
         fileName: `wiki/${page.slug}.json`,
         source: json({
-          schemaVersion: 1,
+          schemaVersion: 2,
           humanUrl: `/wiki/${page.slug}`,
           page,
-          backlinks: getBacklinks(wikiCorpusData, page.slug).map(pageReference),
-          relatedPages: getRelatedPages(wikiCorpusData, page.slug).map(pageReference),
+          backlinks: getGuideBacklinks(wikiCorpusData, page.slug).map(guideReference),
+          relatedPages: getRelatedGuides(wikiCorpusData, page.slug).map(guideReference),
         }),
       });
     }
@@ -73,23 +71,23 @@ export const wikiPublications = (): Plugin => ({
       source: [
         "# Possible",
         "",
-        "A sourced wiki of what people and agents can make possible.",
+        "Source-backed field guides for people and agents.",
         "",
         "- Agent protocol (static; no backend or query-aware endpoint): https://possible.sh/agent/protocol.json",
         "- Search index: https://possible.sh/agent/search.json",
         "- Exact page read: https://possible.sh/agent/read/{slug}.json",
         "- Derived related pages: https://possible.sh/agent/related/{slug}.json",
         "",
-        "- Corpus index: https://possible.sh/wiki/index.json",
-        "- Individual page JSON: https://possible.sh/wiki/{slug}.json",
-        "- Human page: https://possible.sh/wiki/{slug}",
+        "- Guide index: https://possible.sh/wiki/index.json",
+        "- Individual guide JSON: https://possible.sh/wiki/{slug}.json",
+        "- Human guide: https://possible.sh/wiki/{slug}",
         "- Source repository: https://github.com/fraylabs/possible",
         "",
-        "Each page includes maintained prose, sources, a review date, authored aliases when available, directional links, backlinks, and related pages.",
+        "Each guide includes contributor-authored prose, sources, a review date, authored aliases when available, directional links, backlinks, and related guides.",
         "The static search response is a downloadable index; apply its documented normalization and ranking locally. Query parameters are not evaluated.",
-        "Search consumers must distinguish a verified route, a partial route, and no maintained route. Similarity alone is not evidence of a solution.",
-        "Read and related accept only slugs present in the published index. Unknown slugs have no JSON error contract on the static SPA deployment.",
-        "Possible supplies knowledge; the consuming agent remains responsible for reasoning and execution.",
+        "Search results are relevant reading, not project plans, recommendations, or validation. Authored links are related reading, not ordered steps.",
+        "Read and related accept only slugs present in the published guide index. Unknown slugs have no JSON error contract on the static SPA deployment.",
+        "Possible supplies source-backed context; the consuming agent remains responsible for project-specific reasoning, decisions, actions, and validation.",
         "",
       ].join("\n"),
     });

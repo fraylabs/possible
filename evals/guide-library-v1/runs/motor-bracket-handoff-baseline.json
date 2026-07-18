@@ -1,0 +1,19 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "motor-bracket-handoff",
+  "arm": "baseline",
+  "agentTaskName": "/root/pilot_motor_baseline",
+  "provider": "OpenAI",
+  "model": "inherited-parent-model",
+  "host": "Codex fresh collaboration sub-agent",
+  "responseWordLimit": 900,
+  "controlFingerprint": "ffe16462ad9d0b6ddc2fae94bd9f1d0ced6d296423b108e3cf58e410bf1582f5",
+  "promptSha256": "a47d639cb67be7beb5b7e128e87d34ac1aeb31d8edb4fd94af9936b97a455b2b",
+  "responseFile": "transcripts/motor-bracket-handoff-baseline.md",
+  "responseSha256": "48aa936a4897d81acb16f250171747a2153149d6ed1973aee8a718c3a304ba2c",
+  "responseBytes": 5403,
+  "possibleQueries": [],
+  "possibleReads": [],
+  "externalActionAttempts": [],
+  "artifactChecks": []
+}

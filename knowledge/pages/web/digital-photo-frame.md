@@ -1,24 +1,12 @@
 ---
 slug: digital-photo-frame
 title: Digital photo frame
-summary: A local-first photo display that combines a browser-based photo experience with a kiosk device, durable image storage, and a manufacturable enclosure, while leaving the physical end-to-end route explicit.
+summary: A local-first photo display that combines a browser-based photo experience with a kiosk device, durable image storage, and a manufacturable enclosure while keeping physical-system gaps explicit.
 tags: [web, device, kiosk, offline, photos, cad, manufacturing, privacy]
 aliases:
   - digital picture frame
   - offline photo frame
   - networked photo frame
-kind: outcome
-coverage:
-  - display-device-architecture
-  - image-ingestion
-  - local-storage
-  - kiosk-offline
-  - enclosure-cad
-  - manufacturing
-  - power-thermal
-  - privacy
-  - verification
-routeStatus: partial
 reviewedAt: 2026-07-18
 sources:
   - title: Raspberry Pi — How to use a Raspberry Pi in kiosk mode
@@ -47,7 +35,7 @@ sources:
 
 A digital photo frame can be approached as a local-first [Web](/wiki/web) experience running on a dedicated display device: a browser application presents a slideshow, a nearby admin surface ingests images, local storage keeps the frame useful without a network, and a custom enclosure holds the display, computer, power, and cables. A Raspberry Pi with a supported display is one concrete candidate platform because its official material documents display setup, kiosk startup, power, and thermal behavior.
 
-This is a partial route, not a verified product recipe. The corpus supports the browser, storage primitives, kiosk mechanics, CAD exchange, and verification practices below; it does not contain a tested device image, a chosen panel and controller, a completed enclosure, an electrical design, or a physical end-to-end receipt.
+This guide is maintained starting guidance, not a verified product recipe. It covers browser and storage primitives, kiosk mechanics, CAD exchange, and validation practices; it does not provide a tested device image, a chosen panel and controller, a completed enclosure, an electrical design, or a validated physical system.
 
 ## Candidate architecture
 
@@ -62,13 +50,13 @@ Separate the outcome into four contracts:
 
 Choose the panel and computer together. The display interface, driver board, cable bend radius, available current, heat path, and access to service ports all affect the enclosure. A display that renders a browser page is not automatically suitable for continuous unattended use: test startup timing, scaling, color and brightness behavior, image retention expectations, and recovery after an abrupt power loss.
 
-The Raspberry Pi kiosk guide demonstrates booting into a full-screen Chromium page and calls out unattended-device concerns such as exposed USB ports, SSH hardening, and SD-card corruption. Those facts establish a candidate kiosk mechanism, not a photo-frame implementation. A real route still needs a fixed local entry point, no-network startup behavior, an update and rollback path, a controlled way to exit kiosk mode, and a recovery strategy if the browser or storage fails.
+The Raspberry Pi kiosk guide demonstrates booting into a full-screen Chromium page and calls out unattended-device concerns such as exposed USB ports, SSH hardening, and SD-card corruption. Those facts establish a candidate kiosk mechanism, not a photo-frame implementation. A complete implementation still needs a fixed local entry point, no-network startup behavior, an update and rollback path, a controlled way to exit kiosk mode, and a recovery strategy if the browser or storage fails.
 
 ## Image ingestion and storage
 
 The browser can accept user-selected files through the Web [File API](https://www.w3.org/TR/FileAPI/), which represents selected images as `File`/`Blob` data. A [Browser application](/wiki/browser-applications) can use IndexedDB for structured photo metadata and image blobs, but that API is not a separate maintained Possible capability. Use a service worker to cache the application shell, while keeping the photo library in an explicitly managed store rather than assuming that an HTTP cache is a media database.
 
-Ingestion should define supported formats and sizes, EXIF orientation handling, thumbnail generation, duplicate behavior, ordering, deletion, export, and what happens when storage is full. A local network upload page or removable-media import can be added, but either creates an authentication and trust boundary. Do not imply cloud sync, multi-user accounts, durable capacity, or cross-device synchronization: no such route is maintained here.
+Ingestion should define supported formats and sizes, EXIF orientation handling, thumbnail generation, duplicate behavior, ordering, deletion, export, and what happens when storage is full. A local network upload page or removable-media import can be added, but either creates an authentication and trust boundary. This guide does not cover cloud sync, multi-user accounts, durable capacity, or cross-device synchronization.
 
 ## Offline contract
 
@@ -98,4 +86,4 @@ The missing privacy evidence is a threat model for physical access, Wi-Fi/LAN ac
 
 Use [Production web verification](/wiki/production-web-verification) for the browser route and preserve a receipt covering file import, orientation, ordering, deletion, slideshow looping, empty/error states, offline reload, storage-full behavior, accessibility, and the absence of unexpected network requests. Playwright’s service-worker guidance is useful for designing the offline tests, but a passing browser test is not a device or manufacturing receipt.
 
-For the physical route, retain the CAD source, revisioned [STEP solid exchange](/wiki/step-solid-exchange), any additive or flat-profile exports, DFM result, fit photographs or measurements, power and thermal log, cold-boot/offline log, and inspection evidence. A route can be promoted from `partial` only when a named device and software revision have passed those tests and the enclosure has passed fit, serviceability, thermal, and electrical review. Until then, this page establishes a sourced composition of capabilities and an honest verification plan—not a claim that anyone can already build and operate a verified end-to-end frame from the maintained corpus.
+For the physical system, retain the CAD source, revisioned [STEP solid exchange](/wiki/step-solid-exchange), any additive or flat-profile exports, DFM result, fit photographs or measurements, power and thermal log, cold-boot/offline log, and inspection evidence. Validate a named device and software revision against those tests, and review the enclosure for fit, serviceability, thermal behavior, and electrical safety. This guide supplies sourced starting knowledge and validation considerations for the host to adapt and run; it does not claim that the maintained library alone proves an end-to-end frame works.

@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://possible.sh/schema/wiki-page.schema.json",
-  "title": "Possible wiki page",
-  "description": "A validated projection of one contributor-authored Markdown page.",
+  "title": "Possible field guide",
+  "description": "A validated projection of one contributor-authored Markdown field guide.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -29,19 +29,6 @@
       "type": "array",
       "uniqueItems": true,
       "items": { "type": "string", "minLength": 1 }
-    },
-    "kind": {
-      "type": "string",
-      "enum": ["outcome", "method", "project", "provider", "concept"]
-    },
-    "coverage": {
-      "type": "array",
-      "uniqueItems": true,
-      "items": { "type": "string", "minLength": 1 }
-    },
-    "routeStatus": {
-      "type": "string",
-      "enum": ["verified", "partial"]
     },
     "reviewedAt": { "type": "string", "format": "date" },
     "sources": {

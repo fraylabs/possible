@@ -21,7 +21,7 @@ Use CNC machining when the part is compatible with available stock and cutter ac
 
 Use this process when the part can be reached from stock with the available cutting approach and when material, dimensional, or finish requirements favor machining.
 
-## Consider another route when
+## Limits and alternatives
 
 If the geometry depends on inaccessible cavities, perfectly sharp internal corners, or deep fragile features without a qualified method, do not assume CNC is viable. [Laser sheet cutting and bending](/wiki/laser-sheet-cutting-and-bending) can be more direct for constant-thickness 2D profiles and bent sheet parts.
 

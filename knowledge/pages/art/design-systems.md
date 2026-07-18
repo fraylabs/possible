@@ -3,7 +3,6 @@ slug: design-systems
 title: Design systems
 summary: A reusable visual and interaction vocabulary of tokens, components, states, and usage rules that keeps a website coherent as it grows.
 tags: [art, web, design, components, systems]
-kind: method
 reviewedAt: 2026-07-18
 sources:
   - title: Material Design 3 foundations
@@ -24,7 +23,7 @@ Start from the product’s recurring decisions rather than drawing a large compo
 
 Use this method when several pages or products need to feel coherent, or when repeated visual changes would otherwise be copied inconsistently across screens.
 
-## Consider another route when
+## Limits and alternatives
 
 For a one-screen disposable experiment, a full system may cost more than it saves. Do not create abstractions before repeated behavior is understood, and do not confuse a component library with a complete design system.
 

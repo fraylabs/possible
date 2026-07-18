@@ -23,7 +23,7 @@ Use its CAD skill to turn a clear mechanical brief into an editable Python model
 
 Use this project when an installed agent needs a repeatable local workflow for parts, assemblies, enclosures, brackets, robot descriptions, or fabrication preparation rather than a one-off rendered mesh. It is particularly relevant to [Robotic arms](/wiki/robotic-arms), where CAD geometry, purchased components, simulation descriptions, and manufacturing artifacts must stay connected.
 
-## Consider another route when
+## Limits and alternatives
 
 It is not a substitute for structural certification, finite-element conclusions, tolerance ownership, or physical validation. Use a specialist engineering workflow when safety, regulated compliance, fatigue, or certified analysis determines acceptance. [FreeCAD](/wiki/freecad) and [CadQuery](/wiki/cadquery) remain direct modeling options when an agent skill bundle is unnecessary.
 

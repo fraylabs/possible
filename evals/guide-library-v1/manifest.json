@@ -1,0 +1,16 @@
+{
+  "schemaVersion": "1.0.0",
+  "setId": "possible-field-guides-v1",
+  "status": "locked",
+  "lockedAt": "2026-07-18",
+  "scenarioFile": "scenarios.json",
+  "scenarioCount": 8,
+  "scenarioSha256": "17e4f2514cca7dc1ab53a6ea7af2e63b688cb62f50fc949aa613a3fd1bda5ddd",
+  "controlsFile": "controls.json",
+  "controlsSha256": "6d253fcbfea74521739011d37615738beb5a088b0105cf241e39ede2f779a6ee",
+  "coverageClasses": {
+    "covered": 4,
+    "partial": 2,
+    "uncovered": 2
+  }
+}

@@ -11,7 +11,7 @@ const [toolName, rawArguments = "{}"] = process.argv.slice(2);
 
 if (!toolName || !allowedTools.has(toolName)) {
   console.error(
-    `Usage: npm run possible:query -- <${[...allowedTools].join("|")}> '<plain query/slug or JSON arguments>'`,
+    `Usage: npm run possible:query -- <${[...allowedTools].join("|")}> '<focused field-guide query, exact slug, or JSON arguments>'`,
   );
   process.exitCode = 2;
 } else {

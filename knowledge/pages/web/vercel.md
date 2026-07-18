@@ -25,7 +25,7 @@ Connect an approved repository when Git-based previews fit the review workflow, 
 
 Shortlist Vercel when the application uses Next.js or another documented framework and integrated Git previews are valuable. Vercel is one deployment provider in [Web](/wiki/web), not a guarantee that a particular account, runtime, or plan fits.
 
-## Consider another route when
+## Limits and alternatives
 
 Choose a different provider when the runtime, compliance boundary, cost model, or infrastructure-ownership requirements do not fit. [Cloudflare Workers](/wiki/cloudflare-workers) is an alternative with a different runtime and network model.
 

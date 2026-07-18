@@ -1,9 +1,8 @@
 ---
 slug: invalid-route-status
 title: Invalid route status
-summary: This negative fixture marks a provider as a verified outcome route.
+summary: This negative fixture tries to add a completeness status to a guide.
 tags: [negative]
-kind: provider
 routeStatus: verified
 reviewedAt: 2026-07-18
 sources:
@@ -11,4 +10,4 @@ sources:
     url: https://example.com/invalid-route-status
 ---
 
-Invalid route status body.
+Unsupported route status body.

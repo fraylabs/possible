@@ -17,9 +17,6 @@ const frontmatterKeys = new Set([
   "summary",
   "tags",
   "aliases",
-  "kind",
-  "coverage",
-  "routeStatus",
   "reviewedAt",
   "sources",
 ]);
@@ -170,12 +167,6 @@ function assertNonemptyText(page, file) {
   (page.aliases ?? []).forEach((alias, index) => {
     if (!alias.trim()) errors.push(`aliases/${index} must contain non-whitespace text`);
   });
-  (page.coverage ?? []).forEach((scope, index) => {
-    if (!scope.trim()) errors.push(`coverage/${index} must contain non-whitespace text`);
-  });
-  if (page.routeStatus && page.kind !== "outcome") {
-    errors.push("routeStatus requires kind: outcome");
-  }
   page.sources.forEach((source, index) => {
     if (!source.title.trim()) errors.push(`sources/${index}/title must contain non-whitespace text`);
   });
@@ -232,9 +223,9 @@ function assertCorpusIntegrity(parsedPages) {
 function generatedModule(corpus) {
   return [
     "// Generated from contributor-authored Markdown in knowledge/pages/. Do not edit by hand.",
-    'import type { WikiCorpus } from "./types.js";',
+    'import type { GuideLibrary } from "./types.js";',
     "",
-    `export const wikiCorpusData: WikiCorpus = ${JSON.stringify(corpus, null, 2)};`,
+    `export const wikiCorpusData: GuideLibrary = ${JSON.stringify(corpus, null, 2)};`,
     "",
   ].join("\n");
 }

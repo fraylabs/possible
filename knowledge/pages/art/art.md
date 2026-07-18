@@ -23,7 +23,7 @@ Continue into [Image generation](/wiki/image-generation) when the artifact is a 
 
 Use the Art branch when the desired result is primarily expressive or visual and the choice of medium will materially change what can be made, revised, or verified.
 
-## Consider another route when
+## Limits and alternatives
 
 If the primary result is an ordinary data-driven browser application, start with [Web](/wiki/web). If it ends in a physical component, start with [Manufacturing](/wiki/manufacturing). Art can still be part of either project without defining the whole delivery route.
 

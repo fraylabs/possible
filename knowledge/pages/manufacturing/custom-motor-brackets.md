@@ -19,9 +19,9 @@ Define the motor interface geometry, load cases, clearances, fasteners, environm
 
 ## Use this when
 
-Use this route when a motor must be mounted in a custom assembly and fit plus structural behavior affect the mechanism outcome.
+Use this guide when a motor must be mounted in a custom assembly and fit plus structural behavior affect the mechanism outcome.
 
-## Consider another route when
+## Limits and alternatives
 
 If a validated catalog bracket already fits the motor, structure, loads, and environment, use that instead. When the component is custom but not specifically a motor mounting interface, return to [Custom manufactured parts](/wiki/custom-manufactured-parts).
 

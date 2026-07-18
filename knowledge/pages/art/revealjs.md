@@ -3,7 +3,6 @@ slug: revealjs
 title: reveal.js
 summary: An open web-based presentation framework for authoring interactive slide decks with HTML, Markdown, CSS, and JavaScript.
 tags: [art, presentations, web, javascript, slides]
-kind: method
 reviewedAt: 2026-07-18
 sources:
   - title: reveal.js
@@ -18,7 +17,7 @@ reveal.js is an open-source HTML presentation framework. Slides are expressed wi
 
 ## What this makes possible
 
-reveal.js can produce browser-delivered presentations with nested slides, Markdown support, custom styling, code highlighting, speaker notes, and PDF export. It is a route for teams that want a deck to remain inspectable and programmable rather than locked inside a desktop editor.
+reveal.js can produce browser-delivered presentations with nested slides, Markdown support, custom styling, code highlighting, speaker notes, and PDF export. It fits teams that want a deck to remain inspectable and programmable rather than locked inside a desktop editor.
 
 ## A common approach
 
@@ -30,7 +29,7 @@ Use [Presentations](/wiki/presentations) to define the communication outcome bef
 
 Use reveal.js when web-native styling, source control, embedded demos, custom JavaScript, or a repeatable build is more important than office-suite interoperability.
 
-## Consider another route when
+## Limits and alternatives
 
 Choose an office-native format when collaborators must edit through a standard presentation suite or when its review and export workflow is a hard requirement. Choose [Remotion](/wiki/remotion) when the final artifact is a rendered video rather than a navigable deck.
 

@@ -21,7 +21,7 @@ Start here when the requested outcome includes one or more physical custom parts
 
 Use this branch when the outcome includes one or more physical custom parts and a manufacturing provider or local fabrication process will consume exported artifacts.
 
-## Consider another route when
+## Limits and alternatives
 
 If the outcome is wholly digital and never produces a physical component, use [Web](/wiki/web) instead.
 

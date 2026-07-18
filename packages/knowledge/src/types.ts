@@ -1,39 +1,43 @@
-export interface PageSource {
+export interface GuideSource {
   title: string;
   url: string;
 }
 
-export type WikiPageKind = "outcome" | "method" | "project" | "provider" | "concept";
-export type WikiPageRouteStatus = "verified" | "partial";
-
-export interface WikiPage {
+export interface Guide {
   slug: string;
   title: string;
   summary: string;
   body: string;
   tags: string[];
   aliases?: string[];
-  kind?: WikiPageKind;
-  coverage?: string[];
-  routeStatus?: WikiPageRouteStatus;
   reviewedAt: string;
-  sources: PageSource[];
+  sources: GuideSource[];
   links: string[];
 }
 
-export interface WikiCorpus {
-  pages: WikiPage[];
+/**
+ * `pages` remains the collection key so existing browser and MCP consumers can
+ * adopt guide terminology without a data migration.
+ */
+export interface GuideLibrary {
+  pages: Guide[];
 }
 
-export interface PageSearchOptions {
+export interface GuideSearchOptions {
   limit?: number;
   tags?: string[];
-  kind?: WikiPageKind;
-  coverage?: string[];
 }
 
-export interface PageSearchResult {
-  page: WikiPage;
+/** `page` is retained as the result key for wire compatibility. */
+export interface GuideSearchResult {
+  page: Guide;
   score: number;
   matchedTerms: string[];
 }
+
+// Compatibility names for existing consumers and stable public paths.
+export type PageSource = GuideSource;
+export type WikiPage = Guide;
+export type WikiCorpus = GuideLibrary;
+export type PageSearchOptions = GuideSearchOptions;
+export type PageSearchResult = GuideSearchResult;

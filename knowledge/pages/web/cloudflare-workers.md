@@ -23,7 +23,7 @@ Check the application against the current Workers runtime and framework-adapter 
 
 Shortlist Workers when its runtime and static-asset model fit the application and the required framework path is currently supported. It is one deployment provider in [Web](/wiki/web).
 
-## Consider another route when
+## Limits and alternatives
 
 Do not select Workers when required Node.js APIs or Next.js features are unsupported by the current runtime or adapter. [Vercel](/wiki/vercel) is an alternative when its integrated Next.js and Git deployment workflow fits better.
 
@@ -33,7 +33,7 @@ At the review date, Cloudflare's Next.js guidance marked Node.js middleware supp
 
 ## Authenticated handoffs
 
-The Wrangler build-and-deploy route requires authentication, creates externally reachable provider state, and needs explicit approval. Confirm the target, credentials, source, and expected external effect before running it. Possible documents the route but does not hold the account or authorize the deployment.
+The Wrangler build-and-deploy operation requires authentication, creates externally reachable provider state, and needs explicit approval. Confirm the target, credentials, source, and expected external effect before running it. This guide documents the relevant considerations; Possible does not hold the account or authorize the deployment.
 
 ## How to verify
 

@@ -21,7 +21,7 @@ Create one revisioned package for each provider handoff so geometry, drawings, r
 
 Use this practice when files will leave the local workspace for quote or fabrication, or when more than one artifact communicates the part definition.
 
-## Consider another route when
+## Limits and alternatives
 
 If no external handoff or fabrication claim exists yet, the package can wait. When package artifacts cannot be traced to one source revision, return to [Parametric CAD master](/wiki/parametric-cad-master).
 

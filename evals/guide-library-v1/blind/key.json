@@ -1,0 +1,46 @@
+{
+  "schemaVersion": "1.0.0",
+  "warning": "Do not expose this key to the reviewer before blind judgments are final.",
+  "key": [
+    {
+      "scenarioId": "inventory-dashboard-handoff",
+      "baseline": "B",
+      "treatment": "A"
+    },
+    {
+      "scenarioId": "motor-bracket-handoff",
+      "baseline": "A",
+      "treatment": "B"
+    },
+    {
+      "scenarioId": "customer-sales-deck",
+      "baseline": "B",
+      "treatment": "A"
+    },
+    {
+      "scenarioId": "browser-3d-configurator",
+      "baseline": "A",
+      "treatment": "B"
+    },
+    {
+      "scenarioId": "digital-frame-launch-package",
+      "baseline": "B",
+      "treatment": "A"
+    },
+    {
+      "scenarioId": "desktop-robot-arm",
+      "baseline": "A",
+      "treatment": "B"
+    },
+    {
+      "scenarioId": "gene-therapy-strategy",
+      "baseline": "B",
+      "treatment": "A"
+    },
+    {
+      "scenarioId": "cross-border-tax-filing",
+      "baseline": "A",
+      "treatment": "B"
+    }
+  ]
+}

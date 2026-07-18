@@ -23,7 +23,7 @@ Choose direct scene control when it suits the application boundary. Compare [Rea
 
 Use this practice when interactive browser 3D is essential and browser graphics support can determine whether the experience works.
 
-## Consider another route when
+## Limits and alternatives
 
 A controlled environment may justify WebGPU-specific requirements, but only after it has been tested and the project explicitly accepts experimental renderer limitations.
 

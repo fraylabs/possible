@@ -21,7 +21,7 @@ Attach a drawing when critical tolerances, threads, finishes, datums, or inspect
 
 Use this practice when specific features have functional acceptance limits and the provider accepts supporting drawings with the model.
 
-## Consider another route when
+## Limits and alternatives
 
 If every required manufacturing and inspection attribute is already represented and confirmed through another accepted contract, a separate drawing may be unnecessary. Use [Tolerance contract](/wiki/tolerance-contract) to decide which features actually need drawing-level controls.
 

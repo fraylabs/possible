@@ -23,7 +23,7 @@ For a React and TypeScript dashboard that benefits from routing, server data, fo
 
 Use this approach when React and TypeScript fit the working context and the product benefits from both framework data features and locally maintained UI primitives.
 
-## Consider another route when
+## Limits and alternatives
 
 Compare [Vite with React](/wiki/vite-react) when the application is deliberately client-only and server rendering or framework server features are unnecessary. Choose a different composition approach when the product is non-React or rejects Tailwind and local component maintenance.
 

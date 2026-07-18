@@ -25,7 +25,7 @@ Start with the required routing, rendering, server execution, static-output, and
 
 Use this practice when a new project falls under [Browser applications](/wiki/browser-applications) and routing, server execution, static output, or deployment compatibility can materially change the choice.
 
-## Consider another route when
+## Limits and alternatives
 
 Keep the framework of an existing, maintained application when migration is outside the outcome. A framework review is not a reason by itself to reopen a settled architecture.
 

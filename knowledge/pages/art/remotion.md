@@ -1,9 +1,8 @@
 ---
 slug: remotion
 title: Remotion
-summary: A React-based route for building, previewing, and rendering parameterized videos and video applications.
+summary: A React-based framework for building, previewing, and rendering parameterized videos and video applications.
 tags: [art, video, react, rendering, remotion]
-kind: method
 reviewedAt: 2026-07-18
 sources:
   - title: Remotion
@@ -26,7 +25,7 @@ Start with [Programmatic video](/wiki/programmatic-video), define a composition 
 
 Use Remotion when the surrounding application is React or when composition logic, reusable layouts, parameterized content, and repeatable rendering are central to the video workflow.
 
-## Consider another route when
+## Limits and alternatives
 
 Use [reveal.js](/wiki/revealjs) for an interactive slide deck rather than a continuous rendered video. Use a conventional editor when the work is a one-off timeline whose value depends on direct manual manipulation more than reusable composition logic.
 

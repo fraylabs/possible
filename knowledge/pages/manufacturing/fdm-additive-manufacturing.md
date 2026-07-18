@@ -21,7 +21,7 @@ Use FDM when low cost and fast geometric learning matter more than isotropic mat
 
 Use this process when fast, inexpensive geometric learning matters more than isotropic properties and the geometry can be oriented and supported for the selected machine and material.
 
-## Consider another route when
+## Limits and alternatives
 
 If fine finish, isotropy, watertightness, or validated production properties are essential without further qualification, do not assume FDM is acceptable. [SLS additive manufacturing](/wiki/sls-additive-manufacturing) can better suit complex durable nylon parts when supportless powder-bed production and more uniform behavior justify it.
 

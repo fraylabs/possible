@@ -4,9 +4,6 @@ title: Robotic arms
 summary: Articulated robotic arm outcomes combining work-envelope and payload requirements, mechanism architecture, actuators, parametric CAD, simulation, fabrication, controls, calibration, safety, and physical tests.
 tags: [robotic-arm, robotics, manipulator, mechanism]
 aliases: [robot arm, articulated robot arm, robotic manipulator]
-kind: outcome
-coverage: [mechanism, actuation, simulation, manufacturing, controls, calibration, safety, inspection]
-routeStatus: partial
 reviewedAt: 2026-07-18
 sources:
   - title: "MuJoCo overview"
@@ -21,7 +18,7 @@ sources:
 
 ## What this makes possible
 
-This page covers articulated arm outcomes that have to connect work-envelope and payload requirements with mechanism architecture, actuators, CAD, simulation, fabrication, controls, calibration, safety, and physical tests. It is a maintained route map, not a complete design recipe.
+This guide connects articulated-arm work-envelope and payload requirements with mechanism architecture, actuators, CAD, simulation, fabrication, controls, calibration, safety, and physical tests. It is maintained starting guidance, not a complete design recipe.
 
 ## A common approach
 
@@ -29,9 +26,9 @@ Start from measurable payload, reach, repeatability, environment, budget, and ma
 
 ## Use this when
 
-Use this route when the outcome is an articulated manipulator or robot arm and the mechanical design, simulation, fabrication, control system, and physical verification all need to connect.
+Use this guide when the subject is an articulated manipulator or robot arm and the mechanical design, simulation, fabrication, control system, and physical verification all need to connect.
 
-## Consider another route when
+## Limits and alternatives
 
 If a qualified commercial arm already satisfies the outcome, custom mechanism development is unnecessary. When only one mounting interface is being designed, continue with [Custom motor brackets](/wiki/custom-motor-brackets).
 
@@ -43,8 +40,8 @@ The control and power boundary remains a separate capability: define hardware in
 
 ## Current coverage and gaps
 
-The route currently covers the handoff between mechanism requirements, editable CAD, simulation, process selection, custom fabrication, controls architecture, calibration, safety, and inspection. It does not establish a specific actuator bill of materials, transmission design, electronics schematic, safety certification, calibrated robot model, or demonstrated payload and repeatability. Those remain project-specific evidence gaps.
+The guide covers the handoff between mechanism requirements, editable CAD, simulation, process selection, custom fabrication, controls architecture, calibration, safety, and inspection. It does not establish a specific actuator bill of materials, transmission design, electronics schematic, safety certification, calibrated robot model, or demonstrated payload and repeatability. Those remain project-specific evidence gaps.
 
 ## How to verify
 
-Do not call the arm complete from a CAD file, simulation, quote, or successful controller startup alone. Retain the requirement set, revisioned CAD and manufacturing package, actuator and control assumptions, simulation inputs, measured calibration data, safety/risk assessment, inspection results, and physical task tests. Mark the route verified only when those records support the claimed payload, reach, repeatability, operating environment, and safety scope.
+Do not call the arm complete from a CAD file, simulation, quote, or successful controller startup alone. Retain the requirement set, revisioned CAD and manufacturing package, actuator and control assumptions, simulation inputs, measured calibration data, safety/risk assessment, inspection results, and physical task tests. Validate the claimed payload, reach, repeatability, operating environment, and safety scope against those records.

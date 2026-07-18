@@ -19,7 +19,7 @@ Three.js is a renderer option for interactive [3D web experiences](/wiki/3d-web-
 
 Use Three.js directly when interactive browser 3D is required and explicit, imperative control of scene objects, the frame loop, and renderer lifecycle fits the architecture.
 
-## Consider another route when
+## Limits and alternatives
 
 When React already owns the surrounding application and scene state benefits from declarative component composition, compare [React Three Fiber](/wiki/react-three-fiber). It retains the Three.js ecosystem while integrating scene construction with React's lifecycle.
 

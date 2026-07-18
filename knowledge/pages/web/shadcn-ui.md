@@ -21,7 +21,7 @@ shadcn/ui can accelerate interface composition for [Browser applications](/wiki/
 
 Use it when the application has a compatible React and Tailwind setup and the team prefers to own, inspect, and customize component source locally.
 
-## Consider another route when
+## Limits and alternatives
 
 Choose a centrally versioned design-system package when coordinated upgrades matter more than source ownership. If the team rejects Tailwind or does not want to maintain copied component code, a custom component layer in [Vite with React](/wiki/vite-react) avoids adopting shadcn/ui's distribution model.
 

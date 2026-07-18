@@ -21,7 +21,7 @@ Use laser sheet cutting for clean constant-thickness profiles and supported bend
 
 Use this process when the part can be represented as a planar cut profile or supported bent sheet and constant stock thickness is compatible with the design.
 
-## Consider another route when
+## Limits and alternatives
 
 If the geometry requires enclosed 3D volumes, partial-depth features, or unsupported forming operations, do not force a sheet-cut route. [CNC machining](/wiki/cnc-machining) is the alternative when solid 3D features or partial-depth machining are required.
 

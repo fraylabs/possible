@@ -3,8 +3,6 @@ slug: actuator-transmission-sizing
 title: Actuator and transmission sizing
 summary: A requirements-led method for relating robot joint loads, speed, duty cycle, motor characteristics, transmission behavior, sensing, and thermal limits before selecting hardware.
 tags: [robotics, actuation, transmission, sizing, motors]
-kind: method
-coverage: [robotics, actuation, mechanical-design]
 reviewedAt: 2026-07-18
 sources:
   - title: "2.12 Introduction to Robotics: Chapter 2"
@@ -27,7 +25,7 @@ Keep the result as assumptions and margins attached to the [parametric CAD maste
 
 Use this method when a robot arm is being designed around a new actuator, gearbox, belt, harmonic drive, series-elastic element, or other joint transmission, or when a catalog actuator must be shown to meet a specific task envelope.
 
-## Consider another route when
+## Limits and alternatives
 
 If a complete commercial joint or arm already has validated ratings and the application stays within its documented envelope, use the supplier’s integration and acceptance process. Do not infer suitability from a motor’s nominal voltage, no-load speed, or stall torque alone.
 

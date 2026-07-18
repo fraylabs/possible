@@ -23,7 +23,7 @@ Select the process from functional requirements and geometry before optimizing t
 
 Use this practice when a custom part can be produced by more than one process and material behavior, finish, geometry, or dimensional requirements affect viability.
 
-## Consider another route when
+## Limits and alternatives
 
 If a regulated or already qualified process is fixed by an external requirement, document that constraint instead of reopening selection.
 

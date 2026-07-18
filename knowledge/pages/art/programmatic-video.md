@@ -3,7 +3,6 @@ slug: programmatic-video
 title: Programmatic video
 summary: A reproducible video workflow where scenes, timing, assets, and variations are represented as code or structured data before rendering.
 tags: [art, video, motion, rendering, automation]
-kind: outcome
 reviewedAt: 2026-07-18
 sources:
   - title: Remotion
@@ -22,9 +21,9 @@ Define the story, frame rate, dimensions, duration, audio behavior, asset rights
 
 ## Use this when
 
-Use this outcome when many videos share a visual grammar, when data changes the rendered result, or when deterministic revision and batch rendering matter.
+Use this guide when many videos share a visual grammar, when data changes the rendered result, or when deterministic revision and batch rendering matter.
 
-## Consider another route when
+## Limits and alternatives
 
 Use [Presentations](/wiki/presentations) for a presenter-controlled sequence of slides. Use a conventional timeline editor when an artist needs direct, frame-level manipulation of a small number of one-off pieces and code would slow the work.
 

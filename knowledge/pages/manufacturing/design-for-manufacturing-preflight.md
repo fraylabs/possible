@@ -21,7 +21,7 @@ Run a local process-specific DFM preflight before proprietary upload, then treat
 
 Use this practice when a process and provider shortlist exists and geometry or feature choices may violate fabrication constraints.
 
-## Consider another route when
+## Limits and alternatives
 
 If no external fabrication handoff is planned and the design remains a conceptual model, a formal preflight can wait. When DFM failures show that the chosen route is structurally mismatched, return to [Manufacturing process selection](/wiki/manufacturing-process-selection).
 
@@ -31,4 +31,4 @@ This protects the [Custom manufactured parts](/wiki/custom-manufactured-parts) h
 
 ## How to verify
 
-Keep any functional material or geometry change captain-approved and revisioned.
+Keep any functional material or geometry change explicitly user-approved and revisioned.

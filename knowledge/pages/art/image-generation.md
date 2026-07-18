@@ -3,7 +3,6 @@ slug: image-generation
 title: Image generation
 summary: A controlled workflow for creating or editing raster images from text and reference inputs while preserving review, provenance, and output constraints.
 tags: [art, image, generation, editing, raster]
-kind: method
 reviewedAt: 2026-07-18
 sources:
   - title: OpenAI image generation guide
@@ -26,7 +25,7 @@ Use an image-generation API or application that supports the required generation
 
 Use this method when a raster image is the desired artifact and variation or reference-guided editing is more valuable than manually drawing every pixel.
 
-## Consider another route when
+## Limits and alternatives
 
 Use a vector or parametric design workflow when the asset needs exact geometry, reusable constraints, or reliable text. Use [Programmatic video](/wiki/programmatic-video) when timing and animation are core requirements. Do not use generated imagery as a substitute for factual diagrams, technical drawings, or unreviewed product claims.
 

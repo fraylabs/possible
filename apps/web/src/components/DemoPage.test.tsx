@@ -1,19 +1,25 @@
-import { describe, expect, it } from "vitest";
-import { DEMO_DURATION_MS, demoSceneAt } from "./DemoPage";
+import { cleanup, render, screen } from "@testing-library/react";
+import { afterEach, describe, expect, it } from "vitest";
+import { DEMO_QUERY, DemoPage, findDemoGuide } from "./DemoPage";
 
-describe("scripted demo timeline", () => {
-  it.each([
-    [0, "intro"],
-    [1_999, "intro"],
-    [2_000, "outcome"],
-    [9_999, "outcome"],
-    [10_000, "research"],
-    [20_999, "research"],
-    [21_000, "execution"],
-    [30_999, "execution"],
-    [31_000, "final"],
-    [DEMO_DURATION_MS, "final"],
-  ] as const)("shows %s ms as the %s scene", (elapsed, scene) => {
-    expect(demoSceneAt(elapsed)).toBe(scene);
+describe("transparent guide retrieval example", () => {
+  afterEach(() => cleanup());
+
+  it("uses a real corpus search result rather than a hard-coded guide sequence", () => {
+    const guide = findDemoGuide();
+
+    expect(DEMO_QUERY).toBe("robotic arm");
+    expect(guide?.slug).toBe("robotic-arms");
+    expect(guide?.sources.length).toBeGreaterThan(0);
+  });
+
+  it("separates retrieved reading from the host agent's responsibility", () => {
+    render(<DemoPage />);
+
+    expect(screen.getByRole("heading", { level: 1, name: "Context for an agent—not a project plan." })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Robotic arms/i })).toHaveAttribute("href", "/wiki/robotic-arms");
+    expect(screen.getByRole("heading", { name: "Related reading, not ordered steps." })).toBeInTheDocument();
+    expect(screen.getByText(/Possible supplied reading; it did not plan/i)).toBeInTheDocument();
+    expect(screen.queryByText(/route ready|execution workspace|sourced execution/i)).not.toBeInTheDocument();
   });
 });

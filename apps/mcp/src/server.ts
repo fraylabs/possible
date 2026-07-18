@@ -3,7 +3,6 @@ import {
   getPage,
   getRelatedPages,
   loadWiki,
-  assessSearchResults,
   searchPages,
   type PageSource,
   type WikiCorpus,
@@ -20,13 +19,13 @@ export const POSSIBLE_TOOL_NAMES = [
 ] as const;
 
 export const POSSIBLE_SERVER_INSTRUCTIONS = [
-  "Possible is a read-only wiki of contributor-authored pages shared by humans and agents.",
-  "Use search for natural-language discovery, then read exact pages and follow internal links progressively.",
-  "For outcome-like queries, expect outcome pages before supporting methods, providers, concepts, and other page kinds.",
-  "Treat the search assessment as authoritative: verified is an explicitly verified outcome route, partial is incomplete outcome knowledge, and no-maintained-route means Possible has not verified a route.",
-  "Do not turn related tools or methods into a complete solution; when the assessment is not verified, say so and invite a sourced contribution.",
-  "Cite the page review date and attached sources when a retrieved recommendation matters.",
-  "Possible maintains knowledge only; the host agent plans and executes approved actions separately.",
+  "Possible is a read-only library of contributor-authored, source-backed field guides shared by humans and agents.",
+  "Use search for one focused topic or decision at a time, then read exact guides and follow internal links only when they are relevant.",
+  "Split compound requests into separate searches and combine any useful guidance with the actual project context.",
+  "Treat retrieved pages as general guidance, not as a plan, certification, recommendation, or authorization; current project facts and live authoritative sources outrank them.",
+  "If no relevant guide is found, say that Possible has no useful guidance instead of stretching adjacent material.",
+  "The host agent reasons across guides, chooses from skills and tools actually available to it, asks for necessary user decisions and authorization, executes the work, and validates the result.",
+  "Cite the guide title, review date, and supporting sources when retrieved guidance informs a material decision.",
 ].join(" ");
 
 const READ_ONLY_ANNOTATIONS = {
@@ -37,12 +36,12 @@ const READ_ONLY_ANNOTATIONS = {
 } as const;
 
 const searchInput = {
-  query: z.string().trim().min(1).describe("Natural-language topic, outcome, or domain to find"),
-  limit: z.number().int().min(1).max(50).optional().describe("Maximum number of matching pages to return"),
+  query: z.string().trim().min(1).describe("Focused natural-language topic, decision, or technique to find"),
+  limit: z.number().int().min(1).max(50).optional().describe("Maximum number of matching guides to return"),
 };
 
 const readInput = {
-  slug: z.string().trim().min(1).describe("Exact Possible wiki page slug"),
+  slug: z.string().trim().min(1).describe("Exact Possible field-guide slug"),
 };
 
 interface PageSummary {
@@ -54,17 +53,11 @@ interface PageSummary {
 interface SearchToolResult extends PageSummary {
   matchedTerms: string[];
   aliases: string[];
-  kind?: WikiPage["kind"];
-  coverage: string[];
-  routeStatus?: WikiPage["routeStatus"];
 }
 
 interface ReadToolPage extends PageSummary {
   tags: string[];
   aliases: string[];
-  kind?: WikiPage["kind"];
-  coverage: string[];
-  routeStatus?: WikiPage["routeStatus"];
   reviewedAt: string;
   markdown: string;
   links: string[];
@@ -92,9 +85,6 @@ function toSearchToolResult(
     ...toPageSummary(result.page),
     matchedTerms: result.matchedTerms,
     aliases: result.page.aliases ?? [],
-    ...(result.page.kind ? { kind: result.page.kind } : {}),
-    coverage: result.page.coverage ?? [],
-    ...(result.page.routeStatus ? { routeStatus: result.page.routeStatus } : {}),
   };
 }
 
@@ -110,9 +100,6 @@ function renderMarkdown(page: WikiPage): string {
     `summary: ${quoteYaml(page.summary)}`,
     `tags: [${page.tags.map(quoteYaml).join(", ")}]`,
     ...(page.aliases ? [`aliases: [${page.aliases.map(quoteYaml).join(", ")}]`] : []),
-    ...(page.kind ? [`kind: ${quoteYaml(page.kind)}`] : []),
-    ...(page.coverage ? [`coverage: [${page.coverage.map(quoteYaml).join(", ")}]`] : []),
-    ...(page.routeStatus ? [`routeStatus: ${quoteYaml(page.routeStatus)}`] : []),
     `reviewedAt: ${quoteYaml(page.reviewedAt)}`,
     "sources:",
   ];
@@ -130,9 +117,6 @@ function toReadToolResult(corpus: WikiCorpus, page: WikiPage): ReadToolResult {
       ...toPageSummary(page),
       tags: page.tags,
       aliases: page.aliases ?? [],
-      ...(page.kind ? { kind: page.kind } : {}),
-      coverage: page.coverage ?? [],
-      ...(page.routeStatus ? { routeStatus: page.routeStatus } : {}),
       reviewedAt: page.reviewedAt,
       markdown: renderMarkdown(page),
       links: page.links,
@@ -161,8 +145,8 @@ export async function createPossibleServer(
   server.registerTool(
     "search",
     {
-      title: "Search Possible wiki pages",
-      description: "Search contributor-authored wiki pages with a natural-language query; outcome-like queries prefer outcome pages before supporting pages.",
+      title: "Search Possible field guides",
+      description: "Search contributor-authored field guides for one focused topic, decision, or technique.",
       inputSchema: searchInput,
       annotations: READ_ONLY_ANNOTATIONS,
     },
@@ -174,7 +158,6 @@ export async function createPossibleServer(
         return successResult({
           query,
           count: results.length,
-          assessment: assessSearchResults(matches),
           results,
         });
       } catch (error) {
@@ -186,8 +169,8 @@ export async function createPossibleServer(
   server.registerTool(
     "read",
     {
-      title: "Read a Possible wiki page",
-      description: "Read one exact wiki page, including its Markdown, links, sources, backlinks, and related pages.",
+      title: "Read a Possible field guide",
+      description: "Read one exact field guide, including its Markdown, links, sources, backlinks, and related guides.",
       inputSchema: readInput,
       annotations: READ_ONLY_ANNOTATIONS,
     },
@@ -197,7 +180,7 @@ export async function createPossibleServer(
         if (page === undefined) {
           return errorResult(
             "PAGE_NOT_FOUND",
-            `Wiki page '${slug}' does not exist.`,
+            `Field guide '${slug}' does not exist.`,
             { slug },
           );
         }

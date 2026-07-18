@@ -1,7 +1,7 @@
 ---
 slug: create-vercel-preview-deployment
-title: Create a Vercel preview deployment
-summary: Create an approval-gated Vercel preview from project source or a connected Git revision, then return a URL and evidence without promoting production.
+title: Creating a Vercel preview deployment
+summary: Guidance for an approval-gated Vercel preview from project source or a connected Git revision, without implying production publication.
 tags: [vercel, preview, deployment, external-effect]
 reviewedAt: 2026-07-17
 sources:
@@ -11,19 +11,30 @@ sources:
 
 ## What this makes possible
 
-A preview gives reviewers an externally reachable version of a Web project before anything is released to production. It hands approved source or a Git revision to [Vercel](/wiki/vercel) and returns both a preview URL and a deployment-verification receipt.
+A preview can give reviewers an externally reachable version of a Web project
+before production release. This guide covers the approval, provider, and
+evidence considerations when a host agent hands approved source or a Git
+revision to [Vercel](/wiki/vercel). Possible itself does not deploy anything.
 
 ## A common approach
 
-First, live-check Vercel compatibility, the account and plan, and the intended target configuration. Ask the captain to approve repository or source access and creation of external preview state. Create the preview through the approved official path, then return the exact URL with the evidence used to verify it.
+First, live-check Vercel compatibility, the account and plan, and the intended
+target configuration. Ask the user or release owner to approve repository or
+source access and creation of external preview state. If authorized, the host
+agent can use the approved official path and return the exact URL with the
+evidence it gathered.
 
 ## Use this when
 
-Use this route when Vercel was selected after a live provider check and a review environment is needed before production. It is one delivery action within [Web](/wiki/web), not an implicit release.
+Use this guide when Vercel remains suitable after a live provider check and a
+review environment is needed before production. [Web](/wiki/web) provides
+broader related context; neither link chooses a provider for the project.
 
-## Consider another route when
+## Limits and alternatives
 
-Do not proceed while repository access, secrets, provider terms, or the deployment target remain unapproved. When Workers is the compatible selected provider, [Create a Cloudflare preview deployment](/wiki/create-cloudflare-preview-deployment) instead.
+Do not proceed while repository access, secrets, provider terms, or the
+deployment target remain unapproved. [Cloudflare preview deployments](/wiki/create-cloudflare-preview-deployment)
+are a related alternative whose fit the host must establish from current facts.
 
 ## Important decisions
 
@@ -31,4 +42,7 @@ Authentication, source access, and deployment all create state outside Possible,
 
 ## How to verify
 
-Confirm the returned preview URL is the intended deployment and run the applicable [Production web verification](/wiki/production-web-verification) checks against it. Record the deployment identity, observed URL, and verification evidence as the receipt. A successful build alone is not a verified preview.
+The consuming agent should confirm that the returned preview URL is the intended
+deployment and apply relevant [production web verification](/wiki/production-web-verification)
+checks. Record the deployment identity, observed URL, and evidence. A successful
+build or reading this guide does not establish a verified preview.

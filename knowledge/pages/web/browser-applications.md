@@ -21,7 +21,7 @@ Classify the application by its data flow and runtime needs before selecting a s
 
 Use application patterns when the browser surface has multiple routes or views, or when the product reads or mutates application data.
 
-## Consider another route when
+## Limits and alternatives
 
 A single static document with negligible interaction may not need an application framework. Start from [3D web experiences](/wiki/3d-web-experiences) when rendering, assets, input, and frame budget dominate the architecture instead of ordinary data flow.
 

@@ -19,7 +19,7 @@ React Three Fiber supports React-led [3D web experiences](/wiki/3d-web-experienc
 
 Use it when React already owns the surrounding application and declarative scene composition is more valuable than a framework-neutral imperative lifecycle.
 
-## Consider another route when
+## Limits and alternatives
 
 Use [Three.js](/wiki/threejs) directly when the scene must remain independent of React, is dominated by imperative lifecycle control, or should avoid React runtime coupling.
 

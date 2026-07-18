@@ -21,7 +21,7 @@ Treat interactive 3D as a rendering product. Set an explicit asset and performan
 
 Use this approach when a real-time scene is essential and browser compatibility plus frame-time behavior are acceptance criteria.
 
-## Consider another route when
+## Limits and alternatives
 
 Use a pre-rendered image or video when it communicates the outcome without real-time interaction. Follow [Data-heavy dashboards](/wiki/data-heavy-dashboards) patterns when 3D is incidental and records, forms, charts, or operational workflows dominate.
 

@@ -1,9 +1,9 @@
 # @possible/knowledge
 
 This package validates contributor-authored Markdown in `knowledge/pages/` and
-compiles it into the single wiki corpus consumed by Possible's human and agent
-surfaces. Runtime code contains no LLM, network, filesystem, credential, or
-provider-write path.
+compiles it into the field-guide library consumed by Possible's human and agent
+surfaces. Runtime code contains no LLM, network, filesystem, credential,
+provider-write, route-solving, or skill-selection path.
 
 ## Commands
 
@@ -17,23 +17,25 @@ npm run build -w @possible/knowledge
 `validate` checks frontmatter against `schema/wiki-page.schema.json`, rejects
 duplicate slugs and broken internal links, and compares the committed
 browser-safe data module with the canonical Markdown. `generate` updates that
-data module after reviewed page changes.
+data module after reviewed guide changes.
 
 ## Runtime API
 
-- `loadWiki()` returns an isolated copy of the compiled `WikiCorpus`.
-- `searchPages()` performs deterministic weighted text search.
-- `assessSearchResults()` labels retrieved outcomes as `verified`, `partial`, or
-  `no-maintained-route` without treating related pages as a solution.
-- `getPage()` retrieves one exact slug.
-- `getBacklinks()` derives incoming links from page bodies.
-- `getRelatedPages()` returns the direct outgoing and incoming neighbors.
+- `loadGuides()` returns an isolated copy of the compiled `GuideLibrary`.
+- `searchGuides()` performs deterministic weighted text search with optional tag
+  filtering.
+- `getGuide()` retrieves one exact slug.
+- `getGuideBacklinks()` derives incoming links from guide bodies.
+- `getRelatedGuides()` returns the direct outgoing and incoming neighbors.
 - `@possible/knowledge/data` exports `wikiCorpusData` without Node-only imports.
 
-The public model has only `PageSource`, `WikiPage`, and `WikiCorpus`. Pages may
-also carry explicitly authored `aliases`, an existing page `kind` (`outcome`,
-`method`, `project`, `provider`, or `concept`), and `coverage` strings for
-deterministic agent routing. Links are directional slug strings extracted from
-Markdown; no separately authored graph or planner ontology exists. An outcome
-may carry `routeStatus: verified` only when its complete route has contributor
-evidence; otherwise `partial` keeps the gap explicit.
+`loadWiki()`, `searchPages()`, `getPage()`, `getBacklinks()`, and
+`getRelatedPages()` remain compatibility names over the same data and behavior.
+The stable collection and result keys remain `pages` and `page` so existing web,
+MCP, and static consumers do not need a data migration.
+
+The public guide model contains a slug, title, summary, body, tags, optional
+aliases, review date, sources, and links extracted from Markdown. Links support
+discovery only: they do not encode a prescribed route, workflow, skill choice,
+or proof status. The consuming agent decides which guides to combine, chooses
+its available skills, executes, and validates the work.

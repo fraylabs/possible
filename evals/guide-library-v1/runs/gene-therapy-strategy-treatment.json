@@ -1,0 +1,26 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "gene-therapy-strategy",
+  "arm": "treatment",
+  "agentTaskName": "/root/pilot_gene_treatment",
+  "provider": "OpenAI",
+  "model": "inherited-parent-model",
+  "host": "Codex fresh collaboration sub-agent",
+  "responseWordLimit": 900,
+  "controlFingerprint": "ffe16462ad9d0b6ddc2fae94bd9f1d0ced6d296423b108e3cf58e410bf1582f5",
+  "promptSha256": "391ac85c8b68422f2198625d3fb12fc2e3ddbead86add5e8dc7e4cf08d13a660",
+  "responseFile": "transcripts/gene-therapy-strategy-treatment.md",
+  "responseSha256": "52988d7ab0a073459a29d77a267e2a471ae5ff089014a721d3c705858399b1c2",
+  "responseBytes": 962,
+  "possibleQueries": [
+    "CRISPR target selection inherited retinal disease gene therapy",
+    "retinal gene therapy ocular delivery vector",
+    "ocular gene therapy dose selection biodistribution toxicology",
+    "preclinical evidence CRISPR retinal disease animal model off-target",
+    "clinical development inherited retinal disease gene editing",
+    "regulatory path genome editing gene therapy"
+  ],
+  "possibleReads": [],
+  "externalActionAttempts": [],
+  "artifactChecks": []
+}

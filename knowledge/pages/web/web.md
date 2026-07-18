@@ -21,7 +21,7 @@ Start here when the primary user surface runs in a browser. Narrow the work by i
 
 Use the Web branch when browser delivery is central to the requested outcome and deployment plus browser verification are part of “done.”
 
-## Consider another route when
+## Limits and alternatives
 
 When the primary artifact is a fabricated physical component or embedded system, start with [Custom manufactured parts](/wiki/custom-manufactured-parts) instead. A web surface may still configure, quote, or monitor a custom part, but it does not replace the physical-product requirements.
 

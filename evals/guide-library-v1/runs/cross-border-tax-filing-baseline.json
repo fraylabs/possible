@@ -1,0 +1,19 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "cross-border-tax-filing",
+  "arm": "baseline",
+  "agentTaskName": "/root/pilot_tax_baseline",
+  "provider": "OpenAI",
+  "model": "inherited-parent-model",
+  "host": "Codex fresh collaboration sub-agent",
+  "responseWordLimit": 900,
+  "controlFingerprint": "ffe16462ad9d0b6ddc2fae94bd9f1d0ced6d296423b108e3cf58e410bf1582f5",
+  "promptSha256": "8ccd0244c30a1d93ba493d988eb10783fb663f34fdaf426fcfadb34705d9c5ae",
+  "responseFile": "transcripts/cross-border-tax-filing-baseline.md",
+  "responseSha256": "b94f49319061049932f99d6793404055077835d0972598241333976846ae63fb",
+  "responseBytes": 3189,
+  "possibleQueries": [],
+  "possibleReads": [],
+  "externalActionAttempts": [],
+  "artifactChecks": []
+}

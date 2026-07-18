@@ -250,11 +250,12 @@ async function verifyMachineReadableWiki(baseUrl, files) {
   const indexResponse = await requestBytes(`${baseUrl}/wiki/index.json`);
   assert.equal(indexResponse.response.status, 200);
   const index = JSON.parse(indexResponse.bytes.toString("utf8"));
-  assert.equal(index.schemaVersion, 1);
-  assert.equal(index.title, "Possible wiki");
+  assert.equal(index.schemaVersion, 2);
+  assert.equal(index.title, "Possible field guides");
   assert(Array.isArray(index.pages), "Wiki index pages must be an array.");
   assert(index.pages.length > 0, "The published wiki must contain pages.");
   assert.equal(index.pageCount, index.pages.length);
+  assert.equal(index.guideCount, index.pages.length);
 
   const slugs = index.pages.map((page) => page.slug);
   assert.equal(new Set(slugs).size, slugs.length, "Published wiki slugs must be unique.");
@@ -275,7 +276,7 @@ async function verifyMachineReadableWiki(baseUrl, files) {
     const response = await requestBytes(`${baseUrl}${listing.jsonUrl}`);
     assert.equal(response.response.status, 200);
     const document = JSON.parse(response.bytes.toString("utf8"));
-    assert.equal(document.schemaVersion, 1);
+    assert.equal(document.schemaVersion, 2);
     assert.equal(document.humanUrl, listing.humanUrl);
     assert.equal(document.page.slug, listing.slug);
     assert.equal(document.page.title, listing.title);
@@ -311,7 +312,7 @@ async function verifyMachineReadableWiki(baseUrl, files) {
   const protocolResponse = await requestBytes(`${baseUrl}/agent/protocol.json`);
   assert.equal(protocolResponse.response.status, 200);
   const protocol = JSON.parse(protocolResponse.bytes.toString("utf8"));
-  assert.equal(protocol.schemaVersion, 1);
+  assert.equal(protocol.schemaVersion, 2);
   assert.equal(protocol.protocol, "possible-static-agent");
   assert.equal(protocol.static, true);
   assert.deepEqual(Object.keys(protocol.operations), ["search", "read", "related"]);
@@ -323,7 +324,7 @@ async function verifyMachineReadableWiki(baseUrl, files) {
   const searchResponse = await requestBytes(`${baseUrl}/agent/search.json`);
   assert.equal(searchResponse.response.status, 200);
   const search = JSON.parse(searchResponse.bytes.toString("utf8"));
-  assert.equal(search.schemaVersion, 1);
+  assert.equal(search.schemaVersion, 2);
   assert.equal(search.operation, "search");
   assert.equal(search.static, true);
   assert.deepEqual(search.request, {
@@ -335,11 +336,11 @@ async function verifyMachineReadableWiki(baseUrl, files) {
   assert.equal(search.corpus.pageCount, index.pageCount);
   assert.equal(search.pages.length, index.pageCount);
   assert.equal(search.search.match, "all query terms");
-  assert.deepEqual(search.search.assessment.statuses, [
-    "verified",
-    "partial",
-    "no-maintained-route",
-  ]);
+  assert.deepEqual(search.search.interpretation, {
+    results: "relevant-field-guides",
+    links: "related-reading-not-ordered-steps",
+    boundary: "consumer-owns-project-decisions-and-actions",
+  });
 
   const canonicalPages = new Map(documents.map((document) => [document.page.slug, document]));
   const searchSlugs = new Set(search.pages.map((page) => page.slug));
@@ -349,8 +350,6 @@ async function verifyMachineReadableWiki(baseUrl, files) {
     assert(canonical, `Search index contains unknown page ${indexedPage.slug}.`);
     assert.deepEqual(indexedPage.sources, canonical.page.sources);
     assert.deepEqual(indexedPage.aliases, canonical.page.aliases ?? []);
-    assert.deepEqual(indexedPage.coverage, canonical.page.coverage ?? []);
-    assert.equal(indexedPage.routeStatus, canonical.page.routeStatus);
     assert.equal(indexedPage.reviewedAt, canonical.page.reviewedAt);
     assert.deepEqual(indexedPage.searchFields, {
       title: canonical.page.title,
@@ -377,7 +376,7 @@ async function verifyMachineReadableWiki(baseUrl, files) {
   for (const slug of slugs) {
     const canonical = canonicalPages.get(slug);
     const read = JSON.parse((await requestBytes(`${baseUrl}/agent/read/${slug}.json`)).bytes.toString("utf8"));
-    assert.equal(read.schemaVersion, 1);
+    assert.equal(read.schemaVersion, 2);
     assert.equal(read.operation, "read");
     assert.equal(read.humanUrl, `/wiki/${slug}`);
     assert.deepEqual(read.page, canonical.page);
@@ -387,7 +386,7 @@ async function verifyMachineReadableWiki(baseUrl, files) {
     );
 
     const related = JSON.parse((await requestBytes(`${baseUrl}/agent/related/${slug}.json`)).bytes.toString("utf8"));
-    assert.equal(related.schemaVersion, 1);
+    assert.equal(related.schemaVersion, 2);
     assert.equal(related.operation, "related");
     assert.equal(related.slug, slug);
     assert.deepEqual(related.page.slug, slug);
@@ -476,24 +475,28 @@ export async function verifyPreview() {
     missingAssetStatus: 404,
     pathTraversalStatus: 404,
   });
-  const { publishedAt, artifactSha256, ...publication } = manifest.publication;
+  const { artifactSha256, historicalProductionReceipt, ...publication } = manifest.publication;
   assert.deepEqual(publication, {
-    state: "production",
+    state: "not-published",
+    allowedNextAction: "Explicit authorization to publish this exact candidate artifact",
+    requiresSeparateApproval: [
+      "provider authentication or credential-scope changes",
+      "production publication or DNS changes",
+      "cost or paid-plan changes",
+      "quotes, purchases, orders, and fabrication",
+    ],
+  });
+  assert.equal(artifactSha256, manifest.sha256, "Candidate digest must match the reviewed artifact.");
+  assert.deepEqual(historicalProductionReceipt, {
     primaryUrl: "https://possible.sh",
     alternateUrl: "https://www.possible.sh",
     provider: "Vercel",
     dnsProvider: "Cloudflare",
     sourceRepository: "https://github.com/fraylabs/possible",
+    publishedAt: "2026-07-18",
+    artifactSha256: "54ff8c2e8409909bcc7540d0a43654b3a89d136a6975a8b01c6bc3b2d3fb7d04",
     verificationReceipt: "deployment/PRODUCTION.md",
-    remainingApprovalBoundaries: [
-      "cost or paid-plan changes",
-      "credential disclosure or scope expansion",
-      "provider, DNS, or production changes beyond the recorded configuration",
-      "quotes, purchases, orders, and fabrication",
-    ],
   });
-  assert.match(publishedAt, /^\d{4}-\d{2}-\d{2}$/);
-  assert.equal(artifactSha256, manifest.sha256, "Publication digest must match the reviewed artifact.");
 
   const actual = await describeArtifact();
   assert(
@@ -506,7 +509,7 @@ export async function verifyPreview() {
   await verifyRuntime(actual.files);
 
   console.log(
-    `Verified production preview artifact ${actual.sha256}: ${actual.files.length} regular files, `
+    `Verified local candidate artifact ${actual.sha256}: ${actual.files.length} regular files, `
     + `${actual.totalBytes} bytes, exact bytes and content types, SPA fallback, generated page JSON, `
     + "no links or public source maps, and safe negative routes.",
   );
@@ -521,8 +524,16 @@ export async function recordPreview() {
     totalBytes: actual.totalBytes,
     files: actual.files,
     publication: {
-      ...manifest.publication,
+      state: "not-published",
       artifactSha256: actual.sha256,
+      allowedNextAction: "Explicit authorization to publish this exact candidate artifact",
+      requiresSeparateApproval: [
+        "provider authentication or credential-scope changes",
+        "production publication or DNS changes",
+        "cost or paid-plan changes",
+        "quotes, purchases, orders, and fabrication",
+      ],
+      historicalProductionReceipt: manifest.publication.historicalProductionReceipt,
     },
   };
   await writeFile(manifestPath, `${JSON.stringify(next, null, 2)}\n`);

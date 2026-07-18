@@ -23,7 +23,7 @@ Specify tolerances only for functionally critical features and scope every capab
 
 Use this practice when fit, alignment, motion, sealing, or load transfer depends on dimensional variation, and when the chosen provider can review or quote explicit tolerances.
 
-## Consider another route when
+## Limits and alternatives
 
 Do not copy a universal tolerance across unlike processes in place of feature-level engineering judgment. Use [Manufacturing drawing](/wiki/manufacturing-drawing) to communicate the resulting feature controls and datum scheme.
 

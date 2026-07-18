@@ -3,7 +3,6 @@ slug: website-design
 title: Website design
 summary: The visual and interaction design of a website, including hierarchy, responsive behavior, component language, accessibility, and a handoff that survives implementation.
 tags: [art, web, design, interface, accessibility]
-kind: outcome
 reviewedAt: 2026-07-18
 sources:
   - title: Web Content Accessibility Guidelines 2.2
@@ -22,9 +21,9 @@ Start with the audience, primary action, content hierarchy, and supported viewpo
 
 ## Use this when
 
-Use this outcome when the website’s visual language, information hierarchy, and interaction behavior are part of what must be delivered—not merely decoration added after engineering.
+Use this guide when the website’s visual language, information hierarchy, and interaction behavior are part of what must be delivered—not merely decoration added after engineering.
 
-## Consider another route when
+## Limits and alternatives
 
 If the primary challenge is data flow, routing, or server behavior, continue with [Web](/wiki/web) and [Framework selection](/wiki/framework-selection). If the result is a standalone image or campaign asset, use [Image generation](/wiki/image-generation) or another art workflow instead.
 

@@ -21,7 +21,7 @@ Keep the native parametric model as the source of truth and export revision-spec
 
 Use this practice when dimensions or interfaces may change across iterations, or when more than one manufacturing or simulation artifact derives from the same geometry.
 
-## Consider another route when
+## Limits and alternatives
 
 If the geometry is a one-time non-parametric capture whose source cannot be reconstructed as editable CAD, say so explicitly. A GUI-native [FreeCAD](/wiki/freecad) model is the alternative path to a script-authored [CadQuery](/wiki/cadquery) master.
 

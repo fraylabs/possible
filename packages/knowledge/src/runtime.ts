@@ -1,52 +1,10 @@
 import { wikiCorpusData } from "./generated-data.js";
 import type {
-  PageSearchOptions,
-  PageSearchResult,
-  WikiCorpus,
-  WikiPage,
+  Guide,
+  GuideLibrary,
+  GuideSearchOptions,
+  GuideSearchResult,
 } from "./types.js";
-
-export type SearchRouteStatus = "verified" | "partial" | "no-maintained-route";
-
-export interface SearchAssessment {
-  status: SearchRouteStatus;
-  reason: string;
-  verifiedRoutes: string[];
-  partialRoutes: string[];
-}
-
-export const OUTCOME_INTENT_TERMS = [
-  "achieve",
-  "accomplish",
-  "build",
-  "create",
-  "deliver",
-  "design",
-  "develop",
-  "deploy",
-  "fabricate",
-  "generate",
-  "implement",
-  "launch",
-  "make",
-  "manufacture",
-  "need",
-  "produce",
-  "publish",
-  "render",
-  "ship",
-  "want",
-  "write",
-] as const;
-
-export const OUTCOME_INTENT_PHRASES = [
-  "help me",
-  "i am looking for",
-  "i want",
-  "i need",
-  "looking for",
-  "trying to",
-] as const;
 
 const normalize = (value: string): string =>
   value
@@ -60,13 +18,17 @@ const searchStopWords = new Set([
   "a",
   "an",
   "and",
+  "build",
   "can",
+  "create",
   "do",
   "for",
+  "help",
   "how",
   "i",
   "is",
   "it",
+  "looking",
   "make",
   "me",
   "my",
@@ -75,6 +37,7 @@ const searchStopWords = new Set([
   "please",
   "the",
   "to",
+  "trying",
   "want",
   "we",
   "with",
@@ -93,65 +56,49 @@ const termsFor = (value: string): string[] => {
   return meaningfulTerms.length > 0 ? meaningfulTerms : terms;
 };
 
-export function isOutcomeLikeQuery(query: string): boolean {
-  const normalizedQuery = normalize(query);
-  const queryTerms = new Set(normalizedQuery.split(/\s+/).filter(Boolean));
-  return OUTCOME_INTENT_PHRASES.some((phrase) => normalizedQuery.includes(phrase)) ||
-    OUTCOME_INTENT_TERMS.some((term) => queryTerms.has(term));
-}
-
 const compareText = (left: string, right: string): number =>
   left < right ? -1 : left > right ? 1 : 0;
 
-const cloneCorpus = (corpus: WikiCorpus): WikiCorpus =>
-  JSON.parse(JSON.stringify(corpus)) as WikiCorpus;
+const cloneLibrary = (library: GuideLibrary): GuideLibrary =>
+  JSON.parse(JSON.stringify(library)) as GuideLibrary;
 
-const searchFields = (page: WikiPage): Array<readonly [string, number]> => [
-  [page.title, 16],
-  [page.slug, 12],
-  [(page.aliases ?? []).join(" "), 14],
-  [page.tags.join(" "), 10],
-  [page.summary, 8],
-  [page.body, 2],
-  [page.sources.map((source) => source.title).join(" "), 1],
+const searchFields = (guide: Guide): Array<readonly [string, number]> => [
+  [guide.title, 16],
+  [guide.slug, 12],
+  [(guide.aliases ?? []).join(" "), 14],
+  [guide.tags.join(" "), 10],
+  [guide.summary, 8],
+  [guide.body, 2],
+  [guide.sources.map((source) => source.title).join(" "), 1],
 ];
 
-export async function loadWiki(): Promise<WikiCorpus> {
-  return cloneCorpus(wikiCorpusData);
+export async function loadGuides(): Promise<GuideLibrary> {
+  return cloneLibrary(wikiCorpusData);
 }
 
-export function getPage(corpus: WikiCorpus, slug: string): WikiPage | undefined {
-  return corpus.pages.find((page) => page.slug === slug);
+export function getGuide(library: GuideLibrary, slug: string): Guide | undefined {
+  return library.pages.find((guide) => guide.slug === slug);
 }
 
-export function searchPages(
-  corpus: WikiCorpus,
+export function searchGuides(
+  library: GuideLibrary,
   query: string,
-  options: PageSearchOptions = {},
-): PageSearchResult[] {
+  options: GuideSearchOptions = {},
+): GuideSearchResult[] {
   const terms = termsFor(query);
   if (terms.length === 0) return [];
 
   const phrase = terms.join(" ");
   const requestedTags = new Set((options.tags ?? []).map(normalize).filter(Boolean));
-  const requestedCoverage = new Set((options.coverage ?? []).map(normalize).filter(Boolean));
   const limit = Math.max(0, Math.min(options.limit ?? 20, 100));
-  const outcomeLikeQuery = isOutcomeLikeQuery(query);
 
-  return corpus.pages
-    .filter((page) => {
-      if (options.kind !== undefined && page.kind !== options.kind) return false;
-      if (
-        requestedCoverage.size > 0 &&
-        ![...requestedCoverage].every((scope) =>
-          (page.coverage ?? []).some((value) => normalize(value) === scope),
-        )
-      ) return false;
+  return library.pages
+    .filter((guide) => {
       if (requestedTags.size === 0) return true;
-      const pageTags = new Set(page.tags.map(normalize));
-      return [...requestedTags].every((tag) => pageTags.has(tag));
+      const guideTags = new Set(guide.tags.map(normalize));
+      return [...requestedTags].every((tag) => guideTags.has(tag));
     })
-    .map((page): PageSearchResult => {
+    .map((page): GuideSearchResult => {
       const fields = searchFields(page).map(([value, weight]) => [normalize(value), weight] as const);
       const matchedTerms = terms.filter((term) => fields.some(([value]) => value.includes(term)));
       let score = 0;
@@ -167,9 +114,6 @@ export function searchPages(
     .filter((result) => result.matchedTerms.length === terms.length)
     .sort(
       (left, right) =>
-        (outcomeLikeQuery
-          ? Number(right.page.kind === "outcome") - Number(left.page.kind === "outcome")
-          : 0) ||
         right.score - left.score ||
         compareText(left.page.title, right.page.title) ||
         compareText(left.page.slug, right.page.slug),
@@ -177,63 +121,24 @@ export function searchPages(
     .slice(0, limit);
 }
 
-export function assessSearchResults(results: readonly PageSearchResult[]): SearchAssessment {
-  const outcomeResults = results.filter((result) => {
-    if (result.page.kind !== "outcome") return false;
-    const authoredRoutingText = normalize([
-      result.page.title,
-      result.page.slug,
-      ...(result.page.aliases ?? []),
-      ...result.page.tags,
-    ].join(" "));
-    return result.matchedTerms.every((term) => authoredRoutingText.includes(term));
-  });
-  const verifiedRoutes = outcomeResults
-    .filter((result) => result.page.routeStatus === "verified")
-    .map((result) => result.page.slug);
-  const partialRoutes = outcomeResults
-    .filter((result) => result.page.routeStatus !== "verified")
-    .map((result) => result.page.slug);
-
-  if (verifiedRoutes.length > 0) {
-    return {
-      status: "verified",
-      reason: "Possible found an explicitly verified outcome route.",
-      verifiedRoutes,
-      partialRoutes,
-    };
-  }
-
-  if (partialRoutes.length > 0) {
-    return {
-      status: "partial",
-      reason: "Possible found an outcome page, but no explicitly verified route.",
-      verifiedRoutes,
-      partialRoutes,
-    };
-  }
-
-  return {
-    status: "no-maintained-route",
-    reason: results.length > 0
-      ? "Possible found related knowledge, but no maintained outcome route for this query."
-      : "Possible found no maintained pages matching every query term.",
-    verifiedRoutes,
-    partialRoutes,
-  };
+export function getGuideBacklinks(library: GuideLibrary, slug: string): Guide[] {
+  return library.pages.filter((guide) => guide.links.includes(slug));
 }
 
-export function getBacklinks(corpus: WikiCorpus, slug: string): WikiPage[] {
-  return corpus.pages.filter((page) => page.links.includes(slug));
-}
-
-export function getRelatedPages(corpus: WikiCorpus, slug: string): WikiPage[] {
-  const page = getPage(corpus, slug);
-  if (!page) return [];
+export function getRelatedGuides(library: GuideLibrary, slug: string): Guide[] {
+  const guide = getGuide(library, slug);
+  if (!guide) return [];
   const relatedSlugs = new Set([
-    ...page.links,
-    ...getBacklinks(corpus, slug).map((backlink) => backlink.slug),
+    ...guide.links,
+    ...getGuideBacklinks(library, slug).map((backlink) => backlink.slug),
   ]);
   relatedSlugs.delete(slug);
-  return corpus.pages.filter((candidate) => relatedSlugs.has(candidate.slug));
+  return library.pages.filter((candidate) => relatedSlugs.has(candidate.slug));
 }
+
+// Compatibility functions for the existing website, MCP server, and public data paths.
+export const loadWiki = loadGuides;
+export const getPage = getGuide;
+export const searchPages = searchGuides;
+export const getBacklinks = getGuideBacklinks;
+export const getRelatedPages = getRelatedGuides;

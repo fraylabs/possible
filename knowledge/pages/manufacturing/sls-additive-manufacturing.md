@@ -21,7 +21,7 @@ Use SLS when complex geometry benefits from surrounding powder support and the n
 
 Use this process when complex geometry benefits from powder support and when nylon material options with batch nesting match the required function.
 
-## Consider another route when
+## Limits and alternatives
 
 If fine cosmetic surface, sealed internal cavities, or trapped-powder geometry conflict with the provider process, do not assume SLS will work. [FDM additive manufacturing](/wiki/fdm-additive-manufacturing) may be faster and cheaper for early concepts and simple fit checks.
 

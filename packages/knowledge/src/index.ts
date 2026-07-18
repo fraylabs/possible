@@ -1,27 +1,25 @@
 export { wikiCorpusData } from "./data.js";
 export {
   getBacklinks,
+  getGuide,
+  getGuideBacklinks,
   getPage,
+  getRelatedGuides,
   getRelatedPages,
+  loadGuides,
   loadWiki,
-  assessSearchResults,
-  isOutcomeLikeQuery,
+  searchGuides,
   searchPages,
 } from "./runtime.js";
 export type {
-  SearchAssessment,
-  SearchRouteStatus,
-} from "./runtime.js";
-export {
-  OUTCOME_INTENT_PHRASES,
-  OUTCOME_INTENT_TERMS,
-} from "./runtime.js";
-export type {
+  Guide,
+  GuideLibrary,
+  GuideSearchOptions,
+  GuideSearchResult,
+  GuideSource,
   PageSearchOptions,
   PageSearchResult,
   PageSource,
-  WikiPageKind,
-  WikiPageRouteStatus,
   WikiCorpus,
   WikiPage,
 } from "./types.js";

@@ -1,22 +1,33 @@
 # Possible
 
-Possible is a sourced wiki of what people and agents can make possible.
+Possible is a library of source-backed practical guides for people and agents.
 
-Explore the public atlas at [possible.sh](https://possible.sh). Its source and
-pages live at
+This repository revision is a local, not-published candidate. The existing
+[possible.sh](https://possible.sh) deployment may still serve the prior
+authorized release; its source and guides live at
 [github.com/fraylabs/possible](https://github.com/fraylabs/possible).
 
-Possible deliberately keeps the product small:
+Possible deliberately keeps the boundary small:
 
-- A **page** explains an outcome, method, project, provider, or concept.
-- A page's internal **links** generate the graph and backlinks.
-- Its **sources** make the knowledge inspectable and maintainable.
+- A **guide** explains what a subject helps with, when it applies, important
+  decisions, practical approaches, validation evidence to seek, and limits.
+- A guide's internal **links** identify useful adjacent reading and generate the
+  atlas and backlinks. They are not a project plan.
+- Its **sources** and review date make the guidance inspectable and maintainable.
 
-Humans search and follow a visual map in Explore mode, then open one page in a
-focused Read mode. Agents search and read the same corpus through a two-tool,
-read-only MCP server. Possible supplies useful knowledge; the host agent still
-reasons, plans, asks the user for meaningful decisions, and executes through
-other tools.
+People search, browse, and read the library. Agents use the same corpus through
+a two-tool, read-only interface. The host agent interprets the actual project,
+chooses and combines relevant guides, selects from its own skills and tools,
+asks the user for meaningful decisions and approvals, does the work, and
+validates the result.
+
+Possible supplies reviewed context. It does not plan, choose tools, execute,
+authorize, certify, or validate a project.
+
+The first locked paired pilot did not establish that adding Possible generally
+improves agent performance. That no-go result and all 16 raw runs are retained
+under `evals/guide-library-v1/`; the current product claim is the library and
+retrieval contract above, not measured agent uplift.
 
 ## Run it
 
@@ -41,21 +52,23 @@ outside loopback—`ALLOWED_HOSTS` explicitly.
 
 The MCP server exposes exactly two read-only operations:
 
-- `search` — find pages from a natural-language outcome or subject.
-- `read` — retrieve one complete page, its sources, links, and related pages.
+- `search` — find relevant guides for one focused subject or question.
+- `read` — retrieve one complete guide, its sources, links, and related guides.
 
 The installable guidance in [`skills/possible`](skills/possible/) teaches an
-agent to search, read only relevant pages, follow useful links, cite sources,
-and then do its own planning and execution.
+agent to decompose compound work, run focused searches, read only useful guides,
+combine their guidance with project evidence, cite material sources, and retain
+ownership of planning, skill choice, execution, and validation.
 
 ## Contribute
 
-Canonical pages are ordinary Markdown under [`knowledge/pages`](knowledge/pages/).
-Each page has a stable slug, title, summary, optional tags, review date, and at
-least one source. Link to another Possible page with `/wiki/<slug>`; those links
-are the only source of graph edges.
+Canonical guides are ordinary Markdown under [`knowledge/pages`](knowledge/pages/).
+Each guide has a stable slug, title, summary, optional aliases and tags, review
+date, at least one source, and useful prose. Link to another guide with
+`/wiki/<slug>`.
 
-After editing pages, run:
+Start with [`CONTRIBUTING.md`](CONTRIBUTING.md) and the guide template under
+`knowledge/`. After editing guides, run:
 
 ```bash
 npm run knowledge:validate
@@ -63,6 +76,6 @@ npm run test -w @possible/knowledge
 ```
 
 See [`GOAL.md`](GOAL.md) for the active trust claim and
-[`ARCHITECTURE.md`](ARCHITECTURE.md) for the small shared contract. The original
-typed-graph MVP and its controlled evaluation receipts remain in Git history
-and under `evals/` as historical evidence; they are not the new content model.
+[`ARCHITECTURE.md`](ARCHITECTURE.md) for the shared boundary. Historical
+typed-graph evaluations remain under `evals/` and in repository history; they
+are not evidence that Possible plans or validates projects.

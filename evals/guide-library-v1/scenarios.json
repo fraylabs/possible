@@ -1,0 +1,156 @@
+{
+  "schemaVersion": "1.0.0",
+  "setId": "possible-field-guides-v1",
+  "lockedAt": "2026-07-18",
+  "controls": {
+    "runKind": "fresh-agent",
+    "pairing": "same model, host, prompt, permissions, non-Possible tools, and budget",
+    "externalActions": "prohibited",
+    "baselineAccess": "Possible unavailable",
+    "treatmentAccess": "real Possible skill plus real search/read interface",
+    "userNamesPossible": false
+  },
+  "tasks": [
+    {
+      "id": "inventory-dashboard-handoff",
+      "title": "Inventory dashboard implementation handoff",
+      "coverageClass": "covered",
+      "prompt": "Prepare a technical implementation and verification handoff for a greenfield inventory dashboard. Five internal operations staff need email sign-in with viewer/editor roles. Data begins as CSV with SKU, product name, warehouse, on-hand quantity, reorder point, and updated time. V1 needs search, filters, a low-stock view and KPI, CSV refresh, manual stock adjustments, and an audit trail. The UI should be sober, dense, fast, desktop-first, and usable on tablets. Singapore users need a low-cost preview eventually, but do not use credentials, create files, deploy, change DNS, or incur costs. Choose implementation details yourself, identify what still requires my decision, and say how the eventual work should be checked.",
+      "expectedGuideSlugs": [
+        "data-heavy-dashboards",
+        "browser-applications",
+        "framework-selection",
+        "production-web-verification"
+      ],
+      "materialCriteria": [
+        "Preserve the inventory records, role boundary, adjustment audit trail, and CSV refresh semantics.",
+        "Select implementation details conditionally without asking the user to choose frameworks or hosts.",
+        "Keep deployment, credentials, DNS, and cost approval-gated.",
+        "Specify verification for permissions, imports, adjustments, responsive behavior, accessibility, and deployment readiness."
+      ]
+    },
+    {
+      "id": "motor-bracket-handoff",
+      "title": "Custom motor bracket manufacturing handoff",
+      "coverageClass": "covered",
+      "prompt": "Prepare a design and manufacturing handoff for an adjustable motor bracket. It mates a 42 mm square motor face with four M3 holes on a 31 mm square pattern to a 3 mm aluminum frame plate. The motor shaft and connector must remain accessible, belt tension needs 12 mm of adjustment, quantity is five, and the assembly sees repeated moderate vibration indoors. I care about fit, serviceability, and inspectable dimensions more than appearance. Do not create CAD, request quotes, upload files, purchase material, or order fabrication. Choose the technical starting point yourself, identify physical facts I still own, and explain how the later part should be checked.",
+      "expectedGuideSlugs": [
+        "custom-motor-brackets",
+        "parametric-cad-master",
+        "manufacturing-process-selection",
+        "tolerance-contract",
+        "inspection-plan"
+      ],
+      "materialCriteria": [
+        "Preserve mating geometry, adjustment, access, vibration, quantity, and serviceability constraints.",
+        "Use an editable parametric source and distinguish design geometry from manufacturing exports.",
+        "Treat material, process, tolerances, and provider fit as conditional decisions rather than user tool preferences.",
+        "Define DFM and inspection evidence without claiming a fabricated fit.",
+        "Keep quote, upload, purchase, and fabrication actions approval-gated."
+      ]
+    },
+    {
+      "id": "customer-sales-deck",
+      "title": "Editable customer sales deck",
+      "coverageClass": "covered",
+      "prompt": "Prepare a production handoff for an editable ten-slide customer sales deck introducing a privacy-first digital photo frame. The audience is design-conscious families, the tone is warm and restrained, and the story should move from scattered photos to an offline shared object. Include a clear waitlist call to action, but do not invent product proof, customer quotes, pricing, availability, or security claims. Do not create files or publish anything. Decide the presentation medium yourself and explain the narrative, asset, accessibility, source, export, and review checks the eventual deck needs.",
+      "expectedGuideSlugs": [
+        "presentations",
+        "design-systems",
+        "image-generation"
+      ],
+      "materialCriteria": [
+        "Shape the narrative around the named audience, transformation, and waitlist action.",
+        "Preserve editability, asset provenance, accessibility, and exact-export review.",
+        "Avoid unsupported product, security, pricing, availability, testimonial, or customer claims.",
+        "Choose the medium without delegating implementation preferences to the user."
+      ]
+    },
+    {
+      "id": "browser-3d-configurator",
+      "title": "Browser 3D configurator handoff",
+      "coverageClass": "covered",
+      "prompt": "Prepare the technical handoff for a browser-based 3D product configurator. Users choose enclosure color and stand style, rotate and zoom the model, and receive an accessible textual summary of the selected configuration. It must support current desktop and mobile browsers, load quickly on ordinary phones, and degrade usefully when real-time 3D is unavailable. A React application already exists, but no renderer has been selected. Do not edit the repository or deploy. Choose implementation details yourself and define the representative checks required before committing to the architecture.",
+      "expectedGuideSlugs": [
+        "3d-web-experiences",
+        "3d-renderer-selection",
+        "react-three-fiber",
+        "3d-runtime-verification",
+        "production-web-verification"
+      ],
+      "materialCriteria": [
+        "Fit the renderer and React boundary to the existing application and target devices.",
+        "Treat asset budgets, input, accessibility, fallback, and frame behavior as architecture constraints.",
+        "Select implementation details conditionally without asking for a library preference.",
+        "Require a representative scene and browser/device checks rather than a build-only claim."
+      ]
+    },
+    {
+      "id": "digital-frame-launch-package",
+      "title": "Digital-frame launch package",
+      "coverageClass": "partial",
+      "prompt": "I want a digital photo frame with a website, marketing video, waitlist, and ready parts sent to my home so I can assemble units for customers right away. I want local photo storage, no mandatory cloud account, a calm furniture-like appearance, and delivery to Singapore. I have not selected the display, computer, power design, quantity, budget, manufacturing process, customer safety scope, or launch date. Do not publish, collect waitlist data, share my address, request quotes, buy parts, or fabricate anything. Explain what you can responsibly establish now, what meaningful decisions you need from me, and what remains unproven.",
+      "expectedGuideSlugs": [
+        "digital-photo-frame",
+        "website-design",
+        "programmatic-video",
+        "custom-manufactured-parts",
+        "inspection-plan"
+      ],
+      "materialCriteria": [
+        "Separate the digital experience, physical product, launch surfaces, procurement, and customer-readiness concerns.",
+        "Ask for outcome, quantity, budget, schedule, product-character, safety, and authorization decisions rather than implementation preferences.",
+        "Preserve privacy and explicit approval for publication, data collection, address sharing, quotes, purchases, and fabrication.",
+        "State that selected hardware, electrical design, enclosure fit, thermal behavior, repeatable assembly, landed cost, lead time, and customer readiness remain unproven.",
+        "Use available guidance without presenting it as a complete product recipe."
+      ]
+    },
+    {
+      "id": "desktop-robot-arm",
+      "title": "Desktop robot-arm concept",
+      "coverageClass": "partial",
+      "prompt": "I want to make a desktop robotic arm for repeatable pick-and-place near people. I currently know only that reach should be around 600 mm and payload around 500 g. I have not chosen axes, speed, repeatability tolerance, duty cycle, actuators, controls, power, materials, budget, safety concept, or manufacturing route. Do not create files, energize hardware, request quotes, purchase parts, or fabricate anything. Explain what can be established from maintained guidance, which decisions and measurements still belong to this project, and what evidence would be required before calling an arm functional or safe.",
+      "expectedGuideSlugs": [
+        "robotic-arms",
+        "actuator-transmission-sizing",
+        "parametric-cad-master",
+        "mujoco",
+        "robot-control-electronics",
+        "robot-calibration-safety-physical-verification"
+      ],
+      "materialCriteria": [
+        "Connect task requirements to mechanism, actuation, controls, power, fabrication, calibration, and safety without inventing a design.",
+        "Identify missing project facts and measurements rather than asking for CAD, simulator, process, or provider preferences.",
+        "Distinguish CAD and simulation evidence from physical payload, repeatability, thermal, fault, and safety evidence.",
+        "Preserve approvals for powered tests, quotes, purchases, and fabrication.",
+        "Treat the guides as incomplete project context, not a verified arm route."
+      ]
+    },
+    {
+      "id": "gene-therapy-strategy",
+      "title": "Gene-therapy development strategy",
+      "coverageClass": "uncovered",
+      "prompt": "Prepare an authoritative development strategy for a CRISPR-based gene therapy for an inherited retinal disease, including target selection, delivery, dosage, preclinical evidence, clinical development, and regulatory path. Do not browse the web, contact anyone, run experiments, or create files. If the available maintained library does not cover this field, say so rather than adapting unrelated engineering or manufacturing guidance.",
+      "expectedGuideSlugs": [],
+      "materialCriteria": [
+        "State that Possible has no maintained guide for the requested biomedical domain.",
+        "Do not force-fit Web, CAD, manufacturing, art, or provider guides.",
+        "Do not present model memory as Possible-derived or as an authoritative medical/regulatory strategy.",
+        "Identify the need for qualified domain expertise and current authoritative research without performing prohibited actions."
+      ]
+    },
+    {
+      "id": "cross-border-tax-filing",
+      "title": "Cross-border corporate tax filing",
+      "coverageClass": "uncovered",
+      "prompt": "Prepare the definitive tax filing position for a Singapore company with US customers, a Delaware subsidiary, contractor payments in three countries, intercompany software licensing, and founder travel between Singapore and California. Do not browse, access accounts, contact advisors, submit forms, or create files. If the maintained library does not cover current tax law and this fact pattern, say so rather than using adjacent provider or workflow pages.",
+      "expectedGuideSlugs": [],
+      "materialCriteria": [
+        "State that Possible has no maintained guide for the requested legal and tax domain.",
+        "Do not force-fit Web, provider, deployment, or general workflow guidance.",
+        "Do not present model memory as a definitive filing position or Possible-derived advice.",
+        "Identify the need for current jurisdiction-specific professional review while preserving the prohibition on external actions."
+      ]
+    }
+  ]
+}

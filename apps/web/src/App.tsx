@@ -44,6 +44,9 @@ function ExpandedSidebarPage({ page, onSelectPage }: ExpandedSidebarPageProps) {
     <>
       <p className="selected-summary">{page.summary}</p>
       <p className="review-note">Reviewed {formatReviewedAt(page.reviewedAt)}</p>
+      <p className="guide-boundary">
+        This field guide offers source-backed context, not a project-specific plan or validation.
+      </p>
       <div className="sidebar-article-body">
         <MarkdownRenderer markdown={page.body} onSelectPage={onSelectPage} />
       </div>
@@ -313,7 +316,7 @@ export function App() {
         <LoaderCircle className="state-screen__spinner" />
         <p className="brand-wordmark">possible<span>.sh</span></p>
         <h1>Loading Possible</h1>
-        <p>Preparing the shared wiki for search, reading, and exploration.</p>
+        <p>Preparing source-backed field guides for search, reading, and exploration.</p>
       </main>
     );
   }
@@ -323,7 +326,7 @@ export function App() {
       <main className="state-screen state-screen--error" role="alert">
         <CircleAlert size={24} />
         <p className="brand-wordmark">possible<span>.sh</span></p>
-        <h1>The wiki could not be loaded.</h1>
+        <h1>The field guides could not be loaded.</h1>
         <p>{loadState.message}</p>
         <button type="button" onClick={() => setLoadAttempt((attempt) => attempt + 1)}>
           Try again
@@ -336,8 +339,8 @@ export function App() {
     return (
       <main className="state-screen">
         <p className="brand-wordmark">possible<span>.sh</span></p>
-        <h1>No validated wiki pages are available yet.</h1>
-        <p>Build or refresh the shared knowledge package, then reload this app.</p>
+        <h1>No field guides are available yet.</h1>
+        <p>Build or refresh the shared guide library, then reload this app.</p>
       </main>
     );
   }
@@ -369,12 +372,12 @@ export function App() {
         <aside className={`explore-panel${expandedPage ? " is-expanded" : ""}`} aria-label="Explore Possible">
           <button type="button" className="brand-reset" onClick={resetToAtlas}>
             <span className="brand-wordmark">possible<span>.sh</span></span>
-            <span className="brand-tagline">A sourced wiki of what people and agents can make possible.</span>
+            <span className="brand-tagline">Source-backed field guides for people and agents.</span>
           </button>
 
           <div className="search-area">
             <form className="search-form" onSubmit={submitSearch}>
-              <label htmlFor="wiki-search" className="visually-hidden">Search pages</label>
+              <label htmlFor="wiki-search" className="visually-hidden">Search field guides</label>
               <Search size={17} aria-hidden="true" />
               <input
                 ref={searchRef}
@@ -382,7 +385,7 @@ export function App() {
                 type="search"
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
-                placeholder="Search outcomes, tools, and methods"
+                placeholder="What are you trying to make or understand?"
                 autoComplete="off"
               />
               {query && (
@@ -417,14 +420,14 @@ export function App() {
                     ))}
                   </ul>
                 ) : (
-                  <p className="search-empty">No page matches that search yet.</p>
+                  <p className="search-empty">No field guide matches that search yet.</p>
                 )}
               </div>
             )}
             <div className="docs-links">
-              <a className="docs-link docs-link--primary" href="/demo">Try the demo</a>
+              <a className="docs-link docs-link--primary" href="/demo">See an example</a>
               <a className="docs-link" href="/how-it-works">How it works</a>
-              <a className="docs-link docs-link--quiet" href="/proof">Proof</a>
+              <a className="docs-link docs-link--quiet" href="/proof">Retrieval examples</a>
             </div>
           </div>
 
@@ -432,14 +435,14 @@ export function App() {
             {selectedSlug ? (
               <>
                 <div className="inspector-heading">
-                  <p className="section-kicker">{expandedPage ? "Expanded page" : "Focused page"}</p>
+                  <p className="section-kicker">{expandedPage ? "Open field guide" : "Focused guide"}</p>
                   <div className="inspector-actions">
                     {selectedPage && (
                       <button
                         type="button"
                         className="sidebar-expand"
                         onClick={expandPage}
-                        aria-label={expandedPage ? "Collapse page in sidebar" : "Expand page in sidebar"}
+                        aria-label={expandedPage ? "Collapse field guide in sidebar" : "Expand field guide in sidebar"}
                         aria-expanded={Boolean(expandedPage)}
                       >
                         {expandedPage ? "<" : ">"}
@@ -456,7 +459,7 @@ export function App() {
                   <>
                     <p className="selected-summary">{selectedPage.summary}</p>
                     <p className="review-note">Reviewed {formatReviewedAt(selectedPage.reviewedAt)}</p>
-                    <p className="atlas-note">Its authored connections are highlighted in the full universe.</p>
+                    <p className="atlas-note">Its authored references are highlighted across the guide library.</p>
                   </>
                 ) : fallbackPage ? (
                   <button
@@ -470,14 +473,15 @@ export function App() {
               </>
             ) : (
               <>
-                <p className="section-kicker">Atlas</p>
+                <p className="section-kicker">Field guide atlas</p>
                 <h1 className="atlas-title" id="explore-title" ref={exploreTitleRef} tabIndex={-1}>
-                  What do you want to make possible?
+                  Learn what the work involves.
                 </h1>
                 <p className="selected-summary">
-                  Zoom from fields into individual pages. Selecting something focuses its authored connections without replacing the wider map.
+                  Search contributor-authored guides for common approaches, important decisions,
+                  trade-offs, and evidence to look for. You or your agent still decide what to do.
                 </p>
-                <p className="atlas-note">{branches.length} fields · {corpus.pages.length} sourced pages</p>
+                <p className="atlas-note">{branches.length} fields · {corpus.pages.length} source-backed guides</p>
               </>
             )}
           </section>

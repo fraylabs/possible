@@ -23,7 +23,7 @@ It can also host declarative 3D scenes built with [React Three Fiber](/wiki/reac
 
 Use this setup when the application is intentionally client-rendered, does not need integrated server rendering, and benefits from a lightweight build whose server services can evolve independently.
 
-## Consider another route when
+## Limits and alternatives
 
 Choose [Next.js](/wiki/nextjs) when framework-integrated routing, server data, or server rendering removes more system work than it adds. A Vite client can call server services, but Vite does not itself supply the full-stack application conventions that Next.js does.
 

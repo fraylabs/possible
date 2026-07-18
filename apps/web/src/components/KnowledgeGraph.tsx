@@ -384,9 +384,9 @@ export function KnowledgeGraph({
         </ul>
       )}
       {selectedId && connections && (
-        <aside className="graph-connections" aria-label="Related nodes">
+        <aside className="graph-connections" aria-label="Related guides">
           <div className="graph-connections__header">
-            <p className="graph-connections__title">Related nodes</p>
+            <p className="graph-connections__title">Related guides</p>
           </div>
           {connections.related.length > 0 ? (
             <ul className="graph-connections__related">
@@ -398,11 +398,11 @@ export function KnowledgeGraph({
                 </li>
               ))}
             </ul>
-          ) : <p className="graph-connections__empty">No authored connections yet.</p>}
+          ) : <p className="graph-connections__empty">No authored references yet.</p>}
         </aside>
       )}
       <p className="graph-hint">
-        {selectedId ? "Use > to expand the sidebar · Esc clears focus" : "Click a node to focus it · Scroll to explore"}
+        {selectedId ? "Use > to read the guide · Esc clears focus" : "Choose a guide to focus it · Scroll to explore"}
       </p>
       <span className="visually-hidden" aria-live="polite">
         Graph zoom {Math.round(viewport.scale * 100)}%, {zoomBandLabel(zoomBand)}

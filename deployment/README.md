@@ -1,7 +1,7 @@
-# Production deployment
+# Local publication candidate
 
-Possible's website is packaged as a static Vite artifact. Build and verify the
-exact production bundle with:
+Possible's website is packaged as a static Vite artifact. Build and verify an
+exact local publication candidate with:
 
 ```bash
 npm run preview:prepare
@@ -15,14 +15,13 @@ symbolic links and public source maps. A preflight rejects a linked artifact
 root before the build, and parsed HTML must contain an active module script and
 stylesheet for the declared assets.
 
-The reviewed bundle is published at [possible.sh](https://possible.sh) through
-Vercel, with Cloudflare retaining authoritative DNS. `preview-artifact.json`
-records the production state, URLs, provider boundary, and immutable artifact
-digest. `PRODUCTION.md` records the public repository, source commit, provider
-handoff, DNS shape, live byte checks, responsive browser acceptance, and
-remaining limits.
+`preview-artifact.json` records the exact local candidate and explicitly marks
+it `not-published`. It retains the prior production receipt separately so a new
+local digest cannot be mistaken for evidence of a new deployment.
+`PRODUCTION.md` is historical evidence for previously authorized publication;
+it is not evidence that the current candidate is live.
 
 `npm run preview:prepare` is deliberately local and provider-state read-only. It
 rewrites generated local build outputs, but does not authenticate, change DNS,
-or deploy. Future provider, DNS, production, credential-scope, or paid-plan
-changes remain separately approval-gated.
+or deploy. Publishing the exact candidate—or making any provider, DNS,
+credential-scope, or paid-plan change—requires separate explicit approval.

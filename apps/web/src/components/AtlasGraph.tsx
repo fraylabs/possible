@@ -100,14 +100,14 @@ export function AtlasGraph({
 
   return (
     <section className="graph-shell graph-shell--atlas" aria-labelledby="atlas-graph-title">
-      <h2 id="atlas-graph-title" className="visually-hidden">Knowledge fields</h2>
+      <h2 id="atlas-graph-title" className="visually-hidden">Field guide library</h2>
       {nodes.length > 0 ? (
         <KnowledgeGraph
           nodes={nodes}
           edges={graph.edges}
           variant="atlas"
-          ariaLabel="Possible knowledge atlas"
-          guide="Global knowledge graph"
+          ariaLabel="Possible field guide atlas"
+          guide="Browse source-backed field guides"
           clusters={clusters}
           connections={connections}
           selectedId={selectedSlug}
@@ -121,8 +121,8 @@ export function AtlasGraph({
         />
       ) : (
         <div className="graph-empty">
-          <strong>No top-level fields are available.</strong>
-          <p>Add a root page matching its knowledge folder to publish a field.</p>
+          <strong>No field guide collections are available.</strong>
+          <p>Add a root guide matching its knowledge folder to publish a field.</p>
         </div>
       )}
     </section>

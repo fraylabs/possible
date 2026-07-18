@@ -21,7 +21,7 @@ Load the real [Three.js](/wiki/threejs) scene on representative target browsers 
 
 Use this practice when an application renders interactive 3D or when assets and device graphics capability can change the experience.
 
-## Consider another route when
+## Limits and alternatives
 
 Use general [Production web verification](/wiki/production-web-verification) when there is no real-time renderer and ordinary browser-flow checks cover the entire behavior.
 

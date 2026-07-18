@@ -38,12 +38,18 @@ test("valid Markdown compiles metadata, body, and deduplicated internal links", 
     { title: "Example publishing reference", url: "https://example.com/publishing" },
   ]);
   assert.deepEqual(corpus.pages[0].aliases, ["small widget project", "widget build"]);
-  assert.equal(corpus.pages[0].kind, "outcome");
-  assert.deepEqual(corpus.pages[0].coverage, ["physical-product", "publication"]);
-  assert.equal(corpus.pages[0].routeStatus, "verified");
   assert.equal(corpus.pages[1].aliases, undefined);
-  assert.equal(corpus.pages[1].kind, undefined);
-  assert.equal(corpus.pages[1].coverage, undefined);
+  assert.deepEqual(Object.keys(corpus.pages[0]).sort(), [
+    "aliases",
+    "body",
+    "links",
+    "reviewedAt",
+    "slug",
+    "sources",
+    "summary",
+    "tags",
+    "title",
+  ]);
 });
 
 test("broken internal links are rejected", () => {
@@ -94,21 +100,26 @@ test("human-readable fields cannot contain only whitespace", () => {
   assert.match(result.stderr, /title must contain non-whitespace text/);
 });
 
-test("page kind is limited to the existing page categories", () => {
+test("guide kinds are rejected instead of creating a second ontology", () => {
   const result = validateFixture("invalid-kind");
   assert.notEqual(result.status, 0);
-  assert.match(result.stderr, /kind.*must be equal to one of the allowed values/);
+  assert.match(result.stderr, /unsupported frontmatter key: kind/);
 });
 
-test("route status is reserved for outcome pages", () => {
+test("route status is rejected instead of implying completeness", () => {
   const result = validateFixture("invalid-route-status");
   assert.notEqual(result.status, 0);
-  assert.match(result.stderr, /routeStatus requires kind: outcome/);
+  assert.match(result.stderr, /unsupported frontmatter key: routeStatus/);
 });
 
-test("routing metadata cannot contain only whitespace", () => {
+test("coverage metadata is rejected instead of encoding a route solver", () => {
+  const result = validateFixture("invalid-coverage");
+  assert.notEqual(result.status, 0);
+  assert.match(result.stderr, /unsupported frontmatter key: coverage/);
+});
+
+test("guide aliases cannot contain only whitespace", () => {
   const result = validateFixture("whitespace-routing");
   assert.notEqual(result.status, 0);
   assert.match(result.stderr, /aliases\/0 must contain non-whitespace text/);
-  assert.match(result.stderr, /coverage\/0 must contain non-whitespace text/);
 });

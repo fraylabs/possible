@@ -1,5 +1,50 @@
 # Worklog
 
+## 2026-07-18 — Field-guide library reset activated
+
+- The captain clarified the product boundary: Possible is a mentor-like library
+  of maintained guides; the host agent selects and combines guidance, chooses
+  skills, executes, and validates the project.
+- Rejected both a pure wiki positioning and a skill-router/proof-engine pivot.
+  The public mechanism is now source-backed practical guides plus deterministic
+  `search` and `read` retrieval.
+- Activated a durable goal that removes route status, outcome-first routing,
+  sourced-plan and project-proof claims while preserving Markdown, sources,
+  review dates, links, stable URLs, the atlas, and the two read-only MCP tools.
+- Started goal-backed parallel lanes for the guide schema/runtime, agent-facing
+  contract, and human product. The parent retains root contracts, contribution,
+  evaluation, integration, independent review, and release ownership.
+- Defined the completion boundary around a locked paired guide-use pilot and a
+  clean repository verifier rather than renamed copy or a hard-coded demo.
+- Replaced route, status, kind, coverage, capability-matching, execution-demo,
+  and project-proof semantics across the canonical schema, runtime, MCP, skill,
+  static publications, and human surfaces. Stable wiki URLs and the `search`
+  and `read` tool names remain compatible.
+- Expanded the canonical corpus to 61 contributor-authored guides with 201
+  resolved internal links, while making adjacency ordinary related reading.
+  Guide prose may explain a conditional common sequence; the host agent decides
+  whether it applies.
+- Added the guide template, contribution guide, and pull-request checklist.
+  Automated checks cover shape and integrity; editorial source review and all
+  consuming-project judgments remain human or host-agent responsibilities.
+- Ran the locked eight-task paired pilot with 16 goal-backed fresh agents and
+  independent blinded and citation reviews. The result is a no-go for an
+  agent-performance claim: treatment materially improved 1/4 covered tasks and
+  reduced aggregate covered misses plus unsupported decisions by 0%, while
+  preserving uncertainty on 2/2 partial tasks, abstaining on 2/2 uncovered
+  tasks, introducing no treatment safety or authorization regression, and
+  supporting 39/41 material cited claims.
+- Retained every unfavorable run and narrowed the public promise to the guide
+  library and deterministic retrieval contract. No benchmark task was softened
+  or rewritten.
+- Corrected the preview receipt so a rebuilt local artifact remains explicitly
+  `not-published` and the previous production digest is retained only as
+  historical evidence. No provider authentication, deployment, promotion, DNS
+  change, purchase, quote, or fabrication was performed.
+- Recorded the final local bundle as 194 regular files, 2,661,591 bytes, with
+  aggregate SHA-256
+  `25bb2ec97f071f9f61d4b5daa5fd90a1dbc3a321e3cfbde3db2afe0964c4526a`.
+
 ## 2026-07-18 — Persistent knowledge universe activated
 
 - The captain approved replacing route-like graph drilling with one persistent

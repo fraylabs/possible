@@ -3,7 +3,6 @@ slug: presentations
 title: Presentations
 summary: A structured visual narrative delivered as slides, with an explicit audience, argument, pacing, source material, and export or presentation target.
 tags: [art, presentations, slides, narrative, communication]
-kind: outcome
 reviewedAt: 2026-07-18
 sources:
   - title: reveal.js
@@ -22,9 +21,9 @@ Define the audience, decision or understanding the deck must produce, delivery t
 
 ## Use this when
 
-Use this outcome when the result must guide an audience through a sequence rather than exist as a single page, poster, or image.
+Use this guide when the result must guide an audience through a sequence rather than exist as a single page, poster, or image.
 
-## Consider another route when
+## Limits and alternatives
 
 Use [Website design](/wiki/website-design) for an interactive site whose audience navigates at its own pace. Use [Programmatic video](/wiki/programmatic-video) when timing, audio, or continuous playback is central. Do not treat an automatically generated slide list as a finished presentation without narrative and visual review.
 

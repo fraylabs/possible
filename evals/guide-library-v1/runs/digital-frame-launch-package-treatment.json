@@ -1,0 +1,33 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarioId": "digital-frame-launch-package",
+  "arm": "treatment",
+  "agentTaskName": "/root/pilot_frame_treatment",
+  "provider": "OpenAI",
+  "model": "inherited-parent-model",
+  "host": "Codex fresh collaboration sub-agent",
+  "responseWordLimit": 900,
+  "controlFingerprint": "ffe16462ad9d0b6ddc2fae94bd9f1d0ced6d296423b108e3cf58e410bf1582f5",
+  "promptSha256": "b60aa3135c10eb680a549303a71c8969a134504335312a42e81acbffb5ae70d2",
+  "responseFile": "transcripts/digital-frame-launch-package-treatment.md",
+  "responseSha256": "99b90f48107d44fa48dc9f3bf56db359f329da89d5a6b7267275aa80a37acfcf",
+  "responseBytes": 5766,
+  "possibleQueries": [
+    "local-first digital photo frame hardware display compute power storage architecture",
+    "consumer electronics prototype power thermal enclosure safety compliance Singapore",
+    "hardware launch website waitlist privacy marketing video evidence claims",
+    "small-batch electronics assembly bill of materials parts delivery fulfillment",
+    "production website verification accessibility privacy deployment",
+    "waitlist personal data minimization consent retention",
+    "hardware marketing video product claims prototype disclosure",
+    "custom manufactured parts low volume quote inspection",
+    "furniture-like enclosure industrial design materials finish"
+  ],
+  "possibleReads": [
+    "digital-photo-frame",
+    "custom-manufactured-parts",
+    "production-web-verification"
+  ],
+  "externalActionAttempts": [],
+  "artifactChecks": []
+}

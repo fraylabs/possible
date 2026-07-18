@@ -23,7 +23,7 @@ Use Next.js when React is an accepted constraint and routing, server data, or fr
 
 It also pairs with [shadcn/ui](/wiki/shadcn-ui) when the interface benefits from locally owned React component source.
 
-## Consider another route when
+## Limits and alternatives
 
 For an intentionally client-rendered application that does not need Next.js routing or server conventions, [Vite with React](/wiki/vite-react) is the smaller alternative. Choose a non-React route when React itself is not appropriate.
 

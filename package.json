@@ -13,6 +13,9 @@
     "test": "npm run test -w @possible/knowledge && npm run test -w @possible/mcp && npm run test -w @possible/web && npm run test:data -w @possible/web",
     "knowledge:validate": "npm run validate -w @possible/knowledge",
     "skill:validate": "node scripts/validate-skill.mjs",
+    "guide-pilot:validate": "node scripts/validate-guide-pilot.mjs",
+    "guide-pilot:blind": "node scripts/build-guide-pilot-blind.mjs",
+    "guide-pilot:score": "node scripts/score-guide-pilot.mjs --check",
     "agent:test": "node --test scripts/query-possible.test.mjs",
     "possible:query": "node scripts/query-possible.mjs",
     "preview:preflight": "node scripts/verify-preview.mjs --preflight",
@@ -21,7 +24,7 @@
     "preview:verify": "node scripts/verify-preview.mjs",
     "preview:record": "node scripts/verify-preview.mjs --record",
     "preview:prepare": "npm run preview:build && npm run preview:test && npm run preview:verify",
-    "check": "npm run knowledge:validate && npm run skill:validate && npm run test && npm run build && npm run agent:test && npm run preview:test && npm run preview:verify",
+    "check": "npm run knowledge:validate && npm run skill:validate && npm run guide-pilot:validate && npm run guide-pilot:score && npm run test && npm run build && npm run agent:test && npm run preview:test && npm run preview:verify",
     "dev:web": "npm run dev -w @possible/web",
     "dev:mcp": "npm run dev -w @possible/mcp"
   },

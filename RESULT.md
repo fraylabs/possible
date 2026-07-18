@@ -1,71 +1,92 @@
-# Possible Persistent Knowledge Universe Result
+# Possible Field-Guide Library Result
 
-Status: implemented, verified, and live in production on 2026-07-18 in
-Asia/Singapore.
+Status: implemented as a local publication candidate; not published.
 
 ## Supported trust claim
 
-Possible now presents its sourced wiki as one persistent spatial universe.
+Possible is now a maintained field-guide library with deterministic discovery,
+not a project router.
 
-- Explore always renders the complete 49-page atlas derived from the corpus's
-  146 authored internal links. Selecting a page marks it and its authored
-  neighborhood without swapping in a truncated local graph or changing the
-  camera.
-- Zooming out keeps every page present while revealing folder-derived Web and
-  Manufacturing clouds; closer zoom progressively reveals ordinary labels.
-- A floating inspector contains search, focused-page context, clear focus, and
-  the explicit Read action while the graph remains the primary full-screen
-  surface.
-- Pan, pointer-centered wheel zoom, 44 px mobile zoom controls, keyboard
-  `+`/`-`/`0`, Escape, search, stable wiki URLs, and browser Back/Forward share
-  the same selection and camera state.
-- Returning from Read restores the previous selection and graph camera.
-- The canonical KISS model remains pages, internal links, and sources. The
-  `/llms.txt`, wiki JSON, command helper, and exactly two read-only MCP tools
-  remain unchanged.
+- The canonical corpus contains 61 ordinary Markdown guides and 201 resolved
+  authored links. A guide has only a stable slug, title, summary, optional
+  aliases and tags, review date, sources, body, and derived links.
+- Search finds textually relevant guides. Read returns one exact guide with its
+  sources and related reading. The MCP server exposes exactly those two
+  read-only tools: `search` and `read`.
+- Stable `/wiki/<slug>` pages, wiki JSON, `/llms.txt`, and static agent
+  publications remain available. The static agent schema is version 2 and no
+  longer publishes kind, coverage, route-status, capability-matching, or
+  project-proof fields.
+- The installable Possible skill teaches a host agent to decompose a compound
+  request, retrieve focused reading, combine it with actual project evidence,
+  and cite material sources. Planning, skill and tool choice, authorization,
+  execution, and project validation remain with the host agent.
+- The human experience presents search, articles, sources, related reading,
+  and the atlas. Link adjacency alone carries no order, dependency,
+  compatibility, or completeness meaning; a guide may still explain a
+  conditional practice in prose.
+- `CONTRIBUTING.md`, `knowledge/GUIDE_TEMPLATE.md`, and the pull-request
+  checklist define an ordinary source-control contribution path. Automated
+  checks establish repository shape and publication integrity, not editorial
+  truth or project success.
+
+## Evaluation disposition
+
+The locked eight-task paired pilot is a **no-go** for claiming that Possible
+generally improves agent performance. All 16 raw runs, exact transcripts,
+blinded pairs, reveal key, independent adjudication, citation audit, and the
+reproducible scorer are retained in `evals/guide-library-v1/`.
+
+- Treatment materially improved 1 of 4 covered tasks; the threshold was 3.
+- Covered critical misses plus unsupported decisions were 2 at baseline and 2
+  with treatment, a 0% reduction; the threshold was at least 25%.
+- Treatment preserved uncertainty on both partial tasks and abstained on both
+  uncovered tasks.
+- No treatment safety or authorization regression was found.
+- 39 of 41 material cited claims were supported, or 95.1%, above the 90%
+  citation threshold.
+
+The unfavorable result narrows the promise. It does not invalidate the library
+and retrieval contract, but it provides no evidence for a general performance
+uplift. Any later uplift claim needs a new versioned, precommitted pilot; this
+pilot must not be rewritten or discarded.
 
 ## Verification receipt
 
-A clean detached checkout of implementation commit
-`716bec3583059b166dff18a013b673319d36b315` passed `npm ci` and the complete
-`npm run check` after recording the reviewed artifact:
+The repository verifier covers the reduced guide schema and compiler,
+deterministic retrieval, the two-tool MCP boundary, host-owned skill workflow,
+human behavior and accessibility, static-publication parity, production builds,
+the locked pilot, and local artifact safety:
 
-- 49 Markdown pages and 146 resolved links validated;
-- 14 knowledge tests and 7 MCP transport/contract tests passed;
-- 15 web behavior, graph, and accessibility tests plus the real-corpus
-  integration test passed;
-- the real stdio agent helper and 5 artifact-boundary negative tests passed;
-- TypeScript and production builds passed; and
-- 54 regular files totaling 1,342,983 bytes matched aggregate SHA-256
-  `57945bd9ed262d2cf4d411c9787394cee1d1f76282d111268adc68fe9010117f`.
+```bash
+npm ci
+npm run check
+```
 
-The focused web suite proves the same atlas DOM instance survives selection,
-both sibling fields remain present, universe zoom persists through selection,
-Read returns to the preserved camera, browser history restores a recorded
-camera, visible labels remain clickable, and mobile/keyboard semantics remain
-operable. The seven unrelated manufacturing drafts in the captain's working
-copy were excluded from both commits and the clean build.
+The exact candidate artifact is recorded in
+`deployment/preview-artifact.json`. Its publication state is
+`not-published`: 194 regular files totaling 2,661,591 bytes match aggregate
+SHA-256 `25bb2ec97f071f9f61d4b5daa5fd90a1dbc3a321e3cfbde3db2afe0964c4526a`.
+`deployment/PRODUCTION.md` and the separately retained historical digest
+describe an earlier authorized release, not this candidate.
 
-## Production acceptance
+## What is trusted
 
-Public `fraylabs/possible` `main` commit
-`4702fd12993136e640f25b96f1798d08f80a9432` was deployed by Vercel as
-`dpl_4Dy6FGnYBAZBjrqYvGHijMEuXB5p` and reached production / Ready at
-2026-07-18 13:50 Asia/Singapore. Its provider URL is
-`https://possible-dam3wnyid-brainthrust.vercel.app`; Vercel attached
-`https://possible.sh`, `https://www.possible.sh`, and the existing project
-aliases.
+- Canonical guide format, link integrity, source URL shape, review-date shape,
+  generated-data parity, and deterministic search/read behavior.
+- Exactly two read-only MCP operations and compatible stable read paths.
+- The public and skill copy assign consequential project decisions and actions
+  to the consuming agent and user.
+- The paired pilot record and its no-go score are reproducible from the retained
+  evidence.
+- The recorded local artifact matches the built files and respects the
+  publication boundary.
 
-Independent HTTPS reads fetched every one of the 54 manifested files from both
-custom domains. Both hosts returned 1,342,983 exact bytes with zero status,
-size, or SHA-256 mismatches, and `/wiki/web` returned the expected 200 SPA
-route.
+## What remains unproven
 
-## What this does not claim
-
-Possible does not yet provide a typed ontology, route planner, recommendation
-engine, trust score, accounts, marketplace, or autonomous execution. The field
-clouds are visual orientation derived from folders, not hidden knowledge or a
-new canonical schema. At this corpus size the graph still uses a client-side
-force layout and DOM node labels; larger corpora will require precomputed
-positions, label collision management, and a reduced accessibility projection.
+Possible has not proved that its guides improve general agent performance, that
+every guide is complete or correct for a particular project, or that linked
+guides form a plan. It does not know a host's installed skills, choose tools,
+execute work, authorize external actions, validate a consuming project,
+certify an outcome, or fill gaps outside the maintained corpus. The current
+candidate has not been deployed or promoted to production.

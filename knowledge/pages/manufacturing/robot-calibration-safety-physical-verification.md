@@ -3,8 +3,6 @@ slug: robot-calibration-safety-physical-verification
 title: Robot calibration, safety, and physical verification
 summary: A bounded verification method for calibrating robot geometry and frames, assessing application hazards, and measuring physical performance without confusing simulation or inspection with safe operation.
 tags: [robotics, calibration, safety, verification, inspection, metrology]
-kind: method
-coverage: [robotics, calibration, safety, physical-verification, inspection]
 reviewedAt: 2026-07-18
 sources:
   - title: "Tools for Robotics in SME Workcells: Challenges and Approaches for Calibration and Registration"
@@ -29,7 +27,7 @@ Treat safety as an application and integration problem. Identify hazards during 
 
 Use this method when a fabricated arm is expected to perform a real task, when a calibrated model will drive offline or sensor-guided motion, or when payload, accuracy, repeatability, speed, or human proximity is part of the claim.
 
-## Consider another route when
+## Limits and alternatives
 
 If the result is only a CAD or [MuJoCo](/wiki/mujoco) study, report it as a model or simulation and stop before powered hardware claims. If a complete commercial arm is integrated, use its documented commissioning, safety, and performance procedures rather than inventing a substitute acceptance protocol.
 

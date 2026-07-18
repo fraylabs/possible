@@ -35,7 +35,7 @@ export function ArticleView({
   return (
     <div className="read-view">
       <header className="read-nav">
-        <button type="button" className="brand-reset" onClick={onHome} aria-label="Return to Possible atlas">
+        <button type="button" className="brand-reset" onClick={onHome} aria-label="Return to the Possible field guide atlas">
           <span className="brand-wordmark">possible<span>.sh</span></span>
         </button>
         <button type="button" className="back-button" onClick={onBack}>
@@ -46,7 +46,7 @@ export function ArticleView({
 
       <article className="read-article" aria-labelledby="read-title">
         <header className="read-header">
-          <p className="section-kicker">Possible wiki</p>
+          <p className="section-kicker">Possible field guide</p>
           <h1 id="read-title" ref={titleRef} tabIndex={-1}>
             {page?.title ?? "Page not found"}
           </h1>
@@ -55,7 +55,12 @@ export function ArticleView({
               ?? `The page "${routeSlug ?? "unknown"}" is not present in this build.`}
           </p>
           {page && (
-            <p className="review-note">Reviewed {formatReviewedAt(page.reviewedAt)}</p>
+            <>
+              <p className="review-note">Reviewed {formatReviewedAt(page.reviewedAt)}</p>
+              <p className="guide-boundary">
+                This guide provides source-backed context, not a project-specific plan or validation.
+              </p>
+            </>
           )}
         </header>
 
@@ -66,7 +71,7 @@ export function ArticleView({
             </div>
 
             <footer className="article-footer">
-              <h2>Sources</h2>
+              <h2>Sources for this guide</h2>
               <ol className="source-list">
                 {page.sources.map((source) => {
                   const href = safeSourceHref(source.url);
@@ -88,7 +93,7 @@ export function ArticleView({
           </>
         ) : (
           <div className="article-body article-body--missing">
-            <p>Search for another page or return to a page in the current wiki.</p>
+            <p>Search for another guide or return to the current field guide atlas.</p>
             {fallbackPage && (
               <button
                 type="button"

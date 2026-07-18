@@ -1,13 +1,11 @@
 import {
   getBacklinks,
   getRelatedPages,
-  OUTCOME_INTENT_PHRASES,
-  OUTCOME_INTENT_TERMS,
   type WikiCorpus,
   type WikiPage,
 } from "@possible/knowledge";
 
-export const AGENT_SCHEMA_VERSION = 1 as const;
+export const AGENT_SCHEMA_VERSION = 2 as const;
 
 const searchStopWords = [
   "a",
@@ -43,9 +41,6 @@ export interface AgentPageReference {
   summary: string;
   tags: string[];
   aliases: string[];
-  kind?: WikiPage["kind"];
-  coverage: string[];
-  routeStatus?: WikiPage["routeStatus"];
   reviewedAt: string;
   sources: WikiPage["sources"];
   links: string[];
@@ -114,21 +109,13 @@ export interface AgentSearchIndex {
       field: string;
       weight: number;
     }[];
-    outcomePreference: {
-      kind: "outcome";
-      queryTerms: readonly string[];
-      queryPhrases: readonly string[];
-      match: "any-normalized-term-or-phrase";
-      order: "before-text-score";
-    };
     phraseBonus: 20;
     defaultLimit: 20;
     maximumLimit: 100;
-    assessment: {
-      statuses: readonly ["verified", "partial", "no-maintained-route"];
-      verified: string;
-      partial: string;
-      noMaintainedRoute: string;
+    interpretation: {
+      results: "relevant-field-guides";
+      links: "related-reading-not-ordered-steps";
+      boundary: "consumer-owns-project-decisions-and-actions";
     };
   };
   pages: AgentSearchDocument[];
@@ -186,9 +173,6 @@ export function toAgentPageReference(page: WikiPage): AgentPageReference {
     summary: page.summary,
     tags: page.tags,
     aliases: page.aliases ?? [],
-    ...(page.kind ? { kind: page.kind } : {}),
-    coverage: page.coverage ?? [],
-    ...(page.routeStatus ? { routeStatus: page.routeStatus } : {}),
     reviewedAt: page.reviewedAt,
     sources: page.sources,
     links: page.links,
@@ -231,21 +215,13 @@ export function buildAgentSearchIndex(corpus: WikiCorpus): AgentSearchIndex {
         { field: "body", weight: 2 },
         { field: "sourceTitles", weight: 1 },
       ],
-      outcomePreference: {
-        kind: "outcome",
-        queryTerms: OUTCOME_INTENT_TERMS,
-        queryPhrases: OUTCOME_INTENT_PHRASES,
-        match: "any-normalized-term-or-phrase",
-        order: "before-text-score",
-      },
       phraseBonus: 20,
       defaultLimit: 20,
       maximumLimit: 100,
-      assessment: {
-        statuses: ["verified", "partial", "no-maintained-route"],
-        verified: "An explicitly verified outcome route matched the query.",
-        partial: "An outcome page matched, but no explicitly verified route matched.",
-        noMaintainedRoute: "No maintained outcome route matched; related pages are not a solution.",
+      interpretation: {
+        results: "relevant-field-guides",
+        links: "related-reading-not-ordered-steps",
+        boundary: "consumer-owns-project-decisions-and-actions",
       },
     },
     pages: corpus.pages.map((page) => ({
@@ -309,9 +285,8 @@ export function buildAgentProtocol(): AgentProtocolDocument {
           "This is a static search index; query parameters are not evaluated by the deployment.",
           "Normalize and rank locally using the search configuration and fields in the response.",
           "Require every meaningful query term to match, then apply the documented weights and limit.",
-          "For an outcome-like query, rank kind: outcome pages before supporting methods, providers, concepts, and other page kinds.",
           "Treat aliases as contributor-authored vocabulary, not generated synonyms.",
-          "Report no-maintained-route when no exact or authored route is supported by the retrieved pages; do not turn similarity into a claim.",
+          "Search results are relevant field guides, not project plans, recommendations, or validation.",
         ],
       },
       read: {
@@ -323,8 +298,9 @@ export function buildAgentProtocol(): AgentProtocolDocument {
           schema: "AgentReadDocument",
         },
         notes: [
-          "The slug must be one returned by the search index or the canonical wiki index.",
-          "The page body, review date, sources, links, backlinks, and related pages come from the validated corpus.",
+          "The slug must be one returned by the search index or the canonical guide index.",
+          "The guide body, review date, sources, links, backlinks, and related guides come from the published corpus.",
+          "The consuming agent remains responsible for project-specific reasoning, decisions, actions, and validation.",
         ],
       },
       related: {
@@ -336,8 +312,9 @@ export function buildAgentProtocol(): AgentProtocolDocument {
           schema: "AgentRelatedDocument",
         },
         notes: [
-          "Related pages are derived only from the page's outgoing links and backlinks.",
-          "Each related page includes its review date and source URLs for inspection.",
+          "Related guides are derived only from the guide's outgoing links and backlinks.",
+          "Related guides provide reading context; their order does not define a workflow.",
+          "Each related guide includes its review date and source URLs for inspection.",
         ],
       },
     },
@@ -348,9 +325,6 @@ export function buildAgentProtocol(): AgentProtocolDocument {
         "summary",
         "tags",
         "aliases",
-        "kind",
-        "coverage",
-        "routeStatus",
         "reviewedAt",
         "sources",
         "links",
