@@ -20,3 +20,10 @@
 - Added an explicit three-choice composer without automatic or opaque routing.
 - Published a static pack index and per-pack JSON, install commands, and run prompts.
 - Expanded MCP, compiler, web, and skill validation across all three packs.
+
+## 2026-07-18 — Pack gallery
+
+- Kept `/` focused on creating a compiled outcome.
+- Added `/packs` as a curated catalog rather than a marketplace.
+- Added a complete page for every pack with its promise, outputs, workstreams, sources, guardrails, verification, and personalized compiler.
+- Added useful not-found handling and route-level tests without adding a routing dependency.

@@ -4,7 +4,10 @@ import { axe } from "vitest-axe";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import App from "./App";
 
-afterEach(cleanup);
+afterEach(() => {
+  cleanup();
+  window.history.pushState({}, "", "/");
+});
 
 describe("Possible", () => {
   it("turns one brief into the Hardware Launch pack", async () => {
@@ -47,5 +50,37 @@ describe("Possible", () => {
   it("has no automated accessibility violations", async () => {
     const { container } = render(<App />);
     expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("shows every outcome in the packs catalog", () => {
+    window.history.pushState({}, "", "/packs");
+    render(<App />);
+    expect(screen.getByRole("heading", { name: /Three outcomes/i })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Hardware Launch" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Software Launch" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Open-Source Release" })).toBeInTheDocument();
+  });
+
+  it("turns each pack into a complete, personalized detail page", async () => {
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    Object.assign(navigator, { clipboard: { writeText } });
+    window.history.pushState({}, "", "/packs/hardware-launch");
+    const { container } = render(<App />);
+    expect(screen.getByRole("heading", { name: "Hardware Launch" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /Parallel specialists/i })).toBeInTheDocument();
+    expect(container.querySelectorAll(".ingredient-list a")).toHaveLength(5);
+
+    const brief = screen.getByLabelText("YOUR PRODUCT BRIEF");
+    await userEvent.clear(brief);
+    await userEvent.type(brief, "Launch a pocket synth for first-time musicians.");
+    await userEvent.click(screen.getByRole("button", { name: /Copy compiled prompt/i }));
+    expect(writeText.mock.calls[0]?.[0]).toMatch(/Launch a pocket synth for first-time musicians/);
+  });
+
+  it("returns a useful not-found page for unknown packs", () => {
+    window.history.pushState({}, "", "/packs/not-real");
+    render(<App />);
+    expect(screen.getByRole("heading", { name: /not possible yet/i })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Browse the three packs/i })).toHaveAttribute("href", "/packs");
   });
 });

@@ -36,6 +36,8 @@ npm run check
 
 Production builds emit `/packs/index.json`, plus JSON, install text, and run text for every pack.
 
+The web surface keeps creation and discovery separate: `/` is the outcome composer, `/packs` is the curated catalog, and `/packs/:slug` explains and personalizes one complete pack.
+
 ## Trust boundary
 
 Reviewed revisions record the snapshots Possible inspected. The generated Skills CLI commands resolve external repositories at install time; users must inspect the resolved skill contents. Packs never authorize deployment, spending, publishing, outreach, fabrication, data collection, or unsupported real-world claims.
