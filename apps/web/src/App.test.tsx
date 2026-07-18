@@ -17,11 +17,12 @@ describe("Possible", () => {
     expect(screen.getByText("$possible", { selector: ".install-next code" })).toBeInTheDocument();
     expect(screen.getByText("What would you like to make possible today?")).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: /Compile Hardware Launch/i })).not.toBeInTheDocument();
-    expect(container.querySelectorAll(".journey li")).toHaveLength(6);
+    expect(screen.getByRole("link", { name: "DOCS" })).toHaveAttribute("href", "/docs");
+    expect(screen.getByRole("heading", { name: /Discover what is possible.*Learn how it's possible.*Make it possible/i })).toBeInTheDocument();
+    expect(container.querySelectorAll(".journey li")).toHaveLength(3);
     expect([...container.querySelectorAll(".journey li strong")].map((node) => node.textContent)).toEqual([
-      "Install", "Invoke", "Brainstorm", "Recommend", "Confirm", "Execute",
+      "Discover what is possible", "Learn how it’s possible", "Make it possible",
     ]);
-    expect(screen.getByText(/No ingredient skills install and no outcome work starts/i)).toBeInTheDocument();
     expect(screen.getByText(/Saying yes authorizes repo-local ingredient skill installation/i)).toBeInTheDocument();
   });
 
@@ -47,6 +48,19 @@ describe("Possible", () => {
     expect(screen.getByRole("heading", { name: "Hardware Launch" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Software Launch" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Open-Source Release" })).toBeInTheDocument();
+  });
+
+  it("documents the complete conversation-first journey and its safety boundary", () => {
+    window.history.pushState({}, "", "/docs");
+    const { container } = render(<App />);
+    expect(screen.getByRole("heading", { name: /Start with an idea.*Not a configuration/i })).toBeInTheDocument();
+    expect(screen.getByText("npx @possible/cli init", { selector: ".docs-command code" })).toBeInTheDocument();
+    expect(screen.getByText("$possible", { selector: ".docs-command--invoke code" })).toBeInTheDocument();
+    expect(container.querySelectorAll(".docs-principles li")).toHaveLength(3);
+    expect(screen.getByRole("link", { name: /Hardware Launch/i })).toHaveAttribute("href", "/packs/hardware-launch");
+    expect(screen.getByText(/WHAT YES AUTHORIZES/i)).toBeInTheDocument();
+    expect(screen.getByText(/never authorizes deployment, publishing, purchases/i)).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Watch a complete recorded run/i })).toHaveAttribute("href", "/demo");
   });
 
   it("presents each pack as a transparent recommendation, not a starting form", () => {

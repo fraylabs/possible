@@ -3,6 +3,7 @@
 The interactive Possible surface has three layers:
 
 - `/` — install Possible, invoke `$possible`, and understand the brainstorm-first journey.
+- `/docs` — learn the complete install, conversation, recommendation, confirmation, execution, and safety contract.
 - `/packs` — inspect the outcome recipes Possible may recommend.
 - `/packs/:slug` — inspect a pack's outputs, specialists, sources, guardrails, and verification before confirming it.
 - `/demo` — see an explicitly illustrative intake followed by the preserved Hardware Launch execution, failure, repair, and verified artifacts.

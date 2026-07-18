@@ -50,7 +50,7 @@ npm run check
 
 Production builds emit `/packs/index.json`, plus JSON, install text, and run text for every pack.
 
-The web surface keeps entry, discovery, and proof separate: `/` teaches installation and the `$possible` conversation, `/packs` is the transparent gallery of recipes Possible may recommend, `/packs/:slug` explains one complete pack before confirmation, and `/demo` shows the illustrative intake followed by a preserved Hardware Launch execution.
+The web surface keeps entry, understanding, discovery, and proof separate: `/` introduces the three-part Possible process, `/docs` documents the complete first-use and safety contract, `/packs` is the transparent gallery of recipes Possible may recommend, `/packs/:slug` explains one complete pack before confirmation, and `/demo` shows the illustrative intake followed by a preserved Hardware Launch execution.
 
 ## Trust boundary
 
