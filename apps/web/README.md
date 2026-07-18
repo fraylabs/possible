@@ -2,15 +2,18 @@
 
 The interactive Possible surface has three layers:
 
-- `/` — choose an outcome, write one brief, and compile it.
-- `/packs` — compare the curated outcome catalog.
-- `/packs/:slug` — inspect and personalize a complete pack.
-- `/demo` — replay a real Hardware Launch run from one brief through parallel execution, integration, failure, repair, and verified evidence; inspect the full public Codex transcript or open the generated output.
+- `/` — install Possible, invoke `$possible`, and understand the brainstorm-first journey.
+- `/packs` — inspect the outcome recipes Possible may recommend.
+- `/packs/:slug` — inspect a pack's outputs, specialists, sources, guardrails, and verification before confirming it.
+- `/demo` — see an explicitly illustrative intake followed by the preserved Hardware Launch execution, failure, repair, and verified artifacts.
 
-A builder chooses Hardware Launch, Software Launch, or Open-Source Release, writes one brief, inspects the selected pack, and copies:
+A builder starts with only:
 
-1. the external skill install commands;
-2. a compiled Codex prompt containing their brief.
+```bash
+npx @possible/cli init
+```
+
+Then they invoke `$possible`, brainstorm one question at a time, inspect the linked recommendation, and explicitly confirm before any ingredient skill installation or local artifact work begins.
 
 Every page imports the canonical manifest and compiler from `@possible/packs`. Production builds also emit every pack as JSON, install text, run text, and `llms.txt`.
 

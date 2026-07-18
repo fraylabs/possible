@@ -15,16 +15,16 @@ Skills.sh distributes individual agent skills. Possible publishes opinionated ou
 Install the skill once:
 
 ```bash
-npx skills add fraylabs/possible --skill possible -g
+npx @possible/cli init
 ```
 
-Then open any project in Codex and invoke:
+The installer adds Possible to the current project without choosing a pack or creating a brief. Open or reload that project in Codex and invoke:
 
 ```text
 $possible
 ```
 
-Possible first walks through what the user wants to make real. It inspects the project when useful, creates no files during intake, recommends one outcome only after it understands the desired end state, and installs or runs nothing until the user confirms. After confirmation it writes the shared brief, installs the reviewed repo-local ingredient skills, coordinates workstreams, integrates their artifacts, and assigns a fresh verifier.
+Possible opens with a brainstorm. A rough idea is enough: it reflects what it heard, asks one useful question at a time, and creates no files during intake. Once the outcome is clear, it recommends and links one pack, explains the outputs and boundaries, and waits for direct confirmation. Only after the user says yes does it write the shared brief, install the listed repo-local ingredient skills, coordinate workstreams, integrate their artifacts, and assign a fresh verifier.
 
 ## The demo
 
@@ -50,7 +50,7 @@ npm run check
 
 Production builds emit `/packs/index.json`, plus JSON, install text, and run text for every pack.
 
-The web surface keeps creation, discovery, and presentation separate: `/` is the outcome composer, `/packs` is the curated gallery, `/packs/:slug` explains and personalizes one complete pack, and `/demo` is the recorded Hardware Launch replay.
+The web surface keeps entry, discovery, and proof separate: `/` teaches installation and the `$possible` conversation, `/packs` is the transparent gallery of recipes Possible may recommend, `/packs/:slug` explains one complete pack before confirmation, and `/demo` shows the illustrative intake followed by a preserved Hardware Launch execution.
 
 ## Trust boundary
 

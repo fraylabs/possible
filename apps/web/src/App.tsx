@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
-import { compilePack, getPack, outcomePacks } from "@possible/packs";
+import { useEffect, useState } from "react";
+import { getPack, outcomePacks } from "@possible/packs";
 import type { OutcomePack } from "@possible/packs";
 import demoThreadData from "./demo-thread.json";
 
@@ -24,11 +24,7 @@ type DemoThread = {
 
 const demoThread = demoThreadData as DemoThread;
 
-const exampleBriefs: Record<string, string> = {
-  "hardware-launch": "Create a launch for my hardware app startup.",
-  "software-launch": "Prepare my SaaS product for launch.",
-  "open-source-release": "Turn this repository into a trustworthy open-source release.",
-};
+const installCommand = "npx @possible/cli init";
 
 function CopyButton({ label, value }: { label: string; value: string }) {
   const [state, setState] = useState<CopyState>("idle");
@@ -55,9 +51,9 @@ function SiteNav({ label }: { label?: string }) {
   return (
     <nav>
       <a className="wordmark" href="/">possible<span>.sh</span></a>
-      {label ? <div className="nav-meta"><span>OUTCOME PACKS</span><strong>{label.toUpperCase()}</strong></div> : null}
+      {label ? <div className="nav-meta"><span>POSSIBLE</span><strong>{label.toUpperCase()}</strong></div> : null}
       <div className="nav-links">
-        <a href="/">CREATE</a>
+        <a href="/">START</a>
         <a href="/packs">PACKS</a>
         <a href="/demo">DEMO</a>
         <a href="https://github.com/fraylabs/possible" target="_blank" rel="noreferrer">SOURCE ↗</a>
@@ -121,109 +117,69 @@ function IngredientList({ pack }: { pack: OutcomePack }) {
   );
 }
 
-function OutcomeActions({ pack, brief }: { pack: OutcomePack; brief: string }) {
-  const compiled = useMemo(() => compilePack(pack), [pack]);
-  const installText = compiled.installCommands.join("\n");
-  const runPrompt = compiled.runPrompt.replace(
-    "[Replace this line with the product, audience, constraints, and any existing repository or assets.]",
-    brief.trim() || "[Add your product brief here.]",
-  );
-
-  return (
-    <div className="actions">
-      <article>
-        <header><span>STEP 01</span><strong>Install the ingredients</strong></header>
-        <pre>{installText}</pre>
-        <CopyButton label="Copy install commands" value={installText} />
-      </article>
-      <article className="actions-run">
-        <header><span>STEP 02</span><strong>Run the recipe</strong></header>
-        <pre>{runPrompt}</pre>
-        <CopyButton label="Copy compiled prompt" value={runPrompt} />
-      </article>
-    </div>
-  );
-}
-
 function CreatePage() {
-  const [selectedSlug, setSelectedSlug] = useState<string>(outcomePacks[0].slug);
-  const selectedPack = getPack(selectedSlug) ?? outcomePacks[0];
-  const [brief, setBrief] = useState(exampleBriefs[selectedSlug] ?? "");
-  const [isCompiled, setIsCompiled] = useState(false);
-
-  function compileOutcome() {
-    setIsCompiled(true);
-    window.setTimeout(() => {
-      const target = document.querySelector("#compiled");
-      if (target && typeof target.scrollIntoView === "function") {
-        target.scrollIntoView({ behavior: "smooth" });
-      }
-    }, 0);
-  }
-
-  function selectPack(slug: string) {
-    setSelectedSlug(slug);
-    setBrief(exampleBriefs[slug] ?? "");
-    setIsCompiled(false);
-  }
-
   return (
     <main>
-      <SiteNav label={`${selectedPack.name} / 0${outcomePacks.indexOf(selectedPack) + 1}`} />
+      <SiteNav label="Start / $possible" />
 
-      <section className="composer" id="top">
-        <div className="composer-copy">
-          <p className="eyebrow">FOR CODEX · BUILT ON SKILLS.SH</p>
-          <h1>Describe the outcome.<br /><em>Get the whole team.</em></h1>
-          <p className="thesis">Possible compiles individual skills into one coordinated, verifiable run.</p>
-          <a className="text-link" href="/packs">Explore all outcome packs →</a>
+      <section className="possible-hero" id="top">
+        <div className="possible-hero-copy">
+          <p className="eyebrow">A CONVERSATIONAL OUTCOME COMPILER FOR CODEX</p>
+          <h1>Bring the idea.<br /><em>Possible finds the path.</em></h1>
+          <p>Install one skill, say <code>$possible</code>, and talk through what you want to make real. Possible recommends the right outcome pack only when it understands enough.</p>
+          <a className="text-link" href="#start">Start in two commands ↓</a>
         </div>
 
-        <div className="brief-card">
-          <div className="pack-picker" aria-label="Choose an outcome pack">
-            <span>CHOOSE AN OUTCOME</span>
-            <div>
-              {outcomePacks.map((pack, index) => (
-                <button type="button" aria-pressed={pack.slug === selectedSlug} onClick={() => selectPack(pack.slug)} key={pack.slug}>
-                  <small>0{index + 1}</small>{pack.name}
-                </button>
-              ))}
-            </div>
-          </div>
-          <label htmlFor="product-brief">WHAT DO YOU WANT TO SHIP?</label>
-          <textarea
-            id="product-brief"
-            value={brief}
-            onChange={(event) => { setBrief(event.target.value); setIsCompiled(false); }}
-            rows={4}
-          />
-          <button className="compile-button" type="button" onClick={compileOutcome} disabled={!brief.trim()}>
-            <span>Compile {selectedPack.name}</span><span aria-hidden="true">→</span>
-          </button>
+        <div className="start-stack" id="start">
+          <article className="install-card">
+            <header><span>01 / INSTALL POSSIBLE</span><strong>ONE TIME</strong></header>
+            <pre><code>{installCommand}</code></pre>
+            <CopyButton label="Copy install command" value={installCommand} />
+            <div className="install-next"><span>THEN, INSIDE CODEX</span><code>$possible</code></div>
+          </article>
+          <article className="conversation-card" aria-label="Example Possible conversation">
+            <header><span>POSSIBLE / INTAKE</span><i>● READY</i></header>
+            <p className="message message--possible"><strong>POSSIBLE</strong><span>What would you like to make possible today?</span></p>
+            <p className="message message--user"><strong>YOU</strong><span>I want to make a focus device that keeps me off my phone.</span></p>
+            <p className="message message--possible"><strong>POSSIBLE</strong><span>Interesting. What do you imagine someone physically doing with it?</span></p>
+          </article>
         </div>
       </section>
 
-      <section className={`compiled ${isCompiled ? "compiled--ready" : ""}`} id="compiled" aria-live="polite">
-        <header className="compiled-header">
-          <div><p className="eyebrow">COMPILED OUTCOME</p><h2>{selectedPack.name}</h2></div>
-          <span className="ready-state"><i /> {isCompiled ? "READY TO RUN" : "PACK PREVIEW"}</span>
+      <section className="journey">
+        <header>
+          <p className="eyebrow">THE WHOLE PROCESS</p>
+          <h2>No forms.<br />No pack knowledge required.</h2>
         </header>
-        <PackMetrics pack={selectedPack} />
-        <WorkstreamList pack={selectedPack} />
-        <div className="outputs" aria-label="Compiled outputs">
-          {selectedPack.outputs.map((output) => <span key={output}>{output}</span>)}
-        </div>
-        <OutcomeActions pack={selectedPack} brief={brief} />
-        <p className="reload-note">Install → reload Codex → paste the compiled prompt.</p>
+        <ol>
+          {[
+            ["Install", "Add Possible to the project."],
+            ["Invoke", "Type $possible in Codex."],
+            ["Brainstorm", "Start rough. Possible asks one useful question at a time."],
+            ["Recommend", "Possible links the outcome pack that best fits."],
+            ["Confirm", "Nothing installs or runs until you say yes."],
+            ["Execute", "Codex coordinates the specialists and verifies the result."],
+          ].map(([title, detail], index) => <li key={title}><span>0{index + 1}</span><strong>{title}</strong><p>{detail}</p></li>)}
+        </ol>
       </section>
 
-      <section className="ingredients">
-        <div className="ingredients-title">
-          <p className="eyebrow">INSPECT BEFORE INSTALL</p>
-          <h2>Visible ingredients.<br />Opinionated recipe.</h2>
-          <p>Skills remain owned by their source repositories. Possible owns how they work together.</p>
+      <section className="recommendation-example">
+        <div>
+          <p className="eyebrow">POSSIBLE RECOMMENDS · YOU DECIDE</p>
+          <h2>The pack arrives<br />after the conversation.</h2>
+          <p>Possible summarizes what it heard, links the complete recipe, explains what will exist, and waits for explicit approval.</p>
         </div>
-        <IngredientList pack={selectedPack} />
+        <article>
+          <header><span>RECOMMENDED OUTCOME</span><strong>01 / BEST FIT</strong></header>
+          <p><span>WHAT I UNDERSTAND</span>A believable launch for a desk-sized focus device, without claiming production hardware exists.</p>
+          <a href="/packs/hardware-launch"><span>USE THIS PACK</span><strong>Hardware Launch</strong><i>VIEW PACK ↗</i></a>
+          <div><span>PROCEED WITH THIS OUTCOME?</span><strong>Yes, proceed.</strong></div>
+        </article>
+      </section>
+
+      <section className="home-pack-preview">
+        <header><p className="eyebrow">THE AVAILABLE RECIPES</p><h2>Possible chooses from<br />complete outcomes.</h2><a className="button-link" href="/packs">Browse all packs <span>→</span></a></header>
+        <div>{outcomePacks.map((pack, index) => <PackCard pack={pack} index={index} key={pack.slug} />)}</div>
       </section>
 
       <Boundary />
@@ -285,11 +241,11 @@ function PacksPage() {
     <main>
       <SiteNav label="Catalog / 03" />
       <section className="catalog-hero">
-        <p className="eyebrow">CURATED OUTCOME GALLERY / 03</p>
-        <h1>Outcome gallery.<br /><em>Pick what ships next.</em></h1>
+        <p className="eyebrow">PACKS POSSIBLE CAN RECOMMEND / 03</p>
+        <h1>Complete recipes.<br /><em>Chosen through conversation.</em></h1>
         <div className="catalog-intro">
-          <p>Pick what you want to ship. Possible selects the specialists, splits the work, defines the handoffs, and adds an independent review.</p>
-          <a className="button-link" href="/">Create an outcome <span>→</span></a>
+          <p>You do not need to choose a pack before starting. Invoke <code>$possible</code>, describe the idea, and Possible will link the best fit for your approval.</p>
+          <a className="button-link" href="/#start">Start with Possible <span>→</span></a>
         </div>
       </section>
       <section className="pack-grid" aria-label="Outcome packs">
@@ -305,7 +261,6 @@ function PacksPage() {
 }
 
 function PackDetailPage({ pack }: { pack: OutcomePack }) {
-  const [brief, setBrief] = useState(exampleBriefs[pack.slug] ?? "");
   const packNumber = outcomePacks.findIndex((candidate) => candidate.slug === pack.slug) + 1;
 
   return (
@@ -317,7 +272,7 @@ function PackDetailPage({ pack }: { pack: OutcomePack }) {
         <h1>{pack.name}</h1>
         <div className="pack-promise">
           <p>{pack.promise}</p>
-          <div><span>{pack.summary}</span><a className="button-link" href="#compile">Compile this pack <b>↓</b></a></div>
+          <div><span>{pack.summary}</span><a className="button-link" href="/#start">Start with $possible <b>→</b></a></div>
         </div>
       </section>
 
@@ -336,18 +291,20 @@ function PackDetailPage({ pack }: { pack: OutcomePack }) {
         </ol>
       </section>
 
-      <section className="detail-compiler" id="compile">
-        <div className="detail-compiler-intro">
-          <p className="eyebrow">MAKE IT YOURS</p>
-          <h2>Describe your<br />{pack.name.toLowerCase()}.</h2>
-          <p>Possible turns this brief into the captain prompt that coordinates every specialist and their final review.</p>
+      <section className="pack-start">
+        <div>
+          <p className="eyebrow">HOW THIS PACK STARTS</p>
+          <h2>Possible recommends it.<br />You approve it.</h2>
+          <p>This page is the transparent recipe—not a form you must configure. Begin with <code>$possible</code>; after the walkthrough, Possible links this pack and waits for your confirmation.</p>
+          <a className="button-link" href="/#start">Install and invoke Possible <span>→</span></a>
         </div>
-        <div className="detail-compiler-content">
-          <label htmlFor="detail-product-brief">YOUR PRODUCT BRIEF</label>
-          <textarea id="detail-product-brief" value={brief} onChange={(event) => setBrief(event.target.value)} rows={4} />
-          <OutcomeActions pack={pack} brief={brief} />
-          <p className="reload-note">Install → reload Codex → paste the compiled prompt.</p>
-        </div>
+        <article className="pack-recommendation">
+          <header><span>POSSIBLE / RECOMMENDATION</span><strong>WAITING FOR APPROVAL</strong></header>
+          <p><span>RECOMMENDED OUTCOME</span><a href={`/packs/${pack.slug}`}>{pack.name} ↗</a></p>
+          <p><span>WHY IT FITS</span>{pack.promise}</p>
+          <p><span>WHAT WILL EXIST</span>{pack.outputs.join(" · ")}</p>
+          <footer><span>PROCEED WITH THIS OUTCOME?</span><strong>Yes, proceed.</strong></footer>
+        </article>
       </section>
 
       <section className="ingredients detail-ingredients">
@@ -481,6 +438,29 @@ function ThreadTranscript({ onClose }: { onClose: () => void }) {
   );
 }
 
+function DemoIntakePrelude() {
+  return (
+    <section className="demo-intake">
+      <header>
+        <div><p className="eyebrow">CURRENT ENTRY FLOW / ILLUSTRATIVE INTAKE</p><h1>Before the run,<br /><em>a conversation.</em></h1></div>
+        <p>This prelude explains how Possible starts today. It is not spliced into the preserved execution log below, which begins after the pack and brief were already confirmed.</p>
+      </header>
+      <div className="demo-intake-grid">
+        <article className="demo-intake-install"><span>SHELL / INSTALL</span><code>{installCommand}</code><i>✓ Possible installed · Next: type $possible in Codex</i></article>
+        <article className="demo-intake-thread">
+          <p><strong>USER</strong><span>$possible</span></p>
+          <p><strong>POSSIBLE</strong><span>What would you like to make possible today? A rough idea is enough — we can brainstorm it together.</span></p>
+          <p><strong>USER</strong><span>I want to make a small device that helps me focus without opening my phone.</span></p>
+          <p><strong>POSSIBLE</strong><span>Interesting — it sounds like a physical focus ritual, not another app. When this is finished, what would make it feel real to you?</span></p>
+          <p><strong>USER</strong><span>A believable launch: the device concept, a website, and a short product film.</span></p>
+          <p className="demo-intake-recommend"><strong>POSSIBLE</strong><span>I recommend the <a href="/packs/hardware-launch">Hardware Launch pack ↗</a>. It coordinates the site, film, prototype CAD, waitlist contract, and independent review. Proceed with this outcome?</span></p>
+          <p className="demo-intake-confirm"><strong>USER</strong><span>Yes, proceed.</span></p>
+        </article>
+      </div>
+    </section>
+  );
+}
+
 function DemoPage() {
   const events = [
     { actor: "CAPTAIN", title: "Brief locked", detail: "Confirmed facts and boundaries written to outcome-brief.md." },
@@ -523,14 +503,15 @@ function DemoPage() {
   return (
     <main className="replay-page" id="top">
       <SiteNav label="Recorded run / Still" />
+      <DemoIntakePrelude />
       <section className="replay-stage">
         <header className="replay-title">
           <div>
-            <p className="eyebrow">RECORDED FROM A REAL CODEX RUN</p>
-            <h1>Watch the outcome<br /><em>become real.</em></h1>
+            <p className="eyebrow">RECORDED EXECUTION / AFTER CONFIRMATION</p>
+            <h1>After the yes,<br /><em>watch it become real.</em></h1>
           </div>
           <div className="replay-title-meta">
-            <p>A fresh Codex captain ran Possible’s Hardware Launch pack against one fictional e-ink product brief. Every event and artifact below comes from that run.</p>
+            <p>After the outcome was confirmed, a fresh Codex captain ran Possible’s Hardware Launch pack against the fictional Still brief. Every event and artifact below comes from that preserved execution.</p>
             <div><span><i /> LOCAL RUN COMPLETE</span><strong>58 / 58 ARTIFACT CHECKS</strong></div>
             <div className="replay-proof-actions">
               <button type="button" onClick={() => setThreadOpen(true)}>VIEW FULL CODEX THREAD <span>31 MESSAGES</span></button>
@@ -668,7 +649,7 @@ function DemoArtifacts() {
       <header className="demo-artifacts-title">
         <div>
           <p className="eyebrow">ARTIFACTS PRODUCED</p>
-          <h2>One prompt.<br /><em>Real outputs.</em></h2>
+          <h2>One conversation.<br /><em>Real outputs.</em></h2>
         </div>
         <div>
           <p>The output is here, inside the demo—not hidden behind another presentation layer. Open the website, play the film, download the CAD, and inspect every receipt.</p>

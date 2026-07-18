@@ -5,7 +5,7 @@ export const hardwareLaunchPack: OutcomePack = {
   slug: "hardware-launch",
   name: "Hardware Launch",
   eyebrow: "01 / BUILDWEEK PACK",
-  promise: "Turn one hardware idea into a launch room.",
+  promise: "Turn one hardware idea into a coherent, verified launch.",
   summary: "A coordinated website, launch film, prototype CAD package, waitlist, and evidence report—built in parallel, then reviewed together.",
   reviewedAt: "2026-07-18",
   skills: [
