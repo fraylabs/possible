@@ -11,7 +11,17 @@ const repositoryRoot = resolve(packageDir, "../..");
 const defaultKnowledgeDir = resolve(repositoryRoot, "knowledge/pages");
 const schemaPath = resolve(repositoryRoot, "schema/wiki-page.schema.json");
 const generatedPath = resolve(packageDir, "src/generated-data.ts");
-const frontmatterKeys = new Set(["slug", "title", "summary", "tags", "reviewedAt", "sources"]);
+const frontmatterKeys = new Set([
+  "slug",
+  "title",
+  "summary",
+  "tags",
+  "aliases",
+  "kind",
+  "coverage",
+  "reviewedAt",
+  "sources",
+]);
 
 const args = process.argv.slice(2);
 const mode = args.includes("--write")
@@ -155,6 +165,12 @@ function assertNonemptyText(page, file) {
   }
   page.tags.forEach((tag, index) => {
     if (!tag.trim()) errors.push(`tags/${index} must contain non-whitespace text`);
+  });
+  (page.aliases ?? []).forEach((alias, index) => {
+    if (!alias.trim()) errors.push(`aliases/${index} must contain non-whitespace text`);
+  });
+  (page.coverage ?? []).forEach((scope, index) => {
+    if (!scope.trim()) errors.push(`coverage/${index} must contain non-whitespace text`);
   });
   page.sources.forEach((source, index) => {
     if (!source.title.trim()) errors.push(`sources/${index}/title must contain non-whitespace text`);

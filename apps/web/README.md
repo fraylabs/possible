@@ -30,6 +30,17 @@ Production builds also generate public agent-readable files from that corpus:
 - `/llms.txt`
 - `/wiki/index.json`
 - `/wiki/<slug>.json`
+- `/agent/protocol.json`
+- `/agent/search.json`
+- `/agent/read/<slug>.json`
+- `/agent/related/<slug>.json`
+
+The agent publication is deliberately static. `GET /agent/search.json` returns
+the complete searchable index and its normalization/ranking rules; it does not
+evaluate a `q` query parameter. Consumers search that response locally, then
+fetch an exact read or related representation for a slug from the published
+index. Every page representation is generated from the validated corpus and
+retains its review date, sources, and authored links.
 
 ```bash
 npm run test -w @possible/web

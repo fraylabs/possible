@@ -18,6 +18,9 @@ const corpus = {
       summary: "Publish an inclusive website with semantic HTML and keyboard support.",
       body: "Start with landmarks, headings, labels, and visible focus states.",
       tags: ["web", "accessibility"],
+      aliases: ["inclusive web page", "accessible site"],
+      kind: "outcome",
+      coverage: ["web", "accessibility"],
       reviewedAt: "2026-07-18",
       sources: [{ title: "Web accessibility guidance", url: "https://example.com/a11y" }],
       links: ["choose-web-hosting"],
@@ -28,6 +31,8 @@ const corpus = {
       summary: "Compare hosting constraints for a website before publishing it.",
       body: "Check deployment inputs, custom domains, observability, and rollback options.",
       tags: ["web", "publishing"],
+      kind: "provider",
+      coverage: ["web", "delivery"],
       reviewedAt: "2026-07-17",
       sources: [{ title: "Hosting reference", url: "https://example.com/hosting" }],
       links: [],
@@ -68,6 +73,16 @@ test("searchPages is deterministic, weighted, filterable, and bounded", () => {
   assert.equal(searchPages(corpus, "website", { tags: ["web"], limit: 1 }).length, 1);
   assert.deepEqual(searchPages(corpus, "  "), []);
   assert.deepEqual(searchPages(corpus, "website", { limit: 0 }), []);
+});
+
+test("searchPages routes through explicit aliases, kind, and coverage", () => {
+  assert.equal(searchPages(corpus, "inclusive web page")[0]?.page.slug, "build-an-accessible-site");
+  assert.equal(
+    searchPages(corpus, "website", { kind: "provider", coverage: ["delivery"] })[0]?.page.slug,
+    "choose-web-hosting",
+  );
+  assert.deepEqual(searchPages(corpus, "website", { kind: "outcome", coverage: ["delivery"] }), []);
+  assert.deepEqual(searchPages(corpus, "website", { coverage: ["missing-scope"] }), []);
 });
 
 test("exact reads, backlinks, and related pages derive from page links", () => {

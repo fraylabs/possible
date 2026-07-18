@@ -3,278 +3,778 @@
   "artifactDirectory": "apps/web/dist",
   "buildCommand": "npm run preview:build",
   "verificationCommand": "npm run preview:verify",
-  "sha256": "57945bd9ed262d2cf4d411c9787394cee1d1f76282d111268adc68fe9010117f",
-  "totalBytes": 1342983,
+  "sha256": "79feb29dd104075436dca2281e47a94cdfde75253fd1f19c32ab4747dc8fa0be",
+  "totalBytes": 1831223,
   "files": [
     {
-      "path": "assets/index-Dpk8eCbw.js",
-      "bytes": 837124,
-      "sha256": "e76734a5c669cbd6501d23660cb22a0d88e544ecd58e6ccd4d3e7ff4d7967fd4"
+      "path": "agent/protocol.json",
+      "bytes": 2778,
+      "sha256": "509b86a8d328ece30b659e5d65d3d177e5ae87b2a6631c3e736723ebe2f81c63"
     },
     {
-      "path": "assets/index-fcQ9ZLAF.css",
-      "bytes": 20176,
-      "sha256": "9bf980f3dbd2604f179c4c0a6e2768f4465df1faa9f18114c695e1a9a854e208"
+      "path": "agent/read/3d-renderer-selection.json",
+      "bytes": 5959,
+      "sha256": "f9bbae75f5c34ae53e36664b87d07dc403f8acc2bbc1c712828451b4dc90b8b4"
+    },
+    {
+      "path": "agent/read/3d-runtime-verification.json",
+      "bytes": 6504,
+      "sha256": "532c72ad728f8f6f15c5c4cd4a7e85c0e5c791c618c4d3a4122b8553e28ab0c7"
+    },
+    {
+      "path": "agent/read/3d-web-experiences.json",
+      "bytes": 12640,
+      "sha256": "c9cad50c42c51c9976cad27ced6608228e10be1755d6b4307cbebc05d86c3745"
+    },
+    {
+      "path": "agent/read/3mf-additive-exchange.json",
+      "bytes": 9036,
+      "sha256": "80f33c74c5a89eb3e8b869d667e0188497d481515cbcc7a96d96b3af331ae5f0"
+    },
+    {
+      "path": "agent/read/browser-applications.json",
+      "bytes": 18977,
+      "sha256": "5f5cb8c8fa80044671a12be2995f21804bcd89329c5f57cc24e3620fbbbc511b"
+    },
+    {
+      "path": "agent/read/cadquery.json",
+      "bytes": 8960,
+      "sha256": "537b8f560fd1e1e01fcea97e977b52a4295b119d0b98fa7b7035c0ce82484124"
+    },
+    {
+      "path": "agent/read/cloudflare-workers.json",
+      "bytes": 9452,
+      "sha256": "11c0561b467faaf2544a87045497fba9c2c4919f556ce4fa5f0a40472bd04cf6"
+    },
+    {
+      "path": "agent/read/cnc-machining.json",
+      "bytes": 8911,
+      "sha256": "9ee8eb23af48b9358db66b07d649514d00732a3eb4a5cfc4d5bf23167587fb2a"
+    },
+    {
+      "path": "agent/read/create-cloudflare-preview-deployment.json",
+      "bytes": 9122,
+      "sha256": "a6996168ccbdc5c7f3dd1d2ce884c9a9810bfd3241a27c6243e5b302fd1b20c8"
+    },
+    {
+      "path": "agent/read/create-vercel-preview-deployment.json",
+      "bytes": 12648,
+      "sha256": "a080e71bf0a59e9798f38036c7559d90e3d54dc71139340c351c6f4aaf589d8d"
+    },
+    {
+      "path": "agent/read/custom-manufactured-parts.json",
+      "bytes": 33586,
+      "sha256": "540726c25cb7a16d6a0e3aafae4a9ea2f6a049be95345a671c21e9c004882b43"
+    },
+    {
+      "path": "agent/read/custom-motor-brackets.json",
+      "bytes": 8183,
+      "sha256": "f71042460cd60699852d39f373280a531d91af8033bb7e8dd9eb5504f019b41b"
+    },
+    {
+      "path": "agent/read/data-heavy-dashboards.json",
+      "bytes": 9474,
+      "sha256": "51fff066c043acb9e09482b4d12c15274f7954efbbb55dbc6770ba589b1df568"
+    },
+    {
+      "path": "agent/read/design-for-manufacturing-preflight.json",
+      "bytes": 8166,
+      "sha256": "2006e8f54e310bcf86889d3a40a40c233b73b37f3a5624d018da9973112efded"
+    },
+    {
+      "path": "agent/read/dxf-profile-exchange.json",
+      "bytes": 7927,
+      "sha256": "f9b51b654a9d49962ec2557a74b7dd8bfa12f982082183efa10ba030b04d8885"
+    },
+    {
+      "path": "agent/read/fdm-additive-manufacturing.json",
+      "bytes": 8897,
+      "sha256": "63c45338da1c0360c284987d99c93690152189094bc4df8c0ee381618726793d"
+    },
+    {
+      "path": "agent/read/fictiv.json",
+      "bytes": 5713,
+      "sha256": "845ff1526291de1c40efc5ac43d268e8e0805b540e3c738c993f42c53a8b050d"
+    },
+    {
+      "path": "agent/read/framework-selection.json",
+      "bytes": 6504,
+      "sha256": "f5021ddccb3c4418021f23ca2a4b0ebdf5286f41b67d2b41fc12da63d2349f05"
+    },
+    {
+      "path": "agent/read/freecad.json",
+      "bytes": 8970,
+      "sha256": "3905258d4798f126d762e58275184a8ae1142fdd426d1a2e20dc4b4026e8ae36"
+    },
+    {
+      "path": "agent/read/inspection-plan.json",
+      "bytes": 13156,
+      "sha256": "3624c02719394a0819b4d78fb7feeb96dbf235e77ebb62f2e4d1e2f70a58ed18"
+    },
+    {
+      "path": "agent/read/laser-sheet-cutting-and-bending.json",
+      "bytes": 5884,
+      "sha256": "45b4001da723bc441b1efc22fe8b5b32f1ba90d52d0a7b6282c58c80008c301b"
+    },
+    {
+      "path": "agent/read/manufacturing-drawing.json",
+      "bytes": 9010,
+      "sha256": "b385f9387ea82aa1172c6dfdf7ba4a5908880f0f1fbf17d854234be8cfb66206"
+    },
+    {
+      "path": "agent/read/manufacturing-process-selection.json",
+      "bytes": 8673,
+      "sha256": "ec8558a99c93fc0ade1a8087d0c9bbb9621e2ed7339d5704f50f056656e78e48"
+    },
+    {
+      "path": "agent/read/manufacturing.json",
+      "bytes": 4853,
+      "sha256": "36d6a36f85768a1ad8ff80d267dc8465358d62c16caa4045816a22c5727ac244"
+    },
+    {
+      "path": "agent/read/mujoco.json",
+      "bytes": 5571,
+      "sha256": "450118dd37f812c8bdab111b00f309af1d1826420125cb93dcd5de0ae93246ea"
+    },
+    {
+      "path": "agent/read/nextjs.json",
+      "bytes": 18308,
+      "sha256": "1d74557693facca6bc7fa53157da9c585bbf02a58f1d45525bff15381df0f0de"
+    },
+    {
+      "path": "agent/read/parametric-cad-master.json",
+      "bytes": 15048,
+      "sha256": "ad89f8460424f89430830ccb822dfd59475b6631d888be6fdf041faace733d87"
+    },
+    {
+      "path": "agent/read/production-web-verification.json",
+      "bytes": 12128,
+      "sha256": "54e98e11cb8a33fe160d26f324aa4cffe59ddaae8d535a6d863f84ab4009bde9"
+    },
+    {
+      "path": "agent/read/promote-vercel-deployment-to-production.json",
+      "bytes": 6320,
+      "sha256": "c17f1e951d7ea9fd5e1e02c702bd62b5864145882eca613d70402c8292a486de"
+    },
+    {
+      "path": "agent/read/protolabs.json",
+      "bytes": 13693,
+      "sha256": "8ddabafb92b93ec8f5de9669121f8ed083b975d356a9129dc3f23e0f94133b33"
+    },
+    {
+      "path": "agent/read/react-three-fiber.json",
+      "bytes": 9828,
+      "sha256": "8db9b8fd7338b399c869f1af2ed67475334ba227cc0e08b5ec878f0ab8d0afa7"
+    },
+    {
+      "path": "agent/read/request-protolabs-quote.json",
+      "bytes": 8079,
+      "sha256": "1a8ddc2830ac1d8fe28edb6e3e7dcc40cafb023877b523bda6d9de76c3ae9243"
+    },
+    {
+      "path": "agent/read/request-sendcutsend-quote.json",
+      "bytes": 4173,
+      "sha256": "2a636c20a7a123139f4fbaa38042a2e3bc7ddba76d32f412331714b9766fc00e"
+    },
+    {
+      "path": "agent/read/request-xometry-quote.json",
+      "bytes": 5200,
+      "sha256": "16ec56f9818656066743fa17f4d98bc30c41fa726bdb1f722a305e588b05cd00"
+    },
+    {
+      "path": "agent/read/revisioned-manufacturing-package.json",
+      "bytes": 6327,
+      "sha256": "3e463d54aacdf2f3098fe4e4c50fc0313b34a68239c11c8486deee133973bb81"
+    },
+    {
+      "path": "agent/read/robotic-arms.json",
+      "bytes": 8899,
+      "sha256": "c63a594239df157f6c65d1cb15970f323827fe11a996ce54e3c5bbc8d16b6aac"
+    },
+    {
+      "path": "agent/read/sculpteo.json",
+      "bytes": 6298,
+      "sha256": "76050985a4d110fdd11f30b79e66b3de83572624dfc9d70ad914c1aae5950ece"
+    },
+    {
+      "path": "agent/read/sendcutsend.json",
+      "bytes": 7175,
+      "sha256": "f1bd6e915a53ae4e3b7cf63662e305f767d737395cb0d4a93d24ee947f819b72"
+    },
+    {
+      "path": "agent/read/shadcn-ui.json",
+      "bytes": 8966,
+      "sha256": "4cfb405868f4d5021edf5f534b665dabd0076264f51f16731e2dbd575e11e2b0"
+    },
+    {
+      "path": "agent/read/sls-additive-manufacturing.json",
+      "bytes": 6016,
+      "sha256": "2a3f66f7bd66599f2db23284889ebc85b51b0b827d2c5af7044b4fb305e3672e"
+    },
+    {
+      "path": "agent/read/step-solid-exchange.json",
+      "bytes": 30407,
+      "sha256": "3cb8f5197e31976dd864d5782aabc325aa4231dbf683dfb5279bcfafa2fc5685"
+    },
+    {
+      "path": "agent/read/stl-mesh-exchange.json",
+      "bytes": 14422,
+      "sha256": "bf579bf9f3a7371e9285ec88164ab6f2b38c81122025a91f4439dc5a5eed0b97"
+    },
+    {
+      "path": "agent/read/text-to-cad.json",
+      "bytes": 12113,
+      "sha256": "df14dd02a7106836e14941786f3db942e5267516abfda92d642ddeac5bd2543f"
+    },
+    {
+      "path": "agent/read/threejs.json",
+      "bytes": 10041,
+      "sha256": "1748cf133bb3ea8f57c2370e3c7007f7ab9df7eb58c1fd3c3026fa3c71610e30"
+    },
+    {
+      "path": "agent/read/tolerance-contract.json",
+      "bytes": 7289,
+      "sha256": "3f0d6c973ffdee0d55a3ec5c34ba72dfc78edb8bb32aedeaf256cc5dd30a79d1"
+    },
+    {
+      "path": "agent/read/vercel.json",
+      "bytes": 11740,
+      "sha256": "a850ee3219f60ccc35ac4987f6af4b1804a0c35a5ed1a490045d4e335129556b"
+    },
+    {
+      "path": "agent/read/vite-react.json",
+      "bytes": 14566,
+      "sha256": "6c3bee958016a5ca198cfdf508b9993cea56dc9b1a47c507930e52e73db1396a"
+    },
+    {
+      "path": "agent/read/web.json",
+      "bytes": 15917,
+      "sha256": "c6961ffbcdfac1b3e30cba78f89c74ad10cc714b03531d3c640063c1364618bb"
+    },
+    {
+      "path": "agent/read/xometry.json",
+      "bytes": 10495,
+      "sha256": "275162c7a9a608d0f9ceb3e61b1fb85995a5d3221b181cdf273608ab515ac53d"
+    },
+    {
+      "path": "agent/related/3d-renderer-selection.json",
+      "bytes": 3694,
+      "sha256": "4652581b862b8bc03c801547451f5852e39e2d51c20c85d0645fd9e00c682762"
+    },
+    {
+      "path": "agent/related/3d-runtime-verification.json",
+      "bytes": 4149,
+      "sha256": "874bee024bf2e3918fc2318156d392e70b1f19c4b64c94c364e953e30e075a51"
+    },
+    {
+      "path": "agent/related/3d-web-experiences.json",
+      "bytes": 6768,
+      "sha256": "cee26a4f0404b170ffee87eeee04183de862e8050fedc55bc9a221a6bd53778b"
+    },
+    {
+      "path": "agent/related/3mf-additive-exchange.json",
+      "bytes": 5251,
+      "sha256": "39ece3ec13d3cbe0c628246c648fcb265e084f58c0a467cb141e8c528cad2067"
+    },
+    {
+      "path": "agent/related/browser-applications.json",
+      "bytes": 9355,
+      "sha256": "c7e8bbeed27a1d0438ff0526d810c676fcaecc4d8a9183ab6c0f4b245b88df61"
+    },
+    {
+      "path": "agent/related/cadquery.json",
+      "bytes": 5197,
+      "sha256": "bdbc31b75312912ff1d8355fcdec7f9f42470e29189e1db09e05e99c4800dda7"
+    },
+    {
+      "path": "agent/related/cloudflare-workers.json",
+      "bytes": 5187,
+      "sha256": "b145608f974f25b648e42d77ee39257fc649745a105f74c5e93a542e8c88ec57"
+    },
+    {
+      "path": "agent/related/cnc-machining.json",
+      "bytes": 5575,
+      "sha256": "fcd77c605df8d6ce97fb49a05c56236b07eb0603ffe4efd4908905d890796b2f"
+    },
+    {
+      "path": "agent/related/create-cloudflare-preview-deployment.json",
+      "bytes": 5518,
+      "sha256": "8e1b8a205bc8e63497634d56cab931875f12bf93fa96fb442f4c5332aa438b8a"
+    },
+    {
+      "path": "agent/related/create-vercel-preview-deployment.json",
+      "bytes": 6593,
+      "sha256": "82d6302f0c5488fc192bdd6df5b213877dfc78bc18f92411c2a1e8da91591065"
+    },
+    {
+      "path": "agent/related/custom-manufactured-parts.json",
+      "bytes": 16928,
+      "sha256": "34a9eb70f20288205df54c7c8903abe76464a6523ecfcf64ad9f84cd3226632a"
+    },
+    {
+      "path": "agent/related/custom-motor-brackets.json",
+      "bytes": 5133,
+      "sha256": "633220770e6a7e3ed401964b321467a0b6439a51b5adcc47dae37a2e43cf8437"
+    },
+    {
+      "path": "agent/related/data-heavy-dashboards.json",
+      "bytes": 6112,
+      "sha256": "385582d8a417aa7ce2f1c7c2eec465f33a708045de1a119a809bb6ba9a7e473c"
+    },
+    {
+      "path": "agent/related/design-for-manufacturing-preflight.json",
+      "bytes": 4818,
+      "sha256": "433195642e5c867dcc43728e8279875f311feccd0adff8b67097d40724be81f8"
+    },
+    {
+      "path": "agent/related/dxf-profile-exchange.json",
+      "bytes": 4190,
+      "sha256": "cda7a6fcf6f044f5b751a80bbd507e42941c7cab8933de43169e6866ef5cced6"
+    },
+    {
+      "path": "agent/related/fdm-additive-manufacturing.json",
+      "bytes": 5643,
+      "sha256": "64e8fe83722166846209f094c5220dbd6ee668371e56cd34b66f1097d8632a0d"
+    },
+    {
+      "path": "agent/related/fictiv.json",
+      "bytes": 3338,
+      "sha256": "7826b777366134a4ea56960d79dce440ed88df6ad116b0f89d7449859ee388e9"
+    },
+    {
+      "path": "agent/related/framework-selection.json",
+      "bytes": 4081,
+      "sha256": "b6680b4c31fcf34e0a43aee5a911722dd9d85d03964b56be7faa744ea1efef3c"
+    },
+    {
+      "path": "agent/related/freecad.json",
+      "bytes": 5195,
+      "sha256": "ff36a723538fca3c6dc94de443138b29299b17996bb66d2e56f44d97dd725b3c"
+    },
+    {
+      "path": "agent/related/inspection-plan.json",
+      "bytes": 7622,
+      "sha256": "e55f6cfbe44112dab96593248420caeb2118f1ba601eb2ac1d459d30b93adf35"
+    },
+    {
+      "path": "agent/related/laser-sheet-cutting-and-bending.json",
+      "bytes": 4092,
+      "sha256": "0563d1aa3a0faaa13d6dceff86d16a28ea4e0fce1fb6da723c303f2a44321063"
+    },
+    {
+      "path": "agent/related/manufacturing-drawing.json",
+      "bytes": 5613,
+      "sha256": "b170ad833b6dc2f3ee62ec85a500ce341fba915a3cad4c9fccf97f2b6189156a"
+    },
+    {
+      "path": "agent/related/manufacturing-process-selection.json",
+      "bytes": 5588,
+      "sha256": "9ef1fdb66b40c21667613bb12aeac53798184353b3c81ba3666551d04648ab61"
+    },
+    {
+      "path": "agent/related/manufacturing.json",
+      "bytes": 2896,
+      "sha256": "946373167d480122dd66c3590a9256d69693f30ab056fdc4f81987d909bbea4a"
+    },
+    {
+      "path": "agent/related/mujoco.json",
+      "bytes": 2954,
+      "sha256": "e7c63312d63324f7c25e34bddd3a2125ff3b1acb49e4283c28d27980bf60077f"
+    },
+    {
+      "path": "agent/related/nextjs.json",
+      "bytes": 9334,
+      "sha256": "d555b42906a75a89d59f875599190f83815ad1dee6c52cfaf60a563772c896fe"
+    },
+    {
+      "path": "agent/related/parametric-cad-master.json",
+      "bytes": 9464,
+      "sha256": "b2c755d594a6357938de5e8291099031b4fa0f66313cf92cbfd2afa8b5d53daa"
+    },
+    {
+      "path": "agent/related/production-web-verification.json",
+      "bytes": 6553,
+      "sha256": "876ac3f971d5bead8cf32c88032131efff1f712d7c0dcb89d6e068a5e623ab71"
+    },
+    {
+      "path": "agent/related/promote-vercel-deployment-to-production.json",
+      "bytes": 4684,
+      "sha256": "8762491000fc652bd13d0a0c7fb9cd1c4f8ebfb9fa6807d015431183996f8485"
+    },
+    {
+      "path": "agent/related/protolabs.json",
+      "bytes": 8462,
+      "sha256": "5eec1df44fb13e017482609488bc6767804e29e3112fb185678ea04db58c2fba"
+    },
+    {
+      "path": "agent/related/react-three-fiber.json",
+      "bytes": 5623,
+      "sha256": "5fd95f3ca31bbcdd74b49cbf75e3753f9ded3984ac2ce8004708da99053cdf5f"
+    },
+    {
+      "path": "agent/related/request-protolabs-quote.json",
+      "bytes": 4929,
+      "sha256": "0f310b9cd583581f9f9039443de8ee57f30d1082917ab5f07df32542faca5e7f"
+    },
+    {
+      "path": "agent/related/request-sendcutsend-quote.json",
+      "bytes": 3106,
+      "sha256": "e91ca3cf727784b20117c03927ee5c2c3f0515880ff713fbf78eb7d3e44307db"
+    },
+    {
+      "path": "agent/related/request-xometry-quote.json",
+      "bytes": 3181,
+      "sha256": "cdd4d43471ca1a182e0528c1387fd3bf9e03d45c134d79dce35fa6a18256be6e"
+    },
+    {
+      "path": "agent/related/revisioned-manufacturing-package.json",
+      "bytes": 5394,
+      "sha256": "4da254807f2a4e9e5387d49aa7d5bf33302c3be21b6845a48f3bc6b7b3282ee4"
+    },
+    {
+      "path": "agent/related/robotic-arms.json",
+      "bytes": 6363,
+      "sha256": "a6259344938809bcecb7b2e63d09f4ce772d2a0f8f63253775dff29b2f5bbb46"
+    },
+    {
+      "path": "agent/related/sculpteo.json",
+      "bytes": 5202,
+      "sha256": "3f1c7680d38846fb1af3def47168b9a59fa1dac8ef9084601bb768fb2347b58e"
+    },
+    {
+      "path": "agent/related/sendcutsend.json",
+      "bytes": 5087,
+      "sha256": "3d0f01085fe5c622da430619184a44d6a8ea6e63c3c96d71038f92ef52ab9c63"
+    },
+    {
+      "path": "agent/related/shadcn-ui.json",
+      "bytes": 5137,
+      "sha256": "030a023b70d91d50c68062d62ca097f7607c86bafbc87105faddb07e1fe471bb"
+    },
+    {
+      "path": "agent/related/sls-additive-manufacturing.json",
+      "bytes": 4137,
+      "sha256": "31029779813c02fb3b8bebe73796e34a970c97c26e52d1bced72946f77634831"
+    },
+    {
+      "path": "agent/related/step-solid-exchange.json",
+      "bytes": 15406,
+      "sha256": "cb3283f917457e40a9901f801df242d5d87276ceb8c92255194ace314ff249dc"
+    },
+    {
+      "path": "agent/related/stl-mesh-exchange.json",
+      "bytes": 7470,
+      "sha256": "a50a713c3e93b19115db7ee89f59e307b650731202c705a2a4a5baf541484f72"
+    },
+    {
+      "path": "agent/related/text-to-cad.json",
+      "bytes": 8217,
+      "sha256": "1463098c578569a62b2c40329e1bfbd5eebf680f46911a70d62e1929c8d0ee78"
+    },
+    {
+      "path": "agent/related/threejs.json",
+      "bytes": 5617,
+      "sha256": "121f61b7c19096763a5b9f5c611a29156c1374495e314f9e68e73f6f5e036c46"
+    },
+    {
+      "path": "agent/related/tolerance-contract.json",
+      "bytes": 4347,
+      "sha256": "a6936789f96f090b7f006e84fe896d8e79002e0aad9f5ea63e7064c03b33527a"
+    },
+    {
+      "path": "agent/related/vercel.json",
+      "bytes": 6182,
+      "sha256": "87b28fcdea32318525515a544fd864a4bb3b85747b85f046ce8c527216a2087d"
+    },
+    {
+      "path": "agent/related/vite-react.json",
+      "bytes": 7932,
+      "sha256": "3d23ab480a90feda9ee338465826585a2e4426a17abaac65d7c8e3f78289339e"
+    },
+    {
+      "path": "agent/related/web.json",
+      "bytes": 8190,
+      "sha256": "41a060d4a82bd7236d70937c93b03de6daba307d7804d6de7285563fbd9d3056"
+    },
+    {
+      "path": "agent/related/xometry.json",
+      "bytes": 6367,
+      "sha256": "2ab8e4680dd603ec2fcb88f872edff13efb48cc7fe26a8f973a5ad70bc15cac7"
+    },
+    {
+      "path": "agent/search.json",
+      "bytes": 143867,
+      "sha256": "5de13e9070bf388a4805f0e6d000ab86f5135f78864f6d234918f368bff3cef5"
+    },
+    {
+      "path": "assets/index-B5C23w0_.css",
+      "bytes": 28841,
+      "sha256": "9a624dbc3ae025eca2a8fd46601da53c0d46313eebab588ad3b5e16fa36ab06d"
+    },
+    {
+      "path": "assets/index-BB9WnBnR.js",
+      "bytes": 337578,
+      "sha256": "2b322c8e7c259b3377278bb5cd022fdad0e38af452f5863b6a5cab6e22868cfb"
     },
     {
       "path": "index.html",
       "bytes": 614,
-      "sha256": "f1a9cf8ed5ff5aa513f187a3b3a5070c56ea3715bf9907fac3aa015e9c35359a"
+      "sha256": "9de5f66a1682b47203697d99cd31deb0947b38f1cb307643f08f237f02a2acba"
     },
     {
       "path": "llms.txt",
-      "bytes": 507,
-      "sha256": "aee5ab669e8b2a841b1c546a3d046a8d33d9472feb52d8bf72a4ad0292497b25"
+      "bytes": 1268,
+      "sha256": "930a7fc66eb559c8122fb403aaccd9a3913936bd0f8a2b9542c71925a8564b94"
     },
     {
       "path": "wiki/3d-renderer-selection.json",
-      "bytes": 5316,
-      "sha256": "1074371107f56c50fc02d3d4dd5da9189df66c0129e110c8e86c40e5c065839a"
+      "bytes": 5488,
+      "sha256": "5f8f050e337ada4c865fc5847574328d2c256d013282ef3f7519ddd5c97834de"
     },
     {
       "path": "wiki/3d-runtime-verification.json",
-      "bytes": 5823,
-      "sha256": "c2ef971ead8d25789c7e398b82eb2819a2c377c568fc64a3de4689180897e130"
+      "bytes": 5995,
+      "sha256": "026c17aa3ba9c0bef224c7220c69dcc2cc7f0926e0d28e61477060b51c1aed49"
     },
     {
       "path": "wiki/3d-web-experiences.json",
-      "bytes": 10848,
-      "sha256": "a89aa1831574e0dd085e8b287f7c019796616a4b29433e1e79f0d9799684dd0a"
+      "bytes": 11321,
+      "sha256": "f20ed11d43d16688459a51b4a94c567bf790bc3399d74983bffa06b2371f1e45"
     },
     {
       "path": "wiki/3mf-additive-exchange.json",
-      "bytes": 7864,
-      "sha256": "21d108a2232d5fee2aaf213752f23b38c49f701041abc3bc6d6a329078937427"
+      "bytes": 8197,
+      "sha256": "b515c58bb3667084fbaa3844e63f9ef8c5da63ecc1e9aed06aa3bb54fd4c7474"
     },
     {
       "path": "wiki/browser-applications.json",
-      "bytes": 16502,
-      "sha256": "0dd210437d4bba4709c92d3ecf346ed186a85864890433d00cd52a216e0d48da"
+      "bytes": 17190,
+      "sha256": "0567cbb583c8c23bdd8eb38b4176102e294f4773cf986f4f034140a4b54c7c7c"
     },
     {
       "path": "wiki/cadquery.json",
-      "bytes": 7836,
-      "sha256": "4c3e7255d7c9e71ce8a5c9b13cdf6c4b30ed706c8eb260d822dc1e44e66cea08"
+      "bytes": 8169,
+      "sha256": "a1c38cd4a537408d6de661c6453e15735570ff066f73a8a5dfb856f1542822bd"
     },
     {
       "path": "wiki/cloudflare-workers.json",
-      "bytes": 8493,
-      "sha256": "aaacc6ea3e84e3169587799cba2ccc81968d0780cd95482b2beda8133bb9f313"
+      "bytes": 8751,
+      "sha256": "51e93662954a4428bd11f82181dbb4d8262a8b0ff30b300030b5aeb8d9e3fcaa"
     },
     {
       "path": "wiki/cnc-machining.json",
-      "bytes": 7770,
-      "sha256": "2d75fdca5b765b96a2609992fad99e0895ee4e00ee60e35a122de8a0617adc1a"
+      "bytes": 8060,
+      "sha256": "ac5e760029e6bd5b73f449209738b19f8e4b549d7910ebb54a6e40152a93bf94"
     },
     {
       "path": "wiki/create-cloudflare-preview-deployment.json",
-      "bytes": 8089,
-      "sha256": "4f8361c2e95ad9aebefc43e43e449f965041a99a855931b21ba6cbd80d3f5ac3"
+      "bytes": 8347,
+      "sha256": "71f56a00bdcff34a1b5121fc4ca9df4586d5e4d800e8d468e9c29db646ab513f"
     },
     {
       "path": "wiki/create-vercel-preview-deployment.json",
-      "bytes": 11062,
-      "sha256": "cc4b80a5fdd4d2189c0a499feff6f840c968a9bdb7971f33c2a6d0e8eff60924"
+      "bytes": 11449,
+      "sha256": "0c454e8637030314a8676bb76ccc23d08667c6ae137949cdd23124e3403a6221"
     },
     {
       "path": "wiki/custom-manufactured-parts.json",
-      "bytes": 28545,
-      "sha256": "87d34648dff82efec2da44cf38808761dd76cff49d609f70d706618209304bef"
+      "bytes": 29835,
+      "sha256": "00443ab0921d323029a90a5113e7fc877e0555870be70bb8bc10417c21c2634b"
     },
     {
       "path": "wiki/custom-motor-brackets.json",
-      "bytes": 7208,
-      "sha256": "a22aa467dffdac225861d4751a4f55ea6448ce1c4056c9caee7962e5878a9136"
+      "bytes": 7466,
+      "sha256": "eb93d40bb62a1737c88ee8751af8ed71d515877e295e8538b46f998a4ba444bb"
     },
     {
       "path": "wiki/data-heavy-dashboards.json",
-      "bytes": 8396,
-      "sha256": "2cc68558ee79ac666fbdd40881ca2eef62a3dd30ff548a1e8c8fc19087f460b8"
+      "bytes": 8697,
+      "sha256": "8e2651a4f41454b87fc6ef888b2b48f363438df524018f7d4db7d0413c758939"
     },
     {
       "path": "wiki/design-for-manufacturing-preflight.json",
-      "bytes": 7300,
-      "sha256": "f69b91c2acbf6bd74ed648a5a7d986b0a81d434d55f9c8e9433b54a200564b6d"
+      "bytes": 7515,
+      "sha256": "074421339f30a5e24d72c43eb930be36fbccf05958d5aa4ae4a705626f349a18"
     },
     {
       "path": "wiki/dxf-profile-exchange.json",
-      "bytes": 5952,
-      "sha256": "99174a6fc689b384d2ab76319119398e51a40ba31fbda4ec3256bd63598dfb3c"
+      "bytes": 7168,
+      "sha256": "6aaf8495e477e92deedd3ebdc18894b59347a12a547d2fa941207fbf6c03e1ba"
     },
     {
       "path": "wiki/fdm-additive-manufacturing.json",
-      "bytes": 7812,
-      "sha256": "2d8b29ebc76a7edb8101fb141f7aa32fc5c4eb2dcad5634a8a9a45470cb4f63d"
+      "bytes": 8070,
+      "sha256": "5a38f95e7647029403edbe3ad742a06dd26f95a47cd60cf52a9cb210bdf13cbd"
     },
     {
       "path": "wiki/fictiv.json",
-      "bytes": 5090,
-      "sha256": "db5cfab214b9859dd4c15480b2965733dbde4ff831fcf96018b5e095613f9211"
+      "bytes": 5378,
+      "sha256": "b30a3913b8e3e75fac793e750a6dc3f2e31052d07b63e61c7d3cf4ec64ba7fa5"
     },
     {
       "path": "wiki/framework-selection.json",
-      "bytes": 5869,
-      "sha256": "f346020d82070219cbf33bf35ab095f8d4557b1ddd7e27fe9ea74ccf623d9193"
+      "bytes": 6041,
+      "sha256": "49bd9d3ad4ceafd6be9a9d73813c0d1282a7e6321204d7bf30535e428efc9c4f"
     },
     {
       "path": "wiki/freecad.json",
-      "bytes": 7842,
-      "sha256": "f1e57a9a07e9a8c334c0f91519a1da9fd61065ef1e9603f780efb93194102d8d"
+      "bytes": 8175,
+      "sha256": "ffa0efec0f47144610e401cf798f43a7f080f4254e6b4ba73a658f2f2d96c6e9"
     },
     {
       "path": "wiki/index.json",
-      "bytes": 42222,
-      "sha256": "f388cdf39c6ba63dddac9fb788e7c5a8a9205dfcb55269053d87bc827a960a41"
+      "bytes": 44388,
+      "sha256": "0099b704061bd759f9d5aa6f504dce865f2e273332b7786b05e6390282bb8ff4"
     },
     {
       "path": "wiki/inspection-plan.json",
-      "bytes": 9915,
-      "sha256": "8d2f68bd0366c4d93a7a0faa3c3dfff61b47119cb12e64091c67bbf43c37ccd9"
+      "bytes": 11909,
+      "sha256": "27ab592c668c427b21e868e0781ecca43f02fc9fa15b9cd4e5341f70bb6c41be"
     },
     {
       "path": "wiki/laser-sheet-cutting-and-bending.json",
-      "bytes": 5219,
-      "sha256": "d99b4fbbe9a0f175be0cecf248d65ad93179798c79512d9495a1e9bd117eed98"
+      "bytes": 5391,
+      "sha256": "95300f3c07bcf7aa1f5061fcea256af6ca01bb5ae8e913198d5aa8d18853efbd"
     },
     {
       "path": "wiki/manufacturing-drawing.json",
-      "bytes": 7917,
-      "sha256": "ea76a679e77fb38d23c9bf77538c1b844ec00e29ab32778b23d0f94195a345c9"
+      "bytes": 8207,
+      "sha256": "4beb8b799bec058ccdf9fc165cb9ca148bc13623fcaca13af966a6bd77e1fe4b"
     },
     {
       "path": "wiki/manufacturing-process-selection.json",
-      "bytes": 7586,
-      "sha256": "9ce2671b078542cbb55cca16e6a2dabf3fdfb6492ae98b27a34251f782c218b3"
+      "bytes": 7844,
+      "sha256": "7448cd363eeaef47d28821916387c7ff5501e183fe190e55873d4f76e68e035b"
     },
     {
       "path": "wiki/manufacturing.json",
-      "bytes": 4349,
-      "sha256": "d15ecb3ce9e017eda79b540a92aa6144c487270213040ca6469754295988746e"
+      "bytes": 4478,
+      "sha256": "a155c2d49585b64023376c0b7437e6970323db545b72c755be5c0bbd7d3c999b"
     },
     {
       "path": "wiki/mujoco.json",
-      "bytes": 4916,
-      "sha256": "fa47aedb2b30711cd58a26b0ba2b78ad5d896a5f53ec9fa578b62edb9c7f358d"
+      "bytes": 5088,
+      "sha256": "1cf0d5446dda8cec4493b2df53180569f60823a7a6f12bbe97a544cf1cfa72c3"
     },
     {
       "path": "wiki/nextjs.json",
-      "bytes": 15970,
-      "sha256": "ef45842663e0875d28040a2deedde426acc5af126fd1fee1054cad90ea8a4d2b"
+      "bytes": 16615,
+      "sha256": "9394a7c112e7aa29d21b89d4d086920405ff840477e1a58020d7ecf848b51b30"
     },
     {
       "path": "wiki/parametric-cad-master.json",
-      "bytes": 13071,
-      "sha256": "3b2a94596a23ff64e68113aac131020afd60b485ee556091fc3dd2e00ad72d8c"
+      "bytes": 13619,
+      "sha256": "f4bc18ff7891a12276f7f15d35d00c50d2e2fb7b57b23c12547c680d37fefe54"
     },
     {
       "path": "wiki/production-web-verification.json",
-      "bytes": 10420,
-      "sha256": "823907a78a67a9fb234eb9d28f9f901cae9f1de48ed635cc1a62cb3aa550b88b"
+      "bytes": 10807,
+      "sha256": "97b487536b3a9bf2c9f467c7d80fcf79e7e310e862ff7e6385cb8c568376c724"
     },
     {
       "path": "wiki/promote-vercel-deployment-to-production.json",
-      "bytes": 5792,
-      "sha256": "91ad51408473eedd7558d5aab130999d35874964e755d13d92e5615090b6acac"
+      "bytes": 5921,
+      "sha256": "c9598ec95e2ca208b854b549a8c023dbe343c106b62c2e87f9724287a707309f"
     },
     {
       "path": "wiki/protolabs.json",
-      "bytes": 11749,
-      "sha256": "649113fe0add6342c114d436098ad9c454af623897e6843832c783fd98c010f5"
+      "bytes": 12454,
+      "sha256": "03a1172a4ffa9a6f21ca722d2dfcb151e11844d5bcebaefdaf304b308ab4577a"
     },
     {
       "path": "wiki/react-three-fiber.json",
-      "bytes": 8605,
-      "sha256": "36eaa4265d43cdb0959ac5c96cf0506f7ce5a130949376a4d0544aa96fb45214"
+      "bytes": 8949,
+      "sha256": "a099a8780edd5fd0d318557b88b6da824126c86e1ba44f8aaea467a2bfdc991a"
     },
     {
       "path": "wiki/request-protolabs-quote.json",
-      "bytes": 6020,
-      "sha256": "58dfd0c7bf3bc34467fc39279910a734104b431a774908a89f47252c63068284"
+      "bytes": 7332,
+      "sha256": "09319ad9f471e594a20aedcc603ae769d5ecc490deaa818d2d1ffd1f8b967af8"
     },
     {
       "path": "wiki/request-sendcutsend-quote.json",
-      "bytes": 3805,
-      "sha256": "8da19673fc204b791a613bf185465f1f57a497f4c686278f9d9cdceb5d393c01"
+      "bytes": 3918,
+      "sha256": "9e1aa9752ec0df5e8441262dbafe703b1b4b7bcd845829fc04d3e90daaf98d94"
     },
     {
       "path": "wiki/request-xometry-quote.json",
-      "bytes": 4642,
-      "sha256": "6bad8c92587057df38441444bebeafa3a96251a84c8167f30765a6f572b6de41"
+      "bytes": 4825,
+      "sha256": "be7e0e8727104b912d3e87b852fafff9ec468975cbf66c7c1cff791f49ae84f2"
     },
     {
       "path": "wiki/revisioned-manufacturing-package.json",
-      "bytes": 5640,
-      "sha256": "d1de567380aa9295f5f49a1d782fa5ed2485355712a4e476ff2066fa552b5a54"
+      "bytes": 5812,
+      "sha256": "c11d8644ef567b766c26d58346ff82c48d633b3cb1ff5db00b246e1504e4bfd0"
     },
     {
       "path": "wiki/robotic-arms.json",
-      "bytes": 7936,
-      "sha256": "0120b32f8069e2e4fcdddc22cf37590630279f6c840284e10e62611dfb37e7b9"
+      "bytes": 8194,
+      "sha256": "eec6db42fa5c084da991c34e7f805a033f157c07c90f485587ef64dd57ee945c"
     },
     {
       "path": "wiki/sculpteo.json",
-      "bytes": 5514,
-      "sha256": "cb4ad8e67e34b66654066ba3be3e19aa739b674477463844eae809d6b1041557"
+      "bytes": 5815,
+      "sha256": "0c55dc4aaf77267e1d3ff53e6e5c1ab48e374318d45211aec809132d7968a157"
     },
     {
       "path": "wiki/sendcutsend.json",
-      "bytes": 6239,
-      "sha256": "1f3a49e3a386b3d1761c1ff7bb65c29a1ddb689a9c989780c2079ddc9c3bf6de"
+      "bytes": 6546,
+      "sha256": "c8d9dadb4b4f0e5715767d82f352be61d6a02207498fb1526e5d12f14b5cabb4"
     },
     {
       "path": "wiki/shadcn-ui.json",
-      "bytes": 8025,
-      "sha256": "cd0f4a8e5da6342bb65d6dcc3d424c338b27f3160cb5d28b50d404f0ed832876"
+      "bytes": 8283,
+      "sha256": "033eb5aad21fa089c61cc530ed569a769e7b4ebdd382017eaf2fac4239c1c7c9"
     },
     {
       "path": "wiki/sls-additive-manufacturing.json",
-      "bytes": 5297,
-      "sha256": "4e7927f7350d3c33d03204eed25b0408536cc3a1b33ce71231cfb27f98038330"
+      "bytes": 5469,
+      "sha256": "f20fdf7bc81e2f739fe4359e1b202bc659393cbd7afa8894cbd5b3ed60fada51"
     },
     {
       "path": "wiki/step-solid-exchange.json",
-      "bytes": 25922,
-      "sha256": "68ab7de00e2caea1918b4ce6c52f7f25e0ccfbb582de9f8d88611b28a9b67df6"
+      "bytes": 27368,
+      "sha256": "1bc86cd3cefcc64ffaabd8e2cf190f8c3ad55c09d802e406f92ca982bed82b2c"
     },
     {
       "path": "wiki/stl-mesh-exchange.json",
-      "bytes": 12475,
-      "sha256": "759a831ed9055b67a1742ba66b7914a05bed5ec4c2d36273e58bf29657f17506"
+      "bytes": 13055,
+      "sha256": "0047e02f780397ade179eb28f9dd256e1eedd8a9a46df58ffce1a06736cf7043"
     },
     {
       "path": "wiki/text-to-cad.json",
-      "bytes": 10635,
-      "sha256": "a2433a0730d49528a86792cc3280f0a7202cf129985ca6884ae8e8fd25e3a18a"
+      "bytes": 11054,
+      "sha256": "2e6eb6f8afbf3e37166ac2e5516b56b42e911ae76c2a84f9386f8ea2415b0a6e"
     },
     {
       "path": "wiki/threejs.json",
-      "bytes": 8718,
-      "sha256": "cb5421f5c5683a4008617327817a950bfed85681d997b6b3a1966107a8cc4f62"
+      "bytes": 9062,
+      "sha256": "3c722af7a1398c9d14bdaaf7c41a67b8076467a9631ca6c5bbb4bbea3000f724"
     },
     {
       "path": "wiki/tolerance-contract.json",
-      "bytes": 6447,
-      "sha256": "c840c6ec2c235d30e40f4ac1d7315c6dd217f2ab3ae07fa1a644ff1166aefcfa"
+      "bytes": 6662,
+      "sha256": "81a58b56f913801c06aada972eaf9f95f5b7a95848c2180d4c1591a688621c4a"
     },
     {
       "path": "wiki/vercel.json",
-      "bytes": 10343,
-      "sha256": "915ae0a3e8823b1a90deaae91966b0b01f6fe822fca7214bbfae7a86a1e8582d"
+      "bytes": 10687,
+      "sha256": "e78fa2ad0b344fdcfa06df1d7759915749ffc52bf570c1d7a5d0d568bb9200c1"
     },
     {
       "path": "wiki/vite-react.json",
-      "bytes": 12721,
-      "sha256": "3da0876c4c25b6ceb4ec625e4b771d36be759b7585da302904ece6d60bed52d3"
+      "bytes": 13237,
+      "sha256": "11a9b7a1a70273b2f25387ebc2ef3c028a391658f6693e3f3de9252a8cc6d988"
     },
     {
       "path": "wiki/web.json",
-      "bytes": 13719,
-      "sha256": "4815763719aed344e832d5a01b5559c18c739b86e57bd5529470c858c6949108"
+      "bytes": 14278,
+      "sha256": "066a5833da03b2773b718747b0dbd3099f41fa4dadc017664a9bb39f554b60c8"
     },
     {
       "path": "wiki/xometry.json",
-      "bytes": 9116,
-      "sha256": "e5fab2eeb7bb5d317c84a5a238ec17e732804aab2075c03d6a8f39542500e177"
+      "bytes": 9600,
+      "sha256": "189c4e4386100174c5432483eaee3f79346e0a073bf4dddfb4d1ce8e027f2ead"
     }
   ],
   "runtimeContract": {
@@ -299,7 +799,7 @@
     "dnsProvider": "Cloudflare",
     "sourceRepository": "https://github.com/fraylabs/possible",
     "publishedAt": "2026-07-18",
-    "artifactSha256": "57945bd9ed262d2cf4d411c9787394cee1d1f76282d111268adc68fe9010117f",
+    "artifactSha256": "79feb29dd104075436dca2281e47a94cdfde75253fd1f19c32ab4747dc8fa0be",
     "verificationReceipt": "deployment/PRODUCTION.md",
     "remainingApprovalBoundaries": [
       "cost or paid-plan changes",

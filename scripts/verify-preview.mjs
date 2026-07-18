@@ -214,8 +214,12 @@ async function verifyNotFound(url, label) {
   assert.equal(response.bytes.toString("utf8"), "Not found", `${label} returned an unsafe body.`);
 }
 
-const machineReadableWikiFile = (path) =>
-  path === "llms.txt" || (path.startsWith("wiki/") && path.endsWith(".json"));
+const machineReadablePublicationFile = (path) =>
+  path === "llms.txt"
+  || (path.startsWith("wiki/") && path.endsWith(".json"))
+  || path === "agent/protocol.json"
+  || path === "agent/search.json"
+  || /^agent\/(read|related)\/[^/]+\.json$/.test(path);
 
 async function verifyMachineReadableWiki(baseUrl, files) {
   const paths = new Set(files.map((file) => file.path));
@@ -224,6 +228,10 @@ async function verifyMachineReadableWiki(baseUrl, files) {
 
   const discovery = await requestBytes(`${baseUrl}/llms.txt`);
   const discoveryText = discovery.bytes.toString("utf8");
+  assert.match(discoveryText, /https:\/\/possible\.sh\/agent\/protocol\.json/);
+  assert.match(discoveryText, /https:\/\/possible\.sh\/agent\/search\.json/);
+  assert.match(discoveryText, /https:\/\/possible\.sh\/agent\/read\/\{slug\}\.json/);
+  assert.match(discoveryText, /https:\/\/possible\.sh\/agent\/related\/\{slug\}\.json/);
   assert.match(discoveryText, /https:\/\/possible\.sh\/wiki\/index\.json/);
   assert.match(discoveryText, /https:\/\/possible\.sh\/wiki\/\{slug\}\.json/);
 
@@ -287,6 +295,87 @@ async function verifyMachineReadableWiki(baseUrl, files) {
     const publishedRelated = document.relatedPages.map((page) => page.slug).sort();
     assert.deepEqual(publishedRelated, expectedRelated, `${document.page.slug} related pages drifted.`);
   }
+
+  const protocolResponse = await requestBytes(`${baseUrl}/agent/protocol.json`);
+  assert.equal(protocolResponse.response.status, 200);
+  const protocol = JSON.parse(protocolResponse.bytes.toString("utf8"));
+  assert.equal(protocol.schemaVersion, 1);
+  assert.equal(protocol.protocol, "possible-static-agent");
+  assert.equal(protocol.static, true);
+  assert.deepEqual(Object.keys(protocol.operations), ["search", "read", "related"]);
+  assert.deepEqual(protocol.operations.search.request, { query: null, body: null });
+  assert.match(protocol.operations.search.notes[0], /static search index/);
+  assert.equal(protocol.operations.read.path, "/agent/read/{slug}.json");
+  assert.equal(protocol.operations.related.path, "/agent/related/{slug}.json");
+
+  const searchResponse = await requestBytes(`${baseUrl}/agent/search.json`);
+  assert.equal(searchResponse.response.status, 200);
+  const search = JSON.parse(searchResponse.bytes.toString("utf8"));
+  assert.equal(search.schemaVersion, 1);
+  assert.equal(search.operation, "search");
+  assert.equal(search.static, true);
+  assert.deepEqual(search.request, {
+    method: "GET",
+    path: "/agent/search.json",
+    query: null,
+    body: null,
+  });
+  assert.equal(search.corpus.pageCount, index.pageCount);
+  assert.equal(search.pages.length, index.pageCount);
+  assert.equal(search.search.match, "all query terms");
+
+  const canonicalPages = new Map(documents.map((document) => [document.page.slug, document]));
+  const searchSlugs = new Set(search.pages.map((page) => page.slug));
+  assert.deepEqual([...searchSlugs].sort(), slugs.sort(), "Search index pages drifted from wiki index.");
+  for (const indexedPage of search.pages) {
+    const canonical = canonicalPages.get(indexedPage.slug);
+    assert(canonical, `Search index contains unknown page ${indexedPage.slug}.`);
+    assert.deepEqual(indexedPage.sources, canonical.page.sources);
+    assert.equal(indexedPage.reviewedAt, canonical.page.reviewedAt);
+    assert.deepEqual(indexedPage.searchFields, {
+      title: canonical.page.title,
+      slug: canonical.page.slug,
+      aliases: (canonical.page.aliases ?? []).join(" "),
+      tags: canonical.page.tags.join(" "),
+      summary: canonical.page.summary,
+      body: canonical.page.body,
+      sourceTitles: canonical.page.sources.map((source) => source.title).join(" "),
+    });
+  }
+
+  const expectedAgentFiles = [
+    "agent/protocol.json",
+    "agent/search.json",
+    ...slugs.flatMap((slug) => [`agent/read/${slug}.json`, `agent/related/${slug}.json`]),
+  ].sort();
+  const actualAgentFiles = files
+    .map((file) => file.path)
+    .filter((path) => path.startsWith("agent/"))
+    .sort();
+  assert.deepEqual(actualAgentFiles, expectedAgentFiles, "Agent publication files drifted.");
+
+  for (const slug of slugs) {
+    const canonical = canonicalPages.get(slug);
+    const read = JSON.parse((await requestBytes(`${baseUrl}/agent/read/${slug}.json`)).bytes.toString("utf8"));
+    assert.equal(read.schemaVersion, 1);
+    assert.equal(read.operation, "read");
+    assert.equal(read.humanUrl, `/wiki/${slug}`);
+    assert.deepEqual(read.page, canonical.page);
+    assert.deepEqual(
+      read.relatedPages.map((page) => page.slug).sort(),
+      canonical.relatedPages.map((page) => page.slug).sort(),
+    );
+
+    const related = JSON.parse((await requestBytes(`${baseUrl}/agent/related/${slug}.json`)).bytes.toString("utf8"));
+    assert.equal(related.schemaVersion, 1);
+    assert.equal(related.operation, "related");
+    assert.equal(related.slug, slug);
+    assert.deepEqual(related.page.slug, slug);
+    assert.deepEqual(
+      related.relatedPages.map((page) => page.slug).sort(),
+      canonical.relatedPages.map((page) => page.slug).sort(),
+    );
+  }
 }
 
 async function verifyRuntime(files, rootDirectory = distDirectory) {
@@ -316,7 +405,7 @@ async function verifyRuntime(files, rootDirectory = distDirectory) {
           references.stylesheets.includes(expectedPath),
           `index.html has no active stylesheet for ${file.path}.`,
         );
-      } else if (!machineReadableWikiFile(file.path)) {
+      } else if (!machineReadablePublicationFile(file.path)) {
         assert.fail(`No load-bearing HTML reference rule exists for ${file.path}.`);
       }
     }

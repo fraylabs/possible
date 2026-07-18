@@ -8,12 +8,16 @@ import {
 } from "@possible/knowledge";
 import type { Plugin } from "vite";
 import { fileURLToPath } from "node:url";
+import { buildAgentPublications } from "./src/agent-publications";
 
 const pageReference = (page: WikiPage) => ({
   slug: page.slug,
   title: page.title,
   summary: page.summary,
   tags: page.tags,
+  aliases: page.aliases ?? [],
+  ...(page.kind ? { kind: page.kind } : {}),
+  coverage: page.coverage ?? [],
   reviewedAt: page.reviewedAt,
   sources: page.sources,
   links: page.links,
@@ -54,6 +58,14 @@ export const wikiPublications = (): Plugin => ({
       });
     }
 
+    for (const publication of buildAgentPublications(wikiCorpusData)) {
+      this.emitFile({
+        type: "asset",
+        fileName: publication.path,
+        source: json(publication.value),
+      });
+    }
+
     this.emitFile({
       type: "asset",
       fileName: "llms.txt",
@@ -62,12 +74,20 @@ export const wikiPublications = (): Plugin => ({
         "",
         "Possible is a sourced, linked wiki of what people and agents can make possible.",
         "",
+        "- Agent protocol (static; no backend or query-aware endpoint): https://possible.sh/agent/protocol.json",
+        "- Search index: https://possible.sh/agent/search.json",
+        "- Exact page read: https://possible.sh/agent/read/{slug}.json",
+        "- Derived related pages: https://possible.sh/agent/related/{slug}.json",
+        "",
         "- Corpus index: https://possible.sh/wiki/index.json",
         "- Individual page JSON: https://possible.sh/wiki/{slug}.json",
         "- Human page: https://possible.sh/wiki/{slug}",
         "- Source repository: https://github.com/fraylabs/possible",
         "",
-        "Each page includes maintained prose, sources, a review date, directional links, backlinks, and related pages.",
+        "Each page includes maintained prose, sources, a review date, authored aliases when available, directional links, backlinks, and related pages.",
+        "The static search response is a downloadable index; apply its documented normalization and ranking locally. Query parameters are not evaluated.",
+        "Search consumers must distinguish a verified route, a partial route, and no maintained route. Similarity alone is not evidence of a solution.",
+        "Read and related accept only slugs present in the published index. Unknown slugs have no JSON error contract on the static SPA deployment.",
         "Possible supplies knowledge; the consuming agent remains responsible for reasoning and execution.",
         "",
       ].join("\n"),

@@ -3,6 +3,9 @@ slug: build-a-widget
 title: Build a widget
 summary: Plan a small sourced widget project from materials through publication.
 tags: [making, guide]
+aliases: [small widget project, widget build]
+kind: outcome
+coverage: [physical-product, publication]
 reviewedAt: 2026-07-18
 sources:
   - title: Example engineering guide

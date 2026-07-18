@@ -28,6 +28,8 @@ data module after reviewed page changes.
 - `getRelatedPages()` returns the direct outgoing and incoming neighbors.
 - `@possible/knowledge/data` exports `wikiCorpusData` without Node-only imports.
 
-The public model has only `PageSource`, `WikiPage`, and `WikiCorpus`. Links are
-directional slug strings extracted from Markdown; no separately authored graph
-or planner ontology exists.
+The public model has only `PageSource`, `WikiPage`, and `WikiCorpus`. Pages may
+also carry explicitly authored `aliases`, an existing page `kind` (`outcome`,
+`method`, `project`, `provider`, or `concept`), and `coverage` strings for
+deterministic agent routing. Links are directional slug strings extracted from
+Markdown; no separately authored graph or planner ontology exists.

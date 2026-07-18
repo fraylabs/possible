@@ -60,6 +60,7 @@ const cloneCorpus = (corpus: WikiCorpus): WikiCorpus =>
 const searchFields = (page: WikiPage): Array<readonly [string, number]> => [
   [page.title, 16],
   [page.slug, 12],
+  [(page.aliases ?? []).join(" "), 14],
   [page.tags.join(" "), 10],
   [page.summary, 8],
   [page.body, 2],
@@ -84,10 +85,18 @@ export function searchPages(
 
   const phrase = terms.join(" ");
   const requestedTags = new Set((options.tags ?? []).map(normalize).filter(Boolean));
+  const requestedCoverage = new Set((options.coverage ?? []).map(normalize).filter(Boolean));
   const limit = Math.max(0, Math.min(options.limit ?? 20, 100));
 
   return corpus.pages
     .filter((page) => {
+      if (options.kind !== undefined && page.kind !== options.kind) return false;
+      if (
+        requestedCoverage.size > 0 &&
+        ![...requestedCoverage].every((scope) =>
+          (page.coverage ?? []).some((value) => normalize(value) === scope),
+        )
+      ) return false;
       if (requestedTags.size === 0) return true;
       const pageTags = new Set(page.tags.map(normalize));
       return [...requestedTags].every((tag) => pageTags.has(tag));

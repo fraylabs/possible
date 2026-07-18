@@ -10,6 +10,7 @@ export type {
   PageSearchOptions,
   PageSearchResult,
   PageSource,
+  WikiPageKind,
   WikiCorpus,
   WikiPage,
 } from "./types.js";
