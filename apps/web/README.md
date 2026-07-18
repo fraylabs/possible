@@ -18,6 +18,11 @@ Desktop and mobile use the same full-page model. Selecting a search result,
 article link, graph node, or browser-history entry performs the same page
 navigation action and preserves the active mode.
 
+The map uses a Three.js canvas for atmospheric particles, node glows, and
+animated connection signals. Labels and controls remain semantic HTML above
+the canvas, and the existing static connection lines remain as a fallback when
+WebGL 2 or motion is unavailable.
+
 Production builds also generate public agent-readable files from that corpus:
 
 - `/llms.txt`

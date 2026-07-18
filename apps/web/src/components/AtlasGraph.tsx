@@ -1,4 +1,5 @@
 import type { AtlasBranch } from "../atlas";
+import { ThreeGraphScene, type ThreeGraphEdge, type ThreeGraphNode } from "./ThreeGraphScene";
 
 interface AtlasGraphProps {
   branches: AtlasBranch[];
@@ -6,6 +7,21 @@ interface AtlasGraphProps {
 }
 
 export function AtlasGraph({ branches, onSelectBranch }: AtlasGraphProps) {
+  const rootId = "possible-atlas-root";
+  const sceneNodes: ThreeGraphNode[] = [
+    { id: rootId, x: 50, y: 50, role: "root" },
+    ...branches.map((branch) => ({
+      id: branch.page.slug,
+      x: branch.x,
+      y: branch.y,
+      role: "branch" as const,
+    })),
+  ];
+  const sceneEdges: ThreeGraphEdge[] = branches.map((branch) => ({
+    source: rootId,
+    target: branch.page.slug,
+  }));
+
   return (
     <section className="graph-shell graph-shell--atlas" aria-labelledby="atlas-graph-title">
       <h2 id="atlas-graph-title" className="visually-hidden">Knowledge fields</h2>
@@ -13,6 +29,7 @@ export function AtlasGraph({ branches, onSelectBranch }: AtlasGraphProps) {
       <div className="graph-field graph-field--atlas" role="region" aria-label="Possible knowledge atlas">
         {branches.length > 0 ? (
           <>
+            <ThreeGraphScene nodes={sceneNodes} edges={sceneEdges} variant="atlas" />
             <svg className="graph-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
               {branches.map((branch) => (
                 <line

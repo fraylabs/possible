@@ -1,4 +1,5 @@
 import type { RelatedGraphModel } from "../wiki";
+import { ThreeGraphScene, type ThreeGraphEdge, type ThreeGraphNode } from "./ThreeGraphScene";
 
 interface RelatedGraphProps {
   graph: RelatedGraphModel;
@@ -10,6 +11,16 @@ export function RelatedGraph({
   onSelectPage,
 }: RelatedGraphProps) {
   const positions = new Map(graph.nodes.map((node) => [node.page.slug, node]));
+  const sceneNodes: ThreeGraphNode[] = graph.nodes.map((node) => ({
+    id: node.page.slug,
+    x: node.x,
+    y: node.y,
+    role: node.relation === "selected" ? "selected" : "related",
+  }));
+  const sceneEdges: ThreeGraphEdge[] = graph.edges.map((edge) => ({
+    source: edge.source,
+    target: edge.target,
+  }));
 
   return (
     <section className="graph-shell" aria-labelledby="graph-title">
@@ -18,6 +29,7 @@ export function RelatedGraph({
       <div className="graph-field" role="region" aria-label="Related page graph">
         {graph.selected ? (
           <>
+            <ThreeGraphScene nodes={sceneNodes} edges={sceneEdges} variant="related" />
             <svg className="graph-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
               {graph.edges.map((edge) => {
                 const source = positions.get(edge.source);
@@ -46,6 +58,7 @@ export function RelatedGraph({
                   role="img"
                   aria-label={`${node.page.title}, current page`}
                 >
+                  <span>Current page</span>
                   <strong>{node.page.title}</strong>
                 </div>
               ) : (
@@ -57,6 +70,7 @@ export function RelatedGraph({
                   onClick={() => onSelectPage(node.page.slug)}
                   aria-label={`${node.page.title}, related page`}
                 >
+                  <span>Explore</span>
                   <strong>{node.page.title}</strong>
                 </button>
               ))}
