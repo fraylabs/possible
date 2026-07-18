@@ -3,23 +3,23 @@
   "artifactDirectory": "apps/web/dist",
   "buildCommand": "npm run preview:build",
   "verificationCommand": "npm run preview:verify",
-  "sha256": "44c578af4c389a5b2ee1730c57459dfb49afd341d6f4e47b0159511ccde48058",
-  "totalBytes": 801118,
+  "sha256": "0ef15a21ad41eb737358e7bd49536ca1ed5dffd0b16605ec8ac08d6715fa2ab5",
+  "totalBytes": 807096,
   "files": [
     {
-      "path": "assets/index-BKT_YOBj.js",
-      "bytes": 302162,
-      "sha256": "a62f887475d20d27fa5b89a1fb086f284a341bdbfcd686986e33c92c8290372f"
+      "path": "assets/index-BDSGVRI8.js",
+      "bytes": 306587,
+      "sha256": "b615b1c566ffe7e94b1695365ab4cc9abaccf41af2a83391bd65f96abeb319e8"
     },
     {
-      "path": "assets/index-dNlBfXzw.css",
-      "bytes": 13273,
-      "sha256": "52a116ab89361ce8e1c3d7cb2a29d6437773d08713d40ec2e914a0eacc003063"
+      "path": "assets/index-DaOoLK6x.css",
+      "bytes": 14826,
+      "sha256": "85a69e0a3fb09766845ebed3463641f52a6119e5cb4caf05e2c72b6b94673ce3"
     },
     {
       "path": "index.html",
       "bytes": 614,
-      "sha256": "1df6864c0dd109f0e52e06953fdde5500b331355ce7d220d08bb5ed3dd6a602b"
+      "sha256": "7a6d2ea1e2f53c86bc1927fbb0ca10fb87a08b89a4b744db4871ea48d3a6d1df"
     },
     {
       "path": "llms.txt",
@@ -299,7 +299,7 @@
     "dnsProvider": "Cloudflare",
     "sourceRepository": "https://github.com/fraylabs/possible",
     "publishedAt": "2026-07-18",
-    "artifactSha256": "44c578af4c389a5b2ee1730c57459dfb49afd341d6f4e47b0159511ccde48058",
+    "artifactSha256": "0ef15a21ad41eb737358e7bd49536ca1ed5dffd0b16605ec8ac08d6715fa2ab5",
     "verificationReceipt": "deployment/PRODUCTION.md",
     "remainingApprovalBoundaries": [
       "cost or paid-plan changes",
