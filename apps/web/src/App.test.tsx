@@ -21,6 +21,8 @@ describe("Possible", () => {
     expect([...container.querySelectorAll(".journey li strong")].map((node) => node.textContent)).toEqual([
       "Install", "Invoke", "Brainstorm", "Recommend", "Confirm", "Execute",
     ]);
+    expect(screen.getByText(/No ingredient skills install and no outcome work starts/i)).toBeInTheDocument();
+    expect(screen.getByText(/Saying yes authorizes repo-local ingredient skill installation/i)).toBeInTheDocument();
   });
 
   it("copies the one-command installer", async () => {
@@ -56,6 +58,8 @@ describe("Possible", () => {
 
     expect(screen.getByRole("heading", { name: /Possible recommends it.*You approve it/i })).toBeInTheDocument();
     expect(screen.getAllByRole("link", { name: /Start with \$possible/i })[0]).toHaveAttribute("href", "/#start");
+    expect(screen.getByText(/WHAT YES AUTHORIZES/i)).toBeInTheDocument();
+    expect(screen.getByText(/External actions still require separate approval/i)).toBeInTheDocument();
     expect(screen.queryByLabelText("YOUR PRODUCT BRIEF")).not.toBeInTheDocument();
   });
 
@@ -72,6 +76,7 @@ describe("Possible", () => {
     expect(screen.getByRole("heading", { name: /After the yes/i })).toBeInTheDocument();
     expect(screen.getByText("CURRENT ENTRY FLOW / ILLUSTRATIVE INTAKE")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /Hardware Launch pack/i })).toHaveAttribute("href", "/packs/hardware-launch");
+    expect(screen.getByText(/repo-local ingredient skill installation.*External actions still require separate approval/i)).toBeInTheDocument();
     expect(screen.getByText("Yes, proceed.", { selector: ".demo-intake-confirm span" })).toBeInTheDocument();
     expect(screen.getByText("RECORDED REAL RUN")).toBeInTheDocument();
     expect(screen.getByText("Brief locked", { selector: ".replay-controls strong" })).toBeInTheDocument();

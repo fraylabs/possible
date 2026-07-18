@@ -25,6 +25,7 @@ type DemoThread = {
 const demoThread = demoThreadData as DemoThread;
 
 const installCommand = "npx @possible/cli init";
+const approvalDisclosure = "Saying yes authorizes repo-local ingredient skill installation, the shared outcome brief and state files, and local outcome work. External actions still require separate approval.";
 
 function CopyButton({ label, value }: { label: string; value: string }) {
   const [state, setState] = useState<CopyState>("idle");
@@ -157,7 +158,7 @@ function CreatePage() {
             ["Invoke", "Type $possible in Codex."],
             ["Brainstorm", "Start rough. Possible asks one useful question at a time."],
             ["Recommend", "Possible links the outcome pack that best fits."],
-            ["Confirm", "Nothing installs or runs until you say yes."],
+            ["Confirm", "No ingredient skills install and no outcome work starts until you say yes."],
             ["Execute", "Codex coordinates the specialists and verifies the result."],
           ].map(([title, detail], index) => <li key={title}><span>0{index + 1}</span><strong>{title}</strong><p>{detail}</p></li>)}
         </ol>
@@ -173,6 +174,7 @@ function CreatePage() {
           <header><span>RECOMMENDED OUTCOME</span><strong>01 / BEST FIT</strong></header>
           <p><span>WHAT I UNDERSTAND</span>A believable launch for a desk-sized focus device, without claiming production hardware exists.</p>
           <a href="/packs/hardware-launch"><span>USE THIS PACK</span><strong>Hardware Launch</strong><i>VIEW PACK ↗</i></a>
+          <p className="approval-disclosure">{approvalDisclosure}</p>
           <div><span>PROCEED WITH THIS OUTCOME?</span><strong>Yes, proceed.</strong></div>
         </article>
       </section>
@@ -303,6 +305,7 @@ function PackDetailPage({ pack }: { pack: OutcomePack }) {
           <p><span>RECOMMENDED OUTCOME</span><a href={`/packs/${pack.slug}`}>{pack.name} ↗</a></p>
           <p><span>WHY IT FITS</span>{pack.promise}</p>
           <p><span>WHAT WILL EXIST</span>{pack.outputs.join(" · ")}</p>
+          <p className="approval-disclosure"><span>WHAT YES AUTHORIZES</span>{approvalDisclosure}</p>
           <footer><span>PROCEED WITH THIS OUTCOME?</span><strong>Yes, proceed.</strong></footer>
         </article>
       </section>
@@ -453,7 +456,7 @@ function DemoIntakePrelude() {
           <p><strong>USER</strong><span>I want to make a small device that helps me focus without opening my phone.</span></p>
           <p><strong>POSSIBLE</strong><span>Interesting — it sounds like a physical focus ritual, not another app. When this is finished, what would make it feel real to you?</span></p>
           <p><strong>USER</strong><span>A believable launch: the device concept, a website, and a short product film.</span></p>
-          <p className="demo-intake-recommend"><strong>POSSIBLE</strong><span>I recommend the <a href="/packs/hardware-launch">Hardware Launch pack ↗</a>. It coordinates the site, film, prototype CAD, waitlist contract, and independent review. Proceed with this outcome?</span></p>
+          <p className="demo-intake-recommend"><strong>POSSIBLE</strong><span>I recommend the <a href="/packs/hardware-launch">Hardware Launch pack ↗</a>. It coordinates the site, film, prototype CAD, waitlist contract, and independent review. {approvalDisclosure} Proceed with this outcome?</span></p>
           <p className="demo-intake-confirm"><strong>USER</strong><span>Yes, proceed.</span></p>
         </article>
       </div>
