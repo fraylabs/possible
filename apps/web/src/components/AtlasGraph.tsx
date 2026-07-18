@@ -28,6 +28,15 @@ export function AtlasGraph({
   const graph = useMemo(() => buildAtlasGraph(corpus), [corpus]);
   const pageCountBySection = new Map(branches.map((branch) => [branch.section, branch.pageCount]));
   const sectionTitleBySection = new Map(branches.map((branch) => [branch.section, branch.page.title]));
+  const hubSlugs = new Set(
+    branches.flatMap((branch) => {
+      const sectionNodes = graph.nodes
+        .filter((node) => node.section === branch.section && node.role === "page")
+        .sort((left, right) => right.degree - left.degree || left.page.title.localeCompare(right.page.title));
+      const hubCount = Math.min(5, Math.max(2, Math.ceil(Math.sqrt(sectionNodes.length) / 3)));
+      return sectionNodes.slice(0, hubCount).map((node) => node.page.slug);
+    }),
+  );
   const nodes: KnowledgeGraphNode[] = graph.nodes.map((node) => {
     const pageCount = pageCountBySection.get(node.section) ?? 1;
     return {
@@ -39,7 +48,7 @@ export function AtlasGraph({
       role: node.role,
       color: colorForSection(node.section),
       degree: node.degree,
-      prominent: node.role === "field" || node.degree >= 4,
+      prominent: node.role === "field" || hubSlugs.has(node.page.slug),
       interactive: true,
       ariaLabel: node.role === "field"
         ? `${node.page.title}, ${pageCount} pages`

@@ -569,7 +569,7 @@ h1[tabindex="-1"]:focus {
 }
 
 .graph-edge {
-  stroke: rgba(149, 158, 180, 0.36);
+  stroke: rgba(149, 158, 180, 0.2);
   stroke-width: 0.13;
   stroke-linecap: round;
   transition: opacity 150ms ease, stroke 150ms ease, stroke-width 150ms ease;
@@ -608,9 +608,9 @@ h1[tabindex="-1"]:focus {
 }
 
 .knowledge-node__dot {
-  width: 5px;
-  height: 5px;
-  border: 1px solid rgba(255, 255, 255, 0.44);
+  width: 7px;
+  height: 7px;
+  border: 1px solid rgba(255, 255, 255, 0.62);
   border-radius: 50%;
   background: var(--node-color);
   box-shadow:
@@ -659,8 +659,8 @@ h1[tabindex="-1"]:focus {
 }
 
 .knowledge-node--field .knowledge-node__dot {
-  width: 11px;
-  height: 11px;
+  width: 13px;
+  height: 13px;
   box-shadow:
     0 0 0 5px color-mix(in srgb, var(--node-color) 12%, transparent),
     0 0 24px color-mix(in srgb, var(--node-color) 58%, transparent);
