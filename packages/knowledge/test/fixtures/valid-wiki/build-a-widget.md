@@ -6,6 +6,7 @@ tags: [making, guide]
 aliases: [small widget project, widget build]
 kind: outcome
 coverage: [physical-product, publication]
+routeStatus: verified
 reviewedAt: 2026-07-18
 sources:
   - title: Example engineering guide

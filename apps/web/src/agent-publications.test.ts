@@ -42,6 +42,11 @@ describe("static agent publication", () => {
       corpus: { pageCount: corpus.pages.length, sourceIndexUrl: "/wiki/index.json" },
     });
     expect(search.search.match).toBe("all query terms");
+    expect(search.search.assessment.statuses).toEqual([
+      "verified",
+      "partial",
+      "no-maintained-route",
+    ]);
     expect(search.search.ranking).toEqual([
       { field: "title", weight: 16 },
       { field: "slug", weight: 12 },
@@ -66,6 +71,7 @@ describe("static agent publication", () => {
     expect(indexedPage.sources).toEqual(page.sources);
     expect(indexedPage.aliases).toEqual(page.aliases ?? []);
     expect(indexedPage.coverage).toEqual(page.coverage ?? []);
+    expect(indexedPage.routeStatus).toBe(page.routeStatus);
     expect(indexedPage.reviewedAt).toBe(page.reviewedAt);
   });
 

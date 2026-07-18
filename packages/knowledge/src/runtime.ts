@@ -6,6 +6,15 @@ import type {
   WikiPage,
 } from "./types.js";
 
+export type SearchRouteStatus = "verified" | "partial" | "no-maintained-route";
+
+export interface SearchAssessment {
+  status: SearchRouteStatus;
+  reason: string;
+  verifiedRoutes: string[];
+  partialRoutes: string[];
+}
+
 const normalize = (value: string): string =>
   value
     .normalize("NFKD")
@@ -122,6 +131,52 @@ export function searchPages(
         compareText(left.page.slug, right.page.slug),
     )
     .slice(0, limit);
+}
+
+export function assessSearchResults(results: readonly PageSearchResult[]): SearchAssessment {
+  const outcomeResults = results.filter((result) => {
+    if (result.page.kind !== "outcome") return false;
+    const authoredRoutingText = normalize([
+      result.page.title,
+      result.page.slug,
+      ...(result.page.aliases ?? []),
+      ...result.page.tags,
+    ].join(" "));
+    return result.matchedTerms.every((term) => authoredRoutingText.includes(term));
+  });
+  const verifiedRoutes = outcomeResults
+    .filter((result) => result.page.routeStatus === "verified")
+    .map((result) => result.page.slug);
+  const partialRoutes = outcomeResults
+    .filter((result) => result.page.routeStatus !== "verified")
+    .map((result) => result.page.slug);
+
+  if (verifiedRoutes.length > 0) {
+    return {
+      status: "verified",
+      reason: "Possible found an explicitly verified outcome route.",
+      verifiedRoutes,
+      partialRoutes,
+    };
+  }
+
+  if (partialRoutes.length > 0) {
+    return {
+      status: "partial",
+      reason: "Possible found an outcome page, but no explicitly verified route.",
+      verifiedRoutes,
+      partialRoutes,
+    };
+  }
+
+  return {
+    status: "no-maintained-route",
+    reason: results.length > 0
+      ? "Possible found related knowledge, but no maintained outcome route for this query."
+      : "Possible found no maintained pages matching every query term.",
+    verifiedRoutes,
+    partialRoutes,
+  };
 }
 
 export function getBacklinks(corpus: WikiCorpus, slug: string): WikiPage[] {

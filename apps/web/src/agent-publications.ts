@@ -43,6 +43,7 @@ export interface AgentPageReference {
   aliases: string[];
   kind?: WikiPage["kind"];
   coverage: string[];
+  routeStatus?: WikiPage["routeStatus"];
   reviewedAt: string;
   sources: WikiPage["sources"];
   links: string[];
@@ -114,6 +115,12 @@ export interface AgentSearchIndex {
     phraseBonus: 20;
     defaultLimit: 20;
     maximumLimit: 100;
+    assessment: {
+      statuses: readonly ["verified", "partial", "no-maintained-route"];
+      verified: string;
+      partial: string;
+      noMaintainedRoute: string;
+    };
   };
   pages: AgentSearchDocument[];
 }
@@ -172,6 +179,7 @@ export function toAgentPageReference(page: WikiPage): AgentPageReference {
     aliases: page.aliases ?? [],
     ...(page.kind ? { kind: page.kind } : {}),
     coverage: page.coverage ?? [],
+    ...(page.routeStatus ? { routeStatus: page.routeStatus } : {}),
     reviewedAt: page.reviewedAt,
     sources: page.sources,
     links: page.links,
@@ -217,6 +225,12 @@ export function buildAgentSearchIndex(corpus: WikiCorpus): AgentSearchIndex {
       phraseBonus: 20,
       defaultLimit: 20,
       maximumLimit: 100,
+      assessment: {
+        statuses: ["verified", "partial", "no-maintained-route"],
+        verified: "An explicitly verified outcome route matched the query.",
+        partial: "An outcome page matched, but no explicitly verified route matched.",
+        noMaintainedRoute: "No maintained outcome route matched; related pages are not a solution.",
+      },
     },
     pages: corpus.pages.map((page) => ({
       ...toAgentPageReference(page),
@@ -319,6 +333,7 @@ export function buildAgentProtocol(): AgentProtocolDocument {
         "aliases",
         "kind",
         "coverage",
+        "routeStatus",
         "reviewedAt",
         "sources",
         "links",

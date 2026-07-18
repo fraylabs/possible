@@ -323,6 +323,11 @@ async function verifyMachineReadableWiki(baseUrl, files) {
   assert.equal(search.corpus.pageCount, index.pageCount);
   assert.equal(search.pages.length, index.pageCount);
   assert.equal(search.search.match, "all query terms");
+  assert.deepEqual(search.search.assessment.statuses, [
+    "verified",
+    "partial",
+    "no-maintained-route",
+  ]);
 
   const canonicalPages = new Map(documents.map((document) => [document.page.slug, document]));
   const searchSlugs = new Set(search.pages.map((page) => page.slug));
@@ -331,6 +336,9 @@ async function verifyMachineReadableWiki(baseUrl, files) {
     const canonical = canonicalPages.get(indexedPage.slug);
     assert(canonical, `Search index contains unknown page ${indexedPage.slug}.`);
     assert.deepEqual(indexedPage.sources, canonical.page.sources);
+    assert.deepEqual(indexedPage.aliases, canonical.page.aliases ?? []);
+    assert.deepEqual(indexedPage.coverage, canonical.page.coverage ?? []);
+    assert.equal(indexedPage.routeStatus, canonical.page.routeStatus);
     assert.equal(indexedPage.reviewedAt, canonical.page.reviewedAt);
     assert.deepEqual(indexedPage.searchFields, {
       title: canonical.page.title,

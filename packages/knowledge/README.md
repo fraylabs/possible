@@ -23,6 +23,8 @@ data module after reviewed page changes.
 
 - `loadWiki()` returns an isolated copy of the compiled `WikiCorpus`.
 - `searchPages()` performs deterministic weighted text search.
+- `assessSearchResults()` labels retrieved outcomes as `verified`, `partial`, or
+  `no-maintained-route` without treating related pages as a solution.
 - `getPage()` retrieves one exact slug.
 - `getBacklinks()` derives incoming links from page bodies.
 - `getRelatedPages()` returns the direct outgoing and incoming neighbors.
@@ -32,4 +34,6 @@ The public model has only `PageSource`, `WikiPage`, and `WikiCorpus`. Pages may
 also carry explicitly authored `aliases`, an existing page `kind` (`outcome`,
 `method`, `project`, `provider`, or `concept`), and `coverage` strings for
 deterministic agent routing. Links are directional slug strings extracted from
-Markdown; no separately authored graph or planner ontology exists.
+Markdown; no separately authored graph or planner ontology exists. An outcome
+may carry `routeStatus: verified` only when its complete route has contributor
+evidence; otherwise `partial` keeps the gap explicit.

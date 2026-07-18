@@ -39,6 +39,10 @@
       "uniqueItems": true,
       "items": { "type": "string", "minLength": 1 }
     },
+    "routeStatus": {
+      "type": "string",
+      "enum": ["verified", "partial"]
+    },
     "reviewedAt": { "type": "string", "format": "date" },
     "sources": {
       "type": "array",

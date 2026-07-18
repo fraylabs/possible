@@ -18,6 +18,7 @@ const pageReference = (page: WikiPage) => ({
   aliases: page.aliases ?? [],
   ...(page.kind ? { kind: page.kind } : {}),
   coverage: page.coverage ?? [],
+  ...(page.routeStatus ? { routeStatus: page.routeStatus } : {}),
   reviewedAt: page.reviewedAt,
   sources: page.sources,
   links: page.links,

@@ -14,9 +14,13 @@ When binding a non-loopback interface, set comma-separated `ALLOWED_HOSTS` so
 the SDK can validate Host headers at the application boundary.
 
 `search` accepts a natural-language query plus an optional limit and returns
-page `slug`, `title`, `summary`, and `matchedTerms`. `read` accepts an exact
-page slug and returns the full Markdown page plus `links`, `sources`,
-`backlinks`, and `relatedPages`.
+page `slug`, `title`, `summary`, authored routing metadata, matched terms, and
+an assessment. The assessment is `verified` only for an explicitly verified
+outcome route, `partial` for incomplete outcome knowledge, and
+`no-maintained-route` when Possible has no maintained outcome route even if
+related tools or methods were found. `read` accepts an exact page slug and
+returns the full Markdown page plus `links`, `sources`, `backlinks`, and
+`relatedPages`.
 
 The server never stores credentials or exposes deployment, DNS, payment,
 ordering, fabrication, or other write tools. Possible maintains knowledge; the

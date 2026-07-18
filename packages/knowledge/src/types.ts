@@ -4,6 +4,7 @@ export interface PageSource {
 }
 
 export type WikiPageKind = "outcome" | "method" | "project" | "provider" | "concept";
+export type WikiPageRouteStatus = "verified" | "partial";
 
 export interface WikiPage {
   slug: string;
@@ -14,6 +15,7 @@ export interface WikiPage {
   aliases?: string[];
   kind?: WikiPageKind;
   coverage?: string[];
+  routeStatus?: WikiPageRouteStatus;
   reviewedAt: string;
   sources: PageSource[];
   links: string[];

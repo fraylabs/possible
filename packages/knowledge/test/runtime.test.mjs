@@ -6,6 +6,7 @@ import {
   getPage,
   getRelatedPages,
   loadWiki,
+  assessSearchResults,
   searchPages,
 } from "../dist/index.js";
 import { wikiCorpusData } from "../dist/data.js";
@@ -18,9 +19,10 @@ const corpus = {
       summary: "Publish an inclusive website with semantic HTML and keyboard support.",
       body: "Start with landmarks, headings, labels, and visible focus states.",
       tags: ["web", "accessibility"],
-      aliases: ["inclusive web page", "accessible site"],
+      aliases: ["inclusive web page", "accessible site", "accessible website"],
       kind: "outcome",
       coverage: ["web", "accessibility"],
+      routeStatus: "verified",
       reviewedAt: "2026-07-18",
       sources: [{ title: "Web accessibility guidance", url: "https://example.com/a11y" }],
       links: ["choose-web-hosting"],
@@ -83,6 +85,25 @@ test("searchPages routes through explicit aliases, kind, and coverage", () => {
   );
   assert.deepEqual(searchPages(corpus, "website", { kind: "outcome", coverage: ["delivery"] }), []);
   assert.deepEqual(searchPages(corpus, "website", { coverage: ["missing-scope"] }), []);
+});
+
+test("assessSearchResults reports route truth without upgrading related pages", () => {
+  const verified = searchPages(corpus, "accessible website");
+  assert.deepEqual(assessSearchResults(verified), {
+    status: "verified",
+    reason: "Possible found an explicitly verified outcome route.",
+    verifiedRoutes: ["build-an-accessible-site"],
+    partialRoutes: [],
+  });
+
+  const relatedOnly = searchPages(corpus, "hosting");
+  assert.equal(assessSearchResults(relatedOnly).status, "no-maintained-route");
+  assert.deepEqual(assessSearchResults([]), {
+    status: "no-maintained-route",
+    reason: "Possible found no maintained pages matching every query term.",
+    verifiedRoutes: [],
+    partialRoutes: [],
+  });
 });
 
 test("exact reads, backlinks, and related pages derive from page links", () => {

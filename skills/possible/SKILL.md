@@ -13,9 +13,13 @@ agents.
 2. Use `read` on the most relevant slugs only.
 3. Follow internal page links progressively when they are needed to answer the
    task; do not load unrelated branches speculatively.
-4. Cite the page title, review date, and sources when retrieved knowledge
+4. Treat `verified` as the only complete maintained route. `partial` means
+   the outcome knowledge is incomplete, and `no-maintained-route` means the
+   retrieved pages do not establish a maintained outcome route. Do not turn a
+   related tool or method into a claimed solution.
+5. Cite the page title, review date, and sources when retrieved knowledge
    informs a recommendation or plan.
-5. Stop once the maintained pages answer the question.
+6. Stop once the maintained pages answer the question.
 
 Possible hosts knowledge only. The agent host still plans, decides whether more
 retrieval is needed, and executes any approved actions.

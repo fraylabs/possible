@@ -14,6 +14,7 @@ import {
   getPage,
   getRelatedPages,
   loadWiki,
+  assessSearchResults,
   searchPages,
   type PageSource,
   type WikiCorpus,
@@ -38,6 +39,10 @@ const fixtureWiki: WikiCorpus = {
       summary: "Publish an inclusive website with semantic HTML and keyboard support.",
       body: "Start with landmarks, headings, labels, and visible focus states.\n\nThen compare [hosting options](/wiki/choose-web-hosting).",
       tags: ["web", "accessibility"],
+      aliases: ["inclusive web page", "accessible site", "accessible website"],
+      kind: "outcome",
+      coverage: ["web", "accessibility"],
+      routeStatus: "verified",
       reviewedAt: "2026-07-17",
       sources: [{ title: "Web accessibility guidance", url: "https://example.com/a11y" }],
       links: ["choose-web-hosting"],
@@ -58,6 +63,8 @@ const fixtureWiki: WikiCorpus = {
       summary: "Write down decisions and limitations so that work can be reviewed.",
       body: "Link the implementation guide and record verification evidence.\n\nReview [build an accessible site](/wiki/build-an-accessible-site).",
       tags: ["practice"],
+      kind: "outcome",
+      routeStatus: "partial",
       reviewedAt: "2026-07-15",
       sources: [{ title: "Documentation reference", url: "https://example.com/docs" }],
       links: ["build-an-accessible-site"],
@@ -74,12 +81,17 @@ interface PageSummary {
 interface SearchResponse {
   query: string;
   count: number;
+  assessment: ReturnType<typeof assessSearchResults>;
   results: Array<PageSummary & { matchedTerms: string[] }>;
 }
 
 interface ReadResponse {
   page: PageSummary & {
     tags: string[];
+    aliases: string[];
+    kind?: WikiPage["kind"];
+    coverage: string[];
+    routeStatus?: WikiPage["routeStatus"];
     reviewedAt: string;
     markdown: string;
     links: string[];
@@ -104,6 +116,10 @@ function renderMarkdown(page: WikiPage): string {
     `title: ${JSON.stringify(page.title)}`,
     `summary: ${JSON.stringify(page.summary)}`,
     `tags: [${page.tags.map((tag) => JSON.stringify(tag)).join(", ")}]`,
+    ...(page.aliases ? [`aliases: [${page.aliases.map((alias) => JSON.stringify(alias)).join(", ")}]`] : []),
+    ...(page.kind ? [`kind: ${JSON.stringify(page.kind)}`] : []),
+    ...(page.coverage ? [`coverage: [${page.coverage.map((scope) => JSON.stringify(scope)).join(", ")}]`] : []),
+    ...(page.routeStatus ? [`routeStatus: ${JSON.stringify(page.routeStatus)}`] : []),
     `reviewedAt: ${JSON.stringify(page.reviewedAt)}`,
     "sources:",
   ];
@@ -119,10 +135,15 @@ function expectedSearchResponse(corpus: WikiCorpus, query: string, limit: number
   const results = searchPages(corpus, query, { limit }).map((result) => ({
     ...toPageSummary(result.page),
     matchedTerms: result.matchedTerms,
+    aliases: result.page.aliases ?? [],
+    ...(result.page.kind ? { kind: result.page.kind } : {}),
+    coverage: result.page.coverage ?? [],
+    ...(result.page.routeStatus ? { routeStatus: result.page.routeStatus } : {}),
   }));
   return {
     query,
     count: results.length,
+    assessment: assessSearchResults(searchPages(corpus, query, { limit })),
     results,
   };
 }
@@ -134,6 +155,10 @@ function expectedReadResponse(corpus: WikiCorpus, slug: string): ReadResponse {
     page: {
       ...toPageSummary(page),
       tags: page.tags,
+      aliases: page.aliases ?? [],
+      ...(page.kind ? { kind: page.kind } : {}),
+      coverage: page.coverage ?? [],
+      ...(page.routeStatus ? { routeStatus: page.routeStatus } : {}),
       reviewedAt: page.reviewedAt,
       markdown: renderMarkdown(page),
       links: page.links,
@@ -217,6 +242,35 @@ describe("Possible MCP", () => {
       successData<SearchResponse>(response),
       expectedSearchResponse(fixtureWiki, query, 5),
     );
+  });
+
+  it("reports verified, partial, and no-maintained-route honestly", async () => {
+    const activeClient = connectedClient(client);
+
+    const partial = await activeClient.callTool({
+      name: "search",
+      arguments: { query: "document a project" },
+    });
+    assert.equal(successData<SearchResponse>(partial).assessment.status, "partial");
+
+    const relatedOnly = await activeClient.callTool({
+      name: "search",
+      arguments: { query: "hosting" },
+    });
+    const relatedData = successData<SearchResponse>(relatedOnly);
+    assert.equal(relatedData.assessment.status, "no-maintained-route");
+    assert.ok(relatedData.results.length > 0);
+
+    const missing = await activeClient.callTool({
+      name: "search",
+      arguments: { query: "rocket" },
+    });
+    assert.deepEqual(successData<SearchResponse>(missing).assessment, {
+      status: "no-maintained-route",
+      reason: "Possible found no maintained pages matching every query term.",
+      verifiedRoutes: [],
+      partialRoutes: [],
+    });
   });
 
   it("reads one exact page with markdown, links, sources, backlinks, and related pages", async () => {

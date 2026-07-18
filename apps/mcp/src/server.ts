@@ -3,6 +3,7 @@ import {
   getPage,
   getRelatedPages,
   loadWiki,
+  assessSearchResults,
   searchPages,
   type PageSource,
   type WikiCorpus,
@@ -21,6 +22,8 @@ export const POSSIBLE_TOOL_NAMES = [
 export const POSSIBLE_SERVER_INSTRUCTIONS = [
   "Possible is a read-only wiki of contributor-authored pages shared by humans and agents.",
   "Use search for natural-language discovery, then read exact pages and follow internal links progressively.",
+  "Treat the search assessment as authoritative: verified is an explicitly verified outcome route, partial is incomplete outcome knowledge, and no-maintained-route means Possible has not verified a route.",
+  "Do not turn related tools or methods into a complete solution; when the assessment is not verified, say so and invite a sourced contribution.",
   "Cite the page review date and attached sources when a retrieved recommendation matters.",
   "Possible maintains knowledge only; the host agent plans and executes approved actions separately.",
 ].join(" ");
@@ -49,10 +52,18 @@ interface PageSummary {
 
 interface SearchToolResult extends PageSummary {
   matchedTerms: string[];
+  aliases: string[];
+  kind?: WikiPage["kind"];
+  coverage: string[];
+  routeStatus?: WikiPage["routeStatus"];
 }
 
 interface ReadToolPage extends PageSummary {
   tags: string[];
+  aliases: string[];
+  kind?: WikiPage["kind"];
+  coverage: string[];
+  routeStatus?: WikiPage["routeStatus"];
   reviewedAt: string;
   markdown: string;
   links: string[];
@@ -79,6 +90,10 @@ function toSearchToolResult(
   return {
     ...toPageSummary(result.page),
     matchedTerms: result.matchedTerms,
+    aliases: result.page.aliases ?? [],
+    ...(result.page.kind ? { kind: result.page.kind } : {}),
+    coverage: result.page.coverage ?? [],
+    ...(result.page.routeStatus ? { routeStatus: result.page.routeStatus } : {}),
   };
 }
 
@@ -93,6 +108,10 @@ function renderMarkdown(page: WikiPage): string {
     `title: ${quoteYaml(page.title)}`,
     `summary: ${quoteYaml(page.summary)}`,
     `tags: [${page.tags.map(quoteYaml).join(", ")}]`,
+    ...(page.aliases ? [`aliases: [${page.aliases.map(quoteYaml).join(", ")}]`] : []),
+    ...(page.kind ? [`kind: ${quoteYaml(page.kind)}`] : []),
+    ...(page.coverage ? [`coverage: [${page.coverage.map(quoteYaml).join(", ")}]`] : []),
+    ...(page.routeStatus ? [`routeStatus: ${quoteYaml(page.routeStatus)}`] : []),
     `reviewedAt: ${quoteYaml(page.reviewedAt)}`,
     "sources:",
   ];
@@ -109,6 +128,10 @@ function toReadToolResult(corpus: WikiCorpus, page: WikiPage): ReadToolResult {
     page: {
       ...toPageSummary(page),
       tags: page.tags,
+      aliases: page.aliases ?? [],
+      ...(page.kind ? { kind: page.kind } : {}),
+      coverage: page.coverage ?? [],
+      ...(page.routeStatus ? { routeStatus: page.routeStatus } : {}),
       reviewedAt: page.reviewedAt,
       markdown: renderMarkdown(page),
       links: page.links,
@@ -145,8 +168,14 @@ export async function createPossibleServer(
     async ({ query, limit }) => {
       try {
         const searchOptions = limit === undefined ? {} : { limit };
-        const results = searchPages(wiki, query, searchOptions).map(toSearchToolResult);
-        return successResult({ query, count: results.length, results });
+        const matches = searchPages(wiki, query, searchOptions);
+        const results = matches.map(toSearchToolResult);
+        return successResult({
+          query,
+          count: results.length,
+          assessment: assessSearchResults(matches),
+          results,
+        });
       } catch (error) {
         return retrievalFailure(error);
       }

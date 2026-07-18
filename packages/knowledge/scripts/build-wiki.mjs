@@ -19,6 +19,7 @@ const frontmatterKeys = new Set([
   "aliases",
   "kind",
   "coverage",
+  "routeStatus",
   "reviewedAt",
   "sources",
 ]);
@@ -172,6 +173,9 @@ function assertNonemptyText(page, file) {
   (page.coverage ?? []).forEach((scope, index) => {
     if (!scope.trim()) errors.push(`coverage/${index} must contain non-whitespace text`);
   });
+  if (page.routeStatus && page.kind !== "outcome") {
+    errors.push("routeStatus requires kind: outcome");
+  }
   page.sources.forEach((source, index) => {
     if (!source.title.trim()) errors.push(`sources/${index}/title must contain non-whitespace text`);
   });

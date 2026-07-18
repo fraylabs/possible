@@ -40,6 +40,7 @@ test("valid Markdown compiles metadata, body, and deduplicated internal links", 
   assert.deepEqual(corpus.pages[0].aliases, ["small widget project", "widget build"]);
   assert.equal(corpus.pages[0].kind, "outcome");
   assert.deepEqual(corpus.pages[0].coverage, ["physical-product", "publication"]);
+  assert.equal(corpus.pages[0].routeStatus, "verified");
   assert.equal(corpus.pages[1].aliases, undefined);
   assert.equal(corpus.pages[1].kind, undefined);
   assert.equal(corpus.pages[1].coverage, undefined);
@@ -97,6 +98,12 @@ test("page kind is limited to the existing page categories", () => {
   const result = validateFixture("invalid-kind");
   assert.notEqual(result.status, 0);
   assert.match(result.stderr, /kind.*must be equal to one of the allowed values/);
+});
+
+test("route status is reserved for outcome pages", () => {
+  const result = validateFixture("invalid-route-status");
+  assert.notEqual(result.status, 0);
+  assert.match(result.stderr, /routeStatus requires kind: outcome/);
 });
 
 test("routing metadata cannot contain only whitespace", () => {
