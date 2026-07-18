@@ -104,13 +104,16 @@ describe("retrieval examples", () => {
 
     const prompt = screen.getByRole("textbox", { name: "Agent prompt" });
     expect((prompt as HTMLTextAreaElement).value).toContain("not as a project planner");
+    expect((prompt as HTMLTextAreaElement).value).toContain(`${window.location.origin}/llms.txt`);
+    expect((prompt as HTMLTextAreaElement).value).toContain("Require schema version 2");
+    expect((prompt as HTMLTextAreaElement).value).not.toContain("https://possible.sh/llms.txt");
     expect((prompt as HTMLTextAreaElement).value).toContain("bundled guide index");
     expect((prompt as HTMLTextAreaElement).value).not.toMatch(/\bpublished\b/i);
     expect((prompt as HTMLTextAreaElement).value).toContain("link adjacency and display order as related reading");
     expect((prompt as HTMLTextAreaElement).value).toContain("conditional sequence stated in prose");
 
     await user.click(screen.getByRole("button", { name: "Copy prompt" }));
-    expect(writeText).toHaveBeenCalledWith(expect.stringContaining("source-backed reading"));
+    expect(writeText).toHaveBeenCalledWith(expect.stringContaining(`${window.location.origin}/llms.txt`));
     expect(screen.getByRole("status")).toHaveTextContent("Prompt copied to the clipboard.");
   });
 

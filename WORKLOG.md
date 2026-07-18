@@ -64,9 +64,19 @@
   Replaced those with “bundled” language and relative artifact paths, then made
   preview verification reject both public and published descriptors in
   `llms.txt`, the protocol operations, and both example receipts.
-- Recorded the next local bundle as 194 regular files, 2,661,491 bytes, with
-  aggregate SHA-256
-  `d56b42ee78166140354a52dda48ea80d4a7dac03cbbaf4db5040132d393beef6`.
+- A third exact-revision review rejected commit
+  `fca761ed7ab6ce562b15f3c53c06ee643353221f`: its agent prompt and
+  `llms.txt` hard-coded `https://possible.sh`, while that production origin
+  still serves the prior version-1 routing contract. Following the prompt
+  could therefore bypass the candidate and load the contract this reset
+  removes.
+- Made agent discovery origin-safe. The prompt derives `/llms.txt` from the
+  serving origin, requires schema version 2, and tells the host to stop on any
+  other version. The bundled `llms.txt` uses root-relative agent and wiki paths.
+  The unpublished candidate now emits a deny-all `robots.txt` and no sitemap.
+- Recorded the corrected local bundle as 193 regular files, 2,657,229 bytes,
+  with aggregate SHA-256
+  `3afbd4c5e0c40de6d7cf5b15d9eaf89f1d37786ed34d77f6ce02db0f9be14e55`.
 
 ## 2026-07-18 — Persistent knowledge universe activated
 

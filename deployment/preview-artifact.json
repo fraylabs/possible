@@ -3,8 +3,8 @@
   "artifactDirectory": "apps/web/dist",
   "buildCommand": "npm run preview:build",
   "verificationCommand": "npm run preview:verify",
-  "sha256": "d56b42ee78166140354a52dda48ea80d4a7dac03cbbaf4db5040132d393beef6",
-  "totalBytes": 2661491,
+  "sha256": "3afbd4c5e0c40de6d7cf5b15d9eaf89f1d37786ed34d77f6ce02db0f9be14e55",
+  "totalBytes": 2657229,
   "files": [
     {
       "path": "agent/protocol.json",
@@ -627,9 +627,9 @@
       "sha256": "68e6298737e7f44badfb9896b42fac07c01aa6af005c7d93d13c62120ccb451f"
     },
     {
-      "path": "assets/index-DgfWQXOA.js",
-      "bytes": 398007,
-      "sha256": "d6d53febd80fda01a899c8083318e2b246f686d2cbaf5072f33f5d8ab650f88e"
+      "path": "assets/index-B1i-c98c.js",
+      "bytes": 398180,
+      "sha256": "ed084cb2c1028510a2a250505885e688d69b00180bd873a4d32272cb16673653"
     },
     {
       "path": "assets/index-bl-OQRqr.css",
@@ -639,12 +639,12 @@
     {
       "path": "index.html",
       "bytes": 795,
-      "sha256": "dd90017afdd14ebe00f20889547d9b0c11cedd246a1c0e5c8635aedf21f09a7b"
+      "sha256": "16b1ba0e0c9b9813447d333a4f74701a5f114ef085023bac44595f09bdef7778"
     },
     {
       "path": "llms.txt",
-      "bytes": 1307,
-      "sha256": "b561fff16eee2336e45fdbc857cf2e87cdd497ffb04ddc750bc05269cb0936cd"
+      "bytes": 1373,
+      "sha256": "b445d8f17fa93e8e6ef0bb379f4b36a7ddd4869c24d4a936aa1a4918d01b8671"
     },
     {
       "path": "proof/receipts/digital-photo-frame.md",
@@ -658,13 +658,8 @@
     },
     {
       "path": "robots.txt",
-      "bytes": 64,
-      "sha256": "3a1e20473a73daaa44e6d8978ac11159397b9e076042d8109ddfa00222a52f26"
-    },
-    {
-      "path": "sitemap.xml",
-      "bytes": 4463,
-      "sha256": "a98c3e4f06a902bd90c222121089f40d9ba2545b84f7f52bad1c7061e1d26659"
+      "bytes": 26,
+      "sha256": "331ea9090db0c9f6f597bd9840fd5b171830f6e0b3ba1cb24dfa91f0c95aedc1"
     },
     {
       "path": "wiki/3d-renderer-selection.json",
@@ -993,7 +988,7 @@
   },
   "publication": {
     "state": "not-published",
-    "artifactSha256": "d56b42ee78166140354a52dda48ea80d4a7dac03cbbaf4db5040132d393beef6",
+    "artifactSha256": "3afbd4c5e0c40de6d7cf5b15d9eaf89f1d37786ed34d77f6ce02db0f9be14e55",
     "allowedNextAction": "Explicit authorization to publish this exact candidate artifact",
     "requiresSeparateApproval": [
       "provider authentication or credential-scope changes",

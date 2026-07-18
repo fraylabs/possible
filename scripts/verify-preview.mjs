@@ -233,8 +233,10 @@ async function verifyMachineReadableWiki(baseUrl, files) {
 
   const discovery = await requestBytes(`${baseUrl}/llms.txt`);
   const discoveryText = discovery.bytes.toString("utf8");
-  assert.match(discoveryText, /https:\/\/possible\.sh\/agent\/protocol\.json/);
-  assert.match(discoveryText, /https:\/\/possible\.sh\/agent\/search\.json/);
+  assert.match(discoveryText, /Require schemaVersion 2/);
+  assert.match(discoveryText, /\/agent\/protocol\.json/);
+  assert.match(discoveryText, /\/agent\/search\.json/);
+  assert.doesNotMatch(discoveryText, /https:\/\/possible\.sh\/(?:agent|wiki|llms)/);
   assert.match(discoveryText, /bundled guide index/i);
   assert.doesNotMatch(discoveryText, /\b(?:public|published)\b/i);
 
@@ -248,15 +250,12 @@ async function verifyMachineReadableWiki(baseUrl, files) {
   }
 
   const robots = await requestBytes(`${baseUrl}/robots.txt`);
-  assert.match(robots.bytes.toString("utf8"), /^User-agent: \*\nAllow: \/\nSitemap: https:\/\/possible\.sh\/sitemap\.xml\n$/);
-
-  const sitemap = await requestBytes(`${baseUrl}/sitemap.xml`);
-  assert.match(sitemap.bytes.toString("utf8"), /<urlset xmlns="http:\/\/www\.sitemaps\.org\/schemas\/sitemap\/0\.9">/);
-  assert.match(sitemap.bytes.toString("utf8"), /https:\/\/possible\.sh\/wiki\/digital-photo-frame/);
-  assert.match(discoveryText, /https:\/\/possible\.sh\/agent\/read\/\{slug\}\.json/);
-  assert.match(discoveryText, /https:\/\/possible\.sh\/agent\/related\/\{slug\}\.json/);
-  assert.match(discoveryText, /https:\/\/possible\.sh\/wiki\/index\.json/);
-  assert.match(discoveryText, /https:\/\/possible\.sh\/wiki\/\{slug\}\.json/);
+  assert.match(robots.bytes.toString("utf8"), /^User-agent: \*\nDisallow: \/\n$/);
+  assert(!paths.has("sitemap.xml"), "A not-published candidate must not advertise production URLs in a sitemap.");
+  assert.match(discoveryText, /\/agent\/read\/\{slug\}\.json/);
+  assert.match(discoveryText, /\/agent\/related\/\{slug\}\.json/);
+  assert.match(discoveryText, /\/wiki\/index\.json/);
+  assert.match(discoveryText, /\/wiki\/\{slug\}\.json/);
 
   const indexResponse = await requestBytes(`${baseUrl}/wiki/index.json`);
   assert.equal(indexResponse.response.status, 200);

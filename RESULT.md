@@ -14,7 +14,7 @@ not a project router.
   sources and related reading. The MCP server exposes exactly those two
   read-only tools: `search` and `read`.
 - Stable `/wiki/<slug>` pages, wiki JSON, `/llms.txt`, and static agent
-  publications remain available. The static agent schema is version 2 and no
+  artifacts remain bundled. The static agent schema is version 2 and no
   longer publishes kind, coverage, route-status, capability-matching, or
   project-proof fields.
 - The installable Possible skill teaches a host agent to decompose a compound
@@ -65,8 +65,8 @@ npm run check
 
 The exact candidate artifact is recorded in
 `deployment/preview-artifact.json`. Its publication state is
-`not-published`: 194 regular files totaling 2,661,491 bytes match aggregate
-SHA-256 `d56b42ee78166140354a52dda48ea80d4a7dac03cbbaf4db5040132d393beef6`.
+`not-published`: 193 regular files totaling 2,657,229 bytes match aggregate
+SHA-256 `3afbd4c5e0c40de6d7cf5b15d9eaf89f1d37786ed34d77f6ce02db0f9be14e55`.
 `deployment/PRODUCTION.md` and the separately retained historical digest
 describe an earlier authorized release, not this candidate.
 
@@ -75,8 +75,8 @@ describe an earlier authorized release, not this candidate.
 - Canonical guide format, link integrity, source URL shape, review-date shape,
   generated-data parity, and deterministic search/read behavior.
 - Exactly two read-only MCP operations and compatible stable read paths.
-- The public and skill copy assign consequential project decisions and actions
-  to the consuming agent and user.
+- The human-facing and skill copy assign consequential project decisions and
+  actions to the consuming agent and user.
 - The paired pilot record and its no-go score are reproducible from the retained
   evidence.
 - The recorded local artifact matches the built files and respects the

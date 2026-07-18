@@ -12,9 +12,9 @@ const EXAMPLE_QUERIES = [
   "robotic arm",
 ] as const;
 
-const AGENT_PROMPT = `Use Possible as source-backed reading, not as a project planner.
+const buildAgentPrompt = (origin: string) => `Use Possible as source-backed reading, not as a project planner.
 
-1. Read https://possible.sh/llms.txt and follow its static retrieval protocol.
+1. Read ${origin}/llms.txt from the same origin as this page and follow its static retrieval protocol. Require schema version 2; if another version is returned, stop and say this guide-library candidate is not available there.
 2. Search the bundled guide index locally with a short subject query.
 3. Read only the guides relevant to the user's question.
 4. Treat link adjacency and display order as related reading, not a complete workflow; judge any conditional sequence stated in prose against the project.
@@ -138,6 +138,7 @@ function RetrievalArticle({ example, index }: { example: RetrievalExample; index
 export function ProofPage() {
   const [loadState, setLoadState] = useState<LoadState>({ status: "loading" });
   const [copyStatus, setCopyStatus] = useState<"idle" | "copied" | "error">("idle");
+  const agentPrompt = buildAgentPrompt(window.location.origin);
 
   useEffect(() => {
     let active = true;
@@ -160,7 +161,7 @@ export function ProofPage() {
 
   const copyPrompt = async () => {
     try {
-      await navigator.clipboard.writeText(AGENT_PROMPT);
+      await navigator.clipboard.writeText(agentPrompt);
       setCopyStatus("copied");
     } catch {
       setCopyStatus("error");
@@ -200,7 +201,7 @@ export function ProofPage() {
         <textarea
           id="retrieval-agent-prompt"
           className="proof-prompt"
-          value={AGENT_PROMPT}
+          value={agentPrompt}
           readOnly
           rows={12}
           onFocus={(event) => event.currentTarget.select()}

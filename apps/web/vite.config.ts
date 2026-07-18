@@ -72,15 +72,16 @@ export const wikiPublications = (): Plugin => ({
         "# Possible",
         "",
         "Source-backed field guides for people and agents.",
+        "Resolve every path below against the origin that served this file. Require schemaVersion 2; if another version is returned, stop because this guide-library candidate is not available at that origin.",
         "",
-        "- Agent protocol (static; no backend or query-aware endpoint): https://possible.sh/agent/protocol.json",
-        "- Search index: https://possible.sh/agent/search.json",
-        "- Exact page read: https://possible.sh/agent/read/{slug}.json",
-        "- Derived related pages: https://possible.sh/agent/related/{slug}.json",
+        "- Agent protocol (static; no backend or query-aware endpoint): /agent/protocol.json",
+        "- Search index: /agent/search.json",
+        "- Exact page read: /agent/read/{slug}.json",
+        "- Derived related pages: /agent/related/{slug}.json",
         "",
-        "- Guide index: https://possible.sh/wiki/index.json",
-        "- Individual guide JSON: https://possible.sh/wiki/{slug}.json",
-        "- Human guide: https://possible.sh/wiki/{slug}",
+        "- Guide index: /wiki/index.json",
+        "- Individual guide JSON: /wiki/{slug}.json",
+        "- Human guide: /wiki/{slug}",
         "- Source repository: https://github.com/fraylabs/possible",
         "",
         "Each guide includes contributor-authored prose, sources, a review date, authored aliases when available, directional links, backlinks, and related guides.",
@@ -97,27 +98,7 @@ export const wikiPublications = (): Plugin => ({
       fileName: "robots.txt",
       source: [
         "User-agent: *",
-        "Allow: /",
-        "Sitemap: https://possible.sh/sitemap.xml",
-        "",
-      ].join("\n"),
-    });
-
-    const sitemapUrls = [
-      "https://possible.sh/",
-      "https://possible.sh/how-it-works",
-      "https://possible.sh/demo",
-      "https://possible.sh/proof",
-      ...wikiCorpusData.pages.map((page) => `https://possible.sh/wiki/${page.slug}`),
-    ];
-    this.emitFile({
-      type: "asset",
-      fileName: "sitemap.xml",
-      source: [
-        '<?xml version="1.0" encoding="UTF-8"?>',
-        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
-        ...sitemapUrls.map((url) => `  <url><loc>${url}</loc></url>`),
-        "</urlset>",
+        "Disallow: /",
         "",
       ].join("\n"),
     });
