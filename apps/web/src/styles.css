@@ -363,24 +363,6 @@ h1[tabindex="-1"]:focus {
   color: var(--ink);
 }
 
-.inspector-clear {
-  display: grid;
-  width: 36px;
-  height: 36px;
-  flex: 0 0 auto;
-  place-items: center;
-  border: 1px solid var(--paper-line);
-  border-radius: 50%;
-  color: var(--ink-quiet);
-  transition: background 150ms ease, color 150ms ease;
-}
-
-.inspector-clear:hover,
-.inspector-clear:focus-visible {
-  background: var(--paper-bright);
-  color: var(--ink);
-}
-
 .section-kicker {
   margin: 0 0 13px;
   color: var(--ink-quiet);

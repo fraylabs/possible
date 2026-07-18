@@ -431,9 +431,6 @@ export function App() {
                         {expandedPage ? "<" : ">"}
                       </button>
                     )}
-                    <button type="button" className="inspector-clear" onClick={clearSelection} aria-label="Clear graph focus">
-                      <X size={15} aria-hidden="true" />
-                    </button>
                   </div>
                 </div>
                 <h1 id="explore-title" ref={exploreTitleRef} tabIndex={-1}>
