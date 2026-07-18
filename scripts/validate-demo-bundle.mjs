@@ -28,6 +28,11 @@ const [index, app, manifestSource, eventsSource, siteIndex] = await Promise.all(
   readFile(path.join(root, "site/index.html"), "utf8"),
 ]);
 
+const viteConfig = await readFile(path.join(repository, "apps/web/vite.config.ts"), "utf8");
+if (!viteConfig.includes('request.url.replace("/demo/still/", "/demo/still/index.html")')) {
+  failures.push("Vite must serve the clean /demo/still/ route before the SPA fallback");
+}
+
 const liveSources = [index, app, manifestSource, eventsSource].join("\n");
 if (/outcome-room|assets\/(?:site|film|hardware)/.test(liveSources)) {
   failures.push("Live demo files must not expose the retired outcome-room/assets layout");

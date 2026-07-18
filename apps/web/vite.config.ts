@@ -4,6 +4,29 @@ import type { Plugin } from "vite";
 import { defineConfig } from "vitest/config";
 
 const json = (value: unknown) => `${JSON.stringify(value, null, 2)}\n`;
+const cleanDemoRoute = (): Plugin => ({
+  name: "possible-clean-demo-route",
+  configureServer(server) {
+    server.middlewares.use((request, _response, next) => {
+      if (request.url === "/demo/still" || request.url?.startsWith("/demo/still?")) {
+        request.url = request.url.replace("/demo/still", "/demo/still/index.html");
+      } else if (request.url === "/demo/still/" || request.url?.startsWith("/demo/still/?")) {
+        request.url = request.url.replace("/demo/still/", "/demo/still/index.html");
+      }
+      next();
+    });
+  },
+  configurePreviewServer(server) {
+    server.middlewares.use((request, _response, next) => {
+      if (request.url === "/demo/still" || request.url?.startsWith("/demo/still?")) {
+        request.url = request.url.replace("/demo/still", "/demo/still/index.html");
+      } else if (request.url === "/demo/still/" || request.url?.startsWith("/demo/still/?")) {
+        request.url = request.url.replace("/demo/still/", "/demo/still/index.html");
+      }
+      next();
+    });
+  },
+});
 const packPublications = (): Plugin => ({
   name: "possible-pack-publications",
   apply: "build",
@@ -34,7 +57,7 @@ const packPublications = (): Plugin => ({
 });
 
 export default defineConfig({
-  plugins: [react(), packPublications()],
+  plugins: [cleanDemoRoute(), react(), packPublications()],
   build: { target: "es2022", sourcemap: false },
   test: { environment: "jsdom", setupFiles: "./src/test/setup.ts", css: true },
 });

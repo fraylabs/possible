@@ -57,3 +57,4 @@
 - Promoted `/demo/still/` to the finished launch room instead of exposing the internal `outcome-room/` assembly directory.
 - Published the site, film, hardware, evidence, and verification artifacts as direct sibling routes.
 - Updated every live demo link and manifest path while preserving the original run receipts and traces as historical evidence.
+- Added development and preview-server clean-route handling so `/demo/still/` resolves to the static output before the React SPA fallback.
