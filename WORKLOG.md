@@ -77,6 +77,22 @@
 - Recorded the corrected local bundle as 193 regular files, 2,657,229 bytes,
   with aggregate SHA-256
   `3afbd4c5e0c40de6d7cf5b15d9eaf89f1d37786ed34d77f6ce02db0f9be14e55`.
+- Froze implementation commit `6845404dc729183c20b62ef000318a66c88237f7`
+  and exported it into a fresh temporary directory. Independent `npm ci` and
+  `npm run check` both exited successfully; 233 packages were installed, 238
+  audited, and zero vulnerabilities reported.
+- The final fresh-context reviewer accepted the exact commit and artifact after
+  matching all 256 tracked files and modes, recomputing the 193-file artifact,
+  probing covered and uncovered requests through the real stdio helper,
+  inspecting the schema/runtime/MCP/skill boundary, reproducing the no-go
+  pilot, and rechecking publication provenance.
+- The reviewer explicitly closed the previous origin-fallthrough rejection:
+  same-origin discovery, the mandatory schema-version-2 stop, deny-all robots,
+  and the absent sitemap prevent this local candidate from silently consuming
+  the incompatible version-1 contract still served by `possible.sh`.
+- Retained the independent acceptance in `REVIEW.md`. It proves the guide
+  library and artifact contract, not editorial truth for every guide, general
+  agent-performance uplift, publication, or authorization to publish.
 
 ## 2026-07-18 — Persistent knowledge universe activated
 

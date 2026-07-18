@@ -1,6 +1,6 @@
 # Possible Field-Guide Library Result
 
-Status: implemented as a local publication candidate; not published.
+Status: independently accepted as a local publication candidate; not published.
 
 ## Supported trust claim
 
@@ -63,8 +63,9 @@ npm ci
 npm run check
 ```
 
-The exact candidate artifact is recorded in
-`deployment/preview-artifact.json`. Its publication state is
+The independently accepted implementation candidate is commit
+`6845404dc729183c20b62ef000318a66c88237f7`. Its exact artifact is recorded in
+`deployment/preview-artifact.json`, with publication state
 `not-published`: 193 regular files totaling 2,657,229 bytes match aggregate
 SHA-256 `3afbd4c5e0c40de6d7cf5b15d9eaf89f1d37786ed34d77f6ce02db0f9be14e55`.
 `deployment/PRODUCTION.md` and the separately retained historical digest
@@ -81,6 +82,9 @@ describe an earlier authorized release, not this candidate.
   evidence.
 - The recorded local artifact matches the built files and respects the
   publication boundary.
+
+The fresh-context disposition and its exact-revision evidence are retained in
+`REVIEW.md`.
 
 ## What remains unproven
 
