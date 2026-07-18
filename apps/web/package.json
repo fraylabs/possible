@@ -19,8 +19,7 @@
     "@possible/knowledge": "0.1.0",
     "lucide-react": "^1.24.0",
     "react": "^19.2.7",
-    "react-dom": "^19.2.7",
-    "three": "^0.185.1"
+    "react-dom": "^19.2.7"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.9.1",
@@ -28,7 +27,6 @@
     "@testing-library/user-event": "^14.6.1",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
-    "@types/three": "^0.185.1",
     "@vitejs/plugin-react": "^6.0.3",
     "axe-core": "^4.12.1",
     "jsdom": "^29.1.1",

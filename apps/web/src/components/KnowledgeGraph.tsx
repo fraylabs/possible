@@ -8,7 +8,7 @@ import {
   type WheelEvent,
 } from "react";
 import { LocateFixed, Minus, Plus } from "lucide-react";
-import { ThreeGraphScene, type ThreeGraphEdge, type ThreeGraphNodeRole } from "./ThreeGraphScene";
+export type GraphNodeRole = "field" | "page" | "selected" | "related";
 
 export interface KnowledgeGraphNode {
   id: string;
@@ -16,7 +16,7 @@ export interface KnowledgeGraphNode {
   meta: string;
   x: number;
   y: number;
-  role: ThreeGraphNodeRole;
+  role: GraphNodeRole;
   color: string;
   degree: number;
   prominent: boolean;
@@ -252,19 +252,14 @@ export function KnowledgeGraph({
           </div>
         )}
 
-        <ThreeGraphScene
-          nodes={nodes.map((node) => ({
-            id: node.id,
-            x: node.x,
-            y: node.y,
-            role: node.role,
-            color: node.color,
-          }))}
-          edges={edges}
-          variant={variant}
-        />
-
-        <svg className="graph-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+        <svg
+          className="graph-lines"
+          width="100%"
+          height="100%"
+          viewBox="0 0 100 100"
+          preserveAspectRatio="none"
+          aria-hidden="true"
+        >
           {edges.map((edge) => {
             const source = nodeById.get(edge.source);
             const target = nodeById.get(edge.target);

@@ -479,7 +479,10 @@ h1[tabindex="-1"]:focus {
 
 .graph-world {
   position: absolute;
-  inset: clamp(64px, 7vw, 92px) clamp(24px, 4vw, 58px) clamp(54px, 6vw, 82px);
+  top: clamp(64px, 7vw, 92px);
+  right: clamp(24px, 4vw, 58px);
+  bottom: clamp(54px, 6vw, 82px);
+  left: clamp(446px, 34vw, 486px);
   transform-origin: center;
   transition: transform 170ms ease-out;
   will-change: transform;
@@ -489,22 +492,15 @@ h1[tabindex="-1"]:focus {
   transition: none;
 }
 
-.three-graph,
 .graph-lines,
 .graph-nodes {
   position: absolute;
   inset: 0;
 }
 
-.three-graph {
-  z-index: 1;
+.graph-lines {
   width: 100%;
   height: 100%;
-  pointer-events: none;
-}
-
-.graph-lines {
-  z-index: 2;
   overflow: visible;
   opacity: 0.74;
 }
@@ -570,10 +566,6 @@ h1[tabindex="-1"]:focus {
   color: #737d91;
   font-size: 0.52rem;
   letter-spacing: 0.04em;
-}
-
-.three-graph[data-ready="true"] + .graph-lines {
-  opacity: 0.48;
 }
 
 .graph-edge {
@@ -780,7 +772,7 @@ h1[tabindex="-1"]:focus {
 }
 
 .graph-world[data-zoom-band="field"] .knowledge-node:not(.is-prominent, .is-selected) .knowledge-node__label {
-  opacity: 0.08;
+  opacity: 0;
 }
 
 .graph-world[data-zoom-band="detail"] .graph-cloud::before {

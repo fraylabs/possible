@@ -23,6 +23,10 @@ describe("Possible wiki", () => {
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
 
     const atlas = screen.getByRole("region", { name: "Possible knowledge atlas" });
+    expect(atlas.querySelector("canvas.three-graph")).not.toBeInTheDocument();
+    expect(atlas.querySelector("svg.graph-lines")).toHaveAttribute("width", "100%");
+    expect(atlas.querySelector("svg.graph-lines")).toHaveAttribute("height", "100%");
+    expect(atlas.querySelectorAll("svg.graph-lines line")).toHaveLength(5);
     expect(within(atlas).getByRole("button", { name: "Web, 3 pages" })).toBeInTheDocument();
     expect(within(atlas).getByRole("button", { name: "Manufacturing, 2 pages" })).toBeInTheDocument();
     expect(within(atlas).getByRole("button", { name: "Vite with React, Web page" })).toBeInTheDocument();
