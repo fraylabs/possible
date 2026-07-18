@@ -1,79 +1,98 @@
-import { useEffect, useMemo, useState, type FormEvent } from "react";
-import { ArrowLeft, ArrowRight, Search } from "lucide-react";
+import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import {
-  assessSearchResults,
-  getPage,
-  loadWiki,
-  searchPages,
-  type WikiCorpus,
-} from "@possible/knowledge";
+  ArrowLeft,
+  Box,
+  Check,
+  CircleDot,
+  FileCode2,
+  Search,
+  ShieldCheck,
+} from "lucide-react";
+import type { WikiPage } from "@possible/knowledge";
+import { wikiCorpusData } from "@possible/knowledge/data";
 
-const EXAMPLES = [
-  "I want to make a digital photo frame",
-  "I want to make a robotic arm",
-  "I want to design a website",
+export const DEMO_DURATION_MS = 35_000;
+
+export type DemoScene = "intro" | "outcome" | "research" | "execution" | "final";
+
+export function demoSceneAt(elapsed: number): DemoScene {
+  if (elapsed < 2_000) return "intro";
+  if (elapsed < 10_000) return "outcome";
+  if (elapsed < 21_000) return "research";
+  if (elapsed < 31_000) return "execution";
+  return "final";
+}
+
+const ROUTE_SLUGS = [
+  "robotic-arms",
+  "actuator-transmission-sizing",
+  "parametric-cad-master",
+  "mujoco",
+  "manufacturing-process-selection",
+  "robot-control-electronics",
+  "robot-calibration-safety-physical-verification",
 ] as const;
 
-type LoadState =
-  | { status: "loading" }
-  | { status: "ready"; corpus: WikiCorpus }
-  | { status: "error"; message: string };
+function requirePage(slug: (typeof ROUTE_SLUGS)[number]): WikiPage {
+  const page = wikiCorpusData.pages.find((candidate) => candidate.slug === slug);
+  if (!page) throw new Error(`The demo route references a missing Possible page: ${slug}`);
+  return page;
+}
 
-const statusLabel = (status: ReturnType<typeof assessSearchResults>["status"]) => {
-  if (status === "no-maintained-route") return "No maintained route";
-  return status === "verified" ? "Verified route" : "Partial route";
-};
+const OUTCOME = requirePage("robotic-arms");
+const ROUTE = ROUTE_SLUGS.map(requirePage);
+const SOURCES = OUTCOME.sources.slice(0, 3);
+
+const FILES = [
+  ["brief.md", "Outcome and constraints captured"],
+  ["requirements/joint-loads.md", "Load cases ready to size"],
+  ["cad/arm.step", "Parametric assembly target"],
+  ["simulation/arm.xml", "MuJoCo model target"],
+  ["controls/io-contract.md", "Commands, state, limits, faults"],
+  ["verification/acceptance.md", "Physical acceptance gates"],
+] as const;
+
+const CHECKS = [
+  "Size joints against load and duty cycle",
+  "Build and inspect the parametric assembly",
+  "Simulate motion, limits, and contact assumptions",
+  "Preflight the selected manufacturing process",
+  "Calibrate, risk-assess, and physically verify",
+] as const;
+
+function phaseState(elapsed: number, start: number, end: number) {
+  if (elapsed >= end) return "done";
+  if (elapsed >= start) return "active";
+  return "waiting";
+}
 
 export function DemoPage() {
-  const [loadState, setLoadState] = useState<LoadState>({ status: "loading" });
-  const [draft, setDraft] = useState<string>(EXAMPLES[0]);
-  const [query, setQuery] = useState<string>(EXAMPLES[0]);
+  const reducedMotion = useMemo(
+    () => typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches,
+    [],
+  );
+  const [elapsed, setElapsed] = useState(reducedMotion ? DEMO_DURATION_MS : 0);
 
   useEffect(() => {
-    let active = true;
-    loadWiki()
-      .then((corpus) => {
-        if (active) setLoadState({ status: "ready", corpus });
-      })
-      .catch((error: unknown) => {
-        if (!active) return;
-        setLoadState({
-          status: "error",
-          message: error instanceof Error ? error.message : "Possible could not load its corpus.",
-        });
-      });
-    return () => { active = false; };
-  }, []);
+    if (reducedMotion) return;
+    let frame = 0;
+    const startedAt = performance.now();
+    const tick = (now: number) => {
+      const next = Math.min(DEMO_DURATION_MS, now - startedAt);
+      setElapsed(next);
+      if (next < DEMO_DURATION_MS) frame = requestAnimationFrame(tick);
+    };
+    frame = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frame);
+  }, [reducedMotion]);
 
-  const result = useMemo(() => {
-    if (loadState.status !== "ready") return undefined;
-    const results = searchPages(loadState.corpus, query, { limit: 10 });
-    const assessment = assessSearchResults(results);
-    const outcomeSlug = assessment.verifiedRoutes[0] ?? assessment.partialRoutes[0];
-    const outcome = outcomeSlug ? getPage(loadState.corpus, outcomeSlug) : undefined;
-    const nextPages = outcome
-      ? outcome.links
-        .map((slug) => getPage(loadState.corpus, slug))
-        .filter((page) => page !== undefined)
-        .slice(0, 6)
-      : [];
-    return { assessment, outcome, nextPages };
-  }, [loadState, query]);
-
-  const submit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const nextQuery = draft.trim();
-    if (nextQuery) setQuery(nextQuery);
-  };
-
-  const runExample = (example: string) => {
-    setDraft(example);
-    setQuery(example);
-  };
+  const scene = demoSceneAt(elapsed);
+  const progress = Math.min(100, (elapsed / DEMO_DURATION_MS) * 100);
+  const style = { "--film-progress": `${progress}%` } as CSSProperties;
 
   return (
-    <main className="demo-page">
-      <nav className="demo-nav" aria-label="Demo navigation">
+    <main className="demo-page film-page" data-scene={scene} style={style}>
+      <nav className="demo-nav film-nav" aria-label="Demo navigation">
         <a className="brand-reset" href="/">
           <span className="brand-wordmark">possible<span>.sh</span></span>
           <span className="brand-tagline">A sourced wiki of what people and agents can make possible.</span>
@@ -87,99 +106,139 @@ export function DemoPage() {
         </div>
       </nav>
 
-      <section className="demo-hero" aria-labelledby="demo-title">
-        <p className="section-kicker">Live Possible demo</p>
-        <h1 id="demo-title">What do you want to make possible?</h1>
-        <p>
-          Describe an outcome. Possible finds the maintained route, shows where to start, and
-          tells you when the knowledge is incomplete.
-        </p>
+      <section className="film-shell" aria-labelledby="demo-title" aria-live="off">
+        <header className="film-header">
+          <div>
+            <p className="section-kicker">A 35-second agent workflow</p>
+            <h1 id="demo-title">Watch an agent stop guessing.</h1>
+          </div>
+          <p>One outcome. Real Possible pages. A route that ends in evidence—not confidence.</p>
+        </header>
 
-        <form className="demo-search" onSubmit={submit}>
-          <Search size={20} aria-hidden="true" />
-          <label className="visually-hidden" htmlFor="demo-query">Outcome</label>
-          <input
-            id="demo-query"
-            value={draft}
-            onChange={(event) => setDraft(event.target.value)}
-            placeholder="I want to make a…"
-            autoComplete="off"
-          />
-          <button type="submit">Find a route <ArrowRight size={17} aria-hidden="true" /></button>
-        </form>
+        <ol className="film-phases" aria-label="Demo phases">
+          <li data-state={phaseState(elapsed, 2_000, 10_000)}>
+            <span>01</span><strong>What is possible?</strong><small>Educate the outcome</small>
+          </li>
+          <li data-state={phaseState(elapsed, 10_000, 21_000)}>
+            <span>02</span><strong>How is it possible?</strong><small>Research the route</small>
+          </li>
+          <li data-state={phaseState(elapsed, 21_000, 31_000)}>
+            <span>03</span><strong>Let’s make it possible!</strong><small>Execute with gates</small>
+          </li>
+        </ol>
 
-        <div className="demo-examples" aria-label="Example outcomes">
-          <span>Try:</span>
-          {EXAMPLES.map((example) => (
-            <button key={example} type="button" onClick={() => runExample(example)}>{example}</button>
-          ))}
+        <div className="film-progress" aria-hidden="true"><span /></div>
+
+        <div className="film-stage">
+          <section className="film-conversation" aria-label="Agent conversation">
+            <div className="film-window-bar">
+              <span><CircleDot size={13} aria-hidden="true" /> agent session</span>
+              <span className="film-running">{scene === "final" ? "route ready" : "working"}</span>
+            </div>
+
+            <div className="film-chat">
+              <article className="film-message film-message--user film-reveal" data-visible={elapsed >= 450}>
+                <span>You</span>
+                <p>I want to make a robotic arm.</p>
+              </article>
+              <article className="film-message film-message--agent film-reveal" data-visible={elapsed >= 2_500}>
+                <span>Agent</span>
+                <p>Possible—but first, what outcome do you actually need?</p>
+              </article>
+              <article className="film-message film-message--user film-reveal" data-visible={elapsed >= 4_300}>
+                <span>You</span>
+                <p>A desktop arm for repeatable pick-and-place.</p>
+              </article>
+
+              <article className="film-brief film-reveal" data-visible={elapsed >= 6_100}>
+                <header><Box size={15} aria-hidden="true" /> Outcome brief</header>
+                <div className="film-brief-grid">
+                  <span><small>Payload</small>500 g</span>
+                  <span><small>Reach</small>600 mm</span>
+                  <span><small>Task</small>Pick + place</span>
+                  <span><small>Environment</small>People nearby</span>
+                </div>
+              </article>
+
+              <article className="film-agent-action film-reveal" data-visible={elapsed >= 9_700}>
+                <Search size={15} aria-hidden="true" />
+                <span>Consulting possible.sh for a maintained route…</span>
+              </article>
+
+              <article className="film-route-summary film-reveal" data-visible={elapsed >= 10_500}>
+                <header>
+                  <div><small>Possible found</small><strong>{OUTCOME.title}</strong></div>
+                  <span>{OUTCOME.routeStatus} route</span>
+                </header>
+                <p>{OUTCOME.summary}</p>
+              </article>
+
+              <article className="film-execution-note film-reveal" data-visible={elapsed >= 21_300}>
+                <FileCode2 size={16} aria-hidden="true" />
+                <div><strong>Execution workspace created</strong><span>The agent now has a sourced plan and explicit proof gates.</span></div>
+              </article>
+            </div>
+          </section>
+
+          <section className="film-workspace" aria-label="Possible route and execution workspace">
+            <div className="film-window-bar">
+              <span>possible.sh / {scene === "execution" || scene === "final" ? "execution" : "route"}</span>
+              <span>{Math.round(progress)}%</span>
+            </div>
+
+            <div className="film-route film-reveal" data-visible={elapsed >= 10_500}>
+              <div className="film-route-heading">
+                <div><small>Outcome route</small><strong>/wiki/{OUTCOME.slug}</strong></div>
+                <span><ShieldCheck size={14} aria-hidden="true" /> reviewed {OUTCOME.reviewedAt}</span>
+              </div>
+              <ol>
+                {ROUTE.slice(1).map((page, index) => (
+                  <li key={page.slug} className="film-route-node film-reveal" data-visible={elapsed >= 11_800 + index * 1_250}>
+                    <span>{String(index + 1).padStart(2, "0")}</span>
+                    <a href={`/wiki/${page.slug}`}>{page.title}</a>
+                    <small>{page.kind ?? "page"}</small>
+                  </li>
+                ))}
+              </ol>
+              <div className="film-sources film-reveal" data-visible={elapsed >= 18_800}>
+                <small>Sourced from</small>
+                {SOURCES.map((source) => <span key={source.url}>{source.title}</span>)}
+              </div>
+            </div>
+
+            <div className="film-execution film-reveal" data-visible={elapsed >= 21_300}>
+              <div className="film-files">
+                <small>WORKSPACE</small>
+                {FILES.map(([file, description], index) => (
+                  <div className="film-file film-reveal" data-visible={elapsed >= 22_000 + index * 850} key={file}>
+                    <FileCode2 size={13} aria-hidden="true" /><span>{file}</span><em>{description}</em>
+                  </div>
+                ))}
+              </div>
+              <div className="film-checks">
+                <small>ACCEPTANCE GATES</small>
+                {CHECKS.map((check, index) => (
+                  <div className="film-check film-reveal" data-visible={elapsed >= 25_200 + index * 1_050} key={check}>
+                    <Check size={12} aria-hidden="true" /><span>{check}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          <div className="film-final film-reveal" data-visible={elapsed >= 31_000}>
+            <span>possible.sh</span>
+            <strong>Possible turns a vague intention into sourced execution.</strong>
+            <p>The agent knows what to learn, what to use, what to make, and what still needs proof.</p>
+          </div>
         </div>
-      </section>
 
-      <section className="demo-output" aria-live="polite" aria-busy={loadState.status === "loading"}>
-        {loadState.status === "loading" && <p className="demo-state">Searching the maintained corpus…</p>}
-        {loadState.status === "error" && <p className="demo-state demo-state--error">{loadState.message}</p>}
-        {result && (
-          <>
-            <header className="demo-result-header">
-              <div>
-                <p className="section-kicker">Possible found</p>
-                <h2>{result.outcome?.title ?? "No maintained outcome"}</h2>
-              </div>
-              <span className={`demo-status demo-status--${result.assessment.status}`}>
-                {statusLabel(result.assessment.status)}
-              </span>
-            </header>
-
-            {result.outcome ? (
-              <div className="demo-result-grid">
-                <article className="demo-route-card">
-                  <p className="demo-card-label">Why this route</p>
-                  <p className="demo-outcome-summary">{result.outcome.summary}</p>
-                  <p className="demo-assessment">{result.assessment.reason}</p>
-                  <div className="demo-coverage" aria-label="Route coverage">
-                    {(result.outcome.coverage ?? []).map((item) => <span key={item}>{item}</span>)}
-                  </div>
-                  <div className="demo-card-actions">
-                    <a href={`/wiki/${result.outcome.slug}`}>Read the outcome</a>
-                    <a href={`/agent/read/${result.outcome.slug}.json`}>Agent JSON</a>
-                  </div>
-                </article>
-
-                <article className="demo-route-card">
-                  <p className="demo-card-label">Start from here</p>
-                  <ol className="demo-next-pages">
-                    {result.nextPages.map((page) => (
-                      <li key={page.slug}>
-                        <a href={`/wiki/${page.slug}`}>{page.title}</a>
-                        <span>{page.summary}</span>
-                      </li>
-                    ))}
-                  </ol>
-                </article>
-
-                <article className="demo-route-card demo-route-card--sources">
-                  <p className="demo-card-label">Maintained sources</p>
-                  <ul className="demo-source-list">
-                    {result.outcome.sources.slice(0, 5).map((source) => (
-                      <li key={source.url}><a href={source.url} target="_blank" rel="noreferrer">{source.title}</a></li>
-                    ))}
-                  </ul>
-                  <p className="demo-source-note">Reviewed {result.outcome.reviewedAt}. A partial route is a starting point, not proof that the outcome is complete.</p>
-                </article>
-              </div>
-            ) : (
-              <div className="demo-no-route">
-                <h3>Possible will not invent an answer.</h3>
-                <p>
-                  No maintained outcome matches every meaningful term in “{query}”. Try a broader
-                  outcome, explore the atlas, or contribute a sourced route that works.
-                </p>
-                <a href="https://github.com/fraylabs/possible" target="_blank" rel="noreferrer">Contribute a route</a>
-              </div>
-            )}
-          </>
-        )}
+        <p className="visually-hidden">
+          The demonstration shows a user asking an agent to make a robotic arm. The agent refines the outcome,
+          consults Possible, finds the partial Robotic arms route and its maintained sources, then creates an
+          execution workspace with requirements, CAD, simulation, controls, manufacturing, safety, and physical
+          verification gates. Possible does not claim the arm is complete until those gates have evidence.
+        </p>
       </section>
     </main>
   );

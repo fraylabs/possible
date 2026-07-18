@@ -22,30 +22,19 @@ describe("Possible wiki", () => {
     expect(screen.queryByRole("region", { name: "Possible knowledge atlas" })).not.toBeInTheDocument();
   });
 
-  it("demonstrates outcome routing and refuses to invent a missing route", async () => {
-    const user = userEvent.setup();
+  it("plays a scripted robotic-arm workflow without asking the viewer to operate the demo", () => {
     window.history.replaceState(null, "", "/demo");
     render(<App />);
 
-    expect(screen.getByRole("heading", { level: 1, name: "What do you want to make possible?" })).toBeInTheDocument();
-    expect(await screen.findByRole("heading", { level: 2, name: "No maintained outcome" })).toBeInTheDocument();
-    const query = screen.getByRole("textbox", { name: "Outcome" });
-    await user.clear(query);
-    await user.type(query, "I want to make custom manufactured parts");
-    await user.click(screen.getByRole("button", { name: /Find a route/i }));
-
-    expect(await screen.findByRole("heading", { level: 2, name: "Custom manufactured parts" })).toBeInTheDocument();
-    expect(screen.getByText("Partial route")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Read the outcome" })).toHaveAttribute("href", "/wiki/custom-manufactured-parts");
-    expect(screen.getByRole("link", { name: "Agent JSON" })).toHaveAttribute("href", "/agent/read/custom-manufactured-parts.json");
-
-    await user.clear(query);
-    await user.type(query, "interstellar unicorn teleporter");
-    await user.click(screen.getByRole("button", { name: /Find a route/i }));
-
-    expect(await screen.findByRole("heading", { level: 2, name: "No maintained outcome" })).toBeInTheDocument();
-    expect(screen.getByText("No maintained route")).toBeInTheDocument();
-    expect(screen.getByRole("heading", { level: 3, name: "Possible will not invent an answer." })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 1, name: "Watch an agent stop guessing." })).toBeInTheDocument();
+    expect(screen.getByText("What is possible?")).toBeInTheDocument();
+    expect(screen.getByText("How is it possible?")).toBeInTheDocument();
+    expect(screen.getByText("Let’s make it possible!")).toBeInTheDocument();
+    expect(screen.getByText("I want to make a robotic arm.")).toBeInTheDocument();
+    expect(screen.getByText("Possible turns a vague intention into sourced execution.")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "MuJoCo" })).toHaveAttribute("href", "/wiki/mujoco");
+    expect(screen.queryByRole("textbox")).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /Find a route/i })).not.toBeInTheDocument();
   });
 
   it("opens on the atlas, keeps fields as siblings, and lets search and graph select pages", async () => {

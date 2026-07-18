@@ -130,9 +130,10 @@ export default defineConfig(({ mode }) => ({
   plugins: [react(), wikiPublications()],
   ...(mode === "test" ? {
     resolve: {
-      alias: {
-        "@possible/knowledge": fileURLToPath(new URL("./src/test/knowledge-runtime.ts", import.meta.url)),
-      },
+      alias: [{
+        find: /^@possible\/knowledge$/,
+        replacement: fileURLToPath(new URL("./src/test/knowledge-runtime.ts", import.meta.url)),
+      }],
     },
   } : {}),
   build: {
