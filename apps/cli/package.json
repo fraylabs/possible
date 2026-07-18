@@ -4,7 +4,7 @@
   "description": "Install the Possible Codex skill into a project",
   "type": "module",
   "bin": {
-    "possible": "./src/index.mjs"
+    "possible": "src/index.mjs"
   },
   "files": [
     "assets/possible",

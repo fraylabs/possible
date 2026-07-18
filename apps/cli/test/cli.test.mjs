@@ -22,6 +22,11 @@ afterEach(async () => {
   await Promise.all(temporaryDirectories.splice(0).map((directory) => rm(directory, { recursive: true, force: true })));
 });
 
+test("publishes the Possible executable without npm normalizing it away", async () => {
+  const manifest = JSON.parse(await readFile(join(packageRoot, "package.json"), "utf8"));
+  assert.deepEqual(manifest.bin, { possible: "src/index.mjs" });
+});
+
 test("init prints the Codex invocation after installing", async () => {
   const project = await projectFixture();
   const { stdout, stderr } = await execute(process.execPath, [cli, "init"], { cwd: project });
