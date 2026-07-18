@@ -3,8 +3,8 @@
   "artifactDirectory": "apps/web/dist",
   "buildCommand": "npm run preview:build",
   "verificationCommand": "npm run preview:verify",
-  "sha256": "148fc327731373d66bfd422b64497e683b27eca965844977822100a97d4bc3dc",
-  "totalBytes": 2738415,
+  "sha256": "c192b5d9a837cbc148ec441dcd5166acfb95fc2fe18d0cb1aee10c2d00323d6e",
+  "totalBytes": 2747745,
   "files": [
     {
       "path": "agent/protocol.json",
@@ -627,9 +627,9 @@
       "sha256": "29306687d7db6bec454404124b33996136aa067d4f43dd564a96cdcb368f304a"
     },
     {
-      "path": "assets/index-CBtRw7uh.js",
-      "bytes": 394623,
-      "sha256": "aafeecaa3ef3314b4d9134bf44dd177ed252a598986a5eec6c77b2576044634a"
+      "path": "assets/index-D2HWbRWp.js",
+      "bytes": 395063,
+      "sha256": "d71c98bc1b99e12a96d5ad7ef6ed6a379a4b01b2fa5e99704ae6696e5fc5534d"
     },
     {
       "path": "assets/index-RHNZRdf9.css",
@@ -639,12 +639,22 @@
     {
       "path": "index.html",
       "bytes": 803,
-      "sha256": "4b27dcf25f378a20759fc2fc4a66a75869b051922abd250c8907c5ce22dc7249"
+      "sha256": "487b99a185c49562c56585dac1565060cc2a687fb09a5e393e0f4e2ed5867b5b"
     },
     {
       "path": "llms.txt",
       "bytes": 1248,
       "sha256": "fb192eb8f7ffbd025f14cd3c0108eb89c9da7eb0b418b80faec43063ae2ab947"
+    },
+    {
+      "path": "proof/receipts/digital-photo-frame.md",
+      "bytes": 4053,
+      "sha256": "836be86cd07a43a113be241e51fea2ea93ea35199ff5f0445351f9c950d94b58"
+    },
+    {
+      "path": "proof/receipts/robotic-arm.md",
+      "bytes": 4837,
+      "sha256": "1fa06adc0122ea96286dc3fe70138f91524df3b943e91f626255d31ba5121eb3"
     },
     {
       "path": "robots.txt",
@@ -989,7 +999,7 @@
     "dnsProvider": "Cloudflare",
     "sourceRepository": "https://github.com/fraylabs/possible",
     "publishedAt": "2026-07-18",
-    "artifactSha256": "148fc327731373d66bfd422b64497e683b27eca965844977822100a97d4bc3dc",
+    "artifactSha256": "c192b5d9a837cbc148ec441dcd5166acfb95fc2fe18d0cb1aee10c2d00323d6e",
     "verificationReceipt": "deployment/PRODUCTION.md",
     "remainingApprovalBoundaries": [
       "cost or paid-plan changes",

@@ -337,6 +337,10 @@ export function ProofPage() {
           <a className="proof-agent-link" href="/agent/protocol.json">Agent protocol JSON</a>
           <span className="proof-agent-separator" aria-hidden="true">·</span>
           <a className="proof-agent-link" href="/agent/search.json">Search index JSON</a>
+          <span className="proof-agent-separator" aria-hidden="true">·</span>
+          <a className="proof-agent-link" href="/proof/receipts/digital-photo-frame.md">Digital-frame clean-room receipt</a>
+          <span className="proof-agent-separator" aria-hidden="true">·</span>
+          <a className="proof-agent-link" href="/proof/receipts/robotic-arm.md">Robotic-arm clean-room receipt</a>
         </p>
       </section>
 

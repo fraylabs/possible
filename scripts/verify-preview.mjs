@@ -16,6 +16,7 @@ const contentTypes = new Map([
   [".html", "text/html; charset=utf-8"],
   [".js", "text/javascript; charset=utf-8"],
   [".json", "application/json; charset=utf-8"],
+  [".md", "text/markdown; charset=utf-8"],
   [".map", "application/json; charset=utf-8"],
   [".txt", "text/plain; charset=utf-8"],
   [".xml", "application/xml; charset=utf-8"],
@@ -222,7 +223,8 @@ const machineReadablePublicationFile = (path) =>
   || (path.startsWith("wiki/") && path.endsWith(".json"))
   || path === "agent/protocol.json"
   || path === "agent/search.json"
-  || /^agent\/(read|related)\/[^/]+\.json$/.test(path);
+  || /^agent\/(read|related)\/[^/]+\.json$/.test(path)
+  || /^proof\/receipts\/(digital-photo-frame|robotic-arm)\.md$/.test(path);
 
 async function verifyMachineReadableWiki(baseUrl, files) {
   const paths = new Set(files.map((file) => file.path));
