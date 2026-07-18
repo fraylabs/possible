@@ -19,7 +19,7 @@ const cadButtons = document.querySelectorAll("[data-image]");
 
 for (const button of cadButtons) {
   button.addEventListener("click", () => {
-    cadImage.src = `./assets/hardware/${button.dataset.image}`;
+    cadImage.src = `./hardware/${button.dataset.image}`;
     cadImage.alt = button.dataset.alt;
     cadCaption.textContent = button.dataset.label;
     for (const candidate of cadButtons) {

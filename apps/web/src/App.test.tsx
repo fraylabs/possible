@@ -90,7 +90,7 @@ describe("Possible", () => {
     expect(screen.getByRole("heading", { name: /Watch the outcome/i })).toBeInTheDocument();
     expect(screen.getByText("RECORDED REAL RUN")).toBeInTheDocument();
     expect(screen.getByText("Brief locked", { selector: ".replay-controls strong" })).toBeInTheDocument();
-    expect(screen.getAllByRole("link", { name: /Show output/i })[0]).toHaveAttribute("href", "/demo/still/outcome-room/index.html");
+    expect(screen.getAllByRole("link", { name: /Show output/i })[0]).toHaveAttribute("href", "/demo/still/");
 
     await userEvent.click(screen.getByRole("button", { name: /View full Codex thread/i }));
     expect(screen.getByRole("dialog", { name: /full Codex thread/i })).toBeInTheDocument();
@@ -107,6 +107,6 @@ describe("Possible", () => {
     expect(screen.getByRole("heading", { name: /Real outputs/i })).toBeInTheDocument();
     expect(screen.getByText("58 / 58", { selector: ".replay-review-card strong" })).toBeInTheDocument();
     expect(screen.getByText("0", { selector: ".replay-review-card strong" })).toBeInTheDocument();
-    expect(screen.getAllByRole("link", { name: /Show output/i })[0]).toHaveAttribute("href", "/demo/still/outcome-room/index.html");
+    expect(screen.getAllByRole("link", { name: /Show output/i })[0]).toHaveAttribute("href", "/demo/still/");
   });
 });

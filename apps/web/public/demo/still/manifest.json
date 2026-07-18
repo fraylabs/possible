@@ -14,17 +14,17 @@
   ],
   "workstreams": ["site", "film", "hardware"],
   "outputs": [
-    {"name": "launch-site", "status": "passed", "path": "assets/site/index.html"},
-    {"name": "launch-film", "status": "passed", "path": "assets/film/still-launch.mp4"},
-    {"name": "prototype-cad", "status": "passed-with-caveats", "path": "assets/hardware/still.step"},
+    {"name": "launch-site", "status": "passed", "path": "site/"},
+    {"name": "launch-film", "status": "passed", "path": "film/still-launch.mp4"},
+    {"name": "prototype-cad", "status": "passed-with-caveats", "path": "hardware/still.step"},
     {"name": "waitlist-contract", "status": "passed", "path": "evidence/waitlist-contract.md"},
     {"name": "evidence-report", "status": "passed-after-repair", "path": "evidence/final-receipt.md"}
   ],
   "verification": {
     "status": "passed-after-repair",
     "receipt": "evidence/final-receipt.md",
-    "browserResult": "../verification/browser-results.json",
-    "artifactResult": "../verification/artifact-results.json",
+    "browserResult": "verification/browser-results.json",
+    "artifactResult": "verification/artifact-results.json",
     "artifactChecksPassed": 58,
     "materialRepair": "Changed the launch-site Vite base to ./ after the first integrated browser run exposed root-relative asset 404s."
   },

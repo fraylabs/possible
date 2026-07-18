@@ -4,28 +4,28 @@
     "event": "shared-facts-locked",
     "actor": "captain",
     "status": "passed",
-    "evidence": "../outcome-brief.md"
+    "evidence": "./PRODUCT-BRIEF.md"
   },
   {
     "sequence": 2,
     "event": "launch-site-workstream",
     "actor": "web-subagent",
     "status": "passed",
-    "evidence": "../site/README.md"
+    "evidence": "./evidence/site-receipt.md"
   },
   {
     "sequence": 3,
     "event": "launch-film-workstream",
     "actor": "film-subagent",
     "status": "passed",
-    "evidence": "../film/RECEIPT.md"
+    "evidence": "./evidence/film-receipt.md"
   },
   {
     "sequence": 4,
     "event": "prototype-cad-workstream",
     "actor": "hardware-subagent",
     "status": "passed-with-caveats",
-    "evidence": "../hardware/RECEIPT.md"
+    "evidence": "./evidence/hardware-receipt.md"
   },
   {
     "sequence": 5,

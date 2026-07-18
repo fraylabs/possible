@@ -433,7 +433,7 @@ function ThreadTranscript({ onClose }: { onClose: () => void }) {
           <div className="thread-header-actions">
             <button type="button" onClick={copyThread}>{copyState === "copied" ? "COPIED ✓" : copyState === "failed" ? "COPY FAILED" : "COPY THREAD"}</button>
             <a href="/demo/still/CODEX-THREAD.md" target="_blank" rel="noreferrer">RAW .MD ↗</a>
-            <a className="thread-output-button" href="/demo/still/outcome-room/index.html" target="_blank" rel="noreferrer">SHOW OUTPUT ↗</a>
+            <a className="thread-output-button" href="/demo/still/" target="_blank" rel="noreferrer">SHOW OUTPUT ↗</a>
             <button className="thread-close" type="button" aria-label="Close full Codex thread" onClick={onClose}>×</button>
           </div>
         </header>
@@ -526,7 +526,7 @@ function DemoPage() {
             <div><span><i /> LOCAL RUN COMPLETE</span><strong>58 / 58 ARTIFACT CHECKS</strong></div>
             <div className="replay-proof-actions">
               <button type="button" onClick={() => setThreadOpen(true)}>VIEW FULL CODEX THREAD <span>31 MESSAGES</span></button>
-              <a href="/demo/still/outcome-room/index.html" target="_blank" rel="noreferrer">SHOW OUTPUT ↗</a>
+              <a href="/demo/still/" target="_blank" rel="noreferrer">SHOW OUTPUT ↗</a>
             </div>
           </div>
         </header>
@@ -557,7 +557,7 @@ function DemoPage() {
             <footer>
               <button type="button" onClick={() => setThreadOpen(true)}>VIEW FULL THREAD →</button>
               <a href="/demo/still/OUTCOME-RECEIPT.md" target="_blank" rel="noreferrer">VIEW RECEIPT ↗</a>
-              <a href="/demo/still/outcome-room/index.html" target="_blank" rel="noreferrer">OPEN LAUNCH ROOM ↗</a>
+              <a href="/demo/still/" target="_blank" rel="noreferrer">OPEN LAUNCH ROOM ↗</a>
             </footer>
           </aside>
 
@@ -578,7 +578,7 @@ function DemoPage() {
               <div className="replay-artifacts">
                 <article className="replay-artifact replay-artifact--site">
                   <header><span>01 / SITE</span><strong>{step >= 3 ? "PASS" : "RUNNING"}</strong></header>
-                  <img src="/demo/still/outcome-room/evidence/screenshots/embedded-site-desktop.png" alt="Still launch website produced by the site workstream" />
+                  <img src="/demo/still/evidence/screenshots/embedded-site-desktop.png" alt="Still launch website produced by the site workstream" />
                   <p>Responsive launch story + local-only waitlist</p>
                 </article>
                 <article className="replay-artifact replay-artifact--film">
@@ -588,20 +588,20 @@ function DemoPage() {
                     muted
                     playsInline
                     preload="metadata"
-                    poster="/demo/still/outcome-room/assets/film/still-launch-preview.png"
-                    src="/demo/still/outcome-room/assets/film/still-launch.mp4"
+                    poster="/demo/still/film/still-launch-preview.png"
+                    src="/demo/still/film/still-launch.mp4"
                   />
                   <p>24 seconds · 1080p · deterministic Remotion source</p>
                 </article>
                 <article className="replay-artifact replay-artifact--cad">
                   <header><span>03 / CAD</span><strong>{step >= 3 ? "PASS*" : "RUNNING"}</strong></header>
-                  <img src="/demo/still/outcome-room/assets/hardware/still-iso.png" alt="Still STEP-first exterior CAD concept" />
+                  <img src="/demo/still/hardware/still-iso.png" alt="Still STEP-first exterior CAD concept" />
                   <p>STEP + STL + GLB · measured geometry receipt</p>
                 </article>
               </div>
 
               <figure className="replay-integration">
-                <img src="/demo/still/outcome-room/evidence/screenshots/outcome-room-desktop.png" alt="The integrated Still outcome room" />
+                <img src="/demo/still/evidence/screenshots/outcome-room-desktop.png" alt="The integrated Still outcome room" />
                 <figcaption><span>CAPTAIN / INTEGRATED OUTCOME</span><strong>ONE LOCAL LAUNCH ROOM</strong></figcaption>
               </figure>
 
@@ -623,7 +623,7 @@ function DemoPage() {
                 </div>
                 <div className="replay-final-actions">
                   <button type="button" onClick={() => setThreadOpen(true)}>VIEW FULL THREAD →</button>
-                  <a href="/demo/still/outcome-room/index.html" target="_blank" rel="noreferrer">SHOW OUTPUT ↗</a>
+                  <a href="/demo/still/" target="_blank" rel="noreferrer">SHOW OUTPUT ↗</a>
                 </div>
               </article>
             </div>

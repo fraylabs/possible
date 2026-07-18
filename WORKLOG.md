@@ -51,3 +51,9 @@
 - Added one-question-at-a-time discovery, a single recommended outcome, explicit ingredient and boundary disclosure, and a confirmation gate.
 - Bundled a self-contained three-pack runtime reference so the globally installed skill can work without the Possible MCP, while still preferring newer MCP definitions when available.
 - Added resumable `.possible/` state and retained independent workstream, integration, fresh-review, and external-action gates.
+
+## 2026-07-19 — Flat demo outputs
+
+- Promoted `/demo/still/` to the finished launch room instead of exposing the internal `outcome-room/` assembly directory.
+- Published the site, film, hardware, evidence, and verification artifacts as direct sibling routes.
+- Updated every live demo link and manifest path while preserving the original run receipts and traces as historical evidence.
