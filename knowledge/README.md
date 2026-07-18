@@ -22,19 +22,15 @@ sources:
 Write useful, sourced prose here. Continue through [hosting options](/wiki/choose-web-hosting).
 ```
 
-Frontmatter keys are `slug`, optional `parent`, `title`, `summary`, `tags`,
-`reviewedAt`, and `sources`. `parent` names the page one level above this page.
-When omitted, the compiler infers the first knowledge folder as the parent, so
-pages under `knowledge/pages/web/` belong to `web` by default. Slugs use
-lowercase kebab-case. Tags may be empty; sources may not.
+Frontmatter keys are `slug`, `title`, `summary`, `tags`, `reviewedAt`, and
+`sources`. Slugs use lowercase kebab-case. Tags may be empty; sources may not.
 Every source has only a title and an HTTPS URL. `reviewedAt` is a real calendar
 date in `YYYY-MM-DD` form.
 
 Only Markdown links whose destination is exactly `/wiki/<slug>` generate
-authored graph edges. All such links must resolve to another canonical page.
-Parent relationships generate hierarchy edges and power the atlas card's
-level-up and level-down groups. Backlinks and related pages are still derived
-from authored links; contributors never author a second edge list.
+directional graph edges. All such links must resolve to another canonical page.
+Outgoing links power the atlas card's level-down group, and backlinks power its
+level-up group. Contributors never author a second edge list.
 
 Run after editing:
 

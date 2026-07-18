@@ -22,7 +22,6 @@ export const testWikiCorpus: WikiCorpus = {
     },
     {
       slug: "browser-applications",
-      parent: "web",
       title: "Browser applications",
       summary: "Interactive browser software with routes, state, and data flow.",
       body: [
@@ -41,7 +40,6 @@ export const testWikiCorpus: WikiCorpus = {
     },
     {
       slug: "vite-react",
-      parent: "browser-applications",
       title: "Vite with React",
       summary: "A lightweight setup for client-rendered applications.",
       body: [
@@ -76,7 +74,6 @@ export const testWikiCorpus: WikiCorpus = {
     },
     {
       slug: "custom-manufactured-parts",
-      parent: "manufacturing",
       title: "Custom manufactured parts",
       summary: "A controlled path from design intent to fabrication and inspection.",
       body: "Start with the manufacturing requirements and preserve approval evidence.",

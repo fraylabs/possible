@@ -99,7 +99,6 @@ export function buildAtlasGraph(corpus: WikiCorpus): AtlasGraphModel {
   };
 
   pages.forEach(({ page }) => {
-    if (page.parent) addEdge(page.parent, page.slug);
     page.links.forEach((targetSlug) => {
       addEdge(page.slug, targetSlug);
     });

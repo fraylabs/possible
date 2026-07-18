@@ -31,15 +31,15 @@ export function AtlasGraph({
   const pageBySlug = new Map(corpus.pages.map((page) => [page.slug, page]));
   const selectedPage = selectedSlug ? pageBySlug.get(selectedSlug) : undefined;
   const connections: KnowledgeGraphConnections | undefined = selectedPage ? {
-    levelDown: corpus.pages
-      .filter((page) => page.parent === selectedPage.slug)
+    levelDown: selectedPage.links
+      .map((slug) => pageBySlug.get(slug))
+      .filter((page): page is NonNullable<typeof page> => Boolean(page))
       .map((page) => ({ id: page.slug, title: page.title }))
       .sort((left, right) => left.title.localeCompare(right.title)),
-    levelUp: selectedPage.parent
-      ? [pageBySlug.get(selectedPage.parent)]
-        .filter((page): page is NonNullable<typeof page> => Boolean(page))
-        .map((page) => ({ id: page.slug, title: page.title }))
-      : [],
+    levelUp: corpus.pages
+      .filter((page) => page.slug !== selectedPage.slug && page.links.includes(selectedPage.slug))
+      .map((page) => ({ id: page.slug, title: page.title }))
+      .sort((left, right) => left.title.localeCompare(right.title)),
   } : undefined;
   const expandedPage: KnowledgeGraphExpandedPage | undefined = selectedPage ? {
     title: selectedPage.title,

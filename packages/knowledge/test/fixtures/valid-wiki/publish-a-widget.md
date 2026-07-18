@@ -1,6 +1,5 @@
 ---
 slug: publish-a-widget
-parent: build-a-widget
 title: Publish a widget
 summary: Document a finished widget so another person can understand and reproduce it.
 tags: []

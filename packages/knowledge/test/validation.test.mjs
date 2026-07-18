@@ -37,7 +37,6 @@ test("valid Markdown compiles metadata, body, and deduplicated internal links", 
   assert.deepEqual(corpus.pages[2].sources, [
     { title: "Example publishing reference", url: "https://example.com/publishing" },
   ]);
-  assert.equal(corpus.pages[2].parent, "build-a-widget");
 });
 
 test("broken internal links are rejected", () => {

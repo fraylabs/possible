@@ -54,7 +54,6 @@ const corpus: WikiCorpus = {
       tags: ["fabrication"],
       reviewedAt: "2026-07-17",
       sources: [{ title: "Manufacturing", url: "https://example.com/manufacturing" }],
-      parent: "manufacturing",
       links: ["manufacturing"],
     },
   ],
@@ -102,7 +101,6 @@ describe("wiki helpers", () => {
       corpus.pages.map((page) => page.slug).sort(),
     );
     expect(atlasGraph.edges).toHaveLength(7);
-    expect(atlasGraph.edges).toContainEqual({ source: "manufacturing", target: "custom-manufactured-parts" });
     expect(new Set(atlasGraph.edges.map((edge) => `${edge.source}:${edge.target}`)).size).toBe(7);
     expect(atlasGraph.nodes.every((node) =>
       node.x >= 6 && node.x <= 94 && node.y >= 8 && node.y <= 92)).toBe(true);

@@ -5,7 +5,6 @@ export interface PageSource {
 
 export interface WikiPage {
   slug: string;
-  parent?: string;
   title: string;
   summary: string;
   body: string;
