@@ -3,7 +3,6 @@
 import { createMcpExpressApp } from "@modelcontextprotocol/sdk/server/express.js";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import type { Transport } from "@modelcontextprotocol/sdk/shared/transport.js";
-import { loadWiki, type WikiCorpus } from "@possible/knowledge";
 import type { Server } from "node:http";
 import { pathToFileURL } from "node:url";
 
@@ -29,7 +28,6 @@ export interface PossibleHttpOptions {
   port?: number;
   allowedHosts?: string[];
   quiet?: boolean;
-  wiki?: WikiCorpus;
 }
 
 export async function startHttpServer(
@@ -41,13 +39,12 @@ export async function startHttpServer(
     throw new Error(`port must be an integer between 0 and 65535; received '${port}'.`);
   }
   const allowedHosts = options.allowedHosts ?? parseAllowedHosts(process.env.ALLOWED_HOSTS);
-  const wiki = options.wiki ?? await loadWiki();
   const app = allowedHosts === undefined
     ? createMcpExpressApp({ host })
     : createMcpExpressApp({ host, allowedHosts });
 
   app.post("/mcp", async (request, response) => {
-    const server = await createPossibleServer({ wiki });
+    const server = await createPossibleServer();
     const transport = new StreamableHTTPServerTransport({
       enableJsonResponse: true,
     });

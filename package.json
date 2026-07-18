@@ -1,39 +1,20 @@
 {
   "name": "possible",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "private": true,
   "type": "module",
   "packageManager": "npm@11.6.2",
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
+  "workspaces": ["apps/*", "packages/*"],
   "scripts": {
-    "build": "npm run preview:preflight && npm run build -w @possible/knowledge && npm run build -w @possible/mcp && npm run build -w @possible/web",
-    "test": "npm run test -w @possible/knowledge && npm run test -w @possible/mcp && npm run test -w @possible/web && npm run test:data -w @possible/web",
-    "knowledge:validate": "npm run validate -w @possible/knowledge",
-    "skill:validate": "node scripts/validate-skill.mjs",
-    "guide-pilot:validate": "node scripts/validate-guide-pilot.mjs",
-    "guide-pilot:blind": "node scripts/build-guide-pilot-blind.mjs",
-    "guide-pilot:score": "node scripts/score-guide-pilot.mjs --check",
-    "agent:test": "node --test scripts/query-possible.test.mjs",
-    "possible:query": "node scripts/query-possible.mjs",
-    "preview:preflight": "node scripts/verify-preview.mjs --preflight",
-    "preview:build": "npm run preview:preflight && npm run build -w @possible/knowledge && npm run build -w @possible/web",
-    "preview:test": "node --test scripts/verify-preview.test.mjs",
-    "preview:verify": "node scripts/verify-preview.mjs",
-    "preview:record": "node scripts/verify-preview.mjs --record",
-    "preview:prepare": "npm run preview:build && npm run preview:test && npm run preview:verify",
-    "check": "npm run knowledge:validate && npm run skill:validate && npm run guide-pilot:validate && npm run guide-pilot:score && npm run test && npm run build && npm run agent:test && npm run preview:test && npm run preview:verify",
-    "dev:web": "npm run dev -w @possible/web",
-    "dev:mcp": "npm run dev -w @possible/mcp"
+    "build": "npm run build -w @possible/packs && npm run build -w @possible/mcp && npm run build -w @possible/web",
+    "test": "npm run test -w @possible/packs && npm run test -w @possible/mcp && npm run test -w @possible/web",
+    "skill:validate": "node scripts/validate-skill.mjs && python /Users/brianlim/.codex/skills/.system/skill-creator/scripts/quick_validate.py skills/possible",
+    "check": "npm run skill:validate && npm run test && npm run build",
+    "dev:web": "npm run build -w @possible/packs && npm run dev -w @possible/web",
+    "dev:mcp": "npm run build -w @possible/packs && npm run dev -w @possible/mcp"
   },
-  "engines": {
-    "node": ">=22"
-  },
-  "devDependencies": {
-    "jsdom": "^29.1.1"
-  },
+  "engines": { "node": ">=22" },
+  "devDependencies": { "jsdom": "^29.1.1" },
   "optionalDependencies": {
     "@esbuild/linux-x64": "0.28.1",
     "@rolldown/binding-linux-x64-gnu": "1.1.5",

@@ -1,24 +1,16 @@
 {
   "name": "@possible/web",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "private": true,
   "type": "module",
   "scripts": {
-    "generate:atlas": "node scripts/build-atlas.mjs --write",
-    "validate:atlas": "node scripts/build-atlas.mjs --check",
-    "prebuild": "npm run generate:atlas",
-    "predev": "npm run generate:atlas",
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "pretest": "npm run validate:atlas",
-    "test": "vitest run",
-    "test:data": "vitest run --mode integration src/data-contract.test.ts",
-    "test:watch": "vitest"
+    "test": "vitest run src/App.test.tsx",
+    "test:watch": "vitest src/App.test.tsx"
   },
   "dependencies": {
-    "@possible/knowledge": "0.1.0",
-    "d3-force": "^3.0.0",
-    "lucide-react": "^1.24.0",
+    "@possible/packs": "0.1.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7"
   },
@@ -26,14 +18,13 @@
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.6.1",
-    "@types/d3-force": "^3.0.10",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.3",
-    "axe-core": "^4.12.1",
     "jsdom": "^29.1.1",
     "typescript": "^5.9.3",
     "vite": "^8.1.5",
-    "vitest": "^4.1.10"
+    "vitest": "^4.1.10",
+    "vitest-axe": "^0.1.0"
   }
 }

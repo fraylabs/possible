@@ -1,501 +1,68 @@
-import { useEffect, useRef, useState, type FormEvent } from "react";
-import {
-  BookOpenText,
-  CircleAlert,
-  ExternalLink,
-  LoaderCircle,
-  Search,
-  X,
-} from "lucide-react";
-import {
-  getPage,
-  loadWiki,
-  searchPages,
-  type WikiCorpus,
-} from "@possible/knowledge";
-import { buildAtlasBranches } from "./atlas";
-import { ArticleView } from "./components/ArticleView";
-import { AtlasGraph } from "./components/AtlasGraph";
-import { DocsPage } from "./components/DocsPage";
-import { DemoPage } from "./components/DemoPage";
-import { ProofPage } from "./components/ProofPage";
-import { MarkdownRenderer } from "./markdown";
-import {
-  DEFAULT_GRAPH_VIEWPORT,
-  type GraphViewport,
-} from "./components/KnowledgeGraph";
-import { formatReviewedAt, routeSlug, wikiPath } from "./wiki";
+import { useMemo, useState } from "react";
+import { compilePack, hardwareLaunchPack } from "@possible/packs";
 
-type LoadState =
-  | { status: "loading" }
-  | { status: "ready"; corpus: WikiCorpus }
-  | { status: "error"; message: string };
+type CopyState = "idle" | "copied" | "failed";
 
-type ViewMode = "explore" | "read";
-type FocusTarget = "explore" | "read" | "search";
-
-interface ExpandedSidebarPageProps {
-  page: WikiCorpus["pages"][number];
-  onSelectPage: (slug: string) => void;
+function CopyButton({ label, value, tone = "dark" }: { label: string; value: string; tone?: "dark" | "light" }) {
+  const [state, setState] = useState<CopyState>("idle");
+  async function copy() {
+    try {
+      await navigator.clipboard.writeText(value);
+      setState("copied");
+      window.setTimeout(() => setState("idle"), 1800);
+    } catch {
+      setState("failed");
+    }
+  }
+  return <button className={`copy-button copy-button--${tone}`} type="button" onClick={copy}><span>{state === "copied" ? "Copied" : state === "failed" ? "Copy failed" : label}</span><span aria-hidden="true">{state === "copied" ? "✓" : "↗"}</span></button>;
 }
 
-function ExpandedSidebarPage({ page, onSelectPage }: ExpandedSidebarPageProps) {
+function App() {
+  const compiled = useMemo(() => compilePack(hardwareLaunchPack), []);
+  const installText = compiled.installCommands.join("\n");
   return (
-    <>
-      <p className="selected-summary">{page.summary}</p>
-      <p className="review-note">Reviewed {formatReviewedAt(page.reviewedAt)}</p>
-      <p className="guide-boundary">
-        This field guide offers source-backed context, not a project-specific plan or validation.
-      </p>
-      <div className="sidebar-article-body">
-        <MarkdownRenderer markdown={page.body} onSelectPage={onSelectPage} />
-      </div>
-      <footer className="sidebar-sources">
-        <p className="section-kicker">Sources</p>
-        <ul>
-          {page.sources.map((source) => (
-            <li key={source.url}>
-              <a href={source.url} target="_blank" rel="noreferrer">
-                {source.title}
-                <ExternalLink size={13} aria-hidden="true" />
-              </a>
-            </li>
-          ))}
-        </ul>
-      </footer>
-    </>
-  );
-}
-
-interface PossibleHistoryState {
-  possible?: {
-    version: 1;
-    graphViewport: GraphViewport;
-  };
-}
-
-const validGraphViewport = (value: unknown): value is GraphViewport => {
-  if (!value || typeof value !== "object") return false;
-  const viewport = value as Partial<GraphViewport>;
-  return typeof viewport.x === "number" && Number.isFinite(viewport.x)
-    && typeof viewport.y === "number" && Number.isFinite(viewport.y)
-    && typeof viewport.scale === "number" && Number.isFinite(viewport.scale)
-    && viewport.scale >= 0.42 && viewport.scale <= 2.8;
-};
-
-const viewportFromHistory = (state: unknown): GraphViewport | undefined => {
-  if (!state || typeof state !== "object") return undefined;
-  const viewport = (state as PossibleHistoryState).possible?.graphViewport;
-  return validGraphViewport(viewport) ? viewport : undefined;
-};
-
-const historyStateFor = (graphViewport: GraphViewport): PossibleHistoryState => ({
-  possible: { version: 1, graphViewport },
-});
-
-export function App() {
-  const [loadState, setLoadState] = useState<LoadState>({ status: "loading" });
-  const [loadAttempt, setLoadAttempt] = useState(0);
-  const [selectedSlug, setSelectedSlug] = useState<string | undefined>();
-  const [expandedSlug, setExpandedSlug] = useState<string | undefined>();
-  const [query, setQuery] = useState("");
-  const [mode, setMode] = useState<ViewMode>("explore");
-  const [graphViewport, setGraphViewport] = useState<GraphViewport>({ ...DEFAULT_GRAPH_VIEWPORT });
-  const searchRef = useRef<HTMLInputElement>(null);
-  const exploreTitleRef = useRef<HTMLHeadingElement>(null);
-  const readTitleRef = useRef<HTMLHeadingElement>(null);
-  const pendingFocusRef = useRef<FocusTarget | undefined>(undefined);
-
-  useEffect(() => {
-    let active = true;
-    setLoadState({ status: "loading" });
-
-    loadWiki()
-      .then((corpus) => {
-        if (!active) return;
-        setLoadState({ status: "ready", corpus });
-        const requestedSlug = routeSlug(window.location.pathname);
-        setSelectedSlug(requestedSlug);
-        const restoredViewport = viewportFromHistory(window.history.state);
-        if (restoredViewport) setGraphViewport(restoredViewport);
-      })
-      .catch((error: unknown) => {
-        if (!active) return;
-        setLoadState({
-          status: "error",
-          message: error instanceof Error ? error.message : "The wiki could not be loaded.",
-        });
-      });
-
-    return () => {
-      active = false;
-    };
-  }, [loadAttempt]);
-
-  const corpus = loadState.status === "ready" ? loadState.corpus : undefined;
-  const selectedPage = corpus && selectedSlug ? getPage(corpus, selectedSlug) : undefined;
-  const expandedPage = expandedSlug && expandedSlug === selectedSlug ? selectedPage : undefined;
-  const branches = corpus ? buildAtlasBranches(corpus) : [];
-  const fallbackPage = branches[0]?.page ?? (corpus ? corpus.pages[0] : undefined);
-  const searchResults = corpus && query.trim()
-    ? searchPages(corpus, query, { limit: 5 })
-    : [];
-
-  useEffect(() => {
-    const target = pendingFocusRef.current;
-    if (!target) return;
-    pendingFocusRef.current = undefined;
-
-    const frame = window.requestAnimationFrame(() => {
-      document.documentElement.scrollTop = 0;
-      document.body.scrollTop = 0;
-      if (target === "search") searchRef.current?.focus({ preventScroll: true });
-      if (target === "explore") exploreTitleRef.current?.focus({ preventScroll: true });
-      if (target === "read") readTitleRef.current?.focus({ preventScroll: true });
-    });
-    return () => window.cancelAnimationFrame(frame);
-  }, [mode, selectedSlug]);
-
-  useEffect(() => {
-    if (!corpus) return undefined;
-
-    const handlePopState = (event: PopStateEvent) => {
-      const nextSlug = routeSlug(window.location.pathname);
-      const restoredViewport = viewportFromHistory(event.state);
-      pendingFocusRef.current = nextSlug ? mode : "explore";
-      if (!nextSlug) setMode("explore");
-      setSelectedSlug(nextSlug);
-      if (restoredViewport) setGraphViewport(restoredViewport);
-      setQuery("");
-    };
-
-    window.addEventListener("popstate", handlePopState);
-    return () => window.removeEventListener("popstate", handlePopState);
-  }, [corpus, mode]);
-
-  useEffect(() => {
-    if (!corpus || mode !== "explore") return;
-    window.history.replaceState(historyStateFor(graphViewport), "", window.location.href);
-  }, [corpus, graphViewport, mode, selectedSlug]);
-
-  const returnToExplore = (focus: FocusTarget = "explore") => {
-    pendingFocusRef.current = focus;
-    setMode("explore");
-  };
-
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      const target = event.target as HTMLElement | null;
-      const isTyping = target?.tagName === "INPUT" || target?.tagName === "TEXTAREA";
-
-      if (event.key === "/" && !isTyping) {
-        event.preventDefault();
-        if (mode === "read") {
-          returnToExplore("search");
-        } else {
-          searchRef.current?.focus();
-        }
-      }
-
-      if (event.key === "Escape") {
-        if (mode === "read") {
-          returnToExplore();
-        } else if (query) {
-          setQuery("");
-        } else if (selectedSlug) {
-          clearSelection();
-        } else {
-          setQuery("");
-        }
-      }
-
-      if (!isTyping && mode === "explore" && event.key === "0") {
-        event.preventDefault();
-        setGraphViewport({ ...DEFAULT_GRAPH_VIEWPORT });
-      }
-
-      if (!isTyping && mode === "explore" && (event.key === "+" || event.key === "=")) {
-        event.preventDefault();
-        setGraphViewport((viewport) => ({
-          ...viewport,
-          scale: Math.min(2.8, viewport.scale * 1.18),
-        }));
-      }
-
-      if (!isTyping && mode === "explore" && event.key === "-") {
-        event.preventDefault();
-        setGraphViewport((viewport) => ({
-          ...viewport,
-          scale: Math.max(0.42, viewport.scale * 0.82),
-        }));
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [graphViewport, mode, query, selectedSlug]);
-
-  const selectPage = (
-    slug: string,
-    options?: {
-      history?: "push" | "replace" | "none";
-      focus?: FocusTarget;
-      mode?: ViewMode;
-    },
-  ) => {
-    if (options?.focus) pendingFocusRef.current = options.focus;
-    if (options?.mode) setMode(options.mode);
-    setSelectedSlug(slug);
-    setExpandedSlug(undefined);
-    setQuery("");
-
-    if (options?.history === "none") return;
-    const nextPath = wikiPath(slug);
-    if (window.location.pathname === nextPath) return;
-    const method = options?.history === "replace" ? "replaceState" : "pushState";
-    window.history[method](historyStateFor(graphViewport), "", nextPath);
-  };
-
-  function clearSelection() {
-    pendingFocusRef.current = "explore";
-    setSelectedSlug(undefined);
-    setExpandedSlug(undefined);
-    setQuery("");
-    if (window.location.pathname !== "/") {
-      window.history.pushState(historyStateFor(graphViewport), "", "/");
-    }
-  }
-
-  const resetToAtlas = () => {
-    const resetViewport = { ...DEFAULT_GRAPH_VIEWPORT };
-    pendingFocusRef.current = "explore";
-    setMode("explore");
-    setSelectedSlug(undefined);
-    setExpandedSlug(undefined);
-    setGraphViewport(resetViewport);
-    setQuery("");
-    if (window.location.pathname !== "/") {
-      window.history.pushState(historyStateFor(resetViewport), "", "/");
-    } else {
-      window.history.replaceState(historyStateFor(resetViewport), "", "/");
-    }
-  };
-
-  const submitSearch = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const firstResult = searchResults[0]?.page;
-    if (firstResult) {
-      selectPage(firstResult.slug, { focus: "explore", mode: "explore" });
-    }
-  };
-
-  const expandPage = () => {
-    if (selectedPage) setExpandedSlug((slug) => slug ? undefined : selectedPage.slug);
-  };
-
-  const selectExpandedPage = (slug: string) => {
-    selectPage(slug, { focus: "explore", mode: "explore" });
-    setExpandedSlug(slug);
-  };
-
-  if (["/docs", "/how-it-works"].includes(window.location.pathname.replace(/\/+$/, ""))) {
-    return <DocsPage />;
-  }
-
-  if (window.location.pathname.replace(/\/+$/, "") === "/demo") {
-    return <DemoPage />;
-  }
-
-  if (window.location.pathname.replace(/\/+$/, "") === "/proof") {
-    return <ProofPage />;
-  }
-
-  if (loadState.status === "loading") {
-    return (
-      <main className="state-screen" aria-busy="true" aria-live="polite">
-        <LoaderCircle className="state-screen__spinner" />
-        <p className="brand-wordmark">possible<span>.sh</span></p>
-        <h1>Loading Possible</h1>
-        <p>Preparing source-backed field guides for search, reading, and exploration.</p>
-      </main>
-    );
-  }
-
-  if (loadState.status === "error") {
-    return (
-      <main className="state-screen state-screen--error" role="alert">
-        <CircleAlert size={24} />
-        <p className="brand-wordmark">possible<span>.sh</span></p>
-        <h1>The field guides could not be loaded.</h1>
-        <p>{loadState.message}</p>
-        <button type="button" onClick={() => setLoadAttempt((attempt) => attempt + 1)}>
-          Try again
-        </button>
-      </main>
-    );
-  }
-
-  if (!corpus || corpus.pages.length === 0) {
-    return (
-      <main className="state-screen">
-        <p className="brand-wordmark">possible<span>.sh</span></p>
-        <h1>No field guides are available yet.</h1>
-        <p>Build or refresh the shared guide library, then reload this app.</p>
-      </main>
-    );
-  }
-
-  if (mode === "read") {
-    return (
-      <main className="app-shell app-shell--read">
-        <a className="skip-link" href="#read-title">Skip to article</a>
-        <ArticleView
-          page={selectedPage}
-          routeSlug={selectedSlug}
-          fallbackPage={fallbackPage}
-          titleRef={readTitleRef}
-          onBack={() => returnToExplore()}
-          onHome={resetToAtlas}
-          onSelectPage={(slug) => selectPage(slug, { focus: "read", mode: "read" })}
-        />
-      </main>
-    );
-  }
-
-  return (
-    <main className="app-shell app-shell--explore">
-      <a className="skip-link" href="#explore-title">
-        {selectedSlug ? "Skip to selected page" : "Skip to atlas"}
-      </a>
-
-      <div className="explore-view">
-        <aside className={`explore-panel${expandedPage ? " is-expanded" : ""}`} aria-label="Explore Possible">
-          <button type="button" className="brand-reset" onClick={resetToAtlas}>
-            <span className="brand-wordmark">possible<span>.sh</span></span>
-            <span className="brand-tagline">Source-backed field guides for people and agents.</span>
-          </button>
-
-          <div className="search-area">
-            <form className="search-form" onSubmit={submitSearch}>
-              <label htmlFor="wiki-search" className="visually-hidden">Search field guides</label>
-              <Search size={17} aria-hidden="true" />
-              <input
-                ref={searchRef}
-                id="wiki-search"
-                type="search"
-                value={query}
-                onChange={(event) => setQuery(event.target.value)}
-                placeholder="What are you trying to make or understand?"
-                autoComplete="off"
-              />
-              {query && (
-                <button
-                  type="button"
-                  className="search-clear"
-                  onClick={() => setQuery("")}
-                  aria-label="Clear search"
-                >
-                  <X size={14} />
-                </button>
-              )}
-            </form>
-
-            {query && (
-              <div className="search-results" role="listbox" aria-label="Search results">
-                {searchResults.length > 0 ? (
-                  <ul>
-                    {searchResults.map((result) => (
-                      <li key={result.page.slug}>
-                        <button
-                          type="button"
-                          onClick={() => selectPage(result.page.slug, {
-                            focus: "explore",
-                            mode: "explore",
-                          })}
-                        >
-                          <strong>{result.page.title}</strong>
-                          <span>{result.page.summary}</span>
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p className="search-empty">No field guide matches that search yet.</p>
-                )}
-              </div>
-            )}
-            <div className="docs-links">
-              <a className="docs-link docs-link--primary" href="/demo">See an example</a>
-              <a className="docs-link" href="/how-it-works">How it works</a>
-              <a className="docs-link docs-link--quiet" href="/proof">Retrieval examples</a>
-            </div>
-          </div>
-
-          <section className={`selected-context${expandedPage ? " selected-context--expanded" : ""}`} aria-labelledby="explore-title">
-            {selectedSlug ? (
-              <>
-                <div className="inspector-heading">
-                  <p className="section-kicker">{expandedPage ? "Open field guide" : "Focused guide"}</p>
-                  <div className="inspector-actions">
-                    {selectedPage && (
-                      <button
-                        type="button"
-                        className="sidebar-expand"
-                        onClick={expandPage}
-                        aria-label={expandedPage ? "Collapse field guide in sidebar" : "Expand field guide in sidebar"}
-                        aria-expanded={Boolean(expandedPage)}
-                      >
-                        {expandedPage ? "<" : ">"}
-                      </button>
-                    )}
-                  </div>
-                </div>
-                <h1 id="explore-title" ref={exploreTitleRef} tabIndex={-1}>
-                  {selectedPage?.title ?? "Page not found"}
-                </h1>
-                {expandedPage ? (
-                  <ExpandedSidebarPage page={expandedPage} onSelectPage={selectExpandedPage} />
-                ) : selectedPage ? (
-                  <>
-                    <p className="selected-summary">{selectedPage.summary}</p>
-                    <p className="review-note">Reviewed {formatReviewedAt(selectedPage.reviewedAt)}</p>
-                    <p className="atlas-note">Its authored references are highlighted across the guide library.</p>
-                  </>
-                ) : fallbackPage ? (
-                  <button
-                    type="button"
-                    className="read-button"
-                    onClick={() => selectPage(fallbackPage.slug, { focus: "explore" })}
-                  >
-                    Open {fallbackPage.title}
-                  </button>
-                ) : null}
-              </>
-            ) : (
-              <>
-                <p className="section-kicker">Field guide atlas</p>
-                <h1 className="atlas-title" id="explore-title" ref={exploreTitleRef} tabIndex={-1}>
-                  Learn what the work involves.
-                </h1>
-                <p className="selected-summary">
-                  Search contributor-authored guides for common approaches, important decisions,
-                  trade-offs, and evidence to look for. You or your agent still decide what to do.
-                </p>
-                <p className="atlas-note">{branches.length} fields · {corpus.pages.length} source-backed guides</p>
-              </>
-            )}
-          </section>
-        </aside>
-
-        <AtlasGraph
-          corpus={corpus}
-          branches={branches}
-          selectedSlug={selectedSlug}
-          viewport={graphViewport}
-          onViewportChange={setGraphViewport}
-          onSelectPage={(slug) => selectPage(slug, { focus: "explore", mode: "explore" })}
-        />
-      </div>
+    <main>
+      <nav className="nav" aria-label="Primary navigation">
+        <a className="wordmark" href="#top" aria-label="Possible home">possible<span>.sh</span></a>
+        <div className="nav-links"><a href="#pack">The pack</a><a href="#sources">Sources</a><a className="nav-cta" href="#run">Run it <span aria-hidden="true">↘</span></a></div>
+      </nav>
+      <section className="hero" id="top">
+        <div className="hero-kicker"><span>OUTCOME COMPILER</span><span>ONE PACK / FIVE SKILLS</span></div>
+        <h1>Skills are ingredients.<br /><em>Possible compiles<br />the outcome.</em></h1>
+        <div className="hero-foot"><p>Skills.sh gives agents individual capabilities. Possible turns the right ones into a coordinated, verifiable result.</p><a href="#pack" className="circle-link" aria-label="Explore Hardware Launch pack">↓</a></div>
+      </section>
+      <section className="manifesto" aria-label="Product definition">
+        <p className="section-label">THE SIMPLE VERSION</p>
+        <p className="manifesto-copy">You describe what you want. Possible gives Codex the skills, team structure, merge order, guardrails, and definition of done.</p>
+        <div className="equation" aria-label="Skills dot sh plus Possible equals a complete launch"><span>SKILLS.SH</span><b>+</b><span>POSSIBLE</span><b>=</b><span className="equation-result">A COMPLETE LAUNCH</span></div>
+      </section>
+      <section className="pack" id="pack">
+        <header className="pack-header"><p className="section-label section-label--light">{compiled.pack.eyebrow}</p><span className="status"><i /> REVIEWED {compiled.pack.reviewedAt}</span></header>
+        <div className="pack-title"><div><h2>{compiled.pack.name}</h2><p>{compiled.pack.promise}</p></div><span className="pack-number">01</span></div>
+        <div className="flow" aria-label="Pack workflow">
+          <div className="flow-node"><small>INPUT</small><strong>Your product brief</strong></div><span className="flow-arrow">→</span>
+          <div className="flow-center"><small>POSSIBLE PACK</small><strong>Captain</strong><span>shared brief · contracts · merge</span></div><span className="flow-arrow">→</span>
+          <div className="flow-streams">{compiled.pack.workstreams.map((stream, index) => <article key={stream.id}><small>0{index + 1}</small><strong>{stream.name}</strong><span>{stream.skills.length} skill{stream.skills.length > 1 ? "s" : ""}</span></article>)}</div>
+          <span className="flow-arrow">→</span><div className="flow-node"><small>OUTPUT</small><strong>Launch room</strong><span>tested together</span></div>
+        </div>
+        <div className="deliverables">{compiled.pack.outputs.map((output, index) => <div key={output}><span>0{index + 1}</span><strong>{output}</strong></div>)}</div>
+      </section>
+      <section className="sources" id="sources">
+        <div className="sources-intro"><p className="section-label">WHAT'S INSIDE</p><h2>Five specialist skills.<br />One opinionated recipe.</h2><p>Every source is visible before you install. Possible owns the composition—not the ingredients.</p></div>
+        <div className="source-list">{compiled.pack.skills.map((source, index) => <article className="source-row" key={source.id}><span className="source-index">0{index + 1}</span><div><strong>{source.name}</strong><p>{source.role}</p></div><code>{source.repository}</code><a href={source.reviewUrl} target="_blank" rel="noreferrer" aria-label={`Review ${source.name} source at revision ${source.reviewedRevision.slice(0, 7)}`}>{source.reviewedRevision.slice(0, 7)} ↗</a></article>)}</div>
+      </section>
+      <section className="run" id="run">
+        <div className="run-copy"><p className="section-label section-label--light">RUN THE PACK</p><h2>Two copies.<br />One launch.</h2><p>Install the reviewed skill set. Start a fresh Codex session so it can see them. Then paste the compiled run prompt with your product brief.</p>
+          <ol><li><span>1</span><div><strong>Install skills</strong><small>Review each external source first</small></div></li><li><span>2</span><div><strong>Reload Codex</strong><small>Confirm all five skills are visible</small></div></li><li><span>3</span><div><strong>Paste the run prompt</strong><small>Replace the product brief placeholder</small></div></li></ol>
+        </div>
+        <div className="terminal-stack">
+          <article className="terminal"><header><span>01 / INSTALL</span><i /><i /><i /></header><pre>{installText}</pre><CopyButton label="Copy install commands" value={installText} /></article>
+          <article className="terminal terminal--prompt"><header><span>02 / RUN</span><i /><i /><i /></header><pre>{compiled.runPrompt}</pre><CopyButton label="Copy run prompt" value={compiled.runPrompt} tone="light" /></article>
+        </div>
+      </section>
+      <section className="boundary"><p className="section-label">HONEST BY DESIGN</p><h2>A recipe is not a guarantee.</h2><p>The listed revisions are the snapshots Possible reviewed. The install commands fetch external repositories, so inspect the resolved skill contents before running them. The pack never authorizes deployment, purchases, fabrication, outreach, or claims of real-world validation.</p></section>
+      <footer><a className="wordmark" href="#top">possible<span>.sh</span></a><p>COMPILE WHAT'S POSSIBLE.</p><a href="https://github.com/fraylabs/possible" target="_blank" rel="noreferrer">SOURCE ↗</a></footer>
     </main>
   );
 }
+export default App;

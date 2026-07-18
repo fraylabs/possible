@@ -1,9 +1,9 @@
 interface:
   display_name: "Possible"
-  short_description: "Retrieve source-backed field guides"
-  default_prompt: "Use $possible for retrieval-only field-guide research: decompose compound requests, run focused searches, read only relevant guides, combine them with project context, choose available host skills, execute and validate in the host, cite material sources, and state when Possible has no useful guidance."
+  short_description: "Compile skills into complete outcomes"
+  default_prompt: "Use $possible to compile the Hardware Launch outcome: list and inspect its external skill sources, install only with authorization, then run its workstream-based captain workflow and verification contract."
 dependencies:
   tools:
     - type: "mcp"
       value: "possible"
-      description: "Read-only Possible field-guide retrieval server"
+      description: "Read-only Possible outcome-pack compiler"

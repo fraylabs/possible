@@ -1,81 +1,44 @@
 # Possible
 
-Possible is a library of source-backed practical guides for people and agents.
+**Skills are ingredients. Possible compiles the outcome.**
 
-This repository revision is a local, not-published candidate. The existing
-[possible.sh](https://possible.sh) deployment may still serve the prior
-authorized release; its source and guides live at
-[github.com/fraylabs/possible](https://github.com/fraylabs/possible).
+Skills.sh distributes individual agent skills. Possible publishes opinionated outcome packs: the selected skills, workstream ownership, integration order, safety gates, and definition of done needed to turn one goal into a coordinated result.
 
-Possible deliberately keeps the boundary small:
+The Buildweek MVP contains one pack: **Hardware Launch**. It turns a hardware product brief into a launch site, programmatic film, prototype CAD package, waitlist contract, and evidence report.
 
-- A **guide** explains what a subject helps with, when it applies, important
-  decisions, practical approaches, validation evidence to seek, and limits.
-- A guide's internal **links** identify useful adjacent reading and generate the
-  atlas and backlinks. They are not a project plan.
-- Its **sources** and review date make the guidance inspectable and maintainable.
+## The demo
 
-People search, browse, and read the library. Agents use the same corpus through
-a two-tool, read-only interface. The host agent interprets the actual project,
-chooses and combines relevant guides, selects from its own skills and tools,
-asks the user for meaningful decisions and approvals, does the work, and
-validates the result.
+1. Open possible.sh and inspect the Hardware Launch sources.
+2. Copy four Skills CLI install commands.
+3. Reload Codex so the five installed skills are visible.
+4. Copy the compiled run prompt and replace its product-brief placeholder.
+5. Codex creates three independent workstreams, integrates their receipts, then assigns a fresh browser reviewer.
 
-Possible supplies reviewed context. It does not plan, choose tools, execute,
-authorize, certify, or validate a project.
+Possible is not a skill registry, a universal mega-skill, or a claim that installing skills guarantees an outcome. It is the missing composition layer between capability discovery and accountable execution.
 
-The first locked paired pilot did not establish that adding Possible generally
-improves agent performance. That no-go result and all 16 raw runs are retained
-under `evals/guide-library-v1/`; the current product claim is the library and
-retrieval contract above, not measured agent uplift.
+## Repository
 
-## Run it
+- `packages/packs` — typed pack manifest and deterministic compiler
+- `apps/web` — possible.sh experience and static pack publications
+- `apps/mcp` — read-only `list_packs` and `compile_pack` tools
+- `skills/possible` — Codex workflow for safely using packs
 
-Requires Node.js 22 or newer.
+The older `knowledge/`, `evals/`, and `packages/knowledge` directories are retained research from the pre-reset field-guide prototype. They are not part of the active product contract or build.
+
+## Verify
 
 ```bash
 npm install
 npm run check
-npm run dev:web
 ```
 
-Start the Streamable HTTP MCP server separately with:
+Generated web artifacts include:
 
-```bash
-npm run dev:http -w @possible/mcp
-```
+- `/packs/hardware-launch.json`
+- `/packs/hardware-launch/install.txt`
+- `/packs/hardware-launch/run.txt`
+- `/llms.txt`
 
-It defaults to `http://127.0.0.1:3001/mcp`. Set `HOST`, `PORT`, and—when binding
-outside loopback—`ALLOWED_HOSTS` explicitly.
+## Trust boundary
 
-## Agent interface
-
-The MCP server exposes exactly two read-only operations:
-
-- `search` — find relevant guides for one focused subject or question.
-- `read` — retrieve one complete guide, its sources, links, and related guides.
-
-The installable guidance in [`skills/possible`](skills/possible/) teaches an
-agent to decompose compound work, run focused searches, read only useful guides,
-combine their guidance with project evidence, cite material sources, and retain
-ownership of planning, skill choice, execution, and validation.
-
-## Contribute
-
-Canonical guides are ordinary Markdown under [`knowledge/pages`](knowledge/pages/).
-Each guide has a stable slug, title, summary, optional aliases and tags, review
-date, at least one source, and useful prose. Link to another guide with
-`/wiki/<slug>`.
-
-Start with [`CONTRIBUTING.md`](CONTRIBUTING.md) and the guide template under
-`knowledge/`. After editing guides, run:
-
-```bash
-npm run knowledge:validate
-npm run test -w @possible/knowledge
-```
-
-See [`GOAL.md`](GOAL.md) for the active trust claim and
-[`ARCHITECTURE.md`](ARCHITECTURE.md) for the shared boundary. Historical
-typed-graph evaluations remain under `evals/` and in repository history; they
-are not evidence that Possible plans or validates projects.
+Reviewed revisions record the snapshots Possible inspected. The generated Skills CLI commands resolve external repositories at install time; users must inspect the resolved skill contents. Packs never authorize deployment, spending, outreach, fabrication, data collection, or unsupported real-world claims.

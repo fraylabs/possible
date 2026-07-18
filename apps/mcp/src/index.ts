@@ -3,7 +3,6 @@ export {
   createPossibleServer,
   POSSIBLE_SERVER_INSTRUCTIONS,
   POSSIBLE_TOOL_NAMES,
-  type PossibleServerOptions,
 } from "./server.js";
 export {
   type ErrorEnvelope,
