@@ -90,6 +90,16 @@ describe("Possible", () => {
     expect(screen.getByRole("heading", { name: /Watch the outcome/i })).toBeInTheDocument();
     expect(screen.getByText("RECORDED REAL RUN")).toBeInTheDocument();
     expect(screen.getByText("Brief locked", { selector: ".replay-controls strong" })).toBeInTheDocument();
+    expect(screen.getAllByRole("link", { name: /Show output/i })[0]).toHaveAttribute("href", "/demo/still/outcome-room/index.html");
+
+    await userEvent.click(screen.getByRole("button", { name: /View full Codex thread/i }));
+    expect(screen.getByRole("dialog", { name: /full Codex thread/i })).toBeInTheDocument();
+    expect(screen.getByText(/31 exact public messages across 5 real agent threads/i)).toBeInTheDocument();
+    expect(screen.getAllByText("Ampere").length).toBeGreaterThan(1);
+    expect(screen.getAllByText("Beauvoir").length).toBeGreaterThan(1);
+    expect(screen.getByText(/fresh browser review has found a material integration failure/i)).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Raw \.md/i })).toHaveAttribute("href", "/demo/still/CODEX-THREAD.md");
+    await userEvent.click(screen.getByRole("button", { name: /Close full Codex thread/i }));
 
     const next = screen.getByRole("button", { name: "Next event" });
     for (let index = 0; index < 6; index += 1) await userEvent.click(next);
@@ -97,6 +107,6 @@ describe("Possible", () => {
     expect(screen.getByRole("heading", { name: /Real outputs/i })).toBeInTheDocument();
     expect(screen.getByText("58 / 58", { selector: ".replay-review-card strong" })).toBeInTheDocument();
     expect(screen.getByText("0", { selector: ".replay-review-card strong" })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /Explore the real outcome/i })).toHaveAttribute("href", "/demo/still/outcome-room/index.html");
+    expect(screen.getAllByRole("link", { name: /Show output/i })[0]).toHaveAttribute("href", "/demo/still/outcome-room/index.html");
   });
 });

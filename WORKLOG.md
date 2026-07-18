@@ -41,3 +41,5 @@
 - Preserved the review story: the first browser pass found broken embedded-site assets, the captain repaired the Vite base path, and the fresh rerun passed 50/50 browser checks.
 - Replaced the synthetic `/demo` walkthrough with a timed Codex-style replay powered by the run's real artifacts and evidence.
 - Linked the replay to 58/58 artifact checks, the initial failure trace, the final receipt, and the complete local launch room.
+- Exported all 31 public messages from the real captain and four specialist Codex threads, with an explicit boundary excluding private reasoning, system instructions, encrypted handoffs, and raw tool output.
+- Added a full-screen readable/copyable transcript and prominent “Show output” handoffs to the actual generated launch room.

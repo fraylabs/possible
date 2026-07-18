@@ -7,7 +7,7 @@ Possible now publishes three complete outcome contracts: Hardware Launch, Softwa
 - `npm run check`: passed.
 - Pack compiler: 2/2 tests passed across all three packs.
 - MCP: 4/4 tests passed, including catalog listing and multi-pack compilation.
-- Web: 8/8 tests passed, including pack selection, catalog and detail routing, the recorded Hardware Launch replay, brief personalization, copy behavior, unknown-pack handling, and automated accessibility.
+- Web: 8/8 tests passed, including pack selection, catalog and detail routing, the recorded Hardware Launch replay, its full transcript and output handoff, brief personalization, copy behavior, unknown-pack handling, and automated accessibility.
 - Production build: passed and emitted a pack index plus JSON, install text, and run text for all three packs.
 - Skill validation: repository validator and the official skill-creator validator passed.
 - Recorded Hardware Launch run: 58/58 artifact checks and 50/50 fresh-browser checks passed after the reviewer found and verified an asset-path repair; the local-only waitlist made zero network writes.

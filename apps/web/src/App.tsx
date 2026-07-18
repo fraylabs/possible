@@ -1,8 +1,28 @@
 import { useEffect, useMemo, useState } from "react";
 import { compilePack, getPack, outcomePacks } from "@possible/packs";
 import type { OutcomePack } from "@possible/packs";
+import demoThreadData from "./demo-thread.json";
 
 type CopyState = "idle" | "copied" | "failed";
+
+type DemoThread = {
+  title: string;
+  runId: string;
+  recordedAt: string;
+  disclosure: string;
+  prompt: string;
+  agents: Array<{ name: string; role: string; thread: string }>;
+  messages: Array<{
+    timestamp: string;
+    agent: string;
+    role: string;
+    thread: string;
+    phase: string;
+    message: string;
+  }>;
+};
+
+const demoThread = demoThreadData as DemoThread;
 
 const exampleBriefs: Record<string, string> = {
   "hardware-launch": "Create a launch for my hardware app startup.",
@@ -364,6 +384,103 @@ function Boundary() {
   );
 }
 
+function ThreadTranscript({ onClose }: { onClose: () => void }) {
+  const [copyState, setCopyState] = useState<CopyState>("idle");
+
+  useEffect(() => {
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", closeOnEscape);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [onClose]);
+
+  const copyableThread = [
+    `# ${demoThread.title} — Codex thread`,
+    demoThread.disclosure,
+    "## Run prompt",
+    demoThread.prompt,
+    "## Public thread",
+    ...demoThread.messages.map((message) =>
+      `### ${new Date(message.timestamp).toISOString().slice(11, 19)} UTC — ${message.agent} / ${message.role}\n${message.message}`,
+    ),
+  ].join("\n\n");
+
+  async function copyThread() {
+    try {
+      await navigator.clipboard.writeText(copyableThread);
+      setCopyState("copied");
+      window.setTimeout(() => setCopyState("idle"), 1600);
+    } catch {
+      setCopyState("failed");
+    }
+  }
+
+  return (
+    <div className="thread-backdrop" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}>
+      <section className="thread-panel" role="dialog" aria-modal="true" aria-labelledby="thread-title">
+        <header className="thread-header">
+          <div>
+            <span>ACTUAL RUN LOG / {demoThread.runId.slice(0, 8)}</span>
+            <h2 id="thread-title">The full Codex thread.</h2>
+            <p>{demoThread.messages.length} exact public messages across {demoThread.agents.length} real agent threads.</p>
+          </div>
+          <div className="thread-header-actions">
+            <button type="button" onClick={copyThread}>{copyState === "copied" ? "COPIED ✓" : copyState === "failed" ? "COPY FAILED" : "COPY THREAD"}</button>
+            <a href="/demo/still/CODEX-THREAD.md" target="_blank" rel="noreferrer">RAW .MD ↗</a>
+            <a className="thread-output-button" href="/demo/still/outcome-room/index.html" target="_blank" rel="noreferrer">SHOW OUTPUT ↗</a>
+            <button className="thread-close" type="button" aria-label="Close full Codex thread" onClick={onClose}>×</button>
+          </div>
+        </header>
+
+        <div className="thread-agents" aria-label="Agents in this run">
+          {demoThread.agents.map((agent, index) => (
+            <div key={agent.name} className={`thread-agent thread-agent-${index}`}>
+              <i /><span>{agent.name}</span><strong>{agent.role}</strong>
+            </div>
+          ))}
+        </div>
+
+        <div className="thread-scroll">
+          <article className="thread-prompt">
+            <header><span>USER / RUN PROMPT</span><strong>HARDWARE-LAUNCH@1</strong></header>
+            <pre>{demoThread.prompt}</pre>
+          </article>
+
+          <div className="thread-divider"><span>PARALLEL EXECUTION BEGINS</span><i /></div>
+
+          {demoThread.messages.map((message, index) => {
+            const agentIndex = demoThread.agents.findIndex((agent) => agent.name === message.agent);
+            return (
+              <article className={`thread-message thread-agent-${agentIndex}`} key={`${message.timestamp}-${message.agent}`}>
+                <aside><span>{String(index + 1).padStart(2, "0")}</span><i /></aside>
+                <div>
+                  <header>
+                    <p><strong>{message.agent}</strong><span>{message.role}</span></p>
+                    <time dateTime={message.timestamp}>{new Date(message.timestamp).toISOString().slice(11, 19)} UTC</time>
+                  </header>
+                  <p className="thread-message-body">{message.message}</p>
+                  <footer><span>{message.phase.replace("_", " ")}</span><code>{message.thread}</code></footer>
+                </div>
+              </article>
+            );
+          })}
+
+          <div className="thread-disclosure">
+            <span>EXPORT BOUNDARY</span>
+            <p>{demoThread.disclosure}</p>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}
+
 function DemoPage() {
   const events = [
     { actor: "CAPTAIN", title: "Brief locked", detail: "Confirmed facts and boundaries written to outcome-brief.md." },
@@ -376,6 +493,7 @@ function DemoPage() {
   ] as const;
   const [step, setStep] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [threadOpen, setThreadOpen] = useState(false);
   const lastStep = events.length - 1;
   const currentEvent = events[step] ?? events[0];
 
@@ -406,6 +524,10 @@ function DemoPage() {
           <div className="replay-title-meta">
             <p>A fresh Codex captain ran Possible’s Hardware Launch pack against one fictional e-ink product brief. Every event and artifact below comes from that run.</p>
             <div><span><i /> LOCAL RUN COMPLETE</span><strong>58 / 58 ARTIFACT CHECKS</strong></div>
+            <div className="replay-proof-actions">
+              <button type="button" onClick={() => setThreadOpen(true)}>VIEW FULL CODEX THREAD <span>31 MESSAGES</span></button>
+              <a href="/demo/still/outcome-room/index.html" target="_blank" rel="noreferrer">SHOW OUTPUT ↗</a>
+            </div>
           </div>
         </header>
 
@@ -433,6 +555,7 @@ function DemoPage() {
               ))}
             </div>
             <footer>
+              <button type="button" onClick={() => setThreadOpen(true)}>VIEW FULL THREAD →</button>
               <a href="/demo/still/OUTCOME-RECEIPT.md" target="_blank" rel="noreferrer">VIEW RECEIPT ↗</a>
               <a href="/demo/still/outcome-room/index.html" target="_blank" rel="noreferrer">OPEN LAUNCH ROOM ↗</a>
             </footer>
@@ -498,7 +621,10 @@ function DemoPage() {
                   <p><strong>0</strong><span>NETWORK WRITES</span></p>
                   <p><strong>1</strong><span>FAILURE REPAIRED</span></p>
                 </div>
-                <a href="/demo/still/outcome-room/index.html" target="_blank" rel="noreferrer">EXPLORE THE REAL OUTCOME →</a>
+                <div className="replay-final-actions">
+                  <button type="button" onClick={() => setThreadOpen(true)}>VIEW FULL THREAD →</button>
+                  <a href="/demo/still/outcome-room/index.html" target="_blank" rel="noreferrer">SHOW OUTPUT ↗</a>
+                </div>
               </article>
             </div>
 
@@ -516,6 +642,7 @@ function DemoPage() {
           </section>
         </div>
       </section>
+      {threadOpen ? <ThreadTranscript onClose={() => setThreadOpen(false)} /> : null}
     </main>
   );
 }
