@@ -13,7 +13,7 @@ describe("Possible", () => {
   it("starts with installation and a brainstorm instead of a pack picker", () => {
     const { container } = render(<App />);
     expect(screen.getByRole("heading", { name: /Bring the idea.*Possible finds the path/i })).toBeInTheDocument();
-    expect(screen.getByText("npx @possible/cli init")).toBeInTheDocument();
+    expect(screen.getByText("npx @fraylabs/possible init")).toBeInTheDocument();
     expect(screen.getByText("$possible", { selector: ".install-next code" })).toBeInTheDocument();
     expect(screen.getByText("What would you like to make possible today?")).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: /Compile Hardware Launch/i })).not.toBeInTheDocument();
@@ -32,7 +32,7 @@ describe("Possible", () => {
     Object.assign(navigator, { clipboard: { writeText } });
     render(<App />);
     await userEvent.click(screen.getByRole("button", { name: /Copy install command/i }));
-    expect(writeText).toHaveBeenCalledWith("npx @possible/cli init");
+    expect(writeText).toHaveBeenCalledWith("npx @fraylabs/possible init");
     expect(await screen.findByText("Copied")).toBeInTheDocument();
   });
 
@@ -57,7 +57,7 @@ describe("Possible", () => {
     expect(screen.getByRole("heading", { name: /Build complete outcomes with Possible/i })).toBeInTheDocument();
     expect(screen.getByRole("complementary", { name: /Documentation navigation/i })).toBeInTheDocument();
     expect(screen.getByRole("complementary", { name: /On this page/i })).toBeInTheDocument();
-    expect(screen.getByText("npx @possible/cli init", { selector: ".docs-command code" })).toBeInTheDocument();
+    expect(screen.getByText("npx @fraylabs/possible init", { selector: ".docs-command code" })).toBeInTheDocument();
     expect(screen.getByText("$possible", { selector: ".docs-command--invoke code" })).toBeInTheDocument();
     expect(container.querySelectorAll(".docs-article > section")).toHaveLength(9);
     expect(screen.getByRole("link", { name: /EXAMPLE PACKHardware LaunchView recipe/i })).toHaveAttribute("href", "/packs/hardware-launch");

@@ -20,7 +20,7 @@ const listFiles = async (root, current = "") => {
 
 const [canonicalFiles, snapshotFiles] = await Promise.all([listFiles(canonicalRoot), listFiles(snapshotRoot)]);
 if (JSON.stringify(canonicalFiles) !== JSON.stringify(snapshotFiles)) {
-  throw new Error("CLI skill snapshot file list differs from skills/possible. Run `npm run sync:skill -w @possible/cli`.");
+  throw new Error("CLI skill snapshot file list differs from skills/possible. Run `npm run sync:skill -w @fraylabs/possible`.");
 }
 
 for (const path of canonicalFiles) {
@@ -29,7 +29,7 @@ for (const path of canonicalFiles) {
     readFile(join(snapshotRoot, path)),
   ]);
   if (!canonical.equals(snapshot)) {
-    throw new Error(`CLI skill snapshot differs at ${relative(packageRoot, join(snapshotRoot, path))}. Run \`npm run sync:skill -w @possible/cli\`.`);
+    throw new Error(`CLI skill snapshot differs at ${relative(packageRoot, join(snapshotRoot, path))}. Run \`npm run sync:skill -w @fraylabs/possible\`.`);
   }
 }
 

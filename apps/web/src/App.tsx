@@ -24,7 +24,7 @@ type DemoThread = {
 
 const demoThread = demoThreadData as DemoThread;
 
-const installCommand = "npx @possible/cli init";
+const installCommand = "npx @fraylabs/possible init";
 const approvalDisclosure = "Saying yes authorizes repo-local ingredient skill installation, the shared outcome brief and state files, and local outcome work. External actions still require separate approval.";
 
 function CopyButton({ label, value }: { label: string; value: string }) {

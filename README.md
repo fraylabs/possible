@@ -15,7 +15,7 @@ Skills.sh distributes individual agent skills. Possible publishes opinionated ou
 Install the skill once:
 
 ```bash
-npx @possible/cli init
+npx @fraylabs/possible init
 ```
 
 The installer adds Possible to the current project without choosing a pack or creating a brief. Open or reload that project in Codex and invoke:

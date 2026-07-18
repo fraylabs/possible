@@ -1,5 +1,5 @@
 {
-  "name": "@possible/cli",
+  "name": "@fraylabs/possible",
   "version": "0.1.0",
   "description": "Install the Possible Codex skill into a project",
   "type": "module",

@@ -11,7 +11,7 @@ The interactive Possible surface has three layers:
 A builder starts with only:
 
 ```bash
-npx @possible/cli init
+npx @fraylabs/possible init
 ```
 
 Then they invoke `$possible`, brainstorm one question at a time, inspect the linked recommendation, and explicitly confirm before any ingredient skill installation or local artifact work begins.
