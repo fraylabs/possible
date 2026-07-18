@@ -262,3 +262,38 @@ mobile behavior, keyboard shortcuts, accessible semantics, and wordmark return
 from both presentation modes. The complete repository verifier also passed the
 knowledge, MCP, agent retrieval, build, negative-route, and exact-artifact
 checks.
+
+## 2026-07-18 — Three.js graph visual system
+
+This release replaces the flat graph backdrop with a progressively enhanced
+Three.js scene. The GPU layer renders deterministic atmospheric particles,
+soft node glows, animated signals along real page connections, and subtle
+pointer parallax. Labels and click targets remain semantic HTML above the
+canvas, so typography, keyboard navigation, touch interaction, and screen
+reader behavior do not depend on WebGL. Static connection lines remain as a
+fallback, and `prefers-reduced-motion` produces a still scene.
+
+### Delivery identity
+
+- Public source commit:
+  `102d23493fd6264534a61faf2bfef25d7ce460f0`
+- Public branch: `fraylabs/possible` `main`
+- Vercel deployment: `dpl_4h8eb8g9t1TfmvPKNFsaVzyaBbZJ`
+- Deployment URL: `https://possible-7fbk1p6tf-brainthrust.vercel.app`
+- State: production / Ready on 2026-07-18 Asia/Singapore
+- Aliases: `https://possible.sh`, `https://www.possible.sh`, and the existing
+  Vercel project aliases
+
+### Exact live artifact receipt
+
+A clean isolated checkout passed `npm run check` and recorded a 54-file static
+artifact totaling 1,335,824 bytes with aggregate SHA-256
+`95ba90cb57eff014e6e3a21d3ba140f1227213a178d818150a2549082c5d1b1a`.
+Independent HTTPS reads then matched every path, byte count, and hash on both
+custom domains with zero mismatches.
+
+The unchanged human-navigation tests cover atlas and branch selection, search,
+Read mode, history, mobile behavior, keyboard shortcuts, and accessibility.
+The complete verifier also passed the canonical knowledge, MCP, agent
+retrieval, build, negative-route, and exact-artifact checks. The existing
+49-page corpus and agent-facing contract are unchanged by the visual layer.
