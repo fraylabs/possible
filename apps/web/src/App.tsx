@@ -693,11 +693,24 @@ function DemoArtifacts() {
         </article>
 
         <article className="demo-output-card demo-output-card--cad" id="hardware-output">
-          <header><span>03 / PROTOTYPE CAD</span><strong>STEP-FIRST / CONCEPT</strong></header>
-          <img src="/demo/still/hardware/still-iso.png" alt="Isometric CAD view of the Still focus device concept" />
+          <header><span>03 / PROTOTYPE CAD</span><strong>4 VIEWS / STEP-FIRST / CONCEPT</strong></header>
+          <div className="demo-cad-views">
+            <a href="/demo/still/hardware/still-iso.png" target="_blank" rel="noreferrer">
+              <figure><img src="/demo/still/hardware/still-iso.png" alt="Isometric CAD view of the Still focus device concept" /><figcaption><span>01</span><strong>ISO</strong></figcaption></figure>
+            </a>
+            <a href="/demo/still/hardware/still-rear.png" target="_blank" rel="noreferrer">
+              <figure><img src="/demo/still/hardware/still-rear.png" alt="Rear CAD view of the Still focus device concept" /><figcaption><span>02</span><strong>REAR</strong></figcaption></figure>
+            </a>
+            <a href="/demo/still/hardware/still-top.png" target="_blank" rel="noreferrer">
+              <figure><img src="/demo/still/hardware/still-top.png" alt="Top CAD view of the Still focus device concept" /><figcaption><span>03</span><strong>TOP</strong></figcaption></figure>
+            </a>
+            <a href="/demo/still/hardware/still-front.png" target="_blank" rel="noreferrer">
+              <figure><img src="/demo/still/hardware/still-front.png" alt="Front CAD view of the Still focus device concept" /><figcaption><span>04</span><strong>FRONT</strong></figcaption></figure>
+            </a>
+          </div>
           <footer>
             <p>Measured exterior geometry in portable review formats.</p>
-            <div><a href="/demo/still/hardware/still.step" download>STEP ↓</a><a href="/demo/still/hardware/still.glb" download>GLB ↓</a><a href="/demo/still/hardware/still.stl" download>STL ↓</a></div>
+            <div><a href="/demo/still/hardware/still.step" download>STEP ↓</a><a href="/demo/still/hardware/still.glb" download>GLB ↓</a><a href="/demo/still/hardware/still.stl" download>STL ↓</a><a href="/demo/still/hardware/still.py" download>SOURCE ↓</a><a href="/demo/still/evidence/geometry-report.md" target="_blank" rel="noreferrer">REPORT ↗</a></div>
           </footer>
         </article>
       </div>

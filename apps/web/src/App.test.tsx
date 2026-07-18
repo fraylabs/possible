@@ -93,6 +93,10 @@ describe("Possible", () => {
     expect(screen.getAllByRole("link", { name: /Show output/i })[0]).toHaveAttribute("href", "#artifacts");
     expect(screen.getByRole("heading", { name: /One prompt.*Real outputs/i })).toBeInTheDocument();
     expect(screen.getByTitle("Still launch website")).toHaveAttribute("src", "/demo/still/site/");
+    expect(screen.getByAltText("Isometric CAD view of the Still focus device concept")).toBeInTheDocument();
+    expect(screen.getByAltText("Rear CAD view of the Still focus device concept")).toBeInTheDocument();
+    expect(screen.getByAltText("Top CAD view of the Still focus device concept")).toBeInTheDocument();
+    expect(screen.getByAltText("Front CAD view of the Still focus device concept")).toBeInTheDocument();
 
     await userEvent.click(screen.getByRole("button", { name: /View full Codex thread/i }));
     expect(screen.getByRole("dialog", { name: /full Codex thread/i })).toBeInTheDocument();
