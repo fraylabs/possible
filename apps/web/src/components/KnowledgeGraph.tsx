@@ -52,8 +52,7 @@ export interface KnowledgeGraphConnection {
 }
 
 export interface KnowledgeGraphConnections {
-  levelDown: KnowledgeGraphConnection[];
-  levelUp: KnowledgeGraphConnection[];
+  related: KnowledgeGraphConnection[];
 }
 
 export interface KnowledgeGraphExpandedPage {
@@ -400,9 +399,9 @@ export function KnowledgeGraph({
         </ul>
       )}
       {selectedId && connections && (
-        <aside className={`graph-connections${isConnectionsExpanded ? " is-expanded" : ""}`} aria-label="Connected nodes">
+        <aside className={`graph-connections${isConnectionsExpanded ? " is-expanded" : ""}`} aria-label="Related nodes">
           <div className="graph-connections__header">
-            <p className="graph-connections__title">Connected nodes</p>
+            <p className="graph-connections__title">Related nodes</p>
             {expandedPage && (
               <button
                 type="button"
@@ -423,39 +422,17 @@ export function KnowledgeGraph({
             </div>
           )}
           {!isConnectionsExpanded && (
-            <>
-              {connections.levelDown.length > 0 && (
-                <div className="graph-connections__group">
-                  <span>Level down</span>
-                  <ul>
-                    {connections.levelDown.map((connection) => (
-                      <li key={`down:${connection.id}`}>
-                        <button type="button" onClick={() => onSelectNode(connection.id)}>
-                          {connection.title}
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-              {connections.levelUp.length > 0 && (
-                <div className="graph-connections__group">
-                  <span>Level up</span>
-                  <ul>
-                    {connections.levelUp.map((connection) => (
-                      <li key={`up:${connection.id}`}>
-                        <button type="button" onClick={() => onSelectNode(connection.id)}>
-                          {connection.title}
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-              {connections.levelDown.length === 0 && connections.levelUp.length === 0 && (
-                <p className="graph-connections__empty">No authored connections yet.</p>
-              )}
-            </>
+            connections.related.length > 0 ? (
+              <ul className="graph-connections__related">
+                {connections.related.map((connection) => (
+                  <li key={connection.id}>
+                    <button type="button" onClick={() => onSelectNode(connection.id)}>
+                      {connection.title}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            ) : <p className="graph-connections__empty">No authored connections yet.</p>
           )}
         </aside>
       )}

@@ -51,8 +51,8 @@ describe("Possible wiki", () => {
     expect(screen.queryByRole("button", { name: "Expand" })).not.toBeInTheDocument();
     const webGraph = screen.getByRole("region", { name: "Possible knowledge atlas" });
     expect(webGraph).toBe(atlas);
-    expect(within(webGraph).getByRole("complementary", { name: "Connected nodes" })).toBeInTheDocument();
-    expect(within(webGraph).getByText("Level down")).toBeInTheDocument();
+    expect(within(webGraph).getByRole("complementary", { name: "Related nodes" })).toBeInTheDocument();
+    expect(within(webGraph).getByText("Related nodes")).toBeInTheDocument();
     expect(within(webGraph).getByRole("button", { name: "Manufacturing, 2 pages" })).toBeInTheDocument();
     expect(within(webGraph).getByRole("button", { name: "Custom manufactured parts, Manufacturing page" })).toBeInTheDocument();
     expect(within(webGraph).getByRole("button", { name: "Web, 3 pages" })).toHaveAttribute("aria-pressed", "true");
@@ -118,7 +118,7 @@ describe("Possible wiki", () => {
     await user.click(within(atlas).getByRole("button", { name: "Zoom out graph" }));
     expect(within(atlas).getByText("Graph zoom 82%, Field view")).toBeInTheDocument();
 
-    const card = within(atlas).getByRole("complementary", { name: "Connected nodes" });
+    const card = within(atlas).getByRole("complementary", { name: "Related nodes" });
     await user.click(within(card).getByRole("button", { name: "Expand page card" }));
     expect(within(card).getByRole("button", { name: "Collapse page card" })).toBeInTheDocument();
     expect(within(card).getByRole("heading", { level: 3, name: "Vite with React" })).toBeInTheDocument();

@@ -1299,7 +1299,8 @@ h1[tabindex="-1"]:focus {
   font-size: 0.52rem;
 }
 
-.graph-connections__group ul {
+.graph-connections__group ul,
+.graph-connections__related {
   display: grid;
   gap: 2px;
   margin: 0;
@@ -1307,7 +1308,8 @@ h1[tabindex="-1"]:focus {
   list-style: none;
 }
 
-.graph-connections__group button {
+.graph-connections__group button,
+.graph-connections__related button {
   display: block;
   width: 100%;
   overflow: hidden;

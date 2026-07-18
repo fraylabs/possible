@@ -30,14 +30,22 @@ export function AtlasGraph({
   const graph = useMemo(() => buildAtlasGraph(corpus), [corpus]);
   const pageBySlug = new Map(corpus.pages.map((page) => [page.slug, page]));
   const selectedPage = selectedSlug ? pageBySlug.get(selectedSlug) : undefined;
+  const relatedSlugs = selectedPage ? [
+    ...selectedPage.links,
+    ...corpus.pages
+      .filter((page) => page.slug !== selectedPage.slug && page.links.includes(selectedPage.slug))
+      .map((page) => page.slug),
+  ] : [];
+  const relatedSeen = new Set<string>();
   const connections: KnowledgeGraphConnections | undefined = selectedPage ? {
-    levelDown: selectedPage.links
+    related: relatedSlugs
       .map((slug) => pageBySlug.get(slug))
       .filter((page): page is NonNullable<typeof page> => Boolean(page))
-      .map((page) => ({ id: page.slug, title: page.title }))
-      .sort((left, right) => left.title.localeCompare(right.title)),
-    levelUp: corpus.pages
-      .filter((page) => page.slug !== selectedPage.slug && page.links.includes(selectedPage.slug))
+      .filter((page) => {
+        if (relatedSeen.has(page.slug)) return false;
+        relatedSeen.add(page.slug);
+        return true;
+      })
       .map((page) => ({ id: page.slug, title: page.title }))
       .sort((left, right) => left.title.localeCompare(right.title)),
   } : undefined;
