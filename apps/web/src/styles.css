@@ -345,22 +345,28 @@ h1[tabindex="-1"]:focus {
 
 .sidebar-expand {
   display: grid;
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   flex: 0 0 auto;
   place-items: center;
-  border: 1px solid var(--paper-line);
+  border: 1px solid var(--accent);
   border-radius: 50%;
-  color: var(--ink-quiet);
+  background: var(--accent);
+  color: var(--paper-bright);
   font-family: "DM Mono", monospace;
-  font-size: 0.9rem;
-  transition: background 150ms ease, color 150ms ease;
+  font-size: 1.15rem;
+  font-weight: 500;
+  line-height: 1;
+  box-shadow: 0 8px 20px rgba(180, 85, 40, 0.22);
+  transition: transform 150ms ease, background 150ms ease, box-shadow 150ms ease;
 }
 
 .sidebar-expand:hover,
 .sidebar-expand:focus-visible {
-  background: var(--paper-bright);
-  color: var(--ink);
+  background: #963f1d;
+  color: var(--paper-bright);
+  box-shadow: 0 10px 24px rgba(180, 85, 40, 0.3);
+  transform: translateY(-1px);
 }
 
 .section-kicker {
