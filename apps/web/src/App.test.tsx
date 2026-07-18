@@ -11,6 +11,16 @@ describe("Possible wiki", () => {
     window.history.replaceState(null, "", "/");
   });
 
+  it("provides product documentation without entering the graph", () => {
+    window.history.replaceState(null, "", "/docs");
+    render(<App />);
+
+    expect(screen.getByRole("heading", { level: 1, name: "Start with what you want to make." })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Back to atlas" })).toHaveAttribute("href", "/");
+    expect(screen.getByRole("heading", { level: 2, name: "For agents" })).toBeInTheDocument();
+    expect(screen.queryByRole("region", { name: "Possible knowledge atlas" })).not.toBeInTheDocument();
+  });
+
   it("opens on the atlas, keeps fields as siblings, and lets search and graph select pages", async () => {
     const user = userEvent.setup();
     render(<App />);
@@ -18,7 +28,7 @@ describe("Possible wiki", () => {
     expect(screen.getByText("Loading Possible")).toBeInTheDocument();
     await screen.findByRole("heading", { level: 1, name: "What do you want to make possible?" });
     expect(window.location.pathname).toBe("/");
-    expect(screen.queryByRole("button", { name: "Read page" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Expand" })).not.toBeInTheDocument();
     expect(screen.queryByText(/Start with the primary surface/i)).not.toBeInTheDocument();
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
 
@@ -26,7 +36,7 @@ describe("Possible wiki", () => {
     expect(atlas.querySelector("canvas.three-graph")).not.toBeInTheDocument();
     expect(atlas.querySelector("svg.graph-lines")).toHaveAttribute("width", "100%");
     expect(atlas.querySelector("svg.graph-lines")).toHaveAttribute("height", "100%");
-    expect(atlas.querySelectorAll("svg.graph-lines line")).toHaveLength(5);
+    expect(atlas.querySelectorAll("svg.graph-lines line")).toHaveLength(7);
     expect(within(atlas).getByRole("button", { name: "Web, 3 pages" })).toBeInTheDocument();
     expect(within(atlas).getByRole("button", { name: "Manufacturing, 2 pages" })).toBeInTheDocument();
     expect(within(atlas).getByRole("button", { name: "Vite with React, Web page" })).toBeInTheDocument();
@@ -38,9 +48,11 @@ describe("Possible wiki", () => {
 
     expect(await screen.findByRole("heading", { level: 1, name: "Web" })).toBeInTheDocument();
     expect(window.location.pathname).toBe("/wiki/web");
-    expect(screen.getByRole("button", { name: "Read page" })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Expand" })).not.toBeInTheDocument();
     const webGraph = screen.getByRole("region", { name: "Possible knowledge atlas" });
     expect(webGraph).toBe(atlas);
+    expect(within(webGraph).getByRole("complementary", { name: "Connected nodes" })).toBeInTheDocument();
+    expect(within(webGraph).getByText("Level down")).toBeInTheDocument();
     expect(within(webGraph).getByRole("button", { name: "Manufacturing, 2 pages" })).toBeInTheDocument();
     expect(within(webGraph).getByRole("button", { name: "Custom manufactured parts, Manufacturing page" })).toBeInTheDocument();
     expect(within(webGraph).getByRole("button", { name: "Web, 3 pages" })).toHaveAttribute("aria-pressed", "true");
@@ -63,7 +75,7 @@ describe("Possible wiki", () => {
     await waitFor(() => expect(screen.getByRole("heading", { level: 1 })).toHaveFocus());
   });
 
-  it("reveals the whole universe when zoomed out and preserves that camera through selection", async () => {
+  it("reveals the whole universe, then focuses the selected page", async () => {
     const user = userEvent.setup();
     render(<App />);
 
@@ -80,7 +92,8 @@ describe("Possible wiki", () => {
     await user.click(within(atlas).getByRole("button", { name: "Vite with React, Web page" }));
     await screen.findByRole("heading", { level: 1, name: "Vite with React" });
     expect(screen.getByRole("region", { name: "Possible knowledge atlas" })).toBe(atlas);
-    expect(within(atlas).getByText("Graph zoom 67%, Universe view")).toBeInTheDocument();
+    expect(within(atlas).getByText("Graph zoom 150%, Page detail")).toBeInTheDocument();
+    expect(within(atlas).getByText("Use > to expand the page card · Esc clears focus")).toBeInTheDocument();
   });
 
   it("opens a graph page when its visible label is clicked", async () => {
@@ -95,39 +108,22 @@ describe("Possible wiki", () => {
     expect(window.location.pathname).toBe("/wiki/vite-react");
   });
 
-  it("uses a focused Read view with article links, provenance, and one way back", async () => {
+  it("expands the selected page inside the graph card", async () => {
     const user = userEvent.setup();
     window.history.replaceState(null, "", "/wiki/vite-react");
     render(<App />);
 
     await screen.findByRole("heading", { level: 1, name: "Vite with React" });
-    expect(screen.queryByRole("link", { name: "Browser applications" })).not.toBeInTheDocument();
     const atlas = screen.getByRole("region", { name: "Possible knowledge atlas" });
     await user.click(within(atlas).getByRole("button", { name: "Zoom out graph" }));
     expect(within(atlas).getByText("Graph zoom 82%, Field view")).toBeInTheDocument();
 
-    await user.click(screen.getByRole("button", { name: "Read page" }));
-    expect(await screen.findByRole("link", { name: "Browser applications" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { level: 2, name: "Sources" })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /Vite guide/i })).toHaveAttribute(
-      "href",
-      "https://vite.dev/guide/",
-    );
-    expect(screen.getByText(/Reviewed July 17, 2026/i)).toBeInTheDocument();
-    expect(screen.queryByTestId("unsafe-html")).not.toBeInTheDocument();
-    expect(screen.getByText(/<span data-testid="unsafe-html">unsafe html<\/span>/i)).toBeInTheDocument();
-    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
-
-    await user.click(screen.getByRole("link", { name: "Browser applications" }));
-    expect(await screen.findByRole("heading", { level: 1, name: "Browser applications" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { level: 2, name: "Sources" })).toBeInTheDocument();
-    expect(window.location.pathname).toBe("/wiki/browser-applications");
-
-    await user.click(screen.getByRole("button", { name: "Back to map" }));
-    expect(await screen.findByRole("button", { name: "Read page" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { level: 1, name: "Browser applications" })).toBeInTheDocument();
-    expect(within(screen.getByRole("region", { name: "Possible knowledge atlas" })).getByText("Graph zoom 82%, Field view")).toBeInTheDocument();
-    expect(window.location.pathname).toBe("/wiki/browser-applications");
+    const card = within(atlas).getByRole("complementary", { name: "Connected nodes" });
+    await user.click(within(card).getByRole("button", { name: "Expand page card" }));
+    expect(within(card).getByRole("button", { name: "Collapse page card" })).toBeInTheDocument();
+    expect(within(card).getByRole("heading", { level: 3, name: "Vite with React" })).toBeInTheDocument();
+    expect(within(card).getByText(/A lightweight setup for client-rendered applications/i)).toBeInTheDocument();
+    expect(within(atlas).getByText("Graph zoom 82%, Field view")).toBeInTheDocument();
   });
 
   it("tracks browser history without changing the active mode", async () => {
@@ -137,26 +133,23 @@ describe("Possible wiki", () => {
     await screen.findByRole("heading", { level: 1, name: "What do you want to make possible?" });
     await user.click(screen.getByRole("button", { name: "Web, 3 pages" }));
     await screen.findByRole("heading", { level: 1, name: "Web" });
-    await user.click(screen.getByRole("button", { name: "Read page" }));
-    expect(await screen.findByRole("button", { name: "Back to map" })).toBeInTheDocument();
 
     window.history.pushState(null, "", "/wiki/browser-applications");
     fireEvent.popState(window);
     expect(await screen.findByRole("heading", { level: 1, name: "Browser applications" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Back to map" })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Expand" })).not.toBeInTheDocument();
 
-    await user.click(screen.getByRole("button", { name: "Back to map" }));
     const restoredState = {
       possible: { version: 1, graphViewport: { x: 24, y: -16, scale: 0.67 } },
     };
     window.history.pushState(restoredState, "", "/wiki/vite-react");
     fireEvent.popState(window, { state: restoredState });
     expect(await screen.findByRole("heading", { level: 1, name: "Vite with React" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Read page" })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Expand" })).not.toBeInTheDocument();
     expect(screen.getByText("Graph zoom 67%, Universe view")).toBeInTheDocument();
   });
 
-  it("uses the same full-page Explore and Read modes on mobile", async () => {
+  it("keeps the graph context on mobile", async () => {
     const user = userEvent.setup();
     Object.defineProperty(window, "innerWidth", { configurable: true, value: 390 });
     render(<App />);
@@ -167,10 +160,8 @@ describe("Possible wiki", () => {
 
     await user.click(screen.getByRole("button", { name: "Web, 3 pages" }));
     await screen.findByRole("heading", { level: 1, name: "Web" });
-    await user.click(screen.getByRole("button", { name: "Read page" }));
-    expect(await screen.findByRole("button", { name: "Back to map" })).toBeInTheDocument();
+    expect(await screen.findByRole("button", { name: "Expand page card" })).toBeInTheDocument();
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
-    expect(screen.getByRole("heading", { level: 2, name: "Sources" })).toBeInTheDocument();
   });
 
   it("supports keyboard shortcuts and has no detectable semantic accessibility violations", async () => {
@@ -194,24 +185,22 @@ describe("Possible wiki", () => {
 
     await user.click(screen.getByRole("button", { name: "Web, 3 pages" }));
     await screen.findByRole("heading", { level: 1, name: "Web" });
-    await user.click(screen.getByRole("button", { name: "Read page" }));
-    await screen.findByRole("button", { name: "Back to map" });
     const readResults = await axe.run(document.body, {
       rules: { "color-contrast": { enabled: false } },
     });
     expect(readResults.violations).toEqual([]);
 
     fireEvent.keyDown(window, { key: "Escape" });
-    expect(await screen.findByRole("button", { name: "Read page" })).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { level: 1, name: "What do you want to make possible?" })).toBeInTheDocument();
 
-    await user.click(screen.getByRole("button", { name: "Read page" }));
+    await user.click(screen.getByRole("button", { name: "Web, 3 pages" }));
     fireEvent.keyDown(window, { key: "/" });
     await waitFor(() => {
       expect(screen.getByRole("searchbox", { name: "Search pages" })).toHaveFocus();
     });
   });
 
-  it("returns to the top-level atlas from both Explore and Read", async () => {
+  it("returns to the top-level atlas from an expanded page", async () => {
     const user = userEvent.setup();
     window.history.replaceState(null, "", "/wiki/web");
     render(<App />);
@@ -222,9 +211,7 @@ describe("Possible wiki", () => {
     expect(window.location.pathname).toBe("/");
 
     await user.click(screen.getByRole("button", { name: "Manufacturing, 2 pages" }));
-    await user.click(screen.getByRole("button", { name: "Read page" }));
-    await screen.findByRole("button", { name: "Back to map" });
-    await user.click(screen.getByRole("button", { name: "Return to Possible atlas" }));
+    await user.click(screen.getByRole("button", { name: /possible\.sh/i }));
     expect(await screen.findByRole("heading", { level: 1, name: "What do you want to make possible?" })).toBeInTheDocument();
     expect(window.location.pathname).toBe("/");
   });

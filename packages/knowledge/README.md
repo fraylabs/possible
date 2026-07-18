@@ -29,5 +29,6 @@ data module after reviewed page changes.
 - `@possible/knowledge/data` exports `wikiCorpusData` without Node-only imports.
 
 The public model has only `PageSource`, `WikiPage`, and `WikiCorpus`. Links are
-slug strings extracted from Markdown; no separately authored graph or planner
-ontology exists.
+slug strings extracted from Markdown. `WikiPage.parent` identifies the
+hierarchical parent; when omitted in Markdown, the compiler derives it from
+the first knowledge folder. No separately authored planner ontology exists.

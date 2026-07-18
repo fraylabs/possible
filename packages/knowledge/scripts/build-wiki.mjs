@@ -11,7 +11,7 @@ const repositoryRoot = resolve(packageDir, "../..");
 const defaultKnowledgeDir = resolve(repositoryRoot, "knowledge/pages");
 const schemaPath = resolve(repositoryRoot, "schema/wiki-page.schema.json");
 const generatedPath = resolve(packageDir, "src/generated-data.ts");
-const frontmatterKeys = new Set(["slug", "title", "summary", "tags", "reviewedAt", "sources"]);
+const frontmatterKeys = new Set(["slug", "parent", "title", "summary", "tags", "reviewedAt", "sources"]);
 
 const args = process.argv.slice(2);
 const mode = args.includes("--write")
@@ -162,7 +162,7 @@ function assertNonemptyText(page, file) {
   if (errors.length > 0) throw new Error(`${locationFor(file)} failed semantic validation:\n${errors.join("\n")}`);
 }
 
-async function parsePage(file) {
+async function parsePage(file, directory) {
   const source = (await readFile(file, "utf8")).replace(/^\uFEFF/, "");
   const lines = source.split(/\r?\n/);
   if (lines[0]?.trim() !== "---") {
@@ -172,8 +172,15 @@ async function parsePage(file) {
   if (closing < 0) throw new Error(`${locationFor(file)}: frontmatter is missing its closing ---`);
   const metadata = parseFrontmatter(lines.slice(1, closing).join("\n"), file);
   const body = lines.slice(closing + 1).join("\n").trim();
+  const relativeFile = relative(directory, file);
+  const relativeParts = relativeFile.split(/[\\/]/);
+  const directoryParent = relativeParts.length > 1 ? relativeParts[0] : undefined;
+  const inferredParent = directoryParent && directoryParent !== metadata.slug
+    ? directoryParent
+    : undefined;
   return {
     ...metadata,
+    ...(metadata.parent ?? inferredParent ? { parent: metadata.parent ?? inferredParent } : {}),
     body,
     links: extractLinks(body, file),
   };
@@ -197,6 +204,12 @@ function assertCorpusIntegrity(parsedPages) {
     }
   }
   for (const { file, page } of parsedPages) {
+    if (page.parent && page.parent === page.slug) {
+      errors.push(`${file}: parent cannot be the page itself: ${page.parent}`);
+    }
+    if (page.parent && !bySlug.has(page.parent)) {
+      errors.push(`${file}: broken parent relationship: ${page.parent}`);
+    }
     for (const target of page.links) {
       if (!bySlug.has(target)) errors.push(`${file}: broken internal link: /wiki/${target}`);
     }
@@ -229,7 +242,7 @@ export async function compileWiki(directory = knowledgeDir) {
 
   const parsedPages = [];
   for (const file of files) {
-    const page = await parsePage(file);
+    const page = await parsePage(file, directory);
     if (!validate(page)) {
       throw new Error(`${locationFor(file)} failed schema validation:\n${printableErrors(validate.errors)}`);
     }

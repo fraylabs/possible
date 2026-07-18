@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import {
-  BookOpenText,
   CircleAlert,
   LoaderCircle,
   Search,
@@ -15,6 +14,7 @@ import {
 import { buildAtlasBranches } from "./atlas";
 import { ArticleView } from "./components/ArticleView";
 import { AtlasGraph } from "./components/AtlasGraph";
+import { DocsPage } from "./components/DocsPage";
 import {
   DEFAULT_GRAPH_VIEWPORT,
   type GraphViewport,
@@ -246,10 +246,9 @@ export function App() {
     }
   };
 
-  const openRead = () => {
-    pendingFocusRef.current = "read";
-    setMode("read");
-  };
+  if (window.location.pathname.replace(/\/+$/, "") === "/docs") {
+    return <DocsPage />;
+  }
 
   if (loadState.status === "loading") {
     return (
@@ -365,6 +364,7 @@ export function App() {
                 )}
               </div>
             )}
+            <a className="docs-link" href="/docs">How Possible works</a>
           </div>
 
           <section className="selected-context" aria-labelledby="explore-title">
@@ -379,18 +379,11 @@ export function App() {
                 <h1 id="explore-title" ref={exploreTitleRef} tabIndex={-1}>
                   {selectedPage?.title ?? "Page not found"}
                 </h1>
-                <p className="selected-summary">
-                  {selectedPage?.summary
-                    ?? `The page "${selectedSlug}" is not present in this build.`}
-                </p>
                 {selectedPage ? (
                   <>
+                    <p className="selected-summary">{selectedPage.summary}</p>
                     <p className="review-note">Reviewed {formatReviewedAt(selectedPage.reviewedAt)}</p>
                     <p className="atlas-note">Its authored connections are highlighted in the full universe.</p>
-                    <button type="button" className="read-button" onClick={openRead}>
-                      <BookOpenText size={18} aria-hidden="true" />
-                      Read page
-                    </button>
                   </>
                 ) : fallbackPage ? (
                   <button

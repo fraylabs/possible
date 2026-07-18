@@ -17,6 +17,7 @@
   ],
   "properties": {
     "slug": { "$ref": "#/$defs/slug" },
+    "parent": { "$ref": "#/$defs/slug" },
     "title": { "type": "string", "minLength": 1 },
     "summary": { "type": "string", "minLength": 1 },
     "body": { "type": "string", "minLength": 1 },

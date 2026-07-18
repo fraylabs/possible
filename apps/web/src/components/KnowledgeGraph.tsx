@@ -8,6 +8,7 @@ import {
   type WheelEvent,
 } from "react";
 import { LocateFixed, Minus, Plus } from "lucide-react";
+import { MarkdownRenderer } from "../markdown";
 export type GraphNodeRole = "field" | "page" | "selected" | "related";
 
 export interface KnowledgeGraphNode {
@@ -45,6 +46,22 @@ export interface KnowledgeGraphCluster {
   height: number;
 }
 
+export interface KnowledgeGraphConnection {
+  id: string;
+  title: string;
+}
+
+export interface KnowledgeGraphConnections {
+  levelDown: KnowledgeGraphConnection[];
+  levelUp: KnowledgeGraphConnection[];
+}
+
+export interface KnowledgeGraphExpandedPage {
+  title: string;
+  summary: string;
+  body: string;
+}
+
 export interface GraphViewport {
   x: number;
   y: number;
@@ -67,6 +84,8 @@ interface KnowledgeGraphProps {
   guide: string;
   legend?: KnowledgeGraphLegendItem[];
   clusters?: KnowledgeGraphCluster[];
+  connections?: KnowledgeGraphConnections | undefined;
+  expandedPage?: KnowledgeGraphExpandedPage | undefined;
   selectedId?: string | undefined;
   viewport?: GraphViewport | undefined;
   onViewportChange?: ((viewport: GraphViewport) => void) | undefined;
@@ -83,6 +102,7 @@ interface PanGesture {
 
 const MIN_SCALE = 0.42;
 const MAX_SCALE = 2.8;
+const FOCUS_SCALE = 1.5;
 const clampScale = (scale: number): number => Math.min(MAX_SCALE, Math.max(MIN_SCALE, scale));
 
 export function graphZoomBand(scale: number): GraphZoomBand {
@@ -105,6 +125,8 @@ export function KnowledgeGraph({
   guide,
   legend = [],
   clusters = [],
+  connections,
+  expandedPage,
   selectedId,
   viewport: controlledViewport,
   onViewportChange,
@@ -113,7 +135,9 @@ export function KnowledgeGraph({
   const [internalViewport, setInternalViewport] = useState<GraphViewport>({ ...DEFAULT_GRAPH_VIEWPORT });
   const [hoveredId, setHoveredId] = useState<string | undefined>();
   const [isPanning, setIsPanning] = useState(false);
+  const [isConnectionsExpanded, setIsConnectionsExpanded] = useState(false);
   const panGesture = useRef<PanGesture | undefined>(undefined);
+  const worldRef = useRef<HTMLDivElement>(null);
   const viewport = controlledViewport ?? internalViewport;
   const zoomBand = graphZoomBand(viewport.scale);
   const graphKey = `${variant}:${nodes.map((node) => node.id).join("|")}`;
@@ -122,7 +146,12 @@ export function KnowledgeGraph({
   useEffect(() => {
     if (!isControlled) setInternalViewport({ ...DEFAULT_GRAPH_VIEWPORT });
     setHoveredId(undefined);
+    setIsConnectionsExpanded(false);
   }, [graphKey, isControlled]);
+
+  useEffect(() => {
+    setIsConnectionsExpanded(false);
+  }, [selectedId]);
 
   const commitViewport = (nextViewport: GraphViewport) => {
     if (onViewportChange) onViewportChange(nextViewport);
@@ -153,6 +182,23 @@ export function KnowledgeGraph({
     });
   };
   const resetViewport = () => commitViewport({ ...DEFAULT_GRAPH_VIEWPORT });
+  const focusNode = (node: KnowledgeGraphNode) => {
+    const world = worldRef.current;
+    if (!world) {
+      onSelectNode(node.id);
+      return;
+    }
+
+    const scale = clampScale(Math.max(viewport.scale, FOCUS_SCALE));
+    const nodeX = (node.x / 100) * world.clientWidth;
+    const nodeY = (node.y / 100) * world.clientHeight;
+    commitViewport({
+      x: -(nodeX - world.clientWidth / 2) * scale,
+      y: -(nodeY - world.clientHeight / 2) * scale,
+      scale,
+    });
+    onSelectNode(node.id);
+  };
   const handleWheel = (event: WheelEvent<HTMLDivElement>) => {
     event.preventDefault();
     const bounds = event.currentTarget.getBoundingClientRect();
@@ -228,6 +274,7 @@ export function KnowledgeGraph({
       <div
         className={`graph-world${activeIds ? " graph-world--focused" : ""}`}
         style={worldStyle}
+        ref={worldRef}
         data-zoom-band={zoomBand}
         data-focus-kind={focusKind}
       >
@@ -316,7 +363,7 @@ export function KnowledgeGraph({
                 aria-label={node.ariaLabel}
                 aria-pressed={isSelected}
                 aria-current={isSelected ? "page" : undefined}
-                onClick={() => onSelectNode(node.id)}
+                onClick={() => focusNode(node)}
                 onMouseEnter={() => setHoveredId(node.id)}
                 onMouseLeave={() => setHoveredId(undefined)}
                 onFocus={() => setHoveredId(node.id)}
@@ -352,7 +399,69 @@ export function KnowledgeGraph({
           ))}
         </ul>
       )}
-      <p className="graph-hint">Drag to pan · Scroll to zoom · Select to inspect</p>
+      {selectedId && connections && (
+        <aside className={`graph-connections${isConnectionsExpanded ? " is-expanded" : ""}`} aria-label="Connected nodes">
+          <div className="graph-connections__header">
+            <p className="graph-connections__title">Connected nodes</p>
+            {expandedPage && (
+              <button
+                type="button"
+                className="graph-connections__toggle"
+                onClick={() => setIsConnectionsExpanded((expanded) => !expanded)}
+                aria-label={isConnectionsExpanded ? "Collapse page card" : "Expand page card"}
+                aria-expanded={isConnectionsExpanded}
+              >
+                {isConnectionsExpanded ? "<" : ">"}
+              </button>
+            )}
+          </div>
+          {isConnectionsExpanded && expandedPage && (
+            <div className="graph-connections__page">
+              <h3>{expandedPage.title}</h3>
+              <p className="graph-connections__summary">{expandedPage.summary}</p>
+              <MarkdownRenderer markdown={expandedPage.body} onSelectPage={onSelectNode} />
+            </div>
+          )}
+          {!isConnectionsExpanded && (
+            <>
+              {connections.levelDown.length > 0 && (
+                <div className="graph-connections__group">
+                  <span>Level down</span>
+                  <ul>
+                    {connections.levelDown.map((connection) => (
+                      <li key={`down:${connection.id}`}>
+                        <button type="button" onClick={() => onSelectNode(connection.id)}>
+                          {connection.title}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {connections.levelUp.length > 0 && (
+                <div className="graph-connections__group">
+                  <span>Level up</span>
+                  <ul>
+                    {connections.levelUp.map((connection) => (
+                      <li key={`up:${connection.id}`}>
+                        <button type="button" onClick={() => onSelectNode(connection.id)}>
+                          {connection.title}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {connections.levelDown.length === 0 && connections.levelUp.length === 0 && (
+                <p className="graph-connections__empty">No authored connections yet.</p>
+              )}
+            </>
+          )}
+        </aside>
+      )}
+      <p className="graph-hint">
+        {selectedId ? "Use > to expand the page card · Esc clears focus" : "Click a node to focus it · Scroll to explore"}
+      </p>
       <span className="visually-hidden" aria-live="polite">
         Graph zoom {Math.round(viewport.scale * 100)}%, {zoomBandLabel(zoomBand)}
       </span>

@@ -5,6 +5,8 @@ import {
   KnowledgeGraph,
   type GraphViewport,
   type KnowledgeGraphCluster,
+  type KnowledgeGraphConnections,
+  type KnowledgeGraphExpandedPage,
   type KnowledgeGraphNode,
 } from "./KnowledgeGraph";
 
@@ -26,6 +28,24 @@ export function AtlasGraph({
   onSelectPage,
 }: AtlasGraphProps) {
   const graph = useMemo(() => buildAtlasGraph(corpus), [corpus]);
+  const pageBySlug = new Map(corpus.pages.map((page) => [page.slug, page]));
+  const selectedPage = selectedSlug ? pageBySlug.get(selectedSlug) : undefined;
+  const connections: KnowledgeGraphConnections | undefined = selectedPage ? {
+    levelDown: corpus.pages
+      .filter((page) => page.parent === selectedPage.slug)
+      .map((page) => ({ id: page.slug, title: page.title }))
+      .sort((left, right) => left.title.localeCompare(right.title)),
+    levelUp: selectedPage.parent
+      ? [pageBySlug.get(selectedPage.parent)]
+        .filter((page): page is NonNullable<typeof page> => Boolean(page))
+        .map((page) => ({ id: page.slug, title: page.title }))
+      : [],
+  } : undefined;
+  const expandedPage: KnowledgeGraphExpandedPage | undefined = selectedPage ? {
+    title: selectedPage.title,
+    summary: selectedPage.summary,
+    body: selectedPage.body,
+  } : undefined;
   const pageCountBySection = new Map(branches.map((branch) => [branch.section, branch.pageCount]));
   const sectionTitleBySection = new Map(branches.map((branch) => [branch.section, branch.page.title]));
   const hubSlugs = new Set(
@@ -87,6 +107,8 @@ export function AtlasGraph({
           ariaLabel="Possible knowledge atlas"
           guide="Global knowledge graph"
           clusters={clusters}
+          connections={connections}
+          expandedPage={expandedPage}
           selectedId={selectedSlug}
           viewport={viewport}
           onViewportChange={onViewportChange}

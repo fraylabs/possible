@@ -90,16 +90,18 @@ export function buildAtlasGraph(corpus: WikiCorpus): AtlasGraphModel {
   const sectionBySlug = new Map(pages.map(({ page, section }) => [page.slug, section]));
   const edgeKeys = new Set<string>();
   const edges: AtlasGraphEdge[] = [];
+  const addEdge = (source: string, target: string) => {
+    if (source === target || !pageBySlug.has(source) || !pageBySlug.has(target)) return;
+    const key = `${source}:${target}`;
+    if (edgeKeys.has(key)) return;
+    edgeKeys.add(key);
+    edges.push({ source, target });
+  };
 
   pages.forEach(({ page }) => {
+    if (page.parent) addEdge(page.parent, page.slug);
     page.links.forEach((targetSlug) => {
-      if (targetSlug === page.slug || !pageBySlug.has(targetSlug)) return;
-      const [source, target] = [page.slug, targetSlug].sort();
-      if (!source || !target) return;
-      const key = `${source}:${target}`;
-      if (edgeKeys.has(key)) return;
-      edgeKeys.add(key);
-      edges.push({ source, target });
+      addEdge(page.slug, targetSlug);
     });
   });
 

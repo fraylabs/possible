@@ -11,6 +11,7 @@ import { fileURLToPath } from "node:url";
 
 const pageReference = (page: WikiPage) => ({
   slug: page.slug,
+  parent: page.parent,
   title: page.title,
   summary: page.summary,
   tags: page.tags,
@@ -67,7 +68,7 @@ export const wikiPublications = (): Plugin => ({
         "- Human page: https://possible.sh/wiki/{slug}",
         "- Source repository: https://github.com/fraylabs/possible",
         "",
-        "Each page includes maintained prose, sources, a review date, links, backlinks, and related pages.",
+        "Each page includes maintained prose, sources, a review date, parent/child hierarchy, links, backlinks, and related pages.",
         "Possible supplies knowledge; the consuming agent remains responsible for reasoning and execution.",
         "",
       ].join("\n"),
