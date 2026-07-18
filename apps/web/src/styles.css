@@ -539,7 +539,7 @@ h1[tabindex="-1"]:focus {
   color: #d8ddea;
   font-size: clamp(0.58rem, 0.68vw, 0.72rem);
   line-height: 1.15;
-  pointer-events: none;
+  pointer-events: auto;
   text-shadow: 0 1px 5px #0b0d11, 0 0 10px #0b0d11;
   transition: opacity 150ms ease, color 150ms ease;
 }

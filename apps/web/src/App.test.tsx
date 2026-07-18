@@ -55,6 +55,18 @@ describe("Possible wiki", () => {
     await waitFor(() => expect(screen.getByRole("heading", { level: 1 })).toHaveFocus());
   });
 
+  it("opens a graph page when its visible label is clicked", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    await screen.findByRole("heading", { level: 1, name: "What do you want to make possible?" });
+    const atlas = screen.getByRole("region", { name: "Possible knowledge atlas" });
+    await user.click(within(atlas).getByText("Vite with React"));
+
+    expect(await screen.findByRole("heading", { level: 1, name: "Vite with React" })).toBeInTheDocument();
+    expect(window.location.pathname).toBe("/wiki/vite-react");
+  });
+
   it("uses a focused Read view with article links, provenance, and one way back", async () => {
     const user = userEvent.setup();
     window.history.replaceState(null, "", "/wiki/vite-react");
