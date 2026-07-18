@@ -6,8 +6,8 @@
   "packageManager": "npm@11.6.2",
   "workspaces": ["apps/*", "packages/*"],
   "scripts": {
-    "build": "npm run build -w @possible/packs && npm run build -w @possible/mcp && npm run build -w @possible/web",
-    "test": "npm run test -w @possible/packs && npm run test -w @possible/mcp && npm run test -w @possible/web",
+    "build": "npm run build -w @possible/packs && npm run build -w @possible/cli && npm run build -w @possible/mcp && npm run build -w @possible/web",
+    "test": "npm run test -w @possible/packs && npm run test -w @possible/cli && npm run test -w @possible/mcp && npm run test -w @possible/web",
     "skill:validate": "node scripts/validate-skill.mjs && python /Users/brianlim/.codex/skills/.system/skill-creator/scripts/quick_validate.py skills/possible",
     "demo:validate": "node scripts/validate-demo-bundle.mjs",
     "check": "npm run skill:validate && npm run demo:validate && npm run test && npm run build",

@@ -1,0 +1,26 @@
+{
+  "name": "@possible/cli",
+  "version": "0.1.0",
+  "description": "Install the Possible Codex skill into a project",
+  "type": "module",
+  "bin": {
+    "possible": "./src/index.mjs"
+  },
+  "files": [
+    "assets/possible",
+    "src"
+  ],
+  "scripts": {
+    "build": "node scripts/verify-snapshot.mjs",
+    "test": "node --test test/*.test.mjs && node scripts/verify-snapshot.mjs",
+    "sync:skill": "node scripts/sync-skill.mjs",
+    "prepack": "node scripts/verify-snapshot.mjs --quiet"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  }
+}
