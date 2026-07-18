@@ -339,3 +339,25 @@ local graph isolation, search, Read mode, history, mobile behavior, keyboard
 shortcuts, and accessible semantics. The canonical knowledge, MCP, agent
 retrieval, build, negative-route, and artifact verifiers also passed. Existing
 manufacturing drafts in the working copy were excluded from the release.
+
+## 2026-07-18 — Graph label click-target repair
+
+The visible text labels in both graph modes now participate in their parent
+node's pointer target. Previously, `pointer-events: none` allowed clicks on the
+label text to fall through to graph panning; only the small dot itself reliably
+selected a page. The focused regression test imports the production stylesheet,
+clicks the rendered `Vite with React` label, and proves navigation to its stable
+wiki route.
+
+- Public source commit:
+  `0e186147f7f503ba98b1de70dd2d76ea9638c740`
+- Vercel deployment: `dpl_G1tyJmGsjxBGA4wsWRXQN66pJfY2`
+- Deployment URL: `https://possible-7p72zk6os-brainthrust.vercel.app`
+- State: production / Ready on 2026-07-18 Asia/Singapore
+- Production artifact: 54 files, 1,339,892 bytes, aggregate SHA-256
+  `3e6b9146cca62c57999c555a00fc8264108f036735ce4f2678f8943fdcf0f23a`
+
+A clean isolated checkout passed the complete repository verifier, including
+14 web tests. Independent HTTPS reads matched all 54 artifact paths exactly on
+both `possible.sh` and `www.possible.sh`. Existing manufacturing drafts were
+excluded from the release.
