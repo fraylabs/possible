@@ -17,8 +17,11 @@ export interface Workstream {
   brief: string;
 }
 
+export type PackLane = "create" | "launch" | "release" | "operate";
+
 export interface OutcomePack {
   schemaVersion: 1;
+  lane: PackLane;
   slug: string;
   name: string;
   eyebrow: string;

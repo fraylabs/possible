@@ -1,7 +1,7 @@
 import { lazy, Suspense, useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import { getPack, outcomePacks } from "@possible/packs";
-import type { OutcomePack } from "@possible/packs";
+import type { OutcomePack, PackLane } from "@possible/packs";
 import demoThreadData from "./demo-thread.json";
 import openSourceThreadData from "./open-source-thread.json";
 import softwareThreadData from "./software-thread.json";
@@ -33,6 +33,13 @@ const softwareThread = softwareThreadData as DemoThread;
 
 const installCommand = "npx @fraylabs/possible init";
 const approvalDisclosure = "Saying yes authorizes repo-local ingredient skill installation, the shared outcome brief and state files, and local outcome work. External actions still require separate approval.";
+const laneOrder: PackLane[] = ["create", "launch", "release", "operate"];
+const laneLabels: Record<PackLane, string> = {
+  create: "Create",
+  launch: "Launch",
+  release: "Release",
+  operate: "Operate",
+};
 
 function CopyButton({ label, value }: { label: string; value: string }) {
   const [state, setState] = useState<CopyState>("idle");
@@ -188,8 +195,8 @@ function CreatePage() {
       </section>
 
       <section className="home-pack-preview">
-        <header><p className="eyebrow">THE AVAILABLE RECIPES</p><h2>Possible chooses from<br />complete outcomes.</h2><a className="button-link" href="/packs">Browse all packs <span>→</span></a></header>
-        <div>{outcomePacks.map((pack, index) => <PackCard pack={pack} index={index} key={pack.slug} />)}</div>
+        <header><p className="eyebrow">THE OUTCOME LANES</p><h2>Create it. Launch it.<br />Release it. Operate it.</h2><a className="button-link" href="/packs">Browse outcome packs <span>→</span></a></header>
+        <div>{outcomePacks.map((pack) => <PackCard pack={pack} key={pack.slug} />)}</div>
       </section>
 
       <Boundary />
@@ -198,11 +205,12 @@ function CreatePage() {
   );
 }
 
-function PackCard({ pack, index }: { pack: OutcomePack; index: number }) {
+function PackCard({ pack }: { pack: OutcomePack }) {
+  const index = outcomePacks.findIndex((candidate) => candidate.slug === pack.slug);
   return (
     <a className={`pack-card pack-card--${pack.slug}`} href={`/packs/${pack.slug}`}>
       <div className="pack-cover">
-        <header><span>PACK / 0{index + 1}</span><small>{pack.eyebrow}</small><b>↗</b></header>
+        <header><span>PACK / 0{index + 1}</span><small>{pack.lane.toUpperCase()}</small><b>↗</b></header>
         <PackArtwork slug={pack.slug} />
         <div className="pack-cover-title">
           <small>POSSIBLE OUTCOME</small>
@@ -255,6 +263,13 @@ function PackArtwork({ slug }: { slug: string }) {
 }
 
 function PacksPage() {
+  const [activeLane, setActiveLane] = useState<"all" | PackLane>("all");
+  const laneCounts = Object.fromEntries(laneOrder.map((lane) => [lane, outcomePacks.filter((pack) => pack.lane === lane).length])) as Record<PackLane, number>;
+  const visibleLanes = laneOrder.filter((lane) => laneCounts[lane] > 0);
+  const visiblePacks = activeLane === "all" ? outcomePacks : outcomePacks.filter((pack) => pack.lane === activeLane);
+  const activeLabel = activeLane === "all" ? "All" : laneLabels[activeLane];
+  const resultNoun = visiblePacks.length === 1 ? "pack" : "packs";
+
   return (
     <main>
       <SiteNav label="Catalog / 04" />
@@ -266,8 +281,22 @@ function PacksPage() {
           <a className="button-link" href="/#start">Start with Possible <span>→</span></a>
         </div>
       </section>
-      <section className="pack-grid" aria-label="Outcome packs">
-        {outcomePacks.map((pack, index) => <PackCard pack={pack} index={index} key={pack.slug} />)}
+      <div className="pack-filter-header">
+        <span>BROWSE BY OUTCOME</span>
+        <div className="pack-filters" role="group" aria-label="Filter outcome packs by lane">
+          <button type="button" aria-label={`All, ${outcomePacks.length} packs`} aria-pressed={activeLane === "all"} aria-controls="pack-catalog" onClick={() => setActiveLane("all")}>
+            <span>ALL</span><strong>{String(outcomePacks.length).padStart(2, "0")}</strong>
+          </button>
+          {visibleLanes.map((lane) => (
+            <button type="button" aria-label={`${laneLabels[lane]}, ${laneCounts[lane]} ${laneCounts[lane] === 1 ? "pack" : "packs"}`} aria-pressed={activeLane === lane} aria-controls="pack-catalog" onClick={() => setActiveLane(lane)} key={lane}>
+              <span>{lane.toUpperCase()}</span><strong>{String(laneCounts[lane]).padStart(2, "0")}</strong>
+            </button>
+          ))}
+        </div>
+        <p className="sr-only" aria-live="polite">Showing {visiblePacks.length} {activeLabel} {resultNoun}.</p>
+      </div>
+      <section id="pack-catalog" className={`pack-grid${activeLane === "all" ? "" : " pack-grid--filtered"}${visiblePacks.length === 1 ? " pack-grid--single" : ""}`} aria-label={`${activeLabel} outcome packs`}>
+        {visiblePacks.map((pack) => <PackCard pack={pack} key={pack.slug} />)}
       </section>
       <section className="catalog-principle">
         <span>THE DIFFERENCE</span>
@@ -285,7 +314,7 @@ function PackDetailPage({ pack }: { pack: OutcomePack }) {
     <main>
       <SiteNav label={`${pack.name} / 0${packNumber}`} />
       <section className="pack-hero">
-        <div className="pack-breadcrumb"><a href="/packs">PACKS</a><span>/</span><strong>0{packNumber}</strong></div>
+        <div className="pack-breadcrumb"><a href="/packs">PACKS</a><span>/</span><strong>{pack.lane.toUpperCase()}</strong><span>/</span><strong>0{packNumber}</strong></div>
         <p className="eyebrow">{pack.eyebrow}</p>
         <h1>{pack.name}</h1>
         <div className="pack-promise">
@@ -297,7 +326,7 @@ function PackDetailPage({ pack }: { pack: OutcomePack }) {
       <section className="pack-spec">
         <PackMetrics pack={pack} />
         <div className="detail-grid">
-          <header><p className="eyebrow">THE TEAM</p><h2>Parallel specialists.<br />One integrated launch.</h2></header>
+          <header><p className="eyebrow">THE TEAM</p><h2>Parallel specialists.<br />One integrated outcome.</h2></header>
           <WorkstreamList pack={pack} />
         </div>
       </section>

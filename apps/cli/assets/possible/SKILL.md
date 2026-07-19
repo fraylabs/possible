@@ -31,7 +31,7 @@ Inspect the project read-only when it can answer a question. Do not ask the user
 
 During the brainstorm:
 
-- Do not mention pack names or ingredient skills.
+- Do not mention pack names, lanes, or ingredient skills.
 - Do not create `PRODUCT-BRIEF.md`, `RUN-PROMPT.md`, or `AGENTS.md`.
 - Do not install dependencies, edit files, or spawn subagents.
 - Do not invent facts to make the idea appear more complete.
@@ -41,6 +41,8 @@ During the brainstorm:
 After the walkthrough, read [references/packs.md](references/packs.md). If `list_packs` and `compile_pack` are available, use them to check for a newer canonical pack definition; otherwise the bundled reference is the runtime source.
 
 Recommend one primary pack. Use multiple packs only when the user has explicitly described multiple independently valuable outcomes; stage them instead of merging their workstreams.
+
+A lane is catalog browsing metadata, not an intake choice. Do not ask the user to choose a lane; recommend across the complete catalog from the desired finished outcome.
 
 Keep the recommendation compact and conversational. Present:
 

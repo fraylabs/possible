@@ -14,7 +14,7 @@ export async function createPossibleServer(): Promise<McpServer> {
     description: "List the reviewed outcome packs currently published by Possible.",
     annotations: READ_ONLY,
   }, async () => successResult({
-    packs: outcomePacks.map(({ slug, name, promise, reviewedAt }) => ({ slug, name, promise, reviewedAt })),
+    packs: outcomePacks.map(({ slug, lane, name, promise, reviewedAt }) => ({ slug, lane, name, promise, reviewedAt })),
   }));
   server.registerTool("compile_pack", {
     title: "Compile a Possible outcome pack",

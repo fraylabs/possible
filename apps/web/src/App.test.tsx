@@ -19,6 +19,8 @@ describe("Possible", () => {
     expect(screen.queryByRole("button", { name: /Compile Hardware Launch/i })).not.toBeInTheDocument();
     expect(screen.getByRole("link", { name: "DOCS" })).toHaveAttribute("href", "/docs");
     expect(screen.getByRole("heading", { name: /No forms.*No pack knowledge required/i })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /Create it.*Launch it.*Release it.*Operate it/i })).toBeInTheDocument();
+    expect(screen.queryByRole("group", { name: /Filter outcome packs by lane/i })).not.toBeInTheDocument();
     expect(container.querySelectorAll(".journey li")).toHaveLength(6);
     expect([...container.querySelectorAll(".journey li strong")].map((node) => node.textContent)).toEqual([
       "Install", "Invoke", "Brainstorm", "Recommend", "Confirm", "Execute",
@@ -41,15 +43,35 @@ describe("Possible", () => {
     expect(await axe(container)).toHaveNoViolations();
   });
 
-  it("shows every outcome in the packs catalog", () => {
+  it("filters the packs catalog by occupied outcome lane", async () => {
     window.history.pushState({}, "", "/packs");
-    render(<App />);
+    const { container } = render(<App />);
     expect(screen.getByRole("heading", { name: /Complete recipes.*Chosen through conversation/i })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /Start with Possible/i })).toHaveAttribute("href", "/#start");
+    expect(screen.getByRole("button", { name: "All, 4 packs" })).toHaveAttribute("aria-pressed", "true");
+    expect(screen.queryByRole("button", { name: /Operate/i })).not.toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Hardware Launch" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Software Launch" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Open-Source Release" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Playable Web Game" })).toBeInTheDocument();
+
+    await userEvent.click(screen.getByRole("button", { name: "Create, 1 pack" }));
+    expect(screen.getByRole("heading", { name: "Playable Web Game" })).toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "Hardware Launch" })).not.toBeInTheDocument();
+    expect(screen.getByText("Showing 1 Create pack.")).toBeInTheDocument();
+    expect(container.querySelector(".pack-grid")).toHaveClass("pack-grid--filtered", "pack-grid--single");
+
+    await userEvent.click(screen.getByRole("button", { name: "Launch, 2 packs" }));
+    expect(screen.getByRole("heading", { name: "Hardware Launch" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Software Launch" })).toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "Playable Web Game" })).not.toBeInTheDocument();
+    expect(screen.getByText("PACK / 01")).toBeInTheDocument();
+    expect(screen.getByText("PACK / 02")).toBeInTheDocument();
+
+    await userEvent.click(screen.getByRole("button", { name: "Release, 1 pack" }));
+    expect(screen.getByRole("heading", { name: "Open-Source Release" })).toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "Software Launch" })).not.toBeInTheDocument();
+    expect(await axe(container)).toHaveNoViolations();
   });
 
   it("documents the complete conversation-first journey and its safety boundary", async () => {

@@ -9,9 +9,18 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
     "open-source-release",
     "playable-web-game",
   ]);
+  assert.deepEqual(outcomePacks.map(({ slug, lane }) => [slug, lane]), [
+    ["hardware-launch", "launch"],
+    ["software-launch", "launch"],
+    ["open-source-release", "release"],
+    ["playable-web-game", "create"],
+  ]);
 
   for (const pack of outcomePacks) {
+    assert.ok(["create", "launch", "release", "operate"].includes(pack.lane));
+    for (const forbidden of ["lanes", "category", "categories", "track", "tracks"]) assert.equal(forbidden in pack, false);
     const compiled = compilePack(pack);
+    assert.equal(compiled.pack.lane, pack.lane);
     assert.ok(compiled.installCommands.length >= 1);
     assert.ok(pack.skills.length >= 5);
     assert.ok(pack.workstreams.length >= 3);
@@ -26,6 +35,7 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
     assert.match(compiled.runPrompt, /fresh verification subagent/);
     assert.match(compiled.runPrompt, /explicit approval|explicitly tested|direct evidence/i);
     assert.match(compiled.runPrompt, /passed\/failed\/skipped/);
+    assert.doesNotMatch(compiled.runPrompt, /choose a lane|\nLANE\n/i);
   }
 });
 

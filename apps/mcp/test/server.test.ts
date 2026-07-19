@@ -25,16 +25,22 @@ describe("Possible MCP", () => {
 
   it("lists all four outcome packs", async () => {
     const result = await client.callTool({ name: "list_packs", arguments: {} });
-    const envelope = result.structuredContent as { ok: boolean; data: { packs: Array<{ slug: string }> } };
+    const envelope = result.structuredContent as { ok: boolean; data: { packs: Array<{ slug: string; lane: string }> } };
     assert.equal(envelope.ok, true);
-    assert.deepEqual(envelope.data.packs.map((pack) => pack.slug), ["hardware-launch", "software-launch", "open-source-release", "playable-web-game"]);
+    assert.deepEqual(envelope.data.packs.map(({ slug, lane }) => [slug, lane]), [
+      ["hardware-launch", "launch"],
+      ["software-launch", "launch"],
+      ["open-source-release", "release"],
+      ["playable-web-game", "create"],
+    ]);
   });
 
   it("compiles Hardware Launch", async () => {
     const result = await client.callTool({ name: "compile_pack", arguments: { slug: "hardware-launch" } });
     assert.equal(result.isError, undefined);
-    const envelope = result.structuredContent as { ok: boolean; data: { installCommands: string[]; runPrompt: string } };
+    const envelope = result.structuredContent as { ok: boolean; data: { pack: { lane: string }; installCommands: string[]; runPrompt: string } };
     assert.equal(envelope.ok, true);
+    assert.equal(envelope.data.pack.lane, "launch");
     assert.equal(envelope.data.installCommands.length, 4);
     assert.match(envelope.data.runPrompt, /CAPTAIN WORKFLOW/);
   });

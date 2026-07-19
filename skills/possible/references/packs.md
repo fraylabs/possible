@@ -2,9 +2,13 @@
 
 Use this bundled snapshot when the Possible MCP tools are unavailable. Link the recommended pack's public page during the recommendation; disclose its relevant source list and reviewed revisions before installing it.
 
+Lanes are browsing labels only: Create is a first complete usable thing, Launch is a compelling public presentation, Release is evidence-backed readiness to ship or distribute, and Operate is a repeatable ongoing workflow. Do not ask the user to choose a lane; select across the complete catalog from the desired finished outputs. Operate is supported by the model but has no published pack yet.
+
 ## Hardware Launch
 
 Slug: `hardware-launch`
+
+Lane: `launch`
 
 Public page: `https://possible.sh/packs/hardware-launch`
 
@@ -41,6 +45,8 @@ Never imply manufacturing readiness, physical validation, certification, or cust
 
 Slug: `software-launch`
 
+Lane: `launch`
+
 Public page: `https://possible.sh/packs/software-launch`
 
 Use for an existing software idea or repository that needs a coherent product release and launch presentation.
@@ -75,6 +81,8 @@ Never imply demand, uptime, security, performance, or production readiness. Depl
 
 Slug: `open-source-release`
 
+Lane: `release`
+
 Public page: `https://possible.sh/packs/open-source-release`
 
 Use for an existing repository that needs a trustworthy, usable release package without publishing it.
@@ -103,6 +111,8 @@ Never imply security, compatibility, production readiness, or release authority.
 ## Playable Web Game
 
 Slug: `playable-web-game`
+
+Lane: `create`
 
 Public page: `https://possible.sh/packs/playable-web-game`
 

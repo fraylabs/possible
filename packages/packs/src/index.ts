@@ -5,7 +5,7 @@ import { softwareLaunchPack } from "./software-launch.js";
 
 export { hardwareLaunchPack, openSourceReleasePack, playableWebGamePack, softwareLaunchPack };
 export { compileInstallCommands, compilePack, compileRunPrompt } from "./compiler.js";
-export type { CompiledPack, OutcomePack, SkillSource, Workstream } from "./types.js";
+export type { CompiledPack, OutcomePack, PackLane, SkillSource, Workstream } from "./types.js";
 
 export const outcomePacks = [
   hardwareLaunchPack,

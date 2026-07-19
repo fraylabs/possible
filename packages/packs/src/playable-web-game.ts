@@ -2,6 +2,7 @@ import type { OutcomePack } from "./types.js";
 
 export const playableWebGamePack: OutcomePack = {
   schemaVersion: 1,
+  lane: "create",
   slug: "playable-web-game",
   name: "Playable Web Game",
   eyebrow: "04 / OUTCOME PACK",

@@ -2,6 +2,7 @@ import type { OutcomePack } from "./types.js";
 
 export const softwareLaunchPack: OutcomePack = {
   schemaVersion: 1,
+  lane: "launch",
   slug: "software-launch",
   name: "Software Launch",
   eyebrow: "02 / OUTCOME PACK",

@@ -6,9 +6,13 @@ Skills.sh distributes individual agent skills. Possible publishes opinionated ou
 
 ## Outcome packs
 
-- **Hardware Launch** — launch site, programmatic film, prototype CAD, waitlist contract, and evidence report.
-- **Software Launch** — production product, launch site, demo film, deployment plan, and evidence report.
-- **Open-Source Release** — release-ready package, documentation, examples, hardened CI, changelog, and evidence report.
+Lanes make the catalog easier to browse; they are never a question the user must answer during intake.
+
+- **Create** — **Playable Web Game** produces one polished, responsive Three.js game and its evidence report.
+- **Launch** — **Hardware Launch** and **Software Launch** turn a product into a coherent public presentation and verified launch package.
+- **Release** — **Open-Source Release** produces a trustworthy package, documentation, examples, hardened CI, changelog, and evidence report.
+
+**Operate** is reserved for repeatable ongoing workflows and stays out of the public filter until its first real pack exists.
 
 ## Use Possible
 
@@ -50,7 +54,7 @@ npm run check
 
 Production builds emit `/packs/index.json`, plus JSON, install text, and run text for every pack.
 
-The web surface keeps entry, understanding, discovery, and proof separate: `/` introduces the three-part Possible process, `/docs` documents the complete first-use and safety contract, `/packs` is the transparent gallery of recipes Possible may recommend, `/packs/:slug` explains one complete pack before confirmation, and `/demo` shows the illustrative intake followed by a preserved Hardware Launch execution.
+The web surface keeps entry, understanding, discovery, and proof separate: `/` introduces the Possible process, `/docs` documents the complete first-use and safety contract, `/packs` is the transparent lane-filtered gallery of recipes Possible may recommend, `/packs/:slug` explains one complete pack before confirmation, and `/demo` shows the illustrative intake followed by preserved executions.
 
 ## Trust boundary
 

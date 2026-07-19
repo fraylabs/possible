@@ -18,7 +18,7 @@ if (frontmatter) {
   const keys = [...frontmatter[1].matchAll(/^([a-z]+):/gm)].map((match) => match[1]).sort();
   check(JSON.stringify(keys) === JSON.stringify(["description", "name"]), "frontmatter must contain only name and description");
 }
-for (const phrase of ["What are you trying to make real?", "one question per turn", "Do not mention pack names", "Recommend one primary pack", "Proceed with this outcome?", "outcome-brief.md", "fresh verification subagent", "$possible resume"]) {
+for (const phrase of ["What are you trying to make real?", "one question per turn", "Do not mention pack names", "Recommend one primary pack", "Do not ask the user to choose a lane", "Proceed with this outcome?", "outcome-brief.md", "fresh verification subagent", "$possible resume"]) {
   check(skill.toLowerCase().includes(phrase.toLowerCase()), `SKILL.md must include '${phrase}'`);
 }
 for (const gate of ["credentials", "deployment", "DNS", "email", "purchases", "spending money", "fabrication"]) {
@@ -26,6 +26,12 @@ for (const gate of ["credentials", "deployment", "DNS", "email", "purchases", "s
 }
 for (const slug of ["hardware-launch", "software-launch", "open-source-release", "playable-web-game"]) {
   check(catalog.includes(`Slug: \`${slug}\``), `pack reference must include ${slug}`);
+}
+for (const [slug, lane] of [["hardware-launch", "launch"], ["software-launch", "launch"], ["open-source-release", "release"], ["playable-web-game", "create"]]) {
+  const start = catalog.indexOf(`Slug: \`${slug}\``);
+  const end = catalog.indexOf("\n## ", start);
+  const section = start === -1 ? "" : catalog.slice(start, end === -1 ? undefined : end);
+  check(section.includes(`Lane: \`${lane}\``), `pack reference must map ${slug} to ${lane}`);
 }
 for (const source of ["anthropics/skills", "vercel-labs/agent-skills", "remotion-dev/skills", "earthtojake/text-to-cad", "github/awesome-copilot", "mrgoonie/claudekit-skills", "dylantarre/animation-principles"]) {
   check(catalog.includes(source), `pack reference must include ${source}`);
