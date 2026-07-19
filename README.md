@@ -11,8 +11,9 @@ Lanes make the catalog easier to browse; they are never a question the user must
 - **Create** — **Playable Web Game** produces one polished, responsive Three.js game and its evidence report.
 - **Launch** — **Hardware Launch** and **Software Launch** turn a product into a coherent public presentation and verified launch package.
 - **Release** — **Open-Source Release** produces a trustworthy package, documentation, examples, hardened CI, changelog, and evidence report.
+- **Operate** — **Web App Operations** establishes a repeatable health, triage, maintenance, and recovery loop and executes its first dated cycle.
 
-**Operate** is reserved for repeatable ongoing workflows and stays out of the public filter until its first real pack exists.
+Operate packs are recurring by definition: a checklist alone is not enough. The first cycle must run, leave evidence, carry unresolved work forward, and name its next review date.
 
 ## Use Possible
 

@@ -48,12 +48,12 @@ describe("Possible", () => {
     const { container } = render(<App />);
     expect(screen.getByRole("heading", { name: /Complete recipes.*Chosen through conversation/i })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /Start with Possible/i })).toHaveAttribute("href", "/#start");
-    expect(screen.getByRole("button", { name: "All, 4 packs" })).toHaveAttribute("aria-pressed", "true");
-    expect(screen.queryByRole("button", { name: /Operate/i })).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "All, 5 packs" })).toHaveAttribute("aria-pressed", "true");
     expect(screen.getByRole("heading", { name: "Hardware Launch" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Software Launch" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Open-Source Release" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Playable Web Game" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Web App Operations" })).toBeInTheDocument();
 
     await userEvent.click(screen.getByRole("button", { name: "Create, 1 pack" }));
     expect(screen.getByRole("heading", { name: "Playable Web Game" })).toBeInTheDocument();
@@ -71,6 +71,11 @@ describe("Possible", () => {
     await userEvent.click(screen.getByRole("button", { name: "Release, 1 pack" }));
     expect(screen.getByRole("heading", { name: "Open-Source Release" })).toBeInTheDocument();
     expect(screen.queryByRole("heading", { name: "Software Launch" })).not.toBeInTheDocument();
+
+    await userEvent.click(screen.getByRole("button", { name: "Operate, 1 pack" }));
+    expect(screen.getByRole("heading", { name: "Web App Operations" })).toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "Open-Source Release" })).not.toBeInTheDocument();
+    expect(screen.getByText("Showing 1 Operate pack.")).toBeInTheDocument();
     expect(await axe(container)).toHaveNoViolations();
   });
 
@@ -106,11 +111,21 @@ describe("Possible", () => {
     expect(screen.queryByLabelText("YOUR PRODUCT BRIEF")).not.toBeInTheDocument();
   });
 
+  it("presents Web App Operations as a recurring operating loop", () => {
+    window.history.pushState({}, "", "/packs/web-app-operations");
+    const { container } = render(<App />);
+    expect(screen.getByRole("heading", { name: "Web App Operations" })).toBeInTheDocument();
+    expect(container.querySelectorAll(".ingredient-list a")).toHaveLength(6);
+    expect(screen.getAllByText(/Executable operations check and dated health baseline/i).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/First dated operations receipt/i).length).toBeGreaterThan(0);
+    expect(screen.getByText(/one snapshot is a baseline, never an uptime claim/i)).toBeInTheDocument();
+  });
+
   it("returns a useful not-found page for unknown packs", () => {
     window.history.pushState({}, "", "/packs/not-real");
     render(<App />);
     expect(screen.getByRole("heading", { name: /not possible yet/i })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /Browse the four packs/i })).toHaveAttribute("href", "/packs");
+    expect(screen.getByRole("link", { name: /Browse all packs/i })).toHaveAttribute("href", "/packs");
   });
 
   it("shows three recorded runs and the playable game proof in the demo gallery", () => {

@@ -2,7 +2,7 @@
 
 Use this bundled snapshot when the Possible MCP tools are unavailable. Link the recommended pack's public page during the recommendation; disclose its relevant source list and reviewed revisions before installing it.
 
-Lanes are browsing labels only: Create is a first complete usable thing, Launch is a compelling public presentation, Release is evidence-backed readiness to ship or distribute, and Operate is a repeatable ongoing workflow. Do not ask the user to choose a lane; select across the complete catalog from the desired finished outputs. Operate is supported by the model but has no published pack yet.
+Lanes are browsing labels only: Create is a first complete usable thing, Launch is a compelling public presentation, Release is evidence-backed readiness to ship or distribute, and Operate is a repeatable ongoing workflow. Do not ask the user to choose a lane; select across the complete catalog from the desired finished outputs.
 
 ## Hardware Launch
 
@@ -143,6 +143,39 @@ npx skills@1.5.19 add anthropics/skills --skill frontend-design --skill webapp-t
 
 Never imply player demand, accessibility, compatibility, performance, or production readiness beyond direct evidence. Deployment, publishing, analytics, paid assets, and external distribution remain separate gates.
 
+## Web App Operations
+
+Slug: `web-app-operations`
+
+Lane: `operate`
+
+Public page: `https://possible.sh/packs/web-app-operations`
+
+Use for an existing live web app that needs a repeatable operating loop for detecting problems, triaging work, maintaining dependencies, and recovering safely.
+
+Outputs: executable operations check and dated health baseline, issue intake and prioritized operations queue, dependency and security maintenance loop, incident/change/rollback runbooks, exercised recovery drill, first dated operations receipt.
+
+Workstreams:
+
+- Reliability loop — `webapp-testing`; owns `operations/checks/`, `operations/receipts/`, and the repository-native operations command.
+- Triage and maintenance — `impediment-prioritization`, `dependabot`, `security-review`; owns the operations queue, maintenance/security evidence, and Dependabot configuration.
+- Safe change and incident response — `devops-rollout-plan`, `incident-postmortem`; owns change, incident, rollback, and postmortem surfaces.
+- Fresh review — `webapp-testing`, `security-review`; verifies the integrated operating loop after its first cycle.
+
+Sources:
+
+- `anthropics/skills`: `webapp-testing`; reviewed `fa0fa64bdc967915dc8399e803be67759e1e62b8`.
+- `github/awesome-copilot`: `impediment-prioritization`, `dependabot`, `security-review`, `devops-rollout-plan`, `incident-postmortem`; reviewed `26fe2d126bf79aafb38f43344d450b69632200f8`.
+
+Install:
+
+```bash
+npx skills@1.5.19 add anthropics/skills --skill webapp-testing --agent codex
+npx skills@1.5.19 add github/awesome-copilot --skill impediment-prioritization --skill dependabot --skill security-review --skill devops-rollout-plan --skill incident-postmortem --agent codex
+```
+
+Establish the durable workflow and execute its first dated cycle. One health snapshot never proves uptime. Preserve empty queues, skipped checks, unavailable signals, unresolved work, and unproven claims honestly. Production changes, issue-tracker writes, monitoring changes, deploys, rollbacks, paging, status communication, and customer-data access remain separate gates.
+
 ## Selection rule
 
 Recommend the pack whose finished outputs most closely match the user's desired end state:
@@ -151,5 +184,8 @@ Recommend the pack whose finished outputs most closely match the user's desired 
 - Software product plus release and launch presentation → Software Launch.
 - Existing repository plus trustworthy public release materials → Open-Source Release.
 - Browser-game idea plus one polished playable build → Playable Web Game.
+- Live web app plus a repeatable reliability, issue-triage, maintenance, incident-response, and safe-change cadence → Web App Operations.
+
+Use Web App Operations only when the app already exists and the desired outcome is an ongoing rhythm. An initial build or public launch belongs to Software Launch; a distributable repository release belongs to Open-Source Release; one isolated bug or incident with no requested recurring workflow is focused work, not a pack.
 
 If none fits, say so. Do not force a pack or invent a new one during intake.

@@ -1,6 +1,6 @@
 ---
 name: possible
-description: Turn an unclear ambition into a concrete, verified outcome through a short guided conversation, then assemble and run the right reviewed Codex skills after confirmation. Use when the user invokes $possible, asks what they should build or ship, wants help defining an outcome before implementation, or wants a Hardware Launch, Software Launch, Open-Source Release, or Playable Web Game coordinated end to end.
+description: Turn an unclear ambition into a concrete, verified outcome through a short guided conversation, then assemble and run the right reviewed Codex skills after confirmation. Use when the user invokes $possible, asks what they should build, ship, or operate, wants help defining an outcome before implementation, or wants a Hardware Launch, Software Launch, Open-Source Release, Playable Web Game, or Web App Operations outcome coordinated end to end.
 ---
 
 # Possible
@@ -90,6 +90,8 @@ When invoked as `$possible resume`, look for `.possible/outcome-brief.md`, `.pos
 - If all three exist, summarize the confirmed outcome and current evidence, then continue from the first incomplete stage.
 - If the brief exists but the pack or lock does not, return to recommendation or installation without repeating answered questions.
 - If no Possible state exists, begin with the intake question.
+
+For a completed Operate pack, `$possible resume` reads the prior dated receipt, carries unresolved work forward, and runs the next requested cycle. Do not repeat intake or reset the operating history. An Operate pack is not complete when it merely writes a workflow: it must execute the first dated cycle.
 
 ## Boundaries
 

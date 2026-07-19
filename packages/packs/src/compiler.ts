@@ -20,7 +20,18 @@ export function compileRunPrompt(pack: OutcomePack): string {
     `  Brief: ${stream.brief}`,
   ].join("\n")).join("\n");
 
-  return `Build the ${pack.name} outcome for the product described below.
+  const operateLoop = pack.lane === "operate" ? `
+
+OPERATING LOOP
+1. Establish once: record the loop's inputs, cadence, ownership, thresholds, commands, external-action gates, and next review date.
+2. Run now: execute the first dated cycle against available evidence and write a collision-free UTC receipt such as operations/receipts/YYYY-MM-DDTHHMMSSZ.md.
+3. Repeat safely: every later cycle must read the prior receipt, record evidence and deltas, carry unresolved work forward, and set the next review date.
+4. Never manufacture activity to make the cycle look complete; empty queues, unavailable signals, and skipped checks remain explicit.` : "";
+  const integrationTarget = pack.lane === "operate"
+    ? "integrate the durable workflow under operations/ and use outcome-room/ only as its linked review surface"
+    : "integrate them into outcome-room/";
+
+  return `${pack.lane === "operate" ? "Establish and run the first cycle of" : "Build"} the ${pack.name} outcome for the product described below.
 
 PRODUCT BRIEF
 [Replace this line with the product, audience, constraints, and any existing repository or assets.]
@@ -34,7 +45,7 @@ CAPTAIN WORKFLOW
 2. Confirm these installed skills are visible: ${pack.skills.map((source) => `$${source.skill}`).join(", ")}. If any are missing, stop and identify them; do not silently imitate them.
 3. Create one subagent for each independent workstream below. Give every subagent outcome-brief.md, explicit ownership, its named skills, and its own completion verifier. Do not create one subagent per skill.
 ${workstreams}
-4. Continue as captain while the workstreams run: protect the shared facts, resolve interface decisions, and prepare the integration shell. Wait for all workstreams, review their receipts, then integrate them into outcome-room/ without erasing unrelated user work.
+4. Continue as captain while the workstreams run: protect the shared facts, resolve interface decisions, and prepare the integration shell. Wait for all workstreams, review their receipts, then ${integrationTarget} without erasing unrelated user work.
 5. After integration, create a fresh verification subagent. It must invoke ${pack.reviewSkills.map((skill) => `$${skill}`).join(", ")}, inspect the actual integrated outcome, check every promised artifact, and return evidence—not implementation work.
 6. Fix material integration failures, rerun the relevant checks, and finish with a concise outcome receipt: created artifacts, verifier commands, passed/failed/skipped checks, known limitations, and every unproven claim.
 
@@ -43,6 +54,7 @@ ${pack.guardrails.map((guardrail) => `- ${guardrail}`).join("\n")}
 
 VERIFICATION CONTRACT
 ${pack.verification.map((item) => `- ${item}`).join("\n")}
+${operateLoop}
 
 Do not ask me to choose implementation details that can be safely inferred from the brief and repository. Ask only when a missing decision would materially change the product or authorize an external action.`;
 }

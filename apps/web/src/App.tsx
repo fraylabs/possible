@@ -254,6 +254,15 @@ function PackArtwork({ slug }: { slug: string }) {
       </div>
     );
   }
+  if (slug === "web-app-operations") {
+    return (
+      <div className="pack-art pack-art--operations" aria-hidden="true">
+        <div className="operations-board"><i /><i /><i /><i /><i /><i /></div>
+        <b className="operations-pulse" />
+        <span>CHECK / 02:14</span><span>QUEUE / 03</span><span>RECOVER / READY</span>
+      </div>
+    );
+  }
   return (
     <div className="pack-art pack-art--release" aria-hidden="true">
       <i className="release-ring" /><i className="release-dot" />
@@ -272,9 +281,9 @@ function PacksPage() {
 
   return (
     <main>
-      <SiteNav label="Catalog / 04" />
+      <SiteNav label={`Catalog / ${String(outcomePacks.length).padStart(2, "0")}`} />
       <section className="catalog-hero">
-        <p className="eyebrow">PACKS POSSIBLE CAN RECOMMEND / 04</p>
+        <p className="eyebrow">PACKS POSSIBLE CAN RECOMMEND / {String(outcomePacks.length).padStart(2, "0")}</p>
         <h1>Complete recipes.<br /><em>Chosen through conversation.</em></h1>
         <div className="catalog-intro">
           <p>You do not need to choose a pack before starting. Invoke <code>$possible</code>, describe the idea, and Possible will link the best fit for your approval.</p>
@@ -682,7 +691,7 @@ function DemoGalleryPage() {
     <main className="demo-gallery-page">
       <SiteNav label="Examples / 04" />
       <section className="demo-gallery-hero">
-        <p className="eyebrow">FOUR PACKS / THREE PRESERVED RUNS / ONE LIVE PROOF</p>
+        <p className="eyebrow">FOUR PROOFS / THREE PRESERVED RUNS / ONE LIVE PROOF</p>
         <h1>Don’t imagine the outcome.<br /><em>Open it.</em></h1>
         <div>
           <p>Three examples preserve clean <code>$possible</code> runs and their evidence. The new game pack adds a clearly labeled live proof you can play immediately.</p>
@@ -1463,7 +1472,7 @@ function NotFoundPage() {
       <section className="not-found">
         <p className="eyebrow">404 / OUTCOME NOT FOUND</p>
         <h1>This pack is<br /><em>not possible yet.</em></h1>
-        <a className="button-link" href="/packs">Browse the four packs <span>→</span></a>
+        <a className="button-link" href="/packs">Browse all packs <span>→</span></a>
       </section>
       <SiteFooter />
     </main>

@@ -240,6 +240,7 @@ footer .wordmark span { color: #151411; }
 .pack-grid--filtered.pack-grid--single { grid-template-columns: minmax(0, 1fr); }
 .pack-grid--filtered .pack-card--hardware-launch { grid-row: auto; }
 .pack-grid--filtered .pack-card--playable-web-game { grid-column: auto; }
+.pack-grid--filtered .pack-card--web-app-operations { grid-column: auto; }
 .pack-grid--filtered .pack-cover, .pack-grid--filtered .pack-card--hardware-launch .pack-cover { min-height: 520px; }
 .pack-grid--filtered .pack-cover-title h2, .pack-grid--filtered .pack-card:not(.pack-card--hardware-launch) .pack-cover-title h2 { max-width: 730px; font-size: clamp(48px, 6vw, 98px); }
 .pack-card { min-width: 0; border: 1px solid #151411; display: flex; flex-direction: column; overflow: hidden; background: #f3f0e8; transition: transform .22s ease, box-shadow .22s ease; }
@@ -249,6 +250,7 @@ footer .wordmark span { color: #151411; }
 .pack-card--hardware-launch .pack-cover { min-height: 695px; background: #ff4d00; }
 .pack-card--software-launch .pack-cover { background: #151411; color: #f3f0e8; }
 .pack-card--open-source-release .pack-cover { background: #a8ff52; }
+.pack-card--web-app-operations .pack-cover { background: #d3b8ff; }
 .pack-cover header { z-index: 2; display: grid; grid-template-columns: 1fr auto auto; gap: 20px; align-items: center; font: 9px "DM Mono", monospace; letter-spacing: .07em; }
 .pack-cover header small { opacity: .7; }
 .pack-cover header b { font-size: 16px; font-weight: 400; }
@@ -665,6 +667,25 @@ footer .wordmark span { color: #151411; }
 .pack-art--game span:nth-of-type(2) { top: 10%; right: 4%; }
 .pack-art--game span:nth-of-type(3) { right: 6%; bottom: 5%; background: #151411; color: #78d9ff; }
 
+/* Web App Operations pack */
+.pack-card--web-app-operations { grid-column: 1 / -1; }
+.pack-card--web-app-operations .pack-cover { min-height: 430px; }
+.pack-art--operations { bottom: 90px; overflow: hidden; border: 1px solid rgba(21,20,17,.42); background: repeating-linear-gradient(0deg, transparent 0 31px, rgba(21,20,17,.12) 32px), repeating-linear-gradient(90deg, transparent 0 31px, rgba(21,20,17,.12) 32px); }
+.operations-board { width: min(48vw, 650px); height: 48%; position: absolute; top: 24%; left: 50%; border: 1px solid #151411; display: grid; grid-template-columns: repeat(6, 1fr); background: #f3f0e8; transform: translateX(-50%) rotate(-2deg); box-shadow: 9px 9px 0 #151411; }
+.operations-board::before { content: "FIRST CYCLE / 2026-07-19"; position: absolute; top: -27px; left: -1px; padding: 6px 8px; border: 1px solid #151411; background: #151411; color: #d3b8ff; font: 8px "DM Mono", monospace; }
+.operations-board i { border-right: 1px solid #151411; background: linear-gradient(to top, #ff4d00 var(--level, 42%), transparent var(--level, 42%)); }
+.operations-board i:last-child { border-right: 0; }
+.operations-board i:nth-child(2) { --level: 68%; }
+.operations-board i:nth-child(3) { --level: 30%; }
+.operations-board i:nth-child(4) { --level: 82%; }
+.operations-board i:nth-child(5) { --level: 56%; }
+.operations-board i:nth-child(6) { --level: 74%; }
+.operations-pulse { width: 34%; height: 1px; position: absolute; top: 49%; left: 33%; background: #151411; transform: skewY(-17deg); box-shadow: 45px -14px 0 #151411, 90px 10px 0 #151411; }
+.pack-art--operations span { position: absolute; padding: 5px 7px; border: 1px solid #151411; background: #d3b8ff; font: 8px "DM Mono", monospace; }
+.pack-art--operations span:nth-of-type(1) { top: 7%; right: 4%; }
+.pack-art--operations span:nth-of-type(2) { bottom: 6%; left: 4%; }
+.pack-art--operations span:nth-of-type(3) { right: 4%; bottom: 6%; background: #151411; color: #d3b8ff; }
+
 .demo-example-card--game { grid-column: 1 / -1; background: #78d9ff; }
 .demo-example-card--game .demo-example-visual--game { min-height: 420px; background: #10171f; }
 .demo-example-visual--game::before { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(108deg, transparent 0 35px, rgba(120,217,255,.08) 36px, transparent 37px 68px); }
@@ -740,7 +761,9 @@ footer .wordmark span { color: #151411; }
 
 @media (max-width: 900px) {
   .pack-card--playable-web-game { grid-column: auto; }
+  .pack-card--web-app-operations { grid-column: auto; }
   .home-pack-preview .pack-card--playable-web-game { grid-column: auto; }
+  .home-pack-preview .pack-card--web-app-operations { grid-column: auto; }
   .game-evidence-index { grid-template-columns: 1fr 1fr; }
   .game-evidence-index a { border-bottom: 1px solid #151411; }
   .game-evidence-index a:nth-child(2n) { border-right: 0; }

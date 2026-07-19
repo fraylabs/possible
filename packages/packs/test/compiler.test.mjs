@@ -8,12 +8,14 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
     "software-launch",
     "open-source-release",
     "playable-web-game",
+    "web-app-operations",
   ]);
   assert.deepEqual(outcomePacks.map(({ slug, lane }) => [slug, lane]), [
     ["hardware-launch", "launch"],
     ["software-launch", "launch"],
     ["open-source-release", "release"],
     ["playable-web-game", "create"],
+    ["web-app-operations", "operate"],
   ]);
 
   for (const pack of outcomePacks) {
@@ -54,4 +56,13 @@ test("install commands group skills by upstream repository", () => {
   assert.match(game.installCommands[0], /mrgoonie\/claudekit-skills.+threejs/);
   assert.match(game.installCommands[1], /dylantarre\/animation-principles.+game-designer.+mobile-touch/);
   assert.match(game.installCommands[2], /anthropics\/skills.+frontend-design.+webapp-testing/);
+
+  const operations = compilePack(outcomePacks[4]);
+  assert.equal(operations.installCommands.length, 2);
+  assert.match(operations.installCommands[0], /anthropics\/skills.+webapp-testing/);
+  assert.match(operations.installCommands[1], /github\/awesome-copilot.+impediment-prioritization.+dependabot.+security-review.+devops-rollout-plan.+incident-postmortem/);
+  assert.match(operations.runPrompt, /OPERATING LOOP/);
+  assert.match(operations.runPrompt, /prior receipt/);
+  assert.match(operations.runPrompt, /YYYY-MM-DDTHHMMSSZ\.md/);
+  assert.match(operations.runPrompt, /First dated operations receipt/);
 });
