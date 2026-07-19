@@ -20,6 +20,16 @@ export const openSourceReleasePack: OutcomePack = {
   eyebrow: "03 / OUTCOME PACK",
   promise: "Turn one repository into a release people can trust and use.",
   summary: "A release-ready package, documentation, examples, hardened CI, changelog, and evidence report—prepared together without silently publishing anything.",
+  useWhen: [
+    "An existing repository needs a trustworthy, usable public release package.",
+    "Installation, examples, documentation, CI, and versioning must agree.",
+    "You need release evidence before deciding whether to tag or publish.",
+  ],
+  notFor: [
+    "Building the underlying product or designing its public launch campaign.",
+    "Publishing, tagging, or changing repository settings without separate approval.",
+    "General repository cleanup with no concrete release outcome.",
+  ],
   reviewedAt: "2026-07-18",
   skills: [
     source("github-release", "GitHub Release", "Versioning, changelog, and release engineering"),

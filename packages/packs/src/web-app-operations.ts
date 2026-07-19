@@ -20,6 +20,16 @@ export const webAppOperationsPack: OutcomePack = {
   eyebrow: "05 / OUTCOME PACK",
   promise: "Turn one live web app into a repeatable, evidence-backed operating loop.",
   summary: "An executable health check, issue queue, maintenance cadence, incident and rollback runbooks, recovery drill, and first dated receipt—assembled once, then ready to repeat.",
+  useWhen: [
+    "A web application is already live and needs a repeatable operating cadence.",
+    "Critical flows, issue triage, dependency maintenance, and rollback readiness recur.",
+    "Each cycle must preserve evidence, unresolved work, and a next review date.",
+  ],
+  notFor: [
+    "Building or presenting the application's first public launch.",
+    "One isolated bug or incident with no requested recurring workflow.",
+    "Unapproved production changes, customer-data access, paging, or issue-tracker writes.",
+  ],
   reviewedAt: "2026-07-19",
   skills: [
     {

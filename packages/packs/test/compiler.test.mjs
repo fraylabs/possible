@@ -27,6 +27,10 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
     assert.ok(pack.skills.length >= 5);
     assert.ok(pack.workstreams.length >= 3);
     assert.ok(pack.outputs.length >= 5);
+    assert.ok(pack.useWhen.length >= 2);
+    assert.ok(pack.notFor.length >= 2);
+    assert.equal(new Set(pack.useWhen).size, pack.useWhen.length);
+    assert.equal(new Set(pack.notFor).size, pack.notFor.length);
     for (const source of pack.skills) {
       assert.match(compiled.runPrompt, new RegExp("\\$" + source.skill.replaceAll("-", "\\-")));
       assert.equal(source.reviewedRevision.length, 40);

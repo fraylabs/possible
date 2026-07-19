@@ -27,6 +27,8 @@ export interface OutcomePack {
   eyebrow: string;
   promise: string;
   summary: string;
+  useWhen: string[];
+  notFor: string[];
   reviewedAt: string;
   skills: SkillSource[];
   workstreams: Workstream[];

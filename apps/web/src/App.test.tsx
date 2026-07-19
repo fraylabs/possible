@@ -2,6 +2,7 @@ import { cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { axe } from "vitest-axe";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { compilePack, outcomePacks } from "@possible/packs";
 import App from "./App";
 
 afterEach(() => {
@@ -97,28 +98,54 @@ describe("Possible", () => {
     expect(await axe(container)).toHaveNoViolations();
   });
 
-  it("presents each pack as a transparent recommendation, not a starting form", () => {
-    window.history.pushState({}, "", "/packs/hardware-launch");
-    const { container } = render(<App />);
-    expect(screen.getByRole("heading", { name: "Hardware Launch" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: /Parallel specialists/i })).toBeInTheDocument();
-    expect(container.querySelectorAll(".ingredient-list a")).toHaveLength(5);
+  it("renders every pack route as a manifest-derived, accessible outcome specification", async () => {
+    for (const pack of outcomePacks) {
+      window.history.pushState({}, "", `/packs/${pack.slug}`);
+      const { container } = render(<App />);
+      const compiled = compilePack(pack);
 
-    expect(screen.getByRole("heading", { name: /Possible recommends it.*You approve it/i })).toBeInTheDocument();
-    expect(screen.getAllByRole("link", { name: /Start with \$possible/i })[0]).toHaveAttribute("href", "/#start");
-    expect(screen.getByText(/WHAT YES AUTHORIZES/i)).toBeInTheDocument();
-    expect(screen.getByText(/External actions still require separate approval/i)).toBeInTheDocument();
-    expect(screen.queryByLabelText("YOUR PRODUCT BRIEF")).not.toBeInTheDocument();
+      expect(screen.getByRole("heading", { name: pack.name, level: 1 })).toBeInTheDocument();
+      expect(container.querySelectorAll("h1")).toHaveLength(1);
+      expect(container.querySelector(".pack-hero")).not.toBeInTheDocument();
+      expect(container.querySelector(".pack-start")).not.toBeInTheDocument();
+      expect(container.querySelectorAll(".pack-reference-section")).toHaveLength(8);
+      expect(container.querySelector(".pack-reference-packs a[aria-current='page']")).toHaveTextContent(pack.name);
+      expect(screen.getByText(pack.useWhen[0])).toBeInTheDocument();
+      expect(screen.getByText(pack.notFor[0])).toBeInTheDocument();
+      expect(container.querySelectorAll(".pack-contract-list li")).toHaveLength(pack.outputs.length);
+      expect(container.querySelectorAll(".pack-workstream-table tbody tr")).toHaveLength(pack.workstreams.length);
+      expect(container.querySelectorAll(".pack-ingredient-table tbody tr")).toHaveLength(pack.skills.length);
+      expect(container.querySelectorAll(".pack-reference-list li")).toHaveLength(pack.guardrails.length);
+      expect(container.querySelectorAll(".pack-verification-list li")).toHaveLength(pack.verification.length);
+      expect(container.querySelectorAll(".pack-command-list > div")).toHaveLength(compiled.installCommands.length);
+      expect(container.querySelector(".pack-command-list code")).toHaveTextContent(compiled.installCommands[0]);
+      expect(container.querySelector(".pack-prompt-disclosure code")?.textContent).toBe(compiled.runPrompt);
+      expect(screen.getAllByRole("link", { name: "Compiled pack JSON ↗" })[0]).toHaveAttribute("href", `/packs/${pack.slug}.json`);
+      expect(screen.getByRole("link", { name: "Download .txt ↓" })).toHaveAttribute("href", `/packs/${pack.slug}/run.txt`);
+      expect(screen.getByRole("link", { name: "Install .txt ↓" })).toHaveAttribute("href", `/packs/${pack.slug}/install.txt`);
+      expect(await axe(container)).toHaveNoViolations();
+      cleanup();
+    }
+  });
+
+  it("copies the exact compiled run prompt from a pack specification", async () => {
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    Object.assign(navigator, { clipboard: { writeText } });
+    window.history.pushState({}, "", "/packs/hardware-launch");
+    render(<App />);
+    await userEvent.click(screen.getByRole("button", { name: "Copy full run prompt" }));
+    expect(writeText).toHaveBeenCalledWith(compilePack(outcomePacks[0]).runPrompt);
+    expect(await screen.findByText("Copied")).toBeInTheDocument();
   });
 
   it("presents Web App Operations as a recurring operating loop", () => {
     window.history.pushState({}, "", "/packs/web-app-operations");
     const { container } = render(<App />);
     expect(screen.getByRole("heading", { name: "Web App Operations" })).toBeInTheDocument();
-    expect(container.querySelectorAll(".ingredient-list a")).toHaveLength(6);
+    expect(container.querySelectorAll(".pack-ingredient-table tbody tr")).toHaveLength(6);
     expect(screen.getAllByText(/Executable operations check and dated health baseline/i).length).toBeGreaterThan(0);
     expect(screen.getAllByText(/First dated operations receipt/i).length).toBeGreaterThan(0);
-    expect(screen.getByText(/one snapshot is a baseline, never an uptime claim/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/one snapshot is a baseline, never an uptime claim/i).length).toBeGreaterThan(0);
   });
 
   it("returns a useful not-found page for unknown packs", () => {

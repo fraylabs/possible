@@ -8,6 +8,16 @@ export const softwareLaunchPack: OutcomePack = {
   eyebrow: "02 / OUTCOME PACK",
   promise: "Turn one software product into a launch-ready release.",
   summary: "A production product, launch site, demo film, deployment plan, and evidence report—built in parallel, then reviewed as one release.",
+  useWhen: [
+    "A software idea or repository needs a coherent product release and launch presentation.",
+    "The product, launch site, and demo must describe the same verified capabilities.",
+    "You want deployment readiness documented before deciding whether to deploy.",
+  ],
+  notFor: [
+    "Maintaining an already-live application through a recurring operating cadence.",
+    "Preparing a library or repository for public open-source distribution.",
+    "A marketing page that does not include a working product outcome.",
+  ],
   reviewedAt: "2026-07-18",
   skills: [
     {

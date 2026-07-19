@@ -8,6 +8,16 @@ export const playableWebGamePack: OutcomePack = {
   eyebrow: "04 / OUTCOME PACK",
   promise: "Turn one strange game idea into a polished browser game people can play.",
   summary: "A focused core loop, Three.js runtime, responsive controls, intentional game feel, playable build, and evidence report—made together and tested as one experience.",
+  useWhen: [
+    "A browser-game idea needs one complete, replayable Three.js experience.",
+    "Core loop, game feel, controls, HUD, and runtime must be designed together.",
+    "You value a finished playable build over a broad feature list.",
+  ],
+  notFor: [
+    "A reusable game engine, level editor, or multiplayer platform.",
+    "A conventional application that only happens to use Three.js.",
+    "Publishing, analytics, or paid asset acquisition without separate approval.",
+  ],
   reviewedAt: "2026-07-19",
   skills: [
     {

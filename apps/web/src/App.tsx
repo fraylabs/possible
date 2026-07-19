@@ -1,6 +1,6 @@
 import { lazy, Suspense, useEffect, useState } from "react";
 import type { ReactNode } from "react";
-import { getPack, outcomePacks } from "@possible/packs";
+import { compilePack, getPack, outcomePacks } from "@possible/packs";
 import type { OutcomePack, PackLane } from "@possible/packs";
 import demoThreadData from "./demo-thread.json";
 import openSourceThreadData from "./open-source-thread.json";
@@ -55,8 +55,8 @@ function CopyButton({ label, value }: { label: string; value: string }) {
   }
 
   return (
-    <button className="copy-button" type="button" onClick={copy}>
-      <span>{state === "copied" ? "Copied" : state === "failed" ? "Copy failed" : label}</span>
+    <button className="copy-button" type="button" onClick={copy} aria-label={label}>
+      <span aria-live="polite">{state === "copied" ? "Copied" : state === "failed" ? "Copy failed" : label}</span>
       <span aria-hidden="true">{state === "copied" ? "✓" : "↗"}</span>
     </button>
   );
@@ -64,7 +64,7 @@ function CopyButton({ label, value }: { label: string; value: string }) {
 
 function SiteNav({ label }: { label?: string }) {
   return (
-    <nav>
+    <nav aria-label="Primary">
       <a className="wordmark" href="/">possible<span>.sh</span></a>
       {label ? <div className="nav-meta"><span>POSSIBLE</span><strong>{label.toUpperCase()}</strong></div> : null}
       <div className="nav-links">
@@ -85,51 +85,6 @@ function SiteFooter() {
       <strong>SKILLS ARE INGREDIENTS.<br />POSSIBLE COMPILES THE OUTCOME.</strong>
       <span>BUILDWEEK 2026</span>
     </footer>
-  );
-}
-
-function PackMetrics({ pack }: { pack: OutcomePack }) {
-  return (
-    <div className="pack-metrics" aria-label="Pack contents">
-      <div><strong>{pack.skills.length}</strong><span>specialist skills</span></div>
-      <div><strong>{pack.workstreams.length}</strong><span>parallel workstreams</span></div>
-      <div><strong>{pack.outputs.length}</strong><span>integrated outputs</span></div>
-      <div><strong>1</strong><span>independent review</span></div>
-    </div>
-  );
-}
-
-function WorkstreamList({ pack }: { pack: OutcomePack }) {
-  return (
-    <div className="workstreams">
-      {pack.workstreams.map((stream, index) => (
-        <article key={stream.id}>
-          <span>0{index + 1}</span>
-          <div><strong>{stream.name}</strong><p>{stream.brief}</p></div>
-          <small>{stream.skills.map((skill) => `$${skill}`).join(" + ")}</small>
-        </article>
-      ))}
-      <article className="workstream-review">
-        <span>0{pack.workstreams.length + 1}</span>
-        <div><strong>Independent review</strong><p>Inspect the integrated result and return evidence, failures, and unproven claims.</p></div>
-        <small>{pack.reviewSkills.map((skill) => `$${skill}`).join(" + ")}</small>
-      </article>
-    </div>
-  );
-}
-
-function IngredientList({ pack }: { pack: OutcomePack }) {
-  return (
-    <div className="ingredient-list">
-      {pack.skills.map((source, index) => (
-        <a href={source.reviewUrl} target="_blank" rel="noreferrer" key={source.id}>
-          <span>0{index + 1}</span>
-          <div><strong>{source.name}</strong><small>{source.role}</small></div>
-          <code>{source.repository}</code>
-          <b>{source.reviewedRevision.slice(0, 7)} ↗</b>
-        </a>
-      ))}
-    </div>
   );
 }
 
@@ -318,72 +273,136 @@ function PacksPage() {
 
 function PackDetailPage({ pack }: { pack: OutcomePack }) {
   const packNumber = outcomePacks.findIndex((candidate) => candidate.slug === pack.slug) + 1;
+  const compiled = compilePack(pack);
+  const reviewedLabel = new Date(`${pack.reviewedAt}T00:00:00Z`).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    timeZone: "UTC",
+  });
+  const sections = [
+    ["overview", "Overview"],
+    ["fit", "Fit"],
+    ["outputs", "Outcome contract"],
+    ["workstreams", "Execution plan"],
+    ["ingredients", "Ingredients"],
+    ["install", "Install"],
+    ["run-prompt", "Run prompt"],
+    ["boundaries", "Boundaries"],
+    ["verification", "Verification"],
+  ];
 
   return (
-    <main>
-      <SiteNav label={`${pack.name} / 0${packNumber}`} />
-      <section className="pack-hero">
-        <div className="pack-breadcrumb"><a href="/packs">PACKS</a><span>/</span><strong>{pack.lane.toUpperCase()}</strong><span>/</span><strong>0{packNumber}</strong></div>
-        <p className="eyebrow">{pack.eyebrow}</p>
-        <h1>{pack.name}</h1>
-        <div className="pack-promise">
-          <p>{pack.promise}</p>
-          <div><span>{pack.summary}</span><a className="button-link" href="/#start">Start with $possible <b>→</b></a></div>
-        </div>
-      </section>
+    <main className="pack-reference-page">
+      <a className="pack-reference-skip" href="#pack-specification">Skip to pack specification</a>
+      <SiteNav label={`Pack spec / 0${packNumber}`} />
+      <div className="pack-reference-shell">
+        <aside className="pack-reference-packs" aria-label="Outcome pack navigation">
+          <header><span>OUTCOME PACKS</span><strong>{String(outcomePacks.length).padStart(2, "0")}</strong></header>
+          <nav aria-label="Outcome packs">
+            {outcomePacks.map((candidate, index) => (
+              <a href={`/packs/${candidate.slug}`} aria-current={candidate.slug === pack.slug ? "page" : undefined} key={candidate.slug}>
+                <span>{String(index + 1).padStart(2, "0")}</span>
+                <strong>{candidate.name}</strong>
+                <small>{candidate.lane}</small>
+              </a>
+            ))}
+          </nav>
+          <a className="pack-reference-back" href="/packs">← Gallery</a>
+        </aside>
 
-      <section className="pack-spec">
-        <PackMetrics pack={pack} />
-        <div className="detail-grid">
-          <header><p className="eyebrow">THE TEAM</p><h2>Parallel specialists.<br />One integrated outcome.</h2></header>
-          <WorkstreamList pack={pack} />
-        </div>
-      </section>
+        <article className="pack-reference-document" id="pack-specification" tabIndex={-1}>
+          <header className="pack-reference-header" id="overview">
+            <div className="pack-reference-breadcrumb"><a href="/packs">PACKS</a><span>/</span><strong>{pack.lane.toUpperCase()}</strong><span>/</span><strong>{String(packNumber).padStart(2, "0")}</strong></div>
+            <dl className="pack-reference-meta">
+              <div><dt>LANE</dt><dd>{pack.lane}</dd></div>
+              <div><dt>PACK</dt><dd>{String(packNumber).padStart(2, "0")}</dd></div>
+              <div><dt>SCHEMA</dt><dd>v{pack.schemaVersion}</dd></div>
+              <div><dt>LAST REVIEWED</dt><dd><time dateTime={pack.reviewedAt}>{reviewedLabel}</time></dd></div>
+            </dl>
+            <h1>{pack.name}</h1>
+            <p className="pack-reference-promise">{pack.promise}</p>
+            <p className="pack-reference-summary">{pack.summary}</p>
+            <div className="pack-reference-actions">
+              <a href="/#start">Start with $possible <span>→</span></a>
+              <a href={`/packs/${pack.slug}.json`}>Compiled pack JSON ↗</a>
+            </div>
+          </header>
 
-      <section className="deliverables">
-        <div><p className="eyebrow">WHAT YOU GET</p><h2>One run.<br />A complete outcome.</h2></div>
-        <ol>
-          {pack.outputs.map((output, index) => <li key={output}><span>0{index + 1}</span><strong>{output}</strong></li>)}
-        </ol>
-      </section>
+          <details className="pack-reference-mobile-nav">
+            <summary>On this page <span>09 sections</span></summary>
+            <nav aria-label="Mobile page sections">{sections.map(([id, label]) => <a href={`#${id}`} key={id}>{label}</a>)}</nav>
+          </details>
 
-      <section className="pack-start">
-        <div>
-          <p className="eyebrow">HOW THIS PACK STARTS</p>
-          <h2>Possible recommends it.<br />You approve it.</h2>
-          <p>This page is the transparent recipe—not a form you must configure. Begin with <code>$possible</code>; after the walkthrough, Possible links this pack and waits for your confirmation.</p>
-          <a className="button-link" href="/#start">Install and invoke Possible <span>→</span></a>
-        </div>
-        <article className="pack-recommendation">
-          <header><span>POSSIBLE / RECOMMENDATION</span><strong>WAITING FOR APPROVAL</strong></header>
-          <p><span>RECOMMENDED OUTCOME</span><a href={`/packs/${pack.slug}`}>{pack.name} ↗</a></p>
-          <p><span>WHY IT FITS</span>{pack.promise}</p>
-          <p><span>WHAT WILL EXIST</span>{pack.outputs.join(" · ")}</p>
-          <p className="approval-disclosure"><span>WHAT YES AUTHORIZES</span>{approvalDisclosure}</p>
-          <footer><span>PROCEED WITH THIS OUTCOME?</span><strong>Yes, proceed.</strong></footer>
+          <section className="pack-reference-section" id="fit">
+            <header><span>01</span><h2>Fit</h2><p>Choose from the finished outcome, not the lane or ingredient list.</p></header>
+            <div className="pack-fit-grid">
+              <div><h3>Use this when</h3><ul>{pack.useWhen.map((item) => <li key={item}>{item}</li>)}</ul></div>
+              <div><h3>Not for</h3><ul>{pack.notFor.map((item) => <li key={item}>{item}</li>)}</ul></div>
+            </div>
+          </section>
+
+          <section className="pack-reference-section" id="outputs">
+            <header><span>02</span><h2>Outcome contract</h2><p>Every item must exist before this pack can be called complete.</p></header>
+            <ol className="pack-contract-list">{pack.outputs.map((output, index) => <li key={output}><span>{String(index + 1).padStart(2, "0")}</span><strong>{output}</strong></li>)}</ol>
+          </section>
+
+          <section className="pack-reference-section" id="workstreams">
+            <header><span>03</span><h2 id="workstreams-heading">Execution plan</h2><p>Delegate by independent ownership boundary—not one agent per skill.</p></header>
+            <div className="pack-table-scroll">
+              <table className="pack-reference-table pack-workstream-table" aria-labelledby="workstreams-heading">
+                <caption className="sr-only">Workstreams, invoked skills, owned files, and execution briefs for {pack.name}</caption>
+                <thead><tr><th>Workstream</th><th>Invokes</th><th>Owns</th><th>Brief</th></tr></thead>
+                <tbody>
+                  {pack.workstreams.map((stream) => <tr key={stream.id}><th scope="row"><strong>{stream.name}</strong></th><td>{stream.skills.map((skill) => <code key={skill}>${skill}</code>)}</td><td>{stream.owns.map((item) => <code key={item}>{item}</code>)}</td><td>{stream.brief}</td></tr>)}
+                </tbody>
+              </table>
+            </div>
+            <div className="pack-review-callout"><span>INDEPENDENT REVIEW</span><div>{pack.reviewSkills.map((skill) => <code key={skill}>${skill}</code>)}</div><p>Inspect the integrated outcome after production and return evidence, failures, skipped checks, and unproven claims. Reviewers do not own implementation.</p></div>
+          </section>
+
+          <section className="pack-reference-section" id="ingredients">
+            <header><span>04</span><h2 id="ingredients-heading">Reviewed ingredients</h2><p>Review links identify what Possible inspected. Install commands resolve the current upstream source, not a pinned revision.</p></header>
+            <div className="pack-table-scroll">
+              <table className="pack-reference-table pack-ingredient-table" aria-labelledby="ingredients-heading">
+                <caption className="sr-only">Reviewed ingredient skills, roles, repositories, and exact revisions for {pack.name}</caption>
+                <thead><tr><th>Skill</th><th>Role</th><th>Source</th><th>Reviewed revision</th></tr></thead>
+                <tbody>{pack.skills.map((source) => <tr key={source.id}><th scope="row"><strong>{source.name}</strong><code>${source.skill}</code></th><td>{source.role}</td><td><a href={source.catalogUrl ?? source.reviewUrl} target="_blank" rel="noreferrer" aria-label={`${source.repository} skill catalog, opens in a new tab`}>{source.repository} ↗</a></td><td><a href={source.reviewUrl} target="_blank" rel="noreferrer" aria-label={`${source.name} reviewed revision ${source.reviewedRevision}, opens in a new tab`}><code>{source.reviewedRevision}</code> ↗</a></td></tr>)}</tbody>
+              </table>
+            </div>
+          </section>
+
+          <section className="pack-reference-section" id="install">
+            <header><span>05</span><h2>Install ingredients</h2><p>Run only after Possible recommends this pack and you confirm the outcome.</p></header>
+            <div className="pack-command-list">{compiled.installCommands.map((command, index) => <div key={command}><span>COMMAND {String(index + 1).padStart(2, "0")}</span><pre><code>{command}</code></pre><CopyButton label={`Copy install command ${index + 1} of ${compiled.installCommands.length}`} value={command} /></div>)}</div>
+            <p className="pack-reference-note">These commands install repo-local skills. Review source drift before use. Pack confirmation does not authorize deployment, publishing, spending, outreach, fabrication, or production data access.</p>
+          </section>
+
+          <section className="pack-reference-section" id="run-prompt">
+            <header><span>06</span><h2>Compiled run prompt</h2><p>The deterministic captain workflow generated from this manifest.</p></header>
+            <div className="pack-publication-actions"><CopyButton label="Copy full run prompt" value={compiled.runPrompt} /><a href={`/packs/${pack.slug}/run.txt`}>Download .txt ↓</a><a href={`/packs/${pack.slug}/install.txt`}>Install .txt ↓</a></div>
+            <details className="pack-prompt-disclosure"><summary>Preview full compiled prompt <span>{compiled.runPrompt.split("\n").length} lines</span></summary><pre><code>{compiled.runPrompt}</code></pre></details>
+          </section>
+
+          <section className="pack-reference-section" id="boundaries">
+            <header><span>07</span><h2>Approval boundaries</h2><p>Confirmation authorizes the disclosed local workflow, not external action.</p></header>
+            <div className="pack-approval-callout"><strong>What “yes” authorizes</strong><p>{approvalDisclosure}</p></div>
+            <ul className="pack-reference-list">{pack.guardrails.map((item) => <li key={item}>{item}</li>)}</ul>
+          </section>
+
+          <section className="pack-reference-section" id="verification">
+            <header><span>08</span><h2>Verification contract</h2><p>Completion requires evidence. Missing or skipped proof stays visible.</p></header>
+            <ol className="pack-verification-list">{pack.verification.map((item, index) => <li key={item}><span>{String(index + 1).padStart(2, "0")}</span><p>{item}</p></li>)}</ol>
+          </section>
+
         </article>
-      </section>
 
-      <section className="ingredients detail-ingredients">
-        <div className="ingredients-title">
-          <p className="eyebrow">INSPECT BEFORE INSTALL</p>
-          <h2>Every ingredient<br />is visible.</h2>
-          <p>Each source and reviewed revision is exposed. The install resolves from its upstream repository.</p>
-        </div>
-        <IngredientList pack={pack} />
-      </section>
-
-      <section className="assurance">
-        <div>
-          <p className="eyebrow">GUARDRAILS</p>
-          <ul>{pack.guardrails.map((item) => <li key={item}>{item}</li>)}</ul>
-        </div>
-        <div>
-          <p className="eyebrow">VERIFICATION</p>
-          <ul>{pack.verification.map((item) => <li key={item}>{item}</li>)}</ul>
-        </div>
-      </section>
-      <Boundary />
+        <aside className="pack-reference-toc" aria-label="On this page">
+          <span>ON THIS PAGE</span>
+          <nav aria-label="Page sections">{sections.map(([id, label]) => <a href={`#${id}`} key={id}>{label}</a>)}</nav>
+          <div><span>PUBLICATIONS</span><a href={`/packs/${pack.slug}.json`}>Compiled pack JSON ↗</a><a href={`/packs/${pack.slug}/install.txt`}>Install commands ↗</a><a href={`/packs/${pack.slug}/run.txt`}>Run prompt ↗</a></div>
+        </aside>
+      </div>
       <SiteFooter />
     </main>
   );

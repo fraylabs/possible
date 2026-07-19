@@ -8,6 +8,16 @@ export const hardwareLaunchPack: OutcomePack = {
   eyebrow: "01 / BUILDWEEK PACK",
   promise: "Turn one hardware idea into a coherent, verified launch.",
   summary: "A coordinated website, launch film, prototype CAD package, waitlist, and evidence report—built in parallel, then reviewed together.",
+  useWhen: [
+    "A physical-product idea or prototype needs one coherent launch presentation.",
+    "The site, film, and CAD concept must share the same confirmed product facts.",
+    "You need a reviewable prototype story without implying manufacturing readiness.",
+  ],
+  notFor: [
+    "Production engineering, certification, sourcing, or a fabrication-ready release.",
+    "A software-only launch with no physical-product concept.",
+    "Testing customer demand or collecting a real waitlist without separate approval.",
+  ],
   reviewedAt: "2026-07-18",
   skills: [
     {
