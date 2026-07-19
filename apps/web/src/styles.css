@@ -30,6 +30,10 @@ nav { height: 74px; padding: 0 3.5vw; border-bottom: 1px solid #aaa59a; display:
 .build-hero-install > p { margin: 25px 0 0; display: flex; flex-wrap: wrap; gap: 8px; color: #6d675f; font: 9px "DM Mono", monospace; line-height: 1.7; }
 .build-hero-install > p span { color: #ff4d00; }
 .build-hero-install > p code { color: #151411; }
+.schedule-entry { min-height: 48px; margin-top: 14px; padding: 0 13px; border: 1px solid #151411; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 14px; align-items: center; background: #d3b8ff; transition: background .18s ease, color .18s ease; }
+.schedule-entry span, .schedule-entry strong { font: 8px "DM Mono", monospace; }
+.schedule-entry code { min-width: 0; overflow: hidden; font: 11px "DM Mono", monospace; text-overflow: ellipsis; white-space: nowrap; }
+.schedule-entry:hover, .schedule-entry:focus-visible { background: #151411; color: #f3f0e8; }
 
 .starter-chooser { min-width: 0; grid-column: 1 / -1; align-self: end; }
 .starter-grid { min-width: 0; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; list-style: none; }
@@ -168,6 +172,7 @@ nav { height: 74px; padding: 0 3.5vw; border-bottom: 1px solid #aaa59a; display:
 .docs-command pre code { padding: 0; border: 0; background: transparent; color: inherit; }
 .docs-command .copy-button { padding: 12px 16px; background: #ff4d00; color: #151411; font-size: 9px; }
 .docs-command--invoke { background: #25231f; }
+.docs-command--schedule { box-shadow: 7px 7px 0 #d3b8ff; }
 .docs-article blockquote { margin: 28px 0 0; padding: 24px 28px; border-left: 3px solid #ff4d00; background: #eeece5; color: #35312d; font-size: 16px; line-height: 1.6; }
 .docs-do-dont { margin-top: 32px; display: grid; grid-template-columns: 1fr 1fr; border: 1px solid #d7d3ca; }
 .docs-do-dont > div { padding: 22px; }
@@ -425,6 +430,20 @@ footer .wordmark span { color: #151411; }
 .pack-reference-section > header p { max-width: 620px; margin: 0; color: #656159; font-size: 13px; line-height: 1.65; }
 .pack-reference-section h3 { margin: 0 0 18px; font-size: 17px; }
 
+.pack-schedule-prompt { border: 1px solid #151411; background: #151411; color: #f8f7f2; }
+.pack-schedule-prompt > header { min-height: 40px; padding: 0 13px; border-bottom: 1px solid #494640; display: flex; justify-content: space-between; align-items: center; color: #aaa49b; font: 8px "DM Mono", monospace; }
+.pack-schedule-prompt > header strong { color: #a8ff52; }
+.pack-schedule-prompt > code { padding: 27px 18px; display: block; overflow-wrap: anywhere; color: #f8f7f2; font: clamp(16px, 2vw, 24px)/1.4 "DM Mono", monospace; }
+.pack-schedule-flow { margin: 18px 0 0; padding: 0; border-top: 1px solid #d7d3ca; border-left: 1px solid #d7d3ca; display: grid; grid-template-columns: repeat(2, 1fr); list-style: none; }
+.pack-schedule-flow li { min-height: 175px; padding: 18px; border-right: 1px solid #d7d3ca; border-bottom: 1px solid #d7d3ca; display: flex; flex-direction: column; }
+.pack-schedule-flow li > span { color: #ff4d00; font: 8px "DM Mono", monospace; }
+.pack-schedule-flow li strong { margin-top: auto; font-size: 18px; font-weight: 500; }
+.pack-schedule-flow li p { min-height: 55px; margin: 10px 0 0; color: #656159; font-size: 12px; line-height: 1.6; }
+.pack-schedule-flow li code { font: .9em "DM Mono", monospace; }
+.pack-schedule-boundary { margin-top: 18px; padding: 18px; border: 1px solid #c9c4bb; border-left: 4px solid #4d9e38; background: #edf4e8; }
+.pack-schedule-boundary strong { color: #4a7440; font: 8px "DM Mono", monospace; }
+.pack-schedule-boundary p { margin: 8px 0 0; color: #514d47; font-size: 12px; line-height: 1.7; }
+
 .pack-fit-grid { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid #d7d3ca; }
 .pack-fit-grid > div { padding: 22px; }
 .pack-fit-grid > div + div { border-left: 1px solid #d7d3ca; background: #f1eee7; }
@@ -498,12 +517,25 @@ footer .wordmark span { color: #151411; }
   .pack-reference-toc { display: none; }
 }
 
+@media (max-width: 560px) {
+  .pack-schedule-flow { grid-template-columns: 1fr; }
+  .pack-schedule-flow li { min-height: 150px; }
+  .pack-schedule-flow li p { min-height: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .schedule-entry, .starter-card, .pack-card { transition: none; }
+}
+
 @media (max-width: 900px) {
   .build-hero { padding-block: 30px; grid-template-columns: 1.05fr .95fr; gap: 28px; }
   .build-hero-copy h1 { font-size: clamp(48px, 7.4vw, 68px); }
   .build-hero-actions { margin-top: 20px; }
   .build-hero-install .install-card pre { padding: 23px 14px; white-space: nowrap; font-size: 12px; }
   .build-hero-install > p { margin-top: 18px; font-size: 7px; }
+  .schedule-entry { min-height: 0; padding-block: 11px; grid-template-columns: 1fr; gap: 6px; }
+  .schedule-entry code { overflow: visible; font-size: 10px; line-height: 1.45; text-overflow: clip; white-space: normal; }
+  .schedule-entry strong { text-align: left; }
   .starter-grid { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
   .starter-grid::-webkit-scrollbar { display: none; }
   .starter-card { flex: 0 0 min(70vw, 480px); scroll-snap-align: start; }
@@ -891,7 +923,7 @@ footer .wordmark span { color: #151411; }
 .pack-card--web-app-operations .pack-cover { min-height: 430px; }
 .pack-art--operations { bottom: 90px; overflow: hidden; border: 1px solid rgba(21,20,17,.42); background: repeating-linear-gradient(0deg, transparent 0 31px, rgba(21,20,17,.12) 32px), repeating-linear-gradient(90deg, transparent 0 31px, rgba(21,20,17,.12) 32px); }
 .operations-board { width: min(48vw, 650px); height: 48%; position: absolute; top: 24%; left: 50%; border: 1px solid #151411; display: grid; grid-template-columns: repeat(6, 1fr); background: #f3f0e8; transform: translateX(-50%) rotate(-2deg); box-shadow: 9px 9px 0 #151411; }
-.operations-board::before { content: "FIRST CYCLE / 2026-07-19"; position: absolute; top: -27px; left: -1px; padding: 6px 8px; border: 1px solid #151411; background: #151411; color: #d3b8ff; font: 8px "DM Mono", monospace; }
+.operations-board::before { content: "NEXT CYCLE / APPROVAL GATED"; position: absolute; top: -27px; left: -1px; padding: 6px 8px; border: 1px solid #151411; background: #151411; color: #d3b8ff; font: 8px "DM Mono", monospace; }
 .operations-board i { border-right: 1px solid #151411; background: linear-gradient(to top, #ff4d00 var(--level, 42%), transparent var(--level, 42%)); }
 .operations-board i:last-child { border-right: 0; }
 .operations-board i:nth-child(2) { --level: 68%; }

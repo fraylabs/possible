@@ -16,7 +16,7 @@ const plainText = (markup) => markup
 const homeMarkup = await html("index.html");
 const home = visibleText(homeMarkup);
 assert.match(home, /What do you want[\s\S]*to build[\s\S]*today\?/);
-assert.match(home, /Bring an idea\. Possible gives Codex the skills, plan, and proof to make it real\./);
+assert.match(home, /Bring an idea or a live app\. Possible helps Codex build, ship, operate, and safely schedule complete outcomes\./);
 assert.match(home, /npx @fraylabs\/possible init/);
 assert.match(homeMarkup, /<meta property="og:image" content="https:\/\/possible\.sh\/og\.png"\/>/);
 assert.match(homeMarkup, /<meta name="twitter:image" content="https:\/\/possible\.sh\/og\.png"\/>/);

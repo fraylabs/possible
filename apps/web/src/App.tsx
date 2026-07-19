@@ -34,6 +34,7 @@ const openSourceThread = openSourceThreadData as DemoThread;
 const softwareThread = softwareThreadData as DemoThread;
 
 const installCommand = "npx @fraylabs/possible init";
+const schedulePrompt = "I want to schedule operations.";
 const approvalDisclosure = "Saying yes authorizes repo-local ingredient skill installation, the shared outcome brief and state files, and local outcome work. External actions still require separate approval.";
 const laneOrder: PackLane[] = ["create", "launch", "release", "operate"];
 const laneLabels: Record<PackLane, string> = {
@@ -132,7 +133,7 @@ function CreatePage() {
         <div className="build-hero-copy">
           <p className="eyebrow">POSSIBLE / FOR CODEX</p>
           <h1>What do you want<br />{" "}to build <em>today?</em></h1>
-          <p>Bring an idea. Possible gives Codex the skills, plan, and proof to make it real.</p>
+          <p>Bring an idea or a live app. Possible gives Codex the skills, plan, and proof to build it, ship it, or keep it running.</p>
           <div className="build-hero-actions">
             <a className="button-link" href="#try">Try with Codex <span>↓</span></a>
             <a className="text-link" href="/demo">See real outcomes →</a>
@@ -147,6 +148,9 @@ function CreatePage() {
             <div className="install-next"><span>THEN ASK CODEX</span><code>$possible</code></div>
           </article>
           <p><span>01</span> Install once. <span>02</span> Type <code>$possible</code>. <span>03</span> Describe the idea.</p>
+          <a className="schedule-entry" href="/packs/web-app-operations" aria-label="Schedule operations with Possible">
+            <span>TRY SAYING</span><code>“{schedulePrompt}”</code><strong>MANUAL FIRST · SEPARATE YES →</strong>
+          </a>
         </div>
 
         <div className="starter-chooser">
@@ -182,10 +186,11 @@ function CreatePage() {
 }
 
 function PackCard({ pack }: { pack: OutcomePack }) {
+  const isSchedulable = pack.slug === "web-app-operations";
   return (
     <a className={`pack-card pack-card--${pack.slug}`} href={`/packs/${pack.slug}`}>
       <div className="pack-cover">
-        <header><span>PACK / {String(pack.catalogNumber).padStart(2, "0")}</span><small>{pack.lane.toUpperCase()}</small><b>↗</b></header>
+        <header><span>PACK / {String(pack.catalogNumber).padStart(2, "0")}</span><small>{pack.lane.toUpperCase()}{isSchedulable ? " · SCHEDULABLE" : ""}</small><b>↗</b></header>
         <PackArtwork slug={pack.slug} />
         <div className="pack-cover-title">
           <small>POSSIBLE OUTCOME</small>
@@ -198,6 +203,7 @@ function PackCard({ pack }: { pack: OutcomePack }) {
           <span>{pack.skills.length} SKILLS{pack.plugins?.length ? ` + ${pack.plugins.length} PLUGIN` : ""}</span>
           <span>{pack.workstreams.length} WORKSTREAMS</span>
           <span>{pack.outputs.length} OUTPUTS</span>
+          {isSchedulable ? <span>SCHEDULE OPERATIONS</span> : null}
         </div>
       </div>
     </a>
@@ -242,7 +248,7 @@ function PackArtwork({ slug }: { slug: string }) {
       <div className="pack-art pack-art--operations" aria-hidden="true">
         <div className="operations-board"><i /><i /><i /><i /><i /><i /></div>
         <b className="operations-pulse" />
-        <span>CHECK / 02:14</span><span>QUEUE / 03</span><span>RECOVER / READY</span>
+        <span>CYCLE / MANUAL FIRST</span><span>RECEIPT / DATED</span><span>SCHEDULE / SEPARATE YES</span>
       </div>
     );
   }
@@ -277,7 +283,7 @@ function PacksPage() {
         <p className="eyebrow">PACKS POSSIBLE CAN RECOMMEND / {String(outcomePacks.length).padStart(2, "0")}</p>
         <h1>Complete recipes.<br /><em>Chosen through conversation.</em></h1>
         <div className="catalog-intro">
-          <p>You do not need to choose a pack before starting. Invoke <code>$possible</code>, describe the idea, and Possible will link the best fit for your approval.</p>
+          <p>You do not need to choose a pack before starting. Invoke <code>$possible</code>, describe the outcome—or say “I want to schedule operations.” Possible will link the best fit for your approval.</p>
           <a className="button-link" href="/#start">Start with Possible <span>→</span></a>
         </div>
       </section>
@@ -316,6 +322,7 @@ function PackDetailPage({ pack }: { pack: OutcomePack }) {
     year: "numeric",
     timeZone: "UTC",
   });
+  const isSchedulable = pack.slug === "web-app-operations";
   const sections = [
     ["overview", "Overview"],
     ["fit", "Fit"],
@@ -324,6 +331,7 @@ function PackDetailPage({ pack }: { pack: OutcomePack }) {
     ["ingredients", "Ingredients"],
     ["install", "Install"],
     ["run-prompt", "Run prompt"],
+    ...(isSchedulable ? [["schedule", "Schedule"]] : []),
     ["boundaries", "Boundaries"],
     ["verification", "Verification"],
   ];
@@ -366,7 +374,7 @@ function PackDetailPage({ pack }: { pack: OutcomePack }) {
           </header>
 
           <details className="pack-reference-mobile-nav">
-            <summary>On this page <span>09 sections</span></summary>
+            <summary>On this page <span>{String(sections.length).padStart(2, "0")} sections</span></summary>
             <nav aria-label="Mobile page sections">{sections.map(([id, label]) => <a href={`#${id}`} key={id}>{label}</a>)}</nav>
           </details>
 
@@ -423,14 +431,31 @@ function PackDetailPage({ pack }: { pack: OutcomePack }) {
             <details className="pack-prompt-disclosure"><summary>Preview full compiled prompt <span>{compiled.runPrompt.split("\n").length} lines</span></summary><pre><code>{compiled.runPrompt}</code></pre></details>
           </section>
 
+          {isSchedulable ? (
+            <section className="pack-reference-section pack-schedule-section" id="schedule">
+              <header><span>07</span><h2>Schedule the operating loop</h2><p>Scheduling is a second approval gate, never a side effect of choosing this pack.</p></header>
+              <div className="pack-schedule-prompt">
+                <header><span>START IN NATURAL LANGUAGE</span><strong>$possible</strong></header>
+                <code>{schedulePrompt}</code>
+              </div>
+              <ol className="pack-schedule-flow" aria-label="Scheduling flow">
+                <li><span>01</span><strong>Run it once</strong><p>Test the first cycle manually before scheduling.</p></li>
+                <li><span>02</span><strong>Draft the task</strong><p>Show the exact task, cadence, timezone, project, prompt, and permissions. Also disclose its worktree mode and stop conditions.</p></li>
+                <li><span>03</span><strong>Approve the schedule</strong><p>Ask for separate approval before creating or enabling the scheduled task.</p></li>
+                <li><span>04</span><strong>Review every receipt</strong><p>Each recurring run reads the latest receipt, runs one cycle, carries unresolved work forward, and writes a new dated receipt.</p></li>
+              </ol>
+              <aside className="pack-schedule-boundary"><strong>SAFE DEFAULT</strong><p>Standalone task. Isolated worktree. Report findings and prepare reviewable evidence—never deploy, restart, page, publish, or change production unattended.</p></aside>
+            </section>
+          ) : null}
+
           <section className="pack-reference-section" id="boundaries">
-            <header><span>07</span><h2>Approval boundaries</h2><p>Confirmation authorizes the disclosed local workflow, not external action.</p></header>
+            <header><span>{isSchedulable ? "08" : "07"}</span><h2>Approval boundaries</h2><p>Confirmation authorizes the disclosed local workflow, not external action.</p></header>
             <div className="pack-approval-callout"><strong>What “yes” authorizes</strong><p>{approvalDisclosure}</p></div>
             <ul className="pack-reference-list">{pack.guardrails.map((item) => <li key={item}>{item}</li>)}</ul>
           </section>
 
           <section className="pack-reference-section" id="verification">
-            <header><span>08</span><h2>Verification contract</h2><p>Completion requires evidence. Missing or skipped proof stays visible.</p></header>
+            <header><span>{isSchedulable ? "09" : "08"}</span><h2>Verification contract</h2><p>Completion requires evidence. Missing or skipped proof stays visible.</p></header>
             <ol className="pack-verification-list">{pack.verification.map((item, index) => <li key={item}><span>{String(index + 1).padStart(2, "0")}</span><p>{item}</p></li>)}</ol>
           </section>
 
@@ -451,7 +476,7 @@ function Boundary() {
   return (
     <section className="boundary">
       <span>THE BOUNDARY</span>
-      <p>A pack coordinates work. It does not authorize deployment, spending, outreach, fabrication, data collection, or unsupported claims.</p>
+      <p>A pack coordinates work. It does not authorize deployment, scheduling changes, spending, outreach, fabrication, data collection, or unsupported claims.</p>
     </section>
   );
 }
@@ -1369,6 +1394,7 @@ function DocsPage() {
             <a href="#recommend">Recommendation</a>
             <a href="#confirm">Confirmation</a>
             <a href="#execute">Execution</a>
+            <a href="#schedule">Scheduling</a>
           </nav>
           <nav aria-label="Reference">
             <span>REFERENCE</span>
@@ -1385,12 +1411,12 @@ function DocsPage() {
           <header className="docs-title" id="overview">
             <p className="eyebrow">GETTING STARTED</p>
             <h1>Build complete outcomes with Possible</h1>
-            <p>Possible is a conversational Codex skill. Start with a rough idea, clarify the outcome one question at a time, inspect a recommended pack, and approve it before any work begins.</p>
+            <p>Possible is a conversational Codex skill. Start with a rough idea or a repeatable job, clarify the outcome one question at a time, inspect a recommended pack, and approve it before any work begins.</p>
           </header>
 
           <aside className="docs-callout docs-callout--info">
             <strong>THE SHORT VERSION</strong>
-            <p>Install Possible once. Type <code>$possible</code>. Describe what you want to make. Possible handles pack discovery with you.</p>
+            <p>Install Possible once. Type <code>$possible</code>. Describe what you want to make—or say “I want to schedule operations.” Possible handles pack discovery with you.</p>
           </aside>
 
           <section id="installation">
@@ -1464,6 +1490,27 @@ function DocsPage() {
             <a className="docs-text-link" href="/demo/hardware">See a complete recorded Hardware Launch run →</a>
           </section>
 
+          <section id="schedule">
+            <h2>Schedule a recurring outcome</h2>
+            <p>Scheduling is for work that genuinely repeats, such as operating an already-live web app. It is not a new pack or permission to rerun every launch unattended.</p>
+            <div className="docs-command docs-command--schedule">
+              <header><span>CODEX</span><strong>NATURAL LANGUAGE</strong></header>
+              <pre><code>$possible{"\n"}{schedulePrompt}</code></pre>
+              <CopyButton label="Copy scheduling prompt" value={`$possible\n${schedulePrompt}`} />
+            </div>
+            <ol>
+              <li><strong>Prove the first cycle</strong><span>Possible establishes the operating loop and runs it manually before offering recurrence.</span></li>
+              <li><strong>Inspect the exact task</strong><span>Review its cadence, timezone, project, worktree mode, prompt, permissions, receipt, and stop conditions.</span></li>
+              <li><strong>Approve scheduling separately</strong><span>Pack confirmation does not create, update, or enable a scheduled task.</span></li>
+              <li><strong>Review recurring evidence</strong><span>Each run invokes <code>$possible resume</code>, carries unresolved work forward, and writes one dated receipt.</span></li>
+            </ol>
+            <aside className="docs-callout docs-callout--approval">
+              <strong>DEFAULT SCHEDULE</strong>
+              <p>Use a standalone task in an isolated worktree. Report findings and prepare reviewable repo-local evidence. Stop before deployment, production changes, paging, publishing, communication, spending, secrets, or customer data. For local projects, the machine and Codex app must remain running and the project must stay available.</p>
+            </aside>
+            <a className="docs-reference-link" href="/packs/web-app-operations"><span>SCHEDULABLE PACK</span><strong>Web App Operations</strong><i>View schedule contract →</i></a>
+          </section>
+
           <section id="files">
             <h2>Project files</h2>
             <p>Possible creates outcome state only after confirmation.</p>
@@ -1472,6 +1519,7 @@ function DocsPage() {
               <div role="row"><code role="cell">.possible/outcome-brief.md</code><span role="cell">Confirmed intent, constraints, interfaces, acceptance checks, gates, and unknowns.</span></div>
               <div role="row"><code role="cell">.possible/pack.json</code><span role="cell">The exact outcome pack snapshot approved for this run.</span></div>
               <div role="row"><code role="cell">.possible/skills-lock.json</code><span role="cell">Resolved sources, revisions, paths, and content hashes.</span></div>
+              <div role="row"><code role="cell">.possible/schedule.json</code><span role="cell">Receipt of the last approved schedule. It records the task identifier and configuration, but does not prove the external task is still enabled.</span></div>
             </div>
           </section>
 
@@ -1480,7 +1528,7 @@ function DocsPage() {
             <p>Pack confirmation authorizes local project work. It never grants real-world permission.</p>
             <aside className="docs-callout docs-callout--warning">
               <strong>SEPARATE APPROVAL REQUIRED</strong>
-              <p>Deployment, publishing, spending, outreach, fabrication, data collection, credential use, private-data sharing, and unsupported claims remain separately gated.</p>
+              <p>Deployment, scheduling changes, publishing, spending, outreach, fabrication, data collection, credential use, private-data sharing, and unsupported claims remain separately gated.</p>
             </aside>
             <ul>
               <li>Inspect external skill instructions before following them.</li>
@@ -1497,6 +1545,7 @@ function DocsPage() {
               <details><summary>Codex does not recognize $possible</summary><p>Confirm the skill exists at <code>.agents/skills/possible/SKILL.md</code>, then reopen or reload the project so Codex can discover it.</p></details>
               <details><summary>The recommended pack lists @sites, but it is unavailable</summary><p>Sites is an optional OpenAI plugin, not a Skills CLI dependency. Possible records that it is unavailable and uses a reviewed provider fallback when one is compatible and authorized; otherwise it finishes with a deployment-ready no-go receipt.</p></details>
               <details><summary>The recommended pack feels wrong</summary><p>Do not confirm it. Correct Possible&apos;s understanding or continue brainstorming until the recommendation matches the outcome you actually want.</p></details>
+              <details><summary>Scheduling is unavailable in my current Codex surface</summary><p>Possible should still test and prepare the durable task prompt, then return an honest scheduling-ready no-go receipt. Create and manage scheduled tasks from ChatGPT web or the desktop app; do not claim a schedule exists until its external state can be inspected.</p></details>
             </div>
           </section>
 
@@ -1514,6 +1563,7 @@ function DocsPage() {
           <a href="#recommend">Recommendation</a>
           <a href="#confirm">Confirmation</a>
           <a href="#execute">Execution</a>
+          <a href="#schedule">Scheduling</a>
           <a href="#files">Project files</a>
           <a href="#safety">Safety boundary</a>
           <a href="#troubleshooting">Troubleshooting</a>

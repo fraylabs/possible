@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     default: "Possible — What do you want to build today?",
     template: "%s — Possible",
   },
-  description: "Bring an idea. Possible gives Codex the skills, plan, and proof to make it real.",
+  description: "Bring an idea or a live app. Possible helps Codex build, ship, operate, and safely schedule complete outcomes.",
   applicationName: "Possible",
   alternates: {
     types: {
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     type: "website",
     siteName: "Possible",
     title: "Possible — What do you want to build today?",
-    description: "Bring an idea. Possible gives Codex the skills, plan, and proof to make it real.",
+    description: "Bring an idea or a live app. Possible helps Codex build, ship, operate, and safely schedule complete outcomes.",
     url: "/",
     images: [{
       url: "/og.png",
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Possible — What do you want to build today?",
-    description: "Bring an idea. Possible gives Codex the skills, plan, and proof to make it real.",
+    description: "Bring an idea or a live app. Possible helps Codex build, ship, operate, and safely schedule complete outcomes.",
     images: ["/og.png"],
   },
   other: {

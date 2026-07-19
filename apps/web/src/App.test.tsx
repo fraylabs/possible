@@ -15,7 +15,7 @@ describe("Possible", () => {
     const { container } = render(<App />);
     expect(screen.getByRole("heading", { name: "What do you want to build today?", level: 1 })).toBeInTheDocument();
     expect(container.querySelectorAll("h1")).toHaveLength(1);
-    expect(screen.getByText("Bring an idea. Possible gives Codex the skills, plan, and proof to make it real.")).toBeInTheDocument();
+    expect(screen.getByText("Bring an idea or a live app. Possible gives Codex the skills, plan, and proof to build it, ship it, or keep it running.")).toBeInTheDocument();
     expect(screen.getByText("npx @fraylabs/possible init")).toBeInTheDocument();
     expect(screen.getByText("$possible", { selector: ".install-next code" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "DOCS" })).toHaveAttribute("href", "/docs");
@@ -50,6 +50,20 @@ describe("Possible", () => {
   it("has no automated accessibility violations", async () => {
     const { container } = render(<App />);
     expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("makes scheduling operations discoverable from the homepage and pack gallery", () => {
+    render(<App />);
+    expect(screen.getByRole("link", { name: /Schedule operations/i })).toHaveAttribute("href", "/packs/web-app-operations");
+
+    cleanup();
+    window.history.pushState({}, "", "/packs");
+    render(<App />);
+    const catalog = screen.getByRole("region", { name: "All outcome packs" });
+    expect(within(catalog).getByRole("link", { name: /Web App Operations.*Schedule operations/is })).toHaveAttribute(
+      "href",
+      "/packs/web-app-operations",
+    );
   });
 
   it("filters the packs catalog by occupied outcome lane", async () => {
@@ -103,10 +117,10 @@ describe("Possible", () => {
     expect(screen.getByRole("complementary", { name: /On this page/i })).toBeInTheDocument();
     expect(screen.getByText("npx @fraylabs/possible init", { selector: ".docs-command code" })).toBeInTheDocument();
     expect(screen.getByText("$possible", { selector: ".docs-command--invoke code" })).toBeInTheDocument();
-    expect(container.querySelectorAll(".docs-article > section")).toHaveLength(9);
+    expect(container.querySelectorAll(".docs-article > section")).toHaveLength(10);
     expect(screen.getByRole("link", { name: /EXAMPLE PACKHardware LaunchView recipe/i })).toHaveAttribute("href", "/packs/hardware-launch");
     expect(screen.getByText(/WHAT.*YES.*AUTHORIZES/i)).toBeInTheDocument();
-    expect(screen.getByText(/Deployment, publishing, spending, outreach, fabrication/i)).toBeInTheDocument();
+    expect(screen.getByText(/Deployment, scheduling changes, publishing, spending, outreach, fabrication/i)).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /complete recorded Hardware Launch run/i })).toHaveAttribute("href", "/demo/hardware");
     expect(screen.getByRole("columnheader", { name: "Path" })).toBeInTheDocument();
     expect(screen.getByText("Codex does not recognize $possible")).toBeInTheDocument();
@@ -123,7 +137,7 @@ describe("Possible", () => {
       expect(container.querySelectorAll("h1")).toHaveLength(1);
       expect(container.querySelector(".pack-hero")).not.toBeInTheDocument();
       expect(container.querySelector(".pack-start")).not.toBeInTheDocument();
-      expect(container.querySelectorAll(".pack-reference-section")).toHaveLength(8);
+      expect(container.querySelectorAll(".pack-reference-section")).toHaveLength(pack.slug === "web-app-operations" ? 9 : 8);
       expect(container.querySelector(".pack-reference-packs a[aria-current='page']")).toHaveTextContent(pack.name);
       expect(screen.getByText(pack.useWhen[0])).toBeInTheDocument();
       expect(screen.getByText(pack.notFor[0])).toBeInTheDocument();
@@ -170,6 +184,29 @@ describe("Possible", () => {
     expect(screen.getAllByText(/Executable operations check and dated health baseline/i).length).toBeGreaterThan(0);
     expect(screen.getAllByText(/First dated operations receipt/i).length).toBeGreaterThan(0);
     expect(screen.getAllByText(/one snapshot is a baseline, never an uptime claim/i).length).toBeGreaterThan(0);
+  });
+
+  it("explains the test-first, separately approved scheduling flow and its recurring receipts", () => {
+    window.history.pushState({}, "", "/packs/web-app-operations");
+    render(<App />);
+    const flow = screen.getByRole("list", { name: /Scheduling flow/i });
+
+    expect(within(flow).getByText(/Test the first cycle manually before scheduling/i)).toBeInTheDocument();
+    expect(within(flow).getByText(/Show the exact task, cadence, timezone, project, prompt, and permissions/i)).toBeInTheDocument();
+    expect(within(flow).getByText(/Ask for separate approval before creating or enabling/i)).toBeInTheDocument();
+    expect(
+      within(flow).getByText(/Each recurring run reads the latest receipt, runs one cycle, carries unresolved work forward, and writes a new dated receipt/i),
+    ).toBeInTheDocument();
+  });
+
+  it("documents scheduling operations as a natural-language Possible request", () => {
+    window.history.pushState({}, "", "/docs");
+    render(<App />);
+    expect(screen.getAllByText(/I want to schedule operations/i).length).toBeGreaterThanOrEqual(2);
+    expect(screen.getByRole("link", { name: /Web App Operations/i })).toHaveAttribute("href", "/packs/web-app-operations");
+    expect(screen.getByText(".possible/schedule.json")).toBeInTheDocument();
+    expect(screen.getByText(/does not prove the external task is still enabled/i)).toBeInTheDocument();
+    expect(screen.getByText(/do not claim a schedule exists until its external state can be inspected/i)).toBeInTheDocument();
   });
 
   it("returns a useful not-found page for unknown packs", () => {
