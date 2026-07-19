@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import type { ReactNode } from "react";
 import { getPack, outcomePacks } from "@possible/packs";
 import type { OutcomePack } from "@possible/packs";
 import demoThreadData from "./demo-thread.json";
@@ -456,6 +457,183 @@ function ThreadTranscript({
   );
 }
 
+function DemoIntakePrelude() {
+  return (
+    <section className="demo-intake">
+      <header>
+        <div><p className="eyebrow">CURRENT ENTRY FLOW / ILLUSTRATIVE INTAKE</p><h1>Before the run,<br /><em>a conversation.</em></h1></div>
+        <p>This prelude explains how Possible starts today. It is not spliced into the preserved execution log below, which begins after the pack and brief were already confirmed.</p>
+      </header>
+      <div className="demo-intake-grid">
+        <article className="demo-intake-install"><span>SHELL / INSTALL</span><code>{installCommand}</code><i>✓ Possible installed · Next: type $possible in Codex</i></article>
+        <article className="demo-intake-thread">
+          <p><strong>USER</strong><span>$possible</span></p>
+          <p><strong>POSSIBLE</strong><span>What would you like to make possible today? A rough idea is enough — we can brainstorm it together.</span></p>
+          <p><strong>USER</strong><span>I want to make a small device that helps me focus without opening my phone.</span></p>
+          <p><strong>POSSIBLE</strong><span>Interesting — it sounds like a physical focus ritual, not another app. When this is finished, what would make it feel real to you?</span></p>
+          <p><strong>USER</strong><span>A believable launch: the device concept, a website, and a short product film.</span></p>
+          <p className="demo-intake-recommend"><strong>POSSIBLE</strong><span>I recommend the <a href="/packs/hardware-launch">Hardware Launch pack ↗</a>. It coordinates the site, film, prototype CAD, waitlist contract, and independent review. {approvalDisclosure} Proceed with this outcome?</span></p>
+          <p className="demo-intake-confirm"><strong>USER</strong><span>Yes, proceed.</span></p>
+        </article>
+      </div>
+    </section>
+  );
+}
+
+type ReplayEvent = { actor: string; title: string; detail: string };
+
+function RecordedIntakePrelude({
+  eyebrow,
+  title,
+  accent,
+  description,
+  userIdea,
+  possibleQuestion,
+  userOutcome,
+  packHref,
+  packLabel,
+  recommendation,
+}: {
+  eyebrow: string;
+  title: string;
+  accent: string;
+  description: string;
+  userIdea: string;
+  possibleQuestion: string;
+  userOutcome: string;
+  packHref: string;
+  packLabel: string;
+  recommendation: string;
+}) {
+  return (
+    <section className="demo-intake">
+      <header>
+        <div><p className="eyebrow">{eyebrow}</p><h1>{title}<br /><em>{accent}</em></h1></div>
+        <p>{description}</p>
+      </header>
+      <div className="demo-intake-grid">
+        <article className="demo-intake-install"><span>SHELL / INSTALL</span><code>{installCommand}</code><i>✓ Possible installed · Next: type $possible in Codex</i></article>
+        <article className="demo-intake-thread">
+          <p><strong>USER</strong><span>$possible</span></p>
+          <p><strong>POSSIBLE</strong><span>What would you like to make possible today? A rough idea is enough — we can brainstorm it together.</span></p>
+          <p><strong>USER</strong><span>{userIdea}</span></p>
+          <p><strong>POSSIBLE</strong><span>{possibleQuestion}</span></p>
+          <p><strong>USER</strong><span>{userOutcome}</span></p>
+          <p className="demo-intake-recommend"><strong>POSSIBLE</strong><span>I recommend the <a href={packHref}>{packLabel} pack ↗</a>. {recommendation} {approvalDisclosure} Proceed with this outcome?</span></p>
+          <p className="demo-intake-confirm"><strong>USER</strong><span>Yes, proceed with this pack.</span></p>
+        </article>
+      </div>
+    </section>
+  );
+}
+
+function RecordedExecutionStage({
+  eyebrow,
+  title,
+  accent,
+  description,
+  metric,
+  packCode,
+  briefTitle,
+  briefDetail,
+  skillCount,
+  outputCount,
+  events,
+  artifactCards,
+  integrationOutputs,
+  failureTitle,
+  failureDetail,
+  failureHref,
+  finalStats,
+  thread,
+  onOpenThread,
+}: {
+  eyebrow: string;
+  title: string;
+  accent: string;
+  description: string;
+  metric: string;
+  packCode: string;
+  briefTitle: string;
+  briefDetail: string;
+  skillCount: number;
+  outputCount: number;
+  events: ReplayEvent[];
+  artifactCards: ReactNode;
+  integrationOutputs: string[];
+  failureTitle: string;
+  failureDetail: string;
+  failureHref: string;
+  finalStats: Array<{ value: string; label: string }>;
+  thread: DemoThread;
+  onOpenThread: () => void;
+}) {
+  const [step, setStep] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const lastStep = events.length - 1;
+  const currentEvent = events[step] ?? { actor: "CAPTAIN", title: "Run ready", detail: "Recorded outcome run." };
+
+  useEffect(() => {
+    if (!isPlaying) return;
+    if (step >= lastStep) {
+      setIsPlaying(false);
+      return;
+    }
+    const timer = window.setTimeout(() => setStep((value) => Math.min(value + 1, lastStep)), 1900);
+    return () => window.clearTimeout(timer);
+  }, [isPlaying, lastStep, step]);
+
+  function togglePlayback() {
+    if (step >= lastStep) setStep(0);
+    setIsPlaying((value) => !value);
+  }
+
+  return (
+    <section className="replay-stage">
+      <header className="replay-title">
+        <div><p className="eyebrow">{eyebrow}</p><h1>{title}<br /><em>{accent}</em></h1></div>
+        <div className="replay-title-meta">
+          <p>{description}</p>
+          <div><span><i /> LOCAL RUN COMPLETE</span><strong>{metric}</strong></div>
+          <div className="replay-proof-actions"><button type="button" onClick={onOpenThread}>VIEW FULL CODEX THREAD <span>{thread.messages.length} MESSAGES</span></button><a href="#artifacts">SHOW OUTPUT ↓</a></div>
+        </div>
+      </header>
+
+      <div className="replay-window">
+        <header className="replay-window-bar"><div><i /><i /><i /></div><strong>CODEX / POSSIBLE / {packCode}</strong><span>RECORDED REAL RUN</span></header>
+        <aside className="replay-activity">
+          <header><span>CODEX ACTIVITY</span><strong>0{step + 1} / 0{events.length}</strong></header>
+          <div className="replay-event-list">
+            {events.map((event, index) => (
+              <button type="button" className={index === step ? "is-current" : index < step ? "is-past" : ""} aria-current={index === step ? "step" : undefined} onClick={() => { setStep(index); setIsPlaying(false); }} key={event.title}>
+                <span>0{index + 1}</span><div><small>{event.actor}</small><strong>{event.title}</strong><p>{event.detail}</p></div>
+              </button>
+            ))}
+          </div>
+          <footer><button type="button" onClick={onOpenThread}>VIEW FULL THREAD →</button><a href="#artifacts">VIEW ARTIFACTS ↓</a></footer>
+        </aside>
+
+        <section className={`replay-canvas replay-step-${step}`} aria-live="polite">
+          <header><span>ARTIFACT CANVAS</span><strong>{currentEvent.actor} / {currentEvent.title.toUpperCase()}</strong></header>
+          <div className="replay-scene">
+            <article className="replay-brief-card"><span>OUTCOME BRIEF</span><h2>{briefTitle}</h2><p>{briefDetail}</p></article>
+            <article className="replay-recipe-card"><header><span>POSSIBLE PACK</span><strong>{packCode}@1</strong></header><div><b>{skillCount}</b><span>REVIEWED<br />SKILLS</span><i>→</i><b>3</b><span>PARALLEL<br />SUBAGENTS</span><i>→</i><b>{outputCount}</b><span>INTEGRATED<br />OUTPUTS</span></div></article>
+            <div className="replay-artifacts">{artifactCards}</div>
+            <article className="replay-integration"><header><span>CAPTAIN / ASSEMBLED OUTCOME</span><strong>{outputCount} OUTPUTS PRESENT</strong></header><div>{integrationOutputs.map((output, index) => <p key={output}><span>{String(index + 1).padStart(2, "0")}</span><strong>{output}</strong><i>PASS</i></p>)}</div></article>
+            <article className="replay-review-card replay-review-card--failure"><span>FRESH REVIEW / MATERIAL FAILURE</span><h2>{failureTitle}</h2><p>{failureDetail}</p><a href={failureHref} target="_blank" rel="noreferrer">OPEN FAILED TRACE ↗</a></article>
+            <article className="replay-review-card replay-review-card--passed"><span>REPAIR VERIFIED / OUTCOME COMPLETE</span><h2>Real outputs.<br />Real review.</h2><div>{finalStats.map((stat) => <p key={stat.label}><strong>{stat.value}</strong><span>{stat.label}</span></p>)}</div><div className="replay-final-actions"><button type="button" onClick={onOpenThread}>VIEW FULL THREAD →</button><a href="#artifacts">SHOW OUTPUT ↓</a></div></article>
+          </div>
+          <footer className="replay-controls">
+            <div><span>NOW PLAYING</span><strong>{currentEvent.title}</strong></div>
+            <div className="replay-progress" aria-label={`Replay step ${step + 1} of ${events.length}`}>{events.map((event, index) => <i className={index <= step ? "is-filled" : ""} key={event.title} />)}</div>
+            <div className="replay-buttons"><button type="button" aria-label="Previous event" onClick={() => { setStep((value) => Math.max(0, value - 1)); setIsPlaying(false); }} disabled={step === 0}>←</button><button type="button" className="replay-play" onClick={togglePlayback}>{isPlaying ? "Pause" : step === lastStep ? "Replay" : "Play real run"}</button><button type="button" aria-label="Next event" onClick={() => { setStep((value) => Math.min(lastStep, value + 1)); setIsPlaying(false); }} disabled={step === lastStep}>→</button></div>
+          </footer>
+        </section>
+      </div>
+    </section>
+  );
+}
+
 function DemoGalleryPage() {
   return (
     <main className="demo-gallery-page">
@@ -511,123 +689,64 @@ function DemoGalleryPage() {
   );
 }
 
-type EvidenceLink = { label: string; title: string; format: string; href: string };
-
-function ExampleHeader({
-  navLabel,
-  eyebrow,
-  title,
-  accent,
-  description,
-  metric,
-  brief,
-  packHref,
-  packLabel,
-  boundary,
-  thread,
-  onOpenThread,
-}: {
-  navLabel: string;
-  eyebrow: string;
-  title: string;
-  accent: string;
-  description: string;
-  metric: string;
-  brief: string;
-  packHref: string;
-  packLabel: string;
-  boundary: string;
-  thread: DemoThread;
-  onOpenThread: () => void;
-}) {
-  return (
-    <>
-      <SiteNav label={navLabel} />
-      <section className="example-detail-hero">
-        <div>
-          <p className="eyebrow">{eyebrow}</p>
-          <h1>{title}<br /><em>{accent}</em></h1>
-        </div>
-        <aside>
-          <p>{description}</p>
-          <div className="example-hero-status"><span><i /> LOCAL RUN COMPLETE</span><strong>{metric} · {thread.agents.length} AGENT THREADS</strong></div>
-          <div className="example-hero-actions">
-            <button type="button" onClick={onOpenThread}>VIEW FULL CODEX THREAD <span>{thread.messages.length} MESSAGES</span></button>
-            <a href="#artifacts">VIEW ARTIFACTS ↓</a>
-          </div>
-        </aside>
-      </section>
-      <section className="example-run-strip">
-        <p><span>CONFIRMED BRIEF</span><strong>{brief}</strong></p>
-        <p><span>SELECTED PACK</span><strong><a href={packHref}>{packLabel} ↗</a></strong></p>
-        <p><span>RUN BOUNDARY</span><strong>{boundary}</strong></p>
-      </section>
-    </>
-  );
-}
-
-function ExampleArtifactsHeader({ title, accent, description }: { title: string; accent: string; description: string }) {
-  return (
-    <header className="example-artifacts-header">
-      <div><p className="eyebrow">ARTIFACTS PRODUCED</p><h2>{title}<br /><em>{accent}</em></h2></div>
-      <p>{description}</p>
-    </header>
-  );
-}
-
-function ExampleEvidenceIndex({ links }: { links: EvidenceLink[] }) {
-  return (
-    <section className="example-evidence" aria-label="Run evidence">
-      <header><span>EVIDENCE + VERIFICATION</span><strong>{links.length} INSPECTABLE RECEIPTS</strong></header>
-      <div className="example-evidence-index">
-        {links.map((link) => (
-          <a href={link.href} target="_blank" rel="noreferrer" key={link.href}>
-            <span>{link.label}</span><strong>{link.title}</strong><i>{link.format} ↗</i>
-          </a>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-function ExampleFooter({ children }: { children: string }) {
-  return <footer className="example-detail-footer"><a href="/demo">← ALL EXAMPLES</a><p>{children}</p><a href="#top">BACK TO TOP ↑</a></footer>;
-}
-
 function OpenSourceDemoPage() {
   const [threadOpen, setThreadOpen] = useState(false);
-  const evidence: EvidenceLink[] = [
-    { label: "README", title: "Project entry point", format: "MD", href: "/demo/tiny-slug/README.md" },
-    { label: "DOCS", title: "API contract", format: "MD", href: "/demo/tiny-slug/docs/api.md" },
-    { label: "EXAMPLE", title: "Runnable usage", format: "JS", href: "/demo/tiny-slug/examples/basic.js" },
-    { label: "CI", title: "SHA-pinned workflow", format: "YML", href: "/demo/tiny-slug/.github/workflows/ci.yml" },
-    { label: "REVIEW", title: "Security evidence", format: "MD", href: "/demo/tiny-slug/release/security-review.md" },
-    { label: "THREAD", title: "Complete public run", format: "MD", href: "/demo/tiny-slug/CODEX-THREAD.md" },
+  const events: ReplayEvent[] = [
+    { actor: "CAPTAIN", title: "Brief locked", detail: "Release promise, compatibility, and no-publish boundary confirmed." },
+    { actor: "POSSIBLE", title: "Pack compiled", detail: "Release engineering, documentation, CI, and security skills assembled." },
+    { actor: "CAPTAIN", title: "Workstreams spawned", detail: "Package, documentation, and assurance work delegated independently." },
+    { actor: "SUBAGENTS", title: "Artifacts returned", detail: "Source contract, docs, CI, examples, and review evidence returned." },
+    { actor: "CAPTAIN", title: "Outcome assembled", detail: "The exact consumer package and contributor surface were integrated." },
+    { actor: "REVIEWER", title: "Failure found", detail: "Fresh review found release-readiness gaps that the first pass missed." },
+    { actor: "REVIEWER", title: "Repair verified", detail: "Offline consumer install and every final verification gate passed." },
   ];
 
   return (
-    <main className="example-detail example-detail--release" id="top" data-layout="recorded-run">
-      <ExampleHeader
-        navLabel="Recorded run / tiny-slug"
-        eyebrow="REAL CLEAN-ROOM RUN / OPEN-SOURCE RELEASE"
-        title="Three files became"
-        accent="a release people can trust."
-        description="A tiny ASCII-only slugifier entered as one function and one test. Possible prepared the package, documentation, examples, hardened CI, changelog, release plan, and independent security evidence—without publishing it."
-        metric="9 / 9 TESTS · 0 FINDINGS"
-        brief="Make a tiny ESM utility understandable, installable, testable, and contributor-ready."
+    <main className="replay-page replay-page--release" id="top">
+      <SiteNav label="Recorded run / tiny-slug" />
+      <RecordedIntakePrelude
+        eyebrow="PRESERVED INTAKE / BEFORE EXECUTION"
+        title="Before the release,"
+        accent="define trust."
+        description="The clean-room run began with $possible, clarified what a credible open-source release meant, and waited for explicit approval before any repository work."
+        userIdea="I want to release tiny-slug, a tiny ASCII-only ESM slugifier."
+        possibleQuestion="When this is finished, what would make the release trustworthy to a consumer and a contributor?"
+        userOutcome="A clean package, API docs, runnable examples, CI, security review, and release plan—but do not publish, push, or tag anything."
         packHref="/packs/open-source-release"
         packLabel="Open-Source Release"
-        boundary="No publish, push, tag, release, or repository-setting changes."
+        recommendation="It coordinates release engineering, documentation, CI, security assurance, and independent consumer verification."
+      />
+      <RecordedExecutionStage
+        eyebrow="RECORDED EXECUTION / AFTER CONFIRMATION"
+        title="After the yes,"
+        accent="watch the release harden."
+        description="A fresh Codex captain ran the Open-Source Release pack in a throwaway project. The package, documentation, CI, security review, failures, repairs, and final consumer verification below come from that preserved run."
+        metric="9 / 9 TESTS · 0 FINDINGS"
+        packCode="OPEN-SOURCE-RELEASE"
+        briefTitle="Make tiny-slug understandable, installable, testable, and contributor-ready."
+        briefDetail="No publishing, pushing, tagging, or repository-setting changes."
+        skillCount={4}
+        outputCount={6}
+        events={events}
+        artifactCards={<>
+          <article className="replay-artifact replay-artifact--site"><header><span>01 / SOURCE</span><strong>PASS</strong></header><pre><code>{`export function slugify(value) {\n  return value\n    .replace(/[^A-Za-z0-9]+/g, "-")\n    .toLowerCase();\n}`}</code></pre><p>Typed ESM API with zero runtime dependencies</p></article>
+          <article className="replay-artifact replay-artifact--film"><header><span>02 / DOCS</span><strong>PASS</strong></header><div className="replay-artifact-summary"><b>README</b><b>API</b><b>EXAMPLES</b><b>CONTRIBUTING</b></div><p>Consumer and contributor documentation</p></article>
+          <article className="replay-artifact replay-artifact--cad"><header><span>03 / ASSURANCE</span><strong>PASS</strong></header><div className="replay-artifact-summary"><strong>9 / 9</strong><span>OFFLINE INSTALL<br />CLEAN CONSUMER<br />0 FINDINGS</span></div><p>CI, security, and package verification</p></article>
+        </>}
+        integrationOutputs={["Package contract", "API documentation", "Runnable examples", "Hardened CI", "Security review", "Release plan"]}
+        failureTitle="The first release candidate was not yet trustworthy."
+        failureDetail="Independent review rejected gaps between the package promise, documentation, consumer install path, and assurance evidence."
+        failureHref="/demo/tiny-slug/release/security-review.md"
+        finalStats={[{ value: "9 / 9", label: "PACKAGE TESTS" }, { value: "0", label: "RUNTIME DEPS" }, { value: "0", label: "FINDINGS" }, { value: "1", label: "CLEAN CONSUMER" }]}
         thread={openSourceThread}
         onOpenThread={() => setThreadOpen(true)}
       />
 
-      <section className="example-artifacts release-artifacts" id="artifacts">
-        <ExampleArtifactsHeader
-          title="Inspect the"
-          accent="actual repository."
-          description="The package contract, source, documentation, workflows, release evidence, and complete public Codex transcript are preserved below."
-        />
+      <section className="demo-artifacts release-artifacts" id="artifacts">
+        <header className="demo-artifacts-title">
+          <div><p className="eyebrow">ARTIFACTS PRODUCED</p><h2>Inspect the<br /><em>actual repository.</em></h2></div>
+          <p>The package contract, source, documentation, workflows, release evidence, and complete public Codex transcript are preserved below.</p>
+        </header>
 
         <div className="release-artifact-grid">
           <article className="release-code-card">
@@ -659,10 +778,17 @@ function OpenSourceDemoPage() {
           </article>
         </div>
 
-        <ExampleEvidenceIndex links={evidence} />
+        <div className="release-file-index">
+          <a href="/demo/tiny-slug/README.md" target="_blank" rel="noreferrer"><span>README</span><strong>Project entry point</strong><i>MD ↗</i></a>
+          <a href="/demo/tiny-slug/docs/api.md" target="_blank" rel="noreferrer"><span>DOCS</span><strong>API contract</strong><i>MD ↗</i></a>
+          <a href="/demo/tiny-slug/examples/basic.js" target="_blank" rel="noreferrer"><span>EXAMPLE</span><strong>Runnable usage</strong><i>JS ↗</i></a>
+          <a href="/demo/tiny-slug/.github/workflows/ci.yml" target="_blank" rel="noreferrer"><span>CI</span><strong>SHA-pinned workflow</strong><i>YML ↗</i></a>
+          <a href="/demo/tiny-slug/release/security-review.md" target="_blank" rel="noreferrer"><span>REVIEW</span><strong>Security evidence</strong><i>MD ↗</i></a>
+          <a href="/demo/tiny-slug/CODEX-THREAD.md" target="_blank" rel="noreferrer"><span>THREAD</span><strong>Complete public run</strong><i>MD ↗</i></a>
+        </div>
+        <footer className="demo-artifacts-footer"><p>Prepared locally. Nothing was published, pushed, tagged, or changed externally.</p><a href="#top">BACK TO TOP ↑</a></footer>
       </section>
 
-      <ExampleFooter>Prepared locally. Nothing was published, pushed, tagged, or changed externally.</ExampleFooter>
       {threadOpen ? <ThreadTranscript thread={openSourceThread} rawHref="/demo/tiny-slug/CODEX-THREAD.md" outputHref="#artifacts" onClose={() => setThreadOpen(false)} /> : null}
     </main>
   );
@@ -670,41 +796,62 @@ function OpenSourceDemoPage() {
 
 function SoftwareDemoPage() {
   const [threadOpen, setThreadOpen] = useState(false);
-  const evidence: EvidenceLink[] = [
-    { label: "BRIEF", title: "Confirmed outcome", format: "MD", href: "/demo/three/.possible/outcome-brief.md" },
-    { label: "PRODUCT", title: "15-test receipt", format: "MD", href: "/demo/three/evidence/product-test-receipt.md" },
-    { label: "SITE", title: "Build receipt", format: "MD", href: "/demo/three/evidence/site-test-receipt.md" },
-    { label: "FILM", title: "Render receipt", format: "MD", href: "/demo/three/evidence/film-render-receipt.md" },
-    { label: "RELEASE", title: "Gated plan", format: "MD", href: "/demo/three/release/release-plan.md" },
-    { label: "FINAL", title: "L0–L8 decision", format: "MD", href: "/demo/three/evidence/final-verification.md" },
-    { label: "FAILED PASS", title: "What review caught", format: "MD", href: "/demo/three/evidence/failed-review-01/README.md" },
-    { label: "REPAIRS", title: "Failure history", format: "MD", href: "/demo/three/evidence/integration-repairs.md" },
-    { label: "THREAD", title: "Complete public run", format: "MD", href: "/demo/three/CODEX-THREAD.md" },
+  const events: ReplayEvent[] = [
+    { actor: "CAPTAIN", title: "Brief locked", detail: "Three-item invariant, local-only boundary, and launch outputs confirmed." },
+    { actor: "POSSIBLE", title: "Pack compiled", detail: "Product, website, film, and release-readiness skills assembled." },
+    { actor: "CAPTAIN", title: "Workstreams spawned", detail: "Product, site, film, and release planning delegated independently." },
+    { actor: "SUBAGENTS", title: "Artifacts returned", detail: "The working app, site, film, and release plan returned for integration." },
+    { actor: "CAPTAIN", title: "Outcome assembled", detail: "All launch surfaces and exact verification commands were integrated." },
+    { actor: "REVIEWER", title: "Failure found", detail: "Fresh review overrode a false-green pass with accessibility failures." },
+    { actor: "REVIEWER", title: "Repair verified", detail: "Contrast, semantics, settled evidence, and L0–L8 verification passed." },
   ];
 
   return (
-    <main className="example-detail example-detail--software" id="top" data-layout="recorded-run">
-      <ExampleHeader
-        navLabel="Recorded run / Three"
-        eyebrow="REAL CLEAN-ROOM RUN / SOFTWARE LAUNCH"
-        title="An empty repo became"
-        accent="a complete launch."
-        description="Three began as a name and one sentence: a local-first app for choosing exactly three things today. Possible clarified what “launched” meant, recommended the pack, waited for approval, then produced the browser product, launch site, film, release plan, and independent evidence."
-        metric="15 / 15 TESTS · 22S FILM"
-        brief="Give overloaded solo builders a hard three-item boundary and a conclusive end to the day."
+    <main className="replay-page replay-page--software" id="top">
+      <SiteNav label="Recorded run / Three" />
+      <RecordedIntakePrelude
+        eyebrow="PRESERVED INTAKE / BEFORE EXECUTION"
+        title="Before the build,"
+        accent="define launched."
+        description="The clean-room run began with $possible, turned a rough product sentence into a concrete outcome, and waited for explicit approval before touching the empty project."
+        userIdea="I want to launch Three, a local-first web app that helps people commit to exactly three things today."
+        possibleQuestion="Who is this for, and what must exist for you to consider it genuinely launched?"
+        userOutcome="Overloaded solo builders. I want the real app, launch site, product film, and release plan—without accounts, a backend, analytics, or deployment."
         packHref="/packs/software-launch"
         packLabel="Software Launch"
-        boundary="Local-only. No accounts, backend, analytics, deployment, publishing, or outreach."
+        recommendation="It coordinates the product, launch website, demo film, release readiness, and fresh independent review."
+      />
+      <RecordedExecutionStage
+        eyebrow="RECORDED EXECUTION / AFTER CONFIRMATION"
+        title="After the yes,"
+        accent="watch the launch take shape."
+        description="A fresh Codex captain ran the Software Launch pack in a throwaway project. The working product, website, film, failed review, repairs, and final L0–L8 receipts below come from that preserved run."
+        metric="15 / 15 TESTS · 22 SECOND FILM"
+        packCode="SOFTWARE-LAUNCH"
+        briefTitle="Give overloaded solo builders a hard three-item boundary."
+        briefDetail="A real local-first product, launch site, film, and honest release plan."
+        skillCount={6}
+        outputCount={5}
+        events={events}
+        artifactCards={<>
+          <article className="replay-artifact replay-artifact--site"><header><span>01 / PRODUCT</span><strong>PASS</strong></header><img src="/demo/three/evidence/screenshots/product-desktop.png" alt="Three browser product produced by the product workstream" /><p>Working local-first three-item product</p></article>
+          <article className="replay-artifact replay-artifact--film"><header><span>02 / SITE</span><strong>PASS</strong></header><img src="/demo/three/evidence/screenshots/site-desktop.png" alt="Three launch website produced by the site workstream" /><p>Responsive, truthful launch narrative</p></article>
+          <article className="replay-artifact replay-artifact--cad"><header><span>03 / FILM</span><strong>PASS</strong></header><img src="/demo/three/film/stills/04-done.png" alt="Final frame from the Three launch film" /><p>22-second deterministic product film</p></article>
+        </>}
+        integrationOutputs={["Browser product", "Launch website", "Product film", "Release plan", "Verification evidence"]}
+        failureTitle="The first green build failed fresh review."
+        failureDetail="The reviewer found missing semantics, seven contrast failures, ambiguous metadata, and screenshots captured before transitions settled."
+        failureHref="/demo/three/evidence/failed-review-01/README.md"
+        finalStats={[{ value: "15 / 15", label: "PRODUCT TESTS" }, { value: "L0–L8", label: "LOCAL GATES" }, { value: "0", label: "NETWORK WRITES" }, { value: "1", label: "FAILURE REPAIRED" }]}
         thread={softwareThread}
         onOpenThread={() => setThreadOpen(true)}
       />
 
-      <section className="example-artifacts software-artifacts" id="artifacts">
-        <ExampleArtifactsHeader
-          title="Use the product."
-          accent="Watch the launch."
-          description="These are the actual production builds and rendered film from the throwaway project. The browser app remains interactive inside this page and stores only its versioned record in local storage."
-        />
+      <section className="demo-artifacts software-artifacts" id="artifacts">
+        <header className="demo-artifacts-title">
+          <div><p className="eyebrow">ARTIFACTS PRODUCED</p><h2>Use the product.<br /><em>Watch the launch.</em></h2></div>
+          <p>These are the actual production builds and rendered film from the throwaway project. The browser app remains interactive inside this page and stores only its versioned record in local storage.</p>
+        </header>
 
         <div className="software-live-grid">
           <article className="software-live-card software-live-card--product">
@@ -728,89 +875,277 @@ function SoftwareDemoPage() {
           <footer><p><strong>From overload to done.</strong><span>Four scenes, eight inspected frames, full-file decode passed.</span></p><a href="/demo/three/film/three-demo.mp4" target="_blank" rel="noreferrer">OPEN MP4 ↗</a></footer>
         </article>
 
-        <ExampleEvidenceIndex links={evidence} />
+        <div className="software-evidence-index">
+          <a href="/demo/three/.possible/outcome-brief.md" target="_blank" rel="noreferrer"><span>BRIEF</span><strong>Confirmed outcome</strong><i>MD ↗</i></a>
+          <a href="/demo/three/evidence/product-test-receipt.md" target="_blank" rel="noreferrer"><span>PRODUCT</span><strong>15-test receipt</strong><i>MD ↗</i></a>
+          <a href="/demo/three/evidence/site-test-receipt.md" target="_blank" rel="noreferrer"><span>SITE</span><strong>Build receipt</strong><i>MD ↗</i></a>
+          <a href="/demo/three/evidence/film-render-receipt.md" target="_blank" rel="noreferrer"><span>FILM</span><strong>Render receipt</strong><i>MD ↗</i></a>
+          <a href="/demo/three/release/release-plan.md" target="_blank" rel="noreferrer"><span>RELEASE</span><strong>Gated plan</strong><i>MD ↗</i></a>
+          <a href="/demo/three/evidence/final-verification.md" target="_blank" rel="noreferrer"><span>FINAL</span><strong>L0–L8 decision</strong><i>MD ↗</i></a>
+          <a href="/demo/three/evidence/failed-review-01/README.md" target="_blank" rel="noreferrer"><span>FAILED PASS</span><strong>What review caught</strong><i>MD ↗</i></a>
+          <a href="/demo/three/evidence/integration-repairs.md" target="_blank" rel="noreferrer"><span>REPAIRS</span><strong>Failure history</strong><i>MD ↗</i></a>
+          <a href="/demo/three/CODEX-THREAD.md" target="_blank" rel="noreferrer"><span>THREAD</span><strong>Complete public run</strong><i>MD ↗</i></a>
+        </div>
+        <footer className="demo-artifacts-footer"><p>Prepared and verified locally. Nothing was deployed, published, or sent externally.</p><a href="#top">BACK TO TOP ↑</a></footer>
       </section>
 
-      <ExampleFooter>Prepared and verified locally. Nothing was deployed, published, or sent externally.</ExampleFooter>
       {threadOpen ? <ThreadTranscript thread={softwareThread} rawHref="/demo/three/CODEX-THREAD.md" outputHref="#artifacts" onClose={() => setThreadOpen(false)} /> : null}
     </main>
   );
 }
 
-function HardwareArtifacts() {
-  const evidence: EvidenceLink[] = [
-    { label: "OUTCOME", title: "Outcome receipt", format: "MD", href: "/demo/still/OUTCOME-RECEIPT.md" },
-    { label: "REVIEW", title: "Independent final receipt", format: "MD", href: "/demo/still/evidence/final-receipt.md" },
-    { label: "ARTIFACTS", title: "Artifact results", format: "JSON", href: "/demo/still/verification/artifact-results.json" },
-    { label: "BROWSER", title: "Browser results", format: "JSON", href: "/demo/still/verification/browser-results.json" },
-    { label: "FAILED PASS", title: "Initial failed trace", format: "JSON", href: "/demo/still/verification/browser-results-initial-failure.json" },
-    { label: "THREAD", title: "Complete public run", format: "MD", href: "/demo/still/CODEX-THREAD.md" },
-  ];
+function HardwareDemoPage() {
+  const events = [
+    { actor: "CAPTAIN", title: "Brief locked", detail: "Confirmed facts and boundaries written to outcome-brief.md." },
+    { actor: "POSSIBLE", title: "Pack compiled", detail: "Five reviewed skills composed into one Hardware Launch recipe." },
+    { actor: "CAPTAIN", title: "Workstreams spawned", detail: "Site, film, and CAD assigned to isolated subagents." },
+    { actor: "SUBAGENTS", title: "Artifacts returned", detail: "Three specialists returned real outputs and receipts." },
+    { actor: "CAPTAIN", title: "Outcome assembled", detail: "Website, film, CAD, and evidence collected into one inspectable result." },
+    { actor: "REVIEWER", title: "Failure found", detail: "Embedded site assets returned 404 when reviewed from the combined output." },
+    { actor: "REVIEWER", title: "Repair verified", detail: "Relative asset base fixed; browser and artifact audits passed." },
+  ] as const;
+  const [step, setStep] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [threadOpen, setThreadOpen] = useState(false);
+  const lastStep = events.length - 1;
+  const currentEvent = events[step] ?? events[0];
+
+  useEffect(() => {
+    const target = new Set(["artifacts", "film-output", "hardware-output", "evidence-output"])
+      .has(window.location.hash.slice(1))
+      ? document.querySelector(window.location.hash)
+      : null;
+    if (target) window.requestAnimationFrame(() => target.scrollIntoView());
+  }, []);
+
+  useEffect(() => {
+    if (!isPlaying) return;
+    if (step >= lastStep) {
+      setIsPlaying(false);
+      return;
+    }
+    const timer = window.setTimeout(() => setStep((value) => Math.min(value + 1, lastStep)), 1900);
+    return () => window.clearTimeout(timer);
+  }, [isPlaying, lastStep, step]);
+
+  function togglePlayback() {
+    if (step >= lastStep) setStep(0);
+    setIsPlaying((value) => !value);
+  }
 
   return (
-    <section className="example-artifacts hardware-artifacts" id="artifacts">
-      <ExampleArtifactsHeader
-        title="Open the launch."
-        accent="Inspect the hardware."
-        description="The launch website, product film, four CAD views, portable geometry, receipts, and verification traces are presented in the same order as every other Possible example."
-      />
+    <main className="replay-page" id="top">
+      <SiteNav label="Recorded run / Still" />
+      <DemoIntakePrelude />
+      <section className="replay-stage">
+        <header className="replay-title">
+          <div>
+            <p className="eyebrow">RECORDED EXECUTION / AFTER CONFIRMATION</p>
+            <h1>After the yes,<br /><em>watch it become real.</em></h1>
+          </div>
+          <div className="replay-title-meta">
+            <p>After the outcome was confirmed, a fresh Codex captain ran Possible’s Hardware Launch pack against the fictional Still brief. Every event and artifact below comes from that preserved execution.</p>
+            <div><span><i /> LOCAL RUN COMPLETE</span><strong>58 / 58 ARTIFACT CHECKS</strong></div>
+            <div className="replay-proof-actions">
+              <button type="button" onClick={() => setThreadOpen(true)}>VIEW FULL CODEX THREAD <span>31 MESSAGES</span></button>
+              <a href="#artifacts">SHOW OUTPUT ↓</a>
+            </div>
+          </div>
+        </header>
 
-      <div className="hardware-primary-grid">
-        <article className="example-output-card hardware-site-card">
-          <header><span>01 / LAUNCH WEBSITE</span><strong>INTERACTIVE BUILD</strong></header>
-          <iframe src="/demo/still/site/" title="Still launch website" loading="lazy" />
-          <footer><p><strong>Still / Focus without your phone</strong><span>Responsive launch story with a deliberately local-only waitlist interaction.</span></p><a href="/demo/still/site/" target="_blank" rel="noreferrer">OPEN SITE ↗</a></footer>
-        </article>
+        <div className="replay-window">
+          <header className="replay-window-bar">
+            <div><i /><i /><i /></div>
+            <strong>CODEX / POSSIBLE / HARDWARE-LAUNCH</strong>
+            <span>RECORDED REAL RUN</span>
+          </header>
 
-        <article className="example-output-card hardware-film-card">
-          <header><span>02 / LAUNCH FILM</span><strong>24 SEC · 1080P</strong></header>
-          <video controls muted playsInline preload="metadata" poster="/demo/still/film/still-launch-preview.png" src="/demo/still/film/still-launch.mp4" />
-          <footer><p><strong>A physical focus ritual.</strong><span>Deterministic product film with preserved review frames.</span></p><a href="/demo/still/evidence/film-receipt.md" target="_blank" rel="noreferrer">FILM RECEIPT ↗</a></footer>
-        </article>
-      </div>
+          <aside className="replay-activity">
+            <header><span>CODEX ACTIVITY</span><strong>0{step + 1} / 0{events.length}</strong></header>
+            <div className="replay-event-list">
+              {events.map((event, index) => (
+                <button
+                  type="button"
+                  className={index === step ? "is-current" : index < step ? "is-past" : ""}
+                  aria-current={index === step ? "step" : undefined}
+                  onClick={() => { setStep(index); setIsPlaying(false); }}
+                  key={event.title}
+                >
+                  <span>0{index + 1}</span>
+                  <div><small>{event.actor}</small><strong>{event.title}</strong><p>{event.detail}</p></div>
+                </button>
+              ))}
+            </div>
+            <footer>
+              <button type="button" onClick={() => setThreadOpen(true)}>VIEW FULL THREAD →</button>
+              <a href="/demo/still/OUTCOME-RECEIPT.md" target="_blank" rel="noreferrer">VIEW RECEIPT ↗</a>
+              <a href="#artifacts">VIEW ARTIFACTS ↓</a>
+            </footer>
+          </aside>
 
-      <article className="example-output-card hardware-cad-card">
-        <header><span>03 / PROTOTYPE CAD</span><strong>4 VIEWS · STEP-FIRST · CONCEPT</strong></header>
-        <div className="demo-cad-views">
-          <a href="/demo/still/hardware/still-iso.png" target="_blank" rel="noreferrer"><figure><img src="/demo/still/hardware/still-iso.png" alt="Isometric CAD view of the Still focus device concept" /><figcaption><span>01</span><strong>ISOMETRIC</strong></figcaption></figure></a>
-          <a href="/demo/still/hardware/still-rear.png" target="_blank" rel="noreferrer"><figure><img src="/demo/still/hardware/still-rear.png" alt="Rear CAD view of the Still focus device concept" /><figcaption><span>02</span><strong>REAR</strong></figcaption></figure></a>
-          <a href="/demo/still/hardware/still-top.png" target="_blank" rel="noreferrer"><figure><img src="/demo/still/hardware/still-top.png" alt="Top CAD view of the Still focus device concept" /><figcaption><span>03</span><strong>TOP</strong></figcaption></figure></a>
-          <a href="/demo/still/hardware/still-front.png" target="_blank" rel="noreferrer"><figure><img src="/demo/still/hardware/still-front.png" alt="Front CAD view of the Still focus device concept" /><figcaption><span>04</span><strong>FRONT</strong></figcaption></figure></a>
+          <section className={`replay-canvas replay-step-${step}`} aria-live="polite">
+            <header><span>ARTIFACT CANVAS</span><strong>{currentEvent.actor} / {currentEvent.title.toUpperCase()}</strong></header>
+            <div className="replay-scene">
+              <article className="replay-brief-card">
+                <span>OUTCOME BRIEF / STILL</span>
+                <h2>Create a launch for a palm-sized e-ink focus device.</h2>
+                <p>Start a focused block without opening your phone.</p>
+              </article>
+
+              <article className="replay-recipe-card">
+                <header><span>POSSIBLE PACK</span><strong>HARDWARE-LAUNCH@1</strong></header>
+                <div><b>5</b><span>REVIEWED<br />SKILLS</span><i>→</i><b>3</b><span>PARALLEL<br />SUBAGENTS</span><i>→</i><b>5</b><span>INTEGRATED<br />OUTPUTS</span></div>
+              </article>
+
+              <div className="replay-artifacts">
+                <article className="replay-artifact replay-artifact--site">
+                  <header><span>01 / SITE</span><strong>{step >= 3 ? "PASS" : "RUNNING"}</strong></header>
+                  <img src="/demo/still/evidence/screenshots/embedded-site-desktop.png" alt="Still launch website produced by the site workstream" />
+                  <p>Responsive launch story + local-only waitlist</p>
+                </article>
+                <article className="replay-artifact replay-artifact--film">
+                  <header><span>02 / FILM</span><strong>{step >= 3 ? "PASS" : "RUNNING"}</strong></header>
+                  <video
+                    controls
+                    muted
+                    playsInline
+                    preload="metadata"
+                    poster="/demo/still/film/still-launch-preview.png"
+                    src="/demo/still/film/still-launch.mp4"
+                  />
+                  <p>24 seconds · 1080p · deterministic Remotion source</p>
+                </article>
+                <article className="replay-artifact replay-artifact--cad">
+                  <header><span>03 / CAD</span><strong>{step >= 3 ? "PASS*" : "RUNNING"}</strong></header>
+                  <img src="/demo/still/hardware/still-iso.png" alt="Still STEP-first exterior CAD concept" />
+                  <p>STEP + STL + GLB · measured geometry receipt</p>
+                </article>
+              </div>
+
+              <article className="replay-integration">
+                <header><span>CAPTAIN / ASSEMBLED OUTCOME</span><strong>5 OUTPUTS PRESENT</strong></header>
+                <div>
+                  <p><span>01</span><strong>Launch website</strong><i>PASS</i></p>
+                  <p><span>02</span><strong>Launch film</strong><i>PASS</i></p>
+                  <p><span>03</span><strong>Prototype CAD</strong><i>PASS*</i></p>
+                  <p><span>04</span><strong>Evidence receipts</strong><i>PASS</i></p>
+                  <p><span>05</span><strong>Verification traces</strong><i>PASS</i></p>
+                </div>
+              </article>
+
+              <article className="replay-review-card replay-review-card--failure">
+                <span>FRESH REVIEW / MATERIAL FAILURE</span>
+                <h2>Embedded site assets returned 404.</h2>
+                <p>The site passed alone but failed inside the integrated room. The reviewer rejected the outcome.</p>
+                <a href="/demo/still/verification/browser-results-initial-failure.json" target="_blank" rel="noreferrer">OPEN FAILED TRACE ↗</a>
+              </article>
+
+              <article className="replay-review-card replay-review-card--passed">
+                <span>REPAIR VERIFIED / OUTCOME COMPLETE</span>
+                <h2>Real outputs.<br />Real review.</h2>
+                <div>
+                  <p><strong>58 / 58</strong><span>ARTIFACT CHECKS</span></p>
+                  <p><strong>50 / 50</strong><span>BROWSER RESPONSES</span></p>
+                  <p><strong>0</strong><span>NETWORK WRITES</span></p>
+                  <p><strong>1</strong><span>FAILURE REPAIRED</span></p>
+                </div>
+                <div className="replay-final-actions">
+                  <button type="button" onClick={() => setThreadOpen(true)}>VIEW FULL THREAD →</button>
+                  <a href="#artifacts">SHOW OUTPUT ↓</a>
+                </div>
+              </article>
+            </div>
+
+            <footer className="replay-controls">
+              <div><span>NOW PLAYING</span><strong>{currentEvent.title}</strong></div>
+              <div className="replay-progress" aria-label={`Replay step ${step + 1} of ${events.length}`}>
+                {events.map((event, index) => <i className={index <= step ? "is-filled" : ""} key={event.title} />)}
+              </div>
+              <div className="replay-buttons">
+                <button type="button" aria-label="Previous event" onClick={() => { setStep((value) => Math.max(0, value - 1)); setIsPlaying(false); }} disabled={step === 0}>←</button>
+                <button type="button" className="replay-play" onClick={togglePlayback}>{isPlaying ? "Pause" : step === lastStep ? "Replay" : "Play real run"}</button>
+                <button type="button" aria-label="Next event" onClick={() => { setStep((value) => Math.min(lastStep, value + 1)); setIsPlaying(false); }} disabled={step === lastStep}>→</button>
+              </div>
+            </footer>
+          </section>
         </div>
-        <footer>
-          <p><strong>Measured exterior geometry.</strong><span>Portable review formats plus the parametric source and geometry report.</span></p>
-          <div><a href="/demo/still/hardware/still.step" download>STEP ↓</a><a href="/demo/still/hardware/still.glb" download>GLB ↓</a><a href="/demo/still/hardware/still.stl" download>STL ↓</a><a href="/demo/still/hardware/still.py" download>SOURCE ↓</a><a href="/demo/still/evidence/geometry-report.md" target="_blank" rel="noreferrer">REPORT ↗</a></div>
-        </footer>
-      </article>
-
-      <ExampleEvidenceIndex links={evidence} />
-    </section>
+      </section>
+      <DemoArtifacts />
+      {threadOpen ? <ThreadTranscript thread={demoThread} rawHref="/demo/still/CODEX-THREAD.md" onClose={() => setThreadOpen(false)} /> : null}
+    </main>
   );
 }
 
-function HardwareDemoPage() {
-  const [threadOpen, setThreadOpen] = useState(false);
-
+function DemoArtifacts() {
   return (
-    <main className="example-detail example-detail--hardware" id="top" data-layout="recorded-run">
-      <ExampleHeader
-        navLabel="Recorded run / Still"
-        eyebrow="REAL CLEAN-ROOM RUN / HARDWARE LAUNCH"
-        title="A focus-device idea became"
-        accent="a complete launch."
-        description="Still began as a palm-sized e-ink device for starting a focused block without opening a phone. Possible coordinated the launch website, product film, prototype CAD, waitlist contract, and independent review without fabricating, deploying, or collecting data."
-        metric="58 / 58 CHECKS · 24S FILM"
-        brief="Create a believable launch for a palm-sized e-ink focus device."
-        packHref="/packs/hardware-launch"
-        packLabel="Hardware Launch"
-        boundary="Fictional concept. No deployment, fabrication, purchasing, outreach, or real data collection."
-        thread={demoThread}
-        onOpenThread={() => setThreadOpen(true)}
-      />
-      <HardwareArtifacts />
-      <ExampleFooter>Prepared and verified locally. Nothing was deployed, fabricated, purchased, emailed, or connected to real data.</ExampleFooter>
-      {threadOpen ? <ThreadTranscript thread={demoThread} rawHref="/demo/still/CODEX-THREAD.md" outputHref="#artifacts" onClose={() => setThreadOpen(false)} /> : null}
-    </main>
+    <section className="demo-artifacts" id="artifacts">
+      <header className="demo-artifacts-title">
+        <div>
+          <p className="eyebrow">ARTIFACTS PRODUCED</p>
+          <h2>One conversation.<br /><em>Real outputs.</em></h2>
+        </div>
+        <div>
+          <p>The output is here, inside the demo—not hidden behind another presentation layer. Open the website, play the film, download the CAD, and inspect every receipt.</p>
+          <span>STILL / HARDWARE-LAUNCH@1 / LOCAL EVALUATION</span>
+        </div>
+      </header>
+
+      <article className="demo-site-output">
+        <header>
+          <span>01 / LAUNCH WEBSITE</span>
+          <a href="/demo/still/site/" target="_blank" rel="noreferrer">OPEN FULL SITE ↗</a>
+        </header>
+        <iframe src="/demo/still/site/" title="Still launch website" loading="lazy" />
+        <footer><p>Responsive launch story with a deliberately local-only waitlist interaction.</p><a href="/demo/still/evidence/site-receipt.md" target="_blank" rel="noreferrer">SITE RECEIPT ↗</a></footer>
+      </article>
+
+      <div className="demo-output-grid">
+        <article className="demo-output-card demo-output-card--film" id="film-output">
+          <header><span>02 / LAUNCH FILM</span><strong>24 SEC / 1080P</strong></header>
+          <video controls muted playsInline preload="metadata" poster="/demo/still/film/still-launch-preview.png" src="/demo/still/film/still-launch.mp4" />
+          <footer><p>Deterministic product film with preserved review frames.</p><a href="/demo/still/evidence/film-receipt.md" target="_blank" rel="noreferrer">FILM RECEIPT ↗</a></footer>
+        </article>
+
+        <article className="demo-output-card demo-output-card--cad" id="hardware-output">
+          <header><span>03 / PROTOTYPE CAD</span><strong>4 VIEWS / STEP-FIRST / CONCEPT</strong></header>
+          <div className="demo-cad-views">
+            <a href="/demo/still/hardware/still-iso.png" target="_blank" rel="noreferrer">
+              <figure><img src="/demo/still/hardware/still-iso.png" alt="Isometric CAD view of the Still focus device concept" /><figcaption><span>01</span><strong>ISO</strong></figcaption></figure>
+            </a>
+            <a href="/demo/still/hardware/still-rear.png" target="_blank" rel="noreferrer">
+              <figure><img src="/demo/still/hardware/still-rear.png" alt="Rear CAD view of the Still focus device concept" /><figcaption><span>02</span><strong>REAR</strong></figcaption></figure>
+            </a>
+            <a href="/demo/still/hardware/still-top.png" target="_blank" rel="noreferrer">
+              <figure><img src="/demo/still/hardware/still-top.png" alt="Top CAD view of the Still focus device concept" /><figcaption><span>03</span><strong>TOP</strong></figcaption></figure>
+            </a>
+            <a href="/demo/still/hardware/still-front.png" target="_blank" rel="noreferrer">
+              <figure><img src="/demo/still/hardware/still-front.png" alt="Front CAD view of the Still focus device concept" /><figcaption><span>04</span><strong>FRONT</strong></figcaption></figure>
+            </a>
+          </div>
+          <footer>
+            <p>Measured exterior geometry in portable review formats.</p>
+            <div><a href="/demo/still/hardware/still.step" download>STEP ↓</a><a href="/demo/still/hardware/still.glb" download>GLB ↓</a><a href="/demo/still/hardware/still.stl" download>STL ↓</a><a href="/demo/still/hardware/still.py" download>SOURCE ↓</a><a href="/demo/still/evidence/geometry-report.md" target="_blank" rel="noreferrer">REPORT ↗</a></div>
+          </footer>
+        </article>
+      </div>
+
+      <section className="demo-evidence-output" id="evidence-output">
+        <header><span>04 / EVIDENCE + VERIFICATION</span><strong>58 / 58 ARTIFACT CHECKS · 50 / 50 BROWSER CHECKS</strong></header>
+        <div>
+          <a href="/demo/still/OUTCOME-RECEIPT.md" target="_blank" rel="noreferrer"><span>01 / OUTCOME</span><strong>Outcome receipt</strong><i>MARKDOWN ↗</i></a>
+          <a href="/demo/still/evidence/final-receipt.md" target="_blank" rel="noreferrer"><span>02 / REVIEW</span><strong>Independent final receipt</strong><i>MARKDOWN ↗</i></a>
+          <a href="/demo/still/verification/artifact-results.json" target="_blank" rel="noreferrer"><span>03 / TEST</span><strong>Artifact results</strong><i>JSON ↗</i></a>
+          <a href="/demo/still/verification/browser-results.json" target="_blank" rel="noreferrer"><span>04 / TEST</span><strong>Browser results</strong><i>JSON ↗</i></a>
+          <a href="/demo/still/verification/browser-results-initial-failure.json" target="_blank" rel="noreferrer"><span>05 / FAILURE</span><strong>Initial failed trace</strong><i>JSON ↗</i></a>
+          <a href="/demo/still/manifest.json" target="_blank" rel="noreferrer"><span>06 / MANIFEST</span><strong>All generated files</strong><i>JSON ↗</i></a>
+        </div>
+      </section>
+
+      <footer className="demo-artifacts-footer">
+        <p>Fictional concept. Nothing was deployed, fabricated, purchased, emailed, or connected to real data collection.</p>
+        <a href="#top">BACK TO TOP ↑</a>
+      </footer>
+    </section>
   );
 }
 

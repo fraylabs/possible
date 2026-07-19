@@ -99,14 +99,18 @@ describe("Possible", () => {
     expect(screen.getByRole("link", { name: /OPEN-SOURCE RELEASE.*TINY-SLUG/i })).toHaveAttribute("href", "/demo/open-source");
   });
 
-  it("uses the shared recorded-run layout for the Hardware Launch artifacts and thread", async () => {
+  it("replays the real Hardware Launch run from brief to verified outcome", async () => {
     window.history.pushState({}, "", "/demo/hardware");
-    const { container } = render(<App />);
-    expect(container.querySelector('main[data-layout="recorded-run"]')).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: /A focus-device idea became.*a complete launch/i })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /Hardware Launch/i })).toHaveAttribute("href", "/packs/hardware-launch");
-    expect(screen.getByRole("link", { name: /View artifacts/i })).toHaveAttribute("href", "#artifacts");
-    expect(screen.getByRole("heading", { name: /Open the launch.*Inspect the hardware/i })).toBeInTheDocument();
+    render(<App />);
+    expect(screen.getByRole("heading", { name: /After the yes/i })).toBeInTheDocument();
+    expect(screen.getByText("CURRENT ENTRY FLOW / ILLUSTRATIVE INTAKE")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Hardware Launch pack/i })).toHaveAttribute("href", "/packs/hardware-launch");
+    expect(screen.getByText(/repo-local ingredient skill installation.*External actions still require separate approval/i)).toBeInTheDocument();
+    expect(screen.getByText("Yes, proceed.", { selector: ".demo-intake-confirm span" })).toBeInTheDocument();
+    expect(screen.getByText("RECORDED REAL RUN")).toBeInTheDocument();
+    expect(screen.getByText("Brief locked", { selector: ".replay-controls strong" })).toBeInTheDocument();
+    expect(screen.getAllByRole("link", { name: /Show output/i })[0]).toHaveAttribute("href", "#artifacts");
+    expect(screen.getByRole("heading", { name: /One conversation.*Real outputs/i })).toBeInTheDocument();
     expect(screen.getByTitle("Still launch website")).toHaveAttribute("src", "/demo/still/site/");
     expect(screen.getByAltText("Isometric CAD view of the Still focus device concept")).toBeInTheDocument();
     expect(screen.getByAltText("Rear CAD view of the Still focus device concept")).toBeInTheDocument();
@@ -120,14 +124,24 @@ describe("Possible", () => {
     expect(screen.getAllByText("Beauvoir").length).toBeGreaterThan(1);
     expect(screen.getByText(/fresh browser review has found a material integration failure/i)).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /Raw \.md/i })).toHaveAttribute("href", "/demo/still/CODEX-THREAD.md");
-    expect(screen.getByRole("link", { name: /Show output/i })).toHaveAttribute("href", "#artifacts");
+    await userEvent.click(screen.getByRole("button", { name: /Close full Codex thread/i }));
+
+    const next = screen.getByRole("button", { name: "Next event" });
+    for (let index = 0; index < 6; index += 1) await userEvent.click(next);
+
+    expect(screen.getByRole("heading", { name: /Real outputs.*Real review/i })).toBeInTheDocument();
+    expect(screen.getByText("58 / 58", { selector: ".replay-review-card strong" })).toBeInTheDocument();
+    expect(screen.getByText("0", { selector: ".replay-review-card strong" })).toBeInTheDocument();
+    expect(screen.getAllByRole("link", { name: /Show output/i })[0]).toHaveAttribute("href", "#artifacts");
   });
 
   it("shows the real Software Launch product, site, film, evidence, and thread", async () => {
     window.history.pushState({}, "", "/demo/software");
-    const { container } = render(<App />);
-    expect(container.querySelector('main[data-layout="recorded-run"]')).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: /An empty repo became.*a complete launch/i })).toBeInTheDocument();
+    render(<App />);
+    expect(screen.getByRole("heading", { name: /Before the build.*define launched/i })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /After the yes.*watch the launch take shape/i })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Software Launch pack/i })).toHaveAttribute("href", "/packs/software-launch");
+    expect(screen.getByText("Brief locked", { selector: ".replay-controls strong" })).toBeInTheDocument();
     expect(screen.getByTitle("Three local-first product")).toHaveAttribute("src", "/demo/three/product/");
     expect(screen.getByTitle("Three launch website")).toHaveAttribute("src", "/demo/three/site/");
     expect(document.querySelector("video source")).toHaveAttribute("src", "/demo/three/film/three-demo.mp4");
@@ -142,9 +156,11 @@ describe("Possible", () => {
 
   it("shows the real Open-Source Release repository and review evidence", () => {
     window.history.pushState({}, "", "/demo/open-source");
-    const { container } = render(<App />);
-    expect(container.querySelector('main[data-layout="recorded-run"]')).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: /Three files became.*a release people can trust/i })).toBeInTheDocument();
+    render(<App />);
+    expect(screen.getByRole("heading", { name: /Before the release.*define trust/i })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /After the yes.*watch the release harden/i })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Open-Source Release pack/i })).toHaveAttribute("href", "/packs/open-source-release");
+    expect(screen.getByText("Brief locked", { selector: ".replay-controls strong" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /OPEN SOURCE/i })).toHaveAttribute("href", "/demo/tiny-slug/index.js");
     expect(screen.getByRole("link", { name: /OPEN OUTCOME RECEIPT/i })).toHaveAttribute("href", "/demo/tiny-slug/.possible/outcome-receipt.md");
     expect(screen.getByRole("link", { name: /Complete public run/i })).toHaveAttribute("href", "/demo/tiny-slug/CODEX-THREAD.md");
