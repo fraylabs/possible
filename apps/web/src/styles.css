@@ -378,7 +378,10 @@ footer .wordmark span { color: #151411; }
 .pack-command-list { min-width: 0; display: grid; gap: 14px; }
 .pack-command-list > div { width: 100%; min-width: 0; max-width: 100%; overflow: hidden; border: 1px solid #151411; background: #151411; color: #f8f7f2; }
 .pack-command-list > div > span { display: block; padding: 11px 13px; border-bottom: 1px solid #494640; color: #aaa49b; font: 7px "DM Mono", monospace; }
-.pack-command-list pre { max-width: 100%; margin: 0; padding: 22px 16px; overflow: hidden; white-space: pre-wrap; overflow-wrap: anywhere; font: 12px/1.6 "DM Mono", monospace; }
+.pack-command-list pre { max-width: 100%; margin: 0; padding: 22px 16px; overflow-x: auto; overflow-y: hidden; white-space: pre; font: 12px/1.6 "DM Mono", monospace; scrollbar-color: #777169 #25231f; }
+.pack-command-list pre::-webkit-scrollbar { height: 8px; }
+.pack-command-list pre::-webkit-scrollbar-track { background: #25231f; }
+.pack-command-list pre::-webkit-scrollbar-thumb { background: #777169; }
 .pack-command-list .copy-button { min-height: 44px; padding: 0 15px; border-top: 1px solid #494640; background: #ff4d00; color: #151411; font-size: 8px; }
 .pack-reference-note { margin: 18px 0 0; padding: 16px 18px; border: 1px solid #c9c4bb; border-left: 4px solid #ff4d00; background: #fff0e6; color: #514d47; font-size: 12px; line-height: 1.7; }
 .pack-publication-actions { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; border: 1px solid #151411; }
