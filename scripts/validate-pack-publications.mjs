@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { compilePack, outcomePacks } from "../packages/packs/dist/index.js";
 
-const webDist = new URL("../apps/web/dist/", import.meta.url);
+const webDist = new URL("../apps/web/out/", import.meta.url);
 const text = (relative) => readFile(new URL(relative, webDist), "utf8");
 const index = JSON.parse(await text("packs/index.json"));
 

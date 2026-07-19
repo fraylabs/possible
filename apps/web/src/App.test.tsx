@@ -1,4 +1,4 @@
-import { cleanup, render, screen } from "@testing-library/react";
+import { cleanup, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { axe } from "vitest-axe";
 import { afterEach, describe, expect, it, vi } from "vitest";
@@ -11,23 +11,31 @@ afterEach(() => {
 });
 
 describe("Possible", () => {
-  it("starts with installation and a brainstorm instead of a pack picker", () => {
+  it("starts with one clear question, three real outcomes, and an immediate install path", () => {
     const { container } = render(<App />);
-    expect(screen.getByRole("heading", { name: /Bring the idea.*Possible finds the path/i })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "What do you want to build today?", level: 1 })).toBeInTheDocument();
+    expect(container.querySelectorAll("h1")).toHaveLength(1);
+    expect(screen.getByText("Bring an idea. Possible gives Codex the skills, plan, and proof to make it real.")).toBeInTheDocument();
     expect(screen.getByText("npx @fraylabs/possible init")).toBeInTheDocument();
     expect(screen.getByText("$possible", { selector: ".install-next code" })).toBeInTheDocument();
-    expect(screen.getByText("What would you like to make possible today?")).toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: /Compile Hardware Launch/i })).not.toBeInTheDocument();
     expect(screen.getByRole("link", { name: "DOCS" })).toHaveAttribute("href", "/docs");
-    expect(screen.getByRole("heading", { name: /No forms.*No pack knowledge required/i })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: /Create it.*Launch it.*Release it.*Operate it/i })).toBeInTheDocument();
+    const starters = screen.getByRole("list", { name: /Choose a starting point/i });
+    expect(within(starters).getAllByRole("listitem")).toHaveLength(3);
+    for (const [title, demoHref] of [
+      ["A strange 3D game", "/demo/game"],
+      ["A hardware product", "/demo/hardware"],
+      ["A software launch", "/demo/software"],
+    ]) {
+      expect(within(starters).getByRole("heading", { name: title })).toBeInTheDocument();
+      expect(within(starters).getByRole("link", { name: `See ${title} demo` })).toHaveAttribute("href", demoHref);
+      expect(within(starters).getByRole("link", { name: `Try ${title} with Codex` })).toHaveAttribute("href", "#try");
+    }
+    expect(container.querySelector(".journey")).not.toBeInTheDocument();
+    expect(container.querySelector(".recommendation-example")).not.toBeInTheDocument();
+    expect(container.querySelector(".home-pack-preview")).not.toBeInTheDocument();
     expect(screen.queryByRole("group", { name: /Filter outcome packs by lane/i })).not.toBeInTheDocument();
-    expect(container.querySelectorAll(".journey li")).toHaveLength(6);
-    expect([...container.querySelectorAll(".journey li strong")].map((node) => node.textContent)).toEqual([
-      "Install", "Invoke", "Brainstorm", "Recommend", "Confirm", "Execute",
-    ]);
-    expect(screen.getByText(/No ingredient skills install and no outcome work starts/i)).toBeInTheDocument();
-    expect(screen.getByText(/Saying yes authorizes repo-local ingredient skill installation/i)).toBeInTheDocument();
+    expect(container.querySelectorAll(".quick-path li")).toHaveLength(3);
+    expect(container.querySelector("main")).not.toHaveTextContent(/conversational outcome compiler|outcome lanes|ingredient skills|pack knowledge|workstreams/i);
   });
 
   it("copies the one-command installer", async () => {

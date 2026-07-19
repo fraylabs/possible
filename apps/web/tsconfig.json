@@ -1,14 +1,16 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "composite": true,
     "jsx": "react-jsx",
     "lib": ["ES2023", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "noEmit": true,
+    "incremental": true,
     "tsBuildInfoFile": "./node_modules/.cache/possible-web.tsbuildinfo",
-    "types": ["vite/client", "vitest/globals", "node"]
+    "plugins": [{ "name": "next" }],
+    "types": ["vitest/globals", "node"]
   },
-  "include": ["src/App.tsx", "src/PaperPlaneGame.tsx", "src/main.tsx", "vite.config.ts"]
+  "include": ["next-env.d.ts", ".next/types/**/*.ts", "app/**/*.ts", "app/**/*.tsx", "src/**/*.ts", "src/**/*.tsx", "vitest.config.ts"],
+  "exclude": ["node_modules", "out"]
 }

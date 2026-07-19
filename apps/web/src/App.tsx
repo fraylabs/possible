@@ -1,3 +1,5 @@
+"use client";
+
 import { lazy, Suspense, useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import { compilePack, getPack, outcomePacks } from "@possible/packs";
@@ -50,6 +52,29 @@ const gallerySlugs = [
   "production-web-release",
 ] as const;
 const galleryPacks = gallerySlugs.map((slug) => outcomePacks.find((pack) => pack.slug === slug)!).filter(Boolean);
+const starterOutcomes = [
+  {
+    id: "game",
+    label: "PLAY / 01",
+    title: "A strange 3D game",
+    detail: "Fly a paper plane through a storm.",
+    demoHref: "/demo/game",
+  },
+  {
+    id: "hardware",
+    label: "LAUNCH / 02",
+    title: "A hardware product",
+    detail: "Turn an e-ink device idea into CAD, site, and film.",
+    demoHref: "/demo/hardware",
+  },
+  {
+    id: "software",
+    label: "SHIP / 03",
+    title: "A software launch",
+    detail: "See a tested product, site, film, and release evidence.",
+    demoHref: "/demo/software",
+  },
+] as const;
 
 function CopyButton({ label, value }: { label: string; value: string }) {
   const [state, setState] = useState<CopyState>("idle");
@@ -103,65 +128,51 @@ function CreatePage() {
     <main>
       <SiteNav label="Start / $possible" />
 
-      <section className="possible-hero" id="top">
-        <div className="possible-hero-copy">
-          <p className="eyebrow">A CONVERSATIONAL OUTCOME COMPILER FOR CODEX</p>
-          <h1>Bring the idea.<br /><em>Possible finds the path.</em></h1>
-          <p>Install one skill, say <code>$possible</code>, and talk through what you want to make real. Possible recommends the right outcome pack only when it understands enough.</p>
-          <a className="text-link" href="#start">Start in two commands ↓</a>
+      <section className="build-hero" id="top">
+        <div className="build-hero-copy">
+          <p className="eyebrow">POSSIBLE / FOR CODEX</p>
+          <h1>What do you want<br />{" "}to build <em>today?</em></h1>
+          <p>Bring an idea. Possible gives Codex the skills, plan, and proof to make it real.</p>
+          <div className="build-hero-actions">
+            <a className="button-link" href="#try">Try with Codex <span>↓</span></a>
+            <a className="text-link" href="/demo">See real outcomes →</a>
+          </div>
         </div>
 
-        <div className="start-stack" id="start">
-          <article className="install-card">
-            <header><span>01 / INSTALL POSSIBLE</span><strong>ONE TIME</strong></header>
+        <div className="build-hero-install" id="try">
+          <article className="install-card" id="start">
+            <header><span>INSTALL POSSIBLE</span><strong>ONE COMMAND</strong></header>
             <pre><code>{installCommand}</code></pre>
             <CopyButton label="Copy install command" value={installCommand} />
-            <div className="install-next"><span>THEN, INSIDE CODEX</span><code>$possible</code></div>
+            <div className="install-next"><span>THEN ASK CODEX</span><code>$possible</code></div>
           </article>
-          <article className="conversation-card" aria-label="Example Possible conversation">
-            <header><span>POSSIBLE / INTAKE</span><i>● READY</i></header>
-            <p className="message message--possible"><strong>POSSIBLE</strong><span>What would you like to make possible today?</span></p>
-            <p className="message message--user"><strong>YOU</strong><span>I want to make a focus device that keeps me off my phone.</span></p>
-            <p className="message message--possible"><strong>POSSIBLE</strong><span>Interesting. What do you imagine someone physically doing with it?</span></p>
-          </article>
+          <p><span>01</span> Install once. <span>02</span> Type <code>$possible</code>. <span>03</span> Describe the idea.</p>
+        </div>
+
+        <div className="starter-chooser">
+          <h2 className="sr-only" id="starter-heading">Choose a starting point or bring your own idea</h2>
+          <ul className="starter-grid" aria-labelledby="starter-heading">
+            {starterOutcomes.map((starter) => (
+            <li className={`starter-card starter-card--${starter.id}`} key={starter.id}>
+              <a className="starter-card-main" href={starter.demoHref} aria-label={`See ${starter.title} demo`}>
+                <header><span>{starter.label}</span><strong>OPEN DEMO ↗</strong></header>
+                <div className="starter-card-art" aria-hidden="true"><i /><i /><i /><b /></div>
+                <div><h3>{starter.title}</h3><p>{starter.detail}</p></div>
+              </a>
+              <footer><a href="#try" aria-label={`Try ${starter.title} with Codex`}>Try with Codex <span>↓</span></a></footer>
+            </li>
+            ))}
+          </ul>
         </div>
       </section>
 
-      <section className="journey">
-        <header>
-          <p className="eyebrow">THE WHOLE PROCESS</p>
-          <h2>No forms.<br />No pack knowledge required.</h2>
-        </header>
+      <section className="quick-path">
+        <header><span>HOW IT WORKS</span><h2>Talk first.<br />Build after you approve.</h2></header>
         <ol>
-          {[
-            ["Install", "Add Possible to the project."],
-            ["Invoke", "Type $possible in Codex."],
-            ["Brainstorm", "Start rough. Possible asks one useful question at a time."],
-            ["Recommend", "Possible links the outcome pack that best fits."],
-            ["Confirm", "No ingredient skills install and no outcome work starts until you say yes."],
-            ["Execute", "Codex coordinates the specialists and verifies the result."],
-          ].map(([title, detail], index) => <li key={title}><span>0{index + 1}</span><strong>{title}</strong><p>{detail}</p></li>)}
+          <li><span>01</span><strong>Describe it</strong><p>Start rough. Possible asks what matters.</p></li>
+          <li><span>02</span><strong>See the plan</strong><p>Possible chooses the complete recipe.</p></li>
+          <li><span>03</span><strong>Make it real</strong><p>Codex builds and verifies the outcome.</p></li>
         </ol>
-      </section>
-
-      <section className="recommendation-example">
-        <div>
-          <p className="eyebrow">POSSIBLE RECOMMENDS · YOU DECIDE</p>
-          <h2>The pack arrives<br />after the conversation.</h2>
-          <p>Possible summarizes what it heard, links the complete recipe, explains what will exist, and waits for explicit approval.</p>
-        </div>
-        <article>
-          <header><span>RECOMMENDED OUTCOME</span><strong>01 / BEST FIT</strong></header>
-          <p><span>WHAT I UNDERSTAND</span>A believable launch for a desk-sized focus device, without claiming production hardware exists.</p>
-          <a href="/packs/hardware-launch"><span>USE THIS PACK</span><strong>Hardware Launch</strong><i>VIEW PACK ↗</i></a>
-          <p className="approval-disclosure">{approvalDisclosure}</p>
-          <div><span>PROCEED WITH THIS OUTCOME?</span><strong>Yes, proceed.</strong></div>
-        </article>
-      </section>
-
-      <section className="home-pack-preview">
-        <header><p className="eyebrow">THE OUTCOME LANES</p><h2>Create it. Launch it.<br />Release it. Operate it.</h2><a className="button-link" href="/packs">Browse outcome packs <span>→</span></a></header>
-        <div>{galleryPacks.map((pack) => <PackCard pack={pack} key={pack.slug} />)}</div>
       </section>
 
       <Boundary />
@@ -922,7 +933,7 @@ function SoftwareDemoPage() {
         eyebrow="PRESERVED INTAKE / BEFORE EXECUTION"
         title="Before the build,"
         accent="define launched."
-        description="The clean-room run began with $possible, turned a rough product sentence into a concrete outcome, and waited for explicit approval before touching the empty project."
+        description="This preserved run began with $possible, turned a rough product sentence into a concrete outcome, and waited for explicit approval before creating its local evaluation workspace."
         userIdea="I want to launch Three, a local-first web app that helps people commit to exactly three things today."
         possibleQuestion="Who is this for, and what must exist for you to consider it genuinely launched?"
         userOutcome="Overloaded solo builders. I want the real app, launch site, product film, and release plan—without accounts, a backend, analytics, or deployment."
@@ -934,7 +945,7 @@ function SoftwareDemoPage() {
         eyebrow="RECORDED EXECUTION / AFTER CONFIRMATION"
         title="After the yes,"
         accent="watch the launch take shape."
-        description="A fresh Codex captain ran the Software Launch pack in a throwaway project. The working product, website, film, failed review, repairs, and final L0–L8 receipts below come from that preserved run."
+        description="A fresh Codex captain ran the then-current Software Launch pack in a throwaway project. This historical run predates today’s fit rule, which expects a working product; its website, film, failed review, repairs, and final L0–L8 receipts remain preserved below."
         metric="15 / 15 TESTS · 22 SECOND FILM"
         packCode="SOFTWARE-LAUNCH"
         briefTitle="Give overloaded solo builders a hard three-item boundary."
@@ -1523,8 +1534,8 @@ function NotFoundPage() {
   );
 }
 
-function App() {
-  const path = window.location.pathname.replace(/\/+$/, "") || "/";
+export function PossibleSite({ path: requestedPath }: { path?: string }) {
+  const path = (requestedPath ?? (typeof window === "undefined" ? "/" : window.location.pathname)).replace(/\/+$/, "") || "/";
   if (path === "/") return <CreatePage />;
   if (path === "/packs") return <PacksPage />;
   if (path === "/docs") return <DocsPage />;
@@ -1541,4 +1552,4 @@ function App() {
   return <NotFoundPage />;
 }
 
-export default App;
+export default PossibleSite;

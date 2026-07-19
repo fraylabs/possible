@@ -28,11 +28,9 @@ const [index, manifestSource, eventsSource, ...routeIndexes] = await Promise.all
   ...routeDirectories.map((directory) => readFile(path.join(root, directory, "index.html"), "utf8")),
 ]);
 
-const viteConfig = await readFile(path.join(repository, "apps/web/vite.config.ts"), "utf8");
-for (const directory of ["", ...routeDirectories.map((name) => `/${name}`)]) {
-  if (!viteConfig.includes(`"/demo/still${directory}"`)) {
-    failures.push(`Vite must serve /demo/still${directory}/ before the SPA fallback`);
-  }
+const nextConfig = await readFile(path.join(repository, "apps/web/next.config.ts"), "utf8");
+if (!nextConfig.includes('output: "export"') || !nextConfig.includes("trailingSlash: true")) {
+  failures.push("Next.js must export directory index routes for nested public demo presentations");
 }
 
 const liveSources = [index, manifestSource, eventsSource].join("\n");
@@ -77,10 +75,6 @@ async function requireExamplePath(exampleRoot, relative, label) {
     failures.push(`Missing ${label} path: ${relative}`);
     return null;
   }
-}
-
-for (const route of ["/demo/three/product", "/demo/three/site"]) {
-  if (!viteConfig.includes(`"${route}"`)) failures.push(`Vite must serve ${route}/ before the SPA fallback`);
 }
 
 for (const relative of [

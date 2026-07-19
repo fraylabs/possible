@@ -2,22 +2,7 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "buildCommand": "npm run build",
   "installCommand": "npm ci",
-  "outputDirectory": "apps/web/dist",
-  "routes": [
-    {
-      "src": "/packs",
-      "dest": "/index.html"
-    },
-    {
-      "src": "/packs/",
-      "dest": "/index.html"
-    },
-    {
-      "handle": "filesystem"
-    },
-    {
-      "src": "/.*",
-      "dest": "/index.html"
-    }
-  ]
+  "outputDirectory": "apps/web/out",
+  "cleanUrls": true,
+  "trailingSlash": false
 }

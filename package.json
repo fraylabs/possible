@@ -12,7 +12,8 @@
     "demo:validate": "node scripts/validate-demo-bundle.mjs",
     "routes:validate": "node scripts/validate-routes.mjs",
     "publications:validate": "node scripts/validate-pack-publications.mjs",
-    "check": "npm run skill:validate && npm run demo:validate && npm run routes:validate && npm run test && npm run build && npm run publications:validate",
+    "html:validate": "node scripts/validate-static-html.mjs",
+    "check": "npm run skill:validate && npm run demo:validate && npm run routes:validate && npm run test && npm run build && npm run publications:validate && npm run html:validate",
     "dev:web": "npm run build -w @possible/packs && npm run dev -w @possible/web",
     "dev:mcp": "npm run build -w @possible/packs && npm run dev -w @possible/mcp"
   },
