@@ -53,7 +53,7 @@ for (const pack of outcomePacks) {
 }
 
 for (const [relativePath, expected] of [
-  ["why/index.html", "Stop managing prompts"],
+  ["why/index.html", "The bottleneck is no longer what AI can do"],
   ["docs/index.html", "Build complete outcomes with Possible"],
   ["demo/index.html", "Recorded outcomes"],
   ["demo/hardware/index.html", "Hardware Launch"],

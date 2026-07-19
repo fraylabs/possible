@@ -194,14 +194,28 @@ function WhyPage() {
 
       <article className="why-article">
         <header className="why-article-header">
-          <p className="eyebrow">WHY POSSIBLE / ESSAY 01</p>
-          <h1>Stop managing prompts.<br /><em>Start steering outcomes.</em></h1>
-          <p className="why-dek">AI agents can execute increasingly complex work. The harder problem is deciding what should exist, defining what done means, and keeping the work pointed at that outcome.</p>
-          <div className="why-byline"><span>FRAY LABS</span><span>BUILDWEEK 2026</span><span>ON OUTCOME-DIRECTED AGENTS</span></div>
+          <p className="eyebrow">AN ESSAY FROM POSSIBLE</p>
+          <h1>The bottleneck is no longer what AI can do.</h1>
+          <p className="why-dek">It is our ability to see what is possible, define the outcome, and direct agents toward it.</p>
+          <div className="why-byline"><span>FRAY LABS</span><span>20 JUL 2026</span><span>OUTCOME-DIRECTED AGENTS / 01</span></div>
         </header>
 
-        <div className="why-article-body">
-          <section aria-labelledby="why-problem-heading">
+        <div className="why-article-layout">
+          <aside className="why-article-rail" aria-label="In this essay">
+            <span>IN THIS ESSAY</span>
+            <nav aria-label="Essay sections">
+              <a href="#problem">The prompt loop</a>
+              <a href="#outcome">The outcome layer</a>
+              <a href="#roles">Who does what</a>
+              <a href="#process">How it works</a>
+              <a href="#example">An example</a>
+              <a href="#scope">Current scope</a>
+            </nav>
+            <p>POSSIBLE / ESSAY 01<br />BUILDWEEK 2026</p>
+          </aside>
+
+          <div className="why-article-body">
+          <section id="problem" aria-labelledby="why-problem-heading">
             <p className="why-lead">The way most people work with AI still resembles a chat window from years ago: ask for one thing, wait for the answer, decide what comes next, and prompt again.</p>
             <p>This interaction is useful for isolated tasks. It becomes exhausting when the ambition is larger than a task—launching a product, building a working application, preparing a release, or running an ongoing function.</p>
             <h2 id="why-problem-heading">The agent is no longer the only bottleneck.</h2>
@@ -213,14 +227,14 @@ function WhyPage() {
             </blockquote>
           </section>
 
-          <section aria-labelledby="why-outcome-heading">
+          <section id="outcome" aria-labelledby="why-outcome-heading">
             <h2 id="why-outcome-heading">The missing layer is the outcome.</h2>
             <p>Possible starts one level above the prompt. You describe what you want to make real—even when the idea is rough. Possible asks a few questions that can materially change the result: who it is for, what already exists, what success must prove, and which real-world actions remain off limits.</p>
             <p>From that conversation, Possible defines a finished outcome, recommends one reviewed pack, and explains its deliverables, checks, and boundaries. Only after you approve does the agent install the required capabilities and begin coordinated work.</p>
             <p>This changes the human’s job. You remain responsible for intent and consequential decisions. You no longer need to translate an ambition into every intermediate instruction.</p>
           </section>
 
-          <section aria-labelledby="why-roles-heading">
+          <section id="roles" aria-labelledby="why-roles-heading">
             <h2 id="why-roles-heading">Three roles, clearly separated.</h2>
             <div className="why-responsibility-table">
               <article>
@@ -244,7 +258,7 @@ function WhyPage() {
             <span>Nothing begins before the outcome and its boundaries make sense to you.</span>
           </aside>
 
-          <section aria-labelledby="why-process-heading">
+          <section id="process" aria-labelledby="why-process-heading">
             <h2 id="why-process-heading">From ambition to evidence.</h2>
             <ol className="why-process">
               <li><strong>Describe what you want to make real.</strong><p>A rough idea is enough. Possible helps shape it without forcing you through a form.</p></li>
@@ -254,7 +268,7 @@ function WhyPage() {
             </ol>
           </section>
 
-          <section aria-labelledby="why-example-heading">
+          <section id="example" aria-labelledby="why-example-heading">
             <h2 id="why-example-heading">A concrete example.</h2>
             <p>Imagine opening Codex and saying:</p>
             <div className="why-transcript">
@@ -267,9 +281,9 @@ function WhyPage() {
             <a className="why-text-link" href="/demo/hardware">See the recorded Hardware Launch outcome →</a>
           </section>
 
-          <section aria-labelledby="why-lanes-heading">
+          <section id="scope" aria-labelledby="why-lanes-heading">
             <h2 id="why-lanes-heading">What can Possible coordinate?</h2>
-            <p>Possible currently organizes its capabilities into four internal lanes. These lanes organize Possible’s capabilities. They are not an intake menu: Possible selects the relevant path from your conversation.</p>
+            <p>Possible currently groups its reviewed capabilities into four internal lanes. This is a map for Possible, not an intake menu for the user: the relevant path is selected from the conversation.</p>
             <dl className="why-essay-lanes">
               <div><dt>Create</dt><dd>Build products, assets, systems, and experiences.</dd></div>
               <div><dt>Launch</dt><dd>Bring working software and hardware to an audience.</dd></div>
@@ -291,6 +305,7 @@ function WhyPage() {
             <div><pre><code>{installCommand}</code></pre><CopyButton label="Copy install command" value={installCommand} /></div>
             <p>Then open Codex and type <code>$possible</code>.</p>
           </footer>
+          </div>
         </div>
       </article>
 
