@@ -133,14 +133,14 @@ describe("Possible", () => {
     window.history.pushState({}, "", "/why");
     const { container } = render(<App />);
     expect(screen.getByRole("heading", { name: /Stop managing prompts.*Start steering outcomes/i, level: 1 })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: /You set the ambition.*Possible designs the path/i })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /Three roles, clearly separated/i })).toBeInTheDocument();
     expect(screen.getByText(/Possible is not a pack browser/i)).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: /Possible recommends the pack.*You approve it/i })).toBeInTheDocument();
+    expect(container.querySelector(".why-pullquote")).toHaveTextContent(/Possible recommends the pack.*You approve it/i);
     expect(screen.getByText(/These lanes organize Possible.s capabilities.*not an intake menu/i)).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /See the recorded outcome/i })).toHaveAttribute("href", "/demo/hardware");
-    expect(screen.getByText("npx @fraylabs/possible init", { selector: ".why-cta code" })).toBeInTheDocument();
-    expect(container.querySelectorAll(".why-role-grid article")).toHaveLength(3);
-    expect(container.querySelectorAll(".why-lanes article")).toHaveLength(4);
+    expect(screen.getByRole("link", { name: /See the recorded Hardware Launch outcome/i })).toHaveAttribute("href", "/demo/hardware");
+    expect(screen.getByText("npx @fraylabs/possible init", { selector: ".why-article-cta code" })).toBeInTheDocument();
+    expect(container.querySelectorAll(".why-responsibility-table article")).toHaveLength(3);
+    expect(container.querySelectorAll(".why-essay-lanes > div")).toHaveLength(4);
     expect(await axe(container)).toHaveNoViolations();
   });
 
