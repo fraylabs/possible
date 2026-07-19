@@ -19,12 +19,13 @@ export const webAppOperationsPack: OutcomePack = {
   slug: "web-app-operations",
   name: "Web App Operations",
   eyebrow: "05 / OUTCOME PACK",
-  promise: "Turn one live web app into a repeatable, evidence-backed operating loop.",
-  summary: "An executable health check, issue queue, maintenance cadence, incident and rollback runbooks, recovery drill, and first dated receipt—assembled once, then ready to repeat.",
+  promise: "Turn one live web app into a repeatable, optionally scheduled, evidence-backed operating loop.",
+  summary: "An executable health check, issue queue, maintenance cadence, incident and rollback runbooks, recovery drill, first dated receipt, and scheduling-ready recurring task—assembled once, then ready to repeat.",
   useWhen: [
     "A web application is already live and needs a repeatable operating cadence.",
     "Critical flows, issue triage, dependency maintenance, and rollback readiness recur.",
     "Each cycle must preserve evidence, unresolved work, and a next review date.",
+    "The user asks to schedule operations for an already-live application.",
   ],
   notFor: [
     "Building or presenting the application's first public launch.",
@@ -80,9 +81,11 @@ export const webAppOperationsPack: OutcomePack = {
     "Incident, change, and rollback runbooks",
     "Exercised recovery drill",
     "First dated operations receipt",
+    "Scheduling-ready task prompt and, when separately approved, an enabled schedule receipt",
   ],
   guardrails: [
     "Do not deploy, restart services, change production configuration, DNS, alerts, repository settings, issue trackers, or scheduled workflows, contact users, or enable automation without explicit approval.",
+    "Test the first cycle manually and show the exact task, cadence, timezone, project, execution mode, prompt, and permissions before requesting separate approval to create or update a schedule.",
     "Do not access or expose production credentials, secrets, private logs, or customer data unless that exact access has been explicitly authorized.",
     "Never claim uptime, SLO coverage, root cause, security, issue resolution, or recurrence prevention beyond directly measured evidence.",
     "Do not invent incidents, tickets, metrics, owners, or dates; preserve honest empty states and label simulations as fixtures excluded from the live record.",
@@ -96,5 +99,6 @@ export const webAppOperationsPack: OutcomePack = {
     "Verify the dependency inventory covers every detected ecosystem and that the security review states its inspected scope, evidence, limitations, and unproven claims.",
     "Tabletop the incident and rollback runbooks with a labeled simulation, proving decision points and recovery checks without touching production.",
     "Finish with a dated receipt linking evidence, unresolved work, next review date, and passed, failed, skipped, and unproven checks.",
+    "When scheduling is requested, test the durable task prompt manually, verify that it runs exactly one cycle and stops at gated actions, then record either the approved external schedule identifier and state or an honest scheduling-ready no-go receipt.",
   ],
 };

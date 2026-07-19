@@ -1,4 +1,4 @@
 interface:
   display_name: "Possible"
-  short_description: "Turn a conversation into a complete outcome"
-  default_prompt: "Use $possible to brainstorm what I want to make, recommend the right pack, and wait for my confirmation before proceeding."
+  short_description: "Turn ideas into outcomes that can run again"
+  default_prompt: "Use $possible to brainstorm what I want to make, recommend the right pack, and, if recurring, test and schedule it after my approval."

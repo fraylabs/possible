@@ -155,9 +155,9 @@ Lane: `operate`
 
 Public page: `https://possible.sh/packs/web-app-operations`
 
-Use for an existing live web app that needs a repeatable operating loop for detecting problems, triaging work, maintaining dependencies, and recovering safely.
+Use for an existing live web app that needs a repeatable or scheduled operating loop for detecting problems, triaging work, maintaining dependencies, and recovering safely. A request such as “schedule operations” selects this pack when the application is already live.
 
-Outputs: executable operations check and dated health baseline, issue intake and prioritized operations queue, dependency and security maintenance loop, incident/change/rollback runbooks, exercised recovery drill, first dated operations receipt.
+Outputs: executable operations check and dated health baseline, issue intake and prioritized operations queue, dependency and security maintenance loop, incident/change/rollback runbooks, exercised recovery drill, first dated operations receipt, scheduling-ready task prompt, and—only when separately approved—an enabled schedule receipt.
 
 Workstreams:
 
@@ -178,7 +178,9 @@ npx skills@1.5.19 add anthropics/skills --skill webapp-testing --agent codex
 npx skills@1.5.19 add github/awesome-copilot --skill impediment-prioritization --skill dependabot --skill security-review --skill devops-rollout-plan --skill incident-postmortem --agent codex
 ```
 
-Establish the durable workflow and execute its first dated cycle. One health snapshot never proves uptime. Preserve empty queues, skipped checks, unavailable signals, unresolved work, and unproven claims honestly. Production changes, issue-tracker writes, monitoring changes, deploys, rollbacks, paging, status communication, and customer-data access remain separate gates.
+Establish the durable workflow and execute its first dated cycle manually before offering a schedule. For recurring operations, default to a standalone scheduled task in an isolated worktree whose prompt invokes `$possible resume`, runs one cycle, writes a new dated receipt, reports findings, and stops at every external-action gate. Show the exact cadence, timezone, project, execution mode, prompt, and permissions before requesting separate approval to create or enable it. If scheduled-task management is unavailable, provide a tested scheduling-ready prompt without claiming a task exists.
+
+One health snapshot never proves uptime. Preserve empty queues, skipped checks, unavailable signals, unresolved work, and unproven claims honestly. Scheduled-task changes, production changes, issue-tracker writes, monitoring changes, deploys, rollbacks, paging, status communication, and customer-data access remain separate gates.
 
 ## Working Web App
 

@@ -89,6 +89,11 @@ test("install commands group skills by upstream repository", () => {
   assert.match(operations.runPrompt, /prior receipt/);
   assert.match(operations.runPrompt, /YYYY-MM-DDTHHMMSSZ\.md/);
   assert.match(operations.runPrompt, /First dated operations receipt/);
+  assert.match(operations.runPrompt, /SCHEDULE GATE/);
+  assert.match(operations.runPrompt, /invokes \$possible resume/);
+  assert.match(operations.runPrompt, /isolated worktree/);
+  assert.match(operations.runPrompt, /Request direct approval for that exact schedule/);
+  assert.match(operations.runPrompt, /scheduling-ready prompt and an honest no-go receipt/);
 
   const working = bySlug("working-web-app");
   assert.equal(working.installCommands.length, 2);

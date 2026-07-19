@@ -26,7 +26,14 @@ OPERATING LOOP
 1. Establish once: record the loop's inputs, cadence, ownership, thresholds, commands, external-action gates, and next review date.
 2. Run now: execute the first dated cycle against available evidence and write a collision-free UTC receipt such as operations/receipts/YYYY-MM-DDTHHMMSSZ.md.
 3. Repeat safely: every later cycle must read the prior receipt, record evidence and deltas, carry unresolved work forward, and set the next review date.
-4. Never manufacture activity to make the cycle look complete; empty queues, unavailable signals, and skipped checks remain explicit.` : "";
+4. Never manufacture activity to make the cycle look complete; empty queues, unavailable signals, and skipped checks remain explicit.
+
+SCHEDULE GATE
+1. A request to schedule operations selects this recurring outcome, but pack confirmation authorizes only the local workflow and manual first cycle. Do not create, update, or enable a scheduled task yet.
+2. After the manual cycle passes, draft a durable standalone task whose prompt invokes $possible resume, reads the confirmed Possible state and latest receipt, runs exactly one cycle, carries unresolved work forward, reports findings, and stops at every external-action gate.
+3. Default a Git project to an isolated worktree and report-only behavior. Show the exact task name, cadence, timezone, project, standalone-or-chat destination, local-or-worktree mode, prompt, permissions, expected receipt, and stop conditions.
+4. Request direct approval for that exact schedule. Only then use an available scheduled-task capability and record its returned identifier and enabled state in .possible/schedule.json. If scheduling is unavailable on the current surface, return a tested scheduling-ready prompt and an honest no-go receipt instead of claiming the task exists.
+5. Scheduled tasks never gain unattended authority for deployments, restarts, production configuration, DNS, paging, communication, spending, publishing, issue-tracker writes, secrets, or customer data.` : "";
   const approvedReleaseAdapter = pack.skills.some((skill) => skill.id === "deploy-to-vercel")
     ? pack.plugins?.some((plugin) => plugin.id === "sites")
       ? " Only after that approval, the captain invokes the selected deployment adapter: $sites-hosting for OpenAI Sites or $deploy-to-vercel for Vercel. Do not give either adapter to a preflight workstream or invoke it before this step."
