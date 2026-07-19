@@ -100,6 +100,39 @@ npx skills@1.5.19 add github/awesome-copilot --skill github-release --skill crea
 
 Never imply security, compatibility, production readiness, or release authority. Pushing, tagging, publishing packages, creating releases, and changing repository settings remain separate gates.
 
+## Playable Web Game
+
+Slug: `playable-web-game`
+
+Public page: `https://possible.sh/packs/playable-web-game`
+
+Use for a browser-game idea that needs one polished, replayable Three.js experience rather than a general game engine or sprawling feature set.
+
+Outputs: playable browser game, game brief and tuning rules, responsive HUD and controls, production build, evidence report.
+
+Workstreams:
+
+- Core loop and game feel — `game-designer`; owns `game/brief.md` and `game/tuning/`.
+- Three.js game runtime — `threejs`; owns `game/src/`, `game/assets/`, and `game/build/`.
+- HUD and controls — `frontend-design`, `mobile-touch`; owns `game/ui/` and `game/controls.md`.
+- Fresh review — `webapp-testing`; verifies the integrated game with keyboard and touch-sized input paths.
+
+Sources:
+
+- `mrgoonie/claudekit-skills`: `threejs`; reviewed `80113d86bc4407f105af40a2c4ea58194f7c370a`.
+- `dylantarre/animation-principles`: `game-designer`, `mobile-touch`; reviewed `83597134ba8ff59838270f94d7ac7282ffa3b54d`.
+- `anthropics/skills`: `frontend-design`, `webapp-testing`; reviewed `fa0fa64bdc967915dc8399e803be67759e1e62b8`.
+
+Install:
+
+```bash
+npx skills@1.5.19 add mrgoonie/claudekit-skills --skill threejs --agent codex
+npx skills@1.5.19 add dylantarre/animation-principles --skill game-designer --skill mobile-touch --agent codex
+npx skills@1.5.19 add anthropics/skills --skill frontend-design --skill webapp-testing --agent codex
+```
+
+Never imply player demand, accessibility, compatibility, performance, or production readiness beyond direct evidence. Deployment, publishing, analytics, paid assets, and external distribution remain separate gates.
+
 ## Selection rule
 
 Recommend the pack whose finished outputs most closely match the user's desired end state:
@@ -107,5 +140,6 @@ Recommend the pack whose finished outputs most closely match the user's desired 
 - Physical product plus launch presentation → Hardware Launch.
 - Software product plus release and launch presentation → Software Launch.
 - Existing repository plus trustworthy public release materials → Open-Source Release.
+- Browser-game idea plus one polished playable build → Playable Web Game.
 
 If none fits, say so. Do not force a pack or invent a new one during intake.

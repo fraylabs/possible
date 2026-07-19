@@ -49,6 +49,7 @@ describe("Possible", () => {
     expect(screen.getByRole("heading", { name: "Hardware Launch" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Software Launch" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Open-Source Release" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Playable Web Game" })).toBeInTheDocument();
   });
 
   it("documents the complete conversation-first journey and its safety boundary", async () => {
@@ -87,16 +88,30 @@ describe("Possible", () => {
     window.history.pushState({}, "", "/packs/not-real");
     render(<App />);
     expect(screen.getByRole("heading", { name: /not possible yet/i })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /Browse the three packs/i })).toHaveAttribute("href", "/packs");
+    expect(screen.getByRole("link", { name: /Browse the four packs/i })).toHaveAttribute("href", "/packs");
   });
 
-  it("shows all three recorded runs in the demo gallery", () => {
+  it("shows three recorded runs and the playable game proof in the demo gallery", () => {
     window.history.pushState({}, "", "/demo");
     render(<App />);
     expect(screen.getByRole("heading", { name: /Don’t imagine the outcome.*Open it/i })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /HARDWARE LAUNCH.*STILL/i })).toHaveAttribute("href", "/demo/hardware");
     expect(screen.getByRole("link", { name: /SOFTWARE LAUNCH.*THREE/i })).toHaveAttribute("href", "/demo/software");
     expect(screen.getByRole("link", { name: /OPEN-SOURCE RELEASE.*TINY-SLUG/i })).toHaveAttribute("href", "/demo/open-source");
+    expect(screen.getByRole("link", { name: /PLAYABLE WEB GAME.*FOLD/i })).toHaveAttribute("href", "/demo/game");
+  });
+
+  it("presents the game pack as a playable proof without calling it a clean-room run", () => {
+    window.history.pushState({}, "", "/demo/game");
+    render(<App />);
+    expect(screen.getByRole("heading", { name: /Before the build.*find the fun/i })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /After the yes.*make it playable/i })).toBeInTheDocument();
+    expect(screen.getAllByRole("link", { name: /Playable Web Game pack/i })[0]).toHaveAttribute("href", "/packs/playable-web-game");
+    expect(screen.getByText("LIVE PACK PROOF")).toBeInTheDocument();
+    expect(screen.getByText(/not presented as a clean-room pack evaluation/i)).toBeInTheDocument();
+    expect(screen.getByTitle("Fold paper plane game")).toHaveAttribute("src", "/demo/game/play");
+    expect(screen.getByRole("link", { name: /PLAY FULL SCREEN/i })).toHaveAttribute("href", "/demo/game/play");
+    expect(screen.getByRole("link", { name: /What review caught/i })).toHaveAttribute("href", "/demo/fold/review.md");
   });
 
   it("replays the real Hardware Launch run from brief to verified outcome", async () => {

@@ -10,5 +10,5 @@
     "tsBuildInfoFile": "./node_modules/.cache/possible-web.tsbuildinfo",
     "types": ["vite/client", "vitest/globals", "node"]
   },
-  "include": ["src/App.tsx", "src/main.tsx", "vite.config.ts"]
+  "include": ["src/App.tsx", "src/PaperPlaneGame.tsx", "src/main.tsx", "vite.config.ts"]
 }

@@ -67,6 +67,7 @@ if (failures.length) throw new Error(`Still demo validation failed:\n- ${failure
 
 const threeRoot = path.join(repository, "apps/web/public/demo/three");
 const releaseRoot = path.join(repository, "apps/web/public/demo/tiny-slug");
+const gameRoot = path.join(repository, "apps/web/public/demo/fold");
 
 async function requireExamplePath(exampleRoot, relative, label) {
   const target = path.join(exampleRoot, relative);
@@ -128,6 +129,18 @@ for (const relative of [
   "CODEX-THREAD.md",
 ]) await requireExamplePath(releaseRoot, relative, "Open-Source Release demo");
 
+for (const relative of ["game-brief.md", "review.md", "verification.md"]) {
+  await requireExamplePath(gameRoot, relative, "Playable Web Game proof");
+}
+
+const appSource = await readFile(path.join(repository, "apps/web/src/App.tsx"), "utf8");
+if (!appSource.includes('path === "/demo/game/play"') || !appSource.includes('<PaperPlaneGame />')) {
+  failures.push("Playable Web Game proof must expose the full-screen /demo/game/play route");
+}
+if (!appSource.includes("not presented as a clean-room pack evaluation")) {
+  failures.push("Playable Web Game proof must disclose that it is not a clean-room pack evaluation");
+}
+
 const packageJson = JSON.parse(await readFile(path.join(releaseRoot, "package.json"), "utf8"));
 if (packageJson.name !== "tiny-slug" || packageJson.type !== "module") {
   failures.push("Open-Source Release package contract is not the verified tiny-slug ESM package");
@@ -142,4 +155,4 @@ if (publicTranscripts.some((source) => /\/Users\/|\/private\/tmp|\/tmp\//.test(s
 }
 
 if (failures.length) throw new Error(`Demo bundle validation failed:\n- ${failures.join("\n- ")}`);
-console.log("Hardware, Software, and Open-Source demo presentations and artifact routes are complete.");
+console.log("Hardware, Software, and Open-Source demo presentations plus the Playable Web Game proof are complete.");

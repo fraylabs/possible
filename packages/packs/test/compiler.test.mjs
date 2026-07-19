@@ -7,6 +7,7 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
     "hardware-launch",
     "software-launch",
     "open-source-release",
+    "playable-web-game",
   ]);
 
   for (const pack of outcomePacks) {
@@ -37,4 +38,10 @@ test("install commands group skills by upstream repository", () => {
   const openSource = compilePack(outcomePacks[2]);
   assert.equal(openSource.installCommands.length, 1);
   assert.match(openSource.installCommands[0], /github\/awesome-copilot.+github-release.+create-readme.+documentation-writer.+github-actions-hardening.+security-review/);
+
+  const game = compilePack(outcomePacks[3]);
+  assert.equal(game.installCommands.length, 3);
+  assert.match(game.installCommands[0], /mrgoonie\/claudekit-skills.+threejs/);
+  assert.match(game.installCommands[1], /dylantarre\/animation-principles.+game-designer.+mobile-touch/);
+  assert.match(game.installCommands[2], /anthropics\/skills.+frontend-design.+webapp-testing/);
 });

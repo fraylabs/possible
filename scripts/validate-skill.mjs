@@ -24,13 +24,13 @@ for (const phrase of ["What are you trying to make real?", "one question per tur
 for (const gate of ["credentials", "deployment", "DNS", "email", "purchases", "spending money", "fabrication"]) {
   check(skill.toLowerCase().includes(gate.toLowerCase()), `SKILL.md must retain the ${gate} gate`);
 }
-for (const slug of ["hardware-launch", "software-launch", "open-source-release"]) {
+for (const slug of ["hardware-launch", "software-launch", "open-source-release", "playable-web-game"]) {
   check(catalog.includes(`Slug: \`${slug}\``), `pack reference must include ${slug}`);
 }
-for (const source of ["anthropics/skills", "vercel-labs/agent-skills", "remotion-dev/skills", "earthtojake/text-to-cad", "github/awesome-copilot"]) {
+for (const source of ["anthropics/skills", "vercel-labs/agent-skills", "remotion-dev/skills", "earthtojake/text-to-cad", "github/awesome-copilot", "mrgoonie/claudekit-skills", "dylantarre/animation-principles"]) {
   check(catalog.includes(source), `pack reference must include ${source}`);
 }
-check((catalog.match(/npx skills@1\.5\.19 add/g) ?? []).length === 8, "pack reference must include all eight grouped install commands");
+check((catalog.match(/npx skills@1\.5\.19 add/g) ?? []).length === 11, "pack reference must include all eleven grouped install commands");
 check(/short_description: "Turn a conversation into a complete outcome"/.test(metadata), "metadata must state the guided outcome promise");
 check(metadata.includes("$possible"), "default prompt must mention $possible");
 check(entries.every((entry) => ["SKILL.md", "agents", "references"].includes(entry)), "skill directory contains unexpected top-level files");

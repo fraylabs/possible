@@ -23,11 +23,11 @@ describe("Possible MCP", () => {
     assert.equal(client.getInstructions(), POSSIBLE_SERVER_INSTRUCTIONS);
   });
 
-  it("lists all three outcome packs", async () => {
+  it("lists all four outcome packs", async () => {
     const result = await client.callTool({ name: "list_packs", arguments: {} });
     const envelope = result.structuredContent as { ok: boolean; data: { packs: Array<{ slug: string }> } };
     assert.equal(envelope.ok, true);
-    assert.deepEqual(envelope.data.packs.map((pack) => pack.slug), ["hardware-launch", "software-launch", "open-source-release"]);
+    assert.deepEqual(envelope.data.packs.map((pack) => pack.slug), ["hardware-launch", "software-launch", "open-source-release", "playable-web-game"]);
   });
 
   it("compiles Hardware Launch", async () => {
@@ -45,5 +45,14 @@ describe("Possible MCP", () => {
     assert.equal(envelope.ok, true);
     assert.equal(envelope.data.installCommands.length, 1);
     assert.match(envelope.data.runPrompt, /\$github-release/);
+  });
+
+  it("compiles Playable Web Game", async () => {
+    const result = await client.callTool({ name: "compile_pack", arguments: { slug: "playable-web-game" } });
+    const envelope = result.structuredContent as { ok: boolean; data: { installCommands: string[]; runPrompt: string } };
+    assert.equal(envelope.ok, true);
+    assert.equal(envelope.data.installCommands.length, 3);
+    assert.match(envelope.data.runPrompt, /\$threejs/);
+    assert.match(envelope.data.runPrompt, /Playable browser game/);
   });
 });

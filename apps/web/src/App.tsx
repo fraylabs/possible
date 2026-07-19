@@ -1,10 +1,12 @@
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import { getPack, outcomePacks } from "@possible/packs";
 import type { OutcomePack } from "@possible/packs";
 import demoThreadData from "./demo-thread.json";
 import openSourceThreadData from "./open-source-thread.json";
 import softwareThreadData from "./software-thread.json";
+
+const PaperPlaneGame = lazy(() => import("./PaperPlaneGame"));
 
 type CopyState = "idle" | "copied" | "failed";
 
@@ -236,6 +238,14 @@ function PackArtwork({ slug }: { slug: string }) {
       </div>
     );
   }
+  if (slug === "playable-web-game") {
+    return (
+      <div className="pack-art pack-art--game" aria-hidden="true">
+        <i className="game-flight-line" /><i className="game-plane" /><i className="game-gate game-gate--one" /><i className="game-gate game-gate--two" />
+        <span>LOOP</span><span>FEEL</span><span>PLAY</span>
+      </div>
+    );
+  }
   return (
     <div className="pack-art pack-art--release" aria-hidden="true">
       <i className="release-ring" /><i className="release-dot" />
@@ -247,9 +257,9 @@ function PackArtwork({ slug }: { slug: string }) {
 function PacksPage() {
   return (
     <main>
-      <SiteNav label="Catalog / 03" />
+      <SiteNav label="Catalog / 04" />
       <section className="catalog-hero">
-        <p className="eyebrow">PACKS POSSIBLE CAN RECOMMEND / 03</p>
+        <p className="eyebrow">PACKS POSSIBLE CAN RECOMMEND / 04</p>
         <h1>Complete recipes.<br /><em>Chosen through conversation.</em></h1>
         <div className="catalog-intro">
           <p>You do not need to choose a pack before starting. Invoke <code>$possible</code>, describe the idea, and Possible will link the best fit for your approval.</p>
@@ -547,6 +557,8 @@ function RecordedExecutionStage({
   finalStats,
   thread,
   onOpenThread,
+  runLabel = "RECORDED REAL RUN",
+  playLabel = "Play real run",
 }: {
   eyebrow: string;
   title: string;
@@ -565,8 +577,10 @@ function RecordedExecutionStage({
   failureDetail: string;
   failureHref: string;
   finalStats: Array<{ value: string; label: string }>;
-  thread: DemoThread;
-  onOpenThread: () => void;
+  thread?: DemoThread;
+  onOpenThread?: () => void;
+  runLabel?: string;
+  playLabel?: string;
 }) {
   const [step, setStep] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -595,12 +609,12 @@ function RecordedExecutionStage({
         <div className="replay-title-meta">
           <p>{description}</p>
           <div><span><i /> LOCAL RUN COMPLETE</span><strong>{metric}</strong></div>
-          <div className="replay-proof-actions"><button type="button" onClick={onOpenThread}>VIEW FULL CODEX THREAD <span>{thread.messages.length} MESSAGES</span></button><a href="#artifacts">SHOW OUTPUT ↓</a></div>
+          <div className="replay-proof-actions">{thread && onOpenThread ? <button type="button" onClick={onOpenThread}>VIEW FULL CODEX THREAD <span>{thread.messages.length} MESSAGES</span></button> : null}<a href="#artifacts">SHOW OUTPUT ↓</a></div>
         </div>
       </header>
 
       <div className="replay-window">
-        <header className="replay-window-bar"><div><i /><i /><i /></div><strong>CODEX / POSSIBLE / {packCode}</strong><span>RECORDED REAL RUN</span></header>
+        <header className="replay-window-bar"><div><i /><i /><i /></div><strong>CODEX / POSSIBLE / {packCode}</strong><span>{runLabel}</span></header>
         <aside className="replay-activity">
           <header><span>CODEX ACTIVITY</span><strong>0{step + 1} / 0{events.length}</strong></header>
           <div className="replay-event-list">
@@ -610,7 +624,7 @@ function RecordedExecutionStage({
               </button>
             ))}
           </div>
-          <footer><button type="button" onClick={onOpenThread}>VIEW FULL THREAD →</button><a href="#artifacts">VIEW ARTIFACTS ↓</a></footer>
+          <footer>{onOpenThread ? <button type="button" onClick={onOpenThread}>VIEW FULL THREAD →</button> : null}<a href="#artifacts">VIEW ARTIFACTS ↓</a></footer>
         </aside>
 
         <section className={`replay-canvas replay-step-${step}`} aria-live="polite">
@@ -621,12 +635,12 @@ function RecordedExecutionStage({
             <div className="replay-artifacts">{artifactCards}</div>
             <article className="replay-integration"><header><span>CAPTAIN / ASSEMBLED OUTCOME</span><strong>{outputCount} OUTPUTS PRESENT</strong></header><div>{integrationOutputs.map((output, index) => <p key={output}><span>{String(index + 1).padStart(2, "0")}</span><strong>{output}</strong><i>PASS</i></p>)}</div></article>
             <article className="replay-review-card replay-review-card--failure"><span>FRESH REVIEW / MATERIAL FAILURE</span><h2>{failureTitle}</h2><p>{failureDetail}</p><a href={failureHref} target="_blank" rel="noreferrer">OPEN FAILED TRACE ↗</a></article>
-            <article className="replay-review-card replay-review-card--passed"><span>REPAIR VERIFIED / OUTCOME COMPLETE</span><h2>Real outputs.<br />Real review.</h2><div>{finalStats.map((stat) => <p key={stat.label}><strong>{stat.value}</strong><span>{stat.label}</span></p>)}</div><div className="replay-final-actions"><button type="button" onClick={onOpenThread}>VIEW FULL THREAD →</button><a href="#artifacts">SHOW OUTPUT ↓</a></div></article>
+            <article className="replay-review-card replay-review-card--passed"><span>REPAIR VERIFIED / OUTCOME COMPLETE</span><h2>Real outputs.<br />Real review.</h2><div>{finalStats.map((stat) => <p key={stat.label}><strong>{stat.value}</strong><span>{stat.label}</span></p>)}</div><div className="replay-final-actions">{onOpenThread ? <button type="button" onClick={onOpenThread}>VIEW FULL THREAD →</button> : null}<a href="#artifacts">SHOW OUTPUT ↓</a></div></article>
           </div>
           <footer className="replay-controls">
             <div><span>NOW PLAYING</span><strong>{currentEvent.title}</strong></div>
             <div className="replay-progress" aria-label={`Replay step ${step + 1} of ${events.length}`}>{events.map((event, index) => <i className={index <= step ? "is-filled" : ""} key={event.title} />)}</div>
-            <div className="replay-buttons"><button type="button" aria-label="Previous event" onClick={() => { setStep((value) => Math.max(0, value - 1)); setIsPlaying(false); }} disabled={step === 0}>←</button><button type="button" className="replay-play" onClick={togglePlayback}>{isPlaying ? "Pause" : step === lastStep ? "Replay" : "Play real run"}</button><button type="button" aria-label="Next event" onClick={() => { setStep((value) => Math.min(lastStep, value + 1)); setIsPlaying(false); }} disabled={step === lastStep}>→</button></div>
+            <div className="replay-buttons"><button type="button" aria-label="Previous event" onClick={() => { setStep((value) => Math.max(0, value - 1)); setIsPlaying(false); }} disabled={step === 0}>←</button><button type="button" className="replay-play" onClick={togglePlayback}>{isPlaying ? "Pause" : step === lastStep ? "Replay" : playLabel}</button><button type="button" aria-label="Next event" onClick={() => { setStep((value) => Math.min(lastStep, value + 1)); setIsPlaying(false); }} disabled={step === lastStep}>→</button></div>
           </footer>
         </section>
       </div>
@@ -637,12 +651,12 @@ function RecordedExecutionStage({
 function DemoGalleryPage() {
   return (
     <main className="demo-gallery-page">
-      <SiteNav label="Examples / 03" />
+      <SiteNav label="Examples / 04" />
       <section className="demo-gallery-hero">
-        <p className="eyebrow">THREE PACKS / THREE PRESERVED CODEX RUNS</p>
+        <p className="eyebrow">FOUR PACKS / THREE PRESERVED RUNS / ONE LIVE PROOF</p>
         <h1>Don’t imagine the outcome.<br /><em>Open it.</em></h1>
         <div>
-          <p>Each example began in a clean project with <code>$possible</code>, passed through conversation and confirmation, then preserved its real artifacts, public thread, failures, and verification evidence.</p>
+          <p>Three examples preserve clean <code>$possible</code> runs and their evidence. The new game pack adds a clearly labeled live proof you can play immediately.</p>
           <span><i /> ALL RUNS LOCAL · NO EXTERNAL RELEASE ACTIONS</span>
         </div>
       </section>
@@ -681,6 +695,19 @@ function DemoGalleryPage() {
             <p>TINY-SLUG / ESM PACKAGE</p>
             <h2>Three files to a<br />trustworthy release.</h2>
             <div><span>{openSourceThread.agents.length} agent threads</span><span>{openSourceThread.messages.length} public messages</span><span>9 / 9 tests</span></div>
+          </div>
+        </a>
+
+        <a className="demo-example-card demo-example-card--game" href="/demo/game">
+          <header><span>04 / PLAYABLE WEB GAME</span><strong>LIVE PACK PROOF ↗</strong></header>
+          <div className="demo-example-visual demo-example-visual--game" aria-hidden="true">
+            <i className="demo-game-gate demo-game-gate--one" /><i className="demo-game-gate demo-game-gate--two" /><i className="demo-game-plane" />
+            <span>POINTER</span><span>TOUCH</span><span>KEYS</span>
+          </div>
+          <div className="demo-example-copy">
+            <p>FOLD / PAPER PLANE STORM RUN</p>
+            <h2>One strange idea.<br />One game to play.</h2>
+            <div><span>Three.js runtime</span><span>3 input modes</span><span>Play now</span></div>
           </div>
         </a>
       </section>
@@ -890,6 +917,83 @@ function SoftwareDemoPage() {
       </section>
 
       {threadOpen ? <ThreadTranscript thread={softwareThread} rawHref="/demo/three/CODEX-THREAD.md" outputHref="#artifacts" onClose={() => setThreadOpen(false)} /> : null}
+    </main>
+  );
+}
+
+function PlayableGameDemoPage() {
+  const events: ReplayEvent[] = [
+    { actor: "CAPTAIN", title: "Outcome locked", detail: "One paper plane, one storm, one replayable rule." },
+    { actor: "POSSIBLE", title: "Sources reviewed", detail: "Three.js, game feel, touch, interface, and browser review skills inspected." },
+    { actor: "POSSIBLE", title: "Pack compiled", detail: "Three owned workstreams and one independent review contract assembled." },
+    { actor: "RUNTIME", title: "Flight built", detail: "Three.js scene, gates, scoring, collision, and state transitions implemented." },
+    { actor: "CAPTAIN", title: "Experience assembled", detail: "HUD, pointer, touch, keyboard, pause, mute, and restart joined the core loop." },
+    { actor: "REVIEW", title: "Failure found", detail: "The first sound toggle controlled no sound and failed its own interface promise." },
+    { actor: "CAPTAIN", title: "Repair verified", detail: "Procedural gate and collision tones now obey the mute control." },
+  ];
+
+  return (
+    <main className="replay-page replay-page--game" id="top">
+      <SiteNav label="Live pack proof / Fold" />
+      <RecordedIntakePrelude
+        eyebrow="PACK PROOF / ILLUSTRATIVE INTAKE"
+        title="Before the build,"
+        accent="find the fun."
+        description="This is the conversation Possible would use to narrow a broad game idea into one finished core loop before recommending a recipe."
+        userIdea="I want to make a tiny browser game where you pilot a paper plane through a storm."
+        possibleQuestion="What should a player understand in five seconds—and what single action should feel good enough to repeat?"
+        userOutcome="Steer through storm gates, build a score, crash, and instantly try again. It should work with pointer, touch, or keys."
+        packHref="/packs/playable-web-game"
+        packLabel="Playable Web Game"
+        recommendation="It coordinates the core loop, Three.js runtime, responsive controls, game feel, and an independent browser review."
+      />
+      <RecordedExecutionStage
+        eyebrow="LIVE PROOF / BUILT IN THE POSSIBLE PRODUCT THREAD"
+        title="After the yes,"
+        accent="make it playable."
+        description="Fold is a real Three.js reference build made alongside the new pack. It proves the promised output and interaction shape; it is not presented as a clean-room pack evaluation."
+        metric="1 LOOP · 3 INPUT MODES"
+        packCode="PLAYABLE-WEB-GAME"
+        briefTitle="Thread a paper plane through the orange before the storm closes in."
+        briefDetail="One complete loop. No accounts, economy, level editor, multiplayer, analytics, or external assets."
+        skillCount={5}
+        outputCount={5}
+        events={events}
+        artifactCards={<>
+          <article className="replay-artifact replay-artifact--site replay-artifact--game"><header><span>01 / CORE LOOP</span><strong>PLAYABLE</strong></header><div className="game-loop-mark"><i /><b>→</b><i /><b>→</b><i /></div><p>Steer · clear gate · score · crash · retry</p></article>
+          <article className="replay-artifact replay-artifact--film replay-artifact--game"><header><span>02 / THREE.JS</span><strong>LIVE</strong></header><div className="game-runtime-mark"><i /><span>WEBGL</span><b>3D</b></div><p>Procedural world with no external game assets</p></article>
+          <article className="replay-artifact replay-artifact--cad replay-artifact--game"><header><span>03 / CONTROLS</span><strong>3 MODES</strong></header><div className="replay-artifact-summary"><b>POINTER</b><b>TOUCH</b><b>KEYS</b><b>PAUSE</b></div><p>Responsive input and explicit game states</p></article>
+        </>}
+        integrationOutputs={["Playable browser game", "Core-loop brief", "Responsive HUD", "Input contract", "Review evidence"]}
+        failureTitle="The first mute control was only visual."
+        failureDetail="Review caught a real contract failure: the interface exposed sound state before the runtime produced any sound. Procedural feedback and mute behavior were added together."
+        failureHref="/demo/fold/review.md"
+        finalStats={[{ value: "1", label: "CORE LOOP" }, { value: "3", label: "INPUT MODES" }, { value: "0", label: "EXTERNAL ASSETS" }, { value: "1", label: "FAILURE REPAIRED" }]}
+        runLabel="LIVE PACK PROOF"
+        playLabel="Play build story"
+      />
+
+      <section className="demo-artifacts game-artifacts" id="artifacts">
+        <header className="demo-artifacts-title">
+          <div><p className="eyebrow">PLAYABLE ARTIFACT</p><h2>Don’t watch it.<br /><em>Fly it.</em></h2></div>
+          <p>The outcome is the game itself. Start a flight below, then open it full-screen or inspect the brief and review evidence.</p>
+        </header>
+
+        <article className="game-live-card">
+          <header><span>01 / FOLD</span><strong>THREE.JS · POINTER · TOUCH · KEYS</strong></header>
+          <iframe title="Fold paper plane game" src="/demo/game/play" loading="lazy" />
+          <footer><p><strong>Thread the orange.</strong><span>Move to steer. P pauses. Space starts again.</span></p><a href="/demo/game/play" target="_blank" rel="noreferrer">PLAY FULL SCREEN ↗</a></footer>
+        </article>
+
+        <div className="game-evidence-index">
+          <a href="/demo/fold/game-brief.md" target="_blank" rel="noreferrer"><span>01 / BRIEF</span><strong>One-loop contract</strong><i>MD ↗</i></a>
+          <a href="/demo/fold/review.md" target="_blank" rel="noreferrer"><span>02 / FAILURE</span><strong>What review caught</strong><i>MD ↗</i></a>
+          <a href="/demo/fold/verification.md" target="_blank" rel="noreferrer"><span>03 / EVIDENCE</span><strong>Verification receipt</strong><i>MD ↗</i></a>
+          <a href="/packs/playable-web-game"><span>04 / RECIPE</span><strong>Playable Web Game pack</strong><i>PACK ↗</i></a>
+        </div>
+
+        <footer className="demo-artifacts-footer"><p>A game pack should finish with a game—not a design document, a framework, or a list of ideas.</p><a href="/packs/playable-web-game">INSPECT THE PACK →</a></footer>
+      </section>
     </main>
   );
 }
@@ -1330,7 +1434,7 @@ function NotFoundPage() {
       <section className="not-found">
         <p className="eyebrow">404 / OUTCOME NOT FOUND</p>
         <h1>This pack is<br /><em>not possible yet.</em></h1>
-        <a className="button-link" href="/packs">Browse the three packs <span>→</span></a>
+        <a className="button-link" href="/packs">Browse the four packs <span>→</span></a>
       </section>
       <SiteFooter />
     </main>
@@ -1343,6 +1447,8 @@ function App() {
   if (path === "/packs") return <PacksPage />;
   if (path === "/docs") return <DocsPage />;
   if (path === "/demo") return <DemoGalleryPage />;
+  if (path === "/demo/game/play") return <Suspense fallback={<main className="plane-game-shell plane-game-loading"><span>FOLD / LOADING FLIGHT</span></main>}><PaperPlaneGame /></Suspense>;
+  if (path === "/demo/game") return <PlayableGameDemoPage />;
   if (path === "/demo/hardware") return <HardwareDemoPage />;
   if (path === "/demo/software") return <SoftwareDemoPage />;
   if (path === "/demo/open-source") return <OpenSourceDemoPage />;
