@@ -119,7 +119,11 @@ describe("Possible", () => {
     expect(screen.getByRole("complementary", { name: /On this page/i })).toBeInTheDocument();
     expect(screen.getByText("npx @fraylabs/possible init", { selector: ".docs-command code" })).toBeInTheDocument();
     expect(screen.getByText("$possible", { selector: ".docs-command--invoke code" })).toBeInTheDocument();
-    expect(container.querySelectorAll(".docs-article > section")).toHaveLength(10);
+    expect(container.querySelectorAll(".docs-article > section")).toHaveLength(11);
+    expect(screen.getByRole("heading", { name: "Glossary" })).toBeInTheDocument();
+    expect(screen.getByText(/An observable end state that can be checked/i)).toBeInTheDocument();
+    expect(container.querySelectorAll(".docs-glossary > div")).toHaveLength(12);
+    expect(screen.getByText(/A task describes work; it does not define success/i)).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /EXAMPLE PACKHardware LaunchView recipe/i })).toHaveAttribute("href", "/packs/hardware-launch");
     expect(screen.getByText(/WHAT.*YES.*AUTHORIZES/i)).toBeInTheDocument();
     expect(screen.getByText(/Deployment, scheduling changes, publishing, spending, outreach, fabrication/i)).toBeInTheDocument();

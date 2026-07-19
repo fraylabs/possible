@@ -1617,6 +1617,7 @@ function DocsPage() {
           </nav>
           <nav aria-label="Reference">
             <span>REFERENCE</span>
+            <a href="#glossary">Glossary</a>
             <a href="#files">Project files</a>
             <a href="#safety">Safety boundary</a>
             <a href="#troubleshooting">Troubleshooting</a>
@@ -1664,6 +1665,34 @@ function DocsPage() {
             </div>
             <p>Possible opens with a single question:</p>
             <blockquote>What would you like to make possible today? A rough idea is enough — we can brainstorm it together.</blockquote>
+          </section>
+
+          <section id="glossary">
+            <h2>Glossary</h2>
+            <p>Possible uses a small set of terms to separate the result you want from the work an agent performs.</p>
+            <aside className="docs-outcome-definition">
+              <span>OUTCOME</span>
+              <strong>An observable end state that can be checked—not an activity the agent performs.</strong>
+              <p>In practice: what should exist, who it is for, the constraints that matter, and the evidence required to call it complete.</p>
+            </aside>
+            <div className="docs-outcome-example" aria-label="Task and outcome example">
+              <div><span>TASK</span><p>Build a landing page.</p></div>
+              <div><span>OUTCOME</span><p>A responsive launch page for the confirmed audience, using approved claims, with one complete conversion flow and passing accessibility checks.</p></div>
+            </div>
+            <dl className="docs-glossary">
+              <div><dt>Outcome</dt><dd>A specific end state the user wants to make true. One outcome can require many tasks.</dd></div>
+              <div><dt>Task</dt><dd>One action taken toward an outcome. A task describes work; it does not define success.</dd></div>
+              <div><dt>Outcome pack</dt><dd>A reviewed recipe Possible recommends after the conversation. It defines the workstreams, ingredients, outputs, guardrails, and checks for a class of outcomes.</dd></div>
+              <div><dt>Ingredient skill</dt><dd>A reusable specialist capability used by a pack. Skills are ingredients; no single skill is the outcome.</dd></div>
+              <div><dt>Workstream</dt><dd>A bounded part of the outcome with named inputs, outputs, ownership, and checks. Independent workstreams may run in parallel.</dd></div>
+              <div><dt>Outcome brief</dt><dd>The durable record of the confirmed intent, audience, current reality, constraints, acceptance checks, gates, and unknowns.</dd></div>
+              <div><dt>Acceptance check</dt><dd>A concrete condition the finished work must satisfy. It turns “done” into something inspectable.</dd></div>
+              <div><dt>Verification</dt><dd>The tests, review, measurements, or inspected evidence used to determine whether the promised end state is true.</dd></div>
+              <div><dt>Outcome receipt</dt><dd>The final evidence record: artifacts created, checks passed or failed, limitations, unproven claims, and external actions not taken.</dd></div>
+              <div><dt>External action</dt><dd>A real-world change—such as deploying, publishing, spending, outreach, fabrication, or scheduling—that requires separate approval.</dd></div>
+              <div><dt>Lane</dt><dd>Catalog metadata such as Create, Launch, Operate, or Release. Possible uses lanes to find a pack; the user does not need to choose one.</dd></div>
+              <div><dt>Schedule</dt><dd>An approved way to repeat a proven outcome cycle. It is not a pack and does not grant blanket permission for external actions.</dd></div>
+            </dl>
           </section>
 
           <section id="brainstorm">
@@ -1780,6 +1809,7 @@ function DocsPage() {
           <span>ON THIS PAGE</span>
           <a href="#installation">Installation</a>
           <a href="#invoke">Invoke Possible</a>
+          <a href="#glossary">Glossary</a>
           <a href="#brainstorm">Brainstorm</a>
           <a href="#recommend">Recommendation</a>
           <a href="#confirm">Confirmation</a>

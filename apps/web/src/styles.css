@@ -174,6 +174,19 @@ nav { height: 74px; padding: 0 3.5vw; border-bottom: 1px solid #aaa59a; display:
 .docs-command--invoke { background: #25231f; }
 .docs-command--schedule { box-shadow: 7px 7px 0 #d3b8ff; }
 .docs-article blockquote { margin: 28px 0 0; padding: 24px 28px; border-left: 3px solid #ff4d00; background: #eeece5; color: #35312d; font-size: 16px; line-height: 1.6; }
+.docs-outcome-definition { margin-top: 30px; padding: 26px 28px; border: 1px solid #151411; background: #151411; color: #f3f0e8; }
+.docs-outcome-definition > span, .docs-outcome-example span { display: block; color: #ff8c5a; font: 9px "DM Mono", monospace; letter-spacing: .08em; }
+.docs-outcome-definition strong { max-width: 680px; margin: 15px 0 12px; display: block; font-size: clamp(22px, 2.7vw, 34px); font-weight: 500; line-height: 1.2; letter-spacing: -.025em; }
+.docs-outcome-definition p { max-width: 660px; margin: 0; color: #c7c2b8; font-size: 13px; line-height: 1.7; }
+.docs-outcome-example { display: grid; grid-template-columns: .7fr 1.3fr; border: 1px solid #d7d3ca; border-top: 0; }
+.docs-outcome-example > div { padding: 20px 22px; }
+.docs-outcome-example > div + div { border-left: 1px solid #d7d3ca; }
+.docs-outcome-example span { color: #777169; }
+.docs-outcome-example p { margin: 10px 0 0; color: #35312d; font-size: 13px; line-height: 1.6; }
+.docs-glossary { margin: 42px 0 0; border-top: 1px solid #d7d3ca; }
+.docs-glossary > div { padding: 19px 0; border-bottom: 1px solid #d7d3ca; display: grid; grid-template-columns: minmax(145px, .55fr) 1.45fr; gap: 30px; }
+.docs-glossary dt { color: #151411; font-size: 14px; font-weight: 600; }
+.docs-glossary dd { margin: 0; color: #5f5a53; font-size: 13px; line-height: 1.7; }
 .docs-do-dont { margin-top: 32px; display: grid; grid-template-columns: 1fr 1fr; border: 1px solid #d7d3ca; }
 .docs-do-dont > div { padding: 22px; }
 .docs-do-dont > div + div { border-left: 1px solid #d7d3ca; }
@@ -1243,6 +1256,10 @@ footer .wordmark span { color: #151411; }
   .docs-title h1 { font-size: 13vw; }
   .docs-title > p:last-child { font-size: 16px; }
   .docs-article ol li { grid-template-columns: 1fr; gap: 5px; }
+  .docs-outcome-definition { padding: 22px; }
+  .docs-outcome-example, .docs-glossary > div { grid-template-columns: 1fr; }
+  .docs-outcome-example > div + div { border-top: 1px solid #d7d3ca; border-left: 0; }
+  .docs-glossary > div { gap: 7px; }
   .docs-do-dont { grid-template-columns: 1fr; }
   .docs-do-dont > div + div { border-top: 1px solid #d7d3ca; border-left: 0; }
   .docs-reference-link { grid-template-columns: 1fr; gap: 8px; }
