@@ -122,6 +122,7 @@ function SiteNav({ label }: { label?: string }) {
       {label ? <div className="nav-meta"><span>POSSIBLE</span><strong>{label.toUpperCase()}</strong></div> : null}
       <div className="nav-links">
         <a href="/">START</a>
+        <a href="/what">WHAT</a>
         <a href="/why">WHY</a>
         <a href="/benchmarks">BENCH</a>
         <a href="/packs">PACKS</a>
@@ -199,6 +200,89 @@ function CreatePage() {
       </section>
 
       <Boundary />
+      <SiteFooter />
+    </main>
+  );
+}
+
+function WhatPage() {
+  const productParts = [
+    { label: "THE RESULT", term: "Outcome", description: "The observable end state you want to make true—not the activity an agent performs." },
+    { label: "THE RECIPE", term: "Outcome pack", description: "A reviewed way to reach a class of outcomes, including its workstreams, ingredients, boundaries, and checks." },
+    { label: "THE CAPABILITIES", term: "Specialist skills", description: "Focused abilities used as ingredients. They do the design, coding, testing, CAD, release, or operational work." },
+    { label: "THE CONDUCTOR", term: "Possible", description: "The skill that clarifies the outcome, recommends the pack, coordinates the agents, and keeps the work attached to proof." },
+  ] as const;
+
+  return (
+    <main className="what-page">
+      <SiteNav label="What is Possible?" />
+
+      <header className="what-hero">
+        <p className="eyebrow">PRODUCT DEFINITION / POSSIBLE.SH</p>
+        <h1>Possible is the<br /><em>outcome layer</em><br />for AI agents.</h1>
+        <div className="what-hero-intro">
+          <p>Describe the result you want. Possible clarifies the outcome, recommends a reviewed pack, assembles specialist skills, and coordinates the work until there is evidence it is done.</p>
+          <aside><span>WHAT IT IS TODAY</span><strong>An installable Codex skill.</strong><p>The skill is the delivery mechanism. Outcome orchestration is the product.</p></aside>
+        </div>
+      </header>
+
+      <section className="what-flow" aria-labelledby="what-flow-heading">
+        <header><span>THE COMPLETE MODEL</span><h2 id="what-flow-heading">One ambition. A coordinated path. A verified result.</h2></header>
+        <ol>
+          <li><span>01</span><strong>Your ambition</strong><p>You explain what you want to make possible in ordinary language.</p></li>
+          <li><span>02</span><strong>Possible</strong><p>Clarifies the intended end state and recommends the appropriate pack.</p></li>
+          <li><span>03</span><strong>Pack + specialists</strong><p>Defines and performs the work after you approve the recommendation.</p></li>
+          <li><span>04</span><strong>Verified outcome</strong><p>Artifacts, checks, limitations, and receipts show what is actually true.</p></li>
+        </ol>
+      </section>
+
+      <section className="what-anatomy" aria-labelledby="what-anatomy-heading">
+        <header><span>DO NOT CONFUSE THE PARTS</span><h2 id="what-anatomy-heading">What each thing means.</h2></header>
+        <div>
+          {productParts.map((part) => (
+            <article key={part.term}>
+              <span>{part.label}</span>
+              <h3>{part.term}</h3>
+              <p>{part.description}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="what-surface" aria-labelledby="what-surface-heading">
+        <div>
+          <span>POSSIBLE.SH</span>
+          <h2 id="what-surface-heading">The website is the public home, not the agent.</h2>
+          <p>Possible.sh hosts the installer, the reviewed pack catalog, documentation, demonstrations, and evidence. The installed Possible skill is what joins you inside the project and coordinates the work.</p>
+          <a href="/docs">Read the documentation →</a>
+        </div>
+        <dl>
+          <div><dt>Install</dt><dd><code>npx @fraylabs/possible init</code></dd></div>
+          <div><dt>Interface</dt><dd><code>$possible</code> and a conversation</dd></div>
+          <div><dt>Knowledge</dt><dd>Reviewed outcome packs</dd></div>
+          <div><dt>Execution</dt><dd>Codex and specialist skills</dd></div>
+          <div><dt>Result</dt><dd>A verified outcome</dd></div>
+        </dl>
+      </section>
+
+      <section className="what-not" aria-labelledby="what-not-heading">
+        <header><span>BOUNDARIES</span><h2 id="what-not-heading">What Possible is not.</h2></header>
+        <ul>
+          <li>Not another directory where you must choose individual skills.</li>
+          <li>Not one giant skill that can perform every kind of work itself.</li>
+          <li>Not an outcome—the outcome is the result you are trying to achieve.</li>
+          <li>Not blanket permission to deploy, publish, spend, contact people, or change external systems.</li>
+        </ul>
+        <aside><strong>CURRENT SUPPORT</strong><p>Possible is delivered and verified as a Codex skill today. Its model can extend to other agent surfaces, but they are not yet a supported product claim.</p></aside>
+      </section>
+
+      <section className="what-cta">
+        <span>START WITH AN AMBITION</span>
+        <h2>What do you want to make possible?</h2>
+        <div><code>{installCommand}</code><CopyButton label="Copy install command" value={installCommand} /></div>
+        <p>Then open Codex and type <code>$possible</code>.</p>
+      </section>
+
       <SiteFooter />
     </main>
   );
@@ -1842,6 +1926,7 @@ function NotFoundPage() {
 export function PossibleSite({ path: requestedPath }: { path?: string }) {
   const path = (requestedPath ?? (typeof window === "undefined" ? "/" : window.location.pathname)).replace(/\/+$/, "") || "/";
   if (path === "/") return <CreatePage />;
+  if (path === "/what") return <WhatPage />;
   if (path === "/why") return <WhyPage />;
   if (path === "/benchmarks") return <BenchmarksPage />;
   if (path === "/packs") return <PacksPage />;

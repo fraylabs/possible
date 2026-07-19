@@ -5,6 +5,7 @@ const baseUrl = "https://possible.sh";
 export const dynamic = "force-static";
 const staticPaths = [
   "",
+  "/what",
   "/why",
   "/benchmarks",
   "/packs",
