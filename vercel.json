@@ -5,6 +5,14 @@
   "outputDirectory": "apps/web/dist",
   "routes": [
     {
+      "src": "/packs",
+      "dest": "/index.html"
+    },
+    {
+      "src": "/packs/",
+      "dest": "/index.html"
+    },
+    {
       "handle": "filesystem"
     },
     {
