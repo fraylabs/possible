@@ -195,7 +195,7 @@ function PackCard({ pack }: { pack: OutcomePack }) {
       <div className="pack-card-body">
         <p>{pack.promise}</p>
         <div className="pack-card-stats">
-          <span>{pack.skills.length} SKILLS</span>
+          <span>{pack.skills.length} SKILLS{pack.plugins?.length ? ` + ${pack.plugins.length} PLUGIN` : ""}</span>
           <span>{pack.workstreams.length} WORKSTREAMS</span>
           <span>{pack.outputs.length} OUTPUTS</span>
         </div>
@@ -398,20 +398,23 @@ function PackDetailPage({ pack }: { pack: OutcomePack }) {
           </section>
 
           <section className="pack-reference-section" id="ingredients">
-            <header><span>04</span><h2 id="ingredients-heading">Reviewed ingredients</h2><p>Review links identify what Possible inspected. Install commands resolve the current upstream source, not a pinned revision.</p></header>
+            <header><span>04</span><h2 id="ingredients-heading">Reviewed ingredients</h2><p>Repo skills install through the Skills CLI. Agent plugins are detected separately and used only when available.</p></header>
             <div className="pack-table-scroll">
               <table className="pack-reference-table pack-ingredient-table" aria-labelledby="ingredients-heading">
-                <caption className="sr-only">Reviewed ingredient skills, roles, repositories, and exact revisions for {pack.name}</caption>
-                <thead><tr><th>Skill</th><th>Role</th><th>Source</th><th>Reviewed revision</th></tr></thead>
-                <tbody>{pack.skills.map((source) => <tr key={source.id}><th scope="row"><strong>{source.name}</strong><code>${source.skill}</code></th><td>{source.role}</td><td><a href={source.catalogUrl ?? source.reviewUrl} target="_blank" rel="noreferrer" aria-label={`${source.repository} skill catalog, opens in a new tab`}>{source.repository} ↗</a></td><td><a href={source.reviewUrl} target="_blank" rel="noreferrer" aria-label={`${source.name} reviewed revision ${source.reviewedRevision}, opens in a new tab`}><code>{source.reviewedRevision}</code> ↗</a></td></tr>)}</tbody>
+                <caption className="sr-only">Reviewed ingredient skills and optional agent plugins for {pack.name}</caption>
+                <thead><tr><th>Capability</th><th>Role</th><th>Source</th><th>Reviewed</th></tr></thead>
+                <tbody>
+                  {pack.skills.map((source) => <tr key={source.id}><th scope="row"><strong>{source.name}</strong><code>${source.skill}</code></th><td>{source.role}</td><td><a href={source.catalogUrl ?? source.reviewUrl} target="_blank" rel="noreferrer" aria-label={`${source.repository} skill catalog, opens in a new tab`}>{source.repository} ↗</a></td><td><a href={source.reviewUrl} target="_blank" rel="noreferrer" aria-label={`${source.name} reviewed revision ${source.reviewedRevision}, opens in a new tab`}><code>{source.reviewedRevision}</code> ↗</a></td></tr>)}
+                  {pack.plugins?.map((plugin) => <tr key={`plugin-${plugin.id}`}><th scope="row"><strong>{plugin.name}</strong><code>{plugin.invocation} · {plugin.skills.map((skill) => `$${skill}`).join(" · ")}</code></th><td>{plugin.role}<small>{plugin.availability}</small></td><td><a href={plugin.docsUrl} target="_blank" rel="noreferrer" aria-label={`${plugin.name} plugin documentation, opens in a new tab`}>{plugin.provider} plugin ↗</a></td><td><code>v{plugin.reviewedVersion}</code></td></tr>)}
+                </tbody>
               </table>
             </div>
           </section>
 
           <section className="pack-reference-section" id="install">
-            <header><span>05</span><h2>Install ingredients</h2><p>Run only after Possible recommends this pack and you confirm the outcome.</p></header>
+            <header><span>05</span><h2>Install repo skills</h2><p>Run only after Possible recommends this pack and you confirm the outcome.</p></header>
             <div className="pack-command-list">{compiled.installCommands.map((command, index) => <div key={command}><span>COMMAND {String(index + 1).padStart(2, "0")}</span><pre><code>{command}</code></pre><CopyButton label={`Copy install command ${index + 1} of ${compiled.installCommands.length}`} value={command} /></div>)}</div>
-            <p className="pack-reference-note">These commands install repo-local skills. Review source drift before use. Pack confirmation does not authorize deployment, publishing, spending, outreach, fabrication, or production data access.</p>
+            <p className="pack-reference-note">These commands install repo-local skills. Review source drift before use. {pack.plugins?.length ? `Optional plugins such as ${pack.plugins.map((plugin) => plugin.invocation).join(", ")} are detected in Codex; these commands do not install them. ` : ""}Pack confirmation does not authorize deployment, publishing, spending, outreach, fabrication, or production data access.</p>
           </section>
 
           <section className="pack-reference-section" id="run-prompt">
@@ -1453,7 +1456,7 @@ function DocsPage() {
             <h2>Execute the pack</h2>
             <p>After confirmation, Codex becomes the captain for the outcome:</p>
             <ol>
-              <li><strong>Inspect and install</strong><span>Resolve the pack&apos;s reviewed ingredient skills and inspect them before use.</span></li>
+              <li><strong>Inspect and install</strong><span>Resolve the pack&apos;s repo skills and detect optional agent plugins without pretending to install them.</span></li>
               <li><strong>Write shared state</strong><span>Record the confirmed brief, exact pack snapshot, and resolved skill versions.</span></li>
               <li><strong>Coordinate workstreams</strong><span>Run independent specialist work in parallel where appropriate.</span></li>
               <li><strong>Integrate and verify</strong><span>Combine artifacts, run acceptance checks, and assign a fresh reviewer.</span></li>
@@ -1492,6 +1495,7 @@ function DocsPage() {
             <div className="docs-faq">
               <details><summary>The installer reports conflicting files</summary><p>Possible never overwrites a different existing skill. Inspect <code>.agents/skills/possible</code>, preserve anything you need, then resolve the conflict manually before rerunning the installer.</p></details>
               <details><summary>Codex does not recognize $possible</summary><p>Confirm the skill exists at <code>.agents/skills/possible/SKILL.md</code>, then reopen or reload the project so Codex can discover it.</p></details>
+              <details><summary>The recommended pack lists @sites, but it is unavailable</summary><p>Sites is an optional OpenAI plugin, not a Skills CLI dependency. Possible records that it is unavailable and uses a reviewed provider fallback when one is compatible and authorized; otherwise it finishes with a deployment-ready no-go receipt.</p></details>
               <details><summary>The recommended pack feels wrong</summary><p>Do not confirm it. Correct Possible&apos;s understanding or continue brainstorming until the recommendation matches the outcome you actually want.</p></details>
             </div>
           </section>

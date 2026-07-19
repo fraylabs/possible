@@ -9,6 +9,18 @@ export interface SkillSource {
   reviewUrl: string;
 }
 
+export interface PluginCapability {
+  id: string;
+  name: string;
+  role: string;
+  provider: string;
+  invocation: string;
+  skills: string[];
+  reviewedVersion: string;
+  docsUrl: string;
+  availability: string;
+}
+
 export interface Workstream {
   id: string;
   name: string;
@@ -32,6 +44,7 @@ export interface OutcomePack {
   notFor: string[];
   reviewedAt: string;
   skills: SkillSource[];
+  plugins?: PluginCapability[];
   workstreams: Workstream[];
   reviewSkills: string[];
   outputs: string[];

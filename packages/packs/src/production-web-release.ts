@@ -1,4 +1,5 @@
 import type { OutcomePack, SkillSource } from "./types.js";
+import { openAISitesPlugin } from "./sites-plugin.js";
 
 const awesomeRevision = "26fe2d126bf79aafb38f43344d450b69632200f8";
 const awesomeSource = (skill: string, name: string, role: string): SkillSource => ({
@@ -24,13 +25,13 @@ export const productionWebReleasePack: OutcomePack = {
   useWhen: [
     "An existing tested web app is ready to promote from staging or preview to production.",
     "The exact candidate, target environment, approval, rollback path, and post-release proof must be explicit.",
-    "The application uses an authorized Vercel project, or planning-only output is acceptable for another provider.",
+    "The application can use an authorized OpenAI Sites or Vercel project, or planning-only output is acceptable for another provider.",
   ],
   notFor: [
     "Building the product or producing its launch campaign; use Working Web App or Software Launch.",
     "Tagging or publishing a reusable repository or package; use Open-Source Release.",
     "Establishing recurring monitoring and maintenance after release; use Web App Operations.",
-    "Executing production changes on a non-Vercel provider until a reviewed provider adapter is available.",
+    "Executing production changes outside the reviewed OpenAI Sites and Vercel adapters.",
   ],
   reviewedAt: "2026-07-19",
   skills: [
@@ -58,6 +59,7 @@ export const productionWebReleasePack: OutcomePack = {
       reviewUrl: "https://github.com/vercel-labs/agent-skills/tree/f8a72b9603728bb92a217a879b7e62e43ad76c81/skills/deploy-to-vercel",
     },
   ],
+  plugins: [openAISitesPlugin],
   workstreams: [
     {
       id: "readiness",
@@ -71,7 +73,7 @@ export const productionWebReleasePack: OutcomePack = {
       name: "Provider and delivery path",
       skills: ["github-actions-hardening"],
       owns: ["release/provider/", "release/pipeline-review.md", "release/deploy-command.md"],
-      brief: "Detect the linked Vercel team, project, target, and deployment method using read-only checks; audit the delivery workflow and prepare exact preview, promotion, inspection, and rollback commands. Do not invoke the deployment adapter, link, push, deploy, or mutate provider state during preflight.",
+      brief: "Detect whether the candidate is linked to OpenAI Sites or Vercel, then identify its account, project, target, and deployment method using read-only checks. Audit the delivery workflow and prepare exact save, deploy, inspection, and rollback commands. Do not invoke either deployment adapter, link, push, deploy, or mutate provider state during preflight.",
     },
     {
       id: "proof",
@@ -94,7 +96,7 @@ export const productionWebReleasePack: OutcomePack = {
   guardrails: [
     "Selecting this pack is not production authorization. Before any production action, obtain explicit approval naming the provider, account or team, project, production target, exact candidate, deployment method, and accepted known risks.",
     "Do not link or create provider projects, push commits, deploy previews, promote production, change DNS, domains, secrets, environment variables, databases, analytics, billing, repository settings, or workflows without approval for that exact external action.",
-    "Initial automated execution supports Vercel only. For another provider, produce the provider-neutral preflight and stop with an explicit unsupported-provider no-go receipt.",
+    "Automated execution supports the reviewed OpenAI Sites and Vercel adapters only. For another provider, produce the provider-neutral preflight and stop with an explicit unsupported-provider no-go receipt.",
     "Do not deploy when the candidate is unpinned, the target is ambiguous, rollback is untested, a migration is destructive or irreversible, or unresolved release-blocking findings lack explicit risk acceptance.",
     "Never expose credentials or customer data. Use synthetic accounts and non-sensitive fixtures unless the exact production access has been authorized.",
     "Never claim success, availability, security, or rollback readiness without direct evidence from the named environment.",

@@ -28,7 +28,9 @@ OPERATING LOOP
 3. Repeat safely: every later cycle must read the prior receipt, record evidence and deltas, carry unresolved work forward, and set the next review date.
 4. Never manufacture activity to make the cycle look complete; empty queues, unavailable signals, and skipped checks remain explicit.` : "";
   const approvedReleaseAdapter = pack.skills.some((skill) => skill.id === "deploy-to-vercel")
-    ? " Only after that approval, invoke $deploy-to-vercel as the captain; do not give it to a preflight workstream or invoke it before this step."
+    ? pack.plugins?.some((plugin) => plugin.id === "sites")
+      ? " Only after that approval, the captain invokes the selected deployment adapter: $sites-hosting for OpenAI Sites or $deploy-to-vercel for Vercel. Do not give either adapter to a preflight workstream or invoke it before this step."
+      : " Only after that approval, invoke $deploy-to-vercel as the captain; do not give it to a preflight workstream or invoke it before this step."
     : "";
   const releaseGate = pack.lane === "release" ? `
 
@@ -42,6 +44,17 @@ RELEASE GATE
     : "integrate them into outcome-room/";
 
   const action = pack.lane === "operate" ? "Establish and run the first cycle of" : pack.lane === "release" ? "Prepare and verify" : "Build";
+  const pluginCheck = pack.plugins?.length
+    ? ` Also detect these optional agent plugins: ${pack.plugins.map((plugin) => `${plugin.invocation} (${plugin.skills.map((skill) => `$${skill}`).join(", ")})`).join(", ")}. Do not install or imitate an unavailable plugin; record its absence and use the documented fallback.`
+    : "";
+  const sitesPath = pack.plugins?.some((plugin) => plugin.id === "sites") ? `
+
+OPENAI SITES MVP PATH
+1. If .openai/hosting.json exists, use @sites. Otherwise, when no hosting project is already selected and @sites is available, prefer it for the MVP deployment path so the user does not need a separate Vercel registration.
+2. Invoke $sites-building to prepare and validate the exact site. Keep $sites-hosting with the captain; do not delegate hosting mutations to a workstream.
+3. Treat every Sites deployment URL as production. Before creating or linking provider state, pushing source, saving a version, deploying, changing access, adding a domain, or changing environment variables, request explicit approval for that exact external action. Possible's approval gate still applies to an owner-only deployment.
+4. After approval, deploy only the validated saved version, inspect deployment status, verify the named URL and access mode, and record the project, commit, version, deployment, and rollback version in the receipt.
+5. If @sites is unavailable, do not imitate it. Use another reviewed adapter only when it is installed, compatible, and authorized; otherwise finish with a deployment-ready no-go receipt.` : "";
 
   return `${action} the ${pack.name} outcome for the product described below.
 
@@ -54,7 +67,7 @@ Deliver: ${pack.outputs.join(", ")}.
 
 CAPTAIN WORKFLOW
 1. Inspect the workspace and this brief. Do not start production until you write a shared outcome-brief.md containing only confirmed facts, audience, promise, constraints, interfaces, and acceptance checks.
-2. Confirm these installed skills are visible: ${pack.skills.map((source) => `$${source.skill}`).join(", ")}. If any are missing, stop and identify them; do not silently imitate them.
+2. Confirm these installed skills are visible: ${pack.skills.map((source) => `$${source.skill}`).join(", ")}. If any are missing, stop and identify them; do not silently imitate them.${pluginCheck}
 3. Create one subagent for each independent workstream below. Give every subagent outcome-brief.md, explicit ownership, its named skills, and its own completion verifier. Do not create one subagent per skill.
 ${workstreams}
 4. Continue as captain while the workstreams run: protect the shared facts, resolve interface decisions, and prepare the integration shell. Wait for all workstreams, review their receipts, then ${integrationTarget} without erasing unrelated user work.
@@ -66,7 +79,7 @@ ${pack.guardrails.map((guardrail) => `- ${guardrail}`).join("\n")}
 
 VERIFICATION CONTRACT
 ${pack.verification.map((item) => `- ${item}`).join("\n")}
-${releaseGate}${operateLoop}
+${releaseGate}${sitesPath}${operateLoop}
 
 Do not ask me to choose implementation details that can be safely inferred from the brief and repository. Ask only when a missing decision would materially change the product or authorize an external action.`;
 }

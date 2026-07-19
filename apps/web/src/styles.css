@@ -466,6 +466,7 @@ footer .wordmark span { color: #151411; }
 .pack-command-list pre::-webkit-scrollbar-thumb { background: #777169; }
 .pack-command-list .copy-button { min-height: 44px; padding: 0 15px; border-top: 1px solid #494640; background: #ff4d00; color: #151411; font-size: 8px; }
 .pack-reference-note { margin: 18px 0 0; padding: 16px 18px; border: 1px solid #c9c4bb; border-left: 4px solid #ff4d00; background: #fff0e6; color: #514d47; font-size: 12px; line-height: 1.7; }
+.pack-ingredient-table td small { display: block; margin-top: 8px; color: #777169; font: 8px/1.5 "DM Mono", monospace; }
 .pack-publication-actions { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; border: 1px solid #151411; }
 .pack-publication-actions > * { min-height: 46px; padding: 0 13px; border: 0; border-right: 1px solid #151411; display: flex; align-items: center; background: transparent; font: 8px "DM Mono", monospace; text-transform: uppercase; }
 .pack-publication-actions .copy-button { width: 100%; justify-content: space-between; background: #ff4d00; }

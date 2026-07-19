@@ -10,7 +10,7 @@ Lanes make the catalog easier to browse; they are never a question the user must
 
 - **Create** — **Working Web App** produces a locally verified first usable product; **Playable Web Game** produces one polished, responsive Three.js game.
 - **Launch** — **Hardware Launch** and **Software Launch** turn a product into a coherent public presentation and verified launch package.
-- **Release** — **Open-Source Release** prepares a trustworthy distributable repository; **Production Web Release** takes a tested Vercel app through a gated, reversible deployment or an honest no-go.
+- **Release** — **Open-Source Release** prepares a trustworthy distributable repository; **Production Web Release** takes a tested OpenAI Sites or Vercel app through a gated, reversible deployment or an honest no-go.
 - **Operate** — **Web App Operations** establishes a repeatable health, triage, maintenance, and recovery loop and executes its first dated cycle.
 
 Operate packs are recurring by definition: a checklist alone is not enough. The first cycle must run, leave evidence, carry unresolved work forward, and name its next review date.
@@ -59,4 +59,4 @@ The web surface keeps entry, understanding, discovery, and proof separate: `/` i
 
 ## Trust boundary
 
-Reviewed revisions record the snapshots Possible inspected. The generated Skills CLI commands resolve external repositories at install time; users must inspect the resolved skill contents. Packs never authorize deployment, spending, publishing, outreach, fabrication, data collection, or unsupported real-world claims.
+Reviewed revisions record the repo-skill snapshots Possible inspected. OpenAI Sites is represented separately as an optional agent plugin, never as a fake Skills CLI install; when available, launch and web-release packs can use it for an MVP deployment without a separate Vercel registration. The generated Skills CLI commands resolve external repositories at install time, so users must inspect the resolved instructions. Packs never authorize deployment, spending, publishing, outreach, fabrication, data collection, or unsupported real-world claims.

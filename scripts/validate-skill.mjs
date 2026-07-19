@@ -36,6 +36,9 @@ for (const [slug, lane] of [["hardware-launch", "launch"], ["software-launch", "
 for (const source of ["anthropics/skills", "vercel-labs/agent-skills", "remotion-dev/skills", "earthtojake/text-to-cad", "github/awesome-copilot", "mrgoonie/claudekit-skills", "dylantarre/animation-principles"]) {
   check(catalog.includes(source), `pack reference must include ${source}`);
 }
+for (const phrase of ["@sites", "$sites-building", "$sites-hosting", "not installed by the Skills CLI"]) {
+  check(catalog.includes(phrase), `pack reference must describe optional OpenAI Sites capability '${phrase}'`);
+}
 check((catalog.match(/npx skills@1\.5\.19 add/g) ?? []).length === 18, "pack reference must include all eighteen grouped install commands");
 check(/short_description: "Turn a conversation into a complete outcome"/.test(metadata), "metadata must state the guided outcome promise");
 check(metadata.includes("$possible"), "default prompt must mention $possible");

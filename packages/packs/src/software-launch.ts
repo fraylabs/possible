@@ -1,4 +1,5 @@
 import type { OutcomePack } from "./types.js";
+import { openAISitesPlugin } from "./sites-plugin.js";
 
 export const softwareLaunchPack: OutcomePack = {
   schemaVersion: 1,
@@ -8,7 +9,7 @@ export const softwareLaunchPack: OutcomePack = {
   name: "Software Launch",
   eyebrow: "02 / OUTCOME PACK",
   promise: "Turn one working software product into a launch-ready release.",
-  summary: "A stabilized release candidate, launch site, demo film, deployment plan, and evidence report—built in parallel, then reviewed as one truthful public story.",
+  summary: "A stabilized release candidate, launch site, demo film, optional OpenAI Sites MVP deployment, and evidence report—built in parallel, then reviewed as one truthful public story.",
   useWhen: [
     "An existing working software product needs a coherent release and launch presentation.",
     "Its primary user flow already works, but the product, launch site, and demo are not yet one launch-ready story.",
@@ -21,7 +22,7 @@ export const softwareLaunchPack: OutcomePack = {
     "Preparing a library or repository for public open-source distribution.",
     "A marketing page that does not include a working product outcome.",
   ],
-  reviewedAt: "2026-07-18",
+  reviewedAt: "2026-07-19",
   skills: [
     {
       id: "frontend-design",
@@ -84,6 +85,7 @@ export const softwareLaunchPack: OutcomePack = {
       reviewUrl: "https://github.com/remotion-dev/skills/tree/ab22f5fa89962ec943eaa18797cbf38c9d727743/skills/remotion-best-practices",
     },
   ],
+  plugins: [openAISitesPlugin],
   workstreams: [
     {
       id: "product",
@@ -109,13 +111,13 @@ export const softwareLaunchPack: OutcomePack = {
     {
       id: "release",
       name: "Release readiness",
-      skills: ["web-design-guidelines", "deploy-to-vercel"],
+      skills: ["web-design-guidelines"],
       owns: ["release/", "deployment plan"],
-      brief: "Audit the integrated interface and prepare a reversible deployment plan; deploy only after explicit approval.",
+      brief: "Audit the integrated interface and prepare a reversible OpenAI Sites or Vercel deployment plan. The captain retains either deployment adapter until explicit approval.",
     },
   ],
   reviewSkills: ["webapp-testing", "web-design-guidelines"],
-  outputs: ["Stabilized product release candidate", "Launch site", "Demo film", "Deployment plan", "Evidence report"],
+  outputs: ["Stabilized product release candidate", "Launch site", "Demo film", "Approved MVP deployment or deployment-ready no-go receipt", "Evidence report"],
   guardrails: [
     "Do not deploy, change DNS, email users, enable analytics, or collect real customer data without explicit approval.",
     "Never claim demand, uptime, performance, security, or production readiness without direct evidence.",
@@ -126,6 +128,7 @@ export const softwareLaunchPack: OutcomePack = {
     "Run the repository's narrowest relevant unit, type, build, and integration checks.",
     "Use a fresh reviewer to exercise the integrated primary flow in a real browser.",
     "Verify the launch story and demo contain only capabilities present in the product.",
+    "If deployment is approved, verify the exact URL, access mode, source commit, provider version, deployment status, and rollback target.",
     "Finish with a receipt listing passed, failed, skipped, and unproven checks.",
   ],
 };

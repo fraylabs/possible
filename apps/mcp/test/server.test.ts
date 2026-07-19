@@ -41,11 +41,13 @@ describe("Possible MCP", () => {
   it("compiles Hardware Launch", async () => {
     const result = await client.callTool({ name: "compile_pack", arguments: { slug: "hardware-launch" } });
     assert.equal(result.isError, undefined);
-    const envelope = result.structuredContent as { ok: boolean; data: { pack: { lane: string }; installCommands: string[]; runPrompt: string } };
+    const envelope = result.structuredContent as { ok: boolean; data: { pack: { lane: string; plugins: Array<{ invocation: string }> }; installCommands: string[]; runPrompt: string } };
     assert.equal(envelope.ok, true);
     assert.equal(envelope.data.pack.lane, "launch");
     assert.equal(envelope.data.installCommands.length, 4);
+    assert.equal(envelope.data.pack.plugins.at(0)?.invocation, "@sites");
     assert.match(envelope.data.runPrompt, /CAPTAIN WORKFLOW/);
+    assert.match(envelope.data.runPrompt, /OPENAI SITES MVP PATH/);
   });
 
   it("compiles Open-Source Release", async () => {

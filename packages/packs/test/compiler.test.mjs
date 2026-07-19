@@ -44,6 +44,12 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
       assert.equal(source.reviewedRevision.length, 40);
       assert.match(source.reviewUrl, new RegExp(source.reviewedRevision));
     }
+    for (const plugin of pack.plugins ?? []) {
+      assert.match(plugin.invocation, /^@/);
+      assert.ok(plugin.skills.length >= 1);
+      assert.match(compiled.runPrompt, new RegExp(plugin.invocation.replace("@", "@")));
+      for (const skill of plugin.skills) assert.match(compiled.runPrompt, new RegExp("\\$" + skill));
+    }
     for (const reviewer of pack.reviewSkills) assert.match(compiled.runPrompt, new RegExp("\\$" + reviewer));
     assert.match(compiled.runPrompt, /Do not create one subagent per skill/);
     assert.match(compiled.runPrompt, /fresh verification subagent/);
@@ -59,6 +65,11 @@ test("install commands group skills by upstream repository", () => {
   assert.equal(software.installCommands.length, 3);
   assert.match(software.installCommands[0], /anthropics\/skills.+frontend-design.+webapp-testing.+--agent codex/);
   assert.match(software.installCommands[1], /vercel-labs\/agent-skills.+vercel-react-best-practices.+web-design-guidelines.+deploy-to-vercel/);
+  assert.equal(software.pack.plugins[0].invocation, "@sites");
+  assert.deepEqual(software.pack.plugins[0].skills, ["sites-building", "sites-hosting"]);
+  assert.match(software.runPrompt, /prefer it for the MVP deployment path so the user does not need a separate Vercel registration/i);
+  assert.match(software.runPrompt, /Keep \$sites-hosting with the captain/);
+  assert.deepEqual(software.pack.workstreams.find((stream) => stream.id === "release").skills, ["web-design-guidelines"]);
 
   const openSource = bySlug("open-source-release");
   assert.equal(openSource.installCommands.length, 1);
@@ -93,8 +104,20 @@ test("install commands group skills by upstream repository", () => {
   assert.match(production.runPrompt, /^Prepare and verify the Production Web Release outcome/);
   assert.match(production.runPrompt, /RELEASE GATE/);
   assert.match(production.runPrompt, /explicit approval for the exact candidate, target, method, and known risks/);
-  assert.match(production.runPrompt, /Only after that approval, invoke \$deploy-to-vercel as the captain/);
+  assert.match(production.runPrompt, /captain invokes the selected deployment adapter: \$sites-hosting for OpenAI Sites or \$deploy-to-vercel for Vercel/);
+  assert.equal(production.pack.plugins[0].invocation, "@sites");
   assert.deepEqual(production.pack.workstreams.find((stream) => stream.id === "delivery").skills, ["github-actions-hardening"]);
+});
+
+test("Sites is exposed only on web deployment outcomes and never as a fake Skills CLI install", () => {
+  const sitesPacks = outcomePacks.filter((pack) => pack.plugins?.some((plugin) => plugin.id === "sites"));
+  assert.deepEqual(sitesPacks.map((pack) => pack.slug), ["hardware-launch", "software-launch", "production-web-release"]);
+  for (const pack of sitesPacks) {
+    const compiled = compilePack(pack);
+    assert.doesNotMatch(compiled.installCommands.join("\n"), /sites|openai-bundled/i);
+    assert.match(compiled.runPrompt, /every Sites deployment URL as production/i);
+    assert.match(compiled.runPrompt, /explicit approval/);
+  }
 });
 
 test("the web-app lifecycle packs have non-overlapping entry conditions", () => {

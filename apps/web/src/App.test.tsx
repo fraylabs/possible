@@ -129,7 +129,7 @@ describe("Possible", () => {
       expect(screen.getByText(pack.notFor[0])).toBeInTheDocument();
       expect(container.querySelectorAll(".pack-contract-list li")).toHaveLength(pack.outputs.length);
       expect(container.querySelectorAll(".pack-workstream-table tbody tr")).toHaveLength(pack.workstreams.length);
-      expect(container.querySelectorAll(".pack-ingredient-table tbody tr")).toHaveLength(pack.skills.length);
+      expect(container.querySelectorAll(".pack-ingredient-table tbody tr")).toHaveLength(pack.skills.length + (pack.plugins?.length ?? 0));
       expect(container.querySelectorAll(".pack-reference-list li")).toHaveLength(pack.guardrails.length);
       expect(container.querySelectorAll(".pack-verification-list li")).toHaveLength(pack.verification.length);
       expect(container.querySelectorAll(".pack-command-list > div")).toHaveLength(compiled.installCommands.length);
@@ -151,6 +151,15 @@ describe("Possible", () => {
     await userEvent.click(screen.getByRole("button", { name: "Copy full run prompt" }));
     expect(writeText).toHaveBeenCalledWith(compilePack(outcomePacks[0]).runPrompt);
     expect(await screen.findByText("Copied")).toBeInTheDocument();
+  });
+
+  it("documents OpenAI Sites as an optional plugin instead of a fake install command", () => {
+    window.history.pushState({}, "", "/packs/software-launch");
+    const { container } = render(<App />);
+    expect(screen.getByText("OpenAI Sites")).toBeInTheDocument();
+    expect(screen.getByText(/@sites · \$sites-building · \$sites-hosting/)).toBeInTheDocument();
+    expect(screen.getByText(/Optional plugins such as @sites are detected in Codex/)).toBeInTheDocument();
+    expect(container.querySelector(".pack-command-list")).not.toHaveTextContent("sites");
   });
 
   it("presents Web App Operations as a recurring operating loop", () => {

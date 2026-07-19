@@ -14,7 +14,9 @@ Public page: `https://possible.sh/packs/hardware-launch`
 
 Use for a physical-product idea or prototype that needs one coherent launch presentation.
 
-Outputs: launch site, launch film, prototype CAD, honest waitlist contract, evidence report.
+Outputs: launch site, launch film, prototype CAD, honest waitlist contract, approved MVP deployment or deployment-ready no-go receipt, evidence report.
+
+Optional captain capability: OpenAI `@sites` plugin (`$sites-building`, `$sites-hosting`), reviewed at plugin version `0.1.30`. When it is available in the current Codex workspace, prefer it for a new MVP launch-site deployment so no separate Vercel registration is needed. It is not installed by the Skills CLI commands below. Deployment and provider mutations still require separate explicit approval.
 
 Workstreams:
 
@@ -51,14 +53,16 @@ Public page: `https://possible.sh/packs/software-launch`
 
 Use for an existing working software product whose primary flow already exists but needs a coherent release and launch presentation.
 
-Outputs: stabilized product release candidate, launch site, demo film, deployment plan, evidence report.
+Outputs: stabilized product release candidate, launch site, demo film, approved MVP deployment or deployment-ready no-go receipt, evidence report.
+
+Optional captain capability: OpenAI `@sites` plugin (`$sites-building`, `$sites-hosting`), reviewed at plugin version `0.1.30`. Prefer it for a new MVP deployment when it is available and no provider is already selected; retain `deploy-to-vercel` as the reviewed fallback for an existing authorized Vercel target. The plugin is not installed by the Skills CLI commands below. Either external path requires separate explicit approval.
 
 Workstreams:
 
 - Product release candidate — `vercel-react-best-practices`; stabilizes the existing release candidate and owns `product/` and its test receipt.
 - Launch site — `frontend-design`; owns `site/` and the launch narrative.
 - Demo film — `remotion-best-practices`; owns `film/` and the rendered preview.
-- Release readiness — `web-design-guidelines`, `deploy-to-vercel`; owns `release/` and the deployment plan.
+- Release readiness — `web-design-guidelines`; owns `release/` and the deployment plan. The captain retains `sites-hosting` or `deploy-to-vercel` until separate deployment approval.
 - Fresh review — `webapp-testing`, `web-design-guidelines`; verifies the integrated outcome.
 
 Sources:
@@ -217,14 +221,16 @@ Lane: `release`
 
 Public page: `https://possible.sh/packs/production-web-release`
 
-Use when an existing tested web app needs a gated, reversible production release with an immutable candidate, verified preview, exact approval, rollback path, post-deploy smoke evidence, and final receipt. Automated execution initially supports Vercel; other providers stop at a provider-neutral no-go receipt until a reviewed adapter exists.
+Use when an existing tested web app needs a gated, reversible production release with an immutable candidate, verified preview, exact approval, rollback path, post-deploy smoke evidence, and final receipt. Automated execution supports the reviewed OpenAI Sites and Vercel adapters; other providers stop at a provider-neutral no-go receipt.
+
+Optional captain capability: OpenAI `@sites` plugin (`$sites-building`, `$sites-hosting`), reviewed at plugin version `0.1.30`. If `.openai/hosting.json` exists, use Sites. Otherwise prefer it for a new MVP target when available, so no separate Vercel registration is needed. It is not installed by the Skills CLI commands below. Every Sites URL is production, and exact provider mutations remain separately gated.
 
 Outputs: pinned release candidate and provider inventory, security and pipeline preflight, rollout and rollback plan, preview smoke receipt, approved production deployment or no-go receipt, post-deployment evidence, final release receipt.
 
 Workstreams:
 
 - Candidate and release readiness — `devops-rollout-plan`, `security-review`; owns the candidate record, preflight, rollout plan, and rollback plan.
-- Provider and delivery path — `github-actions-hardening`; owns provider evidence, pipeline review, and exact deploy commands. The captain holds `deploy-to-vercel` until the separate exact production approval.
+- Provider and delivery path — `github-actions-hardening`; owns provider evidence, pipeline review, and exact deploy commands. The captain holds `sites-hosting` or `deploy-to-vercel` until the separate exact production approval.
 - Release verification — `webapp-testing`; owns repeatable preview, production, and rollback-recovery checks and receipts.
 - Fresh review — `webapp-testing`, `devops-rollout-plan`; verifies the integrated release evidence before any promotion.
 

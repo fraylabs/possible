@@ -8,7 +8,7 @@ import { workingWebAppPack } from "./working-web-app.js";
 
 export { hardwareLaunchPack, openSourceReleasePack, playableWebGamePack, productionWebReleasePack, softwareLaunchPack, webAppOperationsPack, workingWebAppPack };
 export { compileInstallCommands, compilePack, compileRunPrompt } from "./compiler.js";
-export type { CompiledPack, OutcomePack, PackLane, SkillSource, Workstream } from "./types.js";
+export type { CompiledPack, OutcomePack, PackLane, PluginCapability, SkillSource, Workstream } from "./types.js";
 
 export const outcomePacks = [
   hardwareLaunchPack,

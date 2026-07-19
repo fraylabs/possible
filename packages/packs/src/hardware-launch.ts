@@ -1,4 +1,5 @@
 import type { OutcomePack } from "./types.js";
+import { openAISitesPlugin } from "./sites-plugin.js";
 
 export const hardwareLaunchPack: OutcomePack = {
   schemaVersion: 1,
@@ -8,7 +9,7 @@ export const hardwareLaunchPack: OutcomePack = {
   name: "Hardware Launch",
   eyebrow: "01 / BUILDWEEK PACK",
   promise: "Turn one hardware idea into a coherent, verified launch.",
-  summary: "A coordinated website, launch film, prototype CAD package, waitlist, and evidence report—built in parallel, then reviewed together.",
+  summary: "A coordinated website, launch film, prototype CAD package, waitlist, optional OpenAI Sites MVP deployment, and evidence report—built in parallel, then reviewed together.",
   useWhen: [
     "A physical-product idea or prototype needs one coherent launch presentation.",
     "The site, film, and CAD concept must share the same confirmed product facts.",
@@ -19,7 +20,7 @@ export const hardwareLaunchPack: OutcomePack = {
     "A software-only launch with no physical-product concept.",
     "Testing customer demand or collecting a real waitlist without separate approval.",
   ],
-  reviewedAt: "2026-07-18",
+  reviewedAt: "2026-07-19",
   skills: [
     {
       id: "frontend-design",
@@ -71,13 +72,14 @@ export const hardwareLaunchPack: OutcomePack = {
       reviewUrl: "https://github.com/earthtojake/text-to-cad/tree/fdbb4b4fb62d95ae298cfe9a46fdc7092bdaf423/skills/cad",
     },
   ],
+  plugins: [openAISitesPlugin],
   workstreams: [
     {
       id: "web",
       name: "Launch site",
       skills: ["frontend-design", "vercel-react-best-practices"],
       owns: ["site/", "waitlist contract"],
-      brief: "Build a precise, responsive launch story with one honest waitlist action.",
+      brief: "Build a precise, responsive, deployable launch story with one honest waitlist action.",
     },
     {
       id: "film",
@@ -95,7 +97,7 @@ export const hardwareLaunchPack: OutcomePack = {
     },
   ],
   reviewSkills: ["webapp-testing"],
-  outputs: ["Launch site", "Launch film", "Prototype CAD", "Waitlist contract", "Evidence report"],
+  outputs: ["Launch site", "Launch film", "Prototype CAD", "Waitlist contract", "Approved MVP deployment or deployment-ready no-go receipt", "Evidence report"],
   guardrails: [
     "Do not deploy, purchase, fabricate, email, or collect real customer data without explicit approval.",
     "Never claim customer demand, manufacturing readiness, physical validation, or certification without evidence.",
@@ -106,6 +108,7 @@ export const hardwareLaunchPack: OutcomePack = {
     "Run the repository's narrowest relevant checks.",
     "Use a fresh reviewer to inspect the integrated site in a real browser.",
     "Verify every promised artifact exists and every unsupported claim is labeled.",
+    "If deployment is approved, verify the exact URL, access mode, source commit, saved version, deployment status, and rollback version.",
     "Finish with a receipt listing passed, failed, skipped, and unproven checks.",
   ],
 };
