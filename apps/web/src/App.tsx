@@ -106,6 +106,7 @@ function SiteNav({ label }: { label?: string }) {
       {label ? <div className="nav-meta"><span>POSSIBLE</span><strong>{label.toUpperCase()}</strong></div> : null}
       <div className="nav-links">
         <a href="/">START</a>
+        <a href="/why">WHY</a>
         <a href="/packs">PACKS</a>
         <a href="/docs">DOCS</a>
         <a href="/demo">DEMO</a>
@@ -181,6 +182,134 @@ function CreatePage() {
       </section>
 
       <Boundary />
+      <SiteFooter />
+    </main>
+  );
+}
+
+function WhyPage() {
+  return (
+    <main className="why-page">
+      <SiteNav label="Why Possible" />
+
+      <section className="why-hero" id="top">
+        <p className="eyebrow">WHY POSSIBLE / THE OUTCOME LAYER</p>
+        <h1>Stop managing prompts.<br /><em>Start steering outcomes.</em></h1>
+        <div className="why-hero-note">
+          <span>THE SHIFT</span>
+          <p>AI agents can execute increasingly complex work. People are still forced to coordinate them one prompt at a time. Possible moves the human up a level—from choosing every next task to defining and approving the outcome.</p>
+        </div>
+      </section>
+
+      <section className="why-loop" aria-labelledby="why-loop-heading">
+        <header>
+          <span>01 / THE BOTTLENECK</span>
+          <h2 id="why-loop-heading">The agent can work.<br />The human still carries the workflow.</h2>
+        </header>
+        <div className="why-loop-grid">
+          <article>
+            <div><span>WITHOUT POSSIBLE</span><strong>PROMPT LOOP</strong></div>
+            <ol>
+              <li><span>01</span><p>Ask for one action</p></li>
+              <li><span>02</span><p>Wait and inspect</p></li>
+              <li><span>03</span><p>Invent the next prompt</p></li>
+              <li><span>04</span><p>Repeat until tired</p></li>
+            </ol>
+            <p>The objective, dependencies, and definition of done remain in your head.</p>
+          </article>
+          <article className="why-loop-card--possible">
+            <div><span>WITH POSSIBLE</span><strong>OUTCOME LOOP</strong></div>
+            <ol>
+              <li><span>01</span><p>Describe the ambition</p></li>
+              <li><span>02</span><p>Clarify what done means</p></li>
+              <li><span>03</span><p>Review the proposed path</p></li>
+              <li><span>04</span><p>Approve, then receive the work and proof</p></li>
+            </ol>
+            <p>Possible preserves the objective while agents handle the coordinated steps.</p>
+          </article>
+        </div>
+      </section>
+
+      <section className="why-roles" aria-labelledby="why-roles-heading">
+        <header>
+          <span>02 / WHO DOES WHAT</span>
+          <h2 id="why-roles-heading">You set the ambition.<br />Possible designs the path.</h2>
+          <p>Possible is not a pack browser. You never need to understand lanes, compare recipes, or choose which specialist skills belong together.</p>
+        </header>
+        <div className="why-role-grid">
+          <article>
+            <span>YOU</span>
+            <strong>Steer</strong>
+            <p>Describe what you want to make real, provide essential context, and approve consequential decisions.</p>
+          </article>
+          <article className="why-role--possible">
+            <span>POSSIBLE</span>
+            <strong>Coordinate</strong>
+            <p>Ask the useful questions, inspect what already exists, recommend one outcome pack, assemble reviewed capabilities, and verify the result.</p>
+          </article>
+          <article>
+            <span>AGENTS</span>
+            <strong>Execute</strong>
+            <p>Complete bounded workstreams, create the artifacts, run the checks, and return evidence instead of unsupported claims.</p>
+          </article>
+        </div>
+      </section>
+
+      <section className="why-selection" aria-labelledby="why-selection-heading">
+        <div>
+          <span>03 / SELECTION</span>
+          <h2 id="why-selection-heading">Possible recommends the pack.<br /><em>You approve it.</em></h2>
+          <p>Nothing is installed and no work begins until the proposed outcome, deliverables, checks, and boundaries make sense to you.</p>
+        </div>
+        <ol>
+          <li><span>01</span><strong>Tell Possible what you want to make real.</strong><p>A rough idea is enough.</p></li>
+          <li><span>02</span><strong>Possible asks only what can change the outcome.</strong><p>It uses your answers and the existing project—not a form.</p></li>
+          <li><span>03</span><strong>Possible recommends one complete path.</strong><p>You see what it will produce, how it will be checked, and what remains gated.</p></li>
+          <li><span>04</span><strong>You decide whether to proceed.</strong><p>After your yes, agents execute and Possible returns the outcome with receipts.</p></li>
+        </ol>
+      </section>
+
+      <section className="why-example" aria-labelledby="why-example-heading">
+        <header>
+          <span>04 / IN PRACTICE</span>
+          <h2 id="why-example-heading">One ambition.<br />A coordinated outcome.</h2>
+        </header>
+        <div className="why-example-thread">
+          <article><span>YOU</span><p>“I want to launch my e-ink focus device.”</p></article>
+          <article><span>POSSIBLE</span><p>Clarifies what exists, who it is for, and what a successful launch must prove. Then it recommends Hardware Launch—with its deliverables and boundaries.</p></article>
+          <article><span>YOU</span><p>“Yes, proceed.”</p></article>
+          <article><span>AGENTS</span><p>Coordinate product definition, CAD, positioning, website, launch film, and independent verification. External actions remain separately gated.</p></article>
+        </div>
+        <a className="text-link" href="/demo/hardware">See the recorded outcome →</a>
+      </section>
+
+      <section className="why-lanes" aria-labelledby="why-lanes-heading">
+        <header>
+          <span>05 / INTERNAL MAP</span>
+          <h2 id="why-lanes-heading">Four ways work becomes real.</h2>
+          <p>These lanes organize Possible’s capabilities. They are not an intake menu: Possible selects the relevant path from your conversation.</p>
+        </header>
+        <div>
+          <article><span>CREATE</span><p>Build products, assets, systems, and experiences.</p></article>
+          <article><span>LAUNCH</span><p>Bring working software and hardware to an audience.</p></article>
+          <article><span>OPERATE</span><p>Run repeatable functions such as marketing and application reliability.</p></article>
+          <article><span>RELEASE</span><p>Package, verify, deploy, and distribute completed work.</p></article>
+        </div>
+      </section>
+
+      <section className="why-cta">
+        <div>
+          <span>MAKE SOMETHING POSSIBLE</span>
+          <h2>What do you want<br />to make real?</h2>
+        </div>
+        <div>
+          <pre><code>{installCommand}</code></pre>
+          <CopyButton label="Copy install command" value={installCommand} />
+          <p>Install once. Open Codex. Type <code>$possible</code>.</p>
+          <a href="/demo">Or explore recorded outcomes →</a>
+        </div>
+      </section>
+
       <SiteFooter />
     </main>
   );
@@ -1603,6 +1732,7 @@ function NotFoundPage() {
 export function PossibleSite({ path: requestedPath }: { path?: string }) {
   const path = (requestedPath ?? (typeof window === "undefined" ? "/" : window.location.pathname)).replace(/\/+$/, "") || "/";
   if (path === "/") return <CreatePage />;
+  if (path === "/why") return <WhyPage />;
   if (path === "/packs") return <PacksPage />;
   if (path === "/docs") return <DocsPage />;
   if (path === "/demo") return <DemoGalleryPage />;
