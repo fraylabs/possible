@@ -14,6 +14,7 @@ const source = (skill: string, name: string, role: string): SkillSource => ({
 
 export const openSourceReleasePack: OutcomePack = {
   schemaVersion: 1,
+  catalogNumber: 3,
   lane: "release",
   slug: "open-source-release",
   name: "Open-Source Release",

@@ -49,18 +49,24 @@ describe("Possible", () => {
     const { container } = render(<App />);
     expect(screen.getByRole("heading", { name: /Complete recipes.*Chosen through conversation/i })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /Start with Possible/i })).toHaveAttribute("href", "/#start");
-    expect(screen.getByRole("button", { name: "All, 5 packs" })).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByRole("button", { name: "All, 7 packs" })).toHaveAttribute("aria-pressed", "true");
     expect(screen.getByRole("heading", { name: "Hardware Launch" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Software Launch" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Open-Source Release" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Playable Web Game" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Web App Operations" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Working Web App" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Production Web Release" })).toBeInTheDocument();
+    expect(container.querySelector(".pack-art--working")).toBeInTheDocument();
+    expect(container.querySelector(".pack-art--production-release")).toBeInTheDocument();
 
-    await userEvent.click(screen.getByRole("button", { name: "Create, 1 pack" }));
+    await userEvent.click(screen.getByRole("button", { name: "Create, 2 packs" }));
     expect(screen.getByRole("heading", { name: "Playable Web Game" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Working Web App" })).toBeInTheDocument();
     expect(screen.queryByRole("heading", { name: "Hardware Launch" })).not.toBeInTheDocument();
-    expect(screen.getByText("Showing 1 Create pack.")).toBeInTheDocument();
-    expect(container.querySelector(".pack-grid")).toHaveClass("pack-grid--filtered", "pack-grid--single");
+    expect(screen.getByText("Showing 2 Create packs.")).toBeInTheDocument();
+    expect(container.querySelector(".pack-grid")).toHaveClass("pack-grid--filtered");
+    expect(container.querySelector(".pack-grid")).not.toHaveClass("pack-grid--single");
 
     await userEvent.click(screen.getByRole("button", { name: "Launch, 2 packs" }));
     expect(screen.getByRole("heading", { name: "Hardware Launch" })).toBeInTheDocument();
@@ -69,8 +75,9 @@ describe("Possible", () => {
     expect(screen.getByText("PACK / 01")).toBeInTheDocument();
     expect(screen.getByText("PACK / 02")).toBeInTheDocument();
 
-    await userEvent.click(screen.getByRole("button", { name: "Release, 1 pack" }));
+    await userEvent.click(screen.getByRole("button", { name: "Release, 2 packs" }));
     expect(screen.getByRole("heading", { name: "Open-Source Release" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Production Web Release" })).toBeInTheDocument();
     expect(screen.queryByRole("heading", { name: "Software Launch" })).not.toBeInTheDocument();
 
     await userEvent.click(screen.getByRole("button", { name: "Operate, 1 pack" }));

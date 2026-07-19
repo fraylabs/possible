@@ -23,7 +23,7 @@ describe("Possible MCP", () => {
     assert.equal(client.getInstructions(), POSSIBLE_SERVER_INSTRUCTIONS);
   });
 
-  it("lists all five outcome packs", async () => {
+  it("lists all seven outcome packs", async () => {
     const result = await client.callTool({ name: "list_packs", arguments: {} });
     const envelope = result.structuredContent as { ok: boolean; data: { packs: Array<{ slug: string; lane: string }> } };
     assert.equal(envelope.ok, true);
@@ -33,6 +33,8 @@ describe("Possible MCP", () => {
       ["open-source-release", "release"],
       ["playable-web-game", "create"],
       ["web-app-operations", "operate"],
+      ["working-web-app", "create"],
+      ["production-web-release", "release"],
     ]);
   });
 
@@ -73,5 +75,26 @@ describe("Possible MCP", () => {
     assert.match(envelope.data.runPrompt, /First dated operations receipt/);
     assert.match(envelope.data.runPrompt, /OPERATING LOOP/);
     assert.match(envelope.data.runPrompt, /YYYY-MM-DDTHHMMSSZ\.md/);
+  });
+
+  it("compiles Working Web App", async () => {
+    const result = await client.callTool({ name: "compile_pack", arguments: { slug: "working-web-app" } });
+    const envelope = result.structuredContent as { ok: boolean; data: { pack: { catalogNumber: number; lane: string }; installCommands: string[]; runPrompt: string } };
+    assert.equal(envelope.ok, true);
+    assert.equal(envelope.data.pack.catalogNumber, 6);
+    assert.equal(envelope.data.pack.lane, "create");
+    assert.equal(envelope.data.installCommands.length, 2);
+    assert.match(envelope.data.runPrompt, /^Build the Working Web App outcome/);
+  });
+
+  it("compiles Production Web Release with its second approval gate", async () => {
+    const result = await client.callTool({ name: "compile_pack", arguments: { slug: "production-web-release" } });
+    const envelope = result.structuredContent as { ok: boolean; data: { pack: { catalogNumber: number; lane: string }; installCommands: string[]; runPrompt: string } };
+    assert.equal(envelope.ok, true);
+    assert.equal(envelope.data.pack.catalogNumber, 7);
+    assert.equal(envelope.data.pack.lane, "release");
+    assert.equal(envelope.data.installCommands.length, 3);
+    assert.match(envelope.data.runPrompt, /^Prepare and verify the Production Web Release outcome/);
+    assert.match(envelope.data.runPrompt, /RELEASE GATE/);
   });
 });

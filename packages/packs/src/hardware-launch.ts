@@ -2,6 +2,7 @@ import type { OutcomePack } from "./types.js";
 
 export const hardwareLaunchPack: OutcomePack = {
   schemaVersion: 1,
+  catalogNumber: 1,
   lane: "launch",
   slug: "hardware-launch",
   name: "Hardware Launch",

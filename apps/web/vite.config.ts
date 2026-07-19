@@ -49,7 +49,7 @@ const packPublications = (): Plugin => ({
     }
     this.emitFile({ type: "asset", fileName: "packs/index.json", source: json({
       schemaVersion: 1,
-      packs: outcomePacks.map(({ slug, lane, name, promise, summary, reviewedAt }) => ({ slug, lane, name, promise, summary, reviewedAt })),
+      packs: outcomePacks.map(({ catalogNumber, slug, lane, name, promise, summary, reviewedAt }) => ({ catalogNumber, slug, lane, name, promise, summary, reviewedAt })),
     }) });
     this.emitFile({ type: "asset", fileName: "llms.txt", source: [
       "# Possible", "", "Skills are ingredients. Possible compiles the outcome.", "",

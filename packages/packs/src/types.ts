@@ -21,6 +21,7 @@ export type PackLane = "create" | "launch" | "release" | "operate";
 
 export interface OutcomePack {
   schemaVersion: 1;
+  catalogNumber: number;
   lane: PackLane;
   slug: string;
   name: string;

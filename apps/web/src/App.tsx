@@ -40,6 +40,16 @@ const laneLabels: Record<PackLane, string> = {
   release: "Release",
   operate: "Operate",
 };
+const gallerySlugs = [
+  "hardware-launch",
+  "software-launch",
+  "open-source-release",
+  "playable-web-game",
+  "web-app-operations",
+  "working-web-app",
+  "production-web-release",
+] as const;
+const galleryPacks = gallerySlugs.map((slug) => outcomePacks.find((pack) => pack.slug === slug)!).filter(Boolean);
 
 function CopyButton({ label, value }: { label: string; value: string }) {
   const [state, setState] = useState<CopyState>("idle");
@@ -151,7 +161,7 @@ function CreatePage() {
 
       <section className="home-pack-preview">
         <header><p className="eyebrow">THE OUTCOME LANES</p><h2>Create it. Launch it.<br />Release it. Operate it.</h2><a className="button-link" href="/packs">Browse outcome packs <span>→</span></a></header>
-        <div>{outcomePacks.map((pack) => <PackCard pack={pack} key={pack.slug} />)}</div>
+        <div>{galleryPacks.map((pack) => <PackCard pack={pack} key={pack.slug} />)}</div>
       </section>
 
       <Boundary />
@@ -161,11 +171,10 @@ function CreatePage() {
 }
 
 function PackCard({ pack }: { pack: OutcomePack }) {
-  const index = outcomePacks.findIndex((candidate) => candidate.slug === pack.slug);
   return (
     <a className={`pack-card pack-card--${pack.slug}`} href={`/packs/${pack.slug}`}>
       <div className="pack-cover">
-        <header><span>PACK / 0{index + 1}</span><small>{pack.lane.toUpperCase()}</small><b>↗</b></header>
+        <header><span>PACK / {String(pack.catalogNumber).padStart(2, "0")}</span><small>{pack.lane.toUpperCase()}</small><b>↗</b></header>
         <PackArtwork slug={pack.slug} />
         <div className="pack-cover-title">
           <small>POSSIBLE OUTCOME</small>
@@ -201,6 +210,14 @@ function PackArtwork({ slug }: { slug: string }) {
       </div>
     );
   }
+  if (slug === "working-web-app") {
+    return (
+      <div className="pack-art pack-art--working" aria-hidden="true">
+        <div className="working-window"><i /><i /><i /><b /><b /><b /><b /></div>
+        <span>FLOW / COMPLETE</span><span>STATE / SAVED</span><span>BUILD / PASS</span>
+      </div>
+    );
+  }
   if (slug === "playable-web-game") {
     return (
       <div className="pack-art pack-art--game" aria-hidden="true">
@@ -218,6 +235,14 @@ function PackArtwork({ slug }: { slug: string }) {
       </div>
     );
   }
+  if (slug === "production-web-release") {
+    return (
+      <div className="pack-art pack-art--production-release" aria-hidden="true">
+        <div className="release-track"><i /><i /><i /><b>APPROVAL</b></div>
+        <span>CANDIDATE / PINNED</span><span>ROLLBACK / READY</span><span>PRODUCTION / VERIFIED</span>
+      </div>
+    );
+  }
   return (
     <div className="pack-art pack-art--release" aria-hidden="true">
       <i className="release-ring" /><i className="release-dot" />
@@ -230,7 +255,7 @@ function PacksPage() {
   const [activeLane, setActiveLane] = useState<"all" | PackLane>("all");
   const laneCounts = Object.fromEntries(laneOrder.map((lane) => [lane, outcomePacks.filter((pack) => pack.lane === lane).length])) as Record<PackLane, number>;
   const visibleLanes = laneOrder.filter((lane) => laneCounts[lane] > 0);
-  const visiblePacks = activeLane === "all" ? outcomePacks : outcomePacks.filter((pack) => pack.lane === activeLane);
+  const visiblePacks = activeLane === "all" ? galleryPacks : galleryPacks.filter((pack) => pack.lane === activeLane);
   const activeLabel = activeLane === "all" ? "All" : laneLabels[activeLane];
   const resultNoun = visiblePacks.length === 1 ? "pack" : "packs";
 
@@ -272,7 +297,7 @@ function PacksPage() {
 }
 
 function PackDetailPage({ pack }: { pack: OutcomePack }) {
-  const packNumber = outcomePacks.findIndex((candidate) => candidate.slug === pack.slug) + 1;
+  const packNumber = pack.catalogNumber;
   const compiled = compilePack(pack);
   const reviewedLabel = new Date(`${pack.reviewedAt}T00:00:00Z`).toLocaleDateString("en-US", {
     month: "short",
@@ -295,14 +320,14 @@ function PackDetailPage({ pack }: { pack: OutcomePack }) {
   return (
     <main className="pack-reference-page">
       <a className="pack-reference-skip" href="#pack-specification">Skip to pack specification</a>
-      <SiteNav label={`Pack spec / 0${packNumber}`} />
+      <SiteNav label={`Pack spec / ${String(packNumber).padStart(2, "0")}`} />
       <div className="pack-reference-shell">
         <aside className="pack-reference-packs" aria-label="Outcome pack navigation">
           <header><span>OUTCOME PACKS</span><strong>{String(outcomePacks.length).padStart(2, "0")}</strong></header>
           <nav aria-label="Outcome packs">
-            {outcomePacks.map((candidate, index) => (
+            {galleryPacks.map((candidate) => (
               <a href={`/packs/${candidate.slug}`} aria-current={candidate.slug === pack.slug ? "page" : undefined} key={candidate.slug}>
-                <span>{String(index + 1).padStart(2, "0")}</span>
+                <span>{String(candidate.catalogNumber).padStart(2, "0")}</span>
                 <strong>{candidate.name}</strong>
                 <small>{candidate.lane}</small>
               </a>

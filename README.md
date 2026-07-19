@@ -8,9 +8,9 @@ Skills.sh distributes individual agent skills. Possible publishes opinionated ou
 
 Lanes make the catalog easier to browse; they are never a question the user must answer during intake.
 
-- **Create** — **Playable Web Game** produces one polished, responsive Three.js game and its evidence report.
+- **Create** — **Working Web App** produces a locally verified first usable product; **Playable Web Game** produces one polished, responsive Three.js game.
 - **Launch** — **Hardware Launch** and **Software Launch** turn a product into a coherent public presentation and verified launch package.
-- **Release** — **Open-Source Release** produces a trustworthy package, documentation, examples, hardened CI, changelog, and evidence report.
+- **Release** — **Open-Source Release** prepares a trustworthy distributable repository; **Production Web Release** takes a tested Vercel app through a gated, reversible deployment or an honest no-go.
 - **Operate** — **Web App Operations** establishes a repeatable health, triage, maintenance, and recovery loop and executes its first dated cycle.
 
 Operate packs are recurring by definition: a checklist alone is not enough. The first cycle must run, leave evidence, carry unresolved work forward, and name its next review date.

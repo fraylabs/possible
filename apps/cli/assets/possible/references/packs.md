@@ -49,13 +49,13 @@ Lane: `launch`
 
 Public page: `https://possible.sh/packs/software-launch`
 
-Use for an existing software idea or repository that needs a coherent product release and launch presentation.
+Use for an existing working software product whose primary flow already exists but needs a coherent release and launch presentation.
 
-Outputs: production product, launch site, demo film, deployment plan, evidence report.
+Outputs: stabilized product release candidate, launch site, demo film, deployment plan, evidence report.
 
 Workstreams:
 
-- Production product — `vercel-react-best-practices`; owns `product/` and its test receipt.
+- Product release candidate — `vercel-react-best-practices`; stabilizes the existing release candidate and owns `product/` and its test receipt.
 - Launch site — `frontend-design`; owns `site/` and the launch narrative.
 - Demo film — `remotion-best-practices`; owns `film/` and the rendered preview.
 - Release readiness — `web-design-guidelines`, `deploy-to-vercel`; owns `release/` and the deployment plan.
@@ -176,16 +176,86 @@ npx skills@1.5.19 add github/awesome-copilot --skill impediment-prioritization -
 
 Establish the durable workflow and execute its first dated cycle. One health snapshot never proves uptime. Preserve empty queues, skipped checks, unavailable signals, unresolved work, and unproven claims honestly. Production changes, issue-tracker writes, monitoring changes, deploys, rollbacks, paging, status communication, and customer-data access remain separate gates.
 
+## Working Web App
+
+Slug: `working-web-app`
+
+Lane: `create`
+
+Public page: `https://possible.sh/packs/working-web-app`
+
+Use when an idea, prototype, or rough repository needs to become a small locally runnable web product with one complete verified user flow—not a launch campaign or deployment.
+
+Outputs: locally runnable working application, primary-flow and state contract, reproducible fixtures or demo data, automated checks, production build, evidence report.
+
+Workstreams:
+
+- Product flow and states — `frontend-design`; owns `product/flow.md`, `product/states.md`, and `product/data-contract.md`.
+- Working application — `frontend-design`; owns application source, fixtures, and the production build.
+- Automated product proof — `webapp-testing`; owns tests, the repeatable verification command, and the implementation receipt.
+- Fresh review — `webapp-testing`, `security-review`; verifies the integrated app and reports scoped risks without claiming security.
+
+Sources:
+
+- `anthropics/skills`: `frontend-design`, `webapp-testing`; reviewed `fa0fa64bdc967915dc8399e803be67759e1e62b8`.
+- `github/awesome-copilot`: `security-review`; reviewed `26fe2d126bf79aafb38f43344d450b69632200f8`.
+
+Install:
+
+```bash
+npx skills@1.5.19 add anthropics/skills --skill frontend-design --skill webapp-testing --agent codex
+npx skills@1.5.19 add github/awesome-copilot --skill security-review --agent codex
+```
+
+Prove clean local setup, one complete user job, one material failure path, every promised state and persistence boundary, a production build, responsive browser behavior, and an exact receipt. Deployment, publishing, analytics, third-party services, and real customer data remain separate gates. Never call a local build secure, scalable, reliable, or production-ready.
+
+## Production Web Release
+
+Slug: `production-web-release`
+
+Lane: `release`
+
+Public page: `https://possible.sh/packs/production-web-release`
+
+Use when an existing tested web app needs a gated, reversible production release with an immutable candidate, verified preview, exact approval, rollback path, post-deploy smoke evidence, and final receipt. Automated execution initially supports Vercel; other providers stop at a provider-neutral no-go receipt until a reviewed adapter exists.
+
+Outputs: pinned release candidate and provider inventory, security and pipeline preflight, rollout and rollback plan, preview smoke receipt, approved production deployment or no-go receipt, post-deployment evidence, final release receipt.
+
+Workstreams:
+
+- Candidate and release readiness — `devops-rollout-plan`, `security-review`; owns the candidate record, preflight, rollout plan, and rollback plan.
+- Provider and delivery path — `github-actions-hardening`; owns provider evidence, pipeline review, and exact deploy commands. The captain holds `deploy-to-vercel` until the separate exact production approval.
+- Release verification — `webapp-testing`; owns repeatable preview, production, and rollback-recovery checks and receipts.
+- Fresh review — `webapp-testing`, `devops-rollout-plan`; verifies the integrated release evidence before any promotion.
+
+Sources:
+
+- `github/awesome-copilot`: `devops-rollout-plan`, `github-actions-hardening`, `security-review`; reviewed `26fe2d126bf79aafb38f43344d450b69632200f8`.
+- `anthropics/skills`: `webapp-testing`; reviewed `fa0fa64bdc967915dc8399e803be67759e1e62b8`.
+- `vercel-labs/agent-skills`: `deploy-to-vercel`; reviewed `f8a72b9603728bb92a217a879b7e62e43ad76c81`.
+
+Install:
+
+```bash
+npx skills@1.5.19 add github/awesome-copilot --skill devops-rollout-plan --skill github-actions-hardening --skill security-review --agent codex
+npx skills@1.5.19 add anthropics/skills --skill webapp-testing --agent codex
+npx skills@1.5.19 add vercel-labs/agent-skills --skill deploy-to-vercel --agent codex
+```
+
+Pack confirmation does not authorize production. Workstreams prepare evidence first; the captain integrates it, records go or no-go, and asks again for approval naming the provider, account or team, project, production target, exact candidate, method, and accepted risks. Do not mutate provider state, secrets, databases, DNS, billing, repositories, or workflows without approval for that exact action. Never infer success, availability, security, or rollback readiness from a plan or one browser pass.
+
 ## Selection rule
 
 Recommend the pack whose finished outputs most closely match the user's desired end state:
 
+- Web-app idea or rough repository plus its first complete locally verified user flow → Working Web App.
+- Browser-game idea plus one polished playable build → Playable Web Game.
 - Physical product plus launch presentation → Hardware Launch.
 - Software product plus release and launch presentation → Software Launch.
 - Existing repository plus trustworthy public release materials → Open-Source Release.
-- Browser-game idea plus one polished playable build → Playable Web Game.
+- Existing tested web app plus a reversible approved production deployment and smoke receipt → Production Web Release.
 - Live web app plus a repeatable reliability, issue-triage, maintenance, incident-response, and safe-change cadence → Web App Operations.
 
-Use Web App Operations only when the app already exists and the desired outcome is an ongoing rhythm. An initial build or public launch belongs to Software Launch; a distributable repository release belongs to Open-Source Release; one isolated bug or incident with no requested recurring workflow is focused work, not a pack.
+Use Working Web App when the missing outcome is the product itself. Use Software Launch when the product works and the missing outcome is its public story, site, and demo. Use Production Web Release when a tested candidate exists and the missing outcome is a gated production promotion with rollback and smoke evidence. Use Web App Operations only after the app is live and the desired outcome is an ongoing rhythm. A distributable repository release belongs to Open-Source Release; one isolated bug or incident with no requested recurring workflow is focused work, not a pack.
 
 If none fits, say so. Do not force a pack or invent a new one during intake.

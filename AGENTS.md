@@ -1,6 +1,6 @@
 # Possible
 
-Possible compiles existing skills into five outcome packs: Hardware Launch, Software Launch, Open-Source Release, Playable Web Game, and Web App Operations.
+Possible compiles existing skills into seven outcome packs: Hardware Launch, Software Launch, Open-Source Release, Playable Web Game, Web App Operations, Working Web App, and Production Web Release.
 
 Before editing:
 

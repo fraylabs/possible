@@ -35,6 +35,8 @@ test("installs the complete Possible skill repo-locally without disturbing other
   });
   assert.match(await readFile(join(project, result.installPath, "SKILL.md"), "utf8"), /name: possible/);
   assert.match(await readFile(join(project, result.installPath, "references", "packs.md"), "utf8"), /hardware-launch/);
+  assert.match(await readFile(join(project, result.installPath, "references", "packs.md"), "utf8"), /working-web-app/);
+  assert.match(await readFile(join(project, result.installPath, "references", "packs.md"), "utf8"), /production-web-release/);
   assert.equal(await readFile(existingSkill, "utf8"), "user-owned\n");
 });
 

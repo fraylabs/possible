@@ -14,6 +14,7 @@ const awesomeSource = (skill: string, name: string, role: string): SkillSource =
 
 export const webAppOperationsPack: OutcomePack = {
   schemaVersion: 1,
+  catalogNumber: 5,
   lane: "operate",
   slug: "web-app-operations",
   name: "Web App Operations",

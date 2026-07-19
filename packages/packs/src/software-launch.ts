@@ -2,18 +2,21 @@ import type { OutcomePack } from "./types.js";
 
 export const softwareLaunchPack: OutcomePack = {
   schemaVersion: 1,
+  catalogNumber: 2,
   lane: "launch",
   slug: "software-launch",
   name: "Software Launch",
   eyebrow: "02 / OUTCOME PACK",
-  promise: "Turn one software product into a launch-ready release.",
-  summary: "A production product, launch site, demo film, deployment plan, and evidence report—built in parallel, then reviewed as one release.",
+  promise: "Turn one working software product into a launch-ready release.",
+  summary: "A stabilized release candidate, launch site, demo film, deployment plan, and evidence report—built in parallel, then reviewed as one truthful public story.",
   useWhen: [
-    "A software idea or repository needs a coherent product release and launch presentation.",
+    "An existing working software product needs a coherent release and launch presentation.",
+    "Its primary user flow already works, but the product, launch site, and demo are not yet one launch-ready story.",
     "The product, launch site, and demo must describe the same verified capabilities.",
     "You want deployment readiness documented before deciding whether to deploy.",
   ],
   notFor: [
+    "An idea or rough repository that still needs its first complete usable application; use Working Web App.",
     "Maintaining an already-live application through a recurring operating cadence.",
     "Preparing a library or repository for public open-source distribution.",
     "A marketing page that does not include a working product outcome.",
@@ -84,10 +87,10 @@ export const softwareLaunchPack: OutcomePack = {
   workstreams: [
     {
       id: "product",
-      name: "Production product",
+      name: "Product release candidate",
       skills: ["vercel-react-best-practices"],
       owns: ["product/", "product test receipt"],
-      brief: "Finish the smallest coherent release, preserve the existing stack, and prove its primary user flow.",
+      brief: "Stabilize the existing working product as the smallest coherent release candidate, preserve its stack, and prove its already-defined primary user flow without expanding the product thesis.",
     },
     {
       id: "site",
@@ -112,7 +115,7 @@ export const softwareLaunchPack: OutcomePack = {
     },
   ],
   reviewSkills: ["webapp-testing", "web-design-guidelines"],
-  outputs: ["Production product", "Launch site", "Demo film", "Deployment plan", "Evidence report"],
+  outputs: ["Stabilized product release candidate", "Launch site", "Demo film", "Deployment plan", "Evidence report"],
   guardrails: [
     "Do not deploy, change DNS, email users, enable analytics, or collect real customer data without explicit approval.",
     "Never claim demand, uptime, performance, security, or production readiness without direct evidence.",
