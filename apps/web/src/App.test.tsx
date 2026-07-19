@@ -145,6 +145,25 @@ describe("Possible", () => {
     expect(await axe(container)).toHaveNoViolations();
   });
 
+  it("compares project workflows without presenting qualitative claims as measured results", async () => {
+    window.history.pushState({}, "", "/benchmarks");
+    const { container } = render(<App />);
+    expect(screen.getByRole("heading", { name: /How much of the project.*stays in your head/i, level: 1 })).toBeInTheDocument();
+    expect(screen.getByText(/qualitative workflow comparison/i)).toBeInTheDocument();
+    expect(screen.getByText(/This mock benchmark compares where responsibility lives—not which method writes better code/i)).toBeInTheDocument();
+    const table = screen.getByRole("table", { name: "Workflow responsibility comparison" });
+    expect(within(table).getAllByRole("columnheader")).toHaveLength(6);
+    expect(within(table).getAllByRole("rowheader")).toHaveLength(7);
+    for (const mode of ["Prompt by prompt", "Spec-driven", "/plan", "/goal", "$possible"]) {
+      expect(within(table).getByRole("columnheader", { name: mode })).toBeInTheDocument();
+    }
+    expect(container.querySelectorAll(".benchmark-traces article")).toHaveLength(5);
+    expect(screen.getByRole("heading", { name: /These are layers, not competing religions/i })).toBeInTheDocument();
+    expect(container).toHaveTextContent(/Spec-driven.*not a separate Codex product mode/i);
+    expect(container).not.toHaveTextContent(/\b\d+(?:x|%| tokens saved)\b/i);
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
   it("renders every pack route as a manifest-derived, accessible outcome specification", async () => {
     for (const pack of outcomePacks) {
       window.history.pushState({}, "", `/packs/${pack.slug}`);

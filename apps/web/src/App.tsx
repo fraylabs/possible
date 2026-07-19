@@ -77,6 +77,22 @@ const starterOutcomes = [
     demoHref: "/demo/software",
   },
 ] as const;
+const benchmarkModes = [
+  { id: "manual", label: "Prompt by prompt", trace: ["Ask", "Inspect", "Choose next step", "Repeat"] },
+  { id: "spec", label: "Spec-driven", trace: ["Write spec", "Resolve gaps", "Implement", "Check spec"] },
+  { id: "plan", label: "/plan", trace: ["Gather context", "Clarify", "Propose plan", "Implement"] },
+  { id: "goal", label: "/goal", trace: ["Define outcome", "Set constraints", "Continue work", "Verify done"] },
+  { id: "possible", label: "$possible", trace: ["Describe ambition", "Recommend pack", "Approve", "Coordinate + prove"] },
+] as const;
+const benchmarkRows = [
+  { label: "What the user starts with", manual: "A task prompt and whatever context they remember to include.", spec: "A detailed specification written or assembled before implementation.", plan: "A rough or complex task that Codex can investigate before coding.", goal: "A persistent outcome, constraints, and completion criteria.", possible: "A rough ambition described conversationally." },
+  { label: "Who clarifies the outcome", manual: "The user, across repeated prompts.", spec: "The person or process authoring the spec.", plan: "Codex gathers context, asks questions, and proposes an execution plan.", goal: "The user defines it directly, or uses Plan mode first when it is still unclear.", possible: "Possible interviews the user, inspects the project, and states the finished outcome." },
+  { label: "Where the target lives", manual: "Mostly in the user’s head and chat history.", spec: "In the specification and its acceptance criteria.", plan: "In the approved plan and current chat context.", goal: "As a persistent goal attached to the active chat.", possible: "In a durable outcome brief, approved pack snapshot, skill lock, and receipts." },
+  { label: "Who chooses capabilities", manual: "The user asks for tools, skills, or specialists as needs appear.", spec: "The spec or implementation workflow names what is required.", plan: "Codex plans with the capabilities already available in the project.", goal: "The goal keeps work directed, but does not itself select a reusable capability set.", possible: "Possible recommends one reviewed pack and installs its disclosed ingredients after approval." },
+  { label: "How work is coordinated", manual: "The user prompts, reviews, and sequences each next task.", spec: "Implementation follows the authored specification and task breakdown.", plan: "Codex follows the proposed plan after the planning phase.", goal: "Codex continues toward the persistent target and can be paused, edited, or resumed.", possible: "Possible captains bounded workstreams, integrates their outputs, and preserves approval gates." },
+  { label: "What proves completion", manual: "Whatever checks the user remembers to request and inspect.", spec: "Acceptance criteria written into the specification.", plan: "Checks included in the plan and implementation request.", goal: "Verification criteria included in the goal; Codex tracks them while it works.", possible: "Pack-specific verification, fresh review, artifacts, limitations, and an outcome receipt." },
+  { label: "What the human still owns", manual: "Objective, decomposition, sequencing, memory, review, and every next prompt.", spec: "The complete upfront model of the desired system and ongoing spec maintenance.", plan: "The desired result, approval of the plan, and any missing capability or product decisions.", goal: "A sufficiently clear target, boundaries, and evidence that define done.", possible: "The ambition, essential context, pack confirmation, and consequential real-world approvals." },
+] as const;
 
 function CopyButton({ label, value }: { label: string; value: string }) {
   const [state, setState] = useState<CopyState>("idle");
@@ -107,6 +123,7 @@ function SiteNav({ label }: { label?: string }) {
       <div className="nav-links">
         <a href="/">START</a>
         <a href="/why">WHY</a>
+        <a href="/benchmarks">BENCH</a>
         <a href="/packs">PACKS</a>
         <a href="/docs">DOCS</a>
         <a href="/demo">DEMO</a>
@@ -281,6 +298,7 @@ function WhyPage() {
             <p>The agent handles the execution. Possible keeps that execution attached to the larger purpose.</p>
             <p>Instead of asking, “What should I prompt next?” the human can return to the more important question:</p>
             <p className="why-closing-line">What do I want to make possible?</p>
+            <a className="why-text-link" href="/benchmarks">Compare the workflows →</a>
           </section>
 
           <footer className="why-article-cta">
@@ -290,6 +308,88 @@ function WhyPage() {
           </footer>
         </div>
       </article>
+
+      <SiteFooter />
+    </main>
+  );
+}
+
+function BenchmarksPage() {
+  return (
+    <main className="benchmarks-page">
+      <SiteNav label="Workflow benchmark" />
+
+      <header className="benchmark-hero">
+        <p className="eyebrow">BENCHMARK 01 / PROJECT CREATION</p>
+        <h1>How much of the project<br />stays in <em>your head?</em></h1>
+        <p>Five ways to direct the same coding agent—from repeated prompts to a coordinated outcome.</p>
+        <div><span>QUALITATIVE WORKFLOW COMPARISON</span><span>NO SPEED, TOKEN, OR QUALITY SCORES</span></div>
+      </header>
+
+      <section className="benchmark-method" aria-labelledby="benchmark-method-heading">
+        <div>
+          <span>CONTROLLED SCENARIO</span>
+          <h2 id="benchmark-method-heading">Build a complete daily-focus web app from an empty project.</h2>
+        </div>
+        <p>The target is the same in every column: clarify the product, build one complete user flow, test it, and produce reviewable evidence without deploying it. This mock benchmark compares where responsibility lives—not which method writes better code.</p>
+      </section>
+
+      <section className="benchmark-traces" aria-labelledby="benchmark-traces-heading">
+        <header><span>INTERACTION TRACE</span><h2 id="benchmark-traces-heading">What the user experiences</h2></header>
+        <div>
+          {benchmarkModes.map((mode) => (
+            <article className={mode.id === "possible" ? "is-possible" : ""} key={mode.id}>
+              <h3>{mode.label}</h3>
+              <ol>{mode.trace.map((step) => <li key={step}>{step}</li>)}</ol>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="benchmark-matrix" aria-labelledby="benchmark-matrix-heading">
+        <header>
+          <span>RESPONSIBILITY MATRIX</span>
+          <h2 id="benchmark-matrix-heading">Same agent. Different orchestration layer.</h2>
+          <p>Scroll horizontally to compare every workflow side by side.</p>
+        </header>
+        <div className="benchmark-table-scroll" tabIndex={0} aria-label="Scrollable workflow comparison">
+          <table>
+            <caption className="sr-only">Workflow responsibility comparison</caption>
+            <thead>
+              <tr><th scope="col">Dimension</th>{benchmarkModes.map((mode) => <th className={mode.id === "possible" ? "is-possible" : ""} scope="col" key={mode.id}>{mode.label}</th>)}</tr>
+            </thead>
+            <tbody>
+              {benchmarkRows.map((row) => (
+                <tr key={row.label}>
+                  <th scope="row">{row.label}</th>
+                  {benchmarkModes.map((mode) => <td className={mode.id === "possible" ? "is-possible" : ""} key={mode.id}>{row[mode.id]}</td>)}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section className="benchmark-composition" aria-labelledby="benchmark-composition-heading">
+        <span>THE IMPORTANT PART</span>
+        <h2 id="benchmark-composition-heading">These are layers, not competing religions.</h2>
+        <p>Plan mode improves the thinking before implementation. Goal mode keeps a persistent target attached to long-running work. A specification records requirements and acceptance criteria. Possible can use all three: it operates one level above them by discovering the outcome, selecting the reviewed capability set, and coordinating the path after the user approves.</p>
+        <div>
+          <code>$possible</code><i>→</i><code>/plan</code><i>→</i><code>/goal</code><i>→</i><code>spec + workstreams</code><i>→</i><code>receipt</code>
+        </div>
+      </section>
+
+      <section className="benchmark-notes" aria-labelledby="benchmark-notes-heading">
+        <h2 id="benchmark-notes-heading">Methodology notes</h2>
+        <ul>
+          <li>This is a qualitative interaction mock, not an empirical performance result.</li>
+          <li><code>/plan</code> is Codex Plan mode: it gathers context, asks clarifying questions, and proposes a plan before implementation.</li>
+          <li><code>/goal</code> attaches a persistent target to the active chat and supports pause, resume, edit, and verification-oriented long-running work.</li>
+          <li>“Spec-driven” describes a development methodology here, not a separate Codex product mode.</li>
+          <li>The next benchmark should run the same brief through every workflow and publish prompts, artifacts, elapsed time, token use, interventions, and independent review results.</li>
+        </ul>
+        <p>Sources: <a href="https://learn.chatgpt.com/guides/best-practices" target="_blank" rel="noreferrer">Codex best practices ↗</a> · <a href="https://learn.chatgpt.com/docs/long-running-work" target="_blank" rel="noreferrer">Long-running work and Goal mode ↗</a> · <a href="https://developers.openai.com/cookbook/articles/codex_exec_plans" target="_blank" rel="noreferrer">Execution plans ↗</a></p>
+      </section>
 
       <SiteFooter />
     </main>
@@ -1713,6 +1813,7 @@ export function PossibleSite({ path: requestedPath }: { path?: string }) {
   const path = (requestedPath ?? (typeof window === "undefined" ? "/" : window.location.pathname)).replace(/\/+$/, "") || "/";
   if (path === "/") return <CreatePage />;
   if (path === "/why") return <WhyPage />;
+  if (path === "/benchmarks") return <BenchmarksPage />;
   if (path === "/packs") return <PacksPage />;
   if (path === "/docs") return <DocsPage />;
   if (path === "/demo") return <DemoGalleryPage />;

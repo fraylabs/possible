@@ -1432,3 +1432,81 @@ footer .wordmark span { color: #151411; }
   .why-article-cta { margin-top: 65px; }
   .why-article-cta pre code { font-size: 9px; }
 }
+
+/* Workflow benchmark */
+.benchmarks-page { background: #f3f0e8; color: #151411; }
+.benchmark-hero { min-height: 620px; padding: 100px 3.5vw 55px; border-bottom: 1px solid #151411; display: grid; grid-template-columns: 1fr minmax(260px, .38fr); grid-template-rows: auto 1fr auto; gap: 35px 6vw; }
+.benchmark-hero > .eyebrow { grid-column: 1 / -1; }
+.benchmark-hero h1 { grid-column: 1 / -1; max-width: 1250px; margin: 30px 0; font-size: clamp(62px, 8vw, 124px); font-weight: 500; line-height: .87; letter-spacing: -.07em; }
+.benchmark-hero h1 em { color: #ff4d00; font-style: normal; font-weight: 400; }
+.benchmark-hero > p:not(.eyebrow) { max-width: 720px; margin: 0; color: #514d47; font-size: 20px; line-height: 1.55; }
+.benchmark-hero > div { padding-top: 16px; border-top: 1px solid #aaa59a; display: flex; flex-direction: column; gap: 8px; color: #777169; font: 8px "DM Mono", monospace; }
+.benchmark-method { padding: 75px 3.5vw; border-bottom: 1px solid #151411; display: grid; grid-template-columns: 1fr 1fr; gap: 8vw; }
+.benchmark-method span, .benchmark-traces > header span, .benchmark-matrix > header span, .benchmark-composition > span { color: #777169; font: 8px "DM Mono", monospace; letter-spacing: .08em; }
+.benchmark-method h2 { max-width: 650px; margin: 25px 0 0; font-size: clamp(35px, 4vw, 56px); font-weight: 500; line-height: 1; letter-spacing: -.045em; }
+.benchmark-method > p { max-width: 650px; margin: 23px 0 0; color: #514d47; font-size: 15px; line-height: 1.75; }
+.benchmark-traces { padding: 90px 3.5vw; border-bottom: 1px solid #151411; }
+.benchmark-traces > header, .benchmark-matrix > header { margin-bottom: 40px; display: flex; justify-content: space-between; align-items: baseline; gap: 25px; }
+.benchmark-traces h2, .benchmark-matrix h2 { margin: 0; font-size: clamp(32px, 4vw, 52px); font-weight: 500; letter-spacing: -.045em; }
+.benchmark-traces > div { display: grid; grid-template-columns: repeat(5, minmax(185px, 1fr)); border-top: 1px solid #151411; border-left: 1px solid #151411; }
+.benchmark-traces article { min-height: 340px; padding: 18px; border-right: 1px solid #151411; border-bottom: 1px solid #151411; display: flex; flex-direction: column; background: #f3f0e8; }
+.benchmark-traces article.is-possible { background: #d9ff63; }
+.benchmark-traces h3 { margin: 0; font-size: 18px; font-weight: 600; }
+.benchmark-traces ol { margin: auto 0 0; padding: 0; list-style: none; counter-reset: trace; }
+.benchmark-traces li { padding: 12px 0; border-top: 1px solid #aaa59a; position: relative; display: grid; grid-template-columns: 30px 1fr; gap: 8px; color: #514d47; font-size: 11px; line-height: 1.4; counter-increment: trace; }
+.benchmark-traces li::before { content: "0" counter(trace); color: #777169; font: 8px "DM Mono", monospace; }
+.benchmark-matrix { padding: 90px 3.5vw; border-bottom: 1px solid #151411; }
+.benchmark-matrix > header { display: grid; grid-template-columns: minmax(160px, .3fr) 1fr minmax(220px, .35fr); }
+.benchmark-matrix > header > p { margin: 0; color: #777169; font: 9px "DM Mono", monospace; text-align: right; }
+.benchmark-table-scroll { overflow-x: auto; border: 1px solid #151411; background: #f3f0e8; scrollbar-color: #151411 #d7d3ca; }
+.benchmark-table-scroll:focus-visible { outline: 3px solid #ff4d00; outline-offset: 3px; }
+.benchmark-table-scroll table { width: 100%; min-width: 1240px; border-collapse: collapse; table-layout: fixed; }
+.benchmark-table-scroll th, .benchmark-table-scroll td { padding: 16px; border-right: 1px solid #aaa59a; border-bottom: 1px solid #aaa59a; vertical-align: top; text-align: left; }
+.benchmark-table-scroll tr:last-child th, .benchmark-table-scroll tr:last-child td { border-bottom: 0; }
+.benchmark-table-scroll th:last-child, .benchmark-table-scroll td:last-child { border-right: 0; }
+.benchmark-table-scroll thead th { background: #151411; color: #f3f0e8; font: 9px "DM Mono", monospace; letter-spacing: .04em; }
+.benchmark-table-scroll thead th:first-child { width: 190px; }
+.benchmark-table-scroll tbody th { width: 190px; background: #e7e3da; font-size: 11px; line-height: 1.45; }
+.benchmark-table-scroll td { color: #514d47; font-size: 11px; line-height: 1.65; }
+.benchmark-table-scroll .is-possible { background: #efffc3; color: #151411; }
+.benchmark-table-scroll thead .is-possible { background: #d9ff63; color: #151411; }
+.benchmark-composition { padding: 100px max(3.5vw, calc((100vw - 900px) / 2)); border-bottom: 1px solid #151411; background: #151411; color: #f3f0e8; }
+.benchmark-composition > span { color: #a8ff52; }
+.benchmark-composition h2 { max-width: 850px; margin: 30px 0; font-size: clamp(45px, 6vw, 82px); font-weight: 500; line-height: .94; letter-spacing: -.055em; }
+.benchmark-composition > p { max-width: 780px; color: #aaa49b; font-size: 16px; line-height: 1.75; }
+.benchmark-composition > div { margin-top: 45px; padding: 19px; border: 1px solid #5d5952; display: flex; flex-wrap: wrap; align-items: center; gap: 11px; }
+.benchmark-composition code { color: #f3f0e8; font: 12px "DM Mono", monospace; }
+.benchmark-composition i { color: #ff4d00; font-style: normal; }
+.benchmark-notes { max-width: 900px; margin: 0 auto; padding: 90px 28px 120px; }
+.benchmark-notes h2 { margin: 0 0 28px; font-size: 36px; font-weight: 500; letter-spacing: -.04em; }
+.benchmark-notes ul { margin: 0; padding-left: 21px; }
+.benchmark-notes li { margin-bottom: 13px; color: #514d47; font-size: 14px; line-height: 1.65; }
+.benchmark-notes code { font: .9em "DM Mono", monospace; }
+.benchmark-notes > p { margin-top: 35px; padding-top: 17px; border-top: 1px solid #aaa59a; color: #777169; font-size: 10px; line-height: 1.7; }
+.benchmark-notes a { color: #151411; text-decoration: underline; text-underline-offset: 3px; }
+
+@media (max-width: 1000px) {
+  .nav-links { gap: 15px; }
+  .benchmark-traces > div { overflow-x: auto; grid-template-columns: repeat(5, 210px); }
+  .benchmark-matrix > header { grid-template-columns: 1fr; }
+  .benchmark-matrix > header > p { text-align: left; }
+}
+
+@media (max-width: 560px) {
+  .nav-links a:nth-child(5), .nav-links a:nth-child(6) { display: none; }
+  .why-page .nav-links a:nth-child(4) { display: inline; }
+  .benchmark-hero { min-height: auto; padding: 65px 18px 45px; grid-template-columns: 1fr; }
+  .benchmark-hero h1 { font-size: 15vw; }
+  .benchmark-hero > p:not(.eyebrow), .benchmark-hero > div { grid-column: 1; }
+  .benchmark-method { padding: 60px 18px; grid-template-columns: 1fr; gap: 20px; }
+  .benchmark-method h2 { font-size: 11vw; }
+  .benchmark-traces, .benchmark-matrix { padding: 65px 18px; }
+  .benchmark-traces > header, .benchmark-matrix > header { align-items: flex-start; flex-direction: column; }
+  .benchmark-traces h2, .benchmark-matrix h2 { font-size: 10vw; }
+  .benchmark-traces > div { margin-right: -18px; }
+  .benchmark-composition { padding: 75px 18px; }
+  .benchmark-composition h2 { font-size: 13vw; }
+  .benchmark-composition > div { align-items: flex-start; flex-direction: column; }
+  .benchmark-composition i { transform: rotate(90deg); }
+  .benchmark-notes { padding: 70px 18px 90px; }
+}
