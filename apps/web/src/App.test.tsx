@@ -60,7 +60,7 @@ describe("Possible", () => {
     window.history.pushState({}, "", "/packs");
     render(<App />);
     const catalog = screen.getByRole("region", { name: "All outcome packs" });
-    expect(within(catalog).getByRole("link", { name: /Web App Operations.*Schedule operations/is })).toHaveAttribute(
+    expect(within(catalog).getByRole("link", { name: /Web App Operations.*Optional schedule/is })).toHaveAttribute(
       "href",
       "/packs/web-app-operations",
     );
@@ -71,7 +71,7 @@ describe("Possible", () => {
     const { container } = render(<App />);
     expect(screen.getByRole("heading", { name: /Complete recipes.*Chosen through conversation/i })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /Start with Possible/i })).toHaveAttribute("href", "/#start");
-    expect(screen.getByRole("button", { name: "All, 7 packs" })).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByRole("button", { name: "All, 8 packs" })).toHaveAttribute("aria-pressed", "true");
     expect(screen.getByRole("heading", { name: "Hardware Launch" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Software Launch" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Open-Source Release" })).toBeInTheDocument();
@@ -79,6 +79,7 @@ describe("Possible", () => {
     expect(screen.getByRole("heading", { name: "Web App Operations" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Working Web App" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Production Web Release" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Marketing Operations" })).toBeInTheDocument();
     expect(container.querySelector(".pack-art--working")).toBeInTheDocument();
     expect(container.querySelector(".pack-art--production-release")).toBeInTheDocument();
 
@@ -102,10 +103,11 @@ describe("Possible", () => {
     expect(screen.getByRole("heading", { name: "Production Web Release" })).toBeInTheDocument();
     expect(screen.queryByRole("heading", { name: "Software Launch" })).not.toBeInTheDocument();
 
-    await userEvent.click(screen.getByRole("button", { name: "Operate, 1 pack" }));
+    await userEvent.click(screen.getByRole("button", { name: "Operate, 2 packs" }));
     expect(screen.getByRole("heading", { name: "Web App Operations" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Marketing Operations" })).toBeInTheDocument();
     expect(screen.queryByRole("heading", { name: "Open-Source Release" })).not.toBeInTheDocument();
-    expect(screen.getByText("Showing 1 Operate pack.")).toBeInTheDocument();
+    expect(screen.getByText("Showing 2 Operate packs.")).toBeInTheDocument();
     expect(await axe(container)).toHaveNoViolations();
   });
 
@@ -137,7 +139,7 @@ describe("Possible", () => {
       expect(container.querySelectorAll("h1")).toHaveLength(1);
       expect(container.querySelector(".pack-hero")).not.toBeInTheDocument();
       expect(container.querySelector(".pack-start")).not.toBeInTheDocument();
-      expect(container.querySelectorAll(".pack-reference-section")).toHaveLength(pack.slug === "web-app-operations" ? 9 : 8);
+      expect(container.querySelectorAll(".pack-reference-section")).toHaveLength(pack.lane === "operate" ? 9 : 8);
       expect(container.querySelector(".pack-reference-packs a[aria-current='page']")).toHaveTextContent(pack.name);
       expect(screen.getByText(pack.useWhen[0])).toBeInTheDocument();
       expect(screen.getByText(pack.notFor[0])).toBeInTheDocument();
@@ -197,6 +199,48 @@ describe("Possible", () => {
     expect(
       within(flow).getByText(/Each recurring run reads the latest receipt, runs one cycle, carries unresolved work forward, and writes a new dated receipt/i),
     ).toBeInTheDocument();
+  });
+
+  it("discovers pack 08 and gives both Operate packs the same safe scheduling UX", () => {
+    window.history.pushState({}, "", "/packs");
+    render(<App />);
+    const catalog = screen.getByRole("region", { name: "All outcome packs" });
+    expect(within(catalog).getByRole("link", { name: /PACK \/ 08.*Marketing Operations.*Optional schedule/is })).toHaveAttribute(
+      "href",
+      "/packs/marketing-operations",
+    );
+
+    for (const [slug, name, scheduleHeading, prompt, unattendedBoundary] of [
+      [
+        "web-app-operations",
+        "Web App Operations",
+        "Schedule the operating loop",
+        "I want to schedule operations.",
+        /never deploy, restart, page, publish, or change production unattended/i,
+      ],
+      [
+        "marketing-operations",
+        "Marketing Operations",
+        "Schedule the marketing loop",
+        "I want to schedule marketing operations.",
+        /never publish, send, spend, contact people, change tracking or accounts, use write-capable connectors, or access unauthorized private data/i,
+      ],
+    ]) {
+      cleanup();
+      window.history.pushState({}, "", `/packs/${slug}`);
+      render(<App />);
+
+      expect(screen.getByRole("heading", { name, level: 1 })).toBeInTheDocument();
+      expect(screen.getByRole("heading", { name: scheduleHeading, level: 2 })).toBeInTheDocument();
+      expect(screen.getByText(prompt)).toBeInTheDocument();
+      const flow = screen.getByRole("list", { name: /Scheduling flow/i });
+      expect(within(flow).getByText(/Test the first cycle manually before scheduling/i)).toBeInTheDocument();
+      expect(within(flow).getByText(/Ask for separate approval before creating or enabling/i)).toBeInTheDocument();
+      expect(within(flow).getByText(/reads the latest receipt.*carries unresolved work forward.*new dated receipt/i)).toBeInTheDocument();
+      expect(screen.getByText(unattendedBoundary)).toBeInTheDocument();
+      expect(screen.getAllByRole("link", { name: "Compiled pack JSON ↗" })[0]).toHaveAttribute("href", `/packs/${slug}.json`);
+      expect(screen.getByRole("link", { name: "Download .txt ↓" })).toHaveAttribute("href", `/packs/${slug}/run.txt`);
+    }
   });
 
   it("documents scheduling operations as a natural-language Possible request", () => {

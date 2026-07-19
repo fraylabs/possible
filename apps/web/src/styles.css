@@ -300,6 +300,7 @@ footer .wordmark span { color: #151411; }
 .pack-grid--filtered .pack-card--hardware-launch { grid-row: auto; }
 .pack-grid--filtered .pack-card--playable-web-game { grid-column: auto; }
 .pack-grid--filtered .pack-card--web-app-operations { grid-column: auto; }
+.pack-grid--filtered .pack-card--marketing-operations { grid-column: auto; }
 .pack-grid--filtered .pack-cover, .pack-grid--filtered .pack-card--hardware-launch .pack-cover { min-height: 520px; }
 .pack-grid--filtered .pack-cover-title h2, .pack-grid--filtered .pack-card:not(.pack-card--hardware-launch) .pack-cover-title h2 { max-width: 730px; font-size: clamp(48px, 6vw, 98px); }
 .pack-card { min-width: 0; border: 1px solid #151411; display: flex; flex-direction: column; overflow: hidden; background: #f3f0e8; transition: transform .22s ease, box-shadow .22s ease; }
@@ -312,6 +313,7 @@ footer .wordmark span { color: #151411; }
 .pack-card--web-app-operations .pack-cover { background: #d3b8ff; }
 .pack-card--working-web-app .pack-cover { background: #ffd75a; }
 .pack-card--production-web-release .pack-cover { background: #ff8066; }
+.pack-card--marketing-operations .pack-cover { background: #8ee3c2; }
 .pack-cover header { z-index: 2; display: grid; grid-template-columns: 1fr auto auto; gap: 20px; align-items: center; font: 9px "DM Mono", monospace; letter-spacing: .07em; }
 .pack-cover header small { opacity: .7; }
 .pack-cover header b { font-size: 16px; font-weight: 400; }
@@ -937,6 +939,27 @@ footer .wordmark span { color: #151411; }
 .pack-art--operations span:nth-of-type(2) { bottom: 6%; left: 4%; }
 .pack-art--operations span:nth-of-type(3) { right: 4%; bottom: 6%; background: #151411; color: #d3b8ff; }
 
+/* Marketing Operations pack */
+.pack-card--marketing-operations { grid-column: 1 / -1; }
+.pack-card--marketing-operations .pack-cover { min-height: 430px; }
+.pack-art--marketing { bottom: 90px; overflow: hidden; border: 1px solid rgba(21,20,17,.42); background: repeating-linear-gradient(135deg, transparent 0 23px, rgba(21,20,17,.09) 24px, transparent 25px 48px); }
+.marketing-cycle { width: 180px; aspect-ratio: 1; position: absolute; top: 50%; left: 24%; border: 28px solid #151411; border-right-color: #ff4d00; border-radius: 50%; transform: translate(-50%, -50%) rotate(-18deg); }
+.marketing-cycle::after { content: ""; width: 21px; aspect-ratio: 1; position: absolute; right: -37px; bottom: 2px; background: #ff4d00; clip-path: polygon(0 0, 100% 50%, 0 100%); transform: rotate(28deg); }
+.marketing-cycle i { width: 9px; aspect-ratio: 1; position: absolute; border-radius: 50%; background: #f3f0e8; }
+.marketing-cycle i:nth-of-type(1) { top: -19px; left: 14px; }
+.marketing-cycle i:nth-of-type(2) { top: 22px; right: -19px; }
+.marketing-cycle i:nth-of-type(3) { bottom: -19px; left: 21px; }
+.marketing-cycle b { position: absolute; inset: 0; display: grid; place-items: center; color: #8ee3c2; font: 8px "DM Mono", monospace; transform: rotate(18deg); }
+.marketing-calendar { width: min(37vw, 490px); height: 52%; padding: 40px 13px 13px; position: absolute; top: 23%; right: 8%; border: 1px solid #151411; display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; background: #f3f0e8; box-shadow: 9px 9px 0 #151411; transform: rotate(2deg); }
+.marketing-calendar::before { content: "NEXT 06 / HUMAN CHECKPOINT"; position: absolute; top: 12px; left: 13px; font: 7px "DM Mono", monospace; }
+.marketing-calendar i { border: 1px solid #151411; background: linear-gradient(135deg, #8ee3c2 0 56%, transparent 56%); }
+.marketing-calendar i:nth-of-type(2), .marketing-calendar i:nth-of-type(5) { background: linear-gradient(135deg, #ff4d00 0 38%, transparent 38%); }
+.marketing-calendar i:nth-of-type(3) { background: transparent; }
+.pack-art--marketing span { position: absolute; padding: 5px 7px; border: 1px solid #151411; background: #8ee3c2; font: 8px "DM Mono", monospace; }
+.pack-art--marketing span:nth-of-type(1) { top: 7%; left: 3%; }
+.pack-art--marketing span:nth-of-type(2) { top: 7%; right: 3%; }
+.pack-art--marketing span:nth-of-type(3) { right: 3%; bottom: 6%; background: #151411; color: #8ee3c2; }
+
 .demo-example-card--game { grid-column: 1 / -1; background: #78d9ff; }
 .demo-example-card--game .demo-example-visual--game { min-height: 420px; background: #10171f; }
 .demo-example-visual--game::before { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(108deg, transparent 0 35px, rgba(120,217,255,.08) 36px, transparent 37px 68px); }
@@ -1013,8 +1036,10 @@ footer .wordmark span { color: #151411; }
 @media (max-width: 900px) {
   .pack-card--playable-web-game { grid-column: auto; }
   .pack-card--web-app-operations { grid-column: auto; }
+  .pack-card--marketing-operations { grid-column: auto; }
   .home-pack-preview .pack-card--playable-web-game { grid-column: auto; }
   .home-pack-preview .pack-card--web-app-operations { grid-column: auto; }
+  .home-pack-preview .pack-card--marketing-operations { grid-column: auto; }
   .game-evidence-index { grid-template-columns: 1fr 1fr; }
   .game-evidence-index a { border-bottom: 1px solid #151411; }
   .game-evidence-index a:nth-child(2n) { border-right: 0; }
@@ -1022,6 +1047,9 @@ footer .wordmark span { color: #151411; }
 }
 
 @media (max-width: 620px) {
+  .marketing-cycle { width: 118px; left: 21%; border-width: 19px; }
+  .marketing-cycle::after { right: -29px; }
+  .marketing-calendar { width: 54vw; right: 2%; }
   .demo-example-card--game { grid-column: auto; }
   .demo-example-visual--game { min-height: 360px; }
   .demo-game-plane { width: 105px; left: 15%; }

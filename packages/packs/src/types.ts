@@ -3,10 +3,18 @@ export interface SkillSource {
   name: string;
   role: string;
   repository: string;
+  installSource?: string;
   skill: string;
   catalogUrl?: string;
   reviewedRevision: string;
   reviewUrl: string;
+}
+
+export interface ScheduleContract {
+  request: string;
+  title: string;
+  description: string;
+  safeDefault: string;
 }
 
 export interface PluginCapability {
@@ -43,6 +51,8 @@ export interface OutcomePack {
   useWhen: string[];
   notFor: string[];
   reviewedAt: string;
+  artifactRoot?: string;
+  schedule?: ScheduleContract;
   skills: SkillSource[];
   plugins?: PluginCapability[];
   workstreams: Workstream[];

@@ -33,6 +33,12 @@ export const webAppOperationsPack: OutcomePack = {
     "Unapproved production changes, customer-data access, paging, or issue-tracker writes.",
   ],
   reviewedAt: "2026-07-19",
+  schedule: {
+    request: "I want to schedule operations.",
+    title: "Schedule the operating loop",
+    description: "Scheduling is a second approval gate, never a side effect of choosing this pack.",
+    safeDefault: "Standalone task. Isolated worktree. Report findings and prepare reviewable evidence—never deploy, restart, page, publish, or change production unattended.",
+  },
   skills: [
     {
       id: "webapp-testing",

@@ -3,9 +3,10 @@ import type { CompiledPack, OutcomePack } from "./types.js";
 export function compileInstallCommands(pack: OutcomePack): string[] {
   const groups = new Map<string, string[]>();
   for (const source of pack.skills) {
-    const skills = groups.get(source.repository) ?? [];
+    const installSource = source.installSource ?? source.repository;
+    const skills = groups.get(installSource) ?? [];
     skills.push(source.skill);
-    groups.set(source.repository, skills);
+    groups.set(installSource, skills);
   }
   return [...groups].map(([repository, skills]) =>
     `npx skills@1.5.19 add ${repository} ${skills.map((skill) => `--skill ${skill}`).join(" ")} --agent codex`,
@@ -13,6 +14,7 @@ export function compileInstallCommands(pack: OutcomePack): string[] {
 }
 
 export function compileRunPrompt(pack: OutcomePack): string {
+  const artifactRoot = pack.artifactRoot ?? (pack.lane === "operate" ? "operations" : "outcome-room");
   const workstreams = pack.workstreams.map((stream) => [
     `- ${stream.name} (${stream.id})`,
     `  Invoke: ${stream.skills.map((skill) => `$${skill}`).join(", ")}`,
@@ -24,7 +26,7 @@ export function compileRunPrompt(pack: OutcomePack): string {
 
 OPERATING LOOP
 1. Establish once: record the loop's inputs, cadence, ownership, thresholds, commands, external-action gates, and next review date.
-2. Run now: execute the first dated cycle against available evidence and write a collision-free UTC receipt such as operations/receipts/YYYY-MM-DDTHHMMSSZ.md.
+2. Run now: execute the first dated cycle against available evidence and write a collision-free UTC receipt such as ${artifactRoot}/receipts/YYYY-MM-DDTHHMMSSZ.md.
 3. Repeat safely: every later cycle must read the prior receipt, record evidence and deltas, carry unresolved work forward, and set the next review date.
 4. Never manufacture activity to make the cycle look complete; empty queues, unavailable signals, and skipped checks remain explicit.
 
@@ -47,7 +49,7 @@ RELEASE GATE
 3. Record a go or no-go decision. Before any external deploy, tag, publish, push, provider mutation, or production change, request explicit approval for the exact candidate, target, method, and known risks.
 4. Execute only the approved action, then run fresh verification against the named result.${approvedReleaseAdapter} If approval, provider support, evidence, or rollback readiness is missing, finish with an honest no-go receipt.` : "";
   const integrationTarget = pack.lane === "operate"
-    ? "integrate the durable workflow under operations/ and use outcome-room/ only as its linked review surface"
+    ? `integrate the durable workflow under ${artifactRoot}/ and use outcome-room/ only as its linked review surface`
     : "integrate them into outcome-room/";
 
   const action = pack.lane === "operate" ? "Establish and run the first cycle of" : pack.lane === "release" ? "Prepare and verify" : "Build";

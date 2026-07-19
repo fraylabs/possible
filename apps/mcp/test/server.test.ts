@@ -23,7 +23,7 @@ describe("Possible MCP", () => {
     assert.equal(client.getInstructions(), POSSIBLE_SERVER_INSTRUCTIONS);
   });
 
-  it("lists all seven outcome packs", async () => {
+  it("lists all eight outcome packs", async () => {
     const result = await client.callTool({ name: "list_packs", arguments: {} });
     const envelope = result.structuredContent as { ok: boolean; data: { packs: Array<{ slug: string; lane: string }> } };
     assert.equal(envelope.ok, true);
@@ -35,6 +35,7 @@ describe("Possible MCP", () => {
       ["web-app-operations", "operate"],
       ["working-web-app", "create"],
       ["production-web-release", "release"],
+      ["marketing-operations", "operate"],
     ]);
   });
 
@@ -98,5 +99,19 @@ describe("Possible MCP", () => {
     assert.equal(envelope.data.installCommands.length, 3);
     assert.match(envelope.data.runPrompt, /^Prepare and verify the Production Web Release outcome/);
     assert.match(envelope.data.runPrompt, /RELEASE GATE/);
+  });
+
+  it("compiles Marketing Operations as a safely schedulable loop", async () => {
+    const result = await client.callTool({ name: "compile_pack", arguments: { slug: "marketing-operations" } });
+    const envelope = result.structuredContent as { ok: boolean; data: { pack: { catalogNumber: number; lane: string; artifactRoot: string }; installCommands: string[]; runPrompt: string } };
+    assert.equal(envelope.ok, true);
+    assert.equal(envelope.data.pack.catalogNumber, 8);
+    assert.equal(envelope.data.pack.lane, "operate");
+    assert.equal(envelope.data.pack.artifactRoot, "marketing");
+    assert.equal(envelope.data.installCommands.length, 1);
+    assert.match(envelope.data.runPrompt, /\$marketing-loops/);
+    assert.match(envelope.data.runPrompt, /marketing\/receipts\/YYYY-MM-DDTHHMMSSZ\.md/);
+    assert.match(envelope.data.runPrompt, /SCHEDULE GATE/);
+    assert.match(envelope.data.runPrompt, /must never publish, post, send email or messages/);
   });
 });

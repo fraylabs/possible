@@ -11,6 +11,7 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
     "web-app-operations",
     "working-web-app",
     "production-web-release",
+    "marketing-operations",
   ]);
   assert.deepEqual(outcomePacks.map(({ slug, lane }) => [slug, lane]), [
     ["hardware-launch", "launch"],
@@ -20,8 +21,9 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
     ["web-app-operations", "operate"],
     ["working-web-app", "create"],
     ["production-web-release", "release"],
+    ["marketing-operations", "operate"],
   ]);
-  assert.deepEqual(outcomePacks.map((pack) => pack.catalogNumber), [1, 2, 3, 4, 5, 6, 7]);
+  assert.deepEqual(outcomePacks.map((pack) => pack.catalogNumber), [1, 2, 3, 4, 5, 6, 7, 8]);
   assert.equal(new Set(outcomePacks.map((pack) => pack.catalogNumber)).size, outcomePacks.length);
   assert.equal(new Set(outcomePacks.map((pack) => pack.slug)).size, outcomePacks.length);
 
@@ -123,6 +125,55 @@ test("Sites is exposed only on web deployment outcomes and never as a fake Skill
     assert.match(compiled.runPrompt, /every Sites deployment URL as production/i);
     assert.match(compiled.runPrompt, /explicit approval/);
   }
+});
+
+test("Marketing Operations compiles a manual-first, truthfully gated recurring schedule", () => {
+  const marketing = outcomePacks.find((pack) => pack.slug === "marketing-operations");
+  assert.ok(marketing, "Marketing Operations is present in the catalog");
+  assert.equal(marketing.catalogNumber, 8);
+  assert.equal(marketing.lane, "operate");
+  assert.match(marketing.eyebrow, /^08 \/ /);
+  assert.match(marketing.useWhen.join(" "), /schedule (?:recurring )?marketing operations/i);
+  assert.match(marketing.promise, /repeatable|recurring/i);
+
+  const compiled = compilePack(marketing);
+  assert.match(compiled.installCommands[0], /coreyhaines31\/marketingskills@67264763cb107d61749f418d081c56e5bcbc0209/);
+  assert.match(compiled.runPrompt, /^Establish and run the first cycle of the Marketing Operations outcome/);
+  assert.match(compiled.runPrompt, /OPERATING LOOP/);
+  assert.match(compiled.runPrompt, /marketing\/receipts\/YYYY-MM-DDTHHMMSSZ\.md/);
+  assert.match(compiled.runPrompt, /SCHEDULE GATE/);
+  assert.match(compiled.runPrompt, /manual first cycle/i);
+  assert.match(compiled.runPrompt, /invokes \$possible resume/);
+  assert.match(compiled.runPrompt, /isolated worktree and report-only behavior/);
+  assert.match(compiled.runPrompt, /exact task name, cadence, timezone, project/);
+  assert.match(compiled.runPrompt, /Request direct approval for that exact schedule/);
+  assert.match(compiled.runPrompt, /\.possible\/schedule\.json/);
+  assert.match(compiled.runPrompt, /scheduling-ready prompt and an honest no-go receipt/);
+  assert.match(compiled.runPrompt, /never gain unattended authority.*communication, spending, publishing/is);
+  assert.equal(marketing.schedule.request, "I want to schedule marketing operations.");
+  assert.match(marketing.schedule.safeDefault, /write-capable connectors/i);
+  assert.match(marketing.notFor.join(" "), /application health checks|dependency maintenance/i);
+  assert.match(marketing.notFor.join(" "), /one isolated post|landing page|email|campaign/i);
+
+  const ownedPaths = marketing.workstreams.flatMap((stream) => stream.owns.map((path) => ({ stream: stream.id, path })));
+  for (const left of ownedPaths) {
+    for (const right of ownedPaths) {
+      if (left.stream === right.stream) continue;
+      assert.equal(left.path.startsWith(right.path) || right.path.startsWith(left.path), false, `${left.path} overlaps ${right.path}`);
+    }
+  }
+
+  const guardrails = marketing.guardrails.join(" ");
+  assert.match(guardrails, /publish|post|send|outreach/i);
+  assert.match(guardrails, /spend|budget|paid (?:media|advertising)|ads?/i);
+  assert.match(guardrails, /credential|private data|customer data/i);
+  assert.match(guardrails, /invent|fabricate/i);
+  assert.match(guardrails, /performance|attribution|engagement|conversion/i);
+  assert.match(guardrails, /explicit approval/i);
+  assert.match(marketing.verification.join(" "), /approved external schedule identifier.*no-go receipt/i);
+  assert.match(marketing.verification.join(" "), /unsupported lift.*testimonial.*competitor-claim/i);
+  assert.match(marketing.verification.join(" "), /publish.*email a list.*ad budget.*no external write/i);
+  assert.doesNotMatch(compiled.runPrompt, /marketing on autopilot|always-on growth engine|set it and forget it|guaranteed leads/i);
 });
 
 test("the web-app lifecycle packs have non-overlapping entry conditions", () => {

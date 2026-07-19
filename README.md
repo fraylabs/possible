@@ -11,7 +11,7 @@ Lanes make the catalog easier to browse; they are never a question the user must
 - **Create** — **Working Web App** produces a locally verified first usable product; **Playable Web Game** produces one polished, responsive Three.js game.
 - **Launch** — **Hardware Launch** and **Software Launch** turn a product into a coherent public presentation and verified launch package.
 - **Release** — **Open-Source Release** prepares a trustworthy distributable repository; **Production Web Release** takes a tested OpenAI Sites or Vercel app through a gated, reversible deployment or an honest no-go.
-- **Operate** — **Web App Operations** establishes a repeatable health, triage, maintenance, and recovery loop and executes its first dated cycle.
+- **Operate** — **Web App Operations** runs a repeatable health, triage, maintenance, and recovery loop; **Marketing Operations** runs a repeatable positioning, campaign, draft-production, measurement, and review loop.
 
 Operate packs are recurring by definition: a checklist alone is not enough. The first cycle must run, leave evidence, carry unresolved work forward, and name its next review date.
 

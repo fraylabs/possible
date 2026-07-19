@@ -252,6 +252,37 @@ npx skills@1.5.19 add vercel-labs/agent-skills --skill deploy-to-vercel --agent 
 
 Pack confirmation does not authorize production. Workstreams prepare evidence first; the captain integrates it, records go or no-go, and asks again for approval naming the provider, account or team, project, production target, exact candidate, method, and accepted risks. Do not mutate provider state, secrets, databases, DNS, billing, repositories, or workflows without approval for that exact action. Never infer success, availability, security, or rollback readiness from a plan or one browser pass.
 
+## Marketing Operations
+
+Slug: `marketing-operations`
+
+Lane: `operate`
+
+Public page: `https://possible.sh/packs/marketing-operations`
+
+Use for a real product or offer that needs a repeatable or scheduled marketing rhythm across positioning, campaign planning, channel-ready draft production, measurement, and review. The product and audience must be grounded in confirmed evidence; this is not a substitute for building the product or creating its first complete launch package.
+
+Outputs: versioned product-marketing source of truth and claims register, prioritized campaign plan and editorial calendar, first batch of channel-ready drafts, decision-led measurement and experiment plan, bounded recurring marketing loop, first dated receipt, scheduling-ready task prompt, and—only when separately approved—an enabled schedule receipt.
+
+Workstreams:
+
+- Positioning and campaign plan — `product-marketing`, `content-strategy`; owns the versioned context, `marketing/evidence/`, `marketing/plan/`, and `marketing/calendar/`.
+- Channel-ready draft production — `copywriting`, `social`; owns `marketing/briefs/`, `marketing/drafts/`, and `marketing/review/`.
+- Measurement and recurring loop — `analytics`, `marketing-loops`; owns `marketing/measurement/`, `marketing/loop.md`, `marketing/state/`, and `marketing/receipts/`.
+- Fresh review — `product-marketing`, `analytics`; verifies claims, approval state, measurement logic, privacy boundaries, loop state, and honest unknowns after the first cycle.
+
+Sources:
+
+- `coreyhaines31/marketingskills`: all six skills below; reviewed `67264763cb107d61749f418d081c56e5bcbc0209`.
+
+Install:
+
+```bash
+npx skills@1.5.19 add coreyhaines31/marketingskills@67264763cb107d61749f418d081c56e5bcbc0209 --skill product-marketing --skill content-strategy --skill copywriting --skill social --skill analytics --skill marketing-loops --agent codex
+```
+
+Establish the source of truth and execute the first dated cycle manually before offering a schedule. Scheduled cycles remain permanently repo-local and read-only toward external systems: they may inspect explicitly authorized evidence, maintain plans, and prepare reviewable drafts, but they never post, send, spend, perform outreach, change tracking or accounts, use write-capable connectors, or use credentials. Perform any such action later in a separate interactive task after separate explicit approval. Preserve one canonical durable state location, an atomic no-overlap lock, and a kill switch across runs. Never fabricate customer language, testimonials, metrics, baselines, attribution, rankings, competitor facts, demand, or results. Preserve honest no-signal and empty-calendar states.
+
 ## Selection rule
 
 Recommend the pack whose finished outputs most closely match the user's desired end state:
@@ -263,7 +294,8 @@ Recommend the pack whose finished outputs most closely match the user's desired 
 - Existing repository plus trustworthy public release materials → Open-Source Release.
 - Existing tested web app plus a reversible approved production deployment and smoke receipt → Production Web Release.
 - Live web app plus a repeatable reliability, issue-triage, maintenance, incident-response, and safe-change cadence → Web App Operations.
+- Existing product or offer plus a repeatable positioning, campaign-planning, draft-production, measurement, and review cadence → Marketing Operations.
 
-Use Working Web App when the missing outcome is the product itself. Use Software Launch when the product works and the missing outcome is its public story, site, and demo. Use Production Web Release when a tested candidate exists and the missing outcome is a gated production promotion with rollback and smoke evidence. Use Web App Operations only after the app is live and the desired outcome is an ongoing rhythm. A distributable repository release belongs to Open-Source Release; one isolated bug or incident with no requested recurring workflow is focused work, not a pack.
+Use Working Web App when the missing outcome is the product itself. Use Software Launch when the product works and the missing outcome is its first public story, site, and demo. Use Production Web Release when a tested candidate exists and the missing outcome is a gated production promotion with rollback and smoke evidence. Use Web App Operations only after the app is live and the desired outcome is an ongoing reliability and maintenance rhythm. Use Marketing Operations when the product or offer exists and the missing outcome is a recurring marketing system; one launch campaign remains Software Launch. A distributable repository release belongs to Open-Source Release; one isolated bug, incident, or marketing asset with no requested recurring workflow is focused work, not a pack.
 
 If none fits, say so. Do not force a pack or invent a new one during intake.

@@ -51,6 +51,7 @@ const gallerySlugs = [
   "web-app-operations",
   "working-web-app",
   "production-web-release",
+  "marketing-operations",
 ] as const;
 const galleryPacks = gallerySlugs.map((slug) => outcomePacks.find((pack) => pack.slug === slug)!).filter(Boolean);
 const starterOutcomes = [
@@ -186,7 +187,7 @@ function CreatePage() {
 }
 
 function PackCard({ pack }: { pack: OutcomePack }) {
-  const isSchedulable = pack.slug === "web-app-operations";
+  const isSchedulable = Boolean(pack.schedule);
   return (
     <a className={`pack-card pack-card--${pack.slug}`} href={`/packs/${pack.slug}`}>
       <div className="pack-cover">
@@ -203,7 +204,7 @@ function PackCard({ pack }: { pack: OutcomePack }) {
           <span>{pack.skills.length} SKILLS{pack.plugins?.length ? ` + ${pack.plugins.length} PLUGIN` : ""}</span>
           <span>{pack.workstreams.length} WORKSTREAMS</span>
           <span>{pack.outputs.length} OUTPUTS</span>
-          {isSchedulable ? <span>SCHEDULE OPERATIONS</span> : null}
+          {isSchedulable ? <span>OPTIONAL SCHEDULE</span> : null}
         </div>
       </div>
     </a>
@@ -249,6 +250,15 @@ function PackArtwork({ slug }: { slug: string }) {
         <div className="operations-board"><i /><i /><i /><i /><i /><i /></div>
         <b className="operations-pulse" />
         <span>CYCLE / MANUAL FIRST</span><span>RECEIPT / DATED</span><span>SCHEDULE / SEPARATE YES</span>
+      </div>
+    );
+  }
+  if (slug === "marketing-operations") {
+    return (
+      <div className="pack-art pack-art--marketing" aria-hidden="true">
+        <div className="marketing-cycle"><i /><i /><i /><b>REVIEW</b></div>
+        <div className="marketing-calendar"><i /><i /><i /><i /><i /><i /></div>
+        <span>PLAN / CONFIRMED</span><span>DRAFT / REVIEW</span><span>PUBLISH / GATED</span>
       </div>
     );
   }
@@ -322,7 +332,7 @@ function PackDetailPage({ pack }: { pack: OutcomePack }) {
     year: "numeric",
     timeZone: "UTC",
   });
-  const isSchedulable = pack.slug === "web-app-operations";
+  const isSchedulable = Boolean(pack.schedule);
   const sections = [
     ["overview", "Overview"],
     ["fit", "Fit"],
@@ -433,10 +443,10 @@ function PackDetailPage({ pack }: { pack: OutcomePack }) {
 
           {isSchedulable ? (
             <section className="pack-reference-section pack-schedule-section" id="schedule">
-              <header><span>07</span><h2>Schedule the operating loop</h2><p>Scheduling is a second approval gate, never a side effect of choosing this pack.</p></header>
+              <header><span>07</span><h2>{pack.schedule?.title}</h2><p>{pack.schedule?.description}</p></header>
               <div className="pack-schedule-prompt">
                 <header><span>START IN NATURAL LANGUAGE</span><strong>$possible</strong></header>
-                <code>{schedulePrompt}</code>
+                <code>{pack.schedule?.request}</code>
               </div>
               <ol className="pack-schedule-flow" aria-label="Scheduling flow">
                 <li><span>01</span><strong>Run it once</strong><p>Test the first cycle manually before scheduling.</p></li>
@@ -444,7 +454,7 @@ function PackDetailPage({ pack }: { pack: OutcomePack }) {
                 <li><span>03</span><strong>Approve the schedule</strong><p>Ask for separate approval before creating or enabling the scheduled task.</p></li>
                 <li><span>04</span><strong>Review every receipt</strong><p>Each recurring run reads the latest receipt, runs one cycle, carries unresolved work forward, and writes a new dated receipt.</p></li>
               </ol>
-              <aside className="pack-schedule-boundary"><strong>SAFE DEFAULT</strong><p>Standalone task. Isolated worktree. Report findings and prepare reviewable evidence—never deploy, restart, page, publish, or change production unattended.</p></aside>
+              <aside className="pack-schedule-boundary"><strong>SAFE DEFAULT</strong><p>{pack.schedule?.safeDefault}</p></aside>
             </section>
           ) : null}
 
@@ -1492,12 +1502,13 @@ function DocsPage() {
 
           <section id="schedule">
             <h2>Schedule a recurring outcome</h2>
-            <p>Scheduling is for work that genuinely repeats, such as operating an already-live web app. It is not a new pack or permission to rerun every launch unattended.</p>
+            <p>Scheduling is for work that genuinely repeats, such as operating an already-live web app or running a bounded marketing review and draft cycle. It is not a new pack or permission to rerun every launch unattended.</p>
             <div className="docs-command docs-command--schedule">
               <header><span>CODEX</span><strong>NATURAL LANGUAGE</strong></header>
               <pre><code>$possible{"\n"}{schedulePrompt}</code></pre>
               <CopyButton label="Copy scheduling prompt" value={`$possible\n${schedulePrompt}`} />
             </div>
+            <p>For recurring plans, drafts, and measurement, say <code>I want to schedule marketing operations.</code> Possible will recommend Marketing Operations instead of the reliability pack.</p>
             <ol>
               <li><strong>Prove the first cycle</strong><span>Possible establishes the operating loop and runs it manually before offering recurrence.</span></li>
               <li><strong>Inspect the exact task</strong><span>Review its cadence, timezone, project, worktree mode, prompt, permissions, receipt, and stop conditions.</span></li>
@@ -1506,9 +1517,10 @@ function DocsPage() {
             </ol>
             <aside className="docs-callout docs-callout--approval">
               <strong>DEFAULT SCHEDULE</strong>
-              <p>Use a standalone task in an isolated worktree. Report findings and prepare reviewable repo-local evidence. Stop before deployment, production changes, paging, publishing, communication, spending, secrets, or customer data. For local projects, the machine and Codex app must remain running and the project must stay available.</p>
+              <p>Use a standalone task in an isolated worktree. Report findings and prepare reviewable repo-local evidence. Stop before deployment, production changes, paging, publishing, posting, sending, outreach, spending, tracking changes, secrets, or private data. For local projects, the machine and Codex app must remain running and the project must stay available.</p>
             </aside>
             <a className="docs-reference-link" href="/packs/web-app-operations"><span>SCHEDULABLE PACK</span><strong>Web App Operations</strong><i>View schedule contract →</i></a>
+            <a className="docs-reference-link" href="/packs/marketing-operations"><span>SCHEDULABLE PACK</span><strong>Marketing Operations</strong><i>View schedule contract →</i></a>
           </section>
 
           <section id="files">
