@@ -133,10 +133,10 @@ describe("Possible", () => {
     window.history.pushState({}, "", "/why");
     const { container } = render(<App />);
     expect(screen.getByRole("heading", { name: /The bottleneck is no longer what AI can do/i, level: 1 })).toBeInTheDocument();
-    expect(screen.getByRole("complementary", { name: /In this essay/i })).toBeInTheDocument();
+    expect(screen.queryByRole("complementary", { name: /In this essay/i })).not.toBeInTheDocument();
     expect(screen.getByRole("heading", { name: /Three roles, clearly separated/i })).toBeInTheDocument();
     expect(screen.getByText(/Possible is not a pack browser/i)).toBeInTheDocument();
-    expect(container.querySelector(".why-pullquote")).toHaveTextContent(/Possible recommends the pack.*You approve it/i);
+    expect(container.querySelector(".why-thesis")).toHaveTextContent(/Possible recommends the pack.*You approve it/i);
     expect(screen.getByText(/This is a map for Possible, not an intake menu for the user/i)).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /See the recorded Hardware Launch outcome/i })).toHaveAttribute("href", "/demo/hardware");
     expect(screen.getByText("npx @fraylabs/possible init", { selector: ".why-article-cta code" })).toBeInTheDocument();

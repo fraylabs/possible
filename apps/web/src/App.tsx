@@ -197,24 +197,10 @@ function WhyPage() {
           <p className="eyebrow">AN ESSAY FROM POSSIBLE</p>
           <h1>The bottleneck is no longer what AI can do.</h1>
           <p className="why-dek">It is our ability to see what is possible, define the outcome, and direct agents toward it.</p>
-          <div className="why-byline"><span>FRAY LABS</span><span>20 JUL 2026</span><span>OUTCOME-DIRECTED AGENTS / 01</span></div>
+          <div className="why-byline"><span>FRAY LABS · 20 JUL 2026</span><span>WHY POSSIBLE</span></div>
         </header>
 
-        <div className="why-article-layout">
-          <aside className="why-article-rail" aria-label="In this essay">
-            <span>IN THIS ESSAY</span>
-            <nav aria-label="Essay sections">
-              <a href="#problem">The prompt loop</a>
-              <a href="#outcome">The outcome layer</a>
-              <a href="#roles">Who does what</a>
-              <a href="#process">How it works</a>
-              <a href="#example">An example</a>
-              <a href="#scope">Current scope</a>
-            </nav>
-            <p>POSSIBLE / ESSAY 01<br />BUILDWEEK 2026</p>
-          </aside>
-
-          <div className="why-article-body">
+        <div className="why-article-body">
           <section id="problem" aria-labelledby="why-problem-heading">
             <p className="why-lead">The way most people work with AI still resembles a chat window from years ago: ask for one thing, wait for the answer, decide what comes next, and prompt again.</p>
             <p>This interaction is useful for isolated tasks. It becomes exhausting when the ambition is larger than a task—launching a product, building a working application, preparing a release, or running an ongoing function.</p>
@@ -253,10 +239,7 @@ function WhyPage() {
             <p>Possible is not a pack browser. Users do not need to understand lanes, compare recipes, or decide which specialist skills belong together. Those are implementation details Possible resolves from the conversation.</p>
           </section>
 
-          <aside className="why-pullquote">
-            <p>Possible recommends the pack.<br /><em>You approve it.</em></p>
-            <span>Nothing begins before the outcome and its boundaries make sense to you.</span>
-          </aside>
+          <p className="why-thesis"><strong>Possible recommends the pack. You approve it.</strong> Nothing begins before the outcome and its boundaries make sense to you.</p>
 
           <section id="process" aria-labelledby="why-process-heading">
             <h2 id="why-process-heading">From ambition to evidence.</h2>
@@ -305,7 +288,6 @@ function WhyPage() {
             <div><pre><code>{installCommand}</code></pre><CopyButton label="Copy install command" value={installCommand} /></div>
             <p>Then open Codex and type <code>$possible</code>.</p>
           </footer>
-          </div>
         </div>
       </article>
 
