@@ -205,12 +205,6 @@ function BlogsPage() {
     <main className="blogs-page">
       <SiteNav label="Blogs / 02" />
 
-      <header className="blogs-hero">
-        <p className="eyebrow">POSSIBLE / WRITING</p>
-        <h1>Thinking in<br /><em>outcomes.</em></h1>
-        <p>Short explanations of what Possible is, why it exists, and how outcome-oriented collaboration changes the relationship between people and agents.</p>
-      </header>
-
       <section className="blogs-index" aria-label="Possible articles">
         <a href="/blogs/what-is-possible">
           <span>PRODUCT DEFINITION · 20 JUL 2026</span>
@@ -1000,14 +994,6 @@ function DemoGalleryPage() {
   return (
     <main className="demo-gallery-page">
       <SiteNav label="Examples / 04" />
-      <section className="demo-gallery-hero">
-        <p className="eyebrow">FOUR PROOFS / THREE PRESERVED RUNS / ONE LIVE PROOF</p>
-        <h1>Don’t imagine the outcome.<br /><em>Open it.</em></h1>
-        <div>
-          <p>Three examples preserve clean <code>$possible</code> runs and their evidence. The new game pack adds a clearly labeled live proof you can play immediately.</p>
-          <span><i /> ALL RUNS LOCAL · NO EXTERNAL RELEASE ACTIONS</span>
-        </div>
-      </section>
 
       <section className="demo-gallery-grid" aria-label="Recorded Possible examples">
         <a className="demo-example-card demo-example-card--hardware" href="/demo/hardware">

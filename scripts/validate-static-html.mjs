@@ -81,13 +81,13 @@ for (const [relativePath, assetPrefix] of [
 }
 
 for (const [relativePath, expected] of [
-  ["blogs/index.html", "Thinking in"],
+  ["blogs/index.html", "What is Possible?"],
   ["blogs/what-is-possible/index.html", "Possible is the outcome layer"],
   ["blogs/why-possible/index.html", "The bottleneck is no longer what AI can do"],
   ["benchmarks/index.html", "How long to reach"],
   ["docs/index.html", "Build complete outcomes with Possible"],
   ["docs/how-to-use/index.html", "How to use Possible"],
-  ["demo/index.html", "Recorded outcomes"],
+  ["demo/index.html", "HARDWARE LAUNCH"],
   ["demo/hardware/index.html", "Hardware Launch"],
   ["demo/software/index.html", "Software Launch"],
   ["demo/open-source/index.html", "Open-Source Release"],

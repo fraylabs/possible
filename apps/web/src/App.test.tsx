@@ -49,7 +49,7 @@ describe("Possible", () => {
   it("collects Possible writing under one blogs index", async () => {
     window.history.pushState({}, "", "/blogs");
     const { container } = render(<App />);
-    expect(screen.getByRole("heading", { name: /Thinking in.*outcomes/i, level: 1 })).toBeInTheDocument();
+    expect(container.querySelector(".blogs-hero")).not.toBeInTheDocument();
     expect(screen.getByRole("link", { name: /What is Possible.*READ ARTICLE/is })).toHaveAttribute("href", "/blogs/what-is-possible");
     expect(screen.getByRole("link", { name: /Why Possible.*READ ARTICLE/is })).toHaveAttribute("href", "/blogs/why-possible");
     expect(screen.getByRole("link", { name: /View benchmarks/i })).toHaveAttribute("href", "/benchmarks");
@@ -353,8 +353,8 @@ describe("Possible", () => {
 
   it("shows three recorded runs and the playable game proof in the demo gallery", () => {
     window.history.pushState({}, "", "/demo");
-    render(<App />);
-    expect(screen.getByRole("heading", { name: /Don’t imagine the outcome.*Open it/i })).toBeInTheDocument();
+    const { container } = render(<App />);
+    expect(container.querySelector(".demo-gallery-hero")).not.toBeInTheDocument();
     expect(screen.getByRole("link", { name: /HARDWARE LAUNCH.*STILL/i })).toHaveAttribute("href", "/demo/hardware");
     expect(screen.getByRole("link", { name: /SOFTWARE LAUNCH.*THREE/i })).toHaveAttribute("href", "/demo/software");
     expect(screen.getByRole("link", { name: /OPEN-SOURCE RELEASE.*TINY-SLUG/i })).toHaveAttribute("href", "/demo/open-source");
