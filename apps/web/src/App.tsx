@@ -443,12 +443,13 @@ function BenchmarksPage() {
     <main className="benchmarks-page">
       <SiteNav label="Time-to-outcome model" />
 
-      <header className="benchmark-hero">
-        <p className="eyebrow">BENCHMARK 01 / TIME TO OUTCOME</p>
-        <h1>How long to reach<br />the same <em>outcome?</em></h1>
-        <p>A mocked comparison of five ways to direct the same coding agent from a rough idea to verified work.</p>
-        <div><span>ILLUSTRATIVE MODEL</span><span>NOT MEASURED PERFORMANCE</span></div>
-      </header>
+      <article className="benchmark-article">
+        <header className="benchmark-hero">
+          <p className="eyebrow">A MODEL FROM POSSIBLE</p>
+          <h1>How long to reach<br />the same <em>outcome?</em></h1>
+          <p>A mocked comparison of five ways to direct the same coding agent from a rough idea to verified work.</p>
+          <div className="benchmark-byline"><span>FRAY LABS · 21 JUL 2026</span><span>ILLUSTRATIVE MODEL · NOT MEASURED PERFORMANCE</span></div>
+        </header>
 
       <section className="benchmark-method" aria-labelledby="benchmark-method-heading">
         <div>
@@ -511,6 +512,7 @@ function BenchmarksPage() {
         </ul>
         <p>Until those runs exist, the bars above should be read as a product hypothesis—not a performance claim.</p>
       </section>
+      </article>
 
       <SiteFooter />
     </main>

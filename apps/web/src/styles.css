@@ -1650,3 +1650,42 @@ footer .wordmark span { color: #151411; }
   .benchmark-hypothesis > div { grid-template-columns: 1fr; gap: 25px; }
   .benchmark-notes { padding: 70px 18px 90px; }
 }
+
+/* Editorial benchmark treatment */
+.benchmark-article { max-width: 940px; margin: 0 auto; padding: 0 28px 120px; }
+.benchmark-article .benchmark-hero { min-height: 0; padding: 96px 0 70px; border-bottom: 0; display: block; }
+.benchmark-article .benchmark-hero h1 { max-width: 880px; margin: 28px 0; font: 500 clamp(58px, 7vw, 88px)/.94 Newsreader, Georgia, serif; letter-spacing: -.045em; }
+.benchmark-article .benchmark-hero h1 em { color: inherit; font-style: italic; font-weight: 500; }
+.benchmark-article .benchmark-hero > p:not(.eyebrow) { max-width: 760px; color: #55514a; font-size: clamp(20px, 2.2vw, 27px); line-height: 1.48; letter-spacing: -.015em; }
+.benchmark-article .benchmark-byline { margin-top: 45px; padding: 15px 0; border-top: 1px solid #c9c5bc; border-bottom: 1px solid #c9c5bc; display: flex; flex-direction: row; justify-content: space-between; gap: 20px; color: #777169; font: 9px "DM Mono", monospace; letter-spacing: .06em; }
+.benchmark-article .benchmark-method { margin: 0 0 78px; padding: 0 0 72px; border-bottom: 1px solid #c9c5bc; display: block; }
+.benchmark-article .benchmark-method h2 { max-width: 760px; margin: 18px 0 24px; font: 500 clamp(33px, 4vw, 43px)/1.12 Newsreader, Georgia, serif; letter-spacing: -.025em; }
+.benchmark-article .benchmark-method > p { max-width: 760px; margin: 0; color: #49453f; font-size: 17px; line-height: 1.78; }
+.benchmark-article .benchmark-chart { margin: 0 0 82px; padding: 0 0 72px; border-bottom: 1px solid #c9c5bc; }
+.benchmark-article .benchmark-chart > header { margin-bottom: 28px; display: block; }
+.benchmark-article .benchmark-chart h2 { margin: 16px 0 15px; font: 500 clamp(34px, 4vw, 46px)/1.1 Newsreader, Georgia, serif; letter-spacing: -.025em; }
+.benchmark-article .benchmark-chart > header > p { max-width: 690px; font-size: 13px; }
+.benchmark-article .benchmark-legend { margin-bottom: 35px; }
+.benchmark-article .benchmark-bars li { min-height: 82px; }
+.benchmark-article .benchmark-bars li.is-possible { background: #efffc3; }
+.benchmark-article .benchmark-chart figcaption { max-width: 690px; }
+.benchmark-article .benchmark-hypothesis { margin: 0 0 75px; padding: 0 0 72px; border-bottom: 1px solid #c9c5bc; background: transparent; color: #24221e; }
+.benchmark-article .benchmark-hypothesis > span { color: #777169; }
+.benchmark-article .benchmark-hypothesis h2 { max-width: 820px; margin: 18px 0 28px; font: 500 clamp(34px, 4vw, 46px)/1.1 Newsreader, Georgia, serif; letter-spacing: -.025em; }
+.benchmark-article .benchmark-hypothesis > div { max-width: 760px; display: block; }
+.benchmark-article .benchmark-hypothesis p { margin: 0 0 22px; color: #49453f; font-size: 17px; line-height: 1.78; }
+.benchmark-article .benchmark-notes { max-width: 760px; margin: 0; padding: 0; }
+.benchmark-article .benchmark-notes h2 { margin: 0 0 24px; font: 500 clamp(33px, 4vw, 43px)/1.12 Newsreader, Georgia, serif; letter-spacing: -.025em; }
+.benchmark-article .benchmark-notes li { color: #49453f; font-size: 15px; line-height: 1.7; }
+.benchmark-article .benchmark-notes > p { font-size: 11px; }
+
+@media (max-width: 700px) {
+  .benchmark-article { padding: 0 18px 85px; }
+  .benchmark-article .benchmark-hero { padding: 60px 0 55px; }
+  .benchmark-article .benchmark-hero h1 { font-size: 14vw; }
+  .benchmark-article .benchmark-hero > p:not(.eyebrow) { font-size: 20px; }
+  .benchmark-article .benchmark-byline { flex-direction: column; gap: 7px; }
+  .benchmark-article .benchmark-method, .benchmark-article .benchmark-chart, .benchmark-article .benchmark-hypothesis { margin-bottom: 60px; padding-bottom: 55px; }
+  .benchmark-article .benchmark-method h2, .benchmark-article .benchmark-chart h2, .benchmark-article .benchmark-hypothesis h2, .benchmark-article .benchmark-notes h2 { font-size: 10.5vw; }
+  .benchmark-article .benchmark-method > p, .benchmark-article .benchmark-hypothesis p { font-size: 16px; line-height: 1.72; }
+}

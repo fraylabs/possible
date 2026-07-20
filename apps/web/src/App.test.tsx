@@ -204,6 +204,9 @@ describe("Possible", () => {
     expect(screen.getByText(/Possible does not make the model type twice as fast/i)).toBeInTheDocument();
     expect(screen.getByText(/product hypothesis—not a performance claim/i)).toBeInTheDocument();
     expect(container.querySelector(".benchmark-table-scroll")).not.toBeInTheDocument();
+    expect(container.querySelector(".benchmark-article")).toBeInTheDocument();
+    expect(container.querySelectorAll(".benchmark-article > section")).toHaveLength(4);
+    expect(screen.getByText(/FRAY LABS.*21 JUL 2026/i)).toBeInTheDocument();
     expect(await axe(container)).toHaveNoViolations();
   });
 
