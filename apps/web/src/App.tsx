@@ -53,39 +53,19 @@ const gallerySlugs = [
   "marketing-operations",
 ] as const;
 const galleryPacks = gallerySlugs.map((slug) => outcomePacks.find((pack) => pack.slug === slug)!).filter(Boolean);
-const benchmarkPhases = [
-  { id: "clarification", label: "Clarification" },
-  { id: "coordination", label: "Human coordination" },
-  { id: "execution", label: "Agent execution" },
-  { id: "verification", label: "Verification" },
+const benchmarkOutcomeSeries = [
+  { id: "direct", label: "Prompt by prompt", minutes: 110, coverage: 42 },
+  { id: "spec", label: "Spec-driven", minutes: 190, coverage: 58 },
+  { id: "plan", label: "/plan", minutes: 245, coverage: 66 },
+  { id: "goal", label: "/goal", minutes: 315, coverage: 76 },
+  { id: "possible", label: "$possible", minutes: 440, coverage: 91 },
 ] as const;
-const benchmarkSeries = [
-  { id: "manual", label: "Prompt by prompt", clarification: 60, coordination: 180, execution: 180, verification: 60 },
-  { id: "spec", label: "Spec-driven", clarification: 120, coordination: 45, execution: 165, verification: 60 },
-  { id: "plan", label: "/plan", clarification: 75, coordination: 60, execution: 165, verification: 60 },
-  { id: "goal", label: "/goal", clarification: 60, coordination: 45, execution: 165, verification: 60 },
-  { id: "possible", label: "$possible", clarification: 10, coordination: 5, execution: 90, verification: 30 },
-] as const;
-const benchmarkMaxMinutes = 480;
-const benchmarkPilotSeries = [
-  { id: "direct", label: "Direct", elapsedSeconds: 715, checks: "19/20", outcome: "Not verified", treatment: "Treatment pass" },
-  { id: "spec", label: "Spec-driven", elapsedSeconds: 1101, checks: "20/20", outcome: "Verified", treatment: "Treatment failed" },
-  { id: "plan", label: "/plan", elapsedSeconds: 1332, checks: "20/20", outcome: "Verified", treatment: "Treatment failed" },
-  { id: "goal", label: "/goal", elapsedSeconds: 1511, checks: "20/20", outcome: "Verified", treatment: "Treatment pass" },
-  { id: "possible", label: "$possible", elapsedSeconds: 1850, checks: "20/20", outcome: "Verified", treatment: "Treatment pass" },
-] as const;
-const benchmarkPilotMaxSeconds = 1850;
+const benchmarkWindowMinutes = 480;
 
 function formatBenchmarkDuration(minutes: number) {
   const hours = Math.floor(minutes / 60);
   const remainder = minutes % 60;
   return remainder === 0 ? `${hours}h` : `${hours}h ${remainder}m`;
-}
-
-function formatBenchmarkSeconds(seconds: number) {
-  const minutes = Math.floor(seconds / 60);
-  const remainder = seconds % 60;
-  return `${minutes}m ${String(remainder).padStart(2, "0")}s`;
 }
 
 function CopyButton({ label, value }: { label: string; value: string }) {
@@ -437,101 +417,66 @@ function BenchmarksPage() {
 
       <article className="benchmark-article editorial-article">
         <header className="benchmark-hero editorial-header">
-          <p className="eyebrow">A MEASURED PILOT + MODEL</p>
-          <h1>How long to reach<br />the same <em>outcome?</em></h1>
-          <p className="editorial-dek">Five isolated Codex tasks, one frozen app brief, and one independent verifier—followed by the broader workflow hypothesis we still need to test.</p>
-          <div className="benchmark-byline editorial-byline"><span>FRAY LABS · 21 JUL 2026</span><span>PILOT 01 · NOT A PERFORMANCE CLAIM</span></div>
+          <p className="eyebrow">THE STEP-AWAY BENCHMARK</p>
+          <h1>“Build me a <em>$1 million SaaS.</em> Make no mistakes.”</h1>
+          <p className="editorial-dek">One unreasonable request. Eight hours without supervision. How long does the agent keep advancing the outcome—and how much of it survives independent verification?</p>
+          <div className="benchmark-byline editorial-byline"><span>FRAY LABS · 21 JUL 2026</span><span>MODEL 01 · LIVE RUNS NEXT</span></div>
         </header>
 
-      <section className="benchmark-method" aria-labelledby="benchmark-method-heading">
-        <div>
-          <span>SAME START · SAME FINISH</span>
-          <h2 id="benchmark-method-heading">Build a complete daily-focus web app from an empty project.</h2>
-        </div>
-        <p>The measured pilot started every task with the same complete brief and stopped only after independent review. That controls the finish line, but it does not test rough-idea discovery or typical performance. The separate estimate below models that broader coordination hypothesis.</p>
-      </section>
+        <section className="benchmark-method" aria-labelledby="benchmark-method-heading">
+          <div>
+            <span>ROUGH INTENT · NO OPERATOR PLAYBOOK</span>
+            <h2 id="benchmark-method-heading">The agent has to understand what the request actually requires.</h2>
+          </div>
+          <p>Every workflow starts with the same sentence, model, tools, workspace, and eight-hour window. The operator approves the direction, then steps away. The agent may continue until it completes the outcome or genuinely needs human authority.</p>
+        </section>
 
-      <section className="benchmark-pilot" aria-labelledby="benchmark-pilot-heading">
-        <header>
-          <span>MEASURED PILOT · OUTCOME-V1</span>
-          <h2 id="benchmark-pilot-heading">The first run did not prove Possible faster.</h2>
-          <p id="benchmark-pilot-description">Direct stopped fastest but missed one executable requirement. Spec and Plan reached the outcome but failed their assigned workflow treatment. Goal and Possible were the only runs to pass both.</p>
-        </header>
-        <figure aria-labelledby="benchmark-pilot-heading" aria-describedby="benchmark-pilot-description">
-          <ul className="benchmark-pilot-bars" aria-label="Measured pilot elapsed time by workflow">
-            {benchmarkPilotSeries.map((series) => (
-              <li className={`is-${series.id}`} aria-label={`${series.label}: ${formatBenchmarkSeconds(series.elapsedSeconds)}. ${series.outcome}. ${series.checks} checks. ${series.treatment}.`} key={series.id}>
-                <div><strong>{series.label}</strong><span>{series.outcome}</span></div>
-                <div className="benchmark-pilot-track" aria-hidden="true"><i style={{ width: `${(series.elapsedSeconds / benchmarkPilotMaxSeconds) * 100}%` }} /></div>
-                <b>{formatBenchmarkSeconds(series.elapsedSeconds)}</b>
-                <small>{series.checks} · {series.treatment}</small>
-              </li>
-            ))}
-          </ul>
-          <figcaption>One parallel run per condition. Direct is time-to-stop, not time-to-outcome. Shared browser and agent capacity make these traces unsuitable for a speed ranking.</figcaption>
-        </figure>
-        <p className="benchmark-pilot-human"><strong>$possible used 14 operator words:</strong> one approval and one continuation nudge. Every control used zero follow-up words because all five received the same already-complete brief.</p>
-        <nav className="benchmark-evidence-links" aria-label="Benchmark evidence">
-          <a href="/benchmarks/outcome-v1/protocol.md">Protocol ↗</a>
-          <a href="/benchmarks/outcome-v1/brief.md">Frozen brief ↗</a>
-          <a href="/benchmarks/outcome-v1/result.md">Independent result ↗</a>
-          <a href="/benchmarks/outcome-v1/summary.json">Machine summary ↗</a>
-        </nav>
-      </section>
+        <section className="benchmark-outcome" aria-labelledby="benchmark-outcome-heading">
+          <header>
+            <span>TIME × OUTCOME COVERAGE</span>
+            <h2 id="benchmark-outcome-heading">Longer is better when the work still matters.</h2>
+            <p id="benchmark-outcome-description">Time records how long the agent keeps making useful autonomous progress. Coverage records how much of the source-grounded SaaS outcome an independent verifier can prove.</p>
+          </header>
 
-      <section className="benchmark-chart" aria-labelledby="benchmark-chart-heading">
-        <header>
-          <div><span>THE WORKFLOW HYPOTHESIS</span><h2 id="benchmark-chart-heading">Estimated time to verified outcome</h2></div>
-          <p id="benchmark-chart-description">Each bar uses the same eight-hour scale. Possible assumes five minutes of human coordination after the outcome is confirmed.</p>
-        </header>
-        <div className="benchmark-legend" aria-label="Time categories">
-          {benchmarkPhases.map((phase) => <span className={`is-${phase.id}`} key={phase.id}><i />{phase.label}</span>)}
-        </div>
-        <figure aria-labelledby="benchmark-chart-heading" aria-describedby="benchmark-chart-description">
-          <div className="benchmark-axis" aria-hidden="true"><span>0h</span><span>2h</span><span>4h</span><span>6h</span><span>8h</span></div>
-          <ul className="benchmark-bars" aria-label="Estimated time to verified outcome by workflow">
-            {benchmarkSeries.map((series) => {
-              const total = benchmarkPhases.reduce((sum, phase) => sum + series[phase.id], 0);
-              const breakdown = benchmarkPhases.map((phase) => `${phase.label}: ${series[phase.id]} minutes`).join(", ");
-              return (
-                <li className={series.id === "possible" ? "is-possible" : ""} aria-label={`${series.label}: ${formatBenchmarkDuration(total)} total. ${breakdown}.`} key={series.id}>
-                  <strong>{series.label}</strong>
-                  <div className="benchmark-bar-track" aria-hidden="true">
-                    {benchmarkPhases.map((phase) => (
-                      <i className={`is-${phase.id}`} style={{ width: `${(series[phase.id] / benchmarkMaxMinutes) * 100}%` }} key={phase.id}>
-                        <span>{series[phase.id]}m</span>
-                      </i>
-                    ))}
+          <figure aria-labelledby="benchmark-outcome-heading" aria-describedby="benchmark-outcome-description">
+            <div className="benchmark-outcome-axis" aria-hidden="true"><span>0h</span><span>2h</span><span>4h</span><span>6h</span><span>8h</span></div>
+            <ul className="benchmark-outcome-bars" aria-label="Autonomous work time and outcome coverage by workflow">
+              {benchmarkOutcomeSeries.map((series) => (
+                <li className={series.id === "possible" ? "is-possible" : ""} aria-label={`${series.label}: ${formatBenchmarkDuration(series.minutes)} autonomous work time. ${series.coverage}% independently verified outcome coverage.`} key={series.id}>
+                  <header><strong>{series.label}</strong><b>{series.coverage}%</b></header>
+                  <div className="benchmark-outcome-row is-time">
+                    <span>Time</span>
+                    <div aria-hidden="true"><i style={{ width: `${(series.minutes / benchmarkWindowMinutes) * 100}%` }} /></div>
+                    <em>{formatBenchmarkDuration(series.minutes)}</em>
                   </div>
-                  <b>{formatBenchmarkDuration(total)}</b>
+                  <div className="benchmark-outcome-row is-coverage">
+                    <span>Coverage</span>
+                    <div aria-hidden="true"><i style={{ width: `${series.coverage}%` }} /></div>
+                    <em>{series.coverage}%</em>
+                  </div>
                 </li>
-              );
-            })}
-          </ul>
-          <figcaption>Estimated values only. This chart expresses the workflow hypothesis; measured clean-room runs are still required for a performance claim.</figcaption>
-        </figure>
-      </section>
+              ))}
+            </ul>
+            <figcaption>Eight-hour step-away window. The first live benchmark run will replace Model 01 with verifier receipts.</figcaption>
+          </figure>
+        </section>
 
-      <section className="benchmark-hypothesis" aria-labelledby="benchmark-hypothesis-heading">
-        <span>WHAT THE ESTIMATE IS SAYING</span>
-        <h2 id="benchmark-hypothesis-heading">Possible does not make the model type twice as fast.</h2>
-        <div>
-          <p>It aims to remove time spent deciding the next prompt, rediscovering context, selecting capabilities, coordinating parallel work, and remembering which checks still matter.</p>
-          <p>The modeled advantage comes from orchestration: the human spends less time acting as project manager while the agent stays attached to one approved outcome.</p>
-        </div>
-      </section>
-
-      <section className="benchmark-notes" aria-labelledby="benchmark-notes-heading">
-        <h2 id="benchmark-notes-heading">What the pilot proves—and what it does not</h2>
-        <ul>
-          <li>Passing self-authored tests was not enough: independent browser review found Direct's keyboard path broken.</li>
-          <li>Outcome success and workflow fidelity are different measurements; Spec and Plan passed one and failed the other.</li>
-          <li>Goal and Possible both completed the frozen outcome while satisfying their named coordination treatment.</li>
-          <li>One parallel run cannot establish typical speed, variance, or a causal advantage for any workflow.</li>
-          <li>The next valid performance study needs repeated, sequential runs and a separate rough-intent protocol for human coordination.</li>
-        </ul>
-        <p>The evidence exists and is published above. The eight-hour chart remains a product hypothesis—not measured performance.</p>
-      </section>
+        <section className="benchmark-verifier" aria-labelledby="benchmark-verifier-heading">
+          <span>INDEPENDENT VERIFIER</span>
+          <h2 id="benchmark-verifier-heading">Time alone proves nothing.</h2>
+          <p>The verifier inspects the conversation, artifacts, tests, launch surface, and evidence. Coverage is awarded only for work that can be demonstrated—not plans, promises, generated claims, or busywork.</p>
+          <div className="benchmark-coverage-grid" aria-label="Outcome coverage areas">
+            <span>Market evidence</span>
+            <span>Positioning</span>
+            <span>Useful product</span>
+            <span>Activation</span>
+            <span>Revenue</span>
+            <span>Distribution</span>
+            <span>Reliability</span>
+            <span>Operating loop</span>
+          </div>
+          <p className="benchmark-conclusion"><strong>Possible wins only if it stays productive longer and returns with more of the real outcome verified.</strong></p>
+        </section>
       </article>
 
       <SiteFooter />

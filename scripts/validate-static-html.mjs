@@ -91,7 +91,7 @@ for (const [relativePath, expected] of [
   ["blogs/index.html", "What is Possible?"],
   ["blogs/what-is-possible/index.html", "Possible is the outcome layer"],
   ["blogs/why-possible/index.html", "The bottleneck is no longer what AI can do"],
-  ["benchmarks/index.html", "How long to reach"],
+  ["benchmarks/index.html", "THE STEP-AWAY BENCHMARK"],
   ["docs/index.html", "Build complete outcomes with Possible"],
   ["docs/how-to-use/index.html", "How to use Possible"],
   ["demo/index.html", "HARDWARE LAUNCH"],
