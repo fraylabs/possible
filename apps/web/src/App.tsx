@@ -129,62 +129,63 @@ function CreatePage() {
     <main>
       <SiteNav label="Start / $possible" />
 
-      <section className="build-hero" id="top">
-        <div className="build-hero-copy">
-          <p className="eyebrow">POSSIBLE / FOR CODEX</p>
-          <h1>What do you want<br />{" "}to build <em>today?</em></h1>
-          <p>Bring an idea or a live app. Possible gives Codex the skills, plan, and proof to build it, ship it, or keep it running.</p>
-          <div className="build-hero-actions">
-            <a className="button-link" href="#try">Try with Codex <span>↓</span></a>
-            <a className="text-link" href="#packs">Browse packs ↓</a>
-            <a className="text-link" href="/demo">See real outcomes →</a>
+      <section className="start-section" id="top" aria-label="Start with Possible">
+        <div className="build-hero">
+          <div className="build-hero-copy">
+            <p className="eyebrow">POSSIBLE / FOR CODEX</p>
+            <h1>What do you want<br />{" "}to build <em>today?</em></h1>
+            <p>Bring an idea or a live app. Possible gives Codex the skills, plan, and proof to build it, ship it, or keep it running.</p>
+            <div className="build-hero-actions">
+              <a className="button-link" href="#try">Try with Codex <span>↓</span></a>
+              <a className="text-link" href="#packs">Browse packs ↓</a>
+              <a className="text-link" href="/demo">See real outcomes →</a>
+            </div>
+          </div>
+
+          <div className="build-hero-install" id="try">
+            <article className="install-card" id="start">
+              <header><span>INSTALL POSSIBLE</span><strong>ONE COMMAND</strong></header>
+              <pre><code>{installCommand}</code></pre>
+              <CopyButton label="Copy install command" value={installCommand} />
+              <div className="install-next"><span>THEN ASK CODEX</span><code>$possible</code></div>
+            </article>
+            <p><span>01</span> Install once. <span>02</span> Type <code>$possible</code>. <span>03</span> Describe the idea.</p>
+            <a className="schedule-entry" href="/packs/web-app-operations" aria-label="Schedule operations with Possible">
+              <span>TRY SAYING</span><code>“{schedulePrompt}”</code><strong>MANUAL FIRST · SEPARATE YES →</strong>
+            </a>
           </div>
         </div>
 
-        <div className="build-hero-install" id="try">
-          <article className="install-card" id="start">
-            <header><span>INSTALL POSSIBLE</span><strong>ONE COMMAND</strong></header>
-            <pre><code>{installCommand}</code></pre>
-            <CopyButton label="Copy install command" value={installCommand} />
-            <div className="install-next"><span>THEN ASK CODEX</span><code>$possible</code></div>
-          </article>
-          <p><span>01</span> Install once. <span>02</span> Type <code>$possible</code>. <span>03</span> Describe the idea.</p>
-          <a className="schedule-entry" href="/packs/web-app-operations" aria-label="Schedule operations with Possible">
-            <span>TRY SAYING</span><code>“{schedulePrompt}”</code><strong>MANUAL FIRST · SEPARATE YES →</strong>
-          </a>
-        </div>
+        <div className="home-pack-index" id="packs" role="region" aria-labelledby="home-packs-heading">
+          <header>
+            <div>
+              <span>PACKS POSSIBLE CAN RECOMMEND / {String(galleryPacks.length).padStart(2, "0")}</span>
+              <h2 id="home-packs-heading">Packs are complete recipes for <em>real outcomes.</em></h2>
+            </div>
+            <p>Browse them, or just describe what you want. Possible recommends a pack for your approval before Codex begins.</p>
+          </header>
 
-      </section>
-
-      <section className="home-pack-index" id="packs" aria-labelledby="home-packs-heading">
-        <header>
-          <div>
-            <span>PACKS POSSIBLE CAN RECOMMEND / {String(galleryPacks.length).padStart(2, "0")}</span>
-            <h2 id="home-packs-heading">Complete recipes for<br /><em>real outcomes.</em></h2>
+          <div className="home-pack-columns" aria-hidden="true">
+            <span>#</span><span>PACK</span><span>LANE</span><span>RECIPE</span><span>OPEN</span>
           </div>
-          <p>Browse what Possible can coordinate. You do not need to choose a pack: describe the outcome and Possible recommends the fit for your approval.</p>
-        </header>
-
-        <div className="home-pack-columns" aria-hidden="true">
-          <span>#</span><span>PACK</span><span>LANE</span><span>RECIPE</span><span>OPEN</span>
+          <ol aria-label="Packs Possible can recommend">
+            {galleryPacks.map((pack) => (
+              <li key={pack.slug}>
+                <a href={`/packs/${pack.slug}`} aria-label={`${pack.name}, ${laneLabels[pack.lane]} pack`}>
+                  <span className="home-pack-number">{String(pack.catalogNumber).padStart(2, "0")}</span>
+                  <strong>{pack.name}</strong>
+                  <span className={`home-pack-lane home-pack-lane--${pack.lane}`}>{laneLabels[pack.lane]}</span>
+                  <span className="home-pack-recipe">{pack.skills.length} skills · {pack.outputs.length} outputs{pack.schedule ? " · schedulable" : ""}</span>
+                  <i>↗</i>
+                </a>
+              </li>
+            ))}
+          </ol>
+          <footer>
+            <p><strong>Not sure which pack?</strong> That is what <code>$possible</code> decides with you.</p>
+            <a href="/packs">Open the full pack reference →</a>
+          </footer>
         </div>
-        <ol aria-label="Packs Possible can recommend">
-          {galleryPacks.map((pack) => (
-            <li key={pack.slug}>
-              <a href={`/packs/${pack.slug}`} aria-label={`${pack.name}, ${laneLabels[pack.lane]} pack`}>
-                <span className="home-pack-number">{String(pack.catalogNumber).padStart(2, "0")}</span>
-                <strong>{pack.name}</strong>
-                <span className={`home-pack-lane home-pack-lane--${pack.lane}`}>{laneLabels[pack.lane]}</span>
-                <span className="home-pack-recipe">{pack.skills.length} skills · {pack.outputs.length} outputs{pack.schedule ? " · schedulable" : ""}</span>
-                <i>↗</i>
-              </a>
-            </li>
-          ))}
-        </ol>
-        <footer>
-          <p><strong>Not sure which pack?</strong> That is what <code>$possible</code> decides with you.</p>
-          <a href="/packs">Open the full pack reference →</a>
-        </footer>
       </section>
 
       <section className="quick-path">

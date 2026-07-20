@@ -21,8 +21,10 @@ describe("Possible", () => {
     expect(screen.getByRole("link", { name: "DOCS" })).toHaveAttribute("href", "/docs");
     expect(screen.getByRole("link", { name: "BLOGS" })).toHaveAttribute("href", "/blogs");
     expect(screen.getByRole("link", { name: "PACKS" })).toHaveAttribute("href", "/#packs");
-    expect(screen.getByRole("heading", { name: /Complete recipes for.*real outcomes/i, level: 2 })).toBeInTheDocument();
-    expect(screen.getByText(/You do not need to choose a pack.*Possible recommends the fit/i)).toBeInTheDocument();
+    const start = screen.getByRole("region", { name: "Start with Possible" });
+    expect(within(start).getByRole("heading", { name: /Packs are complete recipes for.*real outcomes/i, level: 2 })).toBeInTheDocument();
+    expect(within(start).getByText(/Browse them, or just describe what you want.*Possible recommends a pack/i)).toBeInTheDocument();
+    expect(within(start).getByText("npx @fraylabs/possible init")).toBeInTheDocument();
     const packs = screen.getByRole("list", { name: "Packs Possible can recommend" });
     expect(within(packs).getAllByRole("listitem")).toHaveLength(8);
     for (const pack of outcomePacks) {

@@ -19,11 +19,12 @@ nav { height: 74px; padding: 0 3.5vw; border-bottom: 1px solid #aaa59a; display:
 .nav-links a::after { content: ""; position: absolute; right: 0; bottom: -5px; left: 0; height: 1px; background: #ff4d00; transform: scaleX(0); transform-origin: right; transition: transform .18s ease; }
 .nav-links a:hover::after, .nav-links a:focus-visible::after { transform: scaleX(1); transform-origin: left; }
 
-.build-hero { min-height: calc(100svh - 74px); padding: clamp(52px, 7vw, 110px) 3.5vw; display: grid; grid-template-columns: 1.08fr .92fr; gap: 6vw; align-items: center; }
-.build-hero-copy h1 { max-width: 980px; margin: 24px 0; font-size: clamp(58px, 6.8vw, 108px); font-weight: 500; line-height: .86; letter-spacing: -.075em; }
+.start-section { scroll-margin-top: 20px; background: #f3f0e8; }
+.build-hero { padding: clamp(42px, 4.7vw, 72px) 3.5vw clamp(40px, 4vw, 62px); display: grid; grid-template-columns: 1.08fr .92fr; gap: 6vw; align-items: center; }
+.build-hero-copy h1 { max-width: 980px; margin: 20px 0; font-size: clamp(54px, 6.1vw, 92px); font-weight: 500; line-height: .86; letter-spacing: -.075em; }
 .build-hero-copy h1 em { color: #ff4d00; font-style: normal; }
 .build-hero-copy > p:not(.eyebrow) { max-width: 650px; margin: 0; color: #5e5952; font-size: clamp(16px, 1.4vw, 21px); line-height: 1.5; }
-.build-hero-actions { margin-top: 30px; display: flex; gap: 24px; align-items: center; }
+.build-hero-actions { margin-top: 24px; display: flex; gap: 24px; align-items: center; }
 .build-hero-actions .button-link { background: #ff4d00; }
 .build-hero-actions .text-link { font-size: 10px; }
 .build-hero-install { min-width: 0; scroll-margin-top: 22px; }
@@ -35,10 +36,10 @@ nav { height: 74px; padding: 0 3.5vw; border-bottom: 1px solid #aaa59a; display:
 .schedule-entry code { min-width: 0; overflow: hidden; font: 11px "DM Mono", monospace; text-overflow: ellipsis; white-space: nowrap; }
 .schedule-entry:hover, .schedule-entry:focus-visible { background: #151411; color: #f3f0e8; }
 
-.home-pack-index { scroll-margin-top: 20px; padding: clamp(72px, 8vw, 120px) 3.5vw; border-top: 1px solid #aaa59a; background: #e9e6de; }
-.home-pack-index > header { margin-bottom: 55px; display: grid; grid-template-columns: 1.2fr .8fr; gap: 8vw; align-items: end; }
+.home-pack-index { scroll-margin-top: 20px; padding: 0 3.5vw clamp(72px, 7vw, 105px); }
+.home-pack-index > header { margin-bottom: 30px; padding-top: 34px; border-top: 1px solid #aaa59a; display: grid; grid-template-columns: 1.2fr .8fr; gap: 8vw; align-items: end; }
 .home-pack-index > header span { color: #716c64; font: 9px "DM Mono", monospace; letter-spacing: .05em; }
-.home-pack-index > header h2 { margin: 22px 0 0; font-size: clamp(48px, 6vw, 92px); font-weight: 500; line-height: .88; letter-spacing: -.07em; }
+.home-pack-index > header h2 { max-width: 920px; margin: 14px 0 0; font-size: clamp(34px, 4.3vw, 64px); font-weight: 500; line-height: .98; letter-spacing: -.06em; }
 .home-pack-index > header h2 em { color: #ff4d00; font-style: normal; }
 .home-pack-index > header p { max-width: 580px; margin: 0; color: #5e5952; font-size: clamp(14px, 1.25vw, 18px); line-height: 1.65; }
 .home-pack-columns, .home-pack-index ol a { display: grid; grid-template-columns: 52px minmax(240px, 1.2fr) 115px minmax(230px, .8fr) 45px; gap: 18px; align-items: center; }
@@ -553,7 +554,7 @@ footer .wordmark span { color: #151411; }
   .schedule-entry { min-height: 0; padding-block: 11px; grid-template-columns: 1fr; gap: 6px; }
   .schedule-entry code { overflow: visible; font-size: 10px; line-height: 1.45; text-overflow: clip; white-space: normal; }
   .schedule-entry strong { text-align: left; }
-  .home-pack-index > header { grid-template-columns: 1fr; gap: 25px; }
+  .home-pack-index > header { grid-template-columns: 1fr; gap: 18px; }
   .home-pack-columns, .home-pack-index ol a { grid-template-columns: 42px minmax(200px, 1fr) 100px minmax(170px, .7fr) 30px; gap: 12px; }
   .quick-path { grid-template-columns: 1fr; }
 }
@@ -566,7 +567,7 @@ footer .wordmark span { color: #151411; }
 }
 
 @media (max-width: 560px) {
-  .build-hero { min-height: calc(100svh - 64px); padding: 38px 18px 28px; display: block; overflow: hidden; }
+  .build-hero { padding: 38px 18px 34px; display: block; overflow: hidden; }
   .build-hero-copy h1 { margin: 18px 0; font-size: 14.5vw; line-height: .88; }
   .build-hero-copy > p:not(.eyebrow) { font-size: 14px; }
   .build-hero-actions { margin-top: 20px; gap: 17px; }
@@ -576,9 +577,9 @@ footer .wordmark span { color: #151411; }
   .build-hero-install .install-card pre { padding: 20px 14px; white-space: nowrap; font-size: 13px; }
   .build-hero-install .install-next { padding: 12px 14px; }
   .build-hero-install > p { margin-top: 17px; font-size: 7px; }
-  .home-pack-index { padding: 65px 18px; }
-  .home-pack-index > header { margin-bottom: 38px; }
-  .home-pack-index > header h2 { font-size: 13.5vw; }
+  .home-pack-index { padding: 0 18px 65px; }
+  .home-pack-index > header { margin-bottom: 28px; padding-top: 28px; }
+  .home-pack-index > header h2 { font-size: 11.5vw; }
   .home-pack-columns { display: none; }
   .home-pack-index ol { border-top: 1px solid #151411; }
   .home-pack-index ol a { min-height: 102px; padding-inline: 4px; grid-template-columns: 32px 1fr auto; gap: 10px; }
