@@ -1,0 +1,159 @@
+{
+  "receiptVersion": 1,
+  "benchmarkRun": "spec-r1",
+  "benchmarkWorkflow": "outcome-v1",
+  "product": "Daymark",
+  "outputPath": "/Users/brianlim/.codex/worktrees/97a9/fray/repos/daymark",
+  "filesCreated": [
+    "BENCHMARK-RECEIPT.json",
+    "README.md",
+    "SPEC.md",
+    "index.html",
+    "package.json",
+    "scripts/build.mjs",
+    "scripts/serve.mjs",
+    "src/app.js",
+    "src/daymark.js",
+    "src/styles.css",
+    "test/daymark.test.js",
+    "dist/index.html",
+    "dist/src/app.js",
+    "dist/src/daymark.js",
+    "dist/src/styles.css"
+  ],
+  "commandsActuallyRun": [
+    {
+      "command": "pwd && jj workspace update-stale && jj status && if [ -e repos/daymark ]; then echo 'repos/daymark already exists'; else echo 'repos/daymark absent'; fi",
+      "result": "failed",
+      "details": "The command stopped at jj workspace update-stale because the provided worktree root is not a jj repository. No files were changed by this preflight attempt."
+    },
+    {
+      "command": "mkdir -p repos/daymark",
+      "result": "passed",
+      "details": "Created the product directory before SPEC.md was written."
+    },
+    {
+      "command": "npm test",
+      "result": "passed",
+      "details": "Run after implementation and after fixes. The final run passed 11 tests in 1 suite with 0 failures, 0 skipped, and 0 todo."
+    },
+    {
+      "command": "npm run build",
+      "result": "passed",
+      "details": "Run after implementation and after fixes. The final run created dist/ with index.html and three local source assets."
+    },
+    {
+      "command": "node --check src/app.js && node --check src/daymark.js && node --check scripts/build.mjs && node --check scripts/serve.mjs",
+      "result": "passed",
+      "details": "All four JavaScript modules passed Node syntax checks."
+    },
+    {
+      "command": "npm start",
+      "result": "passed",
+      "details": "The production server started on 127.0.0.1:4173. It was deliberately stopped with Ctrl-C after local smoke and browser checks; the signal exit is not an application failure."
+    },
+    {
+      "command": "for asset in / /src/styles.css /src/app.js /src/daymark.js; do curl -fsS -o /dev/null -w \"$asset %{http_code} %{content_type}\\n\" \"http://127.0.0.1:4173$asset\" || exit 1; done",
+      "result": "passed",
+      "details": "The final production artifact returned HTTP 200 with the expected HTML, CSS, and JavaScript content types for all four paths."
+    },
+    {
+      "command": "npm run dev",
+      "result": "passed",
+      "details": "The development server started on 127.0.0.1:5173 and was deliberately stopped with Ctrl-C after the smoke check."
+    },
+    {
+      "command": "for asset in / /src/app.js; do curl -fsS -o /dev/null -w \"$asset %{http_code} %{content_type}\\n\" \"http://127.0.0.1:5173$asset\" || exit 1; done",
+      "result": "passed",
+      "details": "The development HTML and application module both returned HTTP 200 with expected content types."
+    },
+    {
+      "command": "cmp -s index.html dist/index.html && cmp -s src/app.js dist/src/app.js && cmp -s src/daymark.js dist/src/daymark.js && cmp -s src/styles.css dist/src/styles.css",
+      "result": "passed",
+      "details": "All built files exactly matched their source counterparts."
+    },
+    {
+      "command": "if rg -n 'fetch\\s*\\(|XMLHttpRequest|navigator\\.sendBeacon|WebSocket\\s*\\(|EventSource\\s*\\(|https?://' index.html src; then exit 1; fi; if rg -n '=(//|https?://)' index.html; then exit 1; fi",
+      "result": "passed",
+      "details": "No fetch, XMLHttpRequest, sendBeacon, WebSocket, EventSource, external URL, or external HTML asset reference was found in the runtime."
+    },
+    {
+      "command": "node -e \"JSON.parse(require('node:fs').readFileSync('BENCHMARK-RECEIPT.json', 'utf8')); console.log('BENCHMARK-RECEIPT.json is valid JSON.');\"",
+      "result": "passed",
+      "details": "The final receipt parsed successfully as JSON."
+    },
+    {
+      "command": "combined cmp and rg boundary check (first shell-quoted attempt)",
+      "result": "failed",
+      "details": "The shell rejected the first invocation with an unmatched quote before any check ran. The corrected invocation is represented by the passing cmp and rg entries above."
+    }
+  ],
+  "checks": {
+    "passed": [
+      {
+        "check": "Required automated behavior coverage",
+        "evidence": "npm test passed 11/11, covering the three-item cap, completion toggle, removal, reset, reload persistence, local-day rollover, stale post-midnight mutation handling, rejected-add rollover, valid prior-day replacement, malformed JSON, and invalid schema recovery."
+      },
+      {
+        "check": "Production build",
+        "evidence": "npm run build completed and dist/ served all four artifact paths with HTTP 200."
+      },
+      {
+        "check": "Development run command",
+        "evidence": "npm run dev served / and /src/app.js with HTTP 200."
+      },
+      {
+        "check": "390px responsive layout",
+        "evidence": "Browser inspection measured a 390px viewport and 390px document/body scroll width. A maximum-length 160-character unbroken priority wrapped inside its row without horizontal overflow."
+      },
+      {
+        "check": "1280px responsive layout",
+        "evidence": "Browser inspection measured a 1280px viewport and document width with a centered 720px application column."
+      },
+      {
+        "check": "Interactive and accessible flow",
+        "evidence": "Local browser walkthrough exercised pointer and Enter-key adds, the disabled/explained three-item limit, complete and incomplete toggles, focus retention after rerender, removal, reset cancel and confirmation, complete-state progress, and reload persistence. Semantic DOM snapshots exposed labeled native controls and the browser console had no warnings or errors."
+      },
+      {
+        "check": "Local-only runtime boundary",
+        "evidence": "Static source scan found no network APIs, external URLs, or external asset references; built files exactly matched the reviewed source."
+      }
+    ],
+    "failed": [],
+    "skipped": [
+      {
+        "check": "Independent user validation",
+        "reason": "The benchmark stops at a locally verified build and prohibits claiming user validation. No independent-review result is claimed."
+      },
+      {
+        "check": "Live wait through a real local midnight",
+        "reason": "Day rollover and stale-action behavior were verified with injected local dates in automated tests; the run did not wait through an actual midnight."
+      },
+      {
+        "check": "Multi-browser and physical assistive-technology device lab",
+        "reason": "The UI was inspected in the available local in-app browser and by semantic/source review only."
+      },
+      {
+        "check": "Deployment or remote availability",
+        "reason": "Explicitly outside the requested local verification boundary."
+      }
+    ]
+  },
+  "knownLimitations": [
+    "Priorities are intentionally scoped to one browser origin and profile; clearing browser storage removes the current day.",
+    "The included test, build, and local server scripts require Node.js 20 or newer.",
+    "No cross-device sync, cross-day history, editing, reordering, or recovery after a deliberate reset is provided by design.",
+    "No independent user study, multi-browser matrix, or physical screen-reader device test was performed.",
+    "The actual passage through midnight was not awaited; local-date rollover was tested deterministically with injected dates."
+  ],
+  "externalActionsNotTaken": [
+    "No deployment or publishing.",
+    "No account creation or sign-in.",
+    "No backend, analytics, notifications, collaboration, or network-writing integration.",
+    "No external assets fetched or embedded.",
+    "No person or organization contacted.",
+    "No files uploaded and no remote data written.",
+    "No claim of user validation or independent review.",
+    "No inspection of repos/possible, another benchmark run, the public Possible benchmark, or a sibling product repository."
+  ]
+}
