@@ -247,17 +247,20 @@ function WhatPage() {
   ] as const;
 
   return (
-    <main className="what-page">
+    <main className="what-page editorial-page">
       <SiteNav label="Blog / What is Possible?" />
 
-      <header className="what-hero">
+      <article className="what-article editorial-article">
+      <header className="what-hero editorial-header">
         <p className="eyebrow">PRODUCT DEFINITION / POSSIBLE.SH</p>
         <h1>Possible is the<br /><em>outcome layer</em><br />for AI agents.</h1>
-        <div className="what-hero-intro">
-          <p>Describe the result you want. Possible clarifies the outcome, recommends a reviewed pack, assembles specialist skills, and coordinates the work until there is evidence it is done.</p>
-          <aside><span>WHAT IT IS TODAY</span><strong>An installable Codex skill.</strong><p>The skill is the delivery mechanism. Outcome orchestration is the product.</p></aside>
+        <p className="editorial-dek">Describe the result you want. Possible clarifies the outcome, recommends a reviewed pack, assembles specialist skills, and coordinates the work until there is evidence it is done.</p>
+        <div className="editorial-byline">
+          <span>FRAY LABS · 20 JUL 2026</span><span>PRODUCT DEFINITION</span>
         </div>
       </header>
+
+      <aside className="what-definition-note"><span>WHAT IT IS TODAY</span><strong>An installable Codex skill.</strong><p>The skill is the delivery mechanism. Outcome orchestration is the product.</p></aside>
 
       <section className="what-flow" aria-labelledby="what-flow-heading">
         <header><span>THE COMPLETE MODEL</span><h2 id="what-flow-heading">One ambition. A coordinated path. A verified result.</h2></header>
@@ -315,6 +318,7 @@ function WhatPage() {
         <div><code>{installCommand}</code><CopyButton label="Copy install command" value={installCommand} /></div>
         <p>Then open Codex and type <code>$possible</code>.</p>
       </section>
+      </article>
 
       <SiteFooter />
     </main>
@@ -323,18 +327,18 @@ function WhatPage() {
 
 function WhyPage() {
   return (
-    <main className="why-page">
+    <main className="why-page editorial-page">
       <SiteNav label="Blog / Why Possible" />
 
-      <article className="why-article">
-        <header className="why-article-header">
+      <article className="why-article editorial-article">
+        <header className="why-article-header editorial-header">
           <p className="eyebrow">AN ESSAY FROM POSSIBLE</p>
           <h1>The bottleneck is no longer what AI can do.</h1>
-          <p className="why-dek">It is our ability to see what is possible, define the outcome, and direct agents toward it.</p>
-          <div className="why-byline"><span>FRAY LABS · 20 JUL 2026</span><span>WHY POSSIBLE</span></div>
+          <p className="why-dek editorial-dek">It is our ability to see what is possible, define the outcome, and direct agents toward it.</p>
+          <div className="why-byline editorial-byline"><span>FRAY LABS · 20 JUL 2026</span><span>WHY POSSIBLE</span></div>
         </header>
 
-        <div className="why-article-body">
+        <div className="why-article-body editorial-body">
           <section id="problem" aria-labelledby="why-problem-heading">
             <p className="why-lead">The way most people work with AI still resembles a chat window from years ago: ask for one thing, wait for the answer, decide what comes next, and prompt again.</p>
             <p>This interaction is useful for isolated tasks. It becomes exhausting when the ambition is larger than a task—launching a product, building a working application, preparing a release, or running an ongoing function.</p>
@@ -433,15 +437,15 @@ function WhyPage() {
 
 function BenchmarksPage() {
   return (
-    <main className="benchmarks-page">
-      <SiteNav label="Time-to-outcome model" />
+    <main className="benchmarks-page editorial-page">
+      <SiteNav label="Blog / Benchmark" />
 
-      <article className="benchmark-article">
-        <header className="benchmark-hero">
+      <article className="benchmark-article editorial-article">
+        <header className="benchmark-hero editorial-header">
           <p className="eyebrow">A MODEL FROM POSSIBLE</p>
           <h1>How long to reach<br />the same <em>outcome?</em></h1>
-          <p>A mocked comparison of five ways to direct the same coding agent from a rough idea to verified work.</p>
-          <div className="benchmark-byline"><span>FRAY LABS · 21 JUL 2026</span><span>ILLUSTRATIVE MODEL · NOT MEASURED PERFORMANCE</span></div>
+          <p className="editorial-dek">A mocked comparison of five ways to direct the same coding agent from a rough idea to verified work.</p>
+          <div className="benchmark-byline editorial-byline"><span>FRAY LABS · 21 JUL 2026</span><span>ILLUSTRATIVE MODEL · NOT MEASURED PERFORMANCE</span></div>
         </header>
 
       <section className="benchmark-method" aria-labelledby="benchmark-method-heading">

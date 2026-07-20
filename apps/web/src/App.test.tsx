@@ -55,6 +55,7 @@ describe("Possible", () => {
   it("defines Possible as the outcome layer without confusing the product with its parts", async () => {
     window.history.pushState({}, "", "/blogs/what-is-possible");
     const { container } = render(<App />);
+    expect(container.querySelector(".what-page.editorial-page .editorial-article .editorial-header .editorial-byline")).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: /Possible is the.*outcome layer.*for AI agents/i, level: 1 })).toBeInTheDocument();
     expect(screen.getByText("An installable Codex skill.")).toBeInTheDocument();
     expect(screen.getByText(/The skill is the delivery mechanism.*Outcome orchestration is the product/i)).toBeInTheDocument();
@@ -180,6 +181,7 @@ describe("Possible", () => {
   it("explains who steers, coordinates, and executes without making users choose packs", async () => {
     window.history.pushState({}, "", "/blogs/why-possible");
     const { container } = render(<App />);
+    expect(container.querySelector(".why-page.editorial-page .editorial-article .editorial-header .editorial-byline")).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: /The bottleneck is no longer what AI can do/i, level: 1 })).toBeInTheDocument();
     expect(screen.queryByRole("complementary", { name: /In this essay/i })).not.toBeInTheDocument();
     expect(screen.getByRole("heading", { name: /Three roles, clearly separated/i })).toBeInTheDocument();
@@ -196,6 +198,7 @@ describe("Possible", () => {
   it("models time to outcome as an explicitly illustrative bar chart", async () => {
     window.history.pushState({}, "", "/benchmarks");
     const { container } = render(<App />);
+    expect(container.querySelector(".benchmarks-page.editorial-page .editorial-article .editorial-header .editorial-byline")).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: /How long to reach.*the same outcome/i, level: 1 })).toBeInTheDocument();
     expect(screen.getByText(/not measured performance/i)).toBeInTheDocument();
     expect(screen.getByText(/values below are deliberately mocked/i)).toBeInTheDocument();
