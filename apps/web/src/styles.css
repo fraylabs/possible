@@ -1382,6 +1382,38 @@ footer .wordmark span { color: #151411; }
   .thread-disclosure { margin-left: 27px; }
 }
 
+/* Possible blogs */
+.blogs-page { background: #f8f7f3; color: #24221e; }
+.blogs-hero { padding: 100px 3.5vw 85px; border-bottom: 1px solid #24221e; }
+.blogs-hero h1 { max-width: 1100px; margin: 35px 0 45px; font: 500 clamp(68px, 9vw, 140px)/.84 Newsreader, Georgia, serif; letter-spacing: -.055em; }
+.blogs-hero h1 em { color: #ff4d00; font-style: normal; }
+.blogs-hero > p:last-child { max-width: 760px; margin: 0 0 0 auto; color: #55514a; font-size: clamp(18px, 2vw, 25px); line-height: 1.55; }
+.blogs-index { border-bottom: 1px solid #24221e; display: grid; grid-template-columns: repeat(2, 1fr); }
+.blogs-index > a { min-height: 500px; padding: 38px 3.5vw; border-right: 1px solid #24221e; display: flex; flex-direction: column; }
+.blogs-index > a:last-child { border-right: 0; }
+.blogs-index > a:hover, .blogs-index > a:focus-visible { background: #efede7; }
+.blogs-index > a > span { color: #777169; font: 9px "DM Mono", monospace; letter-spacing: .06em; }
+.blogs-index h2 { max-width: 600px; margin: auto 0 25px; font: 500 clamp(48px, 5.5vw, 80px)/.95 Newsreader, Georgia, serif; letter-spacing: -.04em; }
+.blogs-index p { max-width: 630px; margin: 0 0 45px; color: #55514a; font-size: 15px; line-height: 1.7; }
+.blogs-index strong { font: 9px "DM Mono", monospace; letter-spacing: .06em; }
+.blogs-evidence { padding: 55px 3.5vw; border-bottom: 1px solid #24221e; display: grid; grid-template-columns: minmax(180px, .3fr) minmax(260px, 1fr) auto; gap: 5vw; align-items: center; }
+.blogs-evidence span { color: #777169; font: 9px "DM Mono", monospace; }
+.blogs-evidence p { max-width: 680px; margin: 0; color: #55514a; font-size: 14px; line-height: 1.7; }
+.blogs-evidence a { padding-bottom: 4px; border-bottom: 1px solid #24221e; font-size: 13px; font-weight: 600; white-space: nowrap; }
+.blogs-evidence a:hover, .blogs-evidence a:focus-visible { color: #ff4d00; border-color: #ff4d00; }
+
+@media (max-width: 760px) {
+  .blogs-hero { padding: 65px 18px 60px; }
+  .blogs-hero h1 { font-size: 17vw; }
+  .blogs-hero > p:last-child { margin-left: 0; }
+  .blogs-index { grid-template-columns: 1fr; }
+  .blogs-index > a { min-height: 390px; padding: 30px 18px; border-right: 0; border-bottom: 1px solid #24221e; }
+  .blogs-index > a:last-child { border-bottom: 0; }
+  .blogs-index h2 { font-size: 14vw; }
+  .blogs-evidence { padding: 45px 18px; grid-template-columns: 1fr; gap: 18px; }
+  .blogs-evidence a { justify-self: start; }
+}
+
 /* What is Possible */
 .what-page { background: #f3f0e8; color: #151411; }
 .what-hero { min-height: 720px; padding: 95px 3.5vw 65px; border-bottom: 1px solid #151411; }

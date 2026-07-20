@@ -122,8 +122,7 @@ function SiteNav({ label }: { label?: string }) {
       {label ? <div className="nav-meta"><span>POSSIBLE</span><strong>{label.toUpperCase()}</strong></div> : null}
       <div className="nav-links">
         <a href="/">START</a>
-        <a href="/what">WHAT</a>
-        <a href="/why">WHY</a>
+        <a href="/blogs">BLOGS</a>
         <a href="/benchmarks">BENCH</a>
         <a href="/packs">PACKS</a>
         <a href="/docs">DOCS</a>
@@ -205,6 +204,43 @@ function CreatePage() {
   );
 }
 
+function BlogsPage() {
+  return (
+    <main className="blogs-page">
+      <SiteNav label="Blogs / 02" />
+
+      <header className="blogs-hero">
+        <p className="eyebrow">POSSIBLE / WRITING</p>
+        <h1>Thinking in<br /><em>outcomes.</em></h1>
+        <p>Short explanations of what Possible is, why it exists, and how outcome-oriented collaboration changes the relationship between people and agents.</p>
+      </header>
+
+      <section className="blogs-index" aria-label="Possible articles">
+        <a href="/blogs/what-is-possible">
+          <span>PRODUCT DEFINITION · 20 JUL 2026</span>
+          <h2>What is Possible?</h2>
+          <p>Possible is delivered as a Codex skill. The product is an outcome layer that coordinates specialist capabilities toward verified results.</p>
+          <strong>READ ARTICLE →</strong>
+        </a>
+        <a href="/blogs/why-possible">
+          <span>ESSAY · 20 JUL 2026</span>
+          <h2>Why Possible?</h2>
+          <p>AI agents can perform increasingly complex work. The remaining bottleneck is our ability to define, coordinate, and verify what we want from them.</p>
+          <strong>READ ARTICLE →</strong>
+        </a>
+      </section>
+
+      <aside className="blogs-evidence">
+        <span>LOOKING FOR EVIDENCE?</span>
+        <p>The workflow benchmark compares Possible with prompting, specifications, Plan mode, and Goal mode.</p>
+        <a href="/benchmarks">View benchmarks →</a>
+      </aside>
+
+      <SiteFooter />
+    </main>
+  );
+}
+
 function WhatPage() {
   const productParts = [
     { label: "THE RESULT", term: "Outcome", description: "The observable end state you want to make true—not the activity an agent performs." },
@@ -215,7 +251,7 @@ function WhatPage() {
 
   return (
     <main className="what-page">
-      <SiteNav label="What is Possible?" />
+      <SiteNav label="Blog / What is Possible?" />
 
       <header className="what-hero">
         <p className="eyebrow">PRODUCT DEFINITION / POSSIBLE.SH</p>
@@ -291,7 +327,7 @@ function WhatPage() {
 function WhyPage() {
   return (
     <main className="why-page">
-      <SiteNav label="Why Possible" />
+      <SiteNav label="Blog / Why Possible" />
 
       <article className="why-article">
         <header className="why-article-header">
@@ -1926,8 +1962,9 @@ function NotFoundPage() {
 export function PossibleSite({ path: requestedPath }: { path?: string }) {
   const path = (requestedPath ?? (typeof window === "undefined" ? "/" : window.location.pathname)).replace(/\/+$/, "") || "/";
   if (path === "/") return <CreatePage />;
-  if (path === "/what") return <WhatPage />;
-  if (path === "/why") return <WhyPage />;
+  if (path === "/blogs") return <BlogsPage />;
+  if (path === "/blogs/what-is-possible") return <WhatPage />;
+  if (path === "/blogs/why-possible") return <WhyPage />;
   if (path === "/benchmarks") return <BenchmarksPage />;
   if (path === "/packs") return <PacksPage />;
   if (path === "/docs") return <DocsPage />;

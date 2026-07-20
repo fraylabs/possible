@@ -53,8 +53,9 @@ for (const pack of outcomePacks) {
 }
 
 for (const [relativePath, expected] of [
-  ["what/index.html", "Possible is the outcome layer"],
-  ["why/index.html", "The bottleneck is no longer what AI can do"],
+  ["blogs/index.html", "Thinking in"],
+  ["blogs/what-is-possible/index.html", "Possible is the outcome layer"],
+  ["blogs/why-possible/index.html", "The bottleneck is no longer what AI can do"],
   ["benchmarks/index.html", "How much of the project"],
   ["docs/index.html", "Build complete outcomes with Possible"],
   ["demo/index.html", "Recorded outcomes"],
@@ -66,4 +67,4 @@ for (const [relativePath, expected] of [
   assert.match(visibleText(await html(relativePath)), new RegExp(expected));
 }
 
-console.log(`All ${outcomePacks.length + 10} public Next.js routes contain meaningful initial HTML.`);
+console.log(`All ${outcomePacks.length + 11} public Next.js routes contain meaningful initial HTML.`);

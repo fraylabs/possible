@@ -19,7 +19,7 @@ describe("Possible", () => {
     expect(screen.getByText("npx @fraylabs/possible init")).toBeInTheDocument();
     expect(screen.getByText("$possible", { selector: ".install-next code" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "DOCS" })).toHaveAttribute("href", "/docs");
-    expect(screen.getByRole("link", { name: "WHAT" })).toHaveAttribute("href", "/what");
+    expect(screen.getByRole("link", { name: "BLOGS" })).toHaveAttribute("href", "/blogs");
     const starters = screen.getByRole("list", { name: /Choose a starting point/i });
     expect(within(starters).getAllByRole("listitem")).toHaveLength(3);
     for (const [title, demoHref] of [
@@ -39,8 +39,18 @@ describe("Possible", () => {
     expect(container.querySelector("main")).not.toHaveTextContent(/conversational outcome compiler|outcome lanes|ingredient skills|pack knowledge|workstreams/i);
   });
 
+  it("collects Possible writing under one blogs index", async () => {
+    window.history.pushState({}, "", "/blogs");
+    const { container } = render(<App />);
+    expect(screen.getByRole("heading", { name: /Thinking in.*outcomes/i, level: 1 })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /What is Possible.*READ ARTICLE/is })).toHaveAttribute("href", "/blogs/what-is-possible");
+    expect(screen.getByRole("link", { name: /Why Possible.*READ ARTICLE/is })).toHaveAttribute("href", "/blogs/why-possible");
+    expect(screen.getByRole("link", { name: /View benchmarks/i })).toHaveAttribute("href", "/benchmarks");
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
   it("defines Possible as the outcome layer without confusing the product with its parts", async () => {
-    window.history.pushState({}, "", "/what");
+    window.history.pushState({}, "", "/blogs/what-is-possible");
     const { container } = render(<App />);
     expect(screen.getByRole("heading", { name: /Possible is the.*outcome layer.*for AI agents/i, level: 1 })).toBeInTheDocument();
     expect(screen.getByText("An installable Codex skill.")).toBeInTheDocument();
@@ -149,7 +159,7 @@ describe("Possible", () => {
   });
 
   it("explains who steers, coordinates, and executes without making users choose packs", async () => {
-    window.history.pushState({}, "", "/why");
+    window.history.pushState({}, "", "/blogs/why-possible");
     const { container } = render(<App />);
     expect(screen.getByRole("heading", { name: /The bottleneck is no longer what AI can do/i, level: 1 })).toBeInTheDocument();
     expect(screen.queryByRole("complementary", { name: /In this essay/i })).not.toBeInTheDocument();

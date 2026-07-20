@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import PossibleRoute from "../_components/PossibleRoute";
+import PossibleRoute from "../../_components/PossibleRoute";
 
 export const metadata: Metadata = {
   title: "Why Possible",
@@ -7,5 +7,5 @@ export const metadata: Metadata = {
 };
 
 export default function WhyPage() {
-  return <PossibleRoute path="/why" />;
+  return <PossibleRoute path="/blogs/why-possible" />;
 }
