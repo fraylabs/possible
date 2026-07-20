@@ -357,19 +357,6 @@ describe("Possible", () => {
     expect(screen.getByRole("link", { name: /PLAYABLE WEB GAME.*FOLD/i })).toHaveAttribute("href", "/demo/game");
   });
 
-  it("resolves exported demo URLs with their production trailing slash", () => {
-    for (const [path, heading] of [
-      ["/demo/hardware/", /After the yes.*watch it become real/i],
-      ["/demo/software/", /After the yes.*watch the launch take shape/i],
-    ] as const) {
-      window.history.pushState({}, "", path);
-      render(<App />);
-      expect(screen.getByRole("heading", { name: heading })).toBeInTheDocument();
-      expect(screen.queryByText(/404 \/ OUTCOME NOT FOUND/i)).not.toBeInTheDocument();
-      cleanup();
-    }
-  });
-
   it("presents the game pack as a playable proof without calling it a clean-room run", () => {
     window.history.pushState({}, "", "/demo/game");
     render(<App />);
@@ -395,7 +382,7 @@ describe("Possible", () => {
     expect(screen.getByText("Brief locked", { selector: ".replay-controls strong" })).toBeInTheDocument();
     expect(screen.getAllByRole("link", { name: /Show output/i })[0]).toHaveAttribute("href", "#artifacts");
     expect(screen.getByRole("heading", { name: /One conversation.*Real outputs/i })).toBeInTheDocument();
-    expect(screen.getByTitle("Still launch website")).toHaveAttribute("src", "/demo/still/site/");
+    expect(screen.getByTitle("Still launch website")).toHaveAttribute("src", "/demo/still/site/index.html");
     expect(screen.getByAltText("Isometric CAD view of the Still focus device concept")).toBeInTheDocument();
     expect(screen.getByAltText("Rear CAD view of the Still focus device concept")).toBeInTheDocument();
     expect(screen.getByAltText("Top CAD view of the Still focus device concept")).toBeInTheDocument();
@@ -426,8 +413,8 @@ describe("Possible", () => {
     expect(screen.getByRole("heading", { name: /After the yes.*watch the launch take shape/i })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /Software Launch pack/i })).toHaveAttribute("href", "/packs/software-launch");
     expect(screen.getByText("Brief locked", { selector: ".replay-controls strong" })).toBeInTheDocument();
-    expect(screen.getByTitle("Three local-first product")).toHaveAttribute("src", "/demo/three/product/");
-    expect(screen.getByTitle("Three launch website")).toHaveAttribute("src", "/demo/three/site/");
+    expect(screen.getByTitle("Three local-first product")).toHaveAttribute("src", "/demo/three/product/index.html");
+    expect(screen.getByTitle("Three launch website")).toHaveAttribute("src", "/demo/three/site/index.html");
     expect(document.querySelector("video source")).toHaveAttribute("src", "/demo/three/film/three-demo.mp4");
     expect(screen.getByRole("link", { name: /15-test receipt/i })).toHaveAttribute("href", "/demo/three/evidence/product-test-receipt.md");
     expect(screen.getByRole("link", { name: /L0–L8 decision/i })).toHaveAttribute("href", "/demo/three/evidence/final-verification.md");

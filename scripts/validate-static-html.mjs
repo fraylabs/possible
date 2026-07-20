@@ -49,6 +49,20 @@ for (const pack of outcomePacks) {
   assert.match(detail, new RegExp(pack.promise.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
 }
 
+const hardwareDemo = await html("demo/hardware/index.html");
+const softwareDemo = await html("demo/software/index.html");
+assert.match(hardwareDemo, /src="\/demo\/still\/site\/index\.html"/);
+assert.match(softwareDemo, /src="\/demo\/three\/product\/index\.html"/);
+assert.match(softwareDemo, /src="\/demo\/three\/site\/index\.html"/);
+for (const [relativePath, assetPrefix] of [
+  ["demo/still/site/index.html", "/demo/still/site/assets/"],
+  ["demo/three/product/index.html", "/demo/three/product/assets/"],
+  ["demo/three/site/index.html", "/demo/three/site/assets/"],
+]) {
+  const embeddedApp = await html(relativePath);
+  assert.match(embeddedApp, new RegExp(`(?:src|href)="${assetPrefix.replaceAll("/", "\\/")}`));
+}
+
 for (const [relativePath, expected] of [
   ["blogs/index.html", "Thinking in"],
   ["blogs/what-is-possible/index.html", "Possible is the outcome layer"],

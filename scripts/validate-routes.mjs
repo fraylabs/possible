@@ -4,9 +4,6 @@ const config = JSON.parse(await readFile(new URL("../vercel.json", import.meta.u
 if (config.outputDirectory !== "apps/web/out") {
   throw new Error("Vercel must publish the statically rendered Next.js output from apps/web/out");
 }
-if (config.trailingSlash !== true) {
-  throw new Error("Vercel trailingSlash must match the Next.js static export so nested route index files resolve");
-}
 if ((config.routes ?? []).some((route) => route.dest === "/index.html")) {
   throw new Error("SPA fallback routing must not replace statically rendered Next.js routes");
 }
@@ -22,4 +19,4 @@ for (const [source, destination] of [
   }
 }
 
-console.log("Vercel publishes trailing-slash Next.js routes and preserves moved blog URLs.");
+console.log("Vercel publishes route-specific Next.js output and preserves moved blog URLs.");

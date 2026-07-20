@@ -1343,14 +1343,14 @@ function SoftwareDemoPage() {
         <div className="software-live-grid">
           <article className="software-live-card software-live-card--product">
             <header><span>01 / BROWSER PRODUCT</span><strong>INTERACTIVE BUILD</strong></header>
-            <iframe title="Three local-first product" src="/demo/three/product/" loading="lazy" />
-            <footer><p><strong>Three / Today</strong><span>Add, complete, reload, remove, and reuse up to three lines.</span></p><a href="/demo/three/product/" target="_blank" rel="noreferrer">OPEN PRODUCT ↗</a></footer>
+            <iframe title="Three local-first product" src="/demo/three/product/index.html" loading="lazy" />
+            <footer><p><strong>Three / Today</strong><span>Add, complete, reload, remove, and reuse up to three lines.</span></p><a href="/demo/three/product/index.html" target="_blank" rel="noreferrer">OPEN PRODUCT ↗</a></footer>
           </article>
 
           <article className="software-live-card software-live-card--site">
             <header><span>02 / LAUNCH SITE</span><strong>PRODUCTION BUILD</strong></header>
-            <iframe title="Three launch website" src="/demo/three/site/" loading="lazy" />
-            <footer><p><strong>Three things. Then you’re done.</strong><span>Truthful local-only positioning with no fake waitlist or demand claims.</span></p><a href="/demo/three/site/" target="_blank" rel="noreferrer">OPEN SITE ↗</a></footer>
+            <iframe title="Three launch website" src="/demo/three/site/index.html" loading="lazy" />
+            <footer><p><strong>Three things. Then you’re done.</strong><span>Truthful local-only positioning with no fake waitlist or demand claims.</span></p><a href="/demo/three/site/index.html" target="_blank" rel="noreferrer">OPEN SITE ↗</a></footer>
           </article>
         </div>
 
@@ -1657,9 +1657,9 @@ function DemoArtifacts() {
       <article className="demo-site-output">
         <header>
           <span>01 / LAUNCH WEBSITE</span>
-          <a href="/demo/still/site/" target="_blank" rel="noreferrer">OPEN FULL SITE ↗</a>
+          <a href="/demo/still/site/index.html" target="_blank" rel="noreferrer">OPEN FULL SITE ↗</a>
         </header>
-        <iframe src="/demo/still/site/" title="Still launch website" loading="lazy" />
+        <iframe src="/demo/still/site/index.html" title="Still launch website" loading="lazy" />
         <footer><p>Responsive launch story with a deliberately local-only waitlist interaction.</p><a href="/demo/still/evidence/site-receipt.md" target="_blank" rel="noreferrer">SITE RECEIPT ↗</a></footer>
       </article>
 

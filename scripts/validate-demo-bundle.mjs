@@ -52,6 +52,9 @@ for (const [offset, routeIndex] of routeIndexes.entries()) {
   const directory = routeDirectories[offset];
   for (const reference of localReferences(routeIndex)) await requirePath(path.join(directory, reference));
 }
+if (!routeIndexes[0].includes('src="/demo/still/site/assets/') || !routeIndexes[0].includes('href="/demo/still/site/assets/')) {
+  failures.push("Hardware Launch site entry must use absolute asset URLs that survive clean-URL redirects");
+}
 
 const manifest = JSON.parse(manifestSource);
 for (const output of manifest.outputs) await requirePath(output.path);
@@ -96,8 +99,9 @@ for (const relative of [
 
 for (const directory of ["product", "site"]) {
   const html = await readFile(path.join(threeRoot, directory, "index.html"), "utf8");
-  if (!html.includes('src="./assets/') || !html.includes('href="./assets/')) {
-    failures.push(`Software Launch ${directory} build must use nested-route-safe relative assets`);
+  const assetPrefix = `/demo/three/${directory}/assets/`;
+  if (!html.includes(`src="${assetPrefix}`) || !html.includes(`href="${assetPrefix}`)) {
+    failures.push(`Software Launch ${directory} build must use absolute assets that survive clean-URL redirects`);
   }
 }
 
