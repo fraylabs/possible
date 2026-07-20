@@ -357,6 +357,19 @@ describe("Possible", () => {
     expect(screen.getByRole("link", { name: /PLAYABLE WEB GAME.*FOLD/i })).toHaveAttribute("href", "/demo/game");
   });
 
+  it("resolves exported demo URLs with their production trailing slash", () => {
+    for (const [path, heading] of [
+      ["/demo/hardware/", /After the yes.*watch it become real/i],
+      ["/demo/software/", /After the yes.*watch the launch take shape/i],
+    ] as const) {
+      window.history.pushState({}, "", path);
+      render(<App />);
+      expect(screen.getByRole("heading", { name: heading })).toBeInTheDocument();
+      expect(screen.queryByText(/404 \/ OUTCOME NOT FOUND/i)).not.toBeInTheDocument();
+      cleanup();
+    }
+  });
+
   it("presents the game pack as a playable proof without calling it a clean-room run", () => {
     window.history.pushState({}, "", "/demo/game");
     render(<App />);
