@@ -190,22 +190,20 @@ describe("Possible", () => {
     expect(await axe(container)).toHaveNoViolations();
   });
 
-  it("compares project workflows without presenting qualitative claims as measured results", async () => {
+  it("models time to outcome as an explicitly illustrative bar chart", async () => {
     window.history.pushState({}, "", "/benchmarks");
     const { container } = render(<App />);
-    expect(screen.getByRole("heading", { name: /How much of the project.*stays in your head/i, level: 1 })).toBeInTheDocument();
-    expect(screen.getByText(/qualitative workflow comparison/i)).toBeInTheDocument();
-    expect(screen.getByText(/This mock benchmark compares where responsibility lives—not which method writes better code/i)).toBeInTheDocument();
-    const table = screen.getByRole("table", { name: "Workflow responsibility comparison" });
-    expect(within(table).getAllByRole("columnheader")).toHaveLength(6);
-    expect(within(table).getAllByRole("rowheader")).toHaveLength(7);
-    for (const mode of ["Prompt by prompt", "Spec-driven", "/plan", "/goal", "$possible"]) {
-      expect(within(table).getByRole("columnheader", { name: mode })).toBeInTheDocument();
-    }
-    expect(container.querySelectorAll(".benchmark-traces article")).toHaveLength(5);
-    expect(screen.getByRole("heading", { name: /These are layers, not competing religions/i })).toBeInTheDocument();
-    expect(container).toHaveTextContent(/Spec-driven.*not a separate Codex product mode/i);
-    expect(container).not.toHaveTextContent(/\b\d+(?:x|%| tokens saved)\b/i);
+    expect(screen.getByRole("heading", { name: /How long to reach.*the same outcome/i, level: 1 })).toBeInTheDocument();
+    expect(screen.getByText(/not measured performance/i)).toBeInTheDocument();
+    expect(screen.getByText(/values below are deliberately mocked/i)).toBeInTheDocument();
+    const chart = screen.getByRole("list", { name: "Illustrative time to verified outcome by workflow" });
+    expect(within(chart).getAllByRole("listitem")).toHaveLength(5);
+    expect(within(chart).getByRole("listitem", { name: /Prompt by prompt: 8h total/i })).toBeInTheDocument();
+    expect(within(chart).getByRole("listitem", { name: /\$possible: 4h total/i })).toBeInTheDocument();
+    expect(container.querySelectorAll(".benchmark-bar-track > i")).toHaveLength(20);
+    expect(screen.getByText(/Possible does not make the model type twice as fast/i)).toBeInTheDocument();
+    expect(screen.getByText(/product hypothesis—not a performance claim/i)).toBeInTheDocument();
+    expect(container.querySelector(".benchmark-table-scroll")).not.toBeInTheDocument();
     expect(await axe(container)).toHaveNoViolations();
   });
 

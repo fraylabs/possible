@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import PossibleRoute from "../_components/PossibleRoute";
 
 export const metadata: Metadata = {
-  title: "Workflow Benchmark",
-  description: "Compare prompt-by-prompt work, spec-driven development, Codex Plan mode, Goal mode, and Possible side by side.",
+  title: "Time-to-Outcome Benchmark",
+  description: "Explore an illustrative time-to-outcome model for prompt-by-prompt work, specifications, Plan mode, Goal mode, and Possible.",
 };
 
 export default function BenchmarksPage() {

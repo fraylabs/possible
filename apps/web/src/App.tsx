@@ -77,22 +77,26 @@ const starterOutcomes = [
     demoHref: "/demo/software",
   },
 ] as const;
-const benchmarkModes = [
-  { id: "manual", label: "Prompt by prompt", trace: ["Ask", "Inspect", "Choose next step", "Repeat"] },
-  { id: "spec", label: "Spec-driven", trace: ["Write spec", "Resolve gaps", "Implement", "Check spec"] },
-  { id: "plan", label: "/plan", trace: ["Gather context", "Clarify", "Propose plan", "Implement"] },
-  { id: "goal", label: "/goal", trace: ["Define outcome", "Set constraints", "Continue work", "Verify done"] },
-  { id: "possible", label: "$possible", trace: ["Describe ambition", "Recommend pack", "Approve", "Coordinate + prove"] },
+const benchmarkPhases = [
+  { id: "clarification", label: "Clarification" },
+  { id: "coordination", label: "Human coordination" },
+  { id: "execution", label: "Agent execution" },
+  { id: "verification", label: "Verification" },
 ] as const;
-const benchmarkRows = [
-  { label: "What the user starts with", manual: "A task prompt and whatever context they remember to include.", spec: "A detailed specification written or assembled before implementation.", plan: "A rough or complex task that Codex can investigate before coding.", goal: "A persistent outcome, constraints, and completion criteria.", possible: "A rough ambition described conversationally." },
-  { label: "Who clarifies the outcome", manual: "The user, across repeated prompts.", spec: "The person or process authoring the spec.", plan: "Codex gathers context, asks questions, and proposes an execution plan.", goal: "The user defines it directly, or uses Plan mode first when it is still unclear.", possible: "Possible interviews the user, inspects the project, and states the finished outcome." },
-  { label: "Where the target lives", manual: "Mostly in the user’s head and chat history.", spec: "In the specification and its acceptance criteria.", plan: "In the approved plan and current chat context.", goal: "As a persistent goal attached to the active chat.", possible: "In a durable outcome brief, approved pack snapshot, skill lock, and receipts." },
-  { label: "Who chooses capabilities", manual: "The user asks for tools, skills, or specialists as needs appear.", spec: "The spec or implementation workflow names what is required.", plan: "Codex plans with the capabilities already available in the project.", goal: "The goal keeps work directed, but does not itself select a reusable capability set.", possible: "Possible recommends one reviewed pack and installs its disclosed ingredients after approval." },
-  { label: "How work is coordinated", manual: "The user prompts, reviews, and sequences each next task.", spec: "Implementation follows the authored specification and task breakdown.", plan: "Codex follows the proposed plan after the planning phase.", goal: "Codex continues toward the persistent target and can be paused, edited, or resumed.", possible: "Possible captains bounded workstreams, integrates their outputs, and preserves approval gates." },
-  { label: "What proves completion", manual: "Whatever checks the user remembers to request and inspect.", spec: "Acceptance criteria written into the specification.", plan: "Checks included in the plan and implementation request.", goal: "Verification criteria included in the goal; Codex tracks them while it works.", possible: "Pack-specific verification, fresh review, artifacts, limitations, and an outcome receipt." },
-  { label: "What the human still owns", manual: "Objective, decomposition, sequencing, memory, review, and every next prompt.", spec: "The complete upfront model of the desired system and ongoing spec maintenance.", plan: "The desired result, approval of the plan, and any missing capability or product decisions.", goal: "A sufficiently clear target, boundaries, and evidence that define done.", possible: "The ambition, essential context, pack confirmation, and consequential real-world approvals." },
+const benchmarkSeries = [
+  { id: "manual", label: "Prompt by prompt", clarification: 60, coordination: 180, execution: 180, verification: 60 },
+  { id: "spec", label: "Spec-driven", clarification: 120, coordination: 45, execution: 165, verification: 60 },
+  { id: "plan", label: "/plan", clarification: 75, coordination: 60, execution: 165, verification: 60 },
+  { id: "goal", label: "/goal", clarification: 60, coordination: 45, execution: 165, verification: 60 },
+  { id: "possible", label: "$possible", clarification: 45, coordination: 30, execution: 120, verification: 45 },
 ] as const;
+const benchmarkMaxMinutes = 480;
+
+function formatBenchmarkDuration(minutes: number) {
+  const hours = Math.floor(minutes / 60);
+  const remainder = minutes % 60;
+  return remainder === 0 ? `${hours}h` : `${hours}h ${remainder}m`;
+}
 
 function CopyButton({ label, value }: { label: string; value: string }) {
   const [state, setState] = useState<CopyState>("idle");
@@ -437,78 +441,75 @@ function WhyPage() {
 function BenchmarksPage() {
   return (
     <main className="benchmarks-page">
-      <SiteNav label="Workflow benchmark" />
+      <SiteNav label="Time-to-outcome model" />
 
       <header className="benchmark-hero">
-        <p className="eyebrow">BENCHMARK 01 / PROJECT CREATION</p>
-        <h1>How much of the project<br />stays in <em>your head?</em></h1>
-        <p>Five ways to direct the same coding agent—from repeated prompts to a coordinated outcome.</p>
-        <div><span>QUALITATIVE WORKFLOW COMPARISON</span><span>NO SPEED, TOKEN, OR QUALITY SCORES</span></div>
+        <p className="eyebrow">BENCHMARK 01 / TIME TO OUTCOME</p>
+        <h1>How long to reach<br />the same <em>outcome?</em></h1>
+        <p>A mocked comparison of five ways to direct the same coding agent from a rough idea to verified work.</p>
+        <div><span>ILLUSTRATIVE MODEL</span><span>NOT MEASURED PERFORMANCE</span></div>
       </header>
 
       <section className="benchmark-method" aria-labelledby="benchmark-method-heading">
         <div>
-          <span>CONTROLLED SCENARIO</span>
+          <span>SAME START · SAME FINISH</span>
           <h2 id="benchmark-method-heading">Build a complete daily-focus web app from an empty project.</h2>
         </div>
-        <p>The target is the same in every column: clarify the product, build one complete user flow, test it, and produce reviewable evidence without deploying it. This mock benchmark compares where responsibility lives—not which method writes better code.</p>
+        <p>The clock starts with a rough ambition and stops when one complete user flow works, tests pass, and reviewable evidence exists. Deployment is outside the outcome. The values below are deliberately mocked to make the orchestration hypothesis visible.</p>
       </section>
 
-      <section className="benchmark-traces" aria-labelledby="benchmark-traces-heading">
-        <header><span>INTERACTION TRACE</span><h2 id="benchmark-traces-heading">What the user experiences</h2></header>
-        <div>
-          {benchmarkModes.map((mode) => (
-            <article className={mode.id === "possible" ? "is-possible" : ""} key={mode.id}>
-              <h3>{mode.label}</h3>
-              <ol>{mode.trace.map((step) => <li key={step}>{step}</li>)}</ol>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="benchmark-matrix" aria-labelledby="benchmark-matrix-heading">
+      <section className="benchmark-chart" aria-labelledby="benchmark-chart-heading">
         <header>
-          <span>RESPONSIBILITY MATRIX</span>
-          <h2 id="benchmark-matrix-heading">Same agent. Different orchestration layer.</h2>
-          <p>Scroll horizontally to compare every workflow side by side.</p>
+          <div><span>MOCKED ELAPSED TIME</span><h2 id="benchmark-chart-heading">Time to verified outcome</h2></div>
+          <p id="benchmark-chart-description">Each bar uses the same eight-hour scale. Segment labels show modeled minutes.</p>
         </header>
-        <div className="benchmark-table-scroll" tabIndex={0} aria-label="Scrollable workflow comparison">
-          <table>
-            <caption className="sr-only">Workflow responsibility comparison</caption>
-            <thead>
-              <tr><th scope="col">Dimension</th>{benchmarkModes.map((mode) => <th className={mode.id === "possible" ? "is-possible" : ""} scope="col" key={mode.id}>{mode.label}</th>)}</tr>
-            </thead>
-            <tbody>
-              {benchmarkRows.map((row) => (
-                <tr key={row.label}>
-                  <th scope="row">{row.label}</th>
-                  {benchmarkModes.map((mode) => <td className={mode.id === "possible" ? "is-possible" : ""} key={mode.id}>{row[mode.id]}</td>)}
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className="benchmark-legend" aria-label="Time categories">
+          {benchmarkPhases.map((phase) => <span className={`is-${phase.id}`} key={phase.id}><i />{phase.label}</span>)}
         </div>
+        <figure aria-labelledby="benchmark-chart-heading" aria-describedby="benchmark-chart-description">
+          <div className="benchmark-axis" aria-hidden="true"><span>0h</span><span>2h</span><span>4h</span><span>6h</span><span>8h</span></div>
+          <ul className="benchmark-bars" aria-label="Illustrative time to verified outcome by workflow">
+            {benchmarkSeries.map((series) => {
+              const total = benchmarkPhases.reduce((sum, phase) => sum + series[phase.id], 0);
+              const breakdown = benchmarkPhases.map((phase) => `${phase.label}: ${series[phase.id]} minutes`).join(", ");
+              return (
+                <li className={series.id === "possible" ? "is-possible" : ""} aria-label={`${series.label}: ${formatBenchmarkDuration(total)} total. ${breakdown}.`} key={series.id}>
+                  <strong>{series.label}</strong>
+                  <div className="benchmark-bar-track" aria-hidden="true">
+                    {benchmarkPhases.map((phase) => (
+                      <i className={`is-${phase.id}`} style={{ width: `${(series[phase.id] / benchmarkMaxMinutes) * 100}%` }} key={phase.id}>
+                        <span>{series[phase.id]}m</span>
+                      </i>
+                    ))}
+                  </div>
+                  <b>{formatBenchmarkDuration(total)}</b>
+                </li>
+              );
+            })}
+          </ul>
+          <figcaption>Illustrative values only. This chart is a hypothesis about coordination overhead, not evidence that one workflow is faster.</figcaption>
+        </figure>
       </section>
 
-      <section className="benchmark-composition" aria-labelledby="benchmark-composition-heading">
-        <span>THE IMPORTANT PART</span>
-        <h2 id="benchmark-composition-heading">These are layers, not competing religions.</h2>
-        <p>Plan mode improves the thinking before implementation. Goal mode keeps a persistent target attached to long-running work. A specification records requirements and acceptance criteria. Possible can use all three: it operates one level above them by discovering the outcome, selecting the reviewed capability set, and coordinating the path after the user approves.</p>
+      <section className="benchmark-hypothesis" aria-labelledby="benchmark-hypothesis-heading">
+        <span>WHAT THE MOCK IS SAYING</span>
+        <h2 id="benchmark-hypothesis-heading">Possible does not make the model type twice as fast.</h2>
         <div>
-          <code>$possible</code><i>→</i><code>/plan</code><i>→</i><code>/goal</code><i>→</i><code>spec + workstreams</code><i>→</i><code>receipt</code>
+          <p>It aims to remove time spent deciding the next prompt, rediscovering context, selecting capabilities, coordinating parallel work, and remembering which checks still matter.</p>
+          <p>The modeled advantage comes from orchestration: the human spends less time acting as project manager while the agent stays attached to one approved outcome.</p>
         </div>
       </section>
 
       <section className="benchmark-notes" aria-labelledby="benchmark-notes-heading">
-        <h2 id="benchmark-notes-heading">Methodology notes</h2>
+        <h2 id="benchmark-notes-heading">How this becomes a real benchmark</h2>
         <ul>
-          <li>This is a qualitative interaction mock, not an empirical performance result.</li>
-          <li><code>/plan</code> is Codex Plan mode: it gathers context, asks clarifying questions, and proposes a plan before implementation.</li>
-          <li><code>/goal</code> attaches a persistent target to the active chat and supports pause, resume, edit, and verification-oriented long-running work.</li>
-          <li>“Spec-driven” describes a development methodology here, not a separate Codex product mode.</li>
-          <li>The next benchmark should run the same brief through every workflow and publish prompts, artifacts, elapsed time, token use, interventions, and independent review results.</li>
+          <li>Run the same starting brief in clean, equivalent projects using the same model and environment.</li>
+          <li>Define one fixed outcome, acceptance checks, and stop condition before any run begins.</li>
+          <li>Measure wall-clock time, active human time, interventions, token use, verification failures, and final artifact quality.</li>
+          <li>Repeat each workflow enough times to show variation instead of publishing one favorable run.</li>
+          <li>Publish the prompts, transcripts, outputs, receipts, raw timing data, and independent review rubric.</li>
         </ul>
-        <p>Sources: <a href="https://learn.chatgpt.com/guides/best-practices" target="_blank" rel="noreferrer">Codex best practices ↗</a> · <a href="https://learn.chatgpt.com/docs/long-running-work" target="_blank" rel="noreferrer">Long-running work and Goal mode ↗</a> · <a href="https://developers.openai.com/cookbook/articles/codex_exec_plans" target="_blank" rel="noreferrer">Execution plans ↗</a></p>
+        <p>Until those runs exist, the bars above should be read as a product hypothesis—not a performance claim.</p>
       </section>
 
       <SiteFooter />
