@@ -1067,11 +1067,6 @@ function OpenSourceDemoPage() {
       />
 
       <section className="demo-artifacts release-artifacts" id="artifacts" aria-label="Outcome artifacts">
-        <header className="demo-artifacts-title">
-          <div><p className="eyebrow">ARTIFACTS PRODUCED</p><h2>Inspect the<br /><em>actual repository.</em></h2></div>
-          <p>The package contract, source, documentation, workflows, release evidence, and complete public Codex transcript are preserved below.</p>
-        </header>
-
         <div className="release-artifact-grid">
           <article className="release-code-card">
             <header><span>01 / PUBLIC API</span><strong>INDEX.JS</strong></header>
@@ -1144,11 +1139,6 @@ function SoftwareDemoPage() {
       />
 
       <section className="demo-artifacts software-artifacts" id="artifacts" aria-label="Outcome artifacts">
-        <header className="demo-artifacts-title">
-          <div><p className="eyebrow">ARTIFACTS PRODUCED</p><h2>Use the product.<br /><em>Watch the launch.</em></h2></div>
-          <p>These are the actual production builds and rendered film from the throwaway project. The browser app remains interactive inside this page and stores only its versioned record in local storage.</p>
-        </header>
-
         <div className="software-live-grid">
           <article className="software-live-card software-live-card--product">
             <header><span>01 / BROWSER PRODUCT</span><strong>INTERACTIVE BUILD</strong></header>
@@ -1212,11 +1202,6 @@ function PlayableGameDemoPage() {
       />
 
       <section className="demo-artifacts game-artifacts" id="artifacts" aria-label="Outcome artifacts">
-        <header className="demo-artifacts-title">
-          <div><p className="eyebrow">PLAYABLE ARTIFACT</p><h2>Don’t watch it.<br /><em>Fly it.</em></h2></div>
-          <p>The outcome is the game itself. Start a flight below, then open it full-screen or inspect the brief and review evidence.</p>
-        </header>
-
         <article className="game-live-card">
           <header><span>01 / FOLD</span><strong>THREE.JS · POINTER · TOUCH · KEYS</strong></header>
           <iframe title="Fold paper plane game" src="/demo/game/play" loading="lazy" />
@@ -1285,17 +1270,6 @@ function HardwareDemoPage() {
 function DemoArtifacts() {
   return (
     <section className="demo-artifacts" id="artifacts" aria-label="Outcome artifacts">
-      <header className="demo-artifacts-title">
-        <div>
-          <p className="eyebrow">ARTIFACTS PRODUCED</p>
-          <h2>One conversation.<br /><em>Real outputs.</em></h2>
-        </div>
-        <div>
-          <p>The output is here, inside the demo—not hidden behind another presentation layer. Open the website, play the film, download the CAD, and inspect every receipt.</p>
-          <span>STILL / HARDWARE-LAUNCH@1 / LOCAL EVALUATION</span>
-        </div>
-      </header>
-
       <article className="demo-site-output">
         <header>
           <span>01 / LAUNCH WEBSITE</span>

@@ -390,7 +390,7 @@ describe("Possible", () => {
 
   it("shows the Hardware Launch outcome before its short conversation and preserved thread", async () => {
     window.history.pushState({}, "", "/demo/hardware");
-    render(<App />);
+    const { container } = render(<App />);
     expect(screen.getByRole("heading", { name: /A focus device.*made believable/i })).toBeInTheDocument();
     const artifacts = screen.getByRole("region", { name: "Outcome artifacts" });
     const conversation = screen.getByRole("region", { name: "$possible conversation" });
@@ -399,7 +399,7 @@ describe("Possible", () => {
     expect(within(conversation).getByRole("link", { name: /Hardware Launch pack/i })).toHaveAttribute("href", "/packs/hardware-launch");
     expect(within(conversation).getByText(/repo-local ingredient skill installation.*External actions still require separate approval/i)).toBeInTheDocument();
     expect(within(conversation).getByText("Yes, proceed.")).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: /One conversation.*Real outputs/i })).toBeInTheDocument();
+    expect(container.querySelector(".demo-artifacts-title")).not.toBeInTheDocument();
     expect(screen.getByTitle("Still launch website")).toHaveAttribute("src", "/demo/still/site/index.html");
     expect(screen.getByAltText("Isometric CAD view of the Still focus device concept")).toBeInTheDocument();
     expect(screen.getByAltText("Rear CAD view of the Still focus device concept")).toBeInTheDocument();
