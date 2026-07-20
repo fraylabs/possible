@@ -16,15 +16,17 @@ const plainText = (markup) => markup
 const homeMarkup = await html("index.html");
 const home = visibleText(homeMarkup);
 assert.match(home, /What do you want[\s\S]*to build[\s\S]*today\?/);
-assert.match(home, /Possible is an outcome skill for AI agents\. Its packs compress 50–100 coordinated tasks, specialist skills, and verification checks into one executable megaprompt/);
+assert.match(home, /Possible is an outcome skill for Codex\. Its packs compile dozens of coordinated tasks, specialist skills, and verification gates into one approved run/);
+assert.match(home, /Codex today\. Other agent surfaces later\./);
 assert.match(home, /npx @fraylabs\/possible init/);
 assert.match(home, /id="packs"/);
 assert.match(home, /Packs are complete recipes for[\s\S]*real outcomes/);
-assert.match(home, /Browse them, or just describe what you want/);
+assert.match(home, /Describe the outcome\. Possible recommends a pack before Codex begins\./);
 assert.match(home, /<section class="start-section"[^>]*>[\s\S]*id="start"[\s\S]*id="packs"[\s\S]*<\/section>/);
 assert.doesNotMatch(home, /href="\/#packs"|Browse packs/);
 assert.match(homeMarkup, /<meta property="og:image" content="https:\/\/possible\.sh\/og\.png"\/>/);
 assert.match(homeMarkup, /<meta name="twitter:image" content="https:\/\/possible\.sh\/og\.png"\/>/);
+assert.match(homeMarkup, /<meta name="description" content="Possible is an outcome skill for Codex\. Its packs compile dozens of coordinated tasks, specialist skills, and verification gates into one approved run\."\/>/);
 assert.doesNotMatch(home, /<div id="root"><\/div>/);
 assert.doesNotMatch(home, /conversational outcome compiler|outcome lanes|ingredient skills|pack knowledge|workstreams/i);
 assert.doesNotMatch(home, /class="[^"]*(?:journey|recommendation-example|starter-card)/);
@@ -32,7 +34,8 @@ assert.doesNotMatch(home, /class="[^"]*(?:journey|recommendation-example|starter
 const homeMain = home.match(/<main[\s\S]*<\/main>/i)?.[0];
 assert.ok(homeMain, "The homepage must contain a semantic main element");
 const homepageWordCount = plainText(homeMain).split(/\s+/).filter(Boolean).length;
-assert.ok(homepageWordCount <= 300, `Homepage must stay at or below 300 words; found ${homepageWordCount}`);
+assert.ok(homepageWordCount <= 215, `Homepage must stay at or below 215 words; found ${homepageWordCount}`);
+assert.doesNotMatch(homeMain, /\bAI agents\b|50[–-]100|megaprompt|class="[^"]*(?:schedule-entry|quick-path|boundary)/i);
 
 for (const pack of outcomePacks) {
   const escapedName = pack.name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -99,5 +102,18 @@ for (const [relativePath, expected] of [
 ]) {
   assert.match(visibleText(await html(relativePath)), new RegExp(expected));
 }
+
+for (const [relativePath, heading] of [["blogs/index.html", "Possible writing"], ["demo/index.html", "Possible outcome demos"]]) {
+  const markup = await html(relativePath);
+  assert.equal((markup.match(/<h1\b/g) ?? []).length, 1, `${relativePath} must contain exactly one h1`);
+  assert.match(markup, new RegExp(`<h1[^>]*>${heading}<\\/h1>`));
+}
+
+const [appSource, stylesSource] = await Promise.all([
+  readFile(new URL("../apps/web/src/App.tsx", import.meta.url), "utf8"),
+  readFile(new URL("../apps/web/src/styles.css", import.meta.url), "utf8"),
+]);
+assert.doesNotMatch(`${appSource}\n${stylesSource}`, /\breplay-page(?:--[\w-]+)?\b/);
+assert.doesNotMatch(stylesSource, /Editorial benchmark treatment/);
 
 console.log(`All ${outcomePacks.length + 12} public Next.js routes contain meaningful initial HTML.`);

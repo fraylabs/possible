@@ -19,7 +19,8 @@ describe("Possible", () => {
     const { container } = render(<App />);
     expect(screen.getByRole("heading", { name: "What do you want to build today?", level: 1 })).toBeInTheDocument();
     expect(container.querySelectorAll("h1")).toHaveLength(1);
-    expect(screen.getByText("Possible is an outcome skill for AI agents. Its packs compress 50–100 coordinated tasks, specialist skills, and verification checks into one executable megaprompt—like launching a SaaS from idea to release.")).toBeInTheDocument();
+    expect(screen.getByText("Possible is an outcome skill for Codex. Its packs compile dozens of coordinated tasks, specialist skills, and verification gates into one approved run—like taking a SaaS from idea to release.")).toBeInTheDocument();
+    expect(screen.getByText("Codex today. Other agent surfaces later.")).toBeInTheDocument();
     expect(screen.getByText("npx @fraylabs/possible init")).toBeInTheDocument();
     expect(screen.getByText("$possible", { selector: ".install-next code" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "DOCS" })).toHaveAttribute("href", "/docs");
@@ -28,7 +29,7 @@ describe("Possible", () => {
     expect(screen.queryByRole("link", { name: /Browse packs/i })).not.toBeInTheDocument();
     const start = screen.getByRole("region", { name: "Start with Possible" });
     expect(within(start).getByRole("heading", { name: /Packs are complete recipes for.*real outcomes/i, level: 2 })).toBeInTheDocument();
-    expect(within(start).getByText(/Browse them, or just describe what you want.*Possible recommends a pack/i)).toBeInTheDocument();
+    expect(within(start).getByText(/Describe the outcome.*Possible recommends a pack before Codex begins/i)).toBeInTheDocument();
     expect(within(start).getByText("npx @fraylabs/possible init")).toBeInTheDocument();
     const packs = screen.getByRole("list", { name: "Packs Possible can recommend" });
     expect(within(packs).getAllByRole("listitem")).toHaveLength(8);
@@ -42,7 +43,8 @@ describe("Possible", () => {
     expect(container.querySelector(".journey")).not.toBeInTheDocument();
     expect(container.querySelector(".recommendation-example")).not.toBeInTheDocument();
     expect(screen.queryByRole("group", { name: /Filter outcome packs by lane/i })).not.toBeInTheDocument();
-    expect(container.querySelectorAll(".quick-path li")).toHaveLength(3);
+    expect(container.querySelector(".schedule-entry, .quick-path, .boundary")).not.toBeInTheDocument();
+    expect(container.querySelector("main")).not.toHaveTextContent(/\bAI agents\b|50[–-]100|megaprompt/i);
     expect(container.querySelector("main")).not.toHaveTextContent(/conversational outcome compiler|outcome lanes|pack knowledge|workstreams/i);
   });
 
@@ -50,6 +52,8 @@ describe("Possible", () => {
     window.history.pushState({}, "", "/blogs");
     const { container } = render(<App />);
     expect(container.querySelector(".blogs-hero")).not.toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Possible writing", level: 1 })).toBeInTheDocument();
+    expect(container.querySelectorAll("h1")).toHaveLength(1);
     expect(screen.getByRole("link", { name: /What is Possible.*READ ARTICLE/is })).toHaveAttribute("href", "/blogs/what-is-possible");
     expect(screen.getByRole("link", { name: /Why Possible.*READ ARTICLE/is })).toHaveAttribute("href", "/blogs/why-possible");
     expect(screen.getByRole("link", { name: /View benchmarks/i })).toHaveAttribute("href", "/benchmarks");
@@ -85,11 +89,7 @@ describe("Possible", () => {
     expect(await axe(container)).toHaveNoViolations();
   });
 
-  it("makes scheduling operations discoverable from the homepage and pack gallery", () => {
-    render(<App />);
-    expect(screen.getByRole("link", { name: /Schedule operations/i })).toHaveAttribute("href", "/packs/web-app-operations");
-
-    cleanup();
+  it("makes scheduling operations discoverable from the pack gallery", () => {
     window.history.pushState({}, "", "/packs");
     render(<App />);
     const catalog = screen.getByRole("region", { name: "All outcome packs" });
@@ -356,6 +356,8 @@ describe("Possible", () => {
     window.history.pushState({}, "", "/demo");
     const { container } = render(<App />);
     expect(container.querySelector(".demo-gallery-hero")).not.toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Possible outcome demos", level: 1 })).toBeInTheDocument();
+    expect(container.querySelectorAll("h1")).toHaveLength(1);
     expect(screen.getByRole("link", { name: /HARDWARE LAUNCH.*STILL/i })).toHaveAttribute("href", "/demo/hardware");
     expect(screen.getByRole("link", { name: /SOFTWARE LAUNCH.*THREE/i })).toHaveAttribute("href", "/demo/software");
     expect(screen.getByRole("link", { name: /OPEN-SOURCE RELEASE.*TINY-SLUG/i })).toHaveAttribute("href", "/demo/open-source");
@@ -366,6 +368,8 @@ describe("Possible", () => {
     for (const route of ["/demo/hardware", "/demo/software", "/demo/open-source", "/demo/game"]) {
       window.history.pushState({}, "", route);
       const { container, unmount } = render(<App />);
+      expect(container.querySelector("main")).toHaveClass("demo-detail-page");
+      expect(container.querySelector('main[class*="replay"]')).not.toBeInTheDocument();
       const artifacts = screen.getByRole("region", { name: "Outcome artifacts" });
       const conversation = screen.getByRole("region", { name: "$possible conversation" });
       const footer = container.querySelector(".demo-outcome-footer")!;

@@ -32,6 +32,8 @@ await write("packs/index.json", json({
 await write("llms.txt", [
   "# Possible",
   "",
+  "Possible is an outcome skill for Codex. Its packs compile dozens of coordinated tasks, specialist skills, and verification gates into one approved run.",
+  "",
   "Skills are ingredients. Possible compiles the outcome.",
   "",
   "- Human documentation: /docs/",

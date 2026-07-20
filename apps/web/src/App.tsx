@@ -132,7 +132,8 @@ function CreatePage() {
           <div className="build-hero-copy">
             <p className="eyebrow">POSSIBLE / FOR CODEX</p>
             <h1>What do you want<br />{" "}to build <em>today?</em></h1>
-            <p>Possible is an outcome skill for AI agents. Its packs compress 50–100 coordinated tasks, specialist skills, and verification checks into one executable megaprompt—like launching a SaaS from idea to release.</p>
+            <p className="build-hero-description">Possible is an outcome skill for Codex. Its packs compile dozens of coordinated tasks, specialist skills, and verification gates into one approved run—like taking a SaaS from idea to release.</p>
+            <p className="build-hero-support">Codex today. Other agent surfaces later.</p>
             <div className="build-hero-actions">
               <a className="button-link" href="#try">Try with Codex <span>↓</span></a>
               <a className="text-link" href="/demo">See real outcomes →</a>
@@ -146,10 +147,6 @@ function CreatePage() {
               <CopyButton label="Copy install command" value={installCommand} />
               <div className="install-next"><span>THEN ASK CODEX</span><code>$possible</code></div>
             </article>
-            <p><span>01</span> Install once. <span>02</span> Type <code>$possible</code>. <span>03</span> Describe the idea.</p>
-            <a className="schedule-entry" href="/packs/web-app-operations" aria-label="Schedule operations with Possible">
-              <span>TRY SAYING</span><code>“{schedulePrompt}”</code><strong>MANUAL FIRST · SEPARATE YES →</strong>
-            </a>
           </div>
         </div>
 
@@ -159,7 +156,7 @@ function CreatePage() {
               <span>PACKS POSSIBLE CAN RECOMMEND / {String(galleryPacks.length).padStart(2, "0")}</span>
               <h2 id="home-packs-heading">Packs are complete recipes for <em>real outcomes.</em></h2>
             </div>
-            <p>Browse them, or just describe what you want. Possible recommends a pack for your approval before Codex begins.</p>
+            <p>Describe the outcome. Possible recommends a pack before Codex begins.</p>
           </header>
 
           <div className="home-pack-columns" aria-hidden="true">
@@ -179,22 +176,12 @@ function CreatePage() {
             ))}
           </ol>
           <footer>
-            <p><strong>Not sure which pack?</strong> That is what <code>$possible</code> decides with you.</p>
+            <p><strong>Not sure?</strong> <code>$possible</code> decides with you.</p>
             <a href="/packs">Open the full pack reference →</a>
           </footer>
         </div>
       </section>
 
-      <section className="quick-path">
-        <header><span>HOW IT WORKS</span><h2>Talk first.<br />Build after you approve.</h2></header>
-        <ol>
-          <li><span>01</span><strong>Describe it</strong><p>Start rough. Possible asks what matters.</p></li>
-          <li><span>02</span><strong>See the plan</strong><p>Possible chooses the complete recipe.</p></li>
-          <li><span>03</span><strong>Make it real</strong><p>Codex builds and verifies the outcome.</p></li>
-        </ol>
-      </section>
-
-      <Boundary />
       <SiteFooter />
     </main>
   );
@@ -204,6 +191,7 @@ function BlogsPage() {
   return (
     <main className="blogs-page">
       <SiteNav label="Blogs / 02" />
+      <h1 className="sr-only">Possible writing</h1>
 
       <section className="blogs-index" aria-label="Possible articles">
         <a href="/blogs/what-is-possible">
@@ -804,15 +792,6 @@ function PackDetailPage({ pack }: { pack: OutcomePack }) {
   );
 }
 
-function Boundary() {
-  return (
-    <section className="boundary">
-      <span>THE BOUNDARY</span>
-      <p>A pack coordinates work. It does not authorize deployment, scheduling changes, spending, outreach, fabrication, data collection, or unsupported claims.</p>
-    </section>
-  );
-}
-
 function ThreadTranscript({
   thread,
   rawHref,
@@ -1002,6 +981,7 @@ function DemoGalleryPage() {
   return (
     <main className="demo-gallery-page">
       <SiteNav label="Examples / 04" />
+      <h1 className="sr-only">Possible outcome demos</h1>
 
       <section className="demo-gallery-grid" aria-label="Recorded Possible examples">
         <a className="demo-example-card demo-example-card--hardware" href="/demo/hardware">
@@ -1062,7 +1042,7 @@ function OpenSourceDemoPage() {
   const [threadOpen, setThreadOpen] = useState(false);
 
   return (
-    <main className="replay-page replay-page--release" id="top">
+    <main className="demo-detail-page demo-detail-page--release" id="top">
       <SiteNav label="Recorded run / tiny-slug" />
       <DemoOutcomeHeader
         eyebrow="OPEN-SOURCE RELEASE / VERIFIED OUTCOME"
@@ -1135,7 +1115,7 @@ function SoftwareDemoPage() {
   const [threadOpen, setThreadOpen] = useState(false);
 
   return (
-    <main className="replay-page replay-page--software" id="top">
+    <main className="demo-detail-page demo-detail-page--software" id="top">
       <SiteNav label="Recorded run / Three" />
       <DemoOutcomeHeader
         eyebrow="SOFTWARE LAUNCH / VERIFIED OUTCOME"
@@ -1201,7 +1181,7 @@ function SoftwareDemoPage() {
 
 function PlayableGameDemoPage() {
   return (
-    <main className="replay-page replay-page--game" id="top">
+    <main className="demo-detail-page demo-detail-page--game" id="top">
       <SiteNav label="Live pack proof / Fold" />
       <DemoOutcomeHeader
         eyebrow="PLAYABLE WEB GAME / LIVE PACK PROOF"
@@ -1253,7 +1233,7 @@ function HardwareDemoPage() {
   }, []);
 
   return (
-    <main className="replay-page" id="top">
+    <main className="demo-detail-page" id="top">
       <SiteNav label="Recorded run / Still" />
       <DemoOutcomeHeader
         eyebrow="HARDWARE LAUNCH / VERIFIED OUTCOME"
