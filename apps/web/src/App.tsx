@@ -105,7 +105,6 @@ function SiteNav({ label }: { label?: string }) {
         <a href="/">START</a>
         <a href="/blogs">BLOGS</a>
         <a href="/benchmarks">BENCH</a>
-        <a href="/#packs">PACKS</a>
         <a href="/docs">DOCS</a>
         <a href="/demo">DEMO</a>
         <a href="https://github.com/fraylabs/possible" target="_blank" rel="noreferrer">SOURCE ↗</a>
@@ -137,7 +136,6 @@ function CreatePage() {
             <p>Bring an idea or a live app. Possible gives Codex the skills, plan, and proof to build it, ship it, or keep it running.</p>
             <div className="build-hero-actions">
               <a className="button-link" href="#try">Try with Codex <span>↓</span></a>
-              <a className="text-link" href="#packs">Browse packs ↓</a>
               <a className="text-link" href="/demo">See real outcomes →</a>
             </div>
           </div>

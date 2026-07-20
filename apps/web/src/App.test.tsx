@@ -20,7 +20,8 @@ describe("Possible", () => {
     expect(screen.getByText("$possible", { selector: ".install-next code" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "DOCS" })).toHaveAttribute("href", "/docs");
     expect(screen.getByRole("link", { name: "BLOGS" })).toHaveAttribute("href", "/blogs");
-    expect(screen.getByRole("link", { name: "PACKS" })).toHaveAttribute("href", "/#packs");
+    expect(screen.queryByRole("link", { name: "PACKS" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: /Browse packs/i })).not.toBeInTheDocument();
     const start = screen.getByRole("region", { name: "Start with Possible" });
     expect(within(start).getByRole("heading", { name: /Packs are complete recipes for.*real outcomes/i, level: 2 })).toBeInTheDocument();
     expect(within(start).getByText(/Browse them, or just describe what you want.*Possible recommends a pack/i)).toBeInTheDocument();
