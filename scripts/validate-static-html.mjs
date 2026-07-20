@@ -68,8 +68,10 @@ for (const [label, markup, hasThread] of [
   assert.ok(conversationIndex > artifactIndex, `${label} demo must show artifacts before the short conversation`);
   assert.match(markup, /What would you like to make possible today\?/);
   assert.match(markup, /Yes, proceed\./);
-  if (hasThread) assert.match(markup, /VIEW FULL CODEX THREAD/);
-  else assert.doesNotMatch(markup, /VIEW FULL CODEX THREAD/);
+  assert.match(markup, /01 \/[\s\S]*OUTPUT/);
+  assert.match(markup, /02 \/[\s\S]*CONVERSATION/);
+  if (hasThread) assert.match(markup, /03 \/[\s\S]*FULL CODEX THREAD/);
+  else assert.doesNotMatch(markup, /FULL CODEX THREAD/);
 }
 for (const [relativePath, assetPrefix] of [
   ["demo/still/site/index.html", "/demo/still/site/assets/"],

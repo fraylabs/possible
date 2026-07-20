@@ -382,7 +382,7 @@ describe("Possible", () => {
     expect(within(conversation).getByText("$possible")).toBeInTheDocument();
     expect(within(conversation).getByRole("link", { name: /Playable Web Game pack/i })).toHaveAttribute("href", "/packs/playable-web-game");
     expect(within(conversation).getByText("Yes, proceed.")).toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: /View full Codex thread/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /Full Codex thread/i })).not.toBeInTheDocument();
     expect(screen.getByTitle("Fold paper plane game")).toHaveAttribute("src", "/demo/game/play");
     expect(screen.getByRole("link", { name: /PLAY FULL SCREEN/i })).toHaveAttribute("href", "/demo/game/play");
     expect(screen.getByRole("link", { name: /What review caught/i })).toHaveAttribute("href", "/demo/fold/review.md");
@@ -395,6 +395,7 @@ describe("Possible", () => {
     const artifacts = screen.getByRole("region", { name: "Outcome artifacts" });
     const conversation = screen.getByRole("region", { name: "$possible conversation" });
     expectBefore(artifacts, conversation);
+    expect(within(artifacts).getByText("OUTPUT", { selector: ".demo-output-label strong" })).toBeInTheDocument();
     expect(within(conversation).getByText("$possible")).toBeInTheDocument();
     expect(within(conversation).getByRole("link", { name: /Hardware Launch pack/i })).toHaveAttribute("href", "/packs/hardware-launch");
     expect(within(conversation).getByText(/repo-local ingredient skill installation.*External actions still require separate approval/i)).toBeInTheDocument();
@@ -406,7 +407,7 @@ describe("Possible", () => {
     expect(screen.getByAltText("Top CAD view of the Still focus device concept")).toBeInTheDocument();
     expect(screen.getByAltText("Front CAD view of the Still focus device concept")).toBeInTheDocument();
 
-    await userEvent.click(screen.getByRole("button", { name: /View full Codex thread/i }));
+    await userEvent.click(screen.getByRole("button", { name: /Full Codex thread/i }));
     expect(screen.getByRole("dialog", { name: /full Codex thread/i })).toBeInTheDocument();
     expect(screen.getByText(/31 exact public messages across 5 real agent threads/i)).toBeInTheDocument();
     expect(screen.getAllByText("Ampere").length).toBeGreaterThan(1);
@@ -431,7 +432,7 @@ describe("Possible", () => {
     expect(screen.getByRole("link", { name: /15-test receipt/i })).toHaveAttribute("href", "/demo/three/evidence/product-test-receipt.md");
     expect(screen.getByRole("link", { name: /L0–L8 decision/i })).toHaveAttribute("href", "/demo/three/evidence/final-verification.md");
     expect(screen.getByRole("link", { name: /What review caught/i })).toHaveAttribute("href", "/demo/three/evidence/failed-review-01/README.md");
-    await userEvent.click(screen.getByRole("button", { name: /View full Codex thread/i }));
+    await userEvent.click(screen.getByRole("button", { name: /Full Codex thread/i }));
     expect(screen.getByRole("dialog", { name: /full Codex thread/i })).toBeInTheDocument();
     expect(screen.getByText(/exact public messages across \d+ real agent threads/i)).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /Raw \.md/i })).toHaveAttribute("href", "/demo/three/CODEX-THREAD.md");
@@ -449,7 +450,7 @@ describe("Possible", () => {
     expect(screen.getByRole("link", { name: /OPEN SOURCE/i })).toHaveAttribute("href", "/demo/tiny-slug/index.js");
     expect(screen.getByRole("link", { name: /OPEN OUTCOME RECEIPT/i })).toHaveAttribute("href", "/demo/tiny-slug/.possible/outcome-receipt.md");
     expect(screen.getByRole("link", { name: /Complete public run/i })).toHaveAttribute("href", "/demo/tiny-slug/CODEX-THREAD.md");
-    await userEvent.click(screen.getByRole("button", { name: /View full Codex thread/i }));
+    await userEvent.click(screen.getByRole("button", { name: /Full Codex thread/i }));
     expect(screen.getByRole("dialog", { name: /full Codex thread/i })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /Raw \.md/i })).toHaveAttribute("href", "/demo/tiny-slug/CODEX-THREAD.md");
   });

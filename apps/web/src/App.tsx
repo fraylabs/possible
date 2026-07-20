@@ -947,9 +947,9 @@ function DemoOutcomeHeader({
         <p>{description}</p>
         <strong><i /> {metric}</strong>
         <div>
-          <a href="#artifacts">OPEN THE OUTCOME ↓</a>
-          {thread && onOpenThread ? <button type="button" onClick={onOpenThread}>VIEW FULL CODEX THREAD <span>{thread.messages.length} MESSAGES</span></button> : null}
-          <a href="#conversation">READ THE SHORT CONVERSATION ↓</a>
+          <a href="#artifacts"><span>01 / OUTPUT</span><b>OPEN ↓</b></a>
+          <a href="#conversation"><span>02 / CONVERSATION</span><b>READ ↓</b></a>
+          {thread && onOpenThread ? <button type="button" onClick={onOpenThread}><span>03 / FULL CODEX THREAD</span><b>{thread.messages.length} MESSAGES ↗</b></button> : null}
         </div>
       </div>
     </section>
@@ -974,7 +974,7 @@ function DemoConversation({
   return (
     <section className="demo-conversation" id="conversation" aria-label="$possible conversation">
       <header>
-        <div><p className="eyebrow">THE USEFUL PART / BEFORE THE WORK</p><h2>One short<br /><em>conversation.</em></h2></div>
+        <div><p className="eyebrow">02 / CONVERSATION</p><h2>One short<br /><em>conversation.</em></h2></div>
         <p>Possible turns a rough idea into a concrete outcome, recommends the recipe, and waits for permission. Then Codex does the work.</p>
       </header>
       <article className="demo-conversation-thread">
@@ -988,6 +988,10 @@ function DemoConversation({
       </article>
     </section>
   );
+}
+
+function DemoOutputLabel() {
+  return <p className="demo-output-label"><span>01 /</span><strong>OUTPUT</strong></p>;
 }
 
 function DemoGalleryPage() {
@@ -1067,6 +1071,7 @@ function OpenSourceDemoPage() {
       />
 
       <section className="demo-artifacts release-artifacts" id="artifacts" aria-label="Outcome artifacts">
+        <DemoOutputLabel />
         <div className="release-artifact-grid">
           <article className="release-code-card">
             <header><span>01 / PUBLIC API</span><strong>INDEX.JS</strong></header>
@@ -1139,6 +1144,7 @@ function SoftwareDemoPage() {
       />
 
       <section className="demo-artifacts software-artifacts" id="artifacts" aria-label="Outcome artifacts">
+        <DemoOutputLabel />
         <div className="software-live-grid">
           <article className="software-live-card software-live-card--product">
             <header><span>01 / BROWSER PRODUCT</span><strong>INTERACTIVE BUILD</strong></header>
@@ -1202,6 +1208,7 @@ function PlayableGameDemoPage() {
       />
 
       <section className="demo-artifacts game-artifacts" id="artifacts" aria-label="Outcome artifacts">
+        <DemoOutputLabel />
         <article className="game-live-card">
           <header><span>01 / FOLD</span><strong>THREE.JS · POINTER · TOUCH · KEYS</strong></header>
           <iframe title="Fold paper plane game" src="/demo/game/play" loading="lazy" />
@@ -1270,6 +1277,7 @@ function HardwareDemoPage() {
 function DemoArtifacts() {
   return (
     <section className="demo-artifacts" id="artifacts" aria-label="Outcome artifacts">
+      <DemoOutputLabel />
       <article className="demo-site-output">
         <header>
           <span>01 / LAUNCH WEBSITE</span>
