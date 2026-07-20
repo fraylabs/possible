@@ -19,7 +19,7 @@ describe("Possible", () => {
     const { container } = render(<App />);
     expect(screen.getByRole("heading", { name: "What do you want to build today?", level: 1 })).toBeInTheDocument();
     expect(container.querySelectorAll("h1")).toHaveLength(1);
-    expect(screen.getByText("Bring an idea or a live app. Possible gives Codex the skills, plan, and proof to build it, ship it, or keep it running.")).toBeInTheDocument();
+    expect(screen.getByText("Possible is an outcome skill for AI agents. Its packs compress 50–100 coordinated tasks, specialist skills, and verification checks into one executable megaprompt—like launching a SaaS from idea to release.")).toBeInTheDocument();
     expect(screen.getByText("npx @fraylabs/possible init")).toBeInTheDocument();
     expect(screen.getByText("$possible", { selector: ".install-next code" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "DOCS" })).toHaveAttribute("href", "/docs");

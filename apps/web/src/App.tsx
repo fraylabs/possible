@@ -132,7 +132,7 @@ function CreatePage() {
           <div className="build-hero-copy">
             <p className="eyebrow">POSSIBLE / FOR CODEX</p>
             <h1>What do you want<br />{" "}to build <em>today?</em></h1>
-            <p>Bring an idea or a live app. Possible gives Codex the skills, plan, and proof to build it, ship it, or keep it running.</p>
+            <p>Possible is an outcome skill for AI agents. Its packs compress 50–100 coordinated tasks, specialist skills, and verification checks into one executable megaprompt—like launching a SaaS from idea to release.</p>
             <div className="build-hero-actions">
               <a className="button-link" href="#try">Try with Codex <span>↓</span></a>
               <a className="text-link" href="/demo">See real outcomes →</a>

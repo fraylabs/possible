@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     default: "Possible — What do you want to build today?",
     template: "%s — Possible",
   },
-  description: "Bring an idea or a live app. Possible helps Codex build, ship, operate, and safely schedule complete outcomes.",
+  description: "Possible is an outcome skill for AI agents. Its packs compress 50–100 coordinated tasks, specialist skills, and verification checks into one executable megaprompt.",
   applicationName: "Possible",
   alternates: {
     types: {
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     type: "website",
     siteName: "Possible",
     title: "Possible — What do you want to build today?",
-    description: "Bring an idea or a live app. Possible helps Codex build, ship, operate, and safely schedule complete outcomes.",
+    description: "Possible is an outcome skill for AI agents. Its packs compress 50–100 coordinated tasks, specialist skills, and verification checks into one executable megaprompt.",
     url: "/",
     images: [{
       url: "/og.png",
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Possible — What do you want to build today?",
-    description: "Bring an idea or a live app. Possible helps Codex build, ship, operate, and safely schedule complete outcomes.",
+    description: "Possible is an outcome skill for AI agents. Its packs compress 50–100 coordinated tasks, specialist skills, and verification checks into one executable megaprompt.",
     images: ["/og.png"],
   },
   other: {

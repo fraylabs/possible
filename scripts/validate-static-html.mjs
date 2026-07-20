@@ -16,7 +16,7 @@ const plainText = (markup) => markup
 const homeMarkup = await html("index.html");
 const home = visibleText(homeMarkup);
 assert.match(home, /What do you want[\s\S]*to build[\s\S]*today\?/);
-assert.match(home, /Bring an idea or a live app\. Possible gives Codex the skills, plan, and proof to build it, ship it, or keep it running\./);
+assert.match(home, /Possible is an outcome skill for AI agents\. Its packs compress 50–100 coordinated tasks, specialist skills, and verification checks into one executable megaprompt/);
 assert.match(home, /npx @fraylabs\/possible init/);
 assert.match(home, /id="packs"/);
 assert.match(home, /Packs are complete recipes for[\s\S]*real outcomes/);
