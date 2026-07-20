@@ -832,13 +832,13 @@ footer .wordmark span { color: #151411; }
 .demo-evidence-output a span, .demo-evidence-output a i { color: #777169; font: 7px "DM Mono", monospace; font-style: normal; }
 .demo-evidence-output a strong { margin: auto 0; max-width: 210px; font-size: 18px; line-height: 1.05; }
 
-.demo-artifacts-footer { min-height: 230px; margin: clamp(80px, 10vw, 150px) -3.5vw 0; padding: 3.5vw; display: flex; justify-content: space-between; align-items: end; gap: 40px; background: #ff4d00; }
-.demo-artifacts-footer p { max-width: 660px; margin: 0; font-size: 18px; line-height: 1.45; }
-.demo-artifacts-footer a { font: 8px "DM Mono", monospace; }
+.demo-outcome-footer { min-height: 230px; padding: 3.5vw; display: flex; justify-content: space-between; align-items: end; gap: 40px; background: #ff4d00; color: #151411; }
+.demo-outcome-footer p { max-width: 660px; margin: 0; font-size: 18px; line-height: 1.45; }
+.demo-outcome-footer a { font: 8px "DM Mono", monospace; }
 
 .replay-page .release-artifacts, .replay-page .software-artifacts { padding-bottom: 0; }
 .replay-page--release .demo-outcome-header h1 em { color: #a8ff52; }
-.replay-page--release .demo-artifacts-footer { background: #a8ff52; }
+.replay-page--release .demo-outcome-footer { background: #a8ff52; }
 
 @media (max-width: 900px) {
   nav { grid-template-columns: 1fr 1fr; }
@@ -948,7 +948,7 @@ footer .wordmark span { color: #151411; }
 
 .replay-page .game-artifacts { padding-bottom: 0; }
 .replay-page--game .demo-outcome-header h1 em { color: #78d9ff; }
-.replay-page--game .demo-artifacts-footer { background: #78d9ff; }
+.replay-page--game .demo-outcome-footer { background: #78d9ff; }
 
 .game-artifacts { background: #e9edf0; }
 .game-live-card { border: 1px solid #151411; background: #10171f; color: #f3f0e8; box-shadow: 10px 10px 0 #151411; overflow: hidden; }
@@ -1262,7 +1262,7 @@ footer .wordmark span { color: #151411; }
   .demo-evidence-output > div { grid-template-columns: 1fr; }
   .demo-evidence-output a, .demo-evidence-output a:nth-child(2n), .demo-evidence-output a:nth-child(3n), .demo-evidence-output a:nth-last-child(-n+2) { border-right: 0; border-bottom: 1px solid #aaa59a; }
   .demo-evidence-output a:last-child { border-bottom: 0; }
-  .demo-artifacts-footer { margin-inline: -18px; padding: 35px 18px; align-items: flex-start; flex-direction: column; }
+  .demo-outcome-footer { padding: 35px 18px; align-items: flex-start; flex-direction: column; }
   .thread-backdrop { padding: 0; }
   .thread-panel { width: 100%; height: 100dvh; border: 0; box-shadow: none; }
   .thread-header { padding: 17px; }

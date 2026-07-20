@@ -365,8 +365,13 @@ describe("Possible", () => {
     for (const route of ["/demo/hardware", "/demo/software", "/demo/open-source", "/demo/game"]) {
       window.history.pushState({}, "", route);
       const { container, unmount } = render(<App />);
+      const artifacts = screen.getByRole("region", { name: "Outcome artifacts" });
+      const conversation = screen.getByRole("region", { name: "$possible conversation" });
+      const footer = container.querySelector(".demo-outcome-footer")!;
+      expectBefore(artifacts, conversation);
+      expectBefore(conversation, footer);
       expect(await axe(container.querySelector(".demo-outcome-header")!)).toHaveNoViolations();
-      expect(await axe(screen.getByRole("region", { name: "$possible conversation" }))).toHaveNoViolations();
+      expect(await axe(conversation)).toHaveNoViolations();
       unmount();
     }
   });

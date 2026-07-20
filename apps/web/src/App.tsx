@@ -994,6 +994,10 @@ function DemoOutputLabel() {
   return <p className="demo-output-label"><span>01 /</span><strong>OUTPUT</strong></p>;
 }
 
+function DemoOutcomeFooter({ text, href = "#top", linkLabel = "BACK TO TOP ↑" }: { text: string; href?: string; linkLabel?: string }) {
+  return <footer className="demo-outcome-footer"><p>{text}</p><a href={href}>{linkLabel}</a></footer>;
+}
+
 function DemoGalleryPage() {
   return (
     <main className="demo-gallery-page">
@@ -1110,7 +1114,6 @@ function OpenSourceDemoPage() {
           <a href="/demo/tiny-slug/release/security-review.md" target="_blank" rel="noreferrer"><span>REVIEW</span><strong>Security evidence</strong><i>MD ↗</i></a>
           <a href="/demo/tiny-slug/CODEX-THREAD.md" target="_blank" rel="noreferrer"><span>THREAD</span><strong>Complete public run</strong><i>MD ↗</i></a>
         </div>
-        <footer className="demo-artifacts-footer"><p>Prepared locally. Nothing was published, pushed, tagged, or changed externally.</p><a href="#top">BACK TO TOP ↑</a></footer>
       </section>
 
       <DemoConversation
@@ -1121,6 +1124,7 @@ function OpenSourceDemoPage() {
         packLabel="Open-Source Release"
         recommendation="It coordinates release engineering, documentation, CI, security assurance, and independent consumer verification."
       />
+      <DemoOutcomeFooter text="Prepared locally. Nothing was published, pushed, tagged, or changed externally." />
 
       {threadOpen ? <ThreadTranscript thread={openSourceThread} rawHref="/demo/tiny-slug/CODEX-THREAD.md" outputHref="#artifacts" onClose={() => setThreadOpen(false)} /> : null}
     </main>
@@ -1178,7 +1182,6 @@ function SoftwareDemoPage() {
           <a href="/demo/three/evidence/integration-repairs.md" target="_blank" rel="noreferrer"><span>REPAIRS</span><strong>Failure history</strong><i>MD ↗</i></a>
           <a href="/demo/three/CODEX-THREAD.md" target="_blank" rel="noreferrer"><span>THREAD</span><strong>Complete public run</strong><i>MD ↗</i></a>
         </div>
-        <footer className="demo-artifacts-footer"><p>Prepared and verified locally. Nothing was deployed, published, or sent externally.</p><a href="#top">BACK TO TOP ↑</a></footer>
       </section>
 
       <DemoConversation
@@ -1189,6 +1192,7 @@ function SoftwareDemoPage() {
         packLabel="Software Launch"
         recommendation="It coordinates the product, launch website, demo film, release readiness, and fresh independent review."
       />
+      <DemoOutcomeFooter text="Prepared and verified locally. Nothing was deployed, published, or sent externally." />
 
       {threadOpen ? <ThreadTranscript thread={softwareThread} rawHref="/demo/three/CODEX-THREAD.md" outputHref="#artifacts" onClose={() => setThreadOpen(false)} /> : null}
     </main>
@@ -1222,7 +1226,6 @@ function PlayableGameDemoPage() {
           <a href="/packs/playable-web-game"><span>04 / RECIPE</span><strong>Playable Web Game pack</strong><i>PACK ↗</i></a>
         </div>
 
-        <footer className="demo-artifacts-footer"><p>A game pack should finish with a game—not a design document, a framework, or a list of ideas.</p><a href="/packs/playable-web-game">INSPECT THE PACK →</a></footer>
       </section>
 
       <DemoConversation
@@ -1233,6 +1236,7 @@ function PlayableGameDemoPage() {
         packLabel="Playable Web Game"
         recommendation="It coordinates the core loop, Three.js runtime, responsive controls, game feel, and an independent browser review."
       />
+      <DemoOutcomeFooter text="A game pack should finish with a game—not a design document, a framework, or a list of ideas." href="/packs/playable-web-game" linkLabel="INSPECT THE PACK →" />
     </main>
   );
 }
@@ -1269,6 +1273,7 @@ function HardwareDemoPage() {
         packLabel="Hardware Launch"
         recommendation="It coordinates the site, film, prototype CAD, waitlist contract, and independent review."
       />
+      <DemoOutcomeFooter text="Fictional concept. Nothing was deployed, fabricated, purchased, emailed, or connected to real data collection." />
       {threadOpen ? <ThreadTranscript thread={demoThread} rawHref="/demo/still/CODEX-THREAD.md" outputHref="#artifacts" onClose={() => setThreadOpen(false)} /> : null}
     </main>
   );
@@ -1329,10 +1334,6 @@ function DemoArtifacts() {
         </div>
       </section>
 
-      <footer className="demo-artifacts-footer">
-        <p>Fictional concept. Nothing was deployed, fabricated, purchased, emailed, or connected to real data collection.</p>
-        <a href="#top">BACK TO TOP ↑</a>
-      </footer>
     </section>
   );
 }

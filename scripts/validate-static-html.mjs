@@ -64,8 +64,10 @@ for (const [label, markup, hasThread] of [
 ]) {
   const artifactIndex = markup.indexOf('aria-label="Outcome artifacts"');
   const conversationIndex = markup.indexOf('aria-label="$possible conversation"');
+  const footerIndex = markup.indexOf('class="demo-outcome-footer"');
   assert.ok(artifactIndex >= 0, `${label} demo must expose its outcome artifacts`);
   assert.ok(conversationIndex > artifactIndex, `${label} demo must show artifacts before the short conversation`);
+  assert.ok(footerIndex > conversationIndex, `${label} demo must finish with its footer after the conversation`);
   assert.match(markup, /What would you like to make possible today\?/);
   assert.match(markup, /Yes, proceed\./);
   assert.match(markup, /01 \/[\s\S]*OUTPUT/);
