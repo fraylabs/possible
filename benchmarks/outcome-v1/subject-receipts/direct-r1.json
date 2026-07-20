@@ -2,8 +2,8 @@
   "benchmark": "outcome-v1",
   "run": "direct-r1",
   "product": "Daymark",
-  "outputPath": "/Users/brianlim/.codex/worktrees/3986/fray/repos/daymark",
-  "productionArtifactPath": "/Users/brianlim/.codex/worktrees/3986/fray/repos/daymark/dist",
+  "outputPath": "<direct-worktree>/repos/daymark",
+  "productionArtifactPath": "<direct-worktree>/repos/daymark/dist",
   "filesCreated": [
     ".gitignore",
     ".openai/hosting.json",
@@ -49,7 +49,7 @@
       "details": "The supplied outer worktree is not a Jujutsu repository."
     },
     {
-      "command": "/Users/brianlim/.codex/plugins/cache/openai-bundled/sites/0.1.30/scripts/init-site.sh \"$PWD\"",
+      "command": "<codex-plugin-cache>/openai-bundled/sites/0.1.30/scripts/init-site.sh \"$PWD\"",
       "result": "passed",
       "details": "Initialized the local project and installed dependencies inside repos/daymark."
     },

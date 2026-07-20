@@ -2,7 +2,7 @@
   "benchmark": "Possible workflow benchmark outcome-v1",
   "run": "plan-r1",
   "product": "Daymark",
-  "output_path": "/Users/brianlim/.codex/worktrees/9dc6/fray/repos/daymark",
+  "output_path": "<plan-worktree>/repos/daymark",
   "files_created": [
     "BENCHMARK-RECEIPT.json",
     "README.md",
@@ -26,61 +26,61 @@
   "commands_actually_run": [
     {
       "command": "jj workspace update-stale",
-      "working_directory": "/Users/brianlim/.codex/worktrees/9dc6/fray",
+      "working_directory": "<plan-worktree>",
       "result": "failed",
       "details": "The supplied workspace is not a Jujutsu repository: There is no jj repo in '.'."
     },
     {
       "command": "jj status",
-      "working_directory": "/Users/brianlim/.codex/worktrees/9dc6/fray",
+      "working_directory": "<plan-worktree>",
       "result": "failed",
       "details": "The supplied workspace is not a Jujutsu repository: There is no jj repo in '.'."
     },
     {
       "command": "git status --short -- repos/daymark",
-      "working_directory": "/Users/brianlim/.codex/worktrees/9dc6/fray",
+      "working_directory": "<plan-worktree>",
       "result": "passed",
       "details": "Reported only repos/daymark as untracked."
     },
     {
       "command": "npm test",
-      "working_directory": "/Users/brianlim/.codex/worktrees/9dc6/fray/repos/daymark",
+      "working_directory": "<plan-worktree>/repos/daymark",
       "result": "passed",
       "details": "Final pre-receipt run passed 17 of 17 tests with zero failed, skipped, or cancelled tests."
     },
     {
       "command": "npm run build",
-      "working_directory": "/Users/brianlim/.codex/worktrees/9dc6/fray/repos/daymark",
+      "working_directory": "<plan-worktree>/repos/daymark",
       "result": "passed",
       "details": "Produced six non-empty static production files in dist/."
     },
     {
       "command": "npm start",
-      "working_directory": "/Users/brianlim/.codex/worktrees/9dc6/fray/repos/daymark",
+      "working_directory": "<plan-worktree>/repos/daymark",
       "result": "failed",
       "details": "The default local port 4173 was already occupied by an unrelated process (EADDRINUSE)."
     },
     {
       "command": "DAYMARK_PORT=43173 npm start",
-      "working_directory": "/Users/brianlim/.codex/worktrees/9dc6/fray/repos/daymark",
+      "working_directory": "<plan-worktree>/repos/daymark",
       "result": "passed",
       "details": "Served dist/ on 127.0.0.1:43173 for local smoke and browser checks, then was stopped."
     },
     {
       "command": "curl -fsS http://127.0.0.1:43173/ and the five linked static assets",
-      "working_directory": "/Users/brianlim/.codex/worktrees/9dc6/fray/repos/daymark",
+      "working_directory": "<plan-worktree>/repos/daymark",
       "result": "passed",
       "details": "The production page and every JavaScript/CSS module returned successfully from the local server."
     },
     {
       "command": "cmp each src production asset with its dist counterpart",
-      "working_directory": "/Users/brianlim/.codex/worktrees/9dc6/fray/repos/daymark",
+      "working_directory": "<plan-worktree>/repos/daymark",
       "result": "passed",
       "details": "All six built assets matched their final source files."
     },
     {
       "command": "rg -n \"https?://|fetch\\(|XMLHttpRequest|sendBeacon|WebSocket\" src",
-      "working_directory": "/Users/brianlim/.codex/worktrees/9dc6/fray/repos/daymark",
+      "working_directory": "<plan-worktree>/repos/daymark",
       "result": "passed",
       "details": "No external URLs or network-write APIs were found in application source."
     }

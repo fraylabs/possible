@@ -5,8 +5,8 @@
   "product": "Daymark",
   "status": "complete_locally_verified",
   "completedLocalDate": "2026-07-21",
-  "outputPath": "/Users/brianlim/.codex/worktrees/322d/fray/repos/daymark",
-  "productionArtifactPath": "/Users/brianlim/.codex/worktrees/322d/fray/repos/daymark/dist",
+  "outputPath": "<possible-worktree>/repos/daymark",
+  "productionArtifactPath": "<possible-worktree>/repos/daymark/dist",
   "workflow": {
     "possibleVersion": "0.1.6",
     "confirmedPack": "Working Web App",

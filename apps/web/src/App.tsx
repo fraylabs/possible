@@ -67,11 +67,25 @@ const benchmarkSeries = [
   { id: "possible", label: "$possible", clarification: 10, coordination: 5, execution: 90, verification: 30 },
 ] as const;
 const benchmarkMaxMinutes = 480;
+const benchmarkPilotSeries = [
+  { id: "direct", label: "Direct", elapsedSeconds: 715, checks: "19/20", outcome: "Not verified", treatment: "Treatment pass" },
+  { id: "spec", label: "Spec-driven", elapsedSeconds: 1101, checks: "20/20", outcome: "Verified", treatment: "Treatment failed" },
+  { id: "plan", label: "/plan", elapsedSeconds: 1332, checks: "20/20", outcome: "Verified", treatment: "Treatment failed" },
+  { id: "goal", label: "/goal", elapsedSeconds: 1511, checks: "20/20", outcome: "Verified", treatment: "Treatment pass" },
+  { id: "possible", label: "$possible", elapsedSeconds: 1850, checks: "20/20", outcome: "Verified", treatment: "Treatment pass" },
+] as const;
+const benchmarkPilotMaxSeconds = 1850;
 
 function formatBenchmarkDuration(minutes: number) {
   const hours = Math.floor(minutes / 60);
   const remainder = minutes % 60;
   return remainder === 0 ? `${hours}h` : `${hours}h ${remainder}m`;
+}
+
+function formatBenchmarkSeconds(seconds: number) {
+  const minutes = Math.floor(seconds / 60);
+  const remainder = seconds % 60;
+  return `${minutes}m ${String(remainder).padStart(2, "0")}s`;
 }
 
 function CopyButton({ label, value }: { label: string; value: string }) {
@@ -423,10 +437,10 @@ function BenchmarksPage() {
 
       <article className="benchmark-article editorial-article">
         <header className="benchmark-hero editorial-header">
-          <p className="eyebrow">A MODEL FROM POSSIBLE</p>
+          <p className="eyebrow">A MEASURED PILOT + MODEL</p>
           <h1>How long to reach<br />the same <em>outcome?</em></h1>
-          <p className="editorial-dek">An estimated comparison of five ways to direct the same coding agent from a rough idea to verified work.</p>
-          <div className="benchmark-byline editorial-byline"><span>FRAY LABS · 21 JUL 2026</span><span>WORKFLOW ESTIMATE · NOT MEASURED PERFORMANCE</span></div>
+          <p className="editorial-dek">Five isolated Codex tasks, one frozen app brief, and one independent verifier—followed by the broader workflow hypothesis we still need to test.</p>
+          <div className="benchmark-byline editorial-byline"><span>FRAY LABS · 21 JUL 2026</span><span>PILOT 01 · NOT A PERFORMANCE CLAIM</span></div>
         </header>
 
       <section className="benchmark-method" aria-labelledby="benchmark-method-heading">
@@ -434,12 +448,40 @@ function BenchmarksPage() {
           <span>SAME START · SAME FINISH</span>
           <h2 id="benchmark-method-heading">Build a complete daily-focus web app from an empty project.</h2>
         </div>
-        <p>The clock starts with a rough ambition and stops when one complete user flow works, tests pass, and reviewable evidence exists. Deployment is outside the outcome. The estimates model the coordination each workflow asks from the human and agent.</p>
+        <p>The measured pilot started every task with the same complete brief and stopped only after independent review. That controls the finish line, but it does not test rough-idea discovery or typical performance. The separate estimate below models that broader coordination hypothesis.</p>
+      </section>
+
+      <section className="benchmark-pilot" aria-labelledby="benchmark-pilot-heading">
+        <header>
+          <span>MEASURED PILOT · OUTCOME-V1</span>
+          <h2 id="benchmark-pilot-heading">The first run did not prove Possible faster.</h2>
+          <p id="benchmark-pilot-description">Direct stopped fastest but missed one executable requirement. Spec and Plan reached the outcome but failed their assigned workflow treatment. Goal and Possible were the only runs to pass both.</p>
+        </header>
+        <figure aria-labelledby="benchmark-pilot-heading" aria-describedby="benchmark-pilot-description">
+          <ul className="benchmark-pilot-bars" aria-label="Measured pilot elapsed time by workflow">
+            {benchmarkPilotSeries.map((series) => (
+              <li className={`is-${series.id}`} aria-label={`${series.label}: ${formatBenchmarkSeconds(series.elapsedSeconds)}. ${series.outcome}. ${series.checks} checks. ${series.treatment}.`} key={series.id}>
+                <div><strong>{series.label}</strong><span>{series.outcome}</span></div>
+                <div className="benchmark-pilot-track" aria-hidden="true"><i style={{ width: `${(series.elapsedSeconds / benchmarkPilotMaxSeconds) * 100}%` }} /></div>
+                <b>{formatBenchmarkSeconds(series.elapsedSeconds)}</b>
+                <small>{series.checks} · {series.treatment}</small>
+              </li>
+            ))}
+          </ul>
+          <figcaption>One parallel run per condition. Direct is time-to-stop, not time-to-outcome. Shared browser and agent capacity make these traces unsuitable for a speed ranking.</figcaption>
+        </figure>
+        <p className="benchmark-pilot-human"><strong>$possible used 14 operator words:</strong> one approval and one continuation nudge. Every control used zero follow-up words because all five received the same already-complete brief.</p>
+        <nav className="benchmark-evidence-links" aria-label="Benchmark evidence">
+          <a href="/benchmarks/outcome-v1/protocol.md">Protocol ↗</a>
+          <a href="/benchmarks/outcome-v1/brief.md">Frozen brief ↗</a>
+          <a href="/benchmarks/outcome-v1/result.md">Independent result ↗</a>
+          <a href="/benchmarks/outcome-v1/summary.json">Machine summary ↗</a>
+        </nav>
       </section>
 
       <section className="benchmark-chart" aria-labelledby="benchmark-chart-heading">
         <header>
-          <div><span>ESTIMATED ELAPSED TIME</span><h2 id="benchmark-chart-heading">Time to verified outcome</h2></div>
+          <div><span>THE WORKFLOW HYPOTHESIS</span><h2 id="benchmark-chart-heading">Estimated time to verified outcome</h2></div>
           <p id="benchmark-chart-description">Each bar uses the same eight-hour scale. Possible assumes five minutes of human coordination after the outcome is confirmed.</p>
         </header>
         <div className="benchmark-legend" aria-label="Time categories">
@@ -480,15 +522,15 @@ function BenchmarksPage() {
       </section>
 
       <section className="benchmark-notes" aria-labelledby="benchmark-notes-heading">
-        <h2 id="benchmark-notes-heading">How this becomes a real benchmark</h2>
+        <h2 id="benchmark-notes-heading">What the pilot proves—and what it does not</h2>
         <ul>
-          <li>Run the same starting brief in clean, equivalent projects using the same model and environment.</li>
-          <li>Define one fixed outcome, acceptance checks, and stop condition before any run begins.</li>
-          <li>Measure wall-clock time, active human time, interventions, token use, verification failures, and final artifact quality.</li>
-          <li>Repeat each workflow enough times to show variation instead of publishing one favorable run.</li>
-          <li>Publish the prompts, transcripts, outputs, receipts, raw timing data, and independent review rubric.</li>
+          <li>Passing self-authored tests was not enough: independent browser review found Direct's keyboard path broken.</li>
+          <li>Outcome success and workflow fidelity are different measurements; Spec and Plan passed one and failed the other.</li>
+          <li>Goal and Possible both completed the frozen outcome while satisfying their named coordination treatment.</li>
+          <li>One parallel run cannot establish typical speed, variance, or a causal advantage for any workflow.</li>
+          <li>The next valid performance study needs repeated, sequential runs and a separate rough-intent protocol for human coordination.</li>
         </ul>
-        <p>Until those runs exist, the bars above should be read as a product hypothesis—not a performance claim.</p>
+        <p>The evidence exists and is published above. The eight-hour chart remains a product hypothesis—not measured performance.</p>
       </section>
       </article>
 

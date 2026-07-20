@@ -199,13 +199,19 @@ describe("Possible", () => {
     expect(await axe(container)).toHaveNoViolations();
   });
 
-  it("models time to outcome as an explicitly estimated bar chart", async () => {
+  it("publishes the measured pilot without presenting it as a performance claim", async () => {
     window.history.pushState({}, "", "/benchmarks");
     const { container } = render(<App />);
     expect(container.querySelector(".benchmarks-page.editorial-page .editorial-article .editorial-header .editorial-byline")).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: /How long to reach.*the same outcome/i, level: 1 })).toBeInTheDocument();
-    expect(screen.getByText(/not measured performance/i)).toBeInTheDocument();
-    expect(screen.getByText(/estimates model the coordination each workflow asks/i)).toBeInTheDocument();
+    expect(screen.getByText(/not a performance claim/i)).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /first run did not prove Possible faster/i })).toBeInTheDocument();
+    const pilot = screen.getByRole("list", { name: "Measured pilot elapsed time by workflow" });
+    expect(within(pilot).getAllByRole("listitem")).toHaveLength(5);
+    expect(within(pilot).getByRole("listitem", { name: /Direct: 11m 55s.*Not verified.*19\/20 checks/i })).toBeInTheDocument();
+    expect(within(pilot).getByRole("listitem", { name: /\$possible: 30m 50s.*Verified.*Treatment pass/i })).toBeInTheDocument();
+    expect(screen.getByText(/\$possible used 14 operator words/i)).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Independent result/i })).toHaveAttribute("href", "/benchmarks/outcome-v1/result.md");
     const chart = screen.getByRole("list", { name: "Estimated time to verified outcome by workflow" });
     expect(within(chart).getAllByRole("listitem")).toHaveLength(5);
     expect(within(chart).getByRole("listitem", { name: /Prompt by prompt: 8h total/i })).toBeInTheDocument();
@@ -213,10 +219,10 @@ describe("Possible", () => {
     expect(screen.queryByText(/mocked|what the mock/i)).not.toBeInTheDocument();
     expect(container.querySelectorAll(".benchmark-bar-track > i")).toHaveLength(20);
     expect(screen.getByText(/Possible does not make the model type twice as fast/i)).toBeInTheDocument();
-    expect(screen.getByText(/product hypothesis—not a performance claim/i)).toBeInTheDocument();
+    expect(screen.getByText(/product hypothesis—not measured performance/i)).toBeInTheDocument();
     expect(container.querySelector(".benchmark-table-scroll")).not.toBeInTheDocument();
     expect(container.querySelector(".benchmark-article")).toBeInTheDocument();
-    expect(container.querySelectorAll(".benchmark-article > section")).toHaveLength(4);
+    expect(container.querySelectorAll(".benchmark-article > section")).toHaveLength(5);
     expect(screen.getByText(/FRAY LABS.*21 JUL 2026/i)).toBeInTheDocument();
     expect(await axe(container)).toHaveNoViolations();
   });

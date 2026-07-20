@@ -6,11 +6,11 @@ here after dispatch. An empty result means the run has not yet completed.
 
 | Run | Condition | Task | Dispatched (UTC) | Follow-ups | Operator words | Approvals | Output | Result |
 | --- | --- | --- | --- | ---: | ---: | ---: | --- | --- |
-| direct-r1 | Direct | `019f80b8-a70b-7b81-afd0-b59dffeed908` | 2026-07-20 18:10:12 | 0 | 0 | 0 | `/Users/brianlim/.codex/worktrees/3986/fray/repos/daymark` | subject complete in 715s; verification pending |
-| spec-r1 | Spec | `019f80b8-a714-76c1-a989-d9ef315e8625` | 2026-07-20 18:10:12 | 0 | 0 | 0 | `/Users/brianlim/.codex/worktrees/97a9/fray/repos/daymark` | subject complete in 1,101s; verification pending |
-| plan-r1 | Plan | `019f80b8-a70c-7a91-b293-9c1a2bd3a237` | 2026-07-20 18:10:12 | 0 | 0 | 0 | `/Users/brianlim/.codex/worktrees/9dc6/fray/repos/daymark` | subject complete in 1,332s; verification pending |
-| goal-r1 | Goal | `019f80b8-a70e-76f3-b3d9-2ed75b39cda6` | 2026-07-20 18:10:12 | 0 | 0 | 0 | `/Users/brianlim/.codex/worktrees/ce23/fray/repos/daymark` | subject complete in 1,511s; verification pending |
-| possible-r1 | Possible | `019f80b8-a717-7d12-a7c4-6531b4120a9b` | 2026-07-20 18:10:12 | 2 | 14 | 1 | `/Users/brianlim/.codex/worktrees/322d/fray/repos/daymark` | subject complete in 1,850s; verification pending |
+| direct-r1 | Direct | `019f80b8-a70b-7b81-afd0-b59dffeed908` | 2026-07-20 18:10:12 | 0 | 0 | 0 | `<direct-worktree>/repos/daymark` | **not verified** · 19/20 · treatment pass · 715s to stop |
+| spec-r1 | Spec | `019f80b8-a714-76c1-a989-d9ef315e8625` | 2026-07-20 18:10:12 | 0 | 0 | 0 | `<spec-worktree>/repos/daymark` | verified · 20/20 · **treatment fail** · 1,101s |
+| plan-r1 | Plan | `019f80b8-a70c-7a91-b293-9c1a2bd3a237` | 2026-07-20 18:10:12 | 0 | 0 | 0 | `<plan-worktree>/repos/daymark` | verified · 20/20 · **treatment fail** · 1,332s |
+| goal-r1 | Goal | `019f80b8-a70e-76f3-b3d9-2ed75b39cda6` | 2026-07-20 18:10:12 | 0 | 0 | 0 | `<goal-worktree>/repos/daymark` | verified · 20/20 · treatment pass · 1,511s |
+| possible-r1 | Possible | `019f80b8-a717-7d12-a7c4-6531b4120a9b` | 2026-07-20 18:10:12 | 2 | 14 | 1 | `<possible-worktree>/repos/daymark` | verified · 20/20 · treatment pass · 1,850s |
 
 ## Operator follow-ups
 
@@ -31,3 +31,16 @@ The five runs were dispatched together. Their elapsed times are useful for this
 pilot's workflow trace, but shared browser, port, package-cache, and agent
 capacity contention prevents treating this single parallel batch as a clean
 relative-speed result.
+
+## Independent verification
+
+- Task: `019f80d5-9f3c-7c80-96e2-904f45381303`
+- Result: [independent/RESULT.md](independent/RESULT.md)
+- Machine results: [independent/results](independent/results)
+- Verifier transcript: [independent/verifier-transcript.json](independent/verifier-transcript.json)
+- Independent screenshots: [independent/screenshots](independent/screenshots)
+
+All five result files pass the frozen JSON Schema and the exact-check/decision
+consistency audit. This pilot cannot support changing the public performance
+chart: it has one run per condition, shared parallel resource contention, one
+failed outcome, and two failed condition treatments.

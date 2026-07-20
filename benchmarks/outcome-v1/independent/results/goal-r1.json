@@ -1,0 +1,166 @@
+{
+  "runId": "goal-r1",
+  "condition": "goal",
+  "taskId": "019f80b8-a70e-76f3-b3d9-2ed75b39cda6",
+  "outputPath": "<goal-worktree>/repos/daymark",
+  "dispatchAt": "2026-07-20T18:10:12Z",
+  "completedAt": "2026-07-20T18:35:23Z",
+  "elapsedSeconds": 1511,
+  "operatorFollowups": 0,
+  "operatorWords": 0,
+  "approvals": 0,
+  "isolation": {
+    "status": "pass",
+    "evidence": "Required `jj status` failed with exit 1 because the enclosing Fray checkout has no Jujutsu repository. The mandated enclosing-Fray Git fallback reported only untracked files below `repos/daymark/`; tracked and cached diffs were empty, so no change outside the owned directory was found."
+  },
+  "commands": [
+    {
+      "command": "jj status",
+      "exitCode": 1,
+      "summary": "Failed as preserved evidence: `Error: There is no jj repo in \".\"`."
+    },
+    {
+      "command": "git status --porcelain=v1 --untracked-files=all",
+      "exitCode": 0,
+      "summary": "Reported only owned untracked files under `repos/daymark/`; tracked and cached diffs were empty."
+    },
+    {
+      "command": "npm test",
+      "exitCode": 0,
+      "summary": "Passed 11 of 11 Node tests with 0 failures, skips, cancellations, or todo items."
+    },
+    {
+      "command": "npm run build",
+      "exitCode": 0,
+      "summary": "Built four non-empty static production files into `dist/`."
+    },
+    {
+      "command": "node --input-type=module -e <independent verifier state/storage probe>",
+      "exitCode": 0,
+      "summary": "Independent assertions passed for the cap, bidirectional toggle, removal, reset, same-day persistence, local-day rollover, and malformed-data recovery."
+    },
+    {
+      "command": "node scripts/serve.mjs dist 43104",
+      "exitCode": 1,
+      "summary": "The documented server implementation became ready on unique port 43104 for two bounded screenshot intervals; each was deliberately terminated with SIGINT after its verifier run."
+    },
+    {
+      "command": "node work/browser-check.cjs http://127.0.0.1:43104 goal-r1 screenshots",
+      "exitCode": 0,
+      "summary": "The verifier-environment fallback used cached Playwright 1.61.1 and local headless Chromium after both interactive browser surfaces wedged; the identical frozen flow completed twice, with the second interval recapturing scroll-normalized screenshots. No console warning/error, external request, or network write was observed."
+    }
+  ],
+  "checks": [
+    {
+      "id": "empty-invitation",
+      "status": "pass",
+      "evidence": "The production empty state presented `Choose today’s three.`, supporting copy, `The first choice sets the day`, a labelled composer, and three visibly open slots at both widths."
+    },
+    {
+      "id": "nonempty-add-keyboard-pointer",
+      "status": "pass",
+      "evidence": "Executable production exercise added `goal-r1 keyboard outcome` with Enter and `goal-r1 pointer outcome` by clicking Add, producing one then two labelled checkbox rows; independent state execution and tests rejected whitespace-only input."
+    },
+    {
+      "id": "three-item-cap-explained",
+      "status": "pass",
+      "evidence": "After a third entry the production DOM had exactly three checkbox rows, disabled the input/Add controls, and displayed `THREE OF THREE CHOSEN — REMOVE ONE TO MAKE ROOM.` Independent execution rejected a fourth item even when an existing item was complete."
+    },
+    {
+      "id": "toggle-complete-incomplete",
+      "status": "pass",
+      "evidence": "Browser exercise checked the first priority and observed `1 OF 3 COMPLETE`, then reopened it to unchecked; independent state assertions confirmed both directions without mutating the original state."
+    },
+    {
+      "id": "remove-priority",
+      "status": "pass",
+      "evidence": "Activating the first item-specific Remove control changed the executable production list from three rows to two, restored one open slot and the enabled composer, and preserved the other items."
+    },
+    {
+      "id": "progress-count-and-visual",
+      "status": "pass",
+      "evidence": "A named progressbar exposed 0–3 values and exact count text; three numbered slots changed to checks, the track filled, and the panel/hero changed to a distinct green `DAY MARKED` / `All three, finished.` state at completion."
+    },
+    {
+      "id": "reload-persistence",
+      "status": "pass",
+      "evidence": "Reloading the production page restored all three texts, order, and checked states with `3 OF 3 COMPLETE`; the independent storage probe restored an equivalent same-day snapshot."
+    },
+    {
+      "id": "confirmed-reset",
+      "status": "pass",
+      "evidence": "The native HTML dialog labelled `Reset today’s priorities?` preserved two rows after `Keep priorities`; reopening and activating `Reset priorities` returned the UI to zero rows and the empty invitation. Source resets the dialog return value to the safe cancel path on every opening."
+    },
+    {
+      "id": "local-day-rollover",
+      "status": "pass",
+      "evidence": "Independent execution loaded a saved 2026-07-21 record as 2026-07-22 and observed a clean empty day with the prior record removed. The open app also reconciles every 30 seconds and on focus, visibility, storage events, and mutations."
+    },
+    {
+      "id": "versioned-storage-key",
+      "status": "pass",
+      "evidence": "Inspected source defines `STORAGE_VERSION = 1` and derives `STORAGE_KEY = \"daymark:today:v1\"`; stored objects carry and validate the version."
+    },
+    {
+      "id": "malformed-storage-recovery",
+      "status": "pass",
+      "evidence": "Independent execution supplied malformed JSON and observed an empty current day with the bad key removed. Source additionally rejects wrong versions, invalid dates, duplicate/invalid IDs, empty or oversized text, missing completion flags, and lists over three."
+    },
+    {
+      "id": "responsive-390-1280",
+      "status": "pass",
+      "evidence": "The production flow ran at 1280 px and exact 390 px. At 390 px inner/client/document/body scroll widths all measured 390; input/Add were 53.6 px high, Remove controls 48 px high, Reset 44 px high, and no horizontal overflow occurred."
+    },
+    {
+      "id": "semantic-controls-and-names",
+      "status": "pass",
+      "evidence": "Executable/inspected DOM evidence showed a skip link, main and labelled sections, ordered heading levels, native labelled text input/buttons/checkboxes/dialog, item-specific Remove names, a named progressbar with value text, and a polite live status region."
+    },
+    {
+      "id": "visible-keyboard-focus",
+      "status": "pass",
+      "evidence": "Keyboard traversal reached Add, both checkboxes, item-specific Remove, Reset, and the skip link; interactive controls showed a computed 3 px solid rgb(37, 95, 232) focus outline."
+    },
+    {
+      "id": "no-network-writes",
+      "status": "pass",
+      "evidence": "The isolated browser recorded only same-origin GET requests for the page and three static assets, with no external origins or write methods. Complete runtime-source inspection found no client networking primitives or external URLs; console warnings/errors were empty."
+    },
+    {
+      "id": "quiet-coherent-visual-states",
+      "status": "pass",
+      "evidence": "Independent captures show a consistent high-contrast paper/ink/green editorial system, coherent spacing/typography, and concrete empty, capped, partial, and completed treatments. This is a usability/coherence finding, not a taste ranking."
+    },
+    {
+      "id": "readme-commands",
+      "status": "pass",
+      "evidence": "README documents exact `npm run dev`, `npm test`, `npm run build`, and `npm start` commands, local URLs/port behavior, Node requirement, production output, and local data semantics."
+    },
+    {
+      "id": "meaningful-required-tests",
+      "status": "pass",
+      "evidence": "The inspected suite contains substantive assertions for cap after completion, blank input, bidirectional toggle, targeted removal/replacement, persisted reset, same-day reload, next-day discard, local calendar keys, malformed JSON, invalid/oversized schemas, and blocked storage; all 11 passed and independent probes corroborated the state paths."
+    },
+    {
+      "id": "production-build",
+      "status": "pass",
+      "evidence": "`npm run build` exited 0, produced four non-empty inspectable static files in `dist/`, and the documented server implementation served the artifact successfully on unique port 43104 for the complete production-browser exercise."
+    },
+    {
+      "id": "honest-receipt",
+      "status": "pass",
+      "evidence": "Read only after independent checks. The receipt lists files, commands actually run, passed/failed/skipped checks, limitations, and external actions not taken. It preserves its missing-Jujutsu and initial occupied-port failures, marks a separate post-audit browser lane and real-midnight soak skipped, disclaims external review/user validation, and its substantive test/build/core-browser claims matched independent evidence."
+    }
+  ],
+  "conditionCompliance": {
+    "status": "pass",
+    "evidence": "The complete readable transcript has one 119-item turn and no older cursor. Before the first implementation file change it explicitly announces use of `ultragoal` to create an active externally verifiable goal, starts `/root/acceptance_audit`, and reports `The goal is active`; the completion standard therefore included external verifier pressure before implementation. Later it waits for receipt consistency and final read-only audit evidence, reports the audit PASS only after 11/11 tests/build parity/inventory checks, and then marks the goal complete. Artifact/transcript inspection found no `SPEC.md` or Possible invocation."
+  },
+  "decision": "verified",
+  "limitations": [
+    "The assigned checkout lacked Jujutsu metadata, so isolation uses the mandated Git fallback after preserving the `jj status` failure.",
+    "Both interactive browser-control surfaces remained wedged in the verifier environment; per operator instruction, goal-r1 used the locally cached Playwright/Chromium headless fallback for the identical frozen checks. This fallback did not alter acceptance status.",
+    "The subject receipt preserves an unavailable separate post-audit browser lane and a skipped real-clock midnight soak. The independent verifier reran the full production browser flow and deterministic next-day state transition, but did not wait across an actual midnight.",
+    "The transcript reader summarizes native goal-tool calls rather than exposing them as standalone tool items; condition compliance relies on explicit pre-implementation `goal is active` sequencing, external-audit activity, evidence-before-completion commentary, and the final system-recorded active-goal completion report."
+  ]
+}

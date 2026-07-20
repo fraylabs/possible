@@ -3,7 +3,7 @@
   "benchmarkRun": "spec-r1",
   "benchmarkWorkflow": "outcome-v1",
   "product": "Daymark",
-  "outputPath": "/Users/brianlim/.codex/worktrees/97a9/fray/repos/daymark",
+  "outputPath": "<spec-worktree>/repos/daymark",
   "filesCreated": [
     "BENCHMARK-RECEIPT.json",
     "README.md",

@@ -3,8 +3,8 @@
   "benchmark": "Possible workflow benchmark outcome-v1",
   "condition": "goal-r1",
   "artifact": "Daymark",
-  "absoluteOutputPath": "/Users/brianlim/.codex/worktrees/ce23/fray/repos/daymark",
-  "productionArtifactPath": "/Users/brianlim/.codex/worktrees/ce23/fray/repos/daymark/dist",
+  "absoluteOutputPath": "<goal-worktree>/repos/daymark",
+  "productionArtifactPath": "<goal-worktree>/repos/daymark/dist",
   "filesCreated": [
     "BENCHMARK-RECEIPT.json",
     "README.md",
@@ -24,74 +24,74 @@
   "commandsActuallyRun": [
     {
       "command": "jj workspace update-stale && jj status",
-      "workingDirectory": "/Users/brianlim/.codex/worktrees/ce23/fray",
+      "workingDirectory": "<goal-worktree>",
       "result": "failed",
       "exitCode": 1,
       "evidence": "Error: There is no jj repo in \".\""
     },
     {
       "command": "npm test",
-      "workingDirectory": "/Users/brianlim/.codex/worktrees/ce23/fray/repos/daymark",
+      "workingDirectory": "<goal-worktree>/repos/daymark",
       "result": "passed",
       "evidence": "Latest run: 11 tests, 11 passed, 0 failed, 0 skipped. The command was rerun after material changes and by the read-only source audit with the same pass count."
     },
     {
       "command": "npm run build",
-      "workingDirectory": "/Users/brianlim/.codex/worktrees/ce23/fray/repos/daymark",
+      "workingDirectory": "<goal-worktree>/repos/daymark",
       "result": "passed",
       "evidence": "Built index.html, styles.css, app.js, and daymark.js into dist/. The command was rerun after material changes and by the read-only source audit."
     },
     {
       "command": "node --check src/app.js && node --check src/daymark.js && node --check scripts/serve.mjs && node --check scripts/build.mjs",
-      "workingDirectory": "/Users/brianlim/.codex/worktrees/ce23/fray/repos/daymark",
+      "workingDirectory": "<goal-worktree>/repos/daymark",
       "result": "passed",
       "evidence": "All four JavaScript modules passed Node syntax checks."
     },
     {
       "command": "npm start",
-      "workingDirectory": "/Users/brianlim/.codex/worktrees/ce23/fray/repos/daymark",
+      "workingDirectory": "<goal-worktree>/repos/daymark",
       "result": "passed after one earlier environmental failure",
       "evidence": "The first pre-fallback attempt failed because 127.0.0.1:4173 was occupied. After the bounded port fallback was added, later runs served dist successfully on 4173 or 4174 and were intentionally stopped after local HTTP checks."
     },
     {
       "command": "node scripts/serve.mjs dist 43821",
-      "workingDirectory": "/Users/brianlim/.codex/worktrees/ce23/fray/repos/daymark",
+      "workingDirectory": "<goal-worktree>/repos/daymark",
       "result": "passed",
       "evidence": "Served the built artifact on local loopback for the primary browser walkthrough, then was intentionally stopped."
     },
     {
       "command": "curl --fail --silent --show-error --head http://127.0.0.1:43821/ && curl --fail --silent --show-error http://127.0.0.1:43821/daymark.js | head -n 3",
-      "workingDirectory": "/Users/brianlim/.codex/worktrees/ce23/fray/repos/daymark",
+      "workingDirectory": "<goal-worktree>/repos/daymark",
       "result": "passed",
       "evidence": "The production index returned HTTP 200 and the built JavaScript module was readable."
     },
     {
       "command": "curl --fail --silent --show-error --head http://127.0.0.1:4174/ && curl --fail --silent --show-error --head http://127.0.0.1:4174/app.js",
-      "workingDirectory": "/Users/brianlim/.codex/worktrees/ce23/fray/repos/daymark",
+      "workingDirectory": "<goal-worktree>/repos/daymark",
       "result": "passed",
       "evidence": "The final production smoke run returned HTTP 200 for the index and app module through the occupied-port fallback."
     },
     {
       "command": "npm run dev",
-      "workingDirectory": "/Users/brianlim/.codex/worktrees/ce23/fray/repos/daymark",
+      "workingDirectory": "<goal-worktree>/repos/daymark",
       "result": "passed",
       "evidence": "The read-only source audit exercised the occupied-port fallback and received HTTP 200 from the src server on 127.0.0.1:4175 before stopping it."
     },
     {
       "command": "cmp src/index.html dist/index.html && cmp src/styles.css dist/styles.css && cmp src/app.js dist/app.js && cmp src/daymark.js dist/daymark.js",
-      "workingDirectory": "/Users/brianlim/.codex/worktrees/ce23/fray/repos/daymark",
+      "workingDirectory": "<goal-worktree>/repos/daymark",
       "result": "passed",
       "evidence": "Every production file is byte-identical to its source counterpart."
     },
     {
       "command": "if rg -n 'https://|fetch\\(|XMLHttpRequest|sendBeacon|WebSocket|navigator\\.serviceWorker' src dist; then echo 'Unexpected external networking reference found.'; exit 1; else echo 'Source/build parity passed; no external networking primitives or HTTPS asset references found.'; fi",
-      "workingDirectory": "/Users/brianlim/.codex/worktrees/ce23/fray/repos/daymark",
+      "workingDirectory": "<goal-worktree>/repos/daymark",
       "result": "passed",
       "evidence": "No external asset URL or browser networking primitive was found in source or build output."
     },
     {
       "command": "curl --max-time 2 --silent --show-error http://127.0.0.1:4173/",
-      "workingDirectory": "/Users/brianlim/.codex/worktrees/ce23/fray/repos/daymark",
+      "workingDirectory": "<goal-worktree>/repos/daymark",
       "result": "expected failure after shutdown",
       "exitCode": 7,
       "evidence": "The final UI regression lane used this only after stopping its local server, confirming that it left no listener running."
