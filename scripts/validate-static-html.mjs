@@ -51,9 +51,26 @@ for (const pack of outcomePacks) {
 
 const hardwareDemo = await html("demo/hardware/index.html");
 const softwareDemo = await html("demo/software/index.html");
+const openSourceDemo = await html("demo/open-source/index.html");
+const gameDemo = await html("demo/game/index.html");
 assert.match(hardwareDemo, /src="\/demo\/still\/site\/index\.html"/);
 assert.match(softwareDemo, /src="\/demo\/three\/product\/index\.html"/);
 assert.match(softwareDemo, /src="\/demo\/three\/site\/index\.html"/);
+for (const [label, markup, hasThread] of [
+  ["hardware", hardwareDemo, true],
+  ["software", softwareDemo, true],
+  ["open-source", openSourceDemo, true],
+  ["game", gameDemo, false],
+]) {
+  const artifactIndex = markup.indexOf('aria-label="Outcome artifacts"');
+  const conversationIndex = markup.indexOf('aria-label="$possible conversation"');
+  assert.ok(artifactIndex >= 0, `${label} demo must expose its outcome artifacts`);
+  assert.ok(conversationIndex > artifactIndex, `${label} demo must show artifacts before the short conversation`);
+  assert.match(markup, /What would you like to make possible today\?/);
+  assert.match(markup, /Yes, proceed\./);
+  if (hasThread) assert.match(markup, /VIEW FULL CODEX THREAD/);
+  else assert.doesNotMatch(markup, /VIEW FULL CODEX THREAD/);
+}
 for (const [relativePath, assetPrefix] of [
   ["demo/still/site/index.html", "/demo/still/site/assets/"],
   ["demo/three/product/index.html", "/demo/three/product/assets/"],

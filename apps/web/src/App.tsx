@@ -1,7 +1,6 @@
 "use client";
 
 import { lazy, Suspense, useEffect, useState } from "react";
-import type { ReactNode } from "react";
 import { compilePack, getPack, outcomePacks } from "@possible/packs";
 import type { OutcomePack, PackLane } from "@possible/packs";
 import demoThreadData from "./demo-thread.json";
@@ -927,36 +926,43 @@ function ThreadTranscript({
   );
 }
 
-function DemoIntakePrelude() {
+function DemoOutcomeHeader({
+  eyebrow,
+  title,
+  accent,
+  description,
+  metric,
+  thread,
+  onOpenThread,
+}: {
+  eyebrow: string;
+  title: string;
+  accent: string;
+  description: string;
+  metric: string;
+  thread?: DemoThread;
+  onOpenThread?: () => void;
+}) {
   return (
-    <section className="demo-intake">
-      <header>
-        <div><p className="eyebrow">CURRENT ENTRY FLOW / ILLUSTRATIVE INTAKE</p><h1>Before the run,<br /><em>a conversation.</em></h1></div>
-        <p>This prelude explains how Possible starts today. It is not spliced into the preserved execution log below, which begins after the pack and brief were already confirmed.</p>
-      </header>
-      <div className="demo-intake-grid">
-        <article className="demo-intake-install"><span>SHELL / INSTALL</span><code>{installCommand}</code><i>✓ Possible installed · Next: type $possible in Codex</i></article>
-        <article className="demo-intake-thread">
-          <p><strong>USER</strong><span>$possible</span></p>
-          <p><strong>POSSIBLE</strong><span>What would you like to make possible today? A rough idea is enough — we can brainstorm it together.</span></p>
-          <p><strong>USER</strong><span>I want to make a small device that helps me focus without opening my phone.</span></p>
-          <p><strong>POSSIBLE</strong><span>Interesting — it sounds like a physical focus ritual, not another app. When this is finished, what would make it feel real to you?</span></p>
-          <p><strong>USER</strong><span>A believable launch: the device concept, a website, and a short product film.</span></p>
-          <p className="demo-intake-recommend"><strong>POSSIBLE</strong><span>I recommend the <a href="/packs/hardware-launch">Hardware Launch pack ↗</a>. It coordinates the site, film, prototype CAD, waitlist contract, and independent review. {approvalDisclosure} Proceed with this outcome?</span></p>
-          <p className="demo-intake-confirm"><strong>USER</strong><span>Yes, proceed.</span></p>
-        </article>
+    <section className="demo-outcome-header">
+      <div>
+        <p className="eyebrow">{eyebrow}</p>
+        <h1>{title}<br /><em>{accent}</em></h1>
+      </div>
+      <div className="demo-outcome-summary">
+        <p>{description}</p>
+        <strong><i /> {metric}</strong>
+        <div>
+          <a href="#artifacts">OPEN THE OUTCOME ↓</a>
+          {thread && onOpenThread ? <button type="button" onClick={onOpenThread}>VIEW FULL CODEX THREAD <span>{thread.messages.length} MESSAGES</span></button> : null}
+          <a href="#conversation">READ THE SHORT CONVERSATION ↓</a>
+        </div>
       </div>
     </section>
   );
 }
 
-type ReplayEvent = { actor: string; title: string; detail: string };
-
-function RecordedIntakePrelude({
-  eyebrow,
-  title,
-  accent,
-  description,
+function DemoConversation({
   userIdea,
   possibleQuestion,
   userOutcome,
@@ -964,10 +970,6 @@ function RecordedIntakePrelude({
   packLabel,
   recommendation,
 }: {
-  eyebrow: string;
-  title: string;
-  accent: string;
-  description: string;
   userIdea: string;
   possibleQuestion: string;
   userOutcome: string;
@@ -976,134 +978,20 @@ function RecordedIntakePrelude({
   recommendation: string;
 }) {
   return (
-    <section className="demo-intake">
+    <section className="demo-conversation" id="conversation" aria-label="$possible conversation">
       <header>
-        <div><p className="eyebrow">{eyebrow}</p><h1>{title}<br /><em>{accent}</em></h1></div>
-        <p>{description}</p>
+        <div><p className="eyebrow">THE USEFUL PART / BEFORE THE WORK</p><h2>One short<br /><em>conversation.</em></h2></div>
+        <p>Possible turns a rough idea into a concrete outcome, recommends the recipe, and waits for permission. Then Codex does the work.</p>
       </header>
-      <div className="demo-intake-grid">
-        <article className="demo-intake-install"><span>SHELL / INSTALL</span><code>{installCommand}</code><i>✓ Possible installed · Next: type $possible in Codex</i></article>
-        <article className="demo-intake-thread">
+      <article className="demo-conversation-thread">
           <p><strong>USER</strong><span>$possible</span></p>
           <p><strong>POSSIBLE</strong><span>What would you like to make possible today? A rough idea is enough — we can brainstorm it together.</span></p>
           <p><strong>USER</strong><span>{userIdea}</span></p>
           <p><strong>POSSIBLE</strong><span>{possibleQuestion}</span></p>
           <p><strong>USER</strong><span>{userOutcome}</span></p>
-          <p className="demo-intake-recommend"><strong>POSSIBLE</strong><span>I recommend the <a href={packHref}>{packLabel} pack ↗</a>. {recommendation} {approvalDisclosure} Proceed with this outcome?</span></p>
-          <p className="demo-intake-confirm"><strong>USER</strong><span>Yes, proceed with this pack.</span></p>
-        </article>
-      </div>
-    </section>
-  );
-}
-
-function RecordedExecutionStage({
-  eyebrow,
-  title,
-  accent,
-  description,
-  metric,
-  packCode,
-  briefTitle,
-  briefDetail,
-  skillCount,
-  outputCount,
-  events,
-  artifactCards,
-  integrationOutputs,
-  failureTitle,
-  failureDetail,
-  failureHref,
-  finalStats,
-  thread,
-  onOpenThread,
-  runLabel = "RECORDED REAL RUN",
-  playLabel = "Play real run",
-}: {
-  eyebrow: string;
-  title: string;
-  accent: string;
-  description: string;
-  metric: string;
-  packCode: string;
-  briefTitle: string;
-  briefDetail: string;
-  skillCount: number;
-  outputCount: number;
-  events: ReplayEvent[];
-  artifactCards: ReactNode;
-  integrationOutputs: string[];
-  failureTitle: string;
-  failureDetail: string;
-  failureHref: string;
-  finalStats: Array<{ value: string; label: string }>;
-  thread?: DemoThread;
-  onOpenThread?: () => void;
-  runLabel?: string;
-  playLabel?: string;
-}) {
-  const [step, setStep] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const lastStep = events.length - 1;
-  const currentEvent = events[step] ?? { actor: "CAPTAIN", title: "Run ready", detail: "Recorded outcome run." };
-
-  useEffect(() => {
-    if (!isPlaying) return;
-    if (step >= lastStep) {
-      setIsPlaying(false);
-      return;
-    }
-    const timer = window.setTimeout(() => setStep((value) => Math.min(value + 1, lastStep)), 1900);
-    return () => window.clearTimeout(timer);
-  }, [isPlaying, lastStep, step]);
-
-  function togglePlayback() {
-    if (step >= lastStep) setStep(0);
-    setIsPlaying((value) => !value);
-  }
-
-  return (
-    <section className="replay-stage">
-      <header className="replay-title">
-        <div><p className="eyebrow">{eyebrow}</p><h1>{title}<br /><em>{accent}</em></h1></div>
-        <div className="replay-title-meta">
-          <p>{description}</p>
-          <div><span><i /> LOCAL RUN COMPLETE</span><strong>{metric}</strong></div>
-          <div className="replay-proof-actions">{thread && onOpenThread ? <button type="button" onClick={onOpenThread}>VIEW FULL CODEX THREAD <span>{thread.messages.length} MESSAGES</span></button> : null}<a href="#artifacts">SHOW OUTPUT ↓</a></div>
-        </div>
-      </header>
-
-      <div className="replay-window">
-        <header className="replay-window-bar"><div><i /><i /><i /></div><strong>CODEX / POSSIBLE / {packCode}</strong><span>{runLabel}</span></header>
-        <aside className="replay-activity">
-          <header><span>CODEX ACTIVITY</span><strong>0{step + 1} / 0{events.length}</strong></header>
-          <div className="replay-event-list">
-            {events.map((event, index) => (
-              <button type="button" className={index === step ? "is-current" : index < step ? "is-past" : ""} aria-current={index === step ? "step" : undefined} onClick={() => { setStep(index); setIsPlaying(false); }} key={event.title}>
-                <span>0{index + 1}</span><div><small>{event.actor}</small><strong>{event.title}</strong><p>{event.detail}</p></div>
-              </button>
-            ))}
-          </div>
-          <footer>{onOpenThread ? <button type="button" onClick={onOpenThread}>VIEW FULL THREAD →</button> : null}<a href="#artifacts">VIEW ARTIFACTS ↓</a></footer>
-        </aside>
-
-        <section className={`replay-canvas replay-step-${step}`} aria-live="polite">
-          <header><span>ARTIFACT CANVAS</span><strong>{currentEvent.actor} / {currentEvent.title.toUpperCase()}</strong></header>
-          <div className="replay-scene">
-            <article className="replay-brief-card"><span>OUTCOME BRIEF</span><h2>{briefTitle}</h2><p>{briefDetail}</p></article>
-            <article className="replay-recipe-card"><header><span>POSSIBLE PACK</span><strong>{packCode}@1</strong></header><div><b>{skillCount}</b><span>REVIEWED<br />SKILLS</span><i>→</i><b>3</b><span>PARALLEL<br />SUBAGENTS</span><i>→</i><b>{outputCount}</b><span>INTEGRATED<br />OUTPUTS</span></div></article>
-            <div className="replay-artifacts">{artifactCards}</div>
-            <article className="replay-integration"><header><span>CAPTAIN / ASSEMBLED OUTCOME</span><strong>{outputCount} OUTPUTS PRESENT</strong></header><div>{integrationOutputs.map((output, index) => <p key={output}><span>{String(index + 1).padStart(2, "0")}</span><strong>{output}</strong><i>PASS</i></p>)}</div></article>
-            <article className="replay-review-card replay-review-card--failure"><span>FRESH REVIEW / MATERIAL FAILURE</span><h2>{failureTitle}</h2><p>{failureDetail}</p><a href={failureHref} target="_blank" rel="noreferrer">OPEN FAILED TRACE ↗</a></article>
-            <article className="replay-review-card replay-review-card--passed"><span>REPAIR VERIFIED / OUTCOME COMPLETE</span><h2>Real outputs.<br />Real review.</h2><div>{finalStats.map((stat) => <p key={stat.label}><strong>{stat.value}</strong><span>{stat.label}</span></p>)}</div><div className="replay-final-actions">{onOpenThread ? <button type="button" onClick={onOpenThread}>VIEW FULL THREAD →</button> : null}<a href="#artifacts">SHOW OUTPUT ↓</a></div></article>
-          </div>
-          <footer className="replay-controls">
-            <div><span>NOW PLAYING</span><strong>{currentEvent.title}</strong></div>
-            <div className="replay-progress" aria-label={`Replay step ${step + 1} of ${events.length}`}>{events.map((event, index) => <i className={index <= step ? "is-filled" : ""} key={event.title} />)}</div>
-            <div className="replay-buttons"><button type="button" aria-label="Previous event" onClick={() => { setStep((value) => Math.max(0, value - 1)); setIsPlaying(false); }} disabled={step === 0}>←</button><button type="button" className="replay-play" onClick={togglePlayback}>{isPlaying ? "Pause" : step === lastStep ? "Replay" : playLabel}</button><button type="button" aria-label="Next event" onClick={() => { setStep((value) => Math.min(lastStep, value + 1)); setIsPlaying(false); }} disabled={step === lastStep}>→</button></div>
-          </footer>
-        </section>
-      </div>
+          <p className="demo-conversation-recommend"><strong>POSSIBLE</strong><span>I recommend the <a href={packHref}>{packLabel} pack ↗</a>. {recommendation} {approvalDisclosure} Proceed with this outcome?</span></p>
+          <p className="demo-conversation-confirm"><strong>USER</strong><span>Yes, proceed.</span></p>
+      </article>
     </section>
   );
 }
@@ -1178,58 +1066,21 @@ function DemoGalleryPage() {
 
 function OpenSourceDemoPage() {
   const [threadOpen, setThreadOpen] = useState(false);
-  const events: ReplayEvent[] = [
-    { actor: "CAPTAIN", title: "Brief locked", detail: "Release promise, compatibility, and no-publish boundary confirmed." },
-    { actor: "POSSIBLE", title: "Pack compiled", detail: "Release engineering, documentation, CI, and security skills assembled." },
-    { actor: "CAPTAIN", title: "Workstreams spawned", detail: "Package, documentation, and assurance work delegated independently." },
-    { actor: "SUBAGENTS", title: "Artifacts returned", detail: "Source contract, docs, CI, examples, and review evidence returned." },
-    { actor: "CAPTAIN", title: "Outcome assembled", detail: "The exact consumer package and contributor surface were integrated." },
-    { actor: "REVIEWER", title: "Failure found", detail: "Fresh review found release-readiness gaps that the first pass missed." },
-    { actor: "REVIEWER", title: "Repair verified", detail: "Offline consumer install and every final verification gate passed." },
-  ];
 
   return (
     <main className="replay-page replay-page--release" id="top">
       <SiteNav label="Recorded run / tiny-slug" />
-      <RecordedIntakePrelude
-        eyebrow="PRESERVED INTAKE / BEFORE EXECUTION"
-        title="Before the release,"
-        accent="define trust."
-        description="The clean-room run began with $possible, clarified what a credible open-source release meant, and waited for explicit approval before any repository work."
-        userIdea="I want to release tiny-slug, a tiny ASCII-only ESM slugifier."
-        possibleQuestion="When this is finished, what would make the release trustworthy to a consumer and a contributor?"
-        userOutcome="A clean package, API docs, runnable examples, CI, security review, and release plan—but do not publish, push, or tag anything."
-        packHref="/packs/open-source-release"
-        packLabel="Open-Source Release"
-        recommendation="It coordinates release engineering, documentation, CI, security assurance, and independent consumer verification."
-      />
-      <RecordedExecutionStage
-        eyebrow="RECORDED EXECUTION / AFTER CONFIRMATION"
-        title="After the yes,"
-        accent="watch the release harden."
-        description="A fresh Codex captain ran the Open-Source Release pack in a throwaway project. The package, documentation, CI, security review, failures, repairs, and final consumer verification below come from that preserved run."
+      <DemoOutcomeHeader
+        eyebrow="OPEN-SOURCE RELEASE / VERIFIED OUTCOME"
+        title="A tiny package,"
+        accent="ready to trust."
+        description="Open the package, documentation, CI, security review, and clean-consumer evidence produced by a preserved Open-Source Release run."
         metric="9 / 9 TESTS · 0 FINDINGS"
-        packCode="OPEN-SOURCE-RELEASE"
-        briefTitle="Make tiny-slug understandable, installable, testable, and contributor-ready."
-        briefDetail="No publishing, pushing, tagging, or repository-setting changes."
-        skillCount={4}
-        outputCount={6}
-        events={events}
-        artifactCards={<>
-          <article className="replay-artifact replay-artifact--site"><header><span>01 / SOURCE</span><strong>PASS</strong></header><pre><code>{`export function slugify(value) {\n  return value\n    .replace(/[^A-Za-z0-9]+/g, "-")\n    .toLowerCase();\n}`}</code></pre><p>Typed ESM API with zero runtime dependencies</p></article>
-          <article className="replay-artifact replay-artifact--film"><header><span>02 / DOCS</span><strong>PASS</strong></header><div className="replay-artifact-summary"><b>README</b><b>API</b><b>EXAMPLES</b><b>CONTRIBUTING</b></div><p>Consumer and contributor documentation</p></article>
-          <article className="replay-artifact replay-artifact--cad"><header><span>03 / ASSURANCE</span><strong>PASS</strong></header><div className="replay-artifact-summary"><strong>9 / 9</strong><span>OFFLINE INSTALL<br />CLEAN CONSUMER<br />0 FINDINGS</span></div><p>CI, security, and package verification</p></article>
-        </>}
-        integrationOutputs={["Package contract", "API documentation", "Runnable examples", "Hardened CI", "Security review", "Release plan"]}
-        failureTitle="The first release candidate was not yet trustworthy."
-        failureDetail="Independent review rejected gaps between the package promise, documentation, consumer install path, and assurance evidence."
-        failureHref="/demo/tiny-slug/release/security-review.md"
-        finalStats={[{ value: "9 / 9", label: "PACKAGE TESTS" }, { value: "0", label: "RUNTIME DEPS" }, { value: "0", label: "FINDINGS" }, { value: "1", label: "CLEAN CONSUMER" }]}
         thread={openSourceThread}
         onOpenThread={() => setThreadOpen(true)}
       />
 
-      <section className="demo-artifacts release-artifacts" id="artifacts">
+      <section className="demo-artifacts release-artifacts" id="artifacts" aria-label="Outcome artifacts">
         <header className="demo-artifacts-title">
           <div><p className="eyebrow">ARTIFACTS PRODUCED</p><h2>Inspect the<br /><em>actual repository.</em></h2></div>
           <p>The package contract, source, documentation, workflows, release evidence, and complete public Codex transcript are preserved below.</p>
@@ -1276,6 +1127,15 @@ function OpenSourceDemoPage() {
         <footer className="demo-artifacts-footer"><p>Prepared locally. Nothing was published, pushed, tagged, or changed externally.</p><a href="#top">BACK TO TOP ↑</a></footer>
       </section>
 
+      <DemoConversation
+        userIdea="I want to release tiny-slug, a tiny ASCII-only ESM slugifier."
+        possibleQuestion="When this is finished, what would make the release trustworthy to a consumer and a contributor?"
+        userOutcome="A clean package, API docs, runnable examples, CI, security review, and release plan—but do not publish, push, or tag anything."
+        packHref="/packs/open-source-release"
+        packLabel="Open-Source Release"
+        recommendation="It coordinates release engineering, documentation, CI, security assurance, and independent consumer verification."
+      />
+
       {threadOpen ? <ThreadTranscript thread={openSourceThread} rawHref="/demo/tiny-slug/CODEX-THREAD.md" outputHref="#artifacts" onClose={() => setThreadOpen(false)} /> : null}
     </main>
   );
@@ -1283,58 +1143,21 @@ function OpenSourceDemoPage() {
 
 function SoftwareDemoPage() {
   const [threadOpen, setThreadOpen] = useState(false);
-  const events: ReplayEvent[] = [
-    { actor: "CAPTAIN", title: "Brief locked", detail: "Three-item invariant, local-only boundary, and launch outputs confirmed." },
-    { actor: "POSSIBLE", title: "Pack compiled", detail: "Product, website, film, and release-readiness skills assembled." },
-    { actor: "CAPTAIN", title: "Workstreams spawned", detail: "Product, site, film, and release planning delegated independently." },
-    { actor: "SUBAGENTS", title: "Artifacts returned", detail: "The working app, site, film, and release plan returned for integration." },
-    { actor: "CAPTAIN", title: "Outcome assembled", detail: "All launch surfaces and exact verification commands were integrated." },
-    { actor: "REVIEWER", title: "Failure found", detail: "Fresh review overrode a false-green pass with accessibility failures." },
-    { actor: "REVIEWER", title: "Repair verified", detail: "Contrast, semantics, settled evidence, and L0–L8 verification passed." },
-  ];
 
   return (
     <main className="replay-page replay-page--software" id="top">
       <SiteNav label="Recorded run / Three" />
-      <RecordedIntakePrelude
-        eyebrow="PRESERVED INTAKE / BEFORE EXECUTION"
-        title="Before the build,"
-        accent="define launched."
-        description="This preserved run began with $possible, turned a rough product sentence into a concrete outcome, and waited for explicit approval before creating its local evaluation workspace."
-        userIdea="I want to launch Three, a local-first web app that helps people commit to exactly three things today."
-        possibleQuestion="Who is this for, and what must exist for you to consider it genuinely launched?"
-        userOutcome="Overloaded solo builders. I want the real app, launch site, product film, and release plan—without accounts, a backend, analytics, or deployment."
-        packHref="/packs/software-launch"
-        packLabel="Software Launch"
-        recommendation="It coordinates the product, launch website, demo film, release readiness, and fresh independent review."
-      />
-      <RecordedExecutionStage
-        eyebrow="RECORDED EXECUTION / AFTER CONFIRMATION"
-        title="After the yes,"
-        accent="watch the launch take shape."
-        description="A fresh Codex captain ran the then-current Software Launch pack in a throwaway project. This historical run predates today’s fit rule, which expects a working product; its website, film, failed review, repairs, and final L0–L8 receipts remain preserved below."
+      <DemoOutcomeHeader
+        eyebrow="SOFTWARE LAUNCH / VERIFIED OUTCOME"
+        title="A real product,"
+        accent="ready to open."
+        description="Use the browser product, open its launch site, watch the film, and inspect the release evidence from a preserved Software Launch run."
         metric="15 / 15 TESTS · 22 SECOND FILM"
-        packCode="SOFTWARE-LAUNCH"
-        briefTitle="Give overloaded solo builders a hard three-item boundary."
-        briefDetail="A real local-first product, launch site, film, and honest release plan."
-        skillCount={6}
-        outputCount={5}
-        events={events}
-        artifactCards={<>
-          <article className="replay-artifact replay-artifact--site"><header><span>01 / PRODUCT</span><strong>PASS</strong></header><img src="/demo/three/evidence/screenshots/product-desktop.png" alt="Three browser product produced by the product workstream" /><p>Working local-first three-item product</p></article>
-          <article className="replay-artifact replay-artifact--film"><header><span>02 / SITE</span><strong>PASS</strong></header><img src="/demo/three/evidence/screenshots/site-desktop.png" alt="Three launch website produced by the site workstream" /><p>Responsive, truthful launch narrative</p></article>
-          <article className="replay-artifact replay-artifact--cad"><header><span>03 / FILM</span><strong>PASS</strong></header><img src="/demo/three/film/stills/04-done.png" alt="Final frame from the Three launch film" /><p>22-second deterministic product film</p></article>
-        </>}
-        integrationOutputs={["Browser product", "Launch website", "Product film", "Release plan", "Verification evidence"]}
-        failureTitle="The first green build failed fresh review."
-        failureDetail="The reviewer found missing semantics, seven contrast failures, ambiguous metadata, and screenshots captured before transitions settled."
-        failureHref="/demo/three/evidence/failed-review-01/README.md"
-        finalStats={[{ value: "15 / 15", label: "PRODUCT TESTS" }, { value: "L0–L8", label: "LOCAL GATES" }, { value: "0", label: "NETWORK WRITES" }, { value: "1", label: "FAILURE REPAIRED" }]}
         thread={softwareThread}
         onOpenThread={() => setThreadOpen(true)}
       />
 
-      <section className="demo-artifacts software-artifacts" id="artifacts">
+      <section className="demo-artifacts software-artifacts" id="artifacts" aria-label="Outcome artifacts">
         <header className="demo-artifacts-title">
           <div><p className="eyebrow">ARTIFACTS PRODUCED</p><h2>Use the product.<br /><em>Watch the launch.</em></h2></div>
           <p>These are the actual production builds and rendered film from the throwaway project. The browser app remains interactive inside this page and stores only its versioned record in local storage.</p>
@@ -1376,64 +1199,33 @@ function SoftwareDemoPage() {
         <footer className="demo-artifacts-footer"><p>Prepared and verified locally. Nothing was deployed, published, or sent externally.</p><a href="#top">BACK TO TOP ↑</a></footer>
       </section>
 
+      <DemoConversation
+        userIdea="I want to launch Three, a local-first web app that helps people commit to exactly three things today."
+        possibleQuestion="Who is this for, and what must exist for you to consider it genuinely launched?"
+        userOutcome="Overloaded solo builders. I want the real app, launch site, product film, and release plan—without accounts, a backend, analytics, or deployment."
+        packHref="/packs/software-launch"
+        packLabel="Software Launch"
+        recommendation="It coordinates the product, launch website, demo film, release readiness, and fresh independent review."
+      />
+
       {threadOpen ? <ThreadTranscript thread={softwareThread} rawHref="/demo/three/CODEX-THREAD.md" outputHref="#artifacts" onClose={() => setThreadOpen(false)} /> : null}
     </main>
   );
 }
 
 function PlayableGameDemoPage() {
-  const events: ReplayEvent[] = [
-    { actor: "CAPTAIN", title: "Outcome locked", detail: "One paper plane, one storm, one replayable rule." },
-    { actor: "POSSIBLE", title: "Sources reviewed", detail: "Three.js, game feel, touch, interface, and browser review skills inspected." },
-    { actor: "POSSIBLE", title: "Pack compiled", detail: "Three owned workstreams and one independent review contract assembled." },
-    { actor: "RUNTIME", title: "Flight built", detail: "Three.js scene, gates, scoring, collision, and state transitions implemented." },
-    { actor: "CAPTAIN", title: "Experience assembled", detail: "HUD, pointer, touch, keyboard, pause, mute, and restart joined the core loop." },
-    { actor: "REVIEW", title: "Failure found", detail: "The first sound toggle controlled no sound and failed its own interface promise." },
-    { actor: "CAPTAIN", title: "Repair verified", detail: "Procedural gate and collision tones now obey the mute control." },
-  ];
-
   return (
     <main className="replay-page replay-page--game" id="top">
       <SiteNav label="Live pack proof / Fold" />
-      <RecordedIntakePrelude
-        eyebrow="PACK PROOF / ILLUSTRATIVE INTAKE"
-        title="Before the build,"
-        accent="find the fun."
-        description="This is the conversation Possible would use to narrow a broad game idea into one finished core loop before recommending a recipe."
-        userIdea="I want to make a tiny browser game where you pilot a paper plane through a storm."
-        possibleQuestion="What should a player understand in five seconds—and what single action should feel good enough to repeat?"
-        userOutcome="Steer through storm gates, build a score, crash, and instantly try again. It should work with pointer, touch, or keys."
-        packHref="/packs/playable-web-game"
-        packLabel="Playable Web Game"
-        recommendation="It coordinates the core loop, Three.js runtime, responsive controls, game feel, and an independent browser review."
-      />
-      <RecordedExecutionStage
-        eyebrow="LIVE PROOF / BUILT IN THE POSSIBLE PRODUCT THREAD"
-        title="After the yes,"
-        accent="make it playable."
+      <DemoOutcomeHeader
+        eyebrow="PLAYABLE WEB GAME / LIVE PACK PROOF"
+        title="A strange idea,"
+        accent="made playable."
         description="Fold is a real Three.js reference build made alongside the new pack. It proves the promised output and interaction shape; it is not presented as a clean-room pack evaluation."
         metric="1 LOOP · 3 INPUT MODES"
-        packCode="PLAYABLE-WEB-GAME"
-        briefTitle="Thread a paper plane through the orange before the storm closes in."
-        briefDetail="One complete loop. No accounts, economy, level editor, multiplayer, analytics, or external assets."
-        skillCount={5}
-        outputCount={5}
-        events={events}
-        artifactCards={<>
-          <article className="replay-artifact replay-artifact--site replay-artifact--game"><header><span>01 / CORE LOOP</span><strong>PLAYABLE</strong></header><div className="game-loop-mark"><i /><b>→</b><i /><b>→</b><i /></div><p>Steer · clear gate · score · crash · retry</p></article>
-          <article className="replay-artifact replay-artifact--film replay-artifact--game"><header><span>02 / THREE.JS</span><strong>LIVE</strong></header><div className="game-runtime-mark"><i /><span>WEBGL</span><b>3D</b></div><p>Procedural world with no external game assets</p></article>
-          <article className="replay-artifact replay-artifact--cad replay-artifact--game"><header><span>03 / CONTROLS</span><strong>3 MODES</strong></header><div className="replay-artifact-summary"><b>POINTER</b><b>TOUCH</b><b>KEYS</b><b>PAUSE</b></div><p>Responsive input and explicit game states</p></article>
-        </>}
-        integrationOutputs={["Playable browser game", "Core-loop brief", "Responsive HUD", "Input contract", "Review evidence"]}
-        failureTitle="The first mute control was only visual."
-        failureDetail="Review caught a real contract failure: the interface exposed sound state before the runtime produced any sound. Procedural feedback and mute behavior were added together."
-        failureHref="/demo/fold/review.md"
-        finalStats={[{ value: "1", label: "CORE LOOP" }, { value: "3", label: "INPUT MODES" }, { value: "0", label: "EXTERNAL ASSETS" }, { value: "1", label: "FAILURE REPAIRED" }]}
-        runLabel="LIVE PACK PROOF"
-        playLabel="Play build story"
       />
 
-      <section className="demo-artifacts game-artifacts" id="artifacts">
+      <section className="demo-artifacts game-artifacts" id="artifacts" aria-label="Outcome artifacts">
         <header className="demo-artifacts-title">
           <div><p className="eyebrow">PLAYABLE ARTIFACT</p><h2>Don’t watch it.<br /><em>Fly it.</em></h2></div>
           <p>The outcome is the game itself. Start a flight below, then open it full-screen or inspect the brief and review evidence.</p>
@@ -1454,195 +1246,59 @@ function PlayableGameDemoPage() {
 
         <footer className="demo-artifacts-footer"><p>A game pack should finish with a game—not a design document, a framework, or a list of ideas.</p><a href="/packs/playable-web-game">INSPECT THE PACK →</a></footer>
       </section>
+
+      <DemoConversation
+        userIdea="I want to make a tiny browser game where you pilot a paper plane through a storm."
+        possibleQuestion="What should a player understand in five seconds—and what single action should feel good enough to repeat?"
+        userOutcome="Steer through storm gates, build a score, crash, and instantly try again. It should work with pointer, touch, or keys."
+        packHref="/packs/playable-web-game"
+        packLabel="Playable Web Game"
+        recommendation="It coordinates the core loop, Three.js runtime, responsive controls, game feel, and an independent browser review."
+      />
     </main>
   );
 }
 
 function HardwareDemoPage() {
-  const events = [
-    { actor: "CAPTAIN", title: "Brief locked", detail: "Confirmed facts and boundaries written to outcome-brief.md." },
-    { actor: "POSSIBLE", title: "Pack compiled", detail: "Five reviewed skills composed into one Hardware Launch recipe." },
-    { actor: "CAPTAIN", title: "Workstreams spawned", detail: "Site, film, and CAD assigned to isolated subagents." },
-    { actor: "SUBAGENTS", title: "Artifacts returned", detail: "Three specialists returned real outputs and receipts." },
-    { actor: "CAPTAIN", title: "Outcome assembled", detail: "Website, film, CAD, and evidence collected into one inspectable result." },
-    { actor: "REVIEWER", title: "Failure found", detail: "Embedded site assets returned 404 when reviewed from the combined output." },
-    { actor: "REVIEWER", title: "Repair verified", detail: "Relative asset base fixed; browser and artifact audits passed." },
-  ] as const;
-  const [step, setStep] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(false);
   const [threadOpen, setThreadOpen] = useState(false);
-  const lastStep = events.length - 1;
-  const currentEvent = events[step] ?? events[0];
 
   useEffect(() => {
-    const target = new Set(["artifacts", "film-output", "hardware-output", "evidence-output"])
+    const target = new Set(["artifacts", "film-output", "hardware-output", "evidence-output", "conversation"])
       .has(window.location.hash.slice(1))
       ? document.querySelector(window.location.hash)
       : null;
     if (target) window.requestAnimationFrame(() => target.scrollIntoView());
   }, []);
 
-  useEffect(() => {
-    if (!isPlaying) return;
-    if (step >= lastStep) {
-      setIsPlaying(false);
-      return;
-    }
-    const timer = window.setTimeout(() => setStep((value) => Math.min(value + 1, lastStep)), 1900);
-    return () => window.clearTimeout(timer);
-  }, [isPlaying, lastStep, step]);
-
-  function togglePlayback() {
-    if (step >= lastStep) setStep(0);
-    setIsPlaying((value) => !value);
-  }
-
   return (
     <main className="replay-page" id="top">
       <SiteNav label="Recorded run / Still" />
-      <DemoIntakePrelude />
-      <section className="replay-stage">
-        <header className="replay-title">
-          <div>
-            <p className="eyebrow">RECORDED EXECUTION / AFTER CONFIRMATION</p>
-            <h1>After the yes,<br /><em>watch it become real.</em></h1>
-          </div>
-          <div className="replay-title-meta">
-            <p>After the outcome was confirmed, a fresh Codex captain ran Possible’s Hardware Launch pack against the fictional Still brief. Every event and artifact below comes from that preserved execution.</p>
-            <div><span><i /> LOCAL RUN COMPLETE</span><strong>58 / 58 ARTIFACT CHECKS</strong></div>
-            <div className="replay-proof-actions">
-              <button type="button" onClick={() => setThreadOpen(true)}>VIEW FULL CODEX THREAD <span>31 MESSAGES</span></button>
-              <a href="#artifacts">SHOW OUTPUT ↓</a>
-            </div>
-          </div>
-        </header>
-
-        <div className="replay-window">
-          <header className="replay-window-bar">
-            <div><i /><i /><i /></div>
-            <strong>CODEX / POSSIBLE / HARDWARE-LAUNCH</strong>
-            <span>RECORDED REAL RUN</span>
-          </header>
-
-          <aside className="replay-activity">
-            <header><span>CODEX ACTIVITY</span><strong>0{step + 1} / 0{events.length}</strong></header>
-            <div className="replay-event-list">
-              {events.map((event, index) => (
-                <button
-                  type="button"
-                  className={index === step ? "is-current" : index < step ? "is-past" : ""}
-                  aria-current={index === step ? "step" : undefined}
-                  onClick={() => { setStep(index); setIsPlaying(false); }}
-                  key={event.title}
-                >
-                  <span>0{index + 1}</span>
-                  <div><small>{event.actor}</small><strong>{event.title}</strong><p>{event.detail}</p></div>
-                </button>
-              ))}
-            </div>
-            <footer>
-              <button type="button" onClick={() => setThreadOpen(true)}>VIEW FULL THREAD →</button>
-              <a href="/demo/still/OUTCOME-RECEIPT.md" target="_blank" rel="noreferrer">VIEW RECEIPT ↗</a>
-              <a href="#artifacts">VIEW ARTIFACTS ↓</a>
-            </footer>
-          </aside>
-
-          <section className={`replay-canvas replay-step-${step}`} aria-live="polite">
-            <header><span>ARTIFACT CANVAS</span><strong>{currentEvent.actor} / {currentEvent.title.toUpperCase()}</strong></header>
-            <div className="replay-scene">
-              <article className="replay-brief-card">
-                <span>OUTCOME BRIEF / STILL</span>
-                <h2>Create a launch for a palm-sized e-ink focus device.</h2>
-                <p>Start a focused block without opening your phone.</p>
-              </article>
-
-              <article className="replay-recipe-card">
-                <header><span>POSSIBLE PACK</span><strong>HARDWARE-LAUNCH@1</strong></header>
-                <div><b>5</b><span>REVIEWED<br />SKILLS</span><i>→</i><b>3</b><span>PARALLEL<br />SUBAGENTS</span><i>→</i><b>5</b><span>INTEGRATED<br />OUTPUTS</span></div>
-              </article>
-
-              <div className="replay-artifacts">
-                <article className="replay-artifact replay-artifact--site">
-                  <header><span>01 / SITE</span><strong>{step >= 3 ? "PASS" : "RUNNING"}</strong></header>
-                  <img src="/demo/still/evidence/screenshots/embedded-site-desktop.png" alt="Still launch website produced by the site workstream" />
-                  <p>Responsive launch story + local-only waitlist</p>
-                </article>
-                <article className="replay-artifact replay-artifact--film">
-                  <header><span>02 / FILM</span><strong>{step >= 3 ? "PASS" : "RUNNING"}</strong></header>
-                  <video
-                    controls
-                    muted
-                    playsInline
-                    preload="metadata"
-                    poster="/demo/still/film/still-launch-preview.png"
-                    src="/demo/still/film/still-launch.mp4"
-                  />
-                  <p>24 seconds · 1080p · deterministic Remotion source</p>
-                </article>
-                <article className="replay-artifact replay-artifact--cad">
-                  <header><span>03 / CAD</span><strong>{step >= 3 ? "PASS*" : "RUNNING"}</strong></header>
-                  <img src="/demo/still/hardware/still-iso.png" alt="Still STEP-first exterior CAD concept" />
-                  <p>STEP + STL + GLB · measured geometry receipt</p>
-                </article>
-              </div>
-
-              <article className="replay-integration">
-                <header><span>CAPTAIN / ASSEMBLED OUTCOME</span><strong>5 OUTPUTS PRESENT</strong></header>
-                <div>
-                  <p><span>01</span><strong>Launch website</strong><i>PASS</i></p>
-                  <p><span>02</span><strong>Launch film</strong><i>PASS</i></p>
-                  <p><span>03</span><strong>Prototype CAD</strong><i>PASS*</i></p>
-                  <p><span>04</span><strong>Evidence receipts</strong><i>PASS</i></p>
-                  <p><span>05</span><strong>Verification traces</strong><i>PASS</i></p>
-                </div>
-              </article>
-
-              <article className="replay-review-card replay-review-card--failure">
-                <span>FRESH REVIEW / MATERIAL FAILURE</span>
-                <h2>Embedded site assets returned 404.</h2>
-                <p>The site passed alone but failed inside the integrated room. The reviewer rejected the outcome.</p>
-                <a href="/demo/still/verification/browser-results-initial-failure.json" target="_blank" rel="noreferrer">OPEN FAILED TRACE ↗</a>
-              </article>
-
-              <article className="replay-review-card replay-review-card--passed">
-                <span>REPAIR VERIFIED / OUTCOME COMPLETE</span>
-                <h2>Real outputs.<br />Real review.</h2>
-                <div>
-                  <p><strong>58 / 58</strong><span>ARTIFACT CHECKS</span></p>
-                  <p><strong>50 / 50</strong><span>BROWSER RESPONSES</span></p>
-                  <p><strong>0</strong><span>NETWORK WRITES</span></p>
-                  <p><strong>1</strong><span>FAILURE REPAIRED</span></p>
-                </div>
-                <div className="replay-final-actions">
-                  <button type="button" onClick={() => setThreadOpen(true)}>VIEW FULL THREAD →</button>
-                  <a href="#artifacts">SHOW OUTPUT ↓</a>
-                </div>
-              </article>
-            </div>
-
-            <footer className="replay-controls">
-              <div><span>NOW PLAYING</span><strong>{currentEvent.title}</strong></div>
-              <div className="replay-progress" aria-label={`Replay step ${step + 1} of ${events.length}`}>
-                {events.map((event, index) => <i className={index <= step ? "is-filled" : ""} key={event.title} />)}
-              </div>
-              <div className="replay-buttons">
-                <button type="button" aria-label="Previous event" onClick={() => { setStep((value) => Math.max(0, value - 1)); setIsPlaying(false); }} disabled={step === 0}>←</button>
-                <button type="button" className="replay-play" onClick={togglePlayback}>{isPlaying ? "Pause" : step === lastStep ? "Replay" : "Play real run"}</button>
-                <button type="button" aria-label="Next event" onClick={() => { setStep((value) => Math.min(lastStep, value + 1)); setIsPlaying(false); }} disabled={step === lastStep}>→</button>
-              </div>
-            </footer>
-          </section>
-        </div>
-      </section>
+      <DemoOutcomeHeader
+        eyebrow="HARDWARE LAUNCH / VERIFIED OUTCOME"
+        title="A focus device,"
+        accent="made believable."
+        description="Open the launch website, watch the product film, inspect every CAD view, and audit the receipts from a preserved Hardware Launch run."
+        metric="58 / 58 ARTIFACT CHECKS"
+        thread={demoThread}
+        onOpenThread={() => setThreadOpen(true)}
+      />
       <DemoArtifacts />
-      {threadOpen ? <ThreadTranscript thread={demoThread} rawHref="/demo/still/CODEX-THREAD.md" onClose={() => setThreadOpen(false)} /> : null}
+      <DemoConversation
+        userIdea="I want to make a small device that helps me focus without opening my phone."
+        possibleQuestion="Interesting — it sounds like a physical focus ritual, not another app. When this is finished, what would make it feel real to you?"
+        userOutcome="A believable launch: the device concept, a website, and a short product film."
+        packHref="/packs/hardware-launch"
+        packLabel="Hardware Launch"
+        recommendation="It coordinates the site, film, prototype CAD, waitlist contract, and independent review."
+      />
+      {threadOpen ? <ThreadTranscript thread={demoThread} rawHref="/demo/still/CODEX-THREAD.md" outputHref="#artifacts" onClose={() => setThreadOpen(false)} /> : null}
     </main>
   );
 }
 
 function DemoArtifacts() {
   return (
-    <section className="demo-artifacts" id="artifacts">
+    <section className="demo-artifacts" id="artifacts" aria-label="Outcome artifacts">
       <header className="demo-artifacts-title">
         <div>
           <p className="eyebrow">ARTIFACTS PRODUCED</p>

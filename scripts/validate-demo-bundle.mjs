@@ -45,6 +45,7 @@ for (const required of [
   "hardware/still.step",
   "evidence/final-receipt.md",
   "verification/browser-results.json",
+  "CODEX-THREAD.md",
 ]) await requirePath(required);
 
 for (const reference of localReferences(index)) await requirePath(reference);
@@ -145,6 +146,7 @@ if (packageJson.name !== "tiny-slug" || packageJson.type !== "module") {
 }
 
 const publicTranscripts = await Promise.all([
+  readFile(path.join(root, "CODEX-THREAD.md"), "utf8"),
   readFile(path.join(threeRoot, "CODEX-THREAD.md"), "utf8"),
   readFile(path.join(releaseRoot, "CODEX-THREAD.md"), "utf8"),
 ]);

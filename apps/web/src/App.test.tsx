@@ -10,6 +10,10 @@ afterEach(() => {
   window.history.pushState({}, "", "/");
 });
 
+function expectBefore(first: Element, second: Element) {
+  expect(first.compareDocumentPosition(second) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+}
+
 describe("Possible", () => {
   it("puts installation and the complete pack index in one clear starting journey", () => {
     const { container } = render(<App />);
@@ -357,30 +361,44 @@ describe("Possible", () => {
     expect(screen.getByRole("link", { name: /PLAYABLE WEB GAME.*FOLD/i })).toHaveAttribute("href", "/demo/game");
   });
 
+  it("keeps every outcome-first demo free of automated accessibility violations", async () => {
+    for (const route of ["/demo/hardware", "/demo/software", "/demo/open-source", "/demo/game"]) {
+      window.history.pushState({}, "", route);
+      const { container, unmount } = render(<App />);
+      expect(await axe(container.querySelector(".demo-outcome-header")!)).toHaveNoViolations();
+      expect(await axe(screen.getByRole("region", { name: "$possible conversation" }))).toHaveNoViolations();
+      unmount();
+    }
+  });
+
   it("presents the game pack as a playable proof without calling it a clean-room run", () => {
     window.history.pushState({}, "", "/demo/game");
     render(<App />);
-    expect(screen.getByRole("heading", { name: /Before the build.*find the fun/i })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: /After the yes.*make it playable/i })).toBeInTheDocument();
-    expect(screen.getAllByRole("link", { name: /Playable Web Game pack/i })[0]).toHaveAttribute("href", "/packs/playable-web-game");
-    expect(screen.getByText("LIVE PACK PROOF")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /A strange idea.*made playable/i })).toBeInTheDocument();
     expect(screen.getByText(/not presented as a clean-room pack evaluation/i)).toBeInTheDocument();
+    const artifacts = screen.getByRole("region", { name: "Outcome artifacts" });
+    const conversation = screen.getByRole("region", { name: "$possible conversation" });
+    expectBefore(artifacts, conversation);
+    expect(within(conversation).getByText("$possible")).toBeInTheDocument();
+    expect(within(conversation).getByRole("link", { name: /Playable Web Game pack/i })).toHaveAttribute("href", "/packs/playable-web-game");
+    expect(within(conversation).getByText("Yes, proceed.")).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /View full Codex thread/i })).not.toBeInTheDocument();
     expect(screen.getByTitle("Fold paper plane game")).toHaveAttribute("src", "/demo/game/play");
     expect(screen.getByRole("link", { name: /PLAY FULL SCREEN/i })).toHaveAttribute("href", "/demo/game/play");
     expect(screen.getByRole("link", { name: /What review caught/i })).toHaveAttribute("href", "/demo/fold/review.md");
   });
 
-  it("replays the real Hardware Launch run from brief to verified outcome", async () => {
+  it("shows the Hardware Launch outcome before its short conversation and preserved thread", async () => {
     window.history.pushState({}, "", "/demo/hardware");
     render(<App />);
-    expect(screen.getByRole("heading", { name: /After the yes/i })).toBeInTheDocument();
-    expect(screen.getByText("CURRENT ENTRY FLOW / ILLUSTRATIVE INTAKE")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /Hardware Launch pack/i })).toHaveAttribute("href", "/packs/hardware-launch");
-    expect(screen.getByText(/repo-local ingredient skill installation.*External actions still require separate approval/i)).toBeInTheDocument();
-    expect(screen.getByText("Yes, proceed.", { selector: ".demo-intake-confirm span" })).toBeInTheDocument();
-    expect(screen.getByText("RECORDED REAL RUN")).toBeInTheDocument();
-    expect(screen.getByText("Brief locked", { selector: ".replay-controls strong" })).toBeInTheDocument();
-    expect(screen.getAllByRole("link", { name: /Show output/i })[0]).toHaveAttribute("href", "#artifacts");
+    expect(screen.getByRole("heading", { name: /A focus device.*made believable/i })).toBeInTheDocument();
+    const artifacts = screen.getByRole("region", { name: "Outcome artifacts" });
+    const conversation = screen.getByRole("region", { name: "$possible conversation" });
+    expectBefore(artifacts, conversation);
+    expect(within(conversation).getByText("$possible")).toBeInTheDocument();
+    expect(within(conversation).getByRole("link", { name: /Hardware Launch pack/i })).toHaveAttribute("href", "/packs/hardware-launch");
+    expect(within(conversation).getByText(/repo-local ingredient skill installation.*External actions still require separate approval/i)).toBeInTheDocument();
+    expect(within(conversation).getByText("Yes, proceed.")).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: /One conversation.*Real outputs/i })).toBeInTheDocument();
     expect(screen.getByTitle("Still launch website")).toHaveAttribute("src", "/demo/still/site/index.html");
     expect(screen.getByAltText("Isometric CAD view of the Still focus device concept")).toBeInTheDocument();
@@ -396,23 +414,17 @@ describe("Possible", () => {
     expect(screen.getByText(/fresh browser review has found a material integration failure/i)).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /Raw \.md/i })).toHaveAttribute("href", "/demo/still/CODEX-THREAD.md");
     await userEvent.click(screen.getByRole("button", { name: /Close full Codex thread/i }));
-
-    const next = screen.getByRole("button", { name: "Next event" });
-    for (let index = 0; index < 6; index += 1) await userEvent.click(next);
-
-    expect(screen.getByRole("heading", { name: /Real outputs.*Real review/i })).toBeInTheDocument();
-    expect(screen.getByText("58 / 58", { selector: ".replay-review-card strong" })).toBeInTheDocument();
-    expect(screen.getByText("0", { selector: ".replay-review-card strong" })).toBeInTheDocument();
-    expect(screen.getAllByRole("link", { name: /Show output/i })[0]).toHaveAttribute("href", "#artifacts");
   });
 
   it("shows the real Software Launch product, site, film, evidence, and thread", async () => {
     window.history.pushState({}, "", "/demo/software");
     render(<App />);
-    expect(screen.getByRole("heading", { name: /Before the build.*define launched/i })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: /After the yes.*watch the launch take shape/i })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /Software Launch pack/i })).toHaveAttribute("href", "/packs/software-launch");
-    expect(screen.getByText("Brief locked", { selector: ".replay-controls strong" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /A real product.*ready to open/i })).toBeInTheDocument();
+    const artifacts = screen.getByRole("region", { name: "Outcome artifacts" });
+    const conversation = screen.getByRole("region", { name: "$possible conversation" });
+    expectBefore(artifacts, conversation);
+    expect(within(conversation).getByRole("link", { name: /Software Launch pack/i })).toHaveAttribute("href", "/packs/software-launch");
+    expect(within(conversation).getByText("Yes, proceed.")).toBeInTheDocument();
     expect(screen.getByTitle("Three local-first product")).toHaveAttribute("src", "/demo/three/product/index.html");
     expect(screen.getByTitle("Three launch website")).toHaveAttribute("src", "/demo/three/site/index.html");
     expect(document.querySelector("video source")).toHaveAttribute("src", "/demo/three/film/three-demo.mp4");
@@ -425,15 +437,20 @@ describe("Possible", () => {
     expect(screen.getByRole("link", { name: /Raw \.md/i })).toHaveAttribute("href", "/demo/three/CODEX-THREAD.md");
   });
 
-  it("shows the real Open-Source Release repository and review evidence", () => {
+  it("shows the Open-Source Release outcome before its conversation and preserved thread", async () => {
     window.history.pushState({}, "", "/demo/open-source");
     render(<App />);
-    expect(screen.getByRole("heading", { name: /Before the release.*define trust/i })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: /After the yes.*watch the release harden/i })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /Open-Source Release pack/i })).toHaveAttribute("href", "/packs/open-source-release");
-    expect(screen.getByText("Brief locked", { selector: ".replay-controls strong" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /A tiny package.*ready to trust/i })).toBeInTheDocument();
+    const artifacts = screen.getByRole("region", { name: "Outcome artifacts" });
+    const conversation = screen.getByRole("region", { name: "$possible conversation" });
+    expectBefore(artifacts, conversation);
+    expect(within(conversation).getByRole("link", { name: /Open-Source Release pack/i })).toHaveAttribute("href", "/packs/open-source-release");
+    expect(within(conversation).getByText("Yes, proceed.")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /OPEN SOURCE/i })).toHaveAttribute("href", "/demo/tiny-slug/index.js");
     expect(screen.getByRole("link", { name: /OPEN OUTCOME RECEIPT/i })).toHaveAttribute("href", "/demo/tiny-slug/.possible/outcome-receipt.md");
     expect(screen.getByRole("link", { name: /Complete public run/i })).toHaveAttribute("href", "/demo/tiny-slug/CODEX-THREAD.md");
+    await userEvent.click(screen.getByRole("button", { name: /View full Codex thread/i }));
+    expect(screen.getByRole("dialog", { name: /full Codex thread/i })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Raw \.md/i })).toHaveAttribute("href", "/demo/tiny-slug/CODEX-THREAD.md");
   });
 });
