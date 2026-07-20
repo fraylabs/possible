@@ -187,6 +187,21 @@ nav { height: 74px; padding: 0 3.5vw; border-bottom: 1px solid #aaa59a; display:
 .docs-glossary > div { padding: 19px 0; border-bottom: 1px solid #d7d3ca; display: grid; grid-template-columns: minmax(145px, .55fr) 1.45fr; gap: 30px; }
 .docs-glossary dt { color: #151411; font-size: 14px; font-weight: 600; }
 .docs-glossary dd { margin: 0; color: #5f5a53; font-size: 13px; line-height: 1.7; }
+.docs-role-summary { margin-top: 40px; border: 1px solid #151411; display: grid; grid-template-columns: repeat(2, 1fr); }
+.docs-role-summary > div { min-height: 220px; padding: 22px; display: flex; flex-direction: column; }
+.docs-role-summary > div:first-child { border-right: 1px solid #151411; background: #d9ff63; }
+.docs-role-summary > div:last-child { background: #151411; color: #f3f0e8; }
+.docs-role-summary span { font: 9px "DM Mono", monospace; letter-spacing: .08em; }
+.docs-role-summary > div:last-child span { color: #a8ff52; }
+.docs-role-summary strong { margin-top: auto; font-size: 21px; }
+.docs-role-summary p { margin: 10px 0 0; color: #514d47; font-size: 12px; line-height: 1.65; }
+.docs-role-summary > div:last-child p { color: #bdb8ae; }
+.docs-responsibility-list code { white-space: nowrap; }
+.docs-article .docs-handshake { counter-reset: handshake; }
+.docs-article .docs-handshake li { padding: 16px 0; grid-template-columns: 110px 1fr; align-items: center; counter-increment: handshake; }
+.docs-handshake li span { color: #777169; font: 9px "DM Mono", monospace; letter-spacing: .06em; }
+.docs-handshake li strong { display: flex; align-items: center; gap: 13px; }
+.docs-handshake li strong::before { content: "0" counter(handshake); color: #ff4d00; font: 9px "DM Mono", monospace; font-weight: 400; }
 .docs-do-dont { margin-top: 32px; display: grid; grid-template-columns: 1fr 1fr; border: 1px solid #d7d3ca; }
 .docs-do-dont > div { padding: 22px; }
 .docs-do-dont > div + div { border-left: 1px solid #d7d3ca; }
@@ -1256,6 +1271,9 @@ footer .wordmark span { color: #151411; }
   .docs-title h1 { font-size: 13vw; }
   .docs-title > p:last-child { font-size: 16px; }
   .docs-article ol li { grid-template-columns: 1fr; gap: 5px; }
+  .docs-role-summary { grid-template-columns: 1fr; }
+  .docs-role-summary > div:first-child { border-right: 0; border-bottom: 1px solid #151411; }
+  .docs-article .docs-handshake li { grid-template-columns: 85px 1fr; gap: 15px; }
   .docs-outcome-definition { padding: 22px; }
   .docs-outcome-example, .docs-glossary > div { grid-template-columns: 1fr; }
   .docs-outcome-example > div + div { border-top: 1px solid #d7d3ca; border-left: 0; }

@@ -58,6 +58,7 @@ for (const [relativePath, expected] of [
   ["blogs/why-possible/index.html", "The bottleneck is no longer what AI can do"],
   ["benchmarks/index.html", "How much of the project"],
   ["docs/index.html", "Build complete outcomes with Possible"],
+  ["docs/how-to-use/index.html", "How to use Possible"],
   ["demo/index.html", "Recorded outcomes"],
   ["demo/hardware/index.html", "Hardware Launch"],
   ["demo/software/index.html", "Software Launch"],
@@ -67,4 +68,4 @@ for (const [relativePath, expected] of [
   assert.match(visibleText(await html(relativePath)), new RegExp(expected));
 }
 
-console.log(`All ${outcomePacks.length + 11} public Next.js routes contain meaningful initial HTML.`);
+console.log(`All ${outcomePacks.length + 12} public Next.js routes contain meaningful initial HTML.`);

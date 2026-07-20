@@ -11,6 +11,7 @@ const staticPaths = [
   "/benchmarks",
   "/packs",
   "/docs",
+  "/docs/how-to-use",
   "/demo",
   "/demo/hardware",
   "/demo/software",

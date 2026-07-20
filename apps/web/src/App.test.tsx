@@ -155,6 +155,22 @@ describe("Possible", () => {
     expect(screen.getByRole("link", { name: /complete recorded Hardware Launch run/i })).toHaveAttribute("href", "/demo/hardware");
     expect(screen.getByRole("columnheader", { name: "Path" })).toBeInTheDocument();
     expect(screen.getByText("Codex does not recognize $possible")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "How to use Possible" })).toHaveAttribute("href", "/docs/how-to-use");
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("documents the human and agent sides of using Possible", async () => {
+    window.history.pushState({}, "", "/docs/how-to-use");
+    const { container } = render(<App />);
+    expect(screen.getByRole("heading", { name: "How to use Possible", level: 1 })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "For the human" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "What Possible does" })).toBeInTheDocument();
+    expect(screen.getByText(/You do not need to manually instruct the agent through these steps/i)).toBeInTheDocument();
+    expect(container.querySelectorAll(".docs-role-summary > div")).toHaveLength(2);
+    expect(container.querySelectorAll(".docs-responsibility-list")).toHaveLength(2);
+    expect(container.querySelectorAll(".docs-handshake li")).toHaveLength(7);
+    expect(screen.getByText(/Confirming a pack authorizes only the disclosed repo-local work/i)).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Explore outcome packs/i })).toHaveAttribute("href", "/packs");
     expect(await axe(container)).toHaveNoViolations();
   });
 

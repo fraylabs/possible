@@ -1713,37 +1713,44 @@ function DemoArtifacts() {
   );
 }
 
+function DocsSidebar({ active }: { active: "overview" | "how-to-use" }) {
+  return (
+    <aside className="docs-sidebar" aria-label="Documentation navigation">
+      <div className="docs-sidebar-title"><strong>Documentation</strong><span>V0.1</span></div>
+      <nav aria-label="Getting started">
+        <span>GETTING STARTED</span>
+        <a className={active === "overview" ? "is-active" : undefined} href="/docs">Overview</a>
+        <a className={active === "how-to-use" ? "is-active" : undefined} href="/docs/how-to-use">How to use Possible</a>
+        <a href="/docs#installation">Installation</a>
+        <a href="/docs#invoke">Invoke Possible</a>
+      </nav>
+      <nav aria-label="Core workflow">
+        <span>CORE WORKFLOW</span>
+        <a href="/docs#brainstorm">Brainstorm</a>
+        <a href="/docs#recommend">Recommendation</a>
+        <a href="/docs#confirm">Confirmation</a>
+        <a href="/docs#execute">Execution</a>
+        <a href="/docs#schedule">Scheduling</a>
+      </nav>
+      <nav aria-label="Reference">
+        <span>REFERENCE</span>
+        <a href="/docs#glossary">Glossary</a>
+        <a href="/docs#files">Project files</a>
+        <a href="/docs#safety">Safety boundary</a>
+        <a href="/docs#troubleshooting">Troubleshooting</a>
+        <a href="/packs">Pack gallery ↗</a>
+      </nav>
+    </aside>
+  );
+}
+
 function DocsPage() {
   return (
     <main className="docs-page">
       <SiteNav label="Docs / Getting started" />
 
       <div className="docs-shell">
-        <aside className="docs-sidebar" aria-label="Documentation navigation">
-          <div className="docs-sidebar-title"><strong>Documentation</strong><span>V0.1</span></div>
-          <nav aria-label="Getting started">
-            <span>GETTING STARTED</span>
-            <a className="is-active" href="#overview">Overview</a>
-            <a href="#installation">Installation</a>
-            <a href="#invoke">Invoke Possible</a>
-          </nav>
-          <nav aria-label="Core workflow">
-            <span>CORE WORKFLOW</span>
-            <a href="#brainstorm">Brainstorm</a>
-            <a href="#recommend">Recommendation</a>
-            <a href="#confirm">Confirmation</a>
-            <a href="#execute">Execution</a>
-            <a href="#schedule">Scheduling</a>
-          </nav>
-          <nav aria-label="Reference">
-            <span>REFERENCE</span>
-            <a href="#glossary">Glossary</a>
-            <a href="#files">Project files</a>
-            <a href="#safety">Safety boundary</a>
-            <a href="#troubleshooting">Troubleshooting</a>
-            <a href="/packs">Pack gallery ↗</a>
-          </nav>
-        </aside>
+        <DocsSidebar active="overview" />
 
         <article className="docs-article">
           <div className="docs-breadcrumb"><a href="/docs">DOCS</a><span>/</span><strong>GETTING STARTED</strong></div>
@@ -1921,7 +1928,7 @@ function DocsPage() {
 
           <nav className="docs-next" aria-label="Next documentation page">
             <span>NEXT</span>
-            <a href="/packs">Explore outcome packs <b>→</b></a>
+            <a href="/docs/how-to-use">How to use Possible <b>→</b></a>
           </nav>
         </article>
 
@@ -1938,6 +1945,103 @@ function DocsPage() {
           <a href="#files">Project files</a>
           <a href="#safety">Safety boundary</a>
           <a href="#troubleshooting">Troubleshooting</a>
+        </aside>
+      </div>
+      <SiteFooter />
+    </main>
+  );
+}
+
+function HowToUsePage() {
+  return (
+    <main className="docs-page">
+      <SiteNav label="Docs / How to use" />
+
+      <div className="docs-shell">
+        <DocsSidebar active="how-to-use" />
+
+        <article className="docs-article docs-how-to-use">
+          <div className="docs-breadcrumb"><a href="/docs">DOCS</a><span>/</span><strong>HOW TO USE POSSIBLE</strong></div>
+
+          <header className="docs-title" id="overview">
+            <p className="eyebrow">USING POSSIBLE</p>
+            <h1>How to use Possible</h1>
+            <p>Possible is a collaboration between a human who supplies intent and judgment, and an agent that turns that intent into coordinated, verifiable work.</p>
+          </header>
+
+          <aside className="docs-role-summary" aria-label="Human and Possible responsibilities">
+            <div><span>HUMAN</span><strong>Describe and decide.</strong><p>Choose the ambition, correct the understanding, confirm the proposed outcome, and approve consequential actions.</p></div>
+            <div><span>POSSIBLE</span><strong>Structure and coordinate.</strong><p>Clarify the outcome, recommend the path, assemble specialist capabilities, integrate the work, and return evidence.</p></div>
+          </aside>
+
+          <section id="human">
+            <h2>For the human</h2>
+            <p>You do not need to understand packs or write a complete specification before starting. Bring the ambition and the context only you can provide.</p>
+            <ol className="docs-responsibility-list">
+              <li><strong>Install Possible once</strong><span>From the project root, run <code>{installCommand}</code>, then open or reload the project in Codex.</span></li>
+              <li><strong>Start the conversation</strong><span>Type <code>$possible</code>. No form, pack name, or special prompt format is required.</span></li>
+              <li><strong>Describe the ambition</strong><span>Say what you want to make, launch, operate, release, or repeat in your own words. A rough idea is enough.</span></li>
+              <li><strong>Supply essential context</strong><span>Answer the questions that materially change the result. Correct assumptions instead of accepting a polished misunderstanding.</span></li>
+              <li><strong>Review the recommendation</strong><span>Check the stated outcome, proposed pack, expected outputs, acceptance checks, assumptions, and actions that remain gated.</span></li>
+              <li><strong>Confirm—or revise</strong><span>Say “yes, proceed” only when the recommendation is right. Otherwise, correct it and continue the conversation.</span></li>
+              <li><strong>Review the evidence</strong><span>Inspect the artifacts, verification results, limitations, and outcome receipt. Approve any external action separately.</span></li>
+            </ol>
+          </section>
+
+          <section id="possible">
+            <h2>What Possible does</h2>
+            <p>This behavior comes from the installed skill. You do not need to manually instruct the agent through these steps.</p>
+            <ol className="docs-responsibility-list">
+              <li><strong>Listen before selecting</strong><span>Possible reflects the ambition and clarifies material unknowns before mentioning packs or beginning work.</span></li>
+              <li><strong>Inspect what already exists</strong><span>When useful, it performs a read-only project check so the recommendation reflects the actual starting point.</span></li>
+              <li><strong>Define the outcome</strong><span>It states the observable end condition, intended audience, constraints, acceptance checks, assumptions, and unknowns.</span></li>
+              <li><strong>Recommend one primary pack</strong><span>It explains why the pack fits, what it should produce, how success will be checked, and what remains unauthorized.</span></li>
+              <li><strong>Wait for explicit confirmation</strong><span>A question, correction, reaction, or silence does not authorize execution.</span></li>
+              <li><strong>Assemble the capabilities</strong><span>After approval, it installs reviewed ingredient skills, records the approved pack and versions, and creates shared outcome state.</span></li>
+              <li><strong>Coordinate the work</strong><span>It assigns bounded workstreams, keeps them aligned to the same brief, and integrates their outputs.</span></li>
+              <li><strong>Verify before declaring success</strong><span>It runs acceptance checks, uses fresh review where appropriate, and returns an outcome receipt with failures, limitations, and unproven claims.</span></li>
+            </ol>
+          </section>
+
+          <section id="handshake">
+            <h2>The collaboration handshake</h2>
+            <p>The handoff between human judgment and agent execution is explicit. Work begins only after the recommendation is understood and approved.</p>
+            <ol className="docs-handshake" aria-label="Possible collaboration sequence">
+              <li><span>YOU</span><strong>Ambition</strong></li>
+              <li><span>POSSIBLE</span><strong>Clarified outcome</strong></li>
+              <li><span>POSSIBLE</span><strong>Pack recommendation</strong></li>
+              <li><span>YOU</span><strong>Confirmation</strong></li>
+              <li><span>AGENTS</span><strong>Execution</strong></li>
+              <li><span>POSSIBLE</span><strong>Verification</strong></li>
+              <li><span>YOU</span><strong>External decisions</strong></li>
+            </ol>
+          </section>
+
+          <section id="approval">
+            <h2>Approval has a boundary</h2>
+            <p>Confirming a pack authorizes only the disclosed repo-local work. It does not grant open-ended autonomy or permission to change the outside world.</p>
+            <aside className="docs-callout docs-callout--approval">
+              <strong>PACK CONFIRMATION</strong>
+              <p>{approvalDisclosure}</p>
+            </aside>
+            <aside className="docs-callout docs-callout--warning">
+              <strong>SEPARATE YES REQUIRED</strong>
+              <p>Deployment, publishing, scheduling changes, spending, outreach, fabrication, data collection, credential use, private-data sharing, and unsupported public claims remain separately gated.</p>
+            </aside>
+          </section>
+
+          <nav className="docs-next" aria-label="Next documentation page">
+            <span>NEXT</span>
+            <a href="/packs">Explore outcome packs <b>→</b></a>
+          </nav>
+        </article>
+
+        <aside className="docs-toc" aria-label="On this page">
+          <span>ON THIS PAGE</span>
+          <a href="#human">For the human</a>
+          <a href="#possible">What Possible does</a>
+          <a href="#handshake">The handshake</a>
+          <a href="#approval">Approval boundary</a>
         </aside>
       </div>
       <SiteFooter />
@@ -1968,6 +2072,7 @@ export function PossibleSite({ path: requestedPath }: { path?: string }) {
   if (path === "/benchmarks") return <BenchmarksPage />;
   if (path === "/packs") return <PacksPage />;
   if (path === "/docs") return <DocsPage />;
+  if (path === "/docs/how-to-use") return <HowToUsePage />;
   if (path === "/demo") return <DemoGalleryPage />;
   if (path === "/demo/game/play") return <Suspense fallback={<main className="plane-game-shell plane-game-loading"><span>FOLD / LOADING FLIGHT</span></main>}><PaperPlaneGame /></Suspense>;
   if (path === "/demo/game") return <PlayableGameDemoPage />;
