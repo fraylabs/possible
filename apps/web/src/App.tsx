@@ -64,7 +64,7 @@ const benchmarkSeries = [
   { id: "spec", label: "Spec-driven", clarification: 120, coordination: 45, execution: 165, verification: 60 },
   { id: "plan", label: "/plan", clarification: 75, coordination: 60, execution: 165, verification: 60 },
   { id: "goal", label: "/goal", clarification: 60, coordination: 45, execution: 165, verification: 60 },
-  { id: "possible", label: "$possible", clarification: 45, coordination: 30, execution: 120, verification: 45 },
+  { id: "possible", label: "$possible", clarification: 10, coordination: 5, execution: 90, verification: 30 },
 ] as const;
 const benchmarkMaxMinutes = 480;
 
@@ -437,8 +437,8 @@ function BenchmarksPage() {
         <header className="benchmark-hero editorial-header">
           <p className="eyebrow">A MODEL FROM POSSIBLE</p>
           <h1>How long to reach<br />the same <em>outcome?</em></h1>
-          <p className="editorial-dek">A mocked comparison of five ways to direct the same coding agent from a rough idea to verified work.</p>
-          <div className="benchmark-byline editorial-byline"><span>FRAY LABS · 21 JUL 2026</span><span>ILLUSTRATIVE MODEL · NOT MEASURED PERFORMANCE</span></div>
+          <p className="editorial-dek">An estimated comparison of five ways to direct the same coding agent from a rough idea to verified work.</p>
+          <div className="benchmark-byline editorial-byline"><span>FRAY LABS · 21 JUL 2026</span><span>WORKFLOW ESTIMATE · NOT MEASURED PERFORMANCE</span></div>
         </header>
 
       <section className="benchmark-method" aria-labelledby="benchmark-method-heading">
@@ -446,20 +446,20 @@ function BenchmarksPage() {
           <span>SAME START · SAME FINISH</span>
           <h2 id="benchmark-method-heading">Build a complete daily-focus web app from an empty project.</h2>
         </div>
-        <p>The clock starts with a rough ambition and stops when one complete user flow works, tests pass, and reviewable evidence exists. Deployment is outside the outcome. The values below are deliberately mocked to make the orchestration hypothesis visible.</p>
+        <p>The clock starts with a rough ambition and stops when one complete user flow works, tests pass, and reviewable evidence exists. Deployment is outside the outcome. The estimates model the coordination each workflow asks from the human and agent.</p>
       </section>
 
       <section className="benchmark-chart" aria-labelledby="benchmark-chart-heading">
         <header>
-          <div><span>MOCKED ELAPSED TIME</span><h2 id="benchmark-chart-heading">Time to verified outcome</h2></div>
-          <p id="benchmark-chart-description">Each bar uses the same eight-hour scale. Segment labels show modeled minutes.</p>
+          <div><span>ESTIMATED ELAPSED TIME</span><h2 id="benchmark-chart-heading">Time to verified outcome</h2></div>
+          <p id="benchmark-chart-description">Each bar uses the same eight-hour scale. Possible assumes five minutes of human coordination after the outcome is confirmed.</p>
         </header>
         <div className="benchmark-legend" aria-label="Time categories">
           {benchmarkPhases.map((phase) => <span className={`is-${phase.id}`} key={phase.id}><i />{phase.label}</span>)}
         </div>
         <figure aria-labelledby="benchmark-chart-heading" aria-describedby="benchmark-chart-description">
           <div className="benchmark-axis" aria-hidden="true"><span>0h</span><span>2h</span><span>4h</span><span>6h</span><span>8h</span></div>
-          <ul className="benchmark-bars" aria-label="Illustrative time to verified outcome by workflow">
+          <ul className="benchmark-bars" aria-label="Estimated time to verified outcome by workflow">
             {benchmarkSeries.map((series) => {
               const total = benchmarkPhases.reduce((sum, phase) => sum + series[phase.id], 0);
               const breakdown = benchmarkPhases.map((phase) => `${phase.label}: ${series[phase.id]} minutes`).join(", ");
@@ -478,12 +478,12 @@ function BenchmarksPage() {
               );
             })}
           </ul>
-          <figcaption>Illustrative values only. This chart is a hypothesis about coordination overhead, not evidence that one workflow is faster.</figcaption>
+          <figcaption>Estimated values only. This chart expresses the workflow hypothesis; measured clean-room runs are still required for a performance claim.</figcaption>
         </figure>
       </section>
 
       <section className="benchmark-hypothesis" aria-labelledby="benchmark-hypothesis-heading">
-        <span>WHAT THE MOCK IS SAYING</span>
+        <span>WHAT THE ESTIMATE IS SAYING</span>
         <h2 id="benchmark-hypothesis-heading">Possible does not make the model type twice as fast.</h2>
         <div>
           <p>It aims to remove time spent deciding the next prompt, rediscovering context, selecting capabilities, coordinating parallel work, and remembering which checks still matter.</p>

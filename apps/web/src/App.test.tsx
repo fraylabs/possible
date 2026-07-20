@@ -199,17 +199,18 @@ describe("Possible", () => {
     expect(await axe(container)).toHaveNoViolations();
   });
 
-  it("models time to outcome as an explicitly illustrative bar chart", async () => {
+  it("models time to outcome as an explicitly estimated bar chart", async () => {
     window.history.pushState({}, "", "/benchmarks");
     const { container } = render(<App />);
     expect(container.querySelector(".benchmarks-page.editorial-page .editorial-article .editorial-header .editorial-byline")).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: /How long to reach.*the same outcome/i, level: 1 })).toBeInTheDocument();
     expect(screen.getByText(/not measured performance/i)).toBeInTheDocument();
-    expect(screen.getByText(/values below are deliberately mocked/i)).toBeInTheDocument();
-    const chart = screen.getByRole("list", { name: "Illustrative time to verified outcome by workflow" });
+    expect(screen.getByText(/estimates model the coordination each workflow asks/i)).toBeInTheDocument();
+    const chart = screen.getByRole("list", { name: "Estimated time to verified outcome by workflow" });
     expect(within(chart).getAllByRole("listitem")).toHaveLength(5);
     expect(within(chart).getByRole("listitem", { name: /Prompt by prompt: 8h total/i })).toBeInTheDocument();
-    expect(within(chart).getByRole("listitem", { name: /\$possible: 4h total/i })).toBeInTheDocument();
+    expect(within(chart).getByRole("listitem", { name: /\$possible: 2h 15m total.*Human coordination: 5 minutes/i })).toBeInTheDocument();
+    expect(screen.queryByText(/mocked|what the mock/i)).not.toBeInTheDocument();
     expect(container.querySelectorAll(".benchmark-bar-track > i")).toHaveLength(20);
     expect(screen.getByText(/Possible does not make the model type twice as fast/i)).toBeInTheDocument();
     expect(screen.getByText(/product hypothesis—not a performance claim/i)).toBeInTheDocument();
