@@ -16,33 +16,28 @@ const plainText = (markup) => markup
 const homeMarkup = await html("index.html");
 const home = visibleText(homeMarkup);
 assert.match(home, /What do you want[\s\S]*to build[\s\S]*today\?/);
-assert.match(home, /Bring an idea or a live app\. Possible helps Codex build, ship, operate, and safely schedule complete outcomes\./);
+assert.match(home, /Bring an idea or a live app\. Possible gives Codex the skills, plan, and proof to build it, ship it, or keep it running\./);
 assert.match(home, /npx @fraylabs\/possible init/);
+assert.match(home, /id="packs"/);
+assert.match(home, /Complete recipes for[\s\S]*real outcomes/);
+assert.match(home, /You do not need to choose a pack/);
 assert.match(homeMarkup, /<meta property="og:image" content="https:\/\/possible\.sh\/og\.png"\/>/);
 assert.match(homeMarkup, /<meta name="twitter:image" content="https:\/\/possible\.sh\/og\.png"\/>/);
 assert.doesNotMatch(home, /<div id="root"><\/div>/);
 assert.doesNotMatch(home, /conversational outcome compiler|outcome lanes|ingredient skills|pack knowledge|workstreams/i);
-assert.doesNotMatch(home, /class="[^"]*(?:journey|recommendation-example|home-pack-preview)/);
+assert.doesNotMatch(home, /class="[^"]*(?:journey|recommendation-example|starter-card)/);
 
 const homeMain = home.match(/<main[\s\S]*<\/main>/i)?.[0];
 assert.ok(homeMain, "The homepage must contain a semantic main element");
 const homepageWordCount = plainText(homeMain).split(/\s+/).filter(Boolean).length;
-assert.ok(homepageWordCount <= 250, `Homepage must stay at or below 250 words; found ${homepageWordCount}`);
+assert.ok(homepageWordCount <= 300, `Homepage must stay at or below 300 words; found ${homepageWordCount}`);
 
-const starterActionTags = [...home.matchAll(/<a\b[^>]*aria-label="((?:See|Try) [^"]+)"[^>]*>/gi)]
-  .map((match) => ({ label: match[1], href: match[0].match(/href="([^"]+)"/i)?.[1] }));
-assert.equal(starterActionTags.length, 6, "The static homepage must expose exactly six labelled starter actions");
-
-for (const [title, href] of [
-  ["A strange 3D game", "/demo/game"],
-  ["A hardware product", "/demo/hardware"],
-  ["A software launch", "/demo/software"],
-]) {
-  assert.match(home, new RegExp(title.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
-  assert.deepEqual(starterActionTags.find(({ label }) => label === `See ${title} demo`), { label: `See ${title} demo`, href });
-  assert.deepEqual(starterActionTags.find(({ label }) => label === `Try ${title} with Codex`), { label: `Try ${title} with Codex`, href: "#try" });
-  await html(`${href.slice(1)}/index.html`);
+for (const pack of outcomePacks) {
+  const escapedName = pack.name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  assert.match(home, new RegExp(escapedName));
+  assert.match(home, new RegExp(`href="/packs/${pack.slug}"`));
 }
+assert.match(home, /href="\/packs"[^>]*>Open the full pack reference/);
 
 const catalog = visibleText(await html("packs/index.html"));
 assert.match(catalog, /Complete recipes/);

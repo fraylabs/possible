@@ -11,7 +11,7 @@ afterEach(() => {
 });
 
 describe("Possible", () => {
-  it("starts with one clear question, three real outcomes, and an immediate install path", () => {
+  it("puts installation and the complete pack index in one clear starting journey", () => {
     const { container } = render(<App />);
     expect(screen.getByRole("heading", { name: "What do you want to build today?", level: 1 })).toBeInTheDocument();
     expect(container.querySelectorAll("h1")).toHaveLength(1);
@@ -20,23 +20,23 @@ describe("Possible", () => {
     expect(screen.getByText("$possible", { selector: ".install-next code" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "DOCS" })).toHaveAttribute("href", "/docs");
     expect(screen.getByRole("link", { name: "BLOGS" })).toHaveAttribute("href", "/blogs");
-    const starters = screen.getByRole("list", { name: /Choose a starting point/i });
-    expect(within(starters).getAllByRole("listitem")).toHaveLength(3);
-    for (const [title, demoHref] of [
-      ["A strange 3D game", "/demo/game"],
-      ["A hardware product", "/demo/hardware"],
-      ["A software launch", "/demo/software"],
-    ]) {
-      expect(within(starters).getByRole("heading", { name: title })).toBeInTheDocument();
-      expect(within(starters).getByRole("link", { name: `See ${title} demo` })).toHaveAttribute("href", demoHref);
-      expect(within(starters).getByRole("link", { name: `Try ${title} with Codex` })).toHaveAttribute("href", "#try");
+    expect(screen.getByRole("link", { name: "PACKS" })).toHaveAttribute("href", "/#packs");
+    expect(screen.getByRole("heading", { name: /Complete recipes for.*real outcomes/i, level: 2 })).toBeInTheDocument();
+    expect(screen.getByText(/You do not need to choose a pack.*Possible recommends the fit/i)).toBeInTheDocument();
+    const packs = screen.getByRole("list", { name: "Packs Possible can recommend" });
+    expect(within(packs).getAllByRole("listitem")).toHaveLength(8);
+    for (const pack of outcomePacks) {
+      expect(within(packs).getByRole("link", { name: `${pack.name}, ${pack.lane[0].toUpperCase()}${pack.lane.slice(1)} pack` })).toHaveAttribute(
+        "href",
+        `/packs/${pack.slug}`,
+      );
     }
+    expect(screen.getByRole("link", { name: /Open the full pack reference/i })).toHaveAttribute("href", "/packs");
     expect(container.querySelector(".journey")).not.toBeInTheDocument();
     expect(container.querySelector(".recommendation-example")).not.toBeInTheDocument();
-    expect(container.querySelector(".home-pack-preview")).not.toBeInTheDocument();
     expect(screen.queryByRole("group", { name: /Filter outcome packs by lane/i })).not.toBeInTheDocument();
     expect(container.querySelectorAll(".quick-path li")).toHaveLength(3);
-    expect(container.querySelector("main")).not.toHaveTextContent(/conversational outcome compiler|outcome lanes|ingredient skills|pack knowledge|workstreams/i);
+    expect(container.querySelector("main")).not.toHaveTextContent(/conversational outcome compiler|outcome lanes|pack knowledge|workstreams/i);
   });
 
   it("collects Possible writing under one blogs index", async () => {

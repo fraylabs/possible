@@ -54,29 +54,6 @@ const gallerySlugs = [
   "marketing-operations",
 ] as const;
 const galleryPacks = gallerySlugs.map((slug) => outcomePacks.find((pack) => pack.slug === slug)!).filter(Boolean);
-const starterOutcomes = [
-  {
-    id: "game",
-    label: "PLAY / 01",
-    title: "A strange 3D game",
-    detail: "Fly a paper plane through a storm.",
-    demoHref: "/demo/game",
-  },
-  {
-    id: "hardware",
-    label: "LAUNCH / 02",
-    title: "A hardware product",
-    detail: "Turn an e-ink device idea into CAD, site, and film.",
-    demoHref: "/demo/hardware",
-  },
-  {
-    id: "software",
-    label: "SHIP / 03",
-    title: "A software launch",
-    detail: "See a tested product, site, film, and release evidence.",
-    demoHref: "/demo/software",
-  },
-] as const;
 const benchmarkPhases = [
   { id: "clarification", label: "Clarification" },
   { id: "coordination", label: "Human coordination" },
@@ -128,7 +105,7 @@ function SiteNav({ label }: { label?: string }) {
         <a href="/">START</a>
         <a href="/blogs">BLOGS</a>
         <a href="/benchmarks">BENCH</a>
-        <a href="/packs">PACKS</a>
+        <a href="/#packs">PACKS</a>
         <a href="/docs">DOCS</a>
         <a href="/demo">DEMO</a>
         <a href="https://github.com/fraylabs/possible" target="_blank" rel="noreferrer">SOURCE ↗</a>
@@ -159,6 +136,7 @@ function CreatePage() {
           <p>Bring an idea or a live app. Possible gives Codex the skills, plan, and proof to build it, ship it, or keep it running.</p>
           <div className="build-hero-actions">
             <a className="button-link" href="#try">Try with Codex <span>↓</span></a>
+            <a className="text-link" href="#packs">Browse packs ↓</a>
             <a className="text-link" href="/demo">See real outcomes →</a>
           </div>
         </div>
@@ -176,21 +154,37 @@ function CreatePage() {
           </a>
         </div>
 
-        <div className="starter-chooser">
-          <h2 className="sr-only" id="starter-heading">Choose a starting point or bring your own idea</h2>
-          <ul className="starter-grid" aria-labelledby="starter-heading">
-            {starterOutcomes.map((starter) => (
-            <li className={`starter-card starter-card--${starter.id}`} key={starter.id}>
-              <a className="starter-card-main" href={starter.demoHref} aria-label={`See ${starter.title} demo`}>
-                <header><span>{starter.label}</span><strong>OPEN DEMO ↗</strong></header>
-                <div className="starter-card-art" aria-hidden="true"><i /><i /><i /><b /></div>
-                <div><h3>{starter.title}</h3><p>{starter.detail}</p></div>
-              </a>
-              <footer><a href="#try" aria-label={`Try ${starter.title} with Codex`}>Try with Codex <span>↓</span></a></footer>
-            </li>
-            ))}
-          </ul>
+      </section>
+
+      <section className="home-pack-index" id="packs" aria-labelledby="home-packs-heading">
+        <header>
+          <div>
+            <span>PACKS POSSIBLE CAN RECOMMEND / {String(galleryPacks.length).padStart(2, "0")}</span>
+            <h2 id="home-packs-heading">Complete recipes for<br /><em>real outcomes.</em></h2>
+          </div>
+          <p>Browse what Possible can coordinate. You do not need to choose a pack: describe the outcome and Possible recommends the fit for your approval.</p>
+        </header>
+
+        <div className="home-pack-columns" aria-hidden="true">
+          <span>#</span><span>PACK</span><span>LANE</span><span>RECIPE</span><span>OPEN</span>
         </div>
+        <ol aria-label="Packs Possible can recommend">
+          {galleryPacks.map((pack) => (
+            <li key={pack.slug}>
+              <a href={`/packs/${pack.slug}`} aria-label={`${pack.name}, ${laneLabels[pack.lane]} pack`}>
+                <span className="home-pack-number">{String(pack.catalogNumber).padStart(2, "0")}</span>
+                <strong>{pack.name}</strong>
+                <span className={`home-pack-lane home-pack-lane--${pack.lane}`}>{laneLabels[pack.lane]}</span>
+                <span className="home-pack-recipe">{pack.skills.length} skills · {pack.outputs.length} outputs{pack.schedule ? " · schedulable" : ""}</span>
+                <i>↗</i>
+              </a>
+            </li>
+          ))}
+        </ol>
+        <footer>
+          <p><strong>Not sure which pack?</strong> That is what <code>$possible</code> decides with you.</p>
+          <a href="/packs">Open the full pack reference →</a>
+        </footer>
       </section>
 
       <section className="quick-path">
