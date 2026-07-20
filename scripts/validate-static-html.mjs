@@ -49,6 +49,10 @@ for (const pack of outcomePacks) {
   assert.match(detail, new RegExp(pack.promise.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
 }
 
+const demoGalleryMarkup = await html("demo/index.html");
+assert.match(demoGalleryMarkup, /src="\/demo\/still\/evidence\/screenshots\/embedded-site-desktop\.png"/);
+assert.match(demoGalleryMarkup, /src="\/demo\/three\/evidence\/screenshots\/site-desktop\.png"/);
+
 for (const [relativePath, expected] of [
   ["blogs/index.html", "Thinking in"],
   ["blogs/what-is-possible/index.html", "Possible is the outcome layer"],
