@@ -1124,8 +1124,8 @@ function DemoGalleryPage() {
       <section className="demo-gallery-grid" aria-label="Recorded Possible examples">
         <a className="demo-example-card demo-example-card--hardware" href="/demo/hardware">
           <header><span>01 / HARDWARE LAUNCH</span><strong>VERIFIED RUN ↗</strong></header>
-          <div className="demo-example-visual demo-example-visual--hardware demo-example-visual--site-preview">
-            <img src="/demo/still/evidence/screenshots/embedded-site-desktop.png" alt="Still launch website produced by the hardware launch run" />
+          <div className="demo-example-visual demo-example-visual--hardware">
+            <img src="/demo/still/hardware/still-iso.png" alt="Still e-ink focus device CAD concept" />
           </div>
           <div className="demo-example-copy">
             <p>STILL / E-INK FOCUS DEVICE</p>
@@ -1136,8 +1136,8 @@ function DemoGalleryPage() {
 
         <a className="demo-example-card demo-example-card--software" href="/demo/software">
           <header><span>02 / SOFTWARE LAUNCH</span><strong>VERIFIED RUN ↗</strong></header>
-          <div className="demo-example-visual demo-example-visual--software demo-example-visual--site-preview">
-            <img src="/demo/three/evidence/screenshots/site-desktop.png" alt="Three launch website produced by the software launch run" />
+          <div className="demo-example-visual demo-example-visual--software" aria-hidden="true">
+            <div className="three-card"><span>THREE / TODAY</span><b>1</b><i /><b>2</b><i /><b>3</b><i /><strong>THEN YOU’RE DONE.</strong></div>
           </div>
           <div className="demo-example-copy">
             <p>THREE / LOCAL-FIRST WEB APP</p>

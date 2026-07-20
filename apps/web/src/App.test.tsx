@@ -353,8 +353,6 @@ describe("Possible", () => {
     expect(screen.getByRole("heading", { name: /Don’t imagine the outcome.*Open it/i })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /HARDWARE LAUNCH.*STILL/i })).toHaveAttribute("href", "/demo/hardware");
     expect(screen.getByRole("link", { name: /SOFTWARE LAUNCH.*THREE/i })).toHaveAttribute("href", "/demo/software");
-    expect(screen.getByAltText("Still launch website produced by the hardware launch run")).toHaveAttribute("src", "/demo/still/evidence/screenshots/embedded-site-desktop.png");
-    expect(screen.getByAltText("Three launch website produced by the software launch run")).toHaveAttribute("src", "/demo/three/evidence/screenshots/site-desktop.png");
     expect(screen.getByRole("link", { name: /OPEN-SOURCE RELEASE.*TINY-SLUG/i })).toHaveAttribute("href", "/demo/open-source");
     expect(screen.getByRole("link", { name: /PLAYABLE WEB GAME.*FOLD/i })).toHaveAttribute("href", "/demo/game");
   });
