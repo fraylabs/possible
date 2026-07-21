@@ -39,12 +39,12 @@ describe("Possible", () => {
     expect(within(start).getByText("npx @fraylabs/possible@0.1.6 init")).toBeInTheDocument();
     const demo = within(start).getByRole("region", { name: /See \$possible brainstorm.*what it produced/i });
     const demoCards = within(demo).getAllByRole("listitem");
-    expect(demoCards).toHaveLength(5);
+    expect(demoCards).toHaveLength(3);
     expect(within(demoCards[0]).getByRole("link", { name: /Robot Snake.*CAD.*SIM.*RERUN/i })).toHaveAttribute("href", "/demo/robot-snake");
     expect(within(demo).getByRole("link", { name: /Still.*SITE.*FILM.*CAD/i })).toHaveAttribute("href", "/demo/hardware");
-    expect(within(demo).getByRole("link", { name: /Three.*APP.*SITE.*TESTS/i })).toHaveAttribute("href", "/demo/software");
-    expect(within(demo).getByRole("link", { name: /tiny-slug.*PACKAGE.*DOCS.*CI/i })).toHaveAttribute("href", "/demo/open-source");
     expect(within(demo).getByRole("link", { name: /Fold.*THREE\.JS.*TOUCH.*PLAY/i })).toHaveAttribute("href", "/demo/game");
+    expect(within(demo).queryByRole("link", { name: /Three.*APP.*SITE.*TESTS/i })).not.toBeInTheDocument();
+    expect(within(demo).queryByRole("link", { name: /tiny-slug.*PACKAGE.*DOCS.*CI/i })).not.toBeInTheDocument();
     expectBefore(container.querySelector(".build-hero")!, demo);
     expectBefore(demo, container.querySelector(".home-pack-index")!);
     const packs = screen.getByRole("list", { name: "Packs Possible can recommend" });

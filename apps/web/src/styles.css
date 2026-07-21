@@ -68,9 +68,7 @@ nav { height: 74px; padding: 0 3.5vw; border-bottom: 1px solid #aaa59a; display:
 .home-demo a { min-height: 210px; padding: 16px; border: 1px solid #151411; display: grid; grid-template-columns: 1fr auto; grid-template-rows: auto 1fr auto; background: #eeece4; transition: background .15s ease, color .15s ease; }
 .home-demo li:nth-child(1) a { background: #efffc3; }
 .home-demo li:nth-child(2) a { background: #eeece4; }
-.home-demo li:nth-child(3) a { background: #d9eff4; }
-.home-demo li:nth-child(4) a { background: #f3c4ad; }
-.home-demo li:nth-child(5) a { background: #e3ddf5; }
+.home-demo li:nth-child(3) a { background: #f3c4ad; }
 .home-demo a:hover, .home-demo a:focus-visible { background: #151411; color: #f3f0e8; }
 .home-demo a > span { font: 8px "DM Mono", monospace; letter-spacing: .05em; }
 .home-demo a h3 { grid-column: 1 / -1; margin: auto 0; font-size: clamp(34px, 4vw, 58px); font-weight: 500; line-height: .9; letter-spacing: -.06em; }
