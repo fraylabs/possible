@@ -1307,6 +1307,26 @@ footer .wordmark span { color: #151411; }
 .demo-detail-page--robot .demo-outcome-header h1 em { color: #a8ff52; }
 .demo-detail-page--robot .demo-outcome-footer { background: #a8ff52; }
 .robot-artifacts { padding-bottom: 0; }
+.robot-comparison { padding: 104px max(24px, calc((100vw - 1320px) / 2)); background: #151411; color: #f8f5ed; }
+.robot-comparison-intro { display: grid; grid-template-columns: minmax(0, 1fr) minmax(280px, .72fr); gap: 24px 72px; align-items: end; }
+.robot-comparison-intro .eyebrow { grid-column: 1 / -1; color: #a8ff52; }
+.robot-comparison-intro h2 { margin: 0; font: 500 clamp(44px, 6vw, 88px)/.91 "DM Sans", sans-serif; letter-spacing: -.07em; }
+.robot-comparison-intro > p:not(.eyebrow) { margin: 0; color: #b7b2a9; font: 400 16px/1.55 "DM Sans", sans-serif; }
+.robot-comparison-intro code { color: #fff; font: inherit; }
+.robot-comparison-intro > div { grid-column: 2; display: flex; flex-wrap: wrap; gap: 8px; }
+.robot-comparison-intro a { border: 1px solid #57534d; padding: 12px 14px; color: #f8f5ed; font: 500 10px "DM Mono", monospace; }
+.robot-comparison-intro a:hover, .robot-comparison-intro a:focus-visible { border-color: #a8ff52; color: #a8ff52; }
+.robot-comparison-table { margin-top: 64px; border: 1px solid #57534d; }
+.robot-comparison-row { display: grid; grid-template-columns: 1.2fr .75fr 1fr; border-top: 1px solid #3c3934; }
+.robot-comparison-row:first-child { border-top: 0; }
+.robot-comparison-row > * { min-width: 0; padding: 17px; border-left: 1px solid #3c3934; font: 400 12px/1.35 "DM Mono", monospace; }
+.robot-comparison-row > *:first-child { border-left: 0; }
+.robot-comparison-row strong { color: #f8f5ed; }
+.robot-comparison-row span { color: #928d84; }
+.robot-comparison-row span:last-child { color: #a8ff52; }
+.robot-comparison-row--head > * { color: #b7b2a9 !important; font-size: 9px; }
+.robot-comparison-note { max-width: 760px; margin: 24px 0 0; color: #928d84; font: 400 13px/1.55 "DM Sans", sans-serif; }
+.robot-comparison-note strong { color: #f8f5ed; }
 .robot-viewer-card,
 .robot-simulation-card,
 .robot-cad-review {
@@ -1405,6 +1425,13 @@ footer .wordmark span { color: #151411; }
 .example-detail--software .example-detail-footer { background: #ff4d00; }
 
 @media (max-width: 760px) {
+  .robot-comparison { padding: 72px 18px; }
+  .robot-comparison-intro { grid-template-columns: 1fr; gap: 22px; }
+  .robot-comparison-intro .eyebrow, .robot-comparison-intro > div { grid-column: auto; }
+  .robot-comparison-row { grid-template-columns: 1fr 1fr; }
+  .robot-comparison-row > *:first-child { grid-column: 1 / -1; border-bottom: 1px solid #3c3934; }
+  .robot-comparison-row > span:nth-child(2) { border-left: 0; }
+  .robot-comparison-row--head > *:first-child { display: none; }
   .demo-gallery-grid { padding: 18px 18px 70px; grid-template-columns: 1fr; }
   .demo-example-card--presentation { grid-column: auto; }
   .demo-example-card--hardware { grid-row: auto; }

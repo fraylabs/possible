@@ -880,10 +880,39 @@ function RobotSnakeDemoPage() {
         metric="12 / 12 TESTS · 186 INTERFACE CHECKS · 0 OBSTACLE CONTACTS"
       />
 
+      <RobotSnakeComparison />
       <RobotSnakeArtifacts />
       <RobotSnakeConversation />
       <DemoOutcomeFooter text="Digital prototype only. Physical locomotion, actuator suitability, fabrication readiness, and functional safety remain unproven." href="/demo/robot-snake/evidence/sim-to-real-gaps.md" linkLabel="READ THE GAPS ↗" />
     </main>
+  );
+}
+
+function RobotSnakeComparison() {
+  const rows = [
+    ["Mechanical CAD", "—", "STEP + GLB"],
+    ["Robot description", "—", "URDF + SRDF"],
+    ["Physics", "Browser kinematics", "MuJoCo"],
+    ["Autonomous avoidance", "—", "Seeded + measured"],
+    ["Engineering timeline", "CSV export", "3,801-frame Rerun"],
+    ["Deterministic checks", "18 tests", "12 tests + 186 interfaces"],
+    ["Fresh verification", "—", "3 defects repaired"],
+  ];
+
+  return (
+    <section className="robot-comparison" aria-labelledby="robot-comparison-title">
+      <div className="robot-comparison-intro">
+        <p className="eyebrow">RECORDED COMPARISON / SAME ROUGH IDEA</p>
+        <h2 id="robot-comparison-title">What did the user<br />not know to ask for?</h2>
+        <p>A clean GPT-5.6 Sol task received <code>/goal I want to make a robot snake</code> and one non-expert preference. It built a strong simulator and hardware handoff. Possible supplied the missing multidisciplinary outcome contract.</p>
+        <div><a href="/demo/robot-snake/control/" target="_blank" rel="noreferrer">OPEN THE CONTROL ↗</a><a href="/demo/robot-snake/CONTROL-RUN.md" target="_blank" rel="noreferrer">READ THE PROTOCOL ↗</a></div>
+      </div>
+      <div className="robot-comparison-table" role="table" aria-label="Robot Prototype contract comparison">
+        <div className="robot-comparison-row robot-comparison-row--head" role="row"><span>PRE-EXISTING CONTRACT</span><span>/GOAL</span><span>$POSSIBLE</span></div>
+        {rows.map(([requirement, control, possible]) => <div className="robot-comparison-row" role="row" key={requirement}><strong>{requirement}</strong><span>{control}</span><span>{possible}</span></div>)}
+      </div>
+      <p className="robot-comparison-note"><strong>The control was not weakened.</strong> It produced gait controls, collision handling, telemetry, a BOM, compiled ESP32 firmware, and 18 passing tests. The difference is the expert work the rough request never named.</p>
+    </section>
   );
 }
 

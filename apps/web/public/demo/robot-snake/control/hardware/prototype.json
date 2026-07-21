@@ -1,0 +1,24 @@
+{
+  "revision": 1,
+  "purpose": "three-module, two-joint bench prototype",
+  "controller": "ESP32-DevKitC V4",
+  "servos": {
+    "model": "goBILDA 2000-0025-0002 25-2 Torque",
+    "count": 2,
+    "voltageV": 7.4,
+    "stallTorqueKgCm": 25.2,
+    "stallCurrentAEach": 3.0,
+    "signalFrequencyHz": 50,
+    "pulseMinimumUs": 500,
+    "pulseMaximumUs": 2500
+  },
+  "pins": {
+    "jointSignals": [18, 19],
+    "physicalEstopSense": 27
+  },
+  "protection": {
+    "servoBranchFuseA": 7.5,
+    "firmwareWatchdogMs": 600,
+    "physicalEstopContact": "normally closed; cuts servo positive and reports LOW when healthy"
+  }
+}

@@ -10,6 +10,8 @@ Possible turns a rough idea into an independently verified, multidisciplinary ou
 
 The [Robot Snake run](https://github.com/fraylabs/possible/blob/main/apps/web/public/demo/robot-snake/evidence/outcome-receipt.md) began with: “I want to make a robot snake.” Possible produced inspectable CAD, URDF/SRDF, MuJoCo control and simulation, simulated autonomous obstacle avoidance, and Rerun telemetry. Fresh verification caught and repaired three material defects before the suite passed 12/12 tests and 186/186 interface checks.
 
+We repeated the rough idea in a clean GPT-5.6 Sol `/goal` task with no Possible or robotics skills. It produced a capable browser simulator, hardware plan, compiled firmware, and 18 tests. It did not infer CAD, URDF/SRDF, MuJoCo, autonomy proof, Rerun evidence, or fresh verification. The [preserved comparison](https://possible.sh/demo/robot-snake/CONTROL-RUN.md) credits both results and evaluates them against the Robot Prototype contract that existed before the control run.
+
 Possible.sh is an open-source library of Outcome Packs. Each pack combines a reusable execution prompt and selected agent skills for dozens of coordinated tasks.
 
 ## Inspiration
@@ -50,6 +52,7 @@ We also separated outcome approval from consequential actions. Deployment, publi
 - Published `@fraylabs/possible@0.1.9` as a one-command, conflict-safe installer.
 - Built four reusable Outcome Packs and four inspectable demos.
 - Preserved verifier failures, repairs, passing reruns, and known limitations.
+- Recorded a strong clean `/goal` control and published the complete human input, artifacts, and contract comparison.
 - Coordinated hardware, robotics, games, and coded presentations through one workflow.
 
 ## What we learned
@@ -60,7 +63,7 @@ The user should supply the ambition. Possible should supply the operational know
 
 ## What's next for Possible.sh
 
-We want more people to author, validate, and share Outcome Packs. Our long-term goal is an open standard for complete, accountable agent outcomes.
+Next, we will test whether outside users can author Outcome Packs and reproduce the recorded outcomes.
 
 ## Quickstart
 

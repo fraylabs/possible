@@ -6,6 +6,8 @@ The [Robot Snake run](apps/web/public/demo/robot-snake/evidence/outcome-receipt.
 
 The run produced CAD, URDF/SRDF, MuJoCo control, obstacle avoidance, and Rerun telemetry. Fresh verification caught and repaired three defects. The final suite passed 12/12 tests and 186/186 interface checks.
 
+A clean `/goal` control given the same rough idea produced a capable browser simulator, hardware plan, compiled firmware, and 18 tests. It did not infer the pack's CAD, robot descriptions, MuJoCo physics, autonomy proof, Rerun evidence, or fresh verification. [Inspect the preserved comparison](apps/web/public/demo/robot-snake/CONTROL-RUN.md).
+
 Possible.sh is an open-source library of Outcome Packs for Codex. An Outcome Pack combines an execution prompt, agent skills, sequencing, safeguards, and completion checks. The `$possible` skill understands the request, recommends a pack, asks for approval, and runs it.
 
 ## OpenAI Build Week
@@ -78,8 +80,6 @@ Each run records the approved brief and exact pack version. A fresh verifier pre
 Commit [`afb5fc1`](https://github.com/fraylabs/possible/commit/afb5fc1c1e01d746753712ddc79f456df0984826) marks the product reset that introduced the current Outcome Pack architecture. The repository history after that boundary records the typed manifests, compiler, installable skill, CLI, public site, preserved runs and verification repairs.
 
 [BUILD-WEEK.md](BUILD-WEEK.md) documents the implementation boundary, Codex session, Codex contributions and human product decisions.
-
-We hope Outcome Packs become an open standard for complete, accountable, and verifiable agent work.
 
 ## Repository
 
