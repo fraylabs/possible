@@ -199,23 +199,23 @@ describe("Possible", () => {
     expect(await axe(container)).toHaveNoViolations();
   });
 
-  it("presents the step-away benchmark as time and independently verified outcome coverage", async () => {
+  it("presents the step-away benchmark as time and independently verified startup ingredients", async () => {
     window.history.pushState({}, "", "/benchmarks");
     const { container } = render(<App />);
     expect(container.querySelector(".benchmarks-page.editorial-page .editorial-article .editorial-header .editorial-byline")).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: /Build me a.*\$1 million SaaS.*Make no mistakes/i, level: 1 })).toBeInTheDocument();
     expect(screen.getByText(/MODEL 01.*LIVE RUNS NEXT/i)).toBeInTheDocument();
     expect(screen.getByText(/same sentence, model, tools, workspace, and eight-hour window/i)).toBeInTheDocument();
-    const chart = screen.getByRole("list", { name: "Autonomous work time and outcome coverage by workflow" });
+    const chart = screen.getByRole("list", { name: "Autonomous work time and verified startup ingredients by workflow" });
     expect(within(chart).getAllByRole("listitem")).toHaveLength(5);
-    expect(within(chart).getByRole("listitem", { name: /Prompt by prompt: 1h 50m autonomous work time.*42% independently verified outcome coverage/i })).toBeInTheDocument();
-    expect(within(chart).getByRole("listitem", { name: /\$possible: 7h 20m autonomous work time.*91% independently verified outcome coverage/i })).toBeInTheDocument();
+    expect(within(chart).getByRole("listitem", { name: /Prompt by prompt: 1h 50m autonomous work time.*42% of successful-startup ingredients independently verified/i })).toBeInTheDocument();
+    expect(within(chart).getByRole("listitem", { name: /\$possible: 7h 20m autonomous work time.*91% of successful-startup ingredients independently verified/i })).toBeInTheDocument();
     expect(screen.queryByText(/mocked|what the mock/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/estimated values|product hypothesis|measured pilot/i)).not.toBeInTheDocument();
     expect(container.querySelectorAll(".benchmark-outcome-row > div > i")).toHaveLength(10);
     expect(screen.getByRole("heading", { name: /Time alone proves nothing/i })).toBeInTheDocument();
-    expect(container.querySelectorAll(".benchmark-coverage-grid > span")).toHaveLength(8);
-    expect(screen.getByText(/stays productive longer and returns with more of the real outcome verified/i)).toBeInTheDocument();
+    expect(container.querySelectorAll(".benchmark-ingredients-grid > span")).toHaveLength(8);
+    expect(screen.getByText(/million dollars still has to happen in the real world/i)).toBeInTheDocument();
     expect(container.querySelector(".benchmark-table-scroll")).not.toBeInTheDocument();
     expect(container.querySelector(".benchmark-article")).toBeInTheDocument();
     expect(container.querySelectorAll(".benchmark-article > section")).toHaveLength(3);

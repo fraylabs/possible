@@ -53,12 +53,12 @@ const gallerySlugs = [
   "marketing-operations",
 ] as const;
 const galleryPacks = gallerySlugs.map((slug) => outcomePacks.find((pack) => pack.slug === slug)!).filter(Boolean);
-const benchmarkOutcomeSeries = [
-  { id: "direct", label: "Prompt by prompt", minutes: 110, coverage: 42 },
-  { id: "spec", label: "Spec-driven", minutes: 190, coverage: 58 },
-  { id: "plan", label: "/plan", minutes: 245, coverage: 66 },
-  { id: "goal", label: "/goal", minutes: 315, coverage: 76 },
-  { id: "possible", label: "$possible", minutes: 440, coverage: 91 },
+const benchmarkStartupSeries = [
+  { id: "direct", label: "Prompt by prompt", minutes: 110, ingredients: 42 },
+  { id: "spec", label: "Spec-driven", minutes: 190, ingredients: 58 },
+  { id: "plan", label: "/plan", minutes: 245, ingredients: 66 },
+  { id: "goal", label: "/goal", minutes: 315, ingredients: 76 },
+  { id: "possible", label: "$possible", minutes: 440, ingredients: 91 },
 ] as const;
 const benchmarkWindowMinutes = 480;
 
@@ -419,7 +419,7 @@ function BenchmarksPage() {
         <header className="benchmark-hero editorial-header">
           <p className="eyebrow">THE STEP-AWAY BENCHMARK</p>
           <h1>“Build me a <em>$1 million SaaS.</em> Make no mistakes.”</h1>
-          <p className="editorial-dek">One unreasonable request. Eight hours without supervision. How long does the agent keep advancing the outcome—and how much of it survives independent verification?</p>
+          <p className="editorial-dek">One unreasonable request. Eight hours without supervision. How long does the agent keep doing useful work—and how many ingredients of a successful startup does it put in place?</p>
           <div className="benchmark-byline editorial-byline"><span>FRAY LABS · 21 JUL 2026</span><span>MODEL 01 · LIVE RUNS NEXT</span></div>
         </header>
 
@@ -428,31 +428,31 @@ function BenchmarksPage() {
             <span>ROUGH INTENT · NO OPERATOR PLAYBOOK</span>
             <h2 id="benchmark-method-heading">The agent has to understand what the request actually requires.</h2>
           </div>
-          <p>Every workflow starts with the same sentence, model, tools, workspace, and eight-hour window. The operator approves the direction, then steps away. The agent may continue until it completes the outcome or genuinely needs human authority.</p>
+          <p>Every workflow starts with the same sentence, model, tools, workspace, and eight-hour window. The operator approves the direction, then steps away. The agent may continue until it exhausts useful work or genuinely needs human authority.</p>
         </section>
 
         <section className="benchmark-outcome" aria-labelledby="benchmark-outcome-heading">
           <header>
-            <span>TIME × OUTCOME COVERAGE</span>
+            <span>TIME × STARTUP INGREDIENTS</span>
             <h2 id="benchmark-outcome-heading">Longer is better when the work still matters.</h2>
-            <p id="benchmark-outcome-description">Time records how long the agent keeps making useful autonomous progress. Coverage records how much of the source-grounded SaaS outcome an independent verifier can prove.</p>
+            <p id="benchmark-outcome-description">Time records how long the agent keeps making useful autonomous progress. The ingredients score records how much of an independently defined, source-grounded startup foundation the verifier can prove.</p>
           </header>
 
           <figure aria-labelledby="benchmark-outcome-heading" aria-describedby="benchmark-outcome-description">
             <div className="benchmark-outcome-axis" aria-hidden="true"><span>0h</span><span>2h</span><span>4h</span><span>6h</span><span>8h</span></div>
-            <ul className="benchmark-outcome-bars" aria-label="Autonomous work time and outcome coverage by workflow">
-              {benchmarkOutcomeSeries.map((series) => (
-                <li className={series.id === "possible" ? "is-possible" : ""} aria-label={`${series.label}: ${formatBenchmarkDuration(series.minutes)} autonomous work time. ${series.coverage}% independently verified outcome coverage.`} key={series.id}>
-                  <header><strong>{series.label}</strong><b>{series.coverage}%</b></header>
+            <ul className="benchmark-outcome-bars" aria-label="Autonomous work time and verified startup ingredients by workflow">
+              {benchmarkStartupSeries.map((series) => (
+                <li className={series.id === "possible" ? "is-possible" : ""} aria-label={`${series.label}: ${formatBenchmarkDuration(series.minutes)} autonomous work time. ${series.ingredients}% of successful-startup ingredients independently verified.`} key={series.id}>
+                  <header><strong>{series.label}</strong><b>{series.ingredients}%</b></header>
                   <div className="benchmark-outcome-row is-time">
                     <span>Time</span>
                     <div aria-hidden="true"><i style={{ width: `${(series.minutes / benchmarkWindowMinutes) * 100}%` }} /></div>
                     <em>{formatBenchmarkDuration(series.minutes)}</em>
                   </div>
-                  <div className="benchmark-outcome-row is-coverage">
-                    <span>Coverage</span>
-                    <div aria-hidden="true"><i style={{ width: `${series.coverage}%` }} /></div>
-                    <em>{series.coverage}%</em>
+                  <div className="benchmark-outcome-row is-ingredients">
+                    <span>Ingredients</span>
+                    <div aria-hidden="true"><i style={{ width: `${series.ingredients}%` }} /></div>
+                    <em>{series.ingredients}%</em>
                   </div>
                 </li>
               ))}
@@ -464,18 +464,18 @@ function BenchmarksPage() {
         <section className="benchmark-verifier" aria-labelledby="benchmark-verifier-heading">
           <span>INDEPENDENT VERIFIER</span>
           <h2 id="benchmark-verifier-heading">Time alone proves nothing.</h2>
-          <p>The verifier inspects the conversation, artifacts, tests, launch surface, and evidence. Coverage is awarded only for work that can be demonstrated—not plans, promises, generated claims, or busywork.</p>
-          <div className="benchmark-coverage-grid" aria-label="Outcome coverage areas">
+          <p>The verifier inspects the conversation, artifacts, tests, launch surface, and evidence. Ingredient credit is awarded only for work that can be demonstrated—not plans, promises, generated claims, or busywork.</p>
+          <div className="benchmark-ingredients-grid" aria-label="Ingredients of a successful startup">
             <span>Market evidence</span>
-            <span>Positioning</span>
+            <span>Clear positioning</span>
             <span>Useful product</span>
-            <span>Activation</span>
-            <span>Revenue</span>
+            <span>Activation loop</span>
+            <span>Revenue model</span>
             <span>Distribution</span>
             <span>Reliability</span>
             <span>Operating loop</span>
           </div>
-          <p className="benchmark-conclusion"><strong>Possible wins only if it stays productive longer and returns with more of the real outcome verified.</strong></p>
+          <p className="benchmark-conclusion"><strong>Possible wins only if it stays productive longer and verifies more of what a startup needs. The million dollars still has to happen in the real world.</strong></p>
         </section>
       </article>
 
