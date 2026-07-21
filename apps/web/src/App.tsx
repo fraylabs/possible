@@ -1157,10 +1157,23 @@ function DemoOutcomeFooter({ text, href = "#top", linkLabel = "BACK TO TOP ↑" 
 function DemoGalleryPage() {
   return (
     <main className="demo-gallery-page">
-      <SiteNav label="Examples / 04" />
+      <SiteNav label="Examples / 06" />
       <h1 className="sr-only">Possible outcome demos</h1>
 
-      <section className="demo-gallery-grid" aria-label="Recorded Possible examples">
+      <section className="demo-gallery-grid" aria-label="Possible demos and recorded examples">
+        <a className="demo-example-card demo-example-card--presentation" href="/presentation">
+          <header><span>00 / POSSIBLE EXPLAINER</span><strong>LIVE CODED DECK ↗</strong></header>
+          <div className="demo-example-visual demo-example-visual--presentation">
+            <img src="/presentation/possible-visual-atlas.webp" alt="Illustrations of an agent skill, execution prompt, Outcome Pack, and the Possible guide" />
+          </div>
+          <div className="demo-example-copy">
+            <p>POSSIBLE.SH / WEB PRESENTATION</p>
+            <h2>What Possible is.<br />In ten slides.</h2>
+            <p className="demo-example-transformation">See how agent skills, reusable execution prompts, Outcome Packs, and <code>$possible</code> fit together—then inspect a real Robot Prototype outcome.</p>
+            <div><span>10 coded slides</span><span>Keyboard + touch</span><span>Open presentation</span></div>
+          </div>
+        </a>
+
         <a className="demo-example-card demo-example-card--hardware" href="/demo/hardware">
           <header><span>01 / HARDWARE LAUNCH</span><strong>VERIFIED RUN ↗</strong></header>
           <div className="demo-example-visual demo-example-visual--hardware">

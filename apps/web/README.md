@@ -12,7 +12,7 @@ The interactive Possible surface has three layers:
 - `/docs` — learn the complete install, conversation, recommendation, confirmation, execution, and safety contract.
 - `/packs` — inspect the outcome recipes Possible may recommend.
 - `/packs/:slug` — inspect a pack's outputs, specialists, sources, guardrails, and verification before confirming it.
-- `/demo` — see an explicitly illustrative intake followed by the preserved Hardware Launch execution, failure, repair, and verified artifacts.
+- `/demo` — open the coded visual explainer or inspect preserved outcome runs, failures, repairs, and verified artifacts.
 
 A builder starts with only:
 

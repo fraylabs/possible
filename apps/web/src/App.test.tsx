@@ -460,6 +460,7 @@ describe("Possible", () => {
     expect(container.querySelector(".demo-gallery-hero")).not.toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Possible outcome demos", level: 1 })).toBeInTheDocument();
     expect(container.querySelectorAll("h1")).toHaveLength(1);
+    expect(screen.getByRole("link", { name: /POSSIBLE EXPLAINER.*LIVE CODED DECK.*POSSIBLE\.SH/i })).toHaveAttribute("href", "/presentation");
     expect(screen.getByRole("link", { name: /HARDWARE LAUNCH.*STILL/i })).toHaveAttribute("href", "/demo/hardware");
     expect(screen.getByRole("link", { name: /SOFTWARE LAUNCH.*THREE/i })).toHaveAttribute("href", "/demo/software");
     expect(screen.getByRole("link", { name: /OPEN-SOURCE RELEASE.*TINY-SLUG/i })).toHaveAttribute("href", "/demo/open-source");
@@ -470,6 +471,7 @@ describe("Possible", () => {
     expect(screen.getByText(/A first-time maintainer supplied three files.*trustworthy release/i)).toBeInTheDocument();
     expect(screen.getByText(/A creator supplied one strange idea.*playability work/i)).toBeInTheDocument();
     expect(screen.getByText(/A robotics novice asked for a robot snake.*inspectable digital prototype/i)).toBeInTheDocument();
+    expect(screen.getByText(/See how agent skills.*real Robot Prototype outcome/i)).toBeInTheDocument();
   });
 
   it("keeps every outcome-first demo free of automated accessibility violations", async () => {

@@ -3,7 +3,7 @@ import PossibleRoute from "../_components/PossibleRoute";
 
 export const metadata: Metadata = {
   title: "Recorded outcomes",
-  description: "Inspect complete Possible runs and the artifacts produced by coordinated Codex skills.",
+  description: "Open the live Possible explainer and inspect complete runs produced by coordinated Codex skills.",
 };
 
 export default function DemoPage() {

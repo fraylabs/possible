@@ -129,7 +129,7 @@ npm run check
 
 Production builds emit `/packs/index.json`, plus JSON, install text, and run text for every Outcome Pack.
 
-The web surface keeps entry, understanding, discovery, and evidence separate. `/` introduces Possible.sh. `/presentation` is the coded visual explainer. `/benchmarks` compares one-prompt outcomes. `/docs` explains first use and safety. `/packs` is the category-filtered Outcome Pack gallery. `/packs/:slug` specifies fit, execution ownership, reviewed sources, boundaries, and verification. `/demo` shows intake, preserved runs, and completion reports.
+The web surface keeps entry, understanding, discovery, and evidence separate. `/` introduces Possible.sh. `/presentation` is the coded visual explainer. `/benchmarks` compares one-prompt outcomes. `/docs` explains first use and safety. `/packs` is the category-filtered Outcome Pack gallery. `/packs/:slug` specifies fit, execution ownership, reviewed sources, boundaries, and verification. `/demo` opens the visual explainer alongside preserved runs and completion reports.
 
 ## Trust boundary
 
