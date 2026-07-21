@@ -1,0 +1,4 @@
+interface:
+  display_name: "MuJoCo Robotics"
+  short_description: "Build and validate robot simulations in MuJoCo"
+  default_prompt: "Use $mujoco-robotics to turn this robot description into a validated MuJoCo model and deterministic simulation."
