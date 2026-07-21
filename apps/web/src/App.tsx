@@ -185,7 +185,7 @@ function CreatePage() {
         <div className="build-hero">
           <div className="build-hero-copy">
             <p className="eyebrow">POSSIBLE / FOR CODEX</p>
-            <h1>What outcome do you want<br />{" "}to achieve <em>today?</em></h1>
+            <h1>What do you want<br />{" "}to achieve <em>today?</em></h1>
             <p className="build-hero-description">Possible is an outcome skill for Codex. Its packs compile dozens of coordinated tasks, specialist skills, and verification gates into one approved run—like taking a SaaS from idea to release.</p>
             <div className="build-hero-actions">
               <a className="button-link" href="#try">Try with Codex <span>↓</span></a>

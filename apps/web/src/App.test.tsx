@@ -17,7 +17,7 @@ function expectBefore(first: Element, second: Element) {
 describe("Possible", () => {
   it("puts installation and the complete pack index in one clear starting journey", () => {
     const { container } = render(<App />);
-    expect(screen.getByRole("heading", { name: "What outcome do you want to achieve today?", level: 1 })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "What do you want to achieve today?", level: 1 })).toBeInTheDocument();
     expect(container.querySelectorAll("h1")).toHaveLength(1);
     expect(screen.getByText("Possible is an outcome skill for Codex. Its packs compile dozens of coordinated tasks, specialist skills, and verification gates into one approved run—like taking a SaaS from idea to release.")).toBeInTheDocument();
     expect(screen.getByText("npx @fraylabs/possible init")).toBeInTheDocument();
