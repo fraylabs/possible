@@ -4,17 +4,25 @@ import { readFile } from "node:fs/promises";
 const repository = new URL("../", import.meta.url);
 const read = (relative) => readFile(new URL(relative, repository), "utf8");
 
-const [readme, devpost, video, buildWeek, npmRelease] = await Promise.all([
+const [readme, devpost, video, buildWeek, npmRelease, judging, robotManifestSource, robotReceipt] = await Promise.all([
   read("README.md"),
   read("submission/DEVPOST-COPY.md"),
   read("submission/VIDEO-PACKAGE.md"),
   read("BUILD-WEEK.md"),
   read("submission/NPM-0.1.8-RELEASE.md"),
+  read("JUDGING.md"),
+  read("apps/web/public/demo/robot-snake/manifest.json"),
+  read("apps/web/public/demo/robot-snake/evidence/outcome-receipt.md"),
 ]);
 
+const robotManifest = JSON.parse(robotManifestSource);
+
 const coreLanguage = "Possible.sh is an open-source library of Outcome Packs. Each pack combines a reusable execution prompt and selected agent skills for dozens of coordinated tasks.";
-for (const [label, source] of [["README", readme], ["Devpost", devpost], ["video", video]]) {
+assert.match(readme, /Possible\.sh is an open-source library of Outcome Packs for Codex\./);
+for (const [label, source] of [["Devpost", devpost], ["video", video]]) {
   assert.match(source, new RegExp(coreLanguage.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")), `${label} must use the core language`);
+}
+for (const [label, source] of [["README", readme], ["Devpost", devpost], ["video", video]]) {
   assert.match(source, /npx @fraylabs\/possible@0\.1\.8 init/, `${label} must use the canonical install`);
   assert.doesNotMatch(source, /@fraylabs\/possible@0\.1\.[0-7]\b|unpublished|candidate/i, `${label} must not discuss historical package versions`);
   assert.doesNotMatch(source, /50[–-]100 coordinated tasks/i, `${label} must use a bounded task claim`);
@@ -25,6 +33,41 @@ for (const name of ["Still", "Robot Snake", "Fold", "Web Presentation"]) {
   assert.match(devpost, new RegExp(name), `Devpost must feature ${name}`);
   assert.match(video, new RegExp(name), `Video must feature ${name}`);
 }
+
+for (const [label, source] of [["README", readme], ["Devpost", devpost]]) {
+  for (const phrase of [
+    "AI made execution accessible. Possible makes operational judgment accessible.",
+    "simulated autonomous obstacle avoidance",
+    "three material defects",
+    "12/12 tests",
+    "186/186 interface checks",
+    "Outcome Packs can become an open standard",
+  ]) assert.match(source, new RegExp(phrase.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")), `${label} must lead with the verified Robot Snake proof`);
+}
+assert.equal(robotManifest.verification.freshIndependentSuite, "12/12 passed");
+assert.equal(robotManifest.verification.interfaceChecks, "186/186 passed");
+assert.match(robotReceipt, /found three material defects before sign-off/);
+
+for (const criterion of ["Technological Implementation", "Design", "Potential Impact", "Quality of the Idea"]) {
+  assert.match(readme, new RegExp(criterion), `README must surface ${criterion}`);
+  assert.match(devpost, new RegExp(criterion), `Devpost must surface ${criterion}`);
+}
+assert.match(readme, /\[Read the complete judging evidence\]\(JUDGING\.md\)/);
+assert.match(readme, /\[inspect the Build Week record\]\(BUILD-WEEK\.md\)/);
+assert.match(readme, /https:\/\/possible\.sh\/judging/);
+assert.match(devpost, /https:\/\/github\.com\/fraylabs\/possible\/blob\/main\/JUDGING\.md/);
+assert.match(devpost, /https:\/\/github\.com\/fraylabs\/possible\/blob\/main\/BUILD-WEEK\.md/);
+assert.match(devpost, /https:\/\/possible\.sh\/judging/);
+
+const judgingWords = judging.trim().split(/\s+/).filter(Boolean).length;
+assert.ok(judgingWords <= 500, `JUDGING.md exceeds the 500-word evidence budget at ${judgingWords} words`);
+for (const criterion of ["Technological Implementation", "Design", "Potential Impact", "Quality of the Idea"]) {
+  assert.equal(judging.match(new RegExp(criterion, "g"))?.length, 1, `JUDGING.md must contain ${criterion} exactly once`);
+}
+assert.match(judging, /## Why this is not a wrapper/);
+assert.match(judging, /## Guided evidence trail: Still/);
+assert.match(judging, /\[Build Week record\]\(BUILD-WEEK\.md\)/);
+assert.doesNotMatch(judging, /hidden text|keyword stuffing|AI screen(?:er|ing)|instructions? (?:to|for) (?:the )?(?:judge|evaluator)/i, "JUDGING.md must remain a factual evidence index");
 
 for (const heading of [
   "Inspiration",
@@ -51,12 +94,15 @@ for (const url of [
 
 assert.doesNotMatch(devpost, /\bMCP\b|recurring operations?|schedule operations/i, "Devpost must keep the primary pitch focused");
 assert.doesNotMatch(video, /\bMCP\b|recurring operations?|schedule operations/i, "Video must keep the primary pitch focused");
-assert.match(buildWeek, /Primary Codex task\/session ID: 019f7517-658f-7723-8686-2ecda930c00a/);
+assert.match(buildWeek, /https:\/\/openai\.devpost\.com\/details\/dates/);
+assert.match(buildWeek, /Primary Codex \/feedback session ID: 019f7517-658f-7723-8686-2ecda930c00a/);
 assert.match(buildWeek, /Demo video: https:\/\/youtu\.be\/s35aGhVI2Eo/);
 assert.match(devpost, /Demo video: https:\/\/youtu\.be\/s35aGhVI2Eo/);
 assert.match(video, /Published demo: https:\/\/youtu\.be\/s35aGhVI2Eo/);
-assert.doesNotMatch(`${readme}\n${devpost}\n${video}\n${buildWeek}`, /feedback session ID/i, "Submission copy must not conflate feedback references with Codex task IDs");
-assert.match(buildWeek, /Eligible commit range: \[FIRST ELIGIBLE COMMIT\]\.\.\[FINAL SUBMISSION COMMIT\]/);
+assert.match(buildWeek, /Built with: Codex using GPT-5\.6/);
+assert.match(buildWeek, /Eligible implementation commit range: afb5fc1c1e01d746753712ddc79f456df0984826\.\.d7d77f098da4712ca6194a9446c5498a7a66d01b/);
+assert.match(buildWeek, /Frozen submission commit: d7d77f098da4712ca6194a9446c5498a7a66d01b/);
+assert.doesNotMatch(buildWeek, /\[[A-Z][A-Z -]+\]/, "Build Week evidence must not contain unresolved placeholders");
 assert.match(npmRelease, /dist-tag: latest/);
 assert.match(npmRelease, /b37e601945cadfe800da92ab59bf0b059546ae36/);
 

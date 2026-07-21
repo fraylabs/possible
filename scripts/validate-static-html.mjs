@@ -19,6 +19,20 @@ assert.match(home, /npx @fraylabs\/possible@0\.1\.8 init/);
 assert.match(home, /DESCRIBE[\s\S]*APPROVE[\s\S]*EXECUTE[\s\S]*VERIFY/);
 assert.match(home, /FEATURED OUTCOMES/);
 
+const judgingMarkup = await html("judging/index.html");
+const judgingText = plainText(visibleText(judgingMarkup));
+const evidenceManifest = JSON.parse(await html("evidence.json"));
+for (const item of evidenceManifest.judgingCriteria) {
+  for (const value of [item.criterion, item.claim, item.implementationFact, item.significance]) {
+    assert.ok(judgingText.includes(value), `/judging must publish the canonical evidence text: ${value}`);
+  }
+}
+assert.ok(judgingText.split(/\s+/).filter(Boolean).length <= 500, "/judging must contain its complete visible argument within 500 words");
+assert.doesNotMatch(judgingMarkup, /<caption[^>]*class="sr-only"/i, "/judging must not hide evidence text");
+assert.match(judgingMarkup, /href="https:\/\/github\.com\/fraylabs\/possible\/blob\/main\/BUILD-WEEK\.md"/, "/judging must link the frozen Build Week record");
+assert.match(judgingMarkup, /href="https:\/\/github\.com\/fraylabs\/possible\/blob\/main\/apps\/web\/public\/demo\/still\/CODEX-THREAD\.md#run-prompt"/, "/judging must link the preserved Still run prompt, not the current generic pack output");
+assert.doesNotMatch(judgingMarkup, /href="\/packs\/hardware-launch\/run\.txt"/, "/judging must not substitute a mutable generic prompt for preserved run evidence");
+
 const headerLinks = home.match(/<div class="nav-links">([\s\S]*?)<\/div>/)?.[1];
 assert.ok(headerLinks, "The shared header must render desktop navigation");
 assert.equal((headerLinks.match(/<a\b/g) ?? []).length, 3, "The header must contain Demo, Docs, and GitHub only");

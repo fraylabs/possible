@@ -8,6 +8,7 @@ const staticPaths = [
   "/packs",
   "/docs",
   "/docs/how-to-use",
+  "/judging",
   "/demo",
   "/demo/hardware",
   "/demo/game",

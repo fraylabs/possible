@@ -110,6 +110,30 @@ describe("Possible", () => {
     expect(await axe(container)).toHaveNoViolations();
   });
 
+  it("maps the four official judging criteria to direct evidence", async () => {
+    const { container } = renderRoute("/judging");
+    expect(screen.getByRole("heading", { name: /The claim\.\s*The evidence\./, level: 1 })).toBeInTheDocument();
+
+    const criteria = screen.getByRole("table", { name: /four official judging criteria/i });
+    for (const name of ["Technological Implementation", "Design", "Potential Impact", "Quality of the Idea"]) {
+      expect(within(criteria).getByRole("rowheader", { name })).toBeInTheDocument();
+    }
+    expect(within(criteria).getByRole("link", { name: /Compiler source/i })).toHaveAttribute("href", "https://github.com/fraylabs/possible/blob/main/packages/packs/src/compiler.ts");
+    expect(within(criteria).getByRole("link", { name: /Still demo/i })).toHaveAttribute("href", "/demo/hardware");
+    expect(within(criteria).getByRole("link", { name: /Hardware Launch manifest/i })).toHaveAttribute("href", "https://github.com/fraylabs/possible/blob/main/packages/packs/src/hardware-launch.ts");
+    expect(container.querySelector(".nav-links")).not.toHaveTextContent(/JUDGING/i);
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("shows Still progressing from intake through a passing fresh rerun", () => {
+    renderRoute("/judging");
+    const trail = screen.getByRole("region", { name: /One outcome,\s*end to end/i });
+    expect(within(trail).getAllByRole("listitem")).toHaveLength(5);
+    expect(trail).toHaveTextContent(/INTAKE.*COMPILE.*FAIL.*REPAIR.*PASS/i);
+    expect(within(trail).getByRole("link", { name: /Failed trace/i })).toHaveAttribute("href", "/demo/still/verification/browser-results-initial-failure.json");
+    expect(within(trail).getByRole("link", { name: /Completion receipt/i })).toHaveAttribute("href", "/demo/still/OUTCOME-RECEIPT.md");
+  });
+
   it("shows exactly four demos", async () => {
     const { container } = renderRoute("/demo");
     const gallery = container.querySelector(".demo-gallery-grid")!;

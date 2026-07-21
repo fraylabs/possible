@@ -1,10 +1,23 @@
 # Possible
 
-Possible.sh is an open-source library of Outcome Packs. Each pack combines a reusable execution prompt and selected agent skills for dozens of coordinated tasks.
+**AI made execution accessible. Possible makes operational judgment accessible.**
 
-People often know what they want without knowing every task, decision or quality check it requires. `$possible` turns that rough request into an approved Outcome Pack, coordinates the work and verifies the result.
+Possible turns one rough idea into a coordinated, independently verified, multidisciplinary outcome. The [Robot Snake run](apps/web/public/demo/robot-snake/evidence/outcome-receipt.md) began with, “I want to make a robot snake.” It produced inspectable CAD, URDF/SRDF, MuJoCo control and simulation, simulated autonomous obstacle avoidance, and Rerun telemetry. Fresh verification caught three material defects; after repair, the independent suite passed 12/12 tests and 186/186 interface checks.
 
-**Agent skills perform tasks. Outcome Packs coordinate the outcome.**
+Possible.sh is an open-source library of Outcome Packs for Codex. Each typed specification coordinates selected agent skills, owned workstreams, shared constraints, approval boundaries, and the evidence required for completion. The same system produced a hardware launch with a site, film, and CAD; a playable Three.js game; and a browser-tested coded presentation.
+
+We believe Outcome Packs can become an open standard for turning human ambition into complete, accountable, and verifiable agent outcomes.
+
+## OpenAI Build Week Judging
+
+Possible is a Developer Tools submission built with Codex using GPT-5.6. [Read the complete judging evidence](JUDGING.md), [inspect the Build Week record](BUILD-WEEK.md), [open the public evidence funnel](https://possible.sh/judging), or [watch the demo](https://youtu.be/s35aGhVI2Eo).
+
+| Official criterion | Claim | Implementation fact | Evidence |
+| --- | --- | --- | --- |
+| Technological Implementation | Possible compiles outcomes instead of returning a static prompt. | Typed manifests become skill installs, owned workstreams, approval gates, verification and completion reporting. | [Compiler source](packages/packs/src/compiler.ts) |
+| Design | Complete outcomes remain inspectable instead of disappearing into agent logs. | The Still demo presents the generated site, film, CAD, receipts and review evidence together. | [Live Still demo](https://possible.sh/demo/hardware) |
+| Potential Impact | A rough ambition can become coordinated specialist work without requiring every task from the user. | The Still run expands one hardware brief into site, film, CAD and independent-review workstreams. | [Still run](apps/web/public/demo/still/CODEX-THREAD.md) |
+| Quality of the Idea | Outcome Packs are a distinct layer above prompts, skills and agents. | The Hardware Launch manifest binds reviewed skills to workstreams, outputs, safeguards and fresh verification. | [Hardware Launch manifest](packages/packs/src/hardware-launch.ts) |
 
 ## Judge Quickstart
 
@@ -69,7 +82,7 @@ The run records the confirmed brief and exact pack snapshot. A fresh verifier ch
 
 Commit [`afb5fc1`](https://github.com/fraylabs/possible/commit/afb5fc1c1e01d746753712ddc79f456df0984826) marks the product reset that introduced the current Outcome Pack architecture. The repository history after that boundary records the typed manifests, compiler, installable skill, CLI, public site, preserved runs and verification repairs.
 
-[BUILD-WEEK.md](BUILD-WEEK.md) documents the before-and-after boundary, Codex contributions, human product decisions and primary Codex task evidence. The submission owner must confirm the official event time range and GPT-5.6 model record from the Build Week account.
+[BUILD-WEEK.md](BUILD-WEEK.md) documents the official submission window, exact implementation range, Codex session, Codex contributions and human product decisions.
 
 ## Repository
 

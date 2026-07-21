@@ -1427,12 +1427,119 @@ function NotFoundPage() {
   );
 }
 
+const judgingCriteria = [
+  {
+    name: "Technological Implementation",
+    claim: "Possible compiles outcomes instead of returning a static prompt.",
+    fact: "The compiler transforms typed manifests into install commands and an execution prompt with owned workstreams, approval gates, verification and completion reporting.",
+    significance: "One reviewed contract controls preparation, execution and completion.",
+    href: "https://github.com/fraylabs/possible/blob/main/packages/packs/src/compiler.ts",
+    evidence: "Compiler source",
+  },
+  {
+    name: "Design",
+    claim: "Complete outcomes remain inspectable instead of disappearing into agent logs.",
+    fact: "The public Still demo presents the generated site, film, CAD, receipts and review evidence together.",
+    significance: "People can inspect both the product and its proof.",
+    href: "/demo/hardware",
+    evidence: "Still demo",
+  },
+  {
+    name: "Potential Impact",
+    claim: "A rough ambition can become coordinated specialist work without requiring the user to enumerate every task.",
+    fact: "The preserved Still run expands one hardware brief into site, film, CAD and independent-review workstreams.",
+    significance: "Possible reduces coordination burden while preserving explicit limits.",
+    href: "https://github.com/fraylabs/possible/blob/main/apps/web/public/demo/still/CODEX-THREAD.md",
+    evidence: "Still run",
+  },
+  {
+    name: "Quality of the Idea",
+    claim: "Outcome Packs are a distinct layer above prompts, skills and agents.",
+    fact: "The Hardware Launch manifest binds reviewed skills to owned workstreams, outputs, safeguards and fresh verification.",
+    significance: "It packages operational judgment, not only model capability.",
+    href: "https://github.com/fraylabs/possible/blob/main/packages/packs/src/hardware-launch.ts",
+    evidence: "Hardware Launch manifest",
+  },
+] as const;
+
+const judgingTrail = [
+  { step: "INTAKE", detail: "The confirmed brief records facts, constraints, required outputs, and acceptance checks.", href: "/demo/still/PRODUCT-BRIEF.md", evidence: "Confirmed brief" },
+  { step: "COMPILE", detail: "The generated prompt assigns site, film, and CAD ownership before execution.", href: "https://github.com/fraylabs/possible/blob/main/apps/web/public/demo/still/CODEX-THREAD.md#run-prompt", evidence: "Compiled workstreams" },
+  { step: "FAIL", detail: "The first browser trace preserves the integrated site's asset-path 404s.", href: "/demo/still/verification/browser-results-initial-failure.json", evidence: "Failed trace" },
+  { step: "REPAIR", detail: "The fresh-review receipt records the relative-base fix and mandatory rerun.", href: "/demo/still/evidence/final-receipt.md", evidence: "Repair receipt" },
+  { step: "PASS", detail: "The outcome receipt records the post-repair browser pass, 58/58 audit, and remaining limits.", href: "/demo/still/OUTCOME-RECEIPT.md", evidence: "Completion receipt" },
+] as const;
+
+function JudgingPage() {
+  return (
+    <main className="judging-page">
+      <SiteNav label="Judging evidence" />
+      <article className="judging-document">
+        <header className="judging-hero">
+          <p className="eyebrow">OPENAI BUILD WEEK / DEVELOPER TOOLS</p>
+          <h1>The claim.<br /><em>The evidence.</em></h1>
+          <p>Possible turns a rough ambition into approved, coordinated workstreams and independently verified outcomes. This page maps that claim to the four judging criteria and one preserved run.</p>
+          <div><a href="/demo/hardware">Open the Still outcome <span>↗</span></a><a href="https://github.com/fraylabs/possible/blob/main/BUILD-WEEK.md" target="_blank" rel="noreferrer">Build Week record <span>↗</span></a><a href="https://github.com/fraylabs/possible" target="_blank" rel="noreferrer">Inspect GitHub <span>↗</span></a></div>
+        </header>
+
+        <section className="judging-section" aria-labelledby="judging-criteria-heading">
+          <header><span>01 / CRITERIA</span><h2 id="judging-criteria-heading">Claim, evidence,<br /><em>significance.</em></h2></header>
+          <div className="judging-table-scroll">
+            <table className="judging-criteria-table">
+              <caption>Possible evidence mapped to the four official judging criteria</caption>
+              <thead><tr><th>Criterion</th><th>Claim</th><th>Implementation fact</th><th>Significance</th><th>Evidence</th></tr></thead>
+              <tbody>{judgingCriteria.map((criterion) => (
+                <tr key={criterion.name}>
+                  <th scope="row">{criterion.name}</th>
+                  <td>{criterion.claim}</td>
+                  <td>{criterion.fact}</td>
+                  <td>{criterion.significance}</td>
+                  <td><a href={criterion.href} target={criterion.href.startsWith("http") ? "_blank" : undefined} rel={criterion.href.startsWith("http") ? "noreferrer" : undefined}>{criterion.evidence} ↗</a></td>
+                </tr>
+              ))}</tbody>
+            </table>
+          </div>
+        </section>
+
+        <section className="judging-section" aria-labelledby="judging-comparison-heading">
+          <header><span>02 / DISTINCTION</span><h2 id="judging-comparison-heading">Why this is not a<br /><em>prompt, skill, or agent wrapper.</em></h2></header>
+          <div className="judging-table-scroll">
+            <table className="judging-comparison-table">
+              <caption>Comparison of Possible with prompt, skill, and agent wrappers</caption>
+              <thead><tr><th>System</th><th>Reusable unit</th><th>Coordination contract</th><th>Independent verification</th><th>Completion proof</th></tr></thead>
+              <tbody>
+                <tr><th scope="row">Prompt library</th><td>Instruction</td><td>Not inherent</td><td>Not inherent</td><td>Not inherent</td></tr>
+                <tr><th scope="row">Skill wrapper</th><td>Capability</td><td>Not inherent</td><td>Not inherent</td><td>Not inherent</td></tr>
+                <tr><th scope="row">Agent wrapper</th><td>Runtime or role</td><td>Runtime-dependent</td><td>Optional</td><td>Optional</td></tr>
+                <tr className="is-possible"><th scope="row">Possible</th><td>Typed outcome manifest</td><td>Declared workstreams, gates, and ownership</td><td>Required</td><td>Required</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section className="judging-section judging-trail" aria-labelledby="judging-trail-heading">
+          <header><span>03 / GUIDED EVIDENCE</span><h2 id="judging-trail-heading">One outcome,<br /><em>end to end.</em></h2></header>
+          <ol>{judgingTrail.map((item, index) => (
+            <li key={item.step}>
+              <span>{String(index + 1).padStart(2, "0")} / {item.step}</span>
+              <p>{item.detail}</p>
+              <a href={item.href} target={item.href.includes(".") ? "_blank" : undefined} rel={item.href.includes(".") ? "noreferrer" : undefined}>{item.evidence} ↗</a>
+            </li>
+          ))}</ol>
+        </section>
+      </article>
+      <SiteFooter />
+    </main>
+  );
+}
+
 export function PossibleSite({ path: requestedPath }: { path?: string }) {
   const path = (requestedPath ?? (typeof window === "undefined" ? "/" : window.location.pathname)).replace(/\/+$/, "") || "/";
   if (path === "/") return <CreatePage />;
   if (path === "/packs") return <PacksPage />;
   if (path === "/docs") return <DocsPage />;
   if (path === "/docs/how-to-use") return <HowToUsePage />;
+  if (path === "/judging") return <JudgingPage />;
   if (path === "/demo") return <DemoGalleryPage />;
   if (path === "/demo/presentation") return <PresentationDemoPage />;
   if (path === "/demo/game/play") return <Suspense fallback={<main className="plane-game-shell plane-game-loading"><span>FOLD / LOADING FLIGHT</span></main>}><PaperPlaneGame /></Suspense>;

@@ -4,6 +4,90 @@ import { compilePack, outcomePacks } from "@possible/packs";
 const featuredSlugs = new Set(["hardware-launch", "robot-prototype", "playable-web-game", "web-presentation"]);
 const featuredPacks = outcomePacks.filter((pack) => featuredSlugs.has(pack.slug));
 
+const evidenceManifest = {
+  schemaVersion: 1,
+  project: {
+    name: "Possible",
+    url: "https://possible.sh/",
+    repository: "https://github.com/fraylabs/possible",
+    judgingPage: "https://possible.sh/judging/",
+  },
+  judgingCriteria: [
+    {
+      criterion: "Technological Implementation",
+      claim: "Possible compiles outcomes instead of returning a static prompt.",
+      implementationFact: "The compiler transforms typed manifests into install commands and an execution prompt with owned workstreams, approval gates, verification and completion reporting.",
+      significance: "One reviewed contract controls preparation, execution and completion.",
+      evidence: {
+        label: "Outcome Pack compiler source",
+        url: "https://github.com/fraylabs/possible/blob/main/packages/packs/src/compiler.ts",
+      },
+    },
+    {
+      criterion: "Design",
+      claim: "Complete outcomes remain inspectable instead of disappearing into agent logs.",
+      implementationFact: "The public Still demo presents the generated site, film, CAD, receipts and review evidence together.",
+      significance: "People can inspect both the product and its proof.",
+      evidence: {
+        label: "Still demo",
+        url: "https://possible.sh/demo/hardware",
+      },
+    },
+    {
+      criterion: "Potential Impact",
+      claim: "A rough ambition can become coordinated specialist work without requiring the user to enumerate every task.",
+      implementationFact: "The preserved Still run expands one hardware brief into site, film, CAD and independent-review workstreams.",
+      significance: "Possible reduces coordination burden while preserving explicit limits.",
+      evidence: {
+        label: "Still Codex transcript",
+        url: "https://github.com/fraylabs/possible/blob/main/apps/web/public/demo/still/CODEX-THREAD.md",
+      },
+    },
+    {
+      criterion: "Quality of the Idea",
+      claim: "Outcome Packs are a distinct layer above prompts, skills and agents.",
+      implementationFact: "The Hardware Launch manifest binds reviewed skills to owned workstreams, outputs, safeguards and fresh verification.",
+      significance: "It packages operational judgment, not only model capability.",
+      evidence: {
+        label: "Hardware Launch manifest",
+        url: "https://github.com/fraylabs/possible/blob/main/packages/packs/src/hardware-launch.ts",
+      },
+    },
+  ],
+  guidedEvidenceTrail: [
+    {
+      step: 1,
+      stage: "Intake",
+      fact: "The confirmed product brief records facts, constraints, required outputs and acceptance checks.",
+      url: "https://github.com/fraylabs/possible/blob/main/apps/web/public/demo/still/PRODUCT-BRIEF.md",
+    },
+    {
+      step: 2,
+      stage: "Compiled workstreams",
+      fact: "The generated run prompt assigns site, film and CAD ownership before execution.",
+      url: "https://github.com/fraylabs/possible/blob/main/apps/web/public/demo/still/CODEX-THREAD.md#run-prompt",
+    },
+    {
+      step: 3,
+      stage: "Verification failure",
+      fact: "The first browser trace preserves the integrated site's asset-path 404s.",
+      url: "https://github.com/fraylabs/possible/blob/main/apps/web/public/demo/still/verification/browser-results-initial-failure.json",
+    },
+    {
+      step: 4,
+      stage: "Repair",
+      fact: "The fresh-review receipt records the relative-base fix and mandatory rerun.",
+      url: "https://github.com/fraylabs/possible/blob/main/apps/web/public/demo/still/evidence/final-receipt.md#material-failure-found-and-repaired",
+    },
+    {
+      step: 5,
+      stage: "Passing completion",
+      fact: "The outcome receipt reports the post-repair browser pass, 58/58 artifact audit and remaining limitations.",
+      url: "https://github.com/fraylabs/possible/blob/main/apps/web/public/demo/still/OUTCOME-RECEIPT.md",
+    },
+  ],
+};
+
 const outputRoot = new URL("../out/", import.meta.url);
 const json = (value) => `${JSON.stringify(value, null, 2)}\n`;
 const write = async (relativePath, contents) => {
@@ -31,6 +115,8 @@ await write("packs/index.json", json({
   })),
 }));
 
+await write("evidence.json", json(evidenceManifest));
+
 await write("llms.txt", [
   "# Possible",
   "",
@@ -41,6 +127,8 @@ await write("llms.txt", [
   "Each pack combines a reusable execution prompt, selected agent skills, sequencing, safeguards, and completion checks for one outcome.",
   "",
   "- Human documentation: /docs/",
+  "- Judging evidence: /judging/",
+  "- Machine-readable evidence: /evidence.json",
   "- Outcome demos: /demo/",
   "- Pack catalog: /packs/",
   "- Pack index: /packs/index.json",

@@ -4,9 +4,28 @@
 
 Possible.sh is an open-source library of Outcome Packs. Each pack combines a reusable execution prompt and selected agent skills for dozens of coordinated tasks.
 
-## Inspiration
+## Project summary
 
-AI made execution accessible. It did not make expertise accessible.
+**AI made execution accessible. Possible makes operational judgment accessible.**
+
+Possible turns one rough idea into a coordinated, independently verified, multidisciplinary outcome. The [Robot Snake run](https://github.com/fraylabs/possible/blob/main/apps/web/public/demo/robot-snake/evidence/outcome-receipt.md) began with, “I want to make a robot snake.” It produced inspectable CAD, URDF/SRDF, MuJoCo control and simulation, simulated autonomous obstacle avoidance, and Rerun telemetry. Fresh verification caught three material defects; after repair, the independent suite passed 12/12 tests and 186/186 interface checks.
+
+Possible is powered by open-source Outcome Packs for Codex. Each typed specification coordinates selected agent skills, owned workstreams, shared constraints, approval boundaries, and the evidence required for completion. The same system produced a hardware launch with a site, film, and CAD; a playable Three.js game; and a browser-tested coded presentation.
+
+We believe Outcome Packs can become an open standard for turning human ambition into complete, accountable, and verifiable agent outcomes.
+
+## Judging evidence
+
+Possible is a Developer Tools submission built with Codex using GPT-5.6. The [complete evidence funnel](https://github.com/fraylabs/possible/blob/main/JUDGING.md), [Build Week record](https://github.com/fraylabs/possible/blob/main/BUILD-WEEK.md), and [public judging page](https://possible.sh/judging) map the project directly to the official criteria.
+
+| Official criterion | Claim and implementation fact | Direct evidence |
+| --- | --- | --- |
+| Technological Implementation | Possible compiles outcomes instead of returning a static prompt; typed manifests become skill installs, owned workstreams, approval gates, verification and completion reporting. | [Compiler source](https://github.com/fraylabs/possible/blob/main/packages/packs/src/compiler.ts) |
+| Design | Complete outcomes remain inspectable; the Still demo presents its site, film, CAD, receipts and review evidence together. | [Live Still demo](https://possible.sh/demo/hardware) |
+| Potential Impact | A rough ambition can become coordinated specialist work; the Still run expands one brief into site, film, CAD and independent review. | [Still run](https://github.com/fraylabs/possible/blob/main/apps/web/public/demo/still/CODEX-THREAD.md) |
+| Quality of the Idea | Outcome Packs are a distinct layer above prompts, skills and agents; the manifest binds reviewed skills to outputs, safeguards and fresh verification. | [Hardware Launch manifest](https://github.com/fraylabs/possible/blob/main/packages/packs/src/hardware-launch.ts) |
+
+## Inspiration
 
 Someone can ask Codex to launch hardware, prototype a robot, or build a game without knowing every discipline, dependency, safeguard, or quality check the outcome requires. The human still has to discover and coordinate that work.
 

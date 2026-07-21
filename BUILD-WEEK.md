@@ -1,6 +1,6 @@
 # Possible — Build Week provenance
 
-This file separates repository evidence from facts that the submission owner must confirm.
+This file records the implementation boundary, official submission window, Codex session, human decisions and preserved evidence.
 
 ## Product reset
 
@@ -47,19 +47,15 @@ These artifacts show implementation, failures, repairs and verification. They do
 
 The human operator chose the product thesis, rejected the universal-skill and marketplace framings, required interview-first intake, selected the featured outcomes and retained approval gates for external actions. Codex implemented, tested and documented those decisions.
 
-## Submission-owner confirmation
+## Frozen submission record
 
-Before submission, add:
-
-1. official Build Week start and end timestamps;
-2. first eligible commit and frozen submission commit;
-3. the GPT-5.6 Codex task/session record;
-4. the primary Codex task/session ID shown by `/status`;
-5. the final demo-video URL.
+The [official submission period](https://openai.devpost.com/details/dates) ran from July 13, 2026 at 9:00am PDT to July 21, 2026 at 5:00pm PDT. The product-reset commit landed July 18 at 6:36am PDT; the frozen submission commit landed July 21 at 2:26pm PDT. This judge-evidence clarification was written afterward and does not expand that implementation range.
 
 ```text
-Primary Codex task/session ID: 019f7517-658f-7723-8686-2ecda930c00a
-Eligible commit range: [FIRST ELIGIBLE COMMIT]..[FINAL SUBMISSION COMMIT]
+Built with: Codex using GPT-5.6
+Primary Codex /feedback session ID: 019f7517-658f-7723-8686-2ecda930c00a
+Eligible implementation commit range: afb5fc1c1e01d746753712ddc79f456df0984826..d7d77f098da4712ca6194a9446c5498a7a66d01b
+Frozen submission commit: d7d77f098da4712ca6194a9446c5498a7a66d01b
 Demo video: https://youtu.be/s35aGhVI2Eo
 ```
 

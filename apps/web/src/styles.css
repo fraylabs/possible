@@ -245,6 +245,57 @@ nav { height: 74px; padding: 0 3.5vw; border-bottom: 1px solid #aaa59a; display:
 .docs-toc a { color: #777169; font-size: 10px; line-height: 1.35; }
 .docs-toc a:hover, .docs-toc a:focus-visible { color: #ff4d00; }
 
+/* Judge-facing evidence */
+.judging-page { background: #f8f7f2; }
+.judging-document { width: min(1280px, 93vw); margin: 0 auto; padding: clamp(54px, 7vw, 105px) 0 clamp(80px, 9vw, 140px); }
+.judging-page :where(a, button):focus-visible { outline: 3px solid #ff4d00; outline-offset: 3px; }
+.judging-hero { max-width: 980px; padding-bottom: clamp(60px, 7vw, 100px); }
+.judging-hero h1 { margin: 22px 0 26px; font-size: clamp(58px, 8vw, 116px); font-weight: 500; line-height: .85; letter-spacing: -.075em; }
+.judging-hero h1 em, .judging-section h2 em { color: #ff4d00; font-style: normal; }
+.judging-hero > p:not(.eyebrow) { max-width: 760px; margin: 0; color: #514d47; font-size: clamp(17px, 1.5vw, 22px); line-height: 1.55; }
+.judging-hero > div { margin-top: 30px; display: flex; flex-wrap: wrap; gap: 10px; }
+.judging-hero > div a { min-height: 46px; padding: 0 15px; border: 1px solid #151411; display: flex; align-items: center; justify-content: space-between; gap: 38px; font: 9px "DM Mono", monospace; text-transform: uppercase; }
+.judging-hero > div a:first-child { background: #151411; color: #f8f7f2; }
+.judging-hero > div a:hover, .judging-hero > div a:focus-visible { background: #a8ff52; color: #151411; }
+.judging-section { padding: clamp(58px, 7vw, 92px) 0; border-top: 1px solid #aaa59a; }
+.judging-section > header { margin-bottom: 34px; display: grid; grid-template-columns: 170px minmax(0, 800px); gap: 34px; align-items: start; }
+.judging-section > header > span { padding-top: 8px; color: #716c64; font: 9px "DM Mono", monospace; letter-spacing: .05em; }
+.judging-section h2 { margin: 0; font-size: clamp(36px, 4.6vw, 68px); font-weight: 500; line-height: .95; letter-spacing: -.06em; }
+.judging-table-scroll { overflow-x: auto; border: 1px solid #151411; background: #f8f7f2; }
+.judging-section table { width: 100%; border-collapse: collapse; color: #514d47; font-size: 11px; line-height: 1.55; text-align: left; }
+.judging-section caption { padding: 12px 14px; border-bottom: 1px solid #151411; color: #716c64; font: 8px "DM Mono", monospace; letter-spacing: .05em; text-align: left; text-transform: uppercase; }
+.judging-section th, .judging-section td { padding: 15px 14px; border-right: 1px solid #aaa59a; border-bottom: 1px solid #aaa59a; vertical-align: top; }
+.judging-section tr:last-child > * { border-bottom: 0; }
+.judging-section tr > *:last-child { border-right: 0; }
+.judging-section thead th { background: #151411; color: #aaa49b; font: 8px "DM Mono", monospace; letter-spacing: .05em; text-transform: uppercase; }
+.judging-section tbody th { color: #151411; font-size: 12px; font-weight: 700; }
+.judging-section td a { color: #a33600; font: 9px "DM Mono", monospace; text-decoration: underline; text-underline-offset: 3px; white-space: nowrap; }
+.judging-criteria-table { min-width: 1040px; }
+.judging-criteria-table th:first-child { width: 180px; }
+.judging-criteria-table td:last-child { width: 130px; }
+.judging-comparison-table { min-width: 720px; }
+.judging-comparison-table th:first-child { width: 180px; }
+.judging-comparison-table .is-possible > * { background: #efffc3; color: #151411; }
+.judging-trail ol { margin: 0; padding: 0; border: 1px solid #151411; display: grid; grid-template-columns: repeat(5, 1fr); list-style: none; }
+.judging-trail li { min-height: 245px; padding: 17px; border-right: 1px solid #aaa59a; display: flex; flex-direction: column; }
+.judging-trail li:last-child { border-right: 0; }
+.judging-trail li > span { color: #ff4d00; font: 8px "DM Mono", monospace; letter-spacing: .05em; }
+.judging-trail li p { margin: auto 0 24px; color: #35312d; font-size: 13px; line-height: 1.6; }
+.judging-trail li a { color: #a33600; font: 9px "DM Mono", monospace; text-decoration: underline; text-underline-offset: 3px; }
+
+@media (max-width: 760px) {
+  .judging-document { width: auto; padding-inline: 18px; }
+  .judging-hero h1 { font-size: 17vw; }
+  .judging-hero > div { align-items: stretch; flex-direction: column; }
+  .judging-hero > div a { width: 100%; }
+  .judging-section > header { grid-template-columns: 1fr; gap: 14px; }
+  .judging-section > header > span { padding-top: 0; }
+  .judging-table-scroll { margin-right: -18px; border-right: 0; }
+  .judging-trail ol { grid-template-columns: 1fr; }
+  .judging-trail li { min-height: 170px; border-right: 0; border-bottom: 1px solid #aaa59a; }
+  .judging-trail li:last-child { border-bottom: 0; }
+}
+
 .composer { min-height: calc(100vh - 74px); padding: 7vw 3.5vw 4vw; display: grid; grid-template-columns: 1.15fr .85fr; gap: 8vw; align-items: center; }
 .eyebrow { margin: 0; font: 500 10px "DM Mono", monospace; letter-spacing: .12em; color: #736e65; }
 .composer h1 { margin: 35px 0; max-width: 950px; font-size: clamp(58px, 7.4vw, 118px); font-weight: 500; line-height: .88; letter-spacing: -.07em; }
