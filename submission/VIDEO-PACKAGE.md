@@ -2,6 +2,8 @@
 
 Target cut: **2:54**. Hard cap: **2:57**. Do not upload a cut that reaches 3:00.
 
+Verified narration: **252 words** — about **2:17 at 110 wpm** or **2:06 at 120 wpm**, leaving roughly 37 seconds at the slower pace for pauses, cursor movement, and artifact audio inside the 2:54 target.
+
 The narration below is intentionally short enough for pauses, cursor movement, and artifact audio. Read with calm authority, not ad-speed energy. Show real interfaces and evidence; avoid animated architecture theater when the actual compiler, manifest, trace, or artifact is available.
 
 ## Timecoded script and storyboard
@@ -12,7 +14,7 @@ The narration below is intentionally short enough for pauses, cursor movement, a
 
 **Narration:**
 
-> Codex knows how to perform individual tasks. But for a complex outcome, someone still has to discover the work, coordinate ownership, integrate the pieces, and decide what proof counts as done.
+> Codex performs individual tasks. Complex outcomes still need someone to discover work, coordinate ownership, integrate pieces, and define proof.
 
 **On-screen text:** `TASK CAPABILITY ≠ COMPLETED OUTCOME`
 
@@ -22,7 +24,7 @@ The narration below is intentionally short enough for pauses, cursor movement, a
 
 **Narration:**
 
-> Possible is an open-source outcome compiler for Codex. It provides the operational knowledge to coordinate individual tasks into a verified result. Skills are ingredients. Possible compiles the outcome.
+> Possible is an open-source outcome compiler for Codex. It supplies operational knowledge that coordinates tasks into verified results. Skills are ingredients. Possible compiles the outcome.
 
 **On-screen text:** `POSSIBLE / THE OUTCOME COMPILER FOR CODEX`
 
@@ -32,7 +34,7 @@ The narration below is intentionally short enough for pauses, cursor movement, a
 
 **Narration:**
 
-> Start with rough intent. Possible asks only what can change the result, recommends one reviewed pack, and states its outputs and boundaries. Before approval, intake stays read-only: no ingredient installs, outcome state, or production work.
+> Start with rough intent. Possible recommends a reviewed pack, states its outputs and boundaries, then waits. Before approval, intake is read-only: no ingredient installs, outcome state, or production work.
 
 **On-screen text:** `INTENT → RECOMMENDATION → EXPLICIT APPROVAL`
 
@@ -42,7 +44,7 @@ The narration below is intentionally short enough for pauses, cursor movement, a
 
 **Narration:**
 
-> This is not a prompt library. A typed manifest records reviewed capabilities, outputs, bounded workstreams, safety gates, and verification. A deterministic TypeScript compiler adds repo-local installs and a parallel, integration, then fresh-review captain sequence. The approved run writes outcome-specific checks into its shared brief.
+> This is not a prompt library. Typed manifests record capabilities, outputs, bounded workstreams, gates, and verification. The compiler adds installs and a parallel-to-integration-to-review captain sequence. Approved runs write outcome-specific checks into the shared brief.
 
 **On-screen flow:** `INTENT → PACK → COMPILED WORKSTREAMS → EXECUTION → FRESH REVIEW → RECEIPT`
 
@@ -52,7 +54,7 @@ The narration below is intentionally short enough for pauses, cursor movement, a
 
 **Narration:**
 
-> For Still, a fictional e-ink focus device, Possible coordinated three workstreams into a real launch site, 24-second 1080p film, STEP-first CAD, local-only waitlist contract, and integrated evidence room. These are generated artifacts—not mock cards.
+> For Still, a fictional e-ink device, Possible coordinated a launch site, 24-second film, STEP-first CAD, local-only waitlist contract, and evidence room. These are generated artifacts.
 
 **On-screen text:** `SITE · FILM · STEP CAD · WAITLIST CONTRACT · EVIDENCE`
 
@@ -62,7 +64,7 @@ The narration below is intentionally short enough for pauses, cursor movement, a
 
 **Narration:**
 
-> Production checks were green, but Possible did not call the outcome complete. A fresh reviewer found the embedded site's JavaScript and CSS returned 404. It preserved the failure; the captain fixed the base path and rebuilt. Fresh verification then passed 58 of 58 artifact checks, with all 50 browser responses successful and no console, page, or HTTP errors.
+> Production checks were green, but completion stayed open. A fresh reviewer found the embedded site's JavaScript and CSS returned 404. The captain repaired the base path. Fresh verification passed 58 artifact checks and all 50 browser responses, with no console, page, or HTTP errors.
 
 **On-screen text:** `PRODUCED ≠ PASSED` then `FAILURE PRESERVED → REPAIR → FRESH PASS`
 
@@ -72,7 +74,7 @@ The narration below is intentionally short enough for pauses, cursor movement, a
 
 **Narration:**
 
-> We froze one brief across five fresh Codex workflows that inherited the same model configuration and common independent checks. Direct stopped at 19 of 20 when keyboard submission failed. Possible reached 20 of 20 and passed its treatment—but took longer and required one approval. This one-run pilot is not proof of typical superiority. The protocol, traces, failures, and limitations are public.
+> We froze one brief across five Codex workflows with the same inherited model configuration and independent checks. Direct stopped at 19 of 20 when keyboard submission failed. Possible reached 20 of 20, but took longer and required approval. One run per condition is not proof of typical superiority; every trace and limitation is public.
 
 **On-screen text:** `DIRECT 19/20 · NOT VERIFIED` / `$POSSIBLE 20/20 · VERIFIED` / `ONE-RUN PILOT — NOT A GENERAL PERFORMANCE CLAIM`
 
@@ -82,7 +84,7 @@ The narration below is intentionally short enough for pauses, cursor movement, a
 
 **Narration:**
 
-> Possible is TypeScript, open source, and installs into a Codex project with one command. Stop prompting tasks. Start specifying outcomes. Make it Possible.
+> Possible is open-source TypeScript and installs into a Codex project with one command. Stop prompting tasks. Start specifying outcomes. Make it Possible.
 
 **On-screen text:** `npx @fraylabs/possible@0.1.6 init` then `possible.sh` until `0.1.7` is published and verified
 
