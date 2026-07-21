@@ -20,7 +20,6 @@ describe("Possible", () => {
     expect(screen.getByRole("heading", { name: "What do you want to build today?", level: 1 })).toBeInTheDocument();
     expect(container.querySelectorAll("h1")).toHaveLength(1);
     expect(screen.getByText("Possible is an outcome skill for Codex. Its packs compile dozens of coordinated tasks, specialist skills, and verification gates into one approved run—like taking a SaaS from idea to release.")).toBeInTheDocument();
-    expect(screen.getByText("Codex today. Other agent surfaces later.")).toBeInTheDocument();
     expect(screen.getByText("npx @fraylabs/possible init")).toBeInTheDocument();
     expect(screen.getByText("$possible", { selector: ".install-next code" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "DOCS" })).toHaveAttribute("href", "/docs");
@@ -29,7 +28,7 @@ describe("Possible", () => {
     expect(screen.queryByRole("link", { name: /Browse packs/i })).not.toBeInTheDocument();
     const start = screen.getByRole("region", { name: "Start with Possible" });
     expect(within(start).getByRole("heading", { name: /Packs are complete recipes for.*real outcomes/i, level: 2 })).toBeInTheDocument();
-    expect(within(start).getByText(/Describe the outcome.*Possible recommends a pack before Codex begins/i)).toBeInTheDocument();
+    expect(within(start).getByText(/Describe the outcome.*Possible recommends a pack before Codex begins.*you do not need to choose one yourself/i)).toBeInTheDocument();
     expect(within(start).getByText("npx @fraylabs/possible init")).toBeInTheDocument();
     const packs = screen.getByRole("list", { name: "Packs Possible can recommend" });
     expect(within(packs).getAllByRole("listitem")).toHaveLength(8);
@@ -39,7 +38,13 @@ describe("Possible", () => {
         `/packs/${pack.slug}`,
       );
     }
-    expect(screen.getByRole("link", { name: /Open the full pack reference/i })).toHaveAttribute("href", "/packs");
+    expect(screen.queryByRole("link", { name: /Open the full pack reference/i })).not.toBeInTheDocument();
+    const benchmark = screen.getByRole("region", { name: /Can Possible keep working when you step away/i });
+    expect(within(benchmark).getByText("8")).toBeInTheDocument();
+    expect(within(benchmark).getByText("12")).toBeInTheDocument();
+    expect(within(benchmark).getByText("T0→T9")).toBeInTheDocument();
+    expect(within(benchmark).getByText(/CONTROLLED RESULTS PENDING/i)).toBeInTheDocument();
+    expect(within(benchmark).getByRole("link", { name: /Read the benchmark protocol/i })).toHaveAttribute("href", "/benchmarks");
     expect(container.querySelector(".journey")).not.toBeInTheDocument();
     expect(container.querySelector(".recommendation-example")).not.toBeInTheDocument();
     expect(screen.queryByRole("group", { name: /Filter outcome packs by lane/i })).not.toBeInTheDocument();
@@ -199,26 +204,48 @@ describe("Possible", () => {
     expect(await axe(container)).toHaveNoViolations();
   });
 
-  it("presents the step-away benchmark as time and independently verified startup ingredients", async () => {
+  it("separates company-system coverage, market success, and projected time to revenue", async () => {
     window.history.pushState({}, "", "/benchmarks");
     const { container } = render(<App />);
     expect(container.querySelector(".benchmarks-page.editorial-page .editorial-article .editorial-header .editorial-byline")).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: /Build me a.*\$1 million SaaS.*Make no mistakes/i, level: 1 })).toBeInTheDocument();
-    expect(screen.getByText(/MODEL 01.*LIVE RUNS NEXT/i)).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /Build me a.*\$100M\/year software company.*Make no mistakes/i, level: 1 })).toBeInTheDocument();
+    expect(screen.getByText(/PROTOCOL MODEL.*NOT OBSERVED RESULTS/i)).toBeInTheDocument();
     expect(screen.getByText(/same sentence, model, tools, workspace, and eight-hour window/i)).toBeInTheDocument();
-    const chart = screen.getByRole("list", { name: "Autonomous work time and verified startup ingredients by workflow" });
+    const chart = screen.getByRole("list", { name: "Autonomous work time and company-system coverage by workflow" });
     expect(within(chart).getAllByRole("listitem")).toHaveLength(5);
-    expect(within(chart).getByRole("listitem", { name: /Prompt by prompt: 1h 50m autonomous work time.*42% of successful-startup ingredients independently verified/i })).toBeInTheDocument();
-    expect(within(chart).getByRole("listitem", { name: /\$possible: 7h 20m autonomous work time.*91% of successful-startup ingredients independently verified/i })).toBeInTheDocument();
-    expect(screen.queryByText(/mocked|what the mock/i)).not.toBeInTheDocument();
-    expect(screen.queryByText(/estimated values|product hypothesis|measured pilot/i)).not.toBeInTheDocument();
+    expect(within(chart).getByRole("listitem", { name: /Prompt by prompt: 1h 50m autonomous work time.*42% modeled company-system coverage/i })).toBeInTheDocument();
+    expect(within(chart).getByRole("listitem", { name: /\$possible: 7h 20m autonomous work time.*91% modeled company-system coverage/i })).toBeInTheDocument();
+    expect(screen.getByText(/protocol-model values are not measurements/i)).toBeInTheDocument();
     expect(container.querySelectorAll(".benchmark-outcome-row > div > i")).toHaveLength(10);
-    expect(screen.getByRole("heading", { name: /Time alone proves nothing/i })).toBeInTheDocument();
-    expect(container.querySelectorAll(".benchmark-ingredients-grid > span")).toHaveLength(8);
-    expect(screen.getByText(/million dollars still has to happen in the real world/i)).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /Ingredients are verifiable now.*Success is earned later/i })).toBeInTheDocument();
+    expect(container.querySelectorAll(".benchmark-evidence-layers article")).toHaveLength(3);
+    expect(screen.getByText(/\$100M in annual revenue.*real financial evidence/i)).toBeInTheDocument();
+    expect(screen.getByText(/Instagram and Twitter schedules.*demand generation only.*not universal requirements/i)).toBeInTheDocument();
+    expect(container.querySelectorAll(".benchmark-ingredients-grid > span")).toHaveLength(12);
+    expect(screen.getByText(/Company-system coverage is not probability of success/i)).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /Projected time to \$100M\/year.*roughly 8–13 years/i })).toBeInTheDocument();
+    expect(screen.getByText(/MODELED SCENARIO.*NOT AN OBSERVED RESULT/i)).toBeInTheDocument();
+    const projection = screen.getByRole("list", { name: /Illustrative compound-growth scenarios/i });
+    expect(within(projection).getAllByRole("listitem")).toHaveLength(3);
+    expect(within(projection).getByRole("listitem", { name: /75% annual growth.*approximately 9\.2 years.*illustrative, not observed/i })).toBeInTheDocument();
+    expect(container.querySelector(".benchmark-truth-line")).toHaveTextContent(/\$0 VERIFIED REVENUE.*TIME TO \$100M UNKNOWN/i);
+    expect(screen.getByRole("complementary", { name: /Public software company revenue references/i })).toHaveTextContent(/Cloudflare.*GitLab.*Atlassian/i);
+    expect(screen.getByRole("link", { name: /Atlassian FY2025 Form 10-K/i })).toHaveAttribute("href", expect.stringContaining("sec.gov"));
+    expect(screen.getByRole("link", { name: /GitLab public marketing handbook/i })).toHaveAttribute("href", expect.stringContaining("handbook.gitlab.com"));
+    expect(screen.getByRole("link", { name: /Cloudflare 2019 prospectus/i })).toHaveAttribute("href", expect.stringContaining("sec.gov"));
+    expect(screen.getByRole("heading", { name: /Funding is validation.*Shipping is the outcome/i })).toBeInTheDocument();
+    const fulfillmentTimeline = screen.getByRole("list", { name: "Idea-to-shipment benchmark milestones" });
+    expect(within(fulfillmentTimeline).getAllByRole("listitem")).toHaveLength(10);
+    expect(within(fulfillmentTimeline).getByText("Rough idea accepted")).toBeInTheDocument();
+    expect(within(fulfillmentTimeline).getByText("95% of rewards shipped")).toBeInTheDocument();
+    expect(container.querySelectorAll(".benchmark-fulfillment-measures > div")).toHaveLength(4);
+    expect(container.querySelector(".benchmark-fulfillment-measures")).toHaveTextContent(/TIME TO KICKSTARTER.*AWAITING FIRST RUN/i);
+    expect(screen.getByText(/Public campaigns rarely reveal when the original idea began/i)).toBeInTheDocument();
+    expect(screen.getByText(/Matched campaigns stay in the cohort even when they are delayed or never report fulfillment/i)).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Kickstarter fulfillment dashboard guidance/i })).toHaveAttribute("href", expect.stringContaining("help.kickstarter.com"));
     expect(container.querySelector(".benchmark-table-scroll")).not.toBeInTheDocument();
     expect(container.querySelector(".benchmark-article")).toBeInTheDocument();
-    expect(container.querySelectorAll(".benchmark-article > section")).toHaveLength(3);
+    expect(container.querySelectorAll(".benchmark-article > section")).toHaveLength(6);
     expect(screen.getByText(/FRAY LABS.*21 JUL 2026/i)).toBeInTheDocument();
     expect(await axe(container)).toHaveNoViolations();
   });

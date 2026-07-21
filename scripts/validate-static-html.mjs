@@ -17,12 +17,16 @@ const homeMarkup = await html("index.html");
 const home = visibleText(homeMarkup);
 assert.match(home, /What do you want[\s\S]*to build[\s\S]*today\?/);
 assert.match(home, /Possible is an outcome skill for Codex\. Its packs compile dozens of coordinated tasks, specialist skills, and verification gates into one approved run/);
-assert.match(home, /Codex today\. Other agent surfaces later\./);
 assert.match(home, /npx @fraylabs\/possible init/);
 assert.match(home, /id="packs"/);
 assert.match(home, /Packs are complete recipes for[\s\S]*real outcomes/);
-assert.match(home, /Describe the outcome\. Possible recommends a pack before Codex begins\./);
+assert.match(home, /Describe the outcome\. Possible recommends a pack before Codex begins—you do not need to choose one yourself\./);
 assert.match(home, /<section class="start-section"[^>]*>[\s\S]*id="start"[\s\S]*id="packs"[\s\S]*<\/section>/);
+assert.match(home, /BENCHMARKS \/ OPEN PROTOCOL/);
+assert.match(home, /Can Possible keep working when[\s\S]*you step away\?/);
+assert.match(home, /8[\s\S]*HOURS[\s\S]*12[\s\S]*DOMAINS[\s\S]*T0→T9/);
+assert.match(home, /PROTOCOL PUBLISHED · CONTROLLED RESULTS PENDING/);
+assert.match(home, /href="\/benchmarks"[^>]*>Read the benchmark protocol/);
 assert.doesNotMatch(home, /href="\/#packs"|Browse packs/);
 assert.match(homeMarkup, /<meta property="og:image" content="https:\/\/possible\.sh\/og\.png"\/>/);
 assert.match(homeMarkup, /<meta name="twitter:image" content="https:\/\/possible\.sh\/og\.png"\/>/);
@@ -34,7 +38,7 @@ assert.doesNotMatch(home, /class="[^"]*(?:journey|recommendation-example|starter
 const homeMain = home.match(/<main[\s\S]*<\/main>/i)?.[0];
 assert.ok(homeMain, "The homepage must contain a semantic main element");
 const homepageWordCount = plainText(homeMain).split(/\s+/).filter(Boolean).length;
-assert.ok(homepageWordCount <= 215, `Homepage must stay at or below 215 words; found ${homepageWordCount}`);
+assert.ok(homepageWordCount <= 270, `Homepage must stay at or below 270 words; found ${homepageWordCount}`);
 assert.doesNotMatch(homeMain, /\bAI agents\b|50[–-]100|megaprompt|class="[^"]*(?:schedule-entry|quick-path|boundary)/i);
 
 for (const pack of outcomePacks) {
@@ -42,7 +46,7 @@ for (const pack of outcomePacks) {
   assert.match(home, new RegExp(escapedName));
   assert.match(home, new RegExp(`href="/packs/${pack.slug}"`));
 }
-assert.match(home, /href="\/packs"[^>]*>Open the full pack reference/);
+assert.doesNotMatch(home, /Open the full pack reference/);
 
 const catalog = visibleText(await html("packs/index.html"));
 assert.match(catalog, /Complete recipes/);
@@ -102,6 +106,22 @@ for (const [relativePath, expected] of [
 ]) {
   assert.match(visibleText(await html(relativePath)), new RegExp(expected));
 }
+
+const benchmarkMarkup = await html("benchmarks/index.html");
+const benchmarkText = visibleText(benchmarkMarkup);
+assert.match(benchmarkText, /PROTOCOL MODEL · NOT OBSERVED RESULTS/);
+assert.match(benchmarkText, /Company-system coverage is not probability of success/);
+assert.match(benchmarkText, /MODELED SCENARIO · NOT AN OBSERVED RESULT/);
+assert.match(benchmarkText, /\$0 VERIFIED REVENUE/);
+assert.match(benchmarkText, /TIME TO \$100M UNKNOWN/);
+assert.match(benchmarkText, /THIRD BENCHMARK · IDEA TO 95% SHIPPED/);
+assert.match(benchmarkText, /Funding is validation\.[\s\S]*Shipping is the outcome\./);
+assert.match(benchmarkText, /AWAITING FIRST RUN/);
+assert.match(benchmarkText, /Matched campaigns stay in the cohort even when they are delayed or never report fulfillment/);
+assert.match(benchmarkMarkup, /Atlassian FY2025 Form 10-K/);
+assert.match(benchmarkMarkup, /GitLab public marketing handbook/);
+assert.match(benchmarkMarkup, /Cloudflare 2019 prospectus/);
+assert.match(benchmarkMarkup, /Kickstarter fulfillment dashboard guidance/);
 
 for (const [relativePath, heading] of [["blogs/index.html", "Possible writing"], ["demo/index.html", "Possible outcome demos"]]) {
   const markup = await html(relativePath);

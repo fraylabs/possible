@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import PossibleRoute from "../_components/PossibleRoute";
 
 export const metadata: Metadata = {
-  title: "Step-Away Startup Benchmark",
-  description: "Compare how long agent workflows keep advancing a $1 million SaaS and how many ingredients of a successful startup they put in place.",
+  title: "Step-Away Company Benchmark",
+  description: "Compare autonomous work, company-system coverage, time to $100M, and the complete Kickstarter journey from rough idea to 95% shipped.",
 };
 
 export default function BenchmarksPage() {
