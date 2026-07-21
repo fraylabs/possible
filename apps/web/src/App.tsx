@@ -182,12 +182,12 @@ function CreatePage() {
       <section className="start-section" id="top" aria-label="Start with Possible">
         <div className="build-hero">
           <div className="build-hero-copy">
-            <p className="eyebrow">POSSIBLE / FOR CODEX</p>
+            <p className="eyebrow">OPEN SOURCE / FOR CODEX</p>
               <h1>Complete a possible <br /><em>outcome!</em></h1>
             <p className="build-hero-description"><strong>Possible is an open-source library of long prompts and agent skills.</strong> Each reusable pack coordinates 50–100 tasks to reproduce an outcome.</p>
             <div className="build-hero-actions">
               <a className="button-link" href="#try">Try with Codex <span>↓</span></a>
-              <a className="text-link" href="/benchmarks">View benchmarks →</a>
+              <a className="text-link" href="https://github.com/fraylabs/possible" target="_blank" rel="noreferrer">View source ↗</a>
             </div>
           </div>
 

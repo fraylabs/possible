@@ -20,8 +20,10 @@ describe("Possible", () => {
     const { container } = render(<App />);
     expect(screen.getByRole("heading", { name: "Complete a possible outcome!", level: 1 })).toBeInTheDocument();
     expect(container.querySelectorAll("h1")).toHaveLength(1);
+    expect(screen.getByText("OPEN SOURCE / FOR CODEX")).toBeInTheDocument();
     expect(screen.getByText(/Possible is an open-source library of long prompts and agent skills/i)).toBeInTheDocument();
     expect(screen.getByText(/Each reusable pack coordinates 50–100 tasks to reproduce an outcome/i)).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "View source ↗" })).toHaveAttribute("href", "https://github.com/fraylabs/possible");
     expect(screen.getByText("npx @fraylabs/possible@0.1.6 init")).toBeInTheDocument();
     expect(screen.getByText("$possible", { selector: ".install-next code" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "DOCS" })).toHaveAttribute("href", "/docs");
