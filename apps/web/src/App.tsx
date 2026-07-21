@@ -1430,35 +1430,35 @@ function NotFoundPage() {
 const judgingCriteria = [
   {
     name: "Technological Implementation",
-    claim: "Possible compiles outcomes instead of returning a static prompt.",
-    fact: "The compiler transforms typed manifests into install commands and an execution prompt with owned workstreams, approval gates, verification and completion reporting.",
-    significance: "One reviewed contract controls preparation, execution and completion.",
+    claim: "Typed Outcome Packs coordinate execution and verification.",
+    fact: "The compiler converts manifests into skill installs, owned workstreams, approval gates, and completion requirements.",
+    significance: "One contract governs the run from preparation through verification.",
     href: "https://github.com/fraylabs/possible/blob/main/packages/packs/src/compiler.ts",
     evidence: "Compiler source",
   },
   {
     name: "Design",
-    claim: "Complete outcomes remain inspectable instead of disappearing into agent logs.",
-    fact: "The public Still demo presents the generated site, film, CAD, receipts and review evidence together.",
-    significance: "People can inspect both the product and its proof.",
-    href: "/demo/hardware",
-    evidence: "Still demo",
+    claim: "Each demo presents the outcome beside its proof.",
+    fact: "The demo gallery exposes four visual outcomes and their preserved evidence.",
+    significance: "Judges can inspect the work without reading agent logs first.",
+    href: "/demo",
+    evidence: "Demo gallery",
   },
   {
     name: "Potential Impact",
-    claim: "A rough ambition can become coordinated specialist work without requiring the user to enumerate every task.",
-    fact: "The preserved Still run expands one hardware brief into site, film, CAD and independent-review workstreams.",
-    significance: "Possible reduces coordination burden while preserving explicit limits.",
-    href: "https://github.com/fraylabs/possible/blob/main/apps/web/public/demo/still/CODEX-THREAD.md",
-    evidence: "Still run",
+    claim: "Possible supplies work a novice did not know to request.",
+    fact: "The Robot Prototype pack covers mechanical design, simulation, control, telemetry, safety, and review.",
+    significance: "One rough request can start multidisciplinary work outside existing expertise.",
+    href: "https://github.com/fraylabs/possible/blob/main/packages/packs/src/robot-prototype.ts",
+    evidence: "Robot Prototype pack",
   },
   {
     name: "Quality of the Idea",
-    claim: "Outcome Packs are a distinct layer above prompts, skills and agents.",
-    fact: "The Hardware Launch manifest binds reviewed skills to owned workstreams, outputs, safeguards and fresh verification.",
-    significance: "It packages operational judgment, not only model capability.",
-    href: "https://github.com/fraylabs/possible/blob/main/packages/packs/src/hardware-launch.ts",
-    evidence: "Hardware Launch manifest",
+    claim: "Outcome Packs make operational judgment reusable.",
+    fact: "The Robot Snake run begins with an ambition and ends with an inspectable completion report.",
+    significance: "The system transfers more than a single capability or instruction.",
+    href: "https://github.com/fraylabs/possible/blob/main/apps/web/public/demo/robot-snake/evidence/outcome-receipt.md",
+    evidence: "Robot Snake report",
   },
 ] as const;
 
@@ -1477,9 +1477,9 @@ function JudgingPage() {
       <article className="judging-document">
         <header className="judging-hero">
           <p className="eyebrow">OPENAI BUILD WEEK / DEVELOPER TOOLS</p>
-          <h1>The claim.<br /><em>The evidence.</em></h1>
-          <p>Possible turns a rough ambition into approved, coordinated workstreams and independently verified outcomes. This page maps that claim to the four judging criteria and one preserved run.</p>
-          <div><a href="/demo/hardware">Open the Still outcome <span>↗</span></a><a href="https://github.com/fraylabs/possible/blob/main/BUILD-WEEK.md" target="_blank" rel="noreferrer">Build Week record <span>↗</span></a><a href="https://github.com/fraylabs/possible" target="_blank" rel="noreferrer">Inspect GitHub <span>↗</span></a></div>
+          <h1>One rough idea.<br /><em>A verified outcome.</em></h1>
+          <p>A robotics novice asked for a robot snake. Possible supplied the missing engineering work, coordinated the run, and verified the result.</p>
+          <div><a href="/demo/robot-snake">Open Robot Snake <span>↗</span></a><a href="https://github.com/fraylabs/possible/blob/main/BUILD-WEEK.md" target="_blank" rel="noreferrer">Build Week record <span>↗</span></a><a href="https://github.com/fraylabs/possible" target="_blank" rel="noreferrer">Inspect GitHub <span>↗</span></a></div>
         </header>
 
         <section className="judging-section" aria-labelledby="judging-criteria-heading">
@@ -1501,24 +1501,8 @@ function JudgingPage() {
           </div>
         </section>
 
-        <section className="judging-section" aria-labelledby="judging-comparison-heading">
-          <header><span>02 / DISTINCTION</span><h2 id="judging-comparison-heading">Why this is not a<br /><em>prompt, skill, or agent wrapper.</em></h2></header>
-          <div className="judging-table-scroll">
-            <table className="judging-comparison-table">
-              <caption>Comparison of Possible with prompt, skill, and agent wrappers</caption>
-              <thead><tr><th>System</th><th>Reusable unit</th><th>Coordination contract</th><th>Independent verification</th><th>Completion proof</th></tr></thead>
-              <tbody>
-                <tr><th scope="row">Prompt library</th><td>Instruction</td><td>Not inherent</td><td>Not inherent</td><td>Not inherent</td></tr>
-                <tr><th scope="row">Skill wrapper</th><td>Capability</td><td>Not inherent</td><td>Not inherent</td><td>Not inherent</td></tr>
-                <tr><th scope="row">Agent wrapper</th><td>Runtime or role</td><td>Runtime-dependent</td><td>Optional</td><td>Optional</td></tr>
-                <tr className="is-possible"><th scope="row">Possible</th><td>Typed outcome manifest</td><td>Declared workstreams, gates, and ownership</td><td>Required</td><td>Required</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </section>
-
         <section className="judging-section judging-trail" aria-labelledby="judging-trail-heading">
-          <header><span>03 / GUIDED EVIDENCE</span><h2 id="judging-trail-heading">One outcome,<br /><em>end to end.</em></h2></header>
+          <header><span>02 / GUIDED EVIDENCE</span><h2 id="judging-trail-heading">One outcome,<br /><em>end to end.</em></h2></header>
           <ol>{judgingTrail.map((item, index) => (
             <li key={item.step}>
               <span>{String(index + 1).padStart(2, "0")} / {item.step}</span>

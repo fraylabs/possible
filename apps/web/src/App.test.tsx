@@ -112,15 +112,16 @@ describe("Possible", () => {
 
   it("maps the four official judging criteria to direct evidence", async () => {
     const { container } = renderRoute("/judging");
-    expect(screen.getByRole("heading", { name: /The claim\.\s*The evidence\./, level: 1 })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /One rough idea\.\s*A verified outcome\./, level: 1 })).toBeInTheDocument();
 
     const criteria = screen.getByRole("table", { name: /four official judging criteria/i });
     for (const name of ["Technological Implementation", "Design", "Potential Impact", "Quality of the Idea"]) {
       expect(within(criteria).getByRole("rowheader", { name })).toBeInTheDocument();
     }
     expect(within(criteria).getByRole("link", { name: /Compiler source/i })).toHaveAttribute("href", "https://github.com/fraylabs/possible/blob/main/packages/packs/src/compiler.ts");
-    expect(within(criteria).getByRole("link", { name: /Still demo/i })).toHaveAttribute("href", "/demo/hardware");
-    expect(within(criteria).getByRole("link", { name: /Hardware Launch manifest/i })).toHaveAttribute("href", "https://github.com/fraylabs/possible/blob/main/packages/packs/src/hardware-launch.ts");
+    expect(within(criteria).getByRole("link", { name: /Demo gallery/i })).toHaveAttribute("href", "/demo");
+    expect(within(criteria).getByRole("link", { name: /Robot Snake report/i })).toHaveAttribute("href", "https://github.com/fraylabs/possible/blob/main/apps/web/public/demo/robot-snake/evidence/outcome-receipt.md");
+    expect(container.querySelector("main")).not.toHaveTextContent(/wrapper|Why this is not/i);
     expect(container.querySelector(".nav-links")).not.toHaveTextContent(/JUDGING/i);
     expect(await axe(container)).toHaveNoViolations();
   });

@@ -17,10 +17,10 @@ const [readme, devpost, video, buildWeek, npmRelease, judging, robotManifestSour
 
 const robotManifest = JSON.parse(robotManifestSource);
 
-const coreLanguage = "Possible.sh is an open-source library of Outcome Packs. Each pack combines a reusable execution prompt and selected agent skills for dozens of coordinated tasks.";
 assert.match(readme, /Possible\.sh is an open-source library of Outcome Packs for Codex\./);
 for (const [label, source] of [["Devpost", devpost], ["video", video]]) {
-  assert.match(source, new RegExp(coreLanguage.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")), `${label} must use the core language`);
+  assert.match(source, /Possible\.sh is an open-source library of Outcome Packs\./, `${label} must define Possible`);
+  assert.match(source, /reusable execution prompt and selected agent skills for dozens of coordinated tasks/, `${label} must explain an Outcome Pack`);
 }
 for (const [label, source] of [["README", readme], ["Devpost", devpost], ["video", video]]) {
   assert.match(source, /npx @fraylabs\/possible@0\.1\.9 init/, `${label} must use the canonical install`);
@@ -37,36 +37,31 @@ for (const name of ["Still", "Robot Snake", "Fold", "Web Presentation"]) {
 for (const [label, source] of [["README", readme], ["Devpost", devpost]]) {
   for (const phrase of [
     "AI made execution accessible. Possible makes operational judgment accessible.",
-    "simulated autonomous obstacle avoidance",
-    "three material defects",
     "12/12 tests",
     "186/186 interface checks",
-    "Outcome Packs can become an open standard",
   ]) assert.match(source, new RegExp(phrase.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")), `${label} must lead with the verified Robot Snake proof`);
+  assert.match(source, /robot snake/i, `${label} must lead with Robot Snake`);
+  assert.match(source, /CAD[\s\S]{0,100}URDF\/SRDF[\s\S]{0,100}MuJoCo/, `${label} must name the multidisciplinary work`);
+  assert.match(source, /three (?:material )?defects/, `${label} must preserve the verifier finding`);
 }
 assert.equal(robotManifest.verification.freshIndependentSuite, "12/12 passed");
 assert.equal(robotManifest.verification.interfaceChecks, "186/186 passed");
 assert.match(robotReceipt, /found three material defects before sign-off/);
 
-for (const criterion of ["Technological Implementation", "Design", "Potential Impact", "Quality of the Idea"]) {
-  assert.match(readme, new RegExp(criterion), `README must surface ${criterion}`);
-  assert.match(devpost, new RegExp(criterion), `Devpost must surface ${criterion}`);
-}
-assert.match(readme, /\[Read the complete judging evidence\]\(JUDGING\.md\)/);
-assert.match(readme, /\[inspect the Build Week record\]\(BUILD-WEEK\.md\)/);
+assert.match(readme, /\[Explore the evidence\]\(https:\/\/possible\.sh\/judging\)/);
+assert.match(readme, /\[Read the Build Week record\]\(BUILD-WEEK\.md\)/);
 assert.match(readme, /https:\/\/possible\.sh\/judging/);
-assert.match(devpost, /https:\/\/github\.com\/fraylabs\/possible\/blob\/main\/JUDGING\.md/);
-assert.match(devpost, /https:\/\/github\.com\/fraylabs\/possible\/blob\/main\/BUILD-WEEK\.md/);
-assert.match(devpost, /https:\/\/possible\.sh\/judging/);
+assert.doesNotMatch(readme, /\bwrapper\b|Why this is not/i, "README must explain Possible directly");
+assert.doesNotMatch(devpost, /\bwrapper\b|Why this is not|^## Judging evidence$/im, "Devpost must explain Possible directly");
 
 const judgingWords = judging.trim().split(/\s+/).filter(Boolean).length;
 assert.ok(judgingWords <= 500, `JUDGING.md exceeds the 500-word evidence budget at ${judgingWords} words`);
 for (const criterion of ["Technological Implementation", "Design", "Potential Impact", "Quality of the Idea"]) {
   assert.equal(judging.match(new RegExp(criterion, "g"))?.length, 1, `JUDGING.md must contain ${criterion} exactly once`);
 }
-assert.match(judging, /## Why this is not a wrapper/);
-assert.match(judging, /## Guided evidence trail: Still/);
+assert.match(judging, /## Guided evidence trail/);
 assert.match(judging, /\[Build Week record\]\(BUILD-WEEK\.md\)/);
+assert.doesNotMatch(judging, /\bwrapper\b|Why this is not/i, "Judging evidence must stay positive and direct");
 assert.doesNotMatch(judging, /hidden text|keyword stuffing|AI screen(?:er|ing)|instructions? (?:to|for) (?:the )?(?:judge|evaluator)/i, "JUDGING.md must remain a factual evidence index");
 
 for (const heading of [
@@ -94,6 +89,8 @@ for (const url of [
 
 assert.doesNotMatch(devpost, /\bMCP\b|recurring operations?|schedule operations/i, "Devpost must keep the primary pitch focused");
 assert.doesNotMatch(video, /\bMCP\b|recurring operations?|schedule operations/i, "Video must keep the primary pitch focused");
+const devpostWords = devpost.trim().split(/\s+/).filter(Boolean).length;
+assert.ok(devpostWords <= 700, `Devpost copy is too dense at ${devpostWords} words`);
 assert.match(buildWeek, /https:\/\/openai\.devpost\.com\/details\/dates/);
 assert.match(buildWeek, /Primary Codex \/feedback session ID: 019f7517-658f-7723-8686-2ecda930c00a/);
 assert.match(buildWeek, /Demo video: https:\/\/youtu\.be\/s35aGhVI2Eo/);

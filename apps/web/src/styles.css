@@ -273,9 +273,6 @@ nav { height: 74px; padding: 0 3.5vw; border-bottom: 1px solid #aaa59a; display:
 .judging-criteria-table { min-width: 1040px; }
 .judging-criteria-table th:first-child { width: 180px; }
 .judging-criteria-table td:last-child { width: 130px; }
-.judging-comparison-table { min-width: 720px; }
-.judging-comparison-table th:first-child { width: 180px; }
-.judging-comparison-table .is-possible > * { background: #efffc3; color: #151411; }
 .judging-trail ol { margin: 0; padding: 0; border: 1px solid #151411; display: grid; grid-template-columns: repeat(5, 1fr); list-style: none; }
 .judging-trail li { min-height: 245px; padding: 17px; border-right: 1px solid #aaa59a; display: flex; flex-direction: column; }
 .judging-trail li:last-child { border-right: 0; }

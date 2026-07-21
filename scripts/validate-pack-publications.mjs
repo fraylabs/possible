@@ -32,7 +32,8 @@ for (const item of evidence.judgingCriteria) {
   assert.equal(typeof item.implementationFact, "string");
   assert.equal(typeof item.significance, "string");
   assert.match(item.evidence.url, /^https:\/\//);
-  assert.match(judgingDocument, new RegExp(`\\| \\*\\*${item.criterion}\\*\\* \\| ${item.claim.replace(/[.*+?^${}()|[\\]\\\\]/g, "\\\\$&")} \\|`));
+  assert.ok(judgingDocument.includes(item.criterion));
+  assert.ok(judgingDocument.includes(item.claim));
   assert.ok(judgingDocument.includes(item.significance));
   assert.ok(judgingDocument.includes(item.evidence.url));
 }

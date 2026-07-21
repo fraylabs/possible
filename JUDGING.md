@@ -1,31 +1,22 @@
 # OpenAI Build Week judging evidence
 
-Possible is a Developer Tools submission built with Codex using GPT-5.6. It is an open-source library of Outcome Packs: reusable execution prompts and selected agent skills that coordinate ambitious outcomes involving dozens of tasks. The [Build Week record](BUILD-WEEK.md) fixes the submission window, commit range, Codex session and demo video.
+Possible turns one rough idea into a coordinated, independently verified outcome. A robotics novice asked for a robot snake. Possible supplied the missing engineering work and produced CAD, URDF/SRDF, MuJoCo control, obstacle avoidance, Rerun telemetry, 12 passing tests, and 186 interface checks. Fresh verification also found and repaired three defects. See the [Robot Snake run](https://possible.sh/demo/robot-snake).
+
+Possible is a Developer Tools submission built with Codex using GPT-5.6. Its open-source Outcome Packs combine reusable execution prompts, selected agent skills, workstreams, safeguards, and completion checks. The [Build Week record](BUILD-WEEK.md) documents the session, submission period, and demo video.
 
 ## Official judging criteria
 
-| Criterion | Claim | Implementation fact and direct evidence | Significance |
+| Criterion | Claim | Evidence | Why it matters |
 | --- | --- | --- | --- |
-| **Technological Implementation** | Possible compiles outcomes instead of returning a static prompt. | The [compiler](https://github.com/fraylabs/possible/blob/main/packages/packs/src/compiler.ts) transforms typed manifests into install commands and an execution prompt with owned workstreams, approval gates, verification and completion reporting. | One reviewed contract controls preparation, execution and completion. |
-| **Design** | Complete outcomes remain inspectable instead of disappearing into agent logs. | The public [Still demo](https://possible.sh/demo/hardware) presents the generated site, film, CAD, receipts and review evidence together. | People can inspect both the product and its proof. |
-| **Potential Impact** | A rough ambition can become coordinated specialist work without requiring the user to enumerate every task. | The preserved [Still run](https://github.com/fraylabs/possible/blob/main/apps/web/public/demo/still/CODEX-THREAD.md) expands one hardware brief into site, film, CAD and independent-review workstreams. | Possible reduces coordination burden while preserving explicit limits. |
-| **Quality of the Idea** | Outcome Packs are a distinct layer above prompts, skills and agents. | The [Hardware Launch manifest](https://github.com/fraylabs/possible/blob/main/packages/packs/src/hardware-launch.ts) binds reviewed skills to owned workstreams, outputs, safeguards and fresh verification. | It packages operational judgment, not only model capability. |
+| **Technological Implementation** | Typed Outcome Packs coordinate execution and verification. | The [compiler](https://github.com/fraylabs/possible/blob/main/packages/packs/src/compiler.ts) converts manifests into skill installs, owned workstreams, approval gates, and completion requirements. | One contract governs the run from preparation through verification. |
+| **Design** | Each demo presents the outcome beside its proof. | The [demo gallery](https://possible.sh/demo) exposes four visual outcomes and their preserved evidence. | Judges can inspect the work without reading agent logs first. |
+| **Potential Impact** | Possible supplies work a novice did not know to request. | The [Robot Prototype pack](https://github.com/fraylabs/possible/blob/main/packages/packs/src/robot-prototype.ts) covers mechanical design, simulation, control, telemetry, safety, and review. | One rough request can start multidisciplinary work outside existing expertise. |
+| **Quality of the Idea** | Outcome Packs make operational judgment reusable. | The [Robot Snake intake](https://github.com/fraylabs/possible/blob/main/apps/web/public/demo/robot-snake/INTAKE-TRANSCRIPT.md) begins with an ambition, then produces an inspectable [completion report](https://github.com/fraylabs/possible/blob/main/apps/web/public/demo/robot-snake/evidence/outcome-receipt.md). | The system transfers more than a single capability or instruction. |
 
-## Why this is not a wrapper
+## Guided evidence trail
 
-| Approach | Primary unit | Workstreams and gates | Independent verification | Completion evidence |
-| --- | --- | --- | --- | --- |
-| Prompt library | Text | Not inherent | Not inherent | Not inherent |
-| Skill wrapper | Capability | Not inherent | Not inherent | Not inherent |
-| Agent wrapper | Agent or tool call | Runtime-dependent | Optional | Optional |
-| **Possible** | Typed outcome manifest | Declared | Required | Required |
-
-Possible uses prompts, skills and agents as ingredients. Its product boundary is the compiled outcome contract: ownership, dependencies, approvals, definition of done and preserved evidence.
-
-## Guided evidence trail: Still
-
-1. **Intake:** the [confirmed product brief](https://github.com/fraylabs/possible/blob/main/apps/web/public/demo/still/PRODUCT-BRIEF.md) records facts, constraints, required outputs and acceptance checks.
-2. **Compiled workstreams:** the [generated run prompt](https://github.com/fraylabs/possible/blob/main/apps/web/public/demo/still/CODEX-THREAD.md#run-prompt) assigns site, film and CAD ownership before execution.
-3. **Verification failure:** the [first browser trace](https://github.com/fraylabs/possible/blob/main/apps/web/public/demo/still/verification/browser-results-initial-failure.json) preserves the integrated site’s asset-path 404s.
-4. **Repair:** the [fresh-review receipt](https://github.com/fraylabs/possible/blob/main/apps/web/public/demo/still/evidence/final-receipt.md#material-failure-found-and-repaired) records the relative-base fix and mandatory rerun.
-5. **Passing completion:** the [outcome receipt](https://github.com/fraylabs/possible/blob/main/apps/web/public/demo/still/OUTCOME-RECEIPT.md) reports the post-repair browser pass, 58/58 artifact audit and remaining limitations.
+1. **Intake:** the [confirmed Still brief](https://github.com/fraylabs/possible/blob/main/apps/web/public/demo/still/PRODUCT-BRIEF.md) records the user’s constraints and acceptance checks.
+2. **Compiled workstreams:** the [run transcript](https://github.com/fraylabs/possible/blob/main/apps/web/public/demo/still/CODEX-THREAD.md#run-prompt) assigns site, film, and CAD ownership.
+3. **Verification failure:** the [initial browser trace](https://github.com/fraylabs/possible/blob/main/apps/web/public/demo/still/verification/browser-results-initial-failure.json) records asset-path failures.
+4. **Repair:** the [review receipt](https://github.com/fraylabs/possible/blob/main/apps/web/public/demo/still/evidence/final-receipt.md#material-failure-found-and-repaired) records the fix and required rerun.
+5. **Passing completion:** the [completion report](https://github.com/fraylabs/possible/blob/main/apps/web/public/demo/still/OUTCOME-RECEIPT.md) reports the browser pass, 58/58 artifact audit, and remaining limits.

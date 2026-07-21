@@ -29,7 +29,8 @@ for (const item of evidenceManifest.judgingCriteria) {
 }
 assert.ok(judgingText.split(/\s+/).filter(Boolean).length <= 500, "/judging must contain its complete visible argument within 500 words");
 assert.doesNotMatch(judgingMarkup, /<caption[^>]*class="sr-only"/i, "/judging must not hide evidence text");
-assert.match(judgingMarkup, /href="https:\/\/github\.com\/fraylabs\/possible\/blob\/main\/BUILD-WEEK\.md"/, "/judging must link the frozen Build Week record");
+assert.match(judgingMarkup, /href="https:\/\/github\.com\/fraylabs\/possible\/blob\/main\/BUILD-WEEK\.md"/, "/judging must link the Build Week record");
+assert.doesNotMatch(judgingText, /\bwrapper\b|Why this is not/i, "/judging must explain Possible directly");
 assert.match(judgingMarkup, /href="https:\/\/github\.com\/fraylabs\/possible\/blob\/main\/apps\/web\/public\/demo\/still\/CODEX-THREAD\.md#run-prompt"/, "/judging must link the preserved Still run prompt, not the current generic pack output");
 assert.doesNotMatch(judgingMarkup, /href="\/packs\/hardware-launch\/run\.txt"/, "/judging must not substitute a mutable generic prompt for preserved run evidence");
 
