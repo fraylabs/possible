@@ -13,6 +13,7 @@ The interactive Possible surface has three layers:
 - `/packs` — inspect the outcome recipes Possible may recommend.
 - `/packs/:slug` — inspect a pack's outputs, specialists, sources, guardrails, and verification before confirming it.
 - `/demo` — open the coded visual explainer or inspect preserved outcome runs, failures, repairs, and verified artifacts.
+- `/demo/presentation` — view the explainer inside the same output, conversation, and completion framing as the recorded demos.
 
 A builder starts with only:
 

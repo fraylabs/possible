@@ -62,9 +62,9 @@ This audit treats completion as unproven. Each requirement below names the autho
 - Packs: **8/8** across the thirteen-pack catalog.
 - CLI: **8/8**, canonical three-file snapshot matched.
 - MCP: **11/11**.
-- Web: **32/32**, including automated accessibility, mobile navigation, and retired-route behavior.
-- Production export: **34/34** static-generation steps.
-- Static HTML: **28 routes**.
+- Web: **33/33**, including the presentation demo, automated accessibility, mobile navigation, and retired-route behavior.
+- Production export: **35/35** static-generation steps.
+- Static HTML: **29 routes**.
 - Pack publications: **13/13** matched the compiler.
 - Demo validator: **passed**.
 - `git diff --check`: **passed**.
@@ -73,7 +73,7 @@ This audit treats completion as unproven. Each requirement below names the autho
 
 ## Missing completion evidence
 
-1. **Fresh visual browser review:** the new coded presentation was reviewed locally across representative desktop slides and the stacked mobile layout, with clean browser logs and no horizontal mobile overflow. A new full-site visual audit was not repeated in this change.
+1. **Fresh visual browser review:** the coded presentation and its demo-detail framing were reviewed locally across desktop and phone-sized layouts. The mobile task map retains readable type, the demo embeds the live output, and neither layout has horizontal overflow. A new full-site visual audit was not repeated in this change.
 2. **Live deployment:** intentionally not performed without public-action approval; the candidate's benchmark, demo, presentation, and raw evidence URLs have not been verified live.
 3. **Owner/account provenance:** the official GPT-5.6 `/feedback` session ID and eligible commit endpoints are unavailable in repository state.
 4. **Video:** storyboard exists; recording and public YouTube upload do not.

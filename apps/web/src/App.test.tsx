@@ -460,7 +460,7 @@ describe("Possible", () => {
     expect(container.querySelector(".demo-gallery-hero")).not.toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Possible outcome demos", level: 1 })).toBeInTheDocument();
     expect(container.querySelectorAll("h1")).toHaveLength(1);
-    expect(screen.getByRole("link", { name: /POSSIBLE EXPLAINER.*LIVE CODED DECK.*POSSIBLE\.SH/i })).toHaveAttribute("href", "/presentation");
+    expect(screen.getByRole("link", { name: /POSSIBLE EXPLAINER.*LIVE CODED DECK.*POSSIBLE\.SH/i })).toHaveAttribute("href", "/demo/presentation");
     expect(screen.getByRole("link", { name: /HARDWARE LAUNCH.*STILL/i })).toHaveAttribute("href", "/demo/hardware");
     expect(screen.getByRole("link", { name: /SOFTWARE LAUNCH.*THREE/i })).toHaveAttribute("href", "/demo/software");
     expect(screen.getByRole("link", { name: /OPEN-SOURCE RELEASE.*TINY-SLUG/i })).toHaveAttribute("href", "/demo/open-source");
@@ -474,8 +474,20 @@ describe("Possible", () => {
     expect(screen.getByText(/See how agent skills.*real Robot Prototype outcome/i)).toBeInTheDocument();
   });
 
+  it("presents the coded explainer with the same outcome-demo structure", () => {
+    window.history.pushState({}, "", "/demo/presentation");
+    const { container } = render(<App />);
+    expect(container.querySelector("main")).toHaveClass("demo-detail-page", "demo-detail-page--presentation");
+    expect(screen.getByRole("heading", { name: /What Possible is,\s*in ten slides/i, level: 1 })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /01 \/ OUTPUT/i })).toHaveAttribute("href", "#artifacts");
+    expect(screen.getByRole("link", { name: /02 \/ CONVERSATION/i })).toHaveAttribute("href", "#conversation");
+    expect(screen.getByTitle("Possible.sh visual explainer")).toHaveAttribute("src", "/presentation/possible.html");
+    expect(screen.getByRole("link", { name: /Web Presentation Outcome Pack/i })).toHaveAttribute("href", "/packs/web-presentation");
+    expect(screen.getByText(/not presented as a preserved \$possible run/i)).toBeInTheDocument();
+  });
+
   it("keeps every outcome-first demo free of automated accessibility violations", async () => {
-    for (const route of ["/demo/hardware", "/demo/software", "/demo/open-source", "/demo/game", "/demo/robot-snake"]) {
+    for (const route of ["/demo/presentation", "/demo/hardware", "/demo/software", "/demo/open-source", "/demo/game", "/demo/robot-snake"]) {
       window.history.pushState({}, "", route);
       const { container, unmount } = render(<App />);
       expect(container.querySelector("main")).toHaveClass("demo-detail-page");

@@ -1161,7 +1161,7 @@ function DemoGalleryPage() {
       <h1 className="sr-only">Possible outcome demos</h1>
 
       <section className="demo-gallery-grid" aria-label="Possible demos and recorded examples">
-        <a className="demo-example-card demo-example-card--presentation" href="/presentation">
+        <a className="demo-example-card demo-example-card--presentation" href="/demo/presentation">
           <header><span>00 / POSSIBLE EXPLAINER</span><strong>LIVE CODED DECK ↗</strong></header>
           <div className="demo-example-visual demo-example-visual--presentation">
             <img src="/presentation/possible-visual-atlas.webp" alt="Illustrations of an agent skill, execution prompt, Outcome Pack, and the Possible guide" />
@@ -1242,6 +1242,48 @@ function DemoGalleryPage() {
         </a>
       </section>
       <SiteFooter />
+    </main>
+  );
+}
+
+function PresentationDemoPage() {
+  return (
+    <main className="demo-detail-page demo-detail-page--presentation" id="top">
+      <SiteNav label="Live demo / Possible explainer" />
+      <DemoOutcomeHeader
+        eyebrow="WEB PRESENTATION / LIVE EXPLAINER"
+        title="What Possible is,"
+        accent="in ten slides."
+        description="A coded browser deck that makes agent skills, reusable execution prompts, Outcome Packs, and the $possible guide immediately understandable."
+        metric="10 SLIDES / BROWSER-TESTED"
+      />
+
+      <section className="presentation-artifacts" id="artifacts" aria-label="Outcome artifacts">
+        <DemoOutputLabel />
+        <header>
+          <div><p className="eyebrow">LIVE / HTML · CSS · JAVASCRIPT</p><h2>The explanation<br /><em>is the output.</em></h2></div>
+          <p>Navigate with arrow keys or swipe. On a phone, scroll through the complete presentation as one readable story.</p>
+        </header>
+        <article className="demo-site-output presentation-live-card">
+          <header><span>POSSIBLE.SH / VISUAL EXPLAINER</span><strong>INTERACTIVE OUTPUT</strong></header>
+          <iframe src="/presentation/possible.html" title="Possible.sh visual explainer" allow="fullscreen" />
+          <footer>
+            <p><strong>Ten coded slides.</strong><span>No PowerPoint, proprietary editor, or exported screenshot deck.</span></p>
+            <a href="/presentation">OPEN FULLSCREEN ↗</a>
+          </footer>
+        </article>
+      </section>
+
+      <DemoConversation
+        userIdea="I need people to understand what Possible.sh is without reading a wall of text."
+        possibleQuestion="Should this be a downloadable slide file, or a live visual experience people can open in the browser?"
+        userOutcome="A distinctive coded presentation with simple visuals, a clear story, and a real outcome at the end."
+        packHref="/packs/web-presentation"
+        packLabel="Web Presentation"
+        recommendation="It coordinates the narrative, evidence, visual direction, coded deck, presenter experience, responsive behavior, and browser review."
+      />
+
+      <DemoOutcomeFooter text="Live coded demonstration. The deck is browser-tested, but this page is not presented as a preserved $possible run." href="/demo" linkLabel="BACK TO DEMOS ↑" />
     </main>
   );
 }
@@ -2031,6 +2073,7 @@ export function PossibleSite({ path: requestedPath }: { path?: string }) {
   if (path === "/docs") return <DocsPage />;
   if (path === "/docs/how-to-use") return <HowToUsePage />;
   if (path === "/demo") return <DemoGalleryPage />;
+  if (path === "/demo/presentation") return <PresentationDemoPage />;
   if (path === "/demo/game/play") return <Suspense fallback={<main className="plane-game-shell plane-game-loading"><span>FOLD / LOADING FLIGHT</span></main>}><PaperPlaneGame /></Suspense>;
   if (path === "/demo/game") return <PlayableGameDemoPage />;
   if (path === "/demo/robot-snake") return <RobotSnakeDemoPage />;

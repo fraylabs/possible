@@ -858,6 +858,18 @@ footer .wordmark span { color: #151411; }
 .demo-detail-page .release-artifacts, .demo-detail-page .software-artifacts { padding-bottom: 0; }
 .demo-detail-page--release .demo-outcome-header h1 em { color: #a8ff52; }
 .demo-detail-page--release .demo-outcome-footer { background: #a8ff52; }
+.demo-detail-page--presentation .demo-outcome-header h1 em { color: #ffc7e5; }
+.demo-detail-page--presentation .demo-outcome-footer { background: #ffc7e5; }
+.presentation-artifacts { scroll-margin-top: 24px; padding: clamp(75px, 8vw, 125px) 3.5vw; background: #eeece4; color: #151411; }
+.presentation-artifacts > header { margin-bottom: 65px; display: grid; grid-template-columns: 1.1fr .9fr; gap: 8vw; align-items: end; }
+.presentation-artifacts h2 { margin: 20px 0 0; font-size: clamp(52px, 7vw, 105px); font-weight: 500; line-height: .86; letter-spacing: -.072em; }
+.presentation-artifacts h2 em { color: #d25595; font-style: normal; }
+.presentation-artifacts > header > p { max-width: 590px; margin: 0; color: #625d55; font-size: 17px; line-height: 1.65; }
+.presentation-live-card { box-shadow: 11px 11px 0 #d25595; }
+.presentation-live-card > header strong { color: #d25595; }
+.presentation-live-card > footer p { display: flex; flex-direction: column; gap: 4px; }
+.presentation-live-card > footer p strong { color: #151411; font-size: 14px; }
+.presentation-live-card > footer p span { color: #625d55; }
 
 @media (max-width: 900px) {
   nav { grid-template-columns: 1fr 1fr; }
@@ -1335,6 +1347,10 @@ footer .wordmark span { color: #151411; }
   .release-file-index a:last-child { border-bottom: 0; }
   .example-detail-footer { padding-inline: 18px; align-items: flex-start; flex-direction: column; gap: 20px; }
   .software-artifacts { padding-inline: 18px; }
+  .presentation-artifacts { padding-inline: 18px; }
+  .presentation-artifacts > header { grid-template-columns: 1fr; }
+  .presentation-artifacts h2 { font-size: 14vw; }
+  .presentation-live-card > footer { align-items: flex-start; flex-direction: column; }
   .software-artifacts > header, .software-live-grid { grid-template-columns: 1fr; }
   .software-artifacts h2 { font-size: 14vw; }
   .software-live-card iframe { height: 620px; }

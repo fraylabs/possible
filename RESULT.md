@@ -16,9 +16,9 @@ The repository now includes a five-minute Judge Quickstart, a non-prompt-library
 - Pack compiler: 8/8 tests passed across all thirteen packs.
 - CLI: 8/8 tests passed; the three-file installed skill snapshot matched.
 - MCP: 11/11 tests passed across the thirteen-pack catalog and compilation behavior.
-- Web: 32/32 tests passed, including automated accessibility, the mobile navigation drawer, the retired-route check, benchmark links, and the Still verification sequence.
-- Production export: all 34 static-generation steps completed.
-- Static HTML: all 28 public routes contained meaningful initial HTML.
+- Web: 33/33 tests passed, including automated accessibility, the presentation demo, the mobile navigation drawer, the retired-route check, benchmark links, and the Still verification sequence.
+- Production export: all 35 static-generation steps completed.
+- Static HTML: all 29 public routes contained meaningful initial HTML.
 - Pack publications: all thirteen JSON/install/run publication sets matched the canonical compiler.
 - Demo validation: Hardware, Software, Open-Source, and Playable Web Game evidence bundles passed.
 - Benchmark result files passed the frozen schema, exact-identifier, uniqueness, and decision-rule audit.

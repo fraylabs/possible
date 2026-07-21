@@ -136,7 +136,45 @@
 
     /* === PRINT / SMALL SCREEN / MOTION === */
     @media print { html,body{height:auto;overflow:visible;background:#fff}.deck{width:100%;height:auto;position:static;transform:none;overflow:visible}.slides{position:static}.slide{width:1920px;height:1080px;position:relative;page-break-after:always;opacity:1;visibility:visible;transform:none}.controls,.progress,.notes{display:none!important} }
-    @media (max-aspect-ratio:4/5) { body{overflow:auto;background:var(--paper)}.deck{width:100%;height:auto;position:static;transform:none;overflow:visible}.slides{position:static}.slide{min-height:100svh;padding:72px 22px;position:relative;opacity:1;visibility:visible;transform:none;grid-template-columns:1fr!important;align-items:start!important;gap:32px}.slide::before,.slide::after{top:22px;font-size:8px}.slide::before{left:22px}.slide::after{right:22px}.title-slide .art{margin-top:28px}.title-slide .lede{font-size:18px}.wordmark{font-size:26px}.eyebrow,.part span,.concept-copy>span,.concept-list li,.flow span,.pill,.chat header,.chat li strong,.proof-grid figcaption{font-size:10px}.parts-grid,.flow{grid-template-columns:1fr 1fr}.part p,.flow p{font-size:14px}.part h3{font-size:24px}.concept-picture{max-width:520px}.formula span{font-size:10px}.formula b{font-size:20px}.chat li{font-size:14px}.proof-grid{min-height:620px}.controls,.progress,.notes{display:none!important}h1,h2{font-size:clamp(48px,12vw,84px)}p{font-size:18px} }
+    @media (max-aspect-ratio:4/5) {
+      body { overflow:auto; background:var(--paper); }
+      .deck { width:100%; height:auto; position:static; transform:none; overflow:visible; }
+      .slides { position:static; }
+      .slide { min-height:100svh; padding:72px 22px; position:relative; opacity:1; visibility:visible; transform:none; grid-template-columns:1fr!important; align-items:start!important; gap:32px; }
+      .slide::before,.slide::after { top:22px; font-size:8px; }
+      .slide::before { left:22px; }
+      .slide::after { right:22px; }
+      h1,h2,.gap-slide h2,.parts-slide h2,.concept-copy h2,.conversation-slide h2,.proof-slide h2,.closing-slide h2 { font-size:clamp(48px,12vw,84px); }
+      p,.title-slide .lede { font-size:18px; }
+      .wordmark { font-size:26px; }
+      .title-slide .art { margin-top:28px; }
+      .title-slide .art span { padding:8px 10px; right:12px; bottom:12px; font-size:10px; }
+      .eyebrow,.part span,.concept-copy>span,.concept-list li,.flow span,.pill,.chat header,.chat li strong,.proof-grid figcaption { font-size:10px; }
+      .gap-slide { align-content:start; }
+      .task-storm { height:auto; display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+      .task-storm span { position:static; padding:13px 12px; box-shadow:4px 4px 0 var(--ink); font-size:11px; transform:none; }
+      .task-storm strong { width:92px; position:static; grid-column:1 / -1; margin:12px auto 0; font-size:38px; transform:none; }
+      .parts-grid,.flow { grid-template-columns:1fr 1fr; }
+      .part { padding:14px; gap:12px; }
+      .part p,.flow p { font-size:14px; }
+      .part h3 { font-size:24px; }
+      .concept-picture { max-width:520px; }
+      .concept-copy p { margin-top:24px; }
+      .concept-list { margin-top:24px; gap:8px; }
+      .concept-list li { padding:8px; }
+      .formula { margin-top:24px; }
+      .formula span { min-height:64px; padding:10px 8px; font-size:10px; }
+      .formula b { font-size:20px; }
+      .flow { padding:0; }
+      .flow li { padding:14px; gap:12px; }
+      .flow strong { font-size:20px; }
+      .chat ol { padding:18px; gap:12px; }
+      .chat li { padding:12px; font-size:14px; }
+      .proof-grid { height:auto; min-height:620px; gap:8px; }
+      .command { padding:14px; font-size:13px; }
+      .closing-slide .invoke { margin-top:20px; font-size:24px; }
+      .controls,.progress,.notes { display:none!important; }
+    }
     @media (prefers-reduced-motion:reduce) { .slide,.progress i{transition:none} }
   </style>
 </head>

@@ -81,8 +81,9 @@ const hardwareDemo = await html("demo/hardware/index.html");
 const softwareDemo = await html("demo/software/index.html");
 const openSourceDemo = await html("demo/open-source/index.html");
 const gameDemo = await html("demo/game/index.html");
+const presentationDemo = await html("demo/presentation/index.html");
 const demoGallery = visibleText(await html("demo/index.html"));
-assert.match(demoGallery, /href="\/presentation"/);
+assert.match(demoGallery, /href="\/demo\/presentation"/);
 assert.match(demoGallery, /POSSIBLE EXPLAINER[\s\S]*LIVE CODED DECK/);
 assert.match(hardwareDemo, /src="\/demo\/still\/site\/index\.html"/);
 assert.match(softwareDemo, /src="\/demo\/three\/product\/index\.html"/);
@@ -92,6 +93,7 @@ for (const [label, markup, hasThread] of [
   ["software", softwareDemo, true],
   ["open-source", openSourceDemo, true],
   ["game", gameDemo, false],
+  ["presentation", presentationDemo, false],
 ]) {
   const artifactIndex = markup.indexOf('aria-label="Outcome artifacts"');
   const conversationIndex = markup.indexOf('aria-label="$possible conversation"');
@@ -129,6 +131,7 @@ for (const [relativePath, expected] of [
   ["demo/software/index.html", "Software Launch"],
   ["demo/open-source/index.html", "Open-Source Release"],
   ["demo/game/index.html", "Playable Web Game"],
+  ["demo/presentation/index.html", "What Possible is,<br/><em>in ten slides"],
   ["presentation/index.html", "Possible.sh visual explainer"],
 ]) {
   assert.match(visibleText(await html(relativePath)), new RegExp(expected));
@@ -142,6 +145,9 @@ for (const phrase of ["Agent skill", "Execution prompt", "Outcome Pack", "$possi
 assert.match(presentation, /possible-visual-atlas\.webp/);
 assert.match(presentation, /data-action="notes"/);
 assert.match(presentation, /prefers-reduced-motion/);
+assert.match(presentation, /@media \(max-aspect-ratio:4\/5\)[\s\S]*\.gap-slide h2[\s\S]*font-size:clamp/);
+assert.match(presentation, /\.task-storm \{ height:auto; display:grid; grid-template-columns:1fr 1fr/);
+assert.match(presentation, /\.task-storm span \{ position:static;[\s\S]*font-size:11px/);
 
 await assert.rejects(html("proof/index.html"), { code: "ENOENT" }, "The retired /proof route must not be exported");
 await assert.rejects(html("benchmarks/billion-dollar-company/index.html"), { code: "ENOENT" }, "The retired billion-dollar benchmark must not be exported");
@@ -195,4 +201,4 @@ assert.match(writingStandard, /Every benchmark page uses the same order/);
 assert.match(writingStandard, /Put results before explanation/);
 assert.match(writingStandard, /Observed:[\s\S]*Modeled:[\s\S]*Projected:[\s\S]*Unknown:/);
 
-console.log(`All ${outcomePacks.length + 15} public Next.js routes contain meaningful initial HTML.`);
+console.log(`All ${outcomePacks.length + 16} public Next.js routes contain meaningful initial HTML.`);

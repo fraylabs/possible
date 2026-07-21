@@ -21,6 +21,7 @@ const staticPaths = [
   "/demo/game",
   "/demo/game/play",
   "/demo/robot-snake",
+  "/demo/presentation",
   "/presentation",
 ];
 
