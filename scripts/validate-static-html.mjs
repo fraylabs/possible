@@ -24,12 +24,13 @@ assert.match(home, /Describe the outcome\. Possible recommends a pack before Cod
 assert.match(home, /<section class="start-section"[^>]*>[\s\S]*id="start"[\s\S]*id="packs"[\s\S]*<\/section>/);
 assert.match(home, /BENCHMARKS \/ OPEN PROTOCOL/);
 assert.match(home, /Benchmarks,[\s\S]*not claims/);
-assert.match(home, /same model, tools, workspace, time, and rough brief/);
-assert.match(home, /removes the operator playbook and counts only independently verified outcomes/);
-assert.match(home, /Failures stay in the cohort/);
-assert.match(home, /href="\/benchmarks\/step-away"/);
-assert.match(home, /href="\/benchmarks\/company-systems"/);
-assert.match(home, /href="\/benchmarks\/fulfillment"/);
+assert.match(home, /Each gets identical model, tools, workspace, time, and brief/);
+assert.match(home, /no operator playbook/);
+assert.match(home, /Independent verifiers score outcomes/);
+assert.match(home, /href="\/benchmarks\/simple-prompt"/);
+assert.match(home, /href="\/benchmarks\/billion-dollar-company"/);
+assert.match(home, /href="\/benchmarks\/kickstarter-funding"/);
+assert.match(home, /href="\/benchmarks\/kickstarter-shipped"/);
 assert.doesNotMatch(home, /href="\/#packs"|Browse packs/);
 assert.match(homeMarkup, /<meta property="og:image" content="https:\/\/possible\.sh\/og\.png"\/>/);
 assert.match(homeMarkup, /<meta name="twitter:image" content="https:\/\/possible\.sh\/og\.png"\/>/);
@@ -98,10 +99,14 @@ for (const [relativePath, expected] of [
   ["blogs/index.html", "What is Possible?"],
   ["blogs/what-is-possible/index.html", "Possible is the outcome layer"],
   ["blogs/why-possible/index.html", "The bottleneck is no longer what AI can do"],
-  ["benchmarks/index.html", "OPEN PROTOCOLS / 03"],
-  ["benchmarks/step-away/index.html", "BENCHMARK[\\s\\S]*01[\\s\\S]*/[\\s\\S]*AUTONOMY"],
-  ["benchmarks/company-systems/index.html", "BENCHMARK[\\s\\S]*02[\\s\\S]*/[\\s\\S]*COVERAGE"],
-  ["benchmarks/fulfillment/index.html", "BENCHMARK[\\s\\S]*03[\\s\\S]*/[\\s\\S]*DELIVERY"],
+  ["benchmarks/index.html", "POSSIBLE BENCHMARK SUITE / V0.1"],
+  ["benchmarks/simple-prompt/index.html", "SIMPLE-0.1[\\s\\S]*/[\\s\\S]*ONE PROMPT"],
+  ["benchmarks/billion-dollar-company/index.html", "\\$1B-0.1[\\s\\S]*/[\\s\\S]*\\$1B COMPANY"],
+  ["benchmarks/kickstarter-funding/index.html", "FUNDING-0.1[\\s\\S]*/[\\s\\S]*FUNDING"],
+  ["benchmarks/kickstarter-shipped/index.html", "SHIPPED-0.1[\\s\\S]*/[\\s\\S]*SHIPPING"],
+  ["benchmarks/step-away/index.html", "The Simple Prompt Benchmark"],
+  ["benchmarks/company-systems/index.html", "Make Me a Billion-Dollar Company"],
+  ["benchmarks/fulfillment/index.html", "The Kickstarter-to-Shipped Benchmark"],
   ["docs/index.html", "Build complete outcomes with Possible"],
   ["docs/how-to-use/index.html", "How to use Possible"],
   ["demo/index.html", "HARDWARE LAUNCH"],
@@ -114,35 +119,42 @@ for (const [relativePath, expected] of [
 }
 
 const benchmarkGallery = visibleText(await html("benchmarks/index.html"));
-assert.match(benchmarkGallery, /Benchmarks,[\s\S]*not claims/);
-assert.match(benchmarkGallery, /href="\/benchmarks\/step-away"/);
-assert.match(benchmarkGallery, /href="\/benchmarks\/company-systems"/);
-assert.match(benchmarkGallery, /href="\/benchmarks\/fulfillment"/);
-assert.match(benchmarkGallery, /Same inputs · no operator playbook · independent verification · failures stay in the cohort/);
+assert.match(benchmarkGallery, /Measure the[\s\S]*whole outcome/);
+assert.match(benchmarkGallery, /href="\/benchmarks\/simple-prompt"/);
+assert.match(benchmarkGallery, /href="\/benchmarks\/billion-dollar-company"/);
+assert.match(benchmarkGallery, /href="\/benchmarks\/kickstarter-funding"/);
+assert.match(benchmarkGallery, /href="\/benchmarks\/kickstarter-shipped"/);
+assert.match(benchmarkGallery, /Fixed task · explicit metric · reproducible protocol · evidence-backed results · disclosed limitations/);
 
-const stepAwayBenchmark = visibleText(await html("benchmarks/step-away/index.html"));
-assert.match(stepAwayBenchmark, /PROTOCOL MODEL[\s\S]*NOT OBSERVED RESULTS/);
-assert.match(stepAwayBenchmark, /Autonomous work time and company-system coverage by workflow/);
-assert.match(stepAwayBenchmark, /Protocol model only[\s\S]*timestamped transcripts and verifier receipts/);
-assert.doesNotMatch(stepAwayBenchmark, /Funding is validation|PRIMARY SOURCE BASIS/);
+const simplePromptBenchmark = visibleText(await html("benchmarks/simple-prompt/index.html"));
+assert.match(simplePromptBenchmark, /The Simple Prompt Benchmark/);
+assert.match(simplePromptBenchmark, /Useful verified work/);
+assert.match(simplePromptBenchmark, /A score requires a receipt/);
+assert.doesNotMatch(simplePromptBenchmark, /7h 20m|91% modeled|PRIMARY SOURCE BASIS/);
 
-const companyBenchmark = visibleText(await html("benchmarks/company-systems/index.html"));
-assert.match(companyBenchmark, /Company-system coverage is not probability of success/);
-assert.match(companyBenchmark, /MODELED SCENARIO · NOT AN OBSERVED RESULT/);
-assert.match(companyBenchmark, /\$0 VERIFIED REVENUE/);
-assert.match(companyBenchmark, /TIME TO \$100M UNKNOWN/);
+const companyBenchmark = visibleText(await html("benchmarks/billion-dollar-company/index.html"));
+assert.match(companyBenchmark, /Make Me a Billion-Dollar Company/);
+assert.match(companyBenchmark, /Verified revenue/);
+assert.match(companyBenchmark, /earned rubric points ÷ 48 × 100/);
+assert.match(companyBenchmark, /Coverage never substitutes for money/);
+assert.match(companyBenchmark, /revenue record stays at \$0/);
 assert.match(companyBenchmark, /Atlassian FY2025 Form 10-K/);
 assert.match(companyBenchmark, /GitLab public marketing handbook/);
 assert.match(companyBenchmark, /Cloudflare 2019 prospectus/);
-assert.doesNotMatch(companyBenchmark, /Idea-to-shipment benchmark milestones/);
+assert.doesNotMatch(companyBenchmark, /Projected time to \$100M|8–13 years/);
 
-const fulfillmentBenchmark = visibleText(await html("benchmarks/fulfillment/index.html"));
-assert.match(fulfillmentBenchmark, /THIRD BENCHMARK · IDEA TO 95% SHIPPED/);
-assert.match(fulfillmentBenchmark, /Funding is validation\.[\s\S]*Shipping is the outcome\./);
-assert.match(fulfillmentBenchmark, /AWAITING FIRST RUN/);
-assert.match(fulfillmentBenchmark, /Delayed and unfinished campaigns remain in the cohort/);
-assert.match(fulfillmentBenchmark, /Kickstarter fulfillment dashboard guidance/);
-assert.doesNotMatch(fulfillmentBenchmark, /Projected time to \$100M\/year/);
+const fundingBenchmark = visibleText(await html("benchmarks/kickstarter-funding/index.html"));
+assert.match(fundingBenchmark, /The Kickstarter Funding Benchmark/);
+assert.match(fundingBenchmark, /Net funds received/);
+assert.match(fundingBenchmark, /Payout received/);
+assert.match(fundingBenchmark, /Unfunded campaigns remain in the cohort/);
+
+const shippedBenchmark = visibleText(await html("benchmarks/kickstarter-shipped/index.html"));
+assert.match(shippedBenchmark, /The Kickstarter-to-Shipped Benchmark/);
+assert.match(shippedBenchmark, /FUNDED TO 95% SHIPPED/);
+assert.match(shippedBenchmark, /Delayed and unfinished campaigns remain in the cohort/);
+assert.match(shippedBenchmark, /Kickstarter fulfillment dashboard guidance/);
+assert.doesNotMatch(shippedBenchmark, /Net funds received|TIME TO KICKSTARTER/);
 
 for (const [relativePath, heading] of [["blogs/index.html", "Possible writing"], ["demo/index.html", "Possible outcome demos"]]) {
   const markup = await html(relativePath);
@@ -160,7 +172,8 @@ assert.doesNotMatch(stylesSource, /Editorial benchmark treatment/);
 const writingStandard = await readFile(new URL("../WRITING.md", import.meta.url), "utf8");
 assert.match(writingStandard, /Google's \[Technical Writing One\]/);
 assert.match(writingStandard, /Give each sentence one idea/);
-assert.match(writingStandard, /Every benchmark page must answer five questions/);
+assert.match(writingStandard, /Every benchmark page uses the same order/);
+assert.match(writingStandard, /Put results before explanation/);
 assert.match(writingStandard, /Observed:[\s\S]*Modeled:[\s\S]*Projected:[\s\S]*Unknown:/);
 
-console.log(`All ${outcomePacks.length + 15} public Next.js routes contain meaningful initial HTML.`);
+console.log(`All ${outcomePacks.length + 19} public Next.js routes contain meaningful initial HTML.`);

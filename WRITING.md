@@ -44,13 +44,18 @@ Do not use `result`, `output`, `artifact`, and `outcome` as interchangeable term
 
 ## Benchmark writing
 
-Every benchmark page must answer five questions:
+Every benchmark page uses the same order:
 
-1. What question does this benchmark test?
-2. What inputs stay fixed?
-3. What does it measure?
-4. What evidence earns credit?
-5. What remains unknown?
+1. **Question:** the capability under test, in one sentence.
+2. **Release:** version, date, status, subject, and budget.
+3. **Results:** the current leaderboard, including an explicit no-runs state.
+4. **Task:** fixed input and evaluation subject.
+5. **Metrics:** the primary metric, formula, and evidence that earns credit.
+6. **Protocol:** the procedure applied to every entry.
+7. **Reproducibility:** run manifest, full trace, and verifier receipt.
+8. **Limitations:** what the score does not establish.
+
+Put results before explanation. Never place modeled or projected values in a results table. If no controlled run exists, say so.
 
 Label evidence precisely:
 
@@ -59,7 +64,16 @@ Label evidence precisely:
 - **Projected:** estimates a future value from stated assumptions.
 - **Unknown:** lacks sufficient evidence.
 
-Never present coverage as success, funding as fulfillment, or a projection as a result. Keep failed and unfinished subjects in the comparison cohort.
+Never present coverage as success, funding as fulfillment, or a projection as a result. Keep failed and unfinished subjects in the comparison cohort. Protocol changes require a new release.
+
+## Reading experience
+
+- Keep article prose near 600px wide.
+- Separate ideas with whitespace, not repeated rules.
+- Use cards only for comparisons, controls, or measured data.
+- Use at most one emphasized callout in a section.
+- Keep metadata quiet. Let the title and first paragraph establish hierarchy.
+- Let tables and charts extend beyond the prose column only when the data needs it.
 
 ## Editing pass
 
