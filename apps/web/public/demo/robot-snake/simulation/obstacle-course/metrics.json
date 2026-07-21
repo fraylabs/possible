@@ -1,0 +1,80 @@
+{
+  "scenario": "obstacle_course",
+  "model": "robot/simulation/scenes/obstacle_course.xml",
+  "seed": 42,
+  "duration_requested_s": 190.0,
+  "duration_simulated_s": 190.0000000001791,
+  "physics_timestep_s": 0.002,
+  "controller_rate_hz": 50.0,
+  "dependencies": {
+    "mujoco": "3.10.0",
+    "numpy": "2.5.1"
+  },
+  "initial_head_xy_m": [
+    0.0,
+    0.0
+  ],
+  "final_head_xy_m": [
+    2.9439448341002077,
+    -0.08190936597416935
+  ],
+  "displacement_xy_m": [
+    2.9439448341002077,
+    -0.08190936597416935
+  ],
+  "forward_progress_m": 2.9439448341002077,
+  "net_displacement_m": 2.94508409565153,
+  "max_abs_joint_position_rad": 0.5891115349853244,
+  "max_abs_joint_velocity_rad_s": 3.3782545229165537,
+  "max_abs_joint_command_rad": 0.5825468905991216,
+  "joint_tracking_rmse_rad": 0.11971718891218873,
+  "obstacle_contact_steps": 0,
+  "minimum_pivot_to_obstacle_surface_clearance_m": 0.10608640707937143,
+  "sensor_triggered_avoidance": true,
+  "terminal_route_heading_rad": 0.16903830570059122,
+  "sensor_estimated_obstacle_surface_xy_m": [
+    0.6350181325247751,
+    0.022488738982015165
+  ],
+  "detour_completed": true,
+  "state_transitions": [
+    {
+      "time_s": 9.059999999999695,
+      "from": "slither",
+      "to": "avoid_left"
+    },
+    {
+      "time_s": 102.40199999994275,
+      "from": "avoid_left",
+      "to": "recover"
+    },
+    {
+      "time_s": 117.06199999990858,
+      "from": "recover",
+      "to": "slither"
+    }
+  ],
+  "checks": {
+    "finite_state": true,
+    "joint_limits_respected": true,
+    "joint_velocity_limits_respected": true,
+    "command_limits_respected": true,
+    "controller_tracking_rmse_below_0_35_rad": true,
+    "no_safe_stop": true,
+    "range_triggered_avoidance": true,
+    "no_obstacle_contact": true,
+    "forward_progress_at_least_1_30_m": true,
+    "entire_body_cleared_obstacle_x": true,
+    "returned_to_slither": true,
+    "terminal_route_heading_error_below_0_20_rad": true,
+    "final_cross_track_error_below_0_30_m": true
+  },
+  "passed": true,
+  "modeled_assumptions": [
+    "directional pad friction and viscous resistive drag approximate smooth-floor traction",
+    "a bounded activity-scaled net force and steering moment stand in for unresolved belly-floor propulsion",
+    "range rays are idealized and noise-free",
+    "position actuators approximate an unidentified inner servo loop",
+    "obstacle geometry and floor are rigid"
+  ]
+}

@@ -447,7 +447,7 @@ describe("Possible", () => {
     expect(screen.getByRole("link", { name: /Browse all packs/i })).toHaveAttribute("href", "/packs");
   });
 
-  it("shows three recorded runs and the playable game proof in the demo gallery", () => {
+  it("shows the recorded runs and the playable game proof in the demo gallery", () => {
     window.history.pushState({}, "", "/demo");
     const { container } = render(<App />);
     expect(container.querySelector(".demo-gallery-hero")).not.toBeInTheDocument();
@@ -457,14 +457,16 @@ describe("Possible", () => {
     expect(screen.getByRole("link", { name: /SOFTWARE LAUNCH.*THREE/i })).toHaveAttribute("href", "/demo/software");
     expect(screen.getByRole("link", { name: /OPEN-SOURCE RELEASE.*TINY-SLUG/i })).toHaveAttribute("href", "/demo/open-source");
     expect(screen.getByRole("link", { name: /PLAYABLE WEB GAME.*FOLD/i })).toHaveAttribute("href", "/demo/game");
+    expect(screen.getByRole("link", { name: /ROBOT PROTOTYPE.*ROBOT SNAKE/i })).toHaveAttribute("href", "/demo/robot-snake");
     expect(screen.getByText(/A hardware novice supplied one rough idea.*credible launch package/i)).toBeInTheDocument();
     expect(screen.getByText(/A software novice supplied one small app idea.*complete release/i)).toBeInTheDocument();
     expect(screen.getByText(/A first-time maintainer supplied three files.*trustworthy release/i)).toBeInTheDocument();
     expect(screen.getByText(/A creator supplied one strange idea.*playability work/i)).toBeInTheDocument();
+    expect(screen.getByText(/A robotics novice asked for a robot snake.*inspectable digital prototype/i)).toBeInTheDocument();
   });
 
   it("keeps every outcome-first demo free of automated accessibility violations", async () => {
-    for (const route of ["/demo/hardware", "/demo/software", "/demo/open-source", "/demo/game"]) {
+    for (const route of ["/demo/hardware", "/demo/software", "/demo/open-source", "/demo/game", "/demo/robot-snake"]) {
       window.history.pushState({}, "", route);
       const { container, unmount } = render(<App />);
       expect(container.querySelector("main")).toHaveClass("demo-detail-page");
@@ -478,6 +480,27 @@ describe("Possible", () => {
       expect(await axe(conversation)).toHaveNoViolations();
       unmount();
     }
+  });
+
+  it("publishes the robot-snake CAD, simulation, model, and fresh-review proof without claiming physical validation", () => {
+    window.history.pushState({}, "", "/demo/robot-snake");
+    const { container } = render(<App />);
+    expect(screen.getByRole("heading", { name: /A robot snake.*simulated and checked/i })).toBeInTheDocument();
+    const artifacts = screen.getByRole("region", { name: "Outcome artifacts" });
+    const conversation = screen.getByRole("region", { name: "$possible conversation" });
+    expectBefore(artifacts, conversation);
+    expect(screen.getByAltText(/Isometric CAD view of the ten-link robot snake/i)).toBeInTheDocument();
+    expect(screen.getByAltText(/detecting, clearing, and passing a cylindrical obstacle/i)).toHaveAttribute("src", "/demo/robot-snake/simulation/obstacle-course/preview.gif");
+    expect(within(artifacts).getByText(/unlatching safe stop.*unsafe stop targets.*velocity-limit overshoot/i)).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Generated URDF/i })).toHaveAttribute("href", "/demo/robot-snake/model/robot-snake.urdf");
+    expect(screen.getByRole("link", { name: /What remains unproven/i })).toHaveAttribute("href", "/demo/robot-snake/evidence/sim-to-real-gaps.md");
+    expect(screen.getByRole("group", { name: /Interactive static CAD viewer/i })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /DOWNLOAD RRD/i })).toHaveAttribute("href", "/demo/robot-snake/viewer/robot-snake.rrd");
+    expect(screen.getByRole("link", { name: /OPEN LOCAL GUIDE/i })).toHaveAttribute("href", "/demo/robot-snake/viewer/README.md");
+    expect(screen.getByRole("link", { name: /VERIFY RECORDING/i })).toHaveAttribute("href", "/demo/robot-snake/viewer/robot-snake.manifest.json");
+    expect(within(conversation).getByRole("link", { name: /Robot Prototype pack/i })).toHaveAttribute("href", "/packs/robot-prototype");
+    expect(within(conversation).getByText("Yes, proceed.")).toBeInTheDocument();
+    expect(container.querySelector(".demo-outcome-footer")).toHaveTextContent(/Physical locomotion.*remain unproven/i);
   });
 
   it("presents the game pack as a playable proof without calling it a clean-room run", () => {

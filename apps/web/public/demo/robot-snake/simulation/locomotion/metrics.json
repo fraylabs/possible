@@ -1,0 +1,57 @@
+{
+  "scenario": "locomotion",
+  "model": "robot/simulation/scenes/locomotion.xml",
+  "seed": 42,
+  "duration_requested_s": 12.0,
+  "duration_simulated_s": 12.000000000000677,
+  "physics_timestep_s": 0.002,
+  "controller_rate_hz": 50.0,
+  "dependencies": {
+    "mujoco": "3.10.0",
+    "numpy": "2.5.1"
+  },
+  "initial_head_xy_m": [
+    0.0,
+    0.0
+  ],
+  "final_head_xy_m": [
+    0.15245482455782114,
+    0.09200759903163976
+  ],
+  "displacement_xy_m": [
+    0.15245482455782114,
+    0.09200759903163976
+  ],
+  "forward_progress_m": 0.15245482455782114,
+  "net_displacement_m": 0.17806704302178722,
+  "max_abs_joint_position_rad": 0.610722480821991,
+  "max_abs_joint_velocity_rad_s": 3.666198589543863,
+  "max_abs_joint_command_rad": 0.55,
+  "joint_tracking_rmse_rad": 0.11587184879844979,
+  "obstacle_contact_steps": 0,
+  "minimum_pivot_to_obstacle_surface_clearance_m": null,
+  "sensor_triggered_avoidance": false,
+  "terminal_route_heading_rad": null,
+  "sensor_estimated_obstacle_surface_xy_m": null,
+  "detour_completed": false,
+  "state_transitions": [],
+  "checks": {
+    "finite_state": true,
+    "joint_limits_respected": true,
+    "joint_velocity_limits_respected": true,
+    "command_limits_respected": true,
+    "controller_tracking_rmse_below_0_35_rad": true,
+    "no_safe_stop": true,
+    "forward_progress_at_least_0_12_m": true,
+    "net_displacement_at_least_0_12_m": true,
+    "physical_joint_wave_rms_at_least_0_12_rad": true
+  },
+  "passed": true,
+  "modeled_assumptions": [
+    "directional pad friction and viscous resistive drag approximate smooth-floor traction",
+    "a bounded activity-scaled net force and steering moment stand in for unresolved belly-floor propulsion",
+    "range rays are idealized and noise-free",
+    "position actuators approximate an unidentified inner servo loop",
+    "obstacle geometry and floor are rigid"
+  ]
+}

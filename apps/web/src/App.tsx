@@ -10,6 +10,7 @@ import openSourceThreadData from "./open-source-thread.json";
 import softwareThreadData from "./software-thread.json";
 
 const PaperPlaneGame = lazy(() => import("./PaperPlaneGame"));
+const RobotSnakeViewer = lazy(() => import("./RobotSnakeViewer"));
 
 type CopyState = "idle" | "copied" | "failed";
 
@@ -1202,6 +1203,20 @@ function DemoGalleryPage() {
             <div><span>Three.js runtime</span><span>3 input modes</span><span>Play now</span></div>
           </div>
         </a>
+
+        <a className="demo-example-card demo-example-card--robot" href="/demo/robot-snake">
+          <header><span>05 / ROBOT PROTOTYPE</span><strong>ISOLATED VERIFIED RUN ↗</strong></header>
+          <div className="demo-example-visual demo-example-visual--robot">
+            <img src="/demo/robot-snake/cad/iso.png" alt="Ten-link robot snake CAD prototype" />
+            <span>CAD · URDF · MUJOCO</span>
+          </div>
+          <div className="demo-example-copy">
+            <p>ROBOT SNAKE / DIGITAL PROTOTYPE</p>
+            <h2>One rough idea.<br />A simulated robot.</h2>
+            <p className="demo-example-transformation">A robotics novice asked for a robot snake. Possible supplied the mechanical, description, control, simulation, safety, and verification work required for an inspectable digital prototype.</p>
+            <div><span>12 / 12 tests</span><span>186 interface checks</span><span>3 verifier repairs</span></div>
+          </div>
+        </a>
       </section>
       <SiteFooter />
     </main>
@@ -1388,6 +1403,137 @@ function PlayableGameDemoPage() {
       />
       <DemoOutcomeFooter text="A game pack should finish with a game—not a design document, a framework, or a list of ideas." href="/packs/playable-web-game" linkLabel="INSPECT THE PACK →" />
     </main>
+  );
+}
+
+function RobotSnakeDemoPage() {
+  return (
+    <main className="demo-detail-page demo-detail-page--robot" id="top">
+      <SiteNav label="Recorded run / Robot Snake" />
+      <DemoOutcomeHeader
+        eyebrow="ROBOT PROTOTYPE / ISOLATED VERIFIED RUN"
+        title="A robot snake,"
+        accent="simulated and checked."
+        description="Inspect the CAD, replay both seeded MuJoCo scenarios, open the robot descriptions, and audit the fresh-review repairs from an isolated Robot Prototype run."
+        metric="12 / 12 TESTS · 186 INTERFACE CHECKS · 0 OBSTACLE CONTACTS"
+      />
+
+      <RobotSnakeArtifacts />
+      <RobotSnakeConversation />
+      <DemoOutcomeFooter text="Digital prototype only. Physical locomotion, actuator suitability, fabrication readiness, and functional safety remain unproven." href="/demo/robot-snake/evidence/sim-to-real-gaps.md" linkLabel="READ THE GAPS ↗" />
+    </main>
+  );
+}
+
+function RobotSnakeArtifacts() {
+  return (
+    <section className="demo-artifacts robot-artifacts" id="artifacts" aria-label="Outcome artifacts">
+      <DemoOutputLabel />
+
+      <article className="robot-viewer-card">
+        <header><span>01 / INSPECTABLE CAD</span><strong>10 LINKS · 9 JOINTS · 945 × 55 × 35 MM</strong></header>
+        <Suspense fallback={<div className="robot-viewer-loading">LOADING REVIEW GEOMETRY…</div>}>
+          <RobotSnakeViewer />
+        </Suspense>
+        <footer>
+          <p><strong>Interactive static CAD.</strong><span>Rotate the GLB in-browser or download the STEP source geometry. Verified motion appears only in the saved simulation replays below.</span></p>
+          <div><a href="/demo/robot-snake/cad/robot-snake.step" download>STEP ↓</a><a href="/demo/robot-snake/cad/robot-snake.glb" download>GLB ↓</a></div>
+        </footer>
+      </article>
+
+      <article className="robot-rerun-card">
+        <header><span>02 / LOCAL ENGINEERING VIEWER</span><strong>RERUN · 3,801 FRAMES · VERIFIED RRD</strong></header>
+        <div className="robot-rerun-layout">
+          <a href="/demo/robot-snake/viewer/preview.png" target="_blank" rel="noreferrer"><img src="/demo/robot-snake/viewer/preview.png" alt="Rerun engineering viewer showing the robot snake, obstacle, sensor rays, controller state, and telemetry plots" loading="lazy" decoding="async" /></a>
+          <div>
+            <p className="eyebrow">PRESERVED TRAJECTORY / NO PHYSICS RERUN</p>
+            <h3>Inspect the whole run<br />on one timeline.</h3>
+            <p>The recording replays ten link poses, five range rays, the route, controller state, joint commands, tracking error, and range telemetry from the saved MuJoCo evidence.</p>
+            <code>rerun robot-snake.rrd</code>
+            <div><a href="/demo/robot-snake/viewer/robot-snake.rrd" download>DOWNLOAD RRD · 10.4 MB ↓</a><a href="/demo/robot-snake/viewer/README.md" target="_blank" rel="noreferrer">OPEN LOCAL GUIDE ↗</a><a href="/demo/robot-snake/viewer/robot-snake.manifest.json" target="_blank" rel="noreferrer">VERIFY RECORDING ↗</a></div>
+          </div>
+        </div>
+      </article>
+
+      <div className="robot-simulation-grid">
+        <article className="robot-simulation-card robot-simulation-card--obstacle">
+          <header><span>03 / SEEDED AUTONOMOUS AVOIDANCE</span><strong>SEED 42 · 190 SIM SECONDS</strong></header>
+          <picture><source media="(prefers-reduced-motion: reduce)" srcSet="/demo/robot-snake/simulation/obstacle-course/contact_sheet.png" /><img src="/demo/robot-snake/simulation/obstacle-course/preview.gif" alt="MuJoCo verification replay of the robot snake detecting, clearing, and passing a cylindrical obstacle" loading="lazy" decoding="async" /></picture>
+          <footer><p><strong>Detect. Detour. Rejoin.</strong><span>2.94 m forward · zero contact steps · entire body cleared.</span></p><a href="/demo/robot-snake/simulation/obstacle-course/metrics.json" target="_blank" rel="noreferrer">OPEN METRICS ↗</a></footer>
+        </article>
+
+        <article className="robot-simulation-card">
+          <header><span>04 / SEEDED LOCOMOTION</span><strong>SEED 42 · 12 SIM SECONDS</strong></header>
+          <picture><source media="(prefers-reduced-motion: reduce)" srcSet="/demo/robot-snake/simulation/locomotion/contact_sheet.png" /><img src="/demo/robot-snake/simulation/locomotion/preview.gif" alt="MuJoCo verification replay of the robot snake's traveling lateral wave" loading="lazy" decoding="async" /></picture>
+          <footer><p><strong>Bounded traveling wave.</strong><span>0.15 m forward · commands and joint limits passed.</span></p><a href="/demo/robot-snake/simulation/locomotion/metrics.json" target="_blank" rel="noreferrer">OPEN METRICS ↗</a></footer>
+        </article>
+      </div>
+
+      <section className="robot-metrics" aria-label="Verified simulation metrics">
+        <p><span>OBSTACLE CONTACT</span><strong>0</strong><small>physics steps</small></p>
+        <p><span>FORWARD PROGRESS</span><strong>2.94 m</strong><small>obstacle scenario</small></p>
+        <p><span>MAX JOINT SPEED</span><strong>3.38</strong><small>rad/s · limit 4.0</small></p>
+        <p><span>FRESH SUITE</span><strong>12 / 12</strong><small>tests passed</small></p>
+      </section>
+
+      <aside className="robot-proof-boundary">
+        <span>SIMULATION BOUNDARY</span>
+        <p>The model uses an explicit aggregate propulsion and steering surrogate. These replays prove the declared deterministic simulation checks—not physical locomotion, actuator suitability, fabrication readiness, manufacturability, or functional safety.</p>
+        <a href="/demo/robot-snake/evidence/sim-to-real-gaps.md" target="_blank" rel="noreferrer">INSPECT EVERY GAP ↗</a>
+      </aside>
+
+      <article className="robot-cad-review">
+        <header><span>05 / CAD REVIEW PACKET</span><strong>FOUR INSPECTED VIEWS</strong></header>
+        <div className="demo-cad-views">
+          <a href="/demo/robot-snake/cad/iso.png" target="_blank" rel="noreferrer"><figure><img src="/demo/robot-snake/cad/iso.png" alt="Isometric robot snake CAD view" loading="lazy" decoding="async" /><figcaption><span>01</span><strong>ISO</strong></figcaption></figure></a>
+          <a href="/demo/robot-snake/cad/iso-opposite.png" target="_blank" rel="noreferrer"><figure><img src="/demo/robot-snake/cad/iso-opposite.png" alt="Opposite isometric robot snake CAD view" loading="lazy" decoding="async" /><figcaption><span>02</span><strong>OPPOSITE</strong></figcaption></figure></a>
+          <a href="/demo/robot-snake/cad/top.png" target="_blank" rel="noreferrer"><figure><img src="/demo/robot-snake/cad/top.png" alt="Top robot snake CAD view" loading="lazy" decoding="async" /><figcaption><span>03</span><strong>TOP</strong></figcaption></figure></a>
+          <a href="/demo/robot-snake/cad/front.png" target="_blank" rel="noreferrer"><figure><img src="/demo/robot-snake/cad/front.png" alt="Front robot snake CAD view" loading="lazy" decoding="async" /><figcaption><span>04</span><strong>FRONT</strong></figcaption></figure></a>
+        </div>
+      </article>
+
+      <section className="demo-evidence-output robot-evidence-output" id="evidence-output">
+        <header><span>06 / FRESH VERIFICATION</span><strong>THREE MATERIAL DEFECTS CAUGHT AND REPAIRED</strong></header>
+        <div className="demo-verification-story">
+          <p><span>01 / PRODUCED</span><strong>CAD, robot descriptions, control, and seeded simulation passed the captain’s first suite.</strong></p>
+          <p><span>02 / WITHHELD</span><strong>Possible assigned a fresh verification-only workstream before declaring the outcome complete.</strong></p>
+          <p className="is-failure"><span>03 / FAILED</span><strong>The reviewer found an unlatching safe stop, unsafe stop targets, and a hidden velocity-limit overshoot.</strong></p>
+          <p><span>04 / REPAIRED</span><strong>Stop behavior was latched and frozen; physics-step measurement exposed and removed the overshoot.</strong></p>
+          <p className="is-pass"><span>05 / PASSED</span><strong>The fresh suite passed 12/12 tests after regeneration. The failure history remains in the receipt.</strong></p>
+        </div>
+        <div>
+          <a href="/demo/robot-snake/evidence/outcome-receipt.md" target="_blank" rel="noreferrer"><span>01 / RECEIPT</span><strong>Passes, repairs, skips, and limits</strong><i>MD ↗</i></a>
+          <a href="/demo/robot-snake/evidence/simulation-contract.md" target="_blank" rel="noreferrer"><span>02 / CONTRACT</span><strong>What the simulation proves</strong><i>MD ↗</i></a>
+          <a href="/demo/robot-snake/evidence/sim-to-real-gaps.md" target="_blank" rel="noreferrer"><span>03 / BOUNDARY</span><strong>What remains unproven</strong><i>MD ↗</i></a>
+          <a href="/demo/robot-snake/model/robot-snake.urdf" target="_blank" rel="noreferrer"><span>04 / MODEL</span><strong>Generated URDF</strong><i>URDF ↗</i></a>
+          <a href="/demo/robot-snake/model/robot-snake.srdf" target="_blank" rel="noreferrer"><span>05 / PLANNING</span><strong>Generated SRDF</strong><i>SRDF ↗</i></a>
+          <a href="/demo/robot-snake/INTAKE-TRANSCRIPT.md" target="_blank" rel="noreferrer"><span>06 / INTAKE</span><strong>Preserved conversation</strong><i>MD ↗</i></a>
+          <a href="/demo/robot-snake/simulation/obstacle-course/contact_sheet.png" target="_blank" rel="noreferrer"><span>07 / REVIEW</span><strong>Obstacle contact sheet</strong><i>PNG ↗</i></a>
+          <a href="/demo/robot-snake/simulation/obstacle-course/trajectory.csv" target="_blank" rel="noreferrer"><span>08 / DATA</span><strong>Obstacle trajectory</strong><i>CSV ↗</i></a>
+          <a href="/demo/robot-snake/manifest.json" target="_blank" rel="noreferrer"><span>09 / MANIFEST</span><strong>Published provenance</strong><i>JSON ↗</i></a>
+        </div>
+      </section>
+    </section>
+  );
+}
+
+function RobotSnakeConversation() {
+  return (
+    <section className="demo-conversation" id="conversation" aria-label="$possible conversation">
+      <header>
+        <div><p className="eyebrow">02 / CONVERSATION</p><h2>One rough idea.<br /><em>A bounded outcome.</em></h2></div>
+        <p>The user did not choose CAD, URDF, MuJoCo, control architecture, safety behavior, or tests. Possible elicited the intended behavior and supplied the missing robotics work.</p>
+      </header>
+      <article className="demo-conversation-thread">
+        <p><strong>USER</strong><span>$possible<br />I want to make a robot snake.</span></p>
+        <p><strong>POSSIBLE</strong><span>What should it be able to do when it is finished?</span></p>
+        <p><strong>USER</strong><span>Slither convincingly and navigate around obstacles on its own.</span></p>
+        <p><strong>POSSIBLE</strong><span>Where should it operate, what are we starting from, and should the first proof be physical or digital?</span></p>
+        <p><strong>USER</strong><span>A smooth indoor floor. Starting from scratch, only the idea. I want a convincing digital prototype I can inspect and simulate now, with a clear path toward fabricating later.</span></p>
+        <p className="demo-conversation-recommend"><strong>POSSIBLE</strong><span>I recommend the <a href="/packs/robot-prototype">Robot Prototype pack ↗</a>. It coordinates the STEP assembly, URDF/SRDF, MuJoCo simulation, controls, deterministic tests, sim-to-real gaps, and independent verification. {approvalDisclosure} Proceed with this outcome?</span></p>
+        <p className="demo-conversation-confirm"><strong>USER</strong><span>Yes, proceed.</span></p>
+      </article>
+    </section>
   );
 }
 
@@ -1862,6 +2008,7 @@ export function PossibleSite({ path: requestedPath }: { path?: string }) {
   if (path === "/demo") return <DemoGalleryPage />;
   if (path === "/demo/game/play") return <Suspense fallback={<main className="plane-game-shell plane-game-loading"><span>FOLD / LOADING FLIGHT</span></main>}><PaperPlaneGame /></Suspense>;
   if (path === "/demo/game") return <PlayableGameDemoPage />;
+  if (path === "/demo/robot-snake") return <RobotSnakeDemoPage />;
   if (path === "/demo/hardware") return <HardwareDemoPage />;
   if (path === "/demo/software") return <SoftwareDemoPage />;
   if (path === "/demo/open-source") return <OpenSourceDemoPage />;

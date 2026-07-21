@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "scenario": "obstacle_course",
+  "recording": "obstacle_course.rrd",
+  "recording_sha256": "bc2bc4cc19054e5a2d438e46a4f4788cb87ed6b4459ee56dd263428c8259bddb",
+  "rerun_sdk": "0.34.1",
+  "source_artifacts": {
+    "robot/simulation/rollouts/obstacle_course/trajectory.npz": "5219f3fe1c4283647f6012a2edaa26cb84f093232d7de8b4959ad47f0b2cc4ca",
+    "robot/simulation/rollouts/obstacle_course/metrics.json": "c97f74028d3c1535ac438eca8099d1a24d731f44b441b68eb6a7223c69bce833",
+    "robot/description/robot_snake.urdf": "682609202f7e0deea134b7f4b471d27ffa4e57a3088b9d003a73066e45a94a03",
+    "robot/interfaces/model_spec.json": "23f9bc963ba2114ae3c3800a66592951c380865b71edd14534340486b8ee93a7"
+  },
+  "coverage": {
+    "frames": 3801,
+    "links": 10,
+    "joints": 9,
+    "range_rays": 5,
+    "controller_states": [
+      "avoid_left",
+      "recover",
+      "slither"
+    ],
+    "timelines": [
+      "frame",
+      "sim_time",
+      "replay_time"
+    ],
+    "telemetry": [
+      "q",
+      "command",
+      "tracking_error",
+      "range"
+    ]
+  },
+  "source_verification": {
+    "seed": 42,
+    "passed": true,
+    "checks_passed": 13,
+    "checks_total": 13
+  },
+  "evidence_boundary": "Presentation-only replay of preserved trajectory; the documented belly-floor propulsion surrogate remains and physical behavior is unvalidated."
+}

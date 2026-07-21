@@ -1,0 +1,203 @@
+{
+  "schemaVersion": 1,
+  "id": "robot-snake-digital-prototype",
+  "taskId": "019f8493-b105-7be1-bcce-9f38005e7d81",
+  "model": "gpt-5.6-sol",
+  "pack": {
+    "slug": "robot-prototype",
+    "repository": "fraylabs/possible",
+    "revision": "9b3d3dfcc28af2b78d947f80dfa447d03eb35c75"
+  },
+  "recordedAt": "2026-07-21",
+  "scope": "simulation-backed digital prototype",
+  "boundary": "Aggregate propulsion and steering are explicit simulation surrogates. No physical locomotion, actuator suitability, fabrication readiness, manufacturability, or functional-safety claim is made.",
+  "verification": {
+    "captainSuite": "12/12 passed",
+    "freshIndependentSuite": "12/12 passed",
+    "interfaceChecks": "186/186 passed",
+    "planningChecks": "6/6 passed",
+    "obstacleContactSteps": 0
+  },
+  "generators": [
+    {
+      "sourcePath": "robot/mechanical/robot_snake.py",
+      "sourceSha256": "89747baff1ca3a49757149923972661f049dea49ab981098047c019ca3aeb11f",
+      "command": "cad step robot/mechanical/robot_snake.py --glb robot_snake.glb --force"
+    },
+    {
+      "sourcePath": "robot/description/gen_robot_snake.py",
+      "sourceSha256": "584fdf737cb0b60bbcebf51f11b106b61b826871e1d13dc4975272cc5c9327d5",
+      "command": "urdf robot/description/gen_robot_snake.py -o robot/description/robot_snake.urdf"
+    },
+    {
+      "sourcePath": "robot/planning/gen_robot_snake.py",
+      "sourceSha256": "6eaed63d73e9a5fdd4e1e966c5f378326196cbf2abb93645b8d24f5c2557ab2a",
+      "command": "srdf robot/planning/gen_robot_snake.py -o robot/planning/robot_snake.srdf"
+    },
+    {
+      "sourcePath": "robot/simulation/run_rollout.py",
+      "sourceSha256": "f4b0c7fe627b37c191d8327aba68e5c18a1673bc8711f85426c2aa3f16303496",
+      "command": "uv run python -m robot.simulation.run_rollout <scenario>"
+    },
+    {
+      "sourcePath": "robot/simulation/render_rollout.py",
+      "sourceSha256": "9a13c86a738f4f470c112ed742b03ccbd895e96ce51e7537fc26fdc7ff026f00",
+      "command": "uv run python -m robot.simulation.render_rollout robot/simulation/rollouts/<scenario>"
+    }
+  ],
+  "files": [
+    {
+      "sourcePath": "robot/mechanical/robot_snake.step",
+      "sourceSha256": "5b3512ab55bf67c6532105e7a8e00a062d28e3c97be8b4a12dc52eb12fa67c0d",
+      "sourceBytes": 1197582,
+      "publishedUrl": "/demo/robot-snake/cad/robot-snake.step",
+      "publishedSha256": "5b3512ab55bf67c6532105e7a8e00a062d28e3c97be8b4a12dc52eb12fa67c0d",
+      "publishedBytes": 1197582,
+      "derivation": "byte-for-byte copy"
+    },
+    {
+      "sourcePath": "robot/mechanical/robot_snake.glb",
+      "sourceSha256": "23877bcbca50d7d392aad8599b97384d7821086225d9a48aa1863e8838ca913f",
+      "sourceBytes": 146388,
+      "publishedUrl": "/demo/robot-snake/cad/robot-snake.glb",
+      "publishedSha256": "23877bcbca50d7d392aad8599b97384d7821086225d9a48aa1863e8838ca913f",
+      "publishedBytes": 146388,
+      "derivation": "byte-for-byte copy"
+    },
+    {
+      "sourcePath": "robot/mechanical/review/robot_snake_iso_20260721T123144Z.png",
+      "sourceSha256": "e1326a2a4cd8c916aed9584597ffd5a21dd902d07fce2d6f36f621d147927070",
+      "sourceBytes": 383373,
+      "publishedUrl": "/demo/robot-snake/cad/iso.png",
+      "publishedSha256": "e1326a2a4cd8c916aed9584597ffd5a21dd902d07fce2d6f36f621d147927070",
+      "publishedBytes": 383373,
+      "derivation": "renamed byte-for-byte copy"
+    },
+    {
+      "sourcePath": "robot/simulation/rollouts/locomotion/preview.gif",
+      "sourceSha256": "135e3ea63dcdba83964556f3b9f283494522395825ee18eda590ee89e8e5befd",
+      "sourceBytes": 978842,
+      "publishedUrl": "/demo/robot-snake/simulation/locomotion/preview.gif",
+      "publishedSha256": "135e3ea63dcdba83964556f3b9f283494522395825ee18eda590ee89e8e5befd",
+      "publishedBytes": 978842,
+      "derivation": "byte-for-byte copy"
+    },
+    {
+      "sourcePath": "robot/simulation/rollouts/locomotion/metrics.json",
+      "sourceSha256": "8389165e609e779ec092f67c5fa62287b49dd17841a9232aa05b57a723976013",
+      "sourceBytes": 1866,
+      "publishedUrl": "/demo/robot-snake/simulation/locomotion/metrics.json",
+      "publishedSha256": "8389165e609e779ec092f67c5fa62287b49dd17841a9232aa05b57a723976013",
+      "publishedBytes": 1866,
+      "derivation": "byte-for-byte copy"
+    },
+    {
+      "sourcePath": "robot/simulation/rollouts/obstacle_course/preview.gif",
+      "sourceSha256": "b4d21cc8e997b21653f59c0dedc3c8a349df62db50ca97fc0737ebb7d18dba3d",
+      "sourceBytes": 1764390,
+      "publishedUrl": "/demo/robot-snake/simulation/obstacle-course/preview.gif",
+      "publishedSha256": "b4d21cc8e997b21653f59c0dedc3c8a349df62db50ca97fc0737ebb7d18dba3d",
+      "publishedBytes": 1764390,
+      "derivation": "renamed-directory byte-for-byte copy"
+    },
+    {
+      "sourcePath": "robot/simulation/rollouts/obstacle_course/metrics.json",
+      "sourceSha256": "c97f74028d3c1535ac438eca8099d1a24d731f44b441b68eb6a7223c69bce833",
+      "sourceBytes": 2416,
+      "publishedUrl": "/demo/robot-snake/simulation/obstacle-course/metrics.json",
+      "publishedSha256": "c97f74028d3c1535ac438eca8099d1a24d731f44b441b68eb6a7223c69bce833",
+      "publishedBytes": 2416,
+      "derivation": "renamed-directory byte-for-byte copy"
+    },
+    {
+      "sourcePath": "robot/description/robot_snake.urdf",
+      "sourceSha256": "682609202f7e0deea134b7f4b471d27ffa4e57a3088b9d003a73066e45a94a03",
+      "sourceBytes": 9438,
+      "publishedUrl": "/demo/robot-snake/model/robot-snake.urdf",
+      "publishedSha256": "682609202f7e0deea134b7f4b471d27ffa4e57a3088b9d003a73066e45a94a03",
+      "publishedBytes": 9438,
+      "derivation": "renamed byte-for-byte copy"
+    },
+    {
+      "sourcePath": "robot/planning/robot_snake.srdf",
+      "sourceSha256": "8a67dac3b8fcd36f92634c42f399748e188d4de2bf21902f5970a6eb9f060910",
+      "sourceBytes": 1818,
+      "publishedUrl": "/demo/robot-snake/model/robot-snake.srdf",
+      "publishedSha256": "8a67dac3b8fcd36f92634c42f399748e188d4de2bf21902f5970a6eb9f060910",
+      "publishedBytes": 1818,
+      "derivation": "renamed byte-for-byte copy"
+    },
+    {
+      "sourcePath": ".possible/receipts/robot-prototype-2026-07-21.md",
+      "sourceSha256": "e033b30389015ce04745c1ab3aa018186ff3065fe2a236262e0c4e34dca8799d",
+      "sourceBytes": 10245,
+      "publishedUrl": "/demo/robot-snake/evidence/outcome-receipt.md",
+      "publishedSha256": "e033b30389015ce04745c1ab3aa018186ff3065fe2a236262e0c4e34dca8799d",
+      "publishedBytes": 10245,
+      "derivation": "renamed byte-for-byte copy"
+    },
+    {
+      "sourcePath": "robot/simulation/SIMULATION-CONTRACT.md",
+      "sourceSha256": "a4cc8e507aba291a357177c1a7eab63e4c8d737ded028de55535ac4c522c66a5",
+      "sourceBytes": 2667,
+      "publishedUrl": "/demo/robot-snake/evidence/simulation-contract.md",
+      "publishedSha256": "a4cc8e507aba291a357177c1a7eab63e4c8d737ded028de55535ac4c522c66a5",
+      "publishedBytes": 2667,
+      "derivation": "renamed byte-for-byte copy"
+    },
+    {
+      "sourcePath": "robot/simulation/SIM-TO-REAL-GAPS.md",
+      "sourceSha256": "5f7a9b1923f19665236f469283115accdb4b6f06d1fe5780bd754271752ac557",
+      "sourceBytes": 2791,
+      "publishedUrl": "/demo/robot-snake/evidence/sim-to-real-gaps.md",
+      "publishedSha256": "5f7a9b1923f19665236f469283115accdb4b6f06d1fe5780bd754271752ac557",
+      "publishedBytes": 2791,
+      "derivation": "renamed byte-for-byte copy"
+    },
+    {
+      "sourcePath": "robot/simulation/rerun/obstacle_course.rrd",
+      "sourceSha256": "bc2bc4cc19054e5a2d438e46a4f4788cb87ed6b4459ee56dd263428c8259bddb",
+      "sourceBytes": 10941055,
+      "publishedUrl": "/demo/robot-snake/viewer/robot-snake.rrd",
+      "publishedSha256": "bc2bc4cc19054e5a2d438e46a4f4788cb87ed6b4459ee56dd263428c8259bddb",
+      "publishedBytes": 10941055,
+      "derivation": "renamed byte-for-byte copy"
+    },
+    {
+      "sourcePath": "robot/simulation/rerun/obstacle_course.manifest.json",
+      "sourceSha256": "7512185dd1216bd9b658dd5672aead6bce14ee635a46837d38a2528bab2e8b8b",
+      "sourceBytes": 1359,
+      "publishedUrl": "/demo/robot-snake/viewer/robot-snake.manifest.json",
+      "publishedSha256": "7512185dd1216bd9b658dd5672aead6bce14ee635a46837d38a2528bab2e8b8b",
+      "publishedBytes": 1359,
+      "derivation": "renamed byte-for-byte copy"
+    },
+    {
+      "sourcePath": "robot/simulation/RERUN-VIEWER.md",
+      "sourceSha256": "8bebec3e8c05e324d541df4f12d26ff16d3ea86afbaefdf61ca4b7022dd50ae0",
+      "sourceBytes": 2475,
+      "publishedUrl": "/demo/robot-snake/viewer/README.md",
+      "publishedSha256": "8bebec3e8c05e324d541df4f12d26ff16d3ea86afbaefdf61ca4b7022dd50ae0",
+      "publishedBytes": 2475,
+      "derivation": "renamed byte-for-byte copy"
+    },
+    {
+      "sourcePath": "robot/simulation/rerun/obstacle_course-viewer.png",
+      "sourceSha256": "2b3d49c51cf7005d0e39f1e1d6962bd1713ce4c9ca8a8bec0e3018aa103dc2cd",
+      "sourceBytes": 1590652,
+      "publishedUrl": "/demo/robot-snake/viewer/preview.png",
+      "publishedSha256": "2b3d49c51cf7005d0e39f1e1d6962bd1713ce4c9ca8a8bec0e3018aa103dc2cd",
+      "publishedBytes": 1590652,
+      "derivation": "renamed byte-for-byte copy"
+    }
+  ],
+  "optionalArtifacts": {
+    "rerunRecording": {
+      "publishedUrl": "/demo/robot-snake/viewer/robot-snake.rrd",
+      "status": "available",
+      "sha256": "bc2bc4cc19054e5a2d438e46a4f4788cb87ed6b4459ee56dd263428c8259bddb",
+      "bytes": 10941055,
+      "verification": "RRF2 footer verification passed twice; repeat export matched with rrd compare --unordered"
+    }
+  }
+}

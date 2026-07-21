@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<!-- cadpy:sourcePath=gen_robot_snake.py -->
+<!-- cadpy:sourceHash=6eaed63d73e9a5fdd4e1e966c5f378326196cbf2abb93645b8d24f5c2557ab2a -->
+<robot xmlns:tcad="https://text-to-cad.dev/srdf" name="robot_snake">
+  <tcad:urdf path="../description/robot_snake.urdf" />
+  <virtual_joint name="world_joint" type="floating" parent_frame="world" child_link="link_00" />
+  <group name="snake_body">
+    <joint name="joint_01" />
+    <joint name="joint_02" />
+    <joint name="joint_03" />
+    <joint name="joint_04" />
+    <joint name="joint_05" />
+    <joint name="joint_06" />
+    <joint name="joint_07" />
+    <joint name="joint_08" />
+    <joint name="joint_09" />
+  </group>
+  <group_state name="straight" group="snake_body">
+    <joint name="joint_01" value="0.0" />
+    <joint name="joint_02" value="0.0" />
+    <joint name="joint_03" value="0.0" />
+    <joint name="joint_04" value="0.0" />
+    <joint name="joint_05" value="0.0" />
+    <joint name="joint_06" value="0.0" />
+    <joint name="joint_07" value="0.0" />
+    <joint name="joint_08" value="0.0" />
+    <joint name="joint_09" value="0.0" />
+  </group_state>
+  <disable_collisions link1="link_00" link2="link_01" reason="Adjacent" />
+  <disable_collisions link1="link_01" link2="link_02" reason="Adjacent" />
+  <disable_collisions link1="link_02" link2="link_03" reason="Adjacent" />
+  <disable_collisions link1="link_03" link2="link_04" reason="Adjacent" />
+  <disable_collisions link1="link_04" link2="link_05" reason="Adjacent" />
+  <disable_collisions link1="link_05" link2="link_06" reason="Adjacent" />
+  <disable_collisions link1="link_06" link2="link_07" reason="Adjacent" />
+  <disable_collisions link1="link_07" link2="link_08" reason="Adjacent" />
+  <disable_collisions link1="link_08" link2="link_09" reason="Adjacent" />
+</robot>

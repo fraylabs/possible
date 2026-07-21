@@ -1,4 +1,5 @@
 import { access, readFile, stat } from "node:fs/promises";
+import { createHash } from "node:crypto";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -70,6 +71,7 @@ if (failures.length) throw new Error(`Still demo validation failed:\n- ${failure
 const threeRoot = path.join(repository, "apps/web/public/demo/three");
 const releaseRoot = path.join(repository, "apps/web/public/demo/tiny-slug");
 const gameRoot = path.join(repository, "apps/web/public/demo/fold");
+const robotRoot = path.join(repository, "apps/web/public/demo/robot-snake");
 
 async function requireExamplePath(exampleRoot, relative, label) {
   const target = path.join(exampleRoot, relative);
@@ -132,12 +134,65 @@ for (const relative of ["game-brief.md", "review.md", "verification.md"]) {
   await requireExamplePath(gameRoot, relative, "Playable Web Game proof");
 }
 
+const robotManifest = JSON.parse(await readFile(path.join(robotRoot, "manifest.json"), "utf8"));
+if (robotManifest.taskId !== "019f8493-b105-7be1-bcce-9f38005e7d81" || robotManifest.model !== "gpt-5.6-sol") {
+  failures.push("Robot Prototype manifest must preserve the isolated task ID and model");
+}
+if (robotManifest.pack?.revision !== "9b3d3dfcc28af2b78d947f80dfa447d03eb35c75") {
+  failures.push("Robot Prototype manifest must preserve the reviewed pack revision");
+}
+if (!/aggregate propulsion and steering.*surrogates/i.test(robotManifest.boundary ?? "")) {
+  failures.push("Robot Prototype manifest must disclose the aggregate propulsion/steering surrogate");
+}
+
+for (const file of robotManifest.files ?? []) {
+  if (!file.publishedUrl?.startsWith("/demo/robot-snake/") || file.publishedUrl.includes("..")) {
+    failures.push(`Robot Prototype manifest has an invalid public URL: ${file.publishedUrl}`);
+    continue;
+  }
+  const relative = file.publishedUrl.slice("/demo/robot-snake/".length);
+  const target = path.join(robotRoot, relative);
+  try {
+    const contents = await readFile(target);
+    const details = await stat(target);
+    const digest = createHash("sha256").update(contents).digest("hex");
+    if (details.size !== file.publishedBytes || digest !== file.publishedSha256) {
+      failures.push(`Robot Prototype published artifact drifted from its manifest: ${relative}`);
+    }
+    if (relative.endsWith(".rrd")) {
+      const header = contents.subarray(0, 4).toString("ascii");
+      const footer = contents.subarray(Math.max(0, contents.length - 64)).toString("ascii");
+      if (header !== "RRF2" || !footer.includes("RRF2FOOT")) {
+        failures.push(`Robot Prototype RRD is missing its expected RRF2 header or footer: ${relative}`);
+      }
+    }
+    if (/byte-for-byte copy/.test(file.derivation) && (file.sourceBytes !== file.publishedBytes || file.sourceSha256 !== file.publishedSha256)) {
+      failures.push(`Robot Prototype copied artifact no longer matches its recorded source: ${relative}`);
+    }
+  } catch {
+    failures.push(`Missing Robot Prototype published artifact: ${relative}`);
+  }
+}
+const robotViewerReceipt = JSON.parse(await readFile(path.join(robotRoot, "viewer/robot-snake.manifest.json"), "utf8"));
+const publishedRrd = robotManifest.files.find((file) => file.publishedUrl.endsWith(".rrd"));
+if (!publishedRrd || robotViewerReceipt.recording_sha256 !== publishedRrd.publishedSha256 || robotViewerReceipt.coverage?.frames !== 3801) {
+  failures.push("Robot Prototype Rerun receipt does not match the published recording or expected frame coverage");
+}
+
 const appSource = await readFile(path.join(repository, "apps/web/src/App.tsx"), "utf8");
 if (!appSource.includes('path === "/demo/game/play"') || !appSource.includes('<PaperPlaneGame />')) {
   failures.push("Playable Web Game proof must expose the full-screen /demo/game/play route");
 }
 if (!appSource.includes("not presented as a clean-room pack evaluation")) {
   failures.push("Playable Web Game proof must disclose that it is not a clean-room pack evaluation");
+}
+for (const file of robotManifest.files ?? []) {
+  if (!appSource.includes(file.publishedUrl)) failures.push(`Robot Prototype page does not link its manifested artifact: ${file.publishedUrl}`);
+}
+for (const claimBoundary of ["Aggregate propulsion", "Physical locomotion", "actuator suitability", "fabrication readiness", "functional safety"]) {
+  if (!appSource.toLowerCase().includes(claimBoundary.toLowerCase())) {
+    failures.push(`Robot Prototype page is missing claim boundary: ${claimBoundary}`);
+  }
 }
 
 const packageJson = JSON.parse(await readFile(path.join(releaseRoot, "package.json"), "utf8"));
@@ -155,4 +210,4 @@ if (publicTranscripts.some((source) => /\/Users\/|\/private\/tmp|\/tmp\//.test(s
 }
 
 if (failures.length) throw new Error(`Demo bundle validation failed:\n- ${failures.join("\n- ")}`);
-console.log("Hardware, Software, and Open-Source demo presentations plus the Playable Web Game proof are complete.");
+console.log("Hardware, Software, Open-Source, and Robot Prototype demos plus the Playable Web Game proof are complete.");

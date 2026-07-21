@@ -20,6 +20,7 @@ const staticPaths = [
   "/demo/open-source",
   "/demo/game",
   "/demo/game/play",
+  "/demo/robot-snake",
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {
