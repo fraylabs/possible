@@ -1,6 +1,6 @@
 # Build Week submission completion audit
 
-Audited candidate: Jujutsu commit `ca92a8f6f887a04ed3ab6f4b6d535fcc4f6247f9` plus the local npm preflight receipt added immediately after that commit.
+Audited candidate: Jujutsu commits `ca92a8f6f887a04ed3ab6f4b6d535fcc4f6247f9` and `aa29f2f2d634`, including the local npm preflight and this requirement-by-requirement audit.
 
 This audit treats completion as unproven. Each requirement below names the authoritative evidence, its current decision, and any missing fact.
 
@@ -73,7 +73,7 @@ This audit treats completion as unproven. Each requirement below names the autho
 
 ## Missing completion evidence
 
-1. **Fresh visual browser review:** not proved. The permitted in-app browser reported no available backend on repeated attempts, so no desktop/mobile screenshots or manual visual-pass claim were fabricated. Automated accessibility, responsive CSS, static HTML, unit interactions, installation, and local-link checks passed, but they do not substitute for visual inspection.
+1. **Fresh visual browser review:** not proved. Across three consecutive goal turns, the permitted browser connection reported no available backend; on the final retry its supported discovery API returned an empty browser list. No desktop/mobile screenshots or manual visual-pass claim were fabricated. Automated accessibility, responsive CSS, static HTML, unit interactions, installation, and local-link checks passed, but they do not substitute for visual inspection.
 2. **Live deployment:** intentionally not performed without public-action approval; current live proof URLs return 404.
 3. **Owner/account provenance:** the official GPT-5.6 `/feedback` session ID and eligible commit endpoints are unavailable in repository state.
 4. **Video:** storyboard exists; recording and public YouTube upload do not.

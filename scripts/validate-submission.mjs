@@ -15,6 +15,7 @@ const [
   claims,
   buildWeek,
   npmPreflight,
+  worklog,
 ] = await Promise.all([
   read("GOAL.md"),
   read("README.md"),
@@ -26,6 +27,7 @@ const [
   read("submission/CLAIM-LEDGER.md"),
   read("BUILD-WEEK.md"),
   read("submission/NPM-0.1.7-PREFLIGHT.md"),
+  read("WORKLOG.md"),
 ]);
 
 assert.equal(exportedPublicProof, publicProof, "Public benchmark proof must match its canonical source");
@@ -42,6 +44,7 @@ assert.ok(narrationWords <= 280, `Video narration is too dense at ${narrationWor
 assert.ok(narrationSecondsAt110Wpm <= 150, `Video narration leaves too little review time at ${narrationSecondsAt110Wpm} seconds`);
 
 const publicClaims = [goal, readme, app, devpost, video, claims].join("\n");
+const historicalClaims = [publicClaims, worklog].join("\n");
 for (const [label, pattern] of [
   ["unsupported agent-prevalence claim", /Most agents stop when they produce something/i],
   ["causal reliability conclusion", /Possible makes Codex materially more reliable/i],
@@ -49,7 +52,7 @@ for (const [label, pattern] of [
   ["HTTP responses mislabeled as browser checks", /50\s*\/\s*50 browser checks/i],
   ["overbroad pre-approval claim", /Nothing runs until the user approves/i],
   ["all-pack disjoint-ownership claim", /delegates disjoint workstreams/i],
-]) assert.doesNotMatch(publicClaims, pattern, label);
+]) assert.doesNotMatch(historicalClaims, pattern, label);
 
 assert.match(app, /In this frozen pilot, Possible reached a verified outcome\. The ordinary direct prompt did not\./);
 assert.match(app, /one run per condition cannot establish a general causal advantage/i);

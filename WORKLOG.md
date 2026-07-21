@@ -38,7 +38,7 @@
 
 - Ran the Hardware Launch pack in a clean sibling workspace against a fictional e-ink focus device called Still.
 - Produced the actual launch website, 24-second launch film, STEP/STL/GLB prototype CAD, local-only waitlist contract, integrated outcome room, receipts, and screenshots.
-- Preserved the review story: the first browser pass found broken embedded-site assets, the captain repaired the Vite base path, and the fresh rerun passed 50/50 browser checks.
+- Preserved the review story: the first browser pass found broken embedded-site assets, the captain repaired the Vite base path, and the fresh rerun recorded 50 successful browser responses.
 - Replaced the synthetic `/demo` walkthrough with a timed Codex-style replay powered by the run's real artifacts and evidence.
 - Linked the replay to 58/58 artifact checks, the initial failure trace, the final receipt, and the complete local launch room.
 - Exported all 31 public messages from the real captain and four specialist Codex threads, with an explicit boundary excluding private reasoning, system instructions, encrypted handoffs, and raw tool output.
@@ -70,3 +70,11 @@
 - Prepared Devpost copy, a 2:54 video storyboard and capture list, and a claim ledger that separates benchmark failures from the independent Still repair story.
 - Passed `npm run check`: 5 pack tests, 8 CLI tests, 9 MCP tests, 30 web tests, 33 static-generation steps, 28 public HTML routes, eight pack publication sets, skill validation, and demo validation.
 - Attempted the required fresh browser review; the in-app browser exposed no available backend. No visual-pass claim was made. Desktop/mobile visual inspection remains open alongside npm publishing and submission-owner attestations.
+
+## 2026-07-21 — Submission preflight and completion audit
+
+- Packed the exact unpublished `@fraylabs/possible@0.1.7` candidate, installed it into a clean target, and preserved package hashes and installed-file evidence without changing the public registry.
+- Added an automated submission validator covering canonical proof parity, bounded benchmark language, version disclosure, prohibited overclaims, and the three-minute narration budget.
+- Re-ran the complete verifier successfully and committed the clean candidate at `aa29f2f2`.
+- Retried browser discovery after reading the supported recovery path; the available-browser list was still empty. No unrelated browser surface or source-level screenshot was substituted for the required fresh review.
+- Rechecked public state: both proof URLs remain 404 and npm remains at `0.1.6`. Push, deployment, npm publication, recording, upload, and owner attestations remain approval- or account-gated.
