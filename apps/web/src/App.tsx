@@ -184,9 +184,7 @@ function CreatePage() {
           <div className="build-hero-copy">
             <p className="eyebrow">POSSIBLE / FOR CODEX</p>
             <h1>What do you want<br />{" "}to achieve <em>today?</em></h1>
-            <p className="build-hero-thesis">AI made execution accessible. <strong>Possible makes operational judgment accessible.</strong></p>
-            <p className="build-hero-description">Most people know the result they want—not every decision, safeguard, or quality check it requires. Possible turns that ambition into an expert-shaped, independently verified outcome.</p>
-            <p className="build-hero-mechanism">Reviewed outcome packs give Codex the missing map.</p>
+            <p className="build-hero-description">Possible gives Codex the operational judgment to turn a rough request into a verified outcome.</p>
             <div className="build-hero-actions">
               <a className="button-link" href="#try">Try with Codex <span>↓</span></a>
               <a className="text-link" href="/benchmarks">View benchmarks →</a>
@@ -208,7 +206,7 @@ function CreatePage() {
           <header>
             <div>
               <span>PACKS POSSIBLE CAN RECOMMEND / {String(galleryPacks.length).padStart(2, "0")}</span>
-              <h2 id="home-packs-heading">Packs are complete recipes for <em>real outcomes.</em></h2>
+              <h2 id="home-packs-heading">Packs are reviewed recipes for <em>real outcomes.</em></h2>
             </div>
             <p>Describe the outcome. Possible recommends the pack; you approve it.</p>
           </header>
@@ -235,9 +233,9 @@ function CreatePage() {
         <header>
           <div>
             <span>BENCHMARK SUITE / THREE OUTCOMES</span>
-            <h2 id="home-benchmark-heading">Who supplies the judgment <em>you did not know to ask for?</em></h2>
+            <h2 id="home-benchmark-heading">Can Codex infer <em>what you forgot to ask for?</em></h2>
           </div>
-          <p>Same ambition. We compare what Direct, <code>/goal</code>, and <code>$possible</code> identify, safeguard, verify, produce, and how much human time they require.</p>
+          <p>Compare Direct, <code>/goal</code>, and <code>$possible</code> from the same ambition. See the judgment, artifacts, and human time each workflow requires.</p>
         </header>
         <ol className="home-benchmark-links" aria-label="Possible benchmarks">
           {benchmarkCards.map((benchmark) => (

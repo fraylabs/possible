@@ -20,9 +20,7 @@ describe("Possible", () => {
     const { container } = render(<App />);
     expect(screen.getByRole("heading", { name: "What do you want to achieve today?", level: 1 })).toBeInTheDocument();
     expect(container.querySelectorAll("h1")).toHaveLength(1);
-    expect(container.querySelector(".build-hero-thesis")).toHaveTextContent(/AI made execution accessible.*Possible makes operational judgment accessible/i);
-    expect(screen.getByText(/Most people know the result they want.*expert-shaped.*independently verified outcome/i)).toBeInTheDocument();
-    expect(screen.getByText(/Reviewed outcome packs give Codex the missing map/i)).toBeInTheDocument();
+    expect(screen.getByText(/Possible gives Codex the operational judgment.*rough request.*verified outcome/i)).toBeInTheDocument();
     expect(screen.getByText("npx @fraylabs/possible@0.1.6 init")).toBeInTheDocument();
     expect(screen.getByText("$possible", { selector: ".install-next code" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "DOCS" })).toHaveAttribute("href", "/docs");
@@ -32,7 +30,7 @@ describe("Possible", () => {
     expect(screen.queryByRole("link", { name: "START" })).not.toBeInTheDocument();
     expect(screen.queryByRole("link", { name: /Browse packs/i })).not.toBeInTheDocument();
     const start = screen.getByRole("region", { name: "Start with Possible" });
-    expect(within(start).getByRole("heading", { name: /Packs are complete recipes for.*real outcomes/i, level: 2 })).toBeInTheDocument();
+    expect(within(start).getByRole("heading", { name: /Packs are reviewed recipes for.*real outcomes/i, level: 2 })).toBeInTheDocument();
     expect(within(start).getByText(/Describe the outcome.*Possible recommends the pack.*you approve it/i)).toBeInTheDocument();
     expect(within(start).getByText("npx @fraylabs/possible@0.1.6 init")).toBeInTheDocument();
     expect(within(start).getByText(/Published 0\.1\.6.*Candidate 0\.1\.7/i)).toBeInTheDocument();
@@ -45,8 +43,8 @@ describe("Possible", () => {
       );
     }
     expect(screen.queryByRole("link", { name: /Open the full pack reference/i })).not.toBeInTheDocument();
-    const benchmark = screen.getByRole("region", { name: /Who supplies the judgment.*you did not know to ask for/i });
-    expect(within(benchmark).getByText(/Same ambition.*compare what Direct.*identify.*safeguard.*verify.*human time/i)).toBeInTheDocument();
+    const benchmark = screen.getByRole("region", { name: /Can Codex infer.*what you forgot to ask for/i });
+    expect(within(benchmark).getByText(/Compare Direct.*same ambition.*judgment.*artifacts.*human time/i)).toBeInTheDocument();
     expect(within(benchmark).getAllByRole("link")).toHaveLength(3);
     for (const card of benchmarkCards) {
       expect(within(benchmark).getByRole("link", { name: new RegExp(card.shortTitle, "i") })).toHaveAttribute("href", `/benchmarks/${card.slug}`);
