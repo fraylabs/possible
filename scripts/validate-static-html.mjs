@@ -16,7 +16,8 @@ const plainText = (markup) => markup
 const homeMarkup = await html("index.html");
 const home = visibleText(homeMarkup);
 assert.match(home, /Complete a possible[\s\S]*outcome!/);
-assert.match(home, /Possible gives Codex the operational judgment to turn a rough request into a verified outcome\./);
+assert.match(home, /Possible is an open-source library of long prompts and agent skills\./);
+assert.match(home, /Each reusable pack coordinates 50–100 tasks to reproduce an outcome\./);
 assert.match(home, /npx @fraylabs\/possible@0\.1\.6 init/);
 const headerLinks = home.match(/<div class="nav-links">([\s\S]*?)<\/div>/)?.[1];
 assert.ok(headerLinks, "The shared header must render its desktop navigation links");
@@ -41,12 +42,12 @@ const packsIndex = home.indexOf('class="home-pack-index"');
 assert.ok(heroIndex >= 0 && demoIndex > heroIndex && packsIndex > demoIndex, "The homepage must place demos between the hero and packs");
 assert.match(home, /BENCHMARK SUITE \/ TWO OUTCOMES/);
 assert.match(home, /Can Codex infer[\s\S]*what you forgot to ask for/);
-assert.match(home, /Compare Direct,[\s\S]*same ambition\.[\s\S]*judgment, artifacts, and human time/);
+assert.match(home, /Compare Direct,[\s\S]*judgment, artifacts, and human time/);
 assert.doesNotMatch(home, /href="\/proof"/);
 assert.doesNotMatch(home, /href="\/#packs"|Browse packs/);
 assert.match(homeMarkup, /<meta property="og:image" content="https:\/\/possible\.sh\/og\.png"\/>/);
 assert.match(homeMarkup, /<meta name="twitter:image" content="https:\/\/possible\.sh\/og\.png"\/>/);
-assert.match(homeMarkup, /<meta name="description" content="Possible gives Codex the operational judgment to turn a rough request into a verified outcome\."\/>/);
+assert.match(homeMarkup, /<meta name="description" content="Possible is an open-source library of reusable outcome packs for Codex, combining long prompts with agent skills\."\/>/);
 assert.doesNotMatch(home, /<div id="root"><\/div>/);
 assert.doesNotMatch(home, /conversational outcome compiler|outcome lanes|ingredient skills|pack knowledge|workstreams/i);
 assert.doesNotMatch(home, /class="[^"]*(?:journey|recommendation-example|starter-card)/);
@@ -55,7 +56,7 @@ const homeMain = home.match(/<main[\s\S]*<\/main>/i)?.[0];
 assert.ok(homeMain, "The homepage must contain a semantic main element");
 const homepageWordCount = plainText(homeMain).split(/\s+/).filter(Boolean).length;
 assert.ok(homepageWordCount <= 250, `Homepage must stay at or below 250 words; found ${homepageWordCount}`);
-assert.doesNotMatch(homeMain, /\bAI agents\b|50[–-]100|megaprompt|class="[^"]*(?:schedule-entry|quick-path|boundary)/i);
+assert.doesNotMatch(homeMain, /\bAI agents\b|megaprompt|class="[^"]*(?:schedule-entry|quick-path|boundary)/i);
 
 for (const pack of outcomePacks) {
   const escapedName = pack.name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");

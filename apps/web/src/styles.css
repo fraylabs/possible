@@ -52,6 +52,7 @@ nav { height: 74px; padding: 0 3.5vw; border-bottom: 1px solid #aaa59a; display:
 .build-hero-copy h1 { max-width: 980px; margin: 20px 0; font-size: clamp(54px, 6.1vw, 92px); font-weight: 500; line-height: .86; letter-spacing: -.075em; }
 .build-hero-copy h1 em { color: #ff4d00; font-style: normal; }
 .build-hero-copy > .build-hero-description { max-width: 650px; margin: 0; color: #5e5952; font-size: clamp(16px, 1.4vw, 21px); line-height: 1.5; }
+.build-hero-description strong { color: #151411; font-weight: 600; }
 .build-hero-actions { margin-top: 24px; display: flex; gap: 24px; align-items: center; }
 .build-hero-actions .button-link { background: #ff4d00; }
 .build-hero-actions .text-link { font-size: 10px; }

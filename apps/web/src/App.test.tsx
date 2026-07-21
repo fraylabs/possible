@@ -20,7 +20,8 @@ describe("Possible", () => {
     const { container } = render(<App />);
     expect(screen.getByRole("heading", { name: "Complete a possible outcome!", level: 1 })).toBeInTheDocument();
     expect(container.querySelectorAll("h1")).toHaveLength(1);
-    expect(screen.getByText(/Possible gives Codex the operational judgment.*rough request.*verified outcome/i)).toBeInTheDocument();
+    expect(screen.getByText(/Possible is an open-source library of long prompts and agent skills/i)).toBeInTheDocument();
+    expect(screen.getByText(/Each reusable pack coordinates 50–100 tasks to reproduce an outcome/i)).toBeInTheDocument();
     expect(screen.getByText("npx @fraylabs/possible@0.1.6 init")).toBeInTheDocument();
     expect(screen.getByText("$possible", { selector: ".install-next code" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "DOCS" })).toHaveAttribute("href", "/docs");
@@ -51,7 +52,7 @@ describe("Possible", () => {
     }
     expect(screen.queryByRole("link", { name: /Open the full pack reference/i })).not.toBeInTheDocument();
     const benchmark = screen.getByRole("region", { name: /Can Codex infer.*what you forgot to ask for/i });
-    expect(within(benchmark).getByText(/Compare Direct.*same ambition.*judgment.*artifacts.*human time/i)).toBeInTheDocument();
+    expect(within(benchmark).getByText(/Compare Direct.*judgment.*artifacts.*human time/i)).toBeInTheDocument();
     expect(within(benchmark).getAllByRole("link")).toHaveLength(2);
     for (const card of benchmarkCards) {
       expect(within(benchmark).getByRole("link", { name: new RegExp(card.shortTitle, "i") })).toHaveAttribute("href", `/benchmarks/${card.slug}`);
@@ -60,7 +61,7 @@ describe("Possible", () => {
     expect(container.querySelector(".recommendation-example")).not.toBeInTheDocument();
     expect(screen.queryByRole("group", { name: /Filter outcome packs by lane/i })).not.toBeInTheDocument();
     expect(container.querySelector(".schedule-entry, .quick-path, .boundary")).not.toBeInTheDocument();
-    expect(container.querySelector("main")).not.toHaveTextContent(/\bAI agents\b|50[–-]100|megaprompt/i);
+    expect(container.querySelector("main")).not.toHaveTextContent(/\bAI agents\b|megaprompt/i);
     expect(container.querySelector("main")).not.toHaveTextContent(/conversational outcome compiler|outcome lanes|pack knowledge|workstreams/i);
   });
 

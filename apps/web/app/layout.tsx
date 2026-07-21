@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     default: "Possible — Complete a possible outcome!",
     template: "%s — Possible",
   },
-  description: "Possible gives Codex the operational judgment to turn a rough request into a verified outcome.",
+  description: "Possible is an open-source library of reusable outcome packs for Codex, combining long prompts with agent skills.",
   applicationName: "Possible",
   alternates: {
     types: {
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     type: "website",
     siteName: "Possible",
     title: "Possible — Complete a possible outcome!",
-    description: "Possible gives Codex the operational judgment to turn a rough request into a verified outcome.",
+    description: "Possible is an open-source library of reusable outcome packs for Codex, combining long prompts with agent skills.",
     url: "/",
     images: [{
       url: "/og.png",
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Possible — Complete a possible outcome!",
-    description: "Possible gives Codex the operational judgment to turn a rough request into a verified outcome.",
+    description: "Possible is an open-source library of reusable outcome packs for Codex, combining long prompts with agent skills.",
     images: ["/og.png"],
   },
   other: {
