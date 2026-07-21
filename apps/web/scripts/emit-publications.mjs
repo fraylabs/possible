@@ -13,6 +13,44 @@ const evidenceManifest = {
     package: "https://www.npmjs.com/package/@fraylabs/possible",
     judgingPage: "https://possible.sh/judging/",
   },
+  recordedComparison: {
+    name: "Robot Snake: /goal control versus Possible",
+    question: "What operational knowledge does a non-expert's rough robot-snake request cause the agent to include?",
+    protocol: {
+      model: "gpt-5.6-sol",
+      controlPrompt: "/goal I want to make a robot snake",
+      onlyFollowUp: "Simulation first. I do not have a fixed budget or access to a 3D printer.",
+      controlEnvironment: "Empty Git repository, fresh CODEX_HOME, and no Possible, Robot Prototype, robotics, CAD, or MuJoCo skill.",
+      evaluationContract: "The Robot Prototype Outcome Pack contract existed before the control run.",
+    },
+    observedResults: {
+      goalControl: "A browser simulator, firmware handoff, hardware planning, and 18 passing tests.",
+      possible: "CAD, URDF/SRDF, MuJoCo simulation, autonomous obstacle-avoidance evidence, Rerun telemetry, 12 tests, 186 interface checks, and three defects caught and repaired by fresh verification.",
+    },
+    interpretation: {
+      goal: "/goal provides dynamic pursuit and adapts execution as evidence changes.",
+      possible: "Possible provides the reviewed outcome contract: workstreams, safeguards, interfaces, evidence, and completion conditions.",
+      together: "Possible defines the multidisciplinary completion target; /goal can sustain and adapt its execution.",
+    },
+    evidence: [
+      {
+        label: "Control protocol and complete human input",
+        url: "https://github.com/fraylabs/possible/blob/main/apps/web/public/demo/robot-snake/CONTROL-RUN.md",
+      },
+      {
+        label: "Preserved control artifacts",
+        url: "https://possible.sh/demo/robot-snake/control/",
+      },
+      {
+        label: "Possible artifact manifest",
+        url: "https://possible.sh/demo/robot-snake/manifest.json",
+      },
+      {
+        label: "Possible completion report",
+        url: "https://github.com/fraylabs/possible/blob/main/apps/web/public/demo/robot-snake/evidence/outcome-receipt.md",
+      },
+    ],
+  },
   judgingCriteria: [
     {
       criterion: "Technological Implementation",
@@ -127,6 +165,10 @@ await write("llms.txt", [
   "",
   "The Robot Snake run began with 'I want to make a robot snake.' It produced inspectable CAD, URDF/SRDF, MuJoCo control and simulation, simulated autonomous obstacle avoidance, and Rerun telemetry. Fresh verification caught three material defects; after repair, the independent suite passed 12/12 tests and 186/186 interface checks.",
   "",
+  "Recorded comparison: a clean GPT-5.6 Sol /goal control received the same rough robot-snake ambition plus one non-expert preference. It produced a useful browser simulator, firmware handoff, hardware planning, and 18 passing tests. Possible supplied the reviewed Robot Prototype outcome contract and added CAD, URDF/SRDF, MuJoCo simulation, autonomous avoidance evidence, Rerun telemetry, interface checks, and fresh verification.",
+  "",
+  "/goal provides dynamic pursuit. Possible provides the reviewed outcome contract. Possible defines the multidisciplinary completion target; /goal can sustain and adapt its execution.",
+  "",
   "Possible.sh is an open-source library of Outcome Packs for Codex. Each typed specification coordinates selected agent skills, owned workstreams, shared constraints, approval boundaries, and the evidence required for completion.",
   "",
   "- Homepage: https://possible.sh/",
@@ -135,6 +177,10 @@ await write("llms.txt", [
   "- Machine-readable evidence: /evidence.json",
   "- Outcome demos: /demo/",
   "- Robot Snake proof: /demo/robot-snake/",
+  "- Recorded /goal comparison protocol: https://github.com/fraylabs/possible/blob/main/apps/web/public/demo/robot-snake/CONTROL-RUN.md",
+  "- Preserved /goal control artifacts: /demo/robot-snake/control/",
+  "- Possible artifact manifest: /demo/robot-snake/manifest.json",
+  "- Possible completion report: https://github.com/fraylabs/possible/blob/main/apps/web/public/demo/robot-snake/evidence/outcome-receipt.md",
   "- Pack catalog: /packs/",
   "- Pack index: /packs/index.json",
   ...featuredPacks.flatMap((pack) => [

@@ -912,12 +912,7 @@ function RobotSnakeComparison() {
         {rows.map(([requirement, control, possible]) => <div className="robot-comparison-row" role="row" key={requirement}><strong>{requirement}</strong><span>{control}</span><span>{possible}</span></div>)}
       </div>
       <p className="robot-comparison-note"><strong>The control was not weakened.</strong> It produced gait controls, collision handling, telemetry, a BOM, compiled ESP32 firmware, and 18 passing tests. The difference is the expert work the rough request never named.</p>
-      <div className="robot-comparison-roles">
-        <header><p className="eyebrow">DIFFERENT JOBS / BETTER TOGETHER</p><h3>Persistence meets<br />operational judgment.</h3></header>
-        <article><span>/GOAL</span><strong>Dynamic pursuit</strong><p>Keeps Codex moving toward an objective, adapting as the repository and evidence change.</p></article>
-        <article><span>$POSSIBLE</span><strong>Controlled outcome</strong><p>Supplies a reviewed definition of the work, safeguards, interfaces, evidence, and completion required.</p></article>
-        <footer>Possible can shape the initial goal. <code>/goal</code> can sustain its execution and expose useful discoveries. Reviewed discoveries can then strengthen the next Outcome Pack version.</footer>
-      </div>
+      <p className="robot-comparison-relationship"><code>/goal</code> sustains dynamic pursuit; Possible supplies the reviewed outcome contract.</p>
     </section>
   );
 }
@@ -1402,6 +1397,24 @@ function HowToUsePage() {
             </ol>
           </section>
 
+          <section id="goal-and-possible">
+            <h2>Use <code>/goal</code> and Possible together</h2>
+            <p>They solve different parts of long-running agent work. Possible defines what a complete outcome requires; <code>/goal</code> keeps Codex pursuing it as the project and evidence change.</p>
+            <div className="docs-goal-possible" aria-label="How Codex goals and Possible complement each other">
+              <article>
+                <span>/GOAL</span>
+                <strong>Dynamic pursuit</strong>
+                <p>Maintains momentum toward an objective, adapts the plan, and continues through new repository evidence.</p>
+              </article>
+              <article>
+                <span>$POSSIBLE</span>
+                <strong>Controlled outcome</strong>
+                <p>Supplies a reviewed contract for the workstreams, safeguards, interfaces, evidence, and definition of done.</p>
+              </article>
+              <footer><strong>TOGETHER</strong><p>Possible contributes operational judgment; <code>/goal</code> contributes persistence. Verified discoveries from a run can be reviewed into later Outcome Pack revisions, strengthening the reusable outcome without silently changing its contract.</p></footer>
+            </div>
+          </section>
+
           <section id="handshake">
             <h2>The collaboration handshake</h2>
             <p>The handoff between human judgment and agent execution is explicit. Work begins only after the recommendation is understood and approved.</p>
@@ -1439,6 +1452,7 @@ function HowToUsePage() {
           <span>ON THIS PAGE</span>
           <a href="#human">For the human</a>
           <a href="#possible">What Possible does</a>
+          <a href="#goal-and-possible">Use with /goal</a>
           <a href="#handshake">The handshake</a>
           <a href="#approval">Approval boundary</a>
         </aside>
@@ -1517,8 +1531,18 @@ function JudgingPage() {
           <div><a href="/demo/robot-snake">Open Robot Snake <span>↗</span></a><a href="https://github.com/fraylabs/possible/blob/main/BUILD-WEEK.md" target="_blank" rel="noreferrer">Build Week record <span>↗</span></a><a href="https://github.com/fraylabs/possible" target="_blank" rel="noreferrer">Inspect GitHub <span>↗</span></a></div>
         </header>
 
+        <section className="judging-section judging-comparison" aria-labelledby="judging-comparison-heading">
+          <header><span>01 / RECORDED CONTROL</span><h2 id="judging-comparison-heading">Same rough idea.<br /><em>Different starting knowledge.</em></h2></header>
+          <div className="judging-comparison-grid">
+            <article><span>/GOAL</span><strong>Dynamic pursuit</strong><p>A clean task received the rough ambition and one non-expert preference. It produced a browser simulator, hardware plan, compiled firmware, and 18 passing tests.</p></article>
+            <article><span>$POSSIBLE</span><strong>Reviewed outcome contract</strong><p>Possible supplied the pre-existing multidisciplinary target: CAD, robot descriptions, MuJoCo, autonomy proof, Rerun evidence, interface checks, and fresh verification.</p></article>
+          </div>
+          <p className="judging-comparison-together"><code>/goal</code> sustains and adapts execution. Possible defines the complete outcome worth pursuing. They are complementary.</p>
+          <div className="judging-comparison-links"><a href="/demo/robot-snake/CONTROL-RUN.md">Control protocol ↗</a><a href="/demo/robot-snake/control/">Control artifacts ↗</a><a href="/demo/robot-snake/manifest.json">Possible manifest ↗</a><a href="/demo/robot-snake/evidence/outcome-receipt.md">Completion report ↗</a></div>
+        </section>
+
         <section className="judging-section" aria-labelledby="judging-criteria-heading">
-          <header><span>01 / CRITERIA</span><h2 id="judging-criteria-heading">Claim, evidence,<br /><em>significance.</em></h2></header>
+          <header><span>02 / CRITERIA</span><h2 id="judging-criteria-heading">Claim, evidence,<br /><em>significance.</em></h2></header>
           <div className="judging-table-scroll">
             <table className="judging-criteria-table">
               <caption>Possible evidence mapped to the four official judging criteria</caption>
@@ -1537,7 +1561,7 @@ function JudgingPage() {
         </section>
 
         <section className="judging-section judging-trail" aria-labelledby="judging-trail-heading">
-          <header><span>02 / GUIDED EVIDENCE</span><h2 id="judging-trail-heading">One outcome,<br /><em>end to end.</em></h2></header>
+          <header><span>03 / GUIDED EVIDENCE</span><h2 id="judging-trail-heading">One outcome,<br /><em>end to end.</em></h2></header>
           <ol>{judgingTrail.map((item, index) => (
             <li key={item.step}>
               <span>{String(index + 1).padStart(2, "0")} / {item.step}</span>

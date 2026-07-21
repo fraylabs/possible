@@ -26,7 +26,7 @@ for (const [label, source] of [["README", readme], ["Devpost", devpost], ["video
   assert.match(source, /npx @fraylabs\/possible@0\.1\.9 init/, `${label} must use the canonical install`);
   assert.doesNotMatch(source, /@fraylabs\/possible@0\.1\.[0-8]\b|unpublished|candidate/i, `${label} must not discuss historical package versions`);
   assert.doesNotMatch(source, /50[–-]100 coordinated tasks/i, `${label} must use a bounded task claim`);
-  assert.doesNotMatch(source, /NO CONTROLLED RUNS|modeled benchmark|Direct[-– ]vs[-– ]Possible|\/goal comparison/i, `${label} must not revive the retired benchmark story`);
+  assert.doesNotMatch(source, /NO CONTROLLED RUNS|modeled benchmark|Direct[-– ]vs[-– ]Possible/i, `${label} must not revive the retired benchmark story`);
 }
 
 for (const name of ["Still", "Robot Snake", "Fold", "Web Presentation"]) {
@@ -61,6 +61,18 @@ for (const criterion of ["Technological Implementation", "Design", "Potential Im
 }
 assert.match(judging, /## Guided evidence trail/);
 assert.match(judging, /\[Build Week record\]\(BUILD-WEEK\.md\)/);
+assert.match(judging, /^## .*\/goal.*comparison/im, "JUDGING.md must make the recorded control comparison easy to find");
+assert.match(judging, /\/goal[\s\S]{0,120}(?:dynamic pursuit|persist|adapt)/i, "JUDGING.md must explain the role of /goal");
+assert.match(judging, /Possible[\s\S]{0,120}(?:reviewed|controlled)[\s\S]{0,80}(?:outcome )?contract/i, "JUDGING.md must explain the role of Possible");
+assert.match(judging, /(?:work|better) together|complement(?:ary|s)/i, "JUDGING.md must explain how /goal and Possible combine");
+for (const url of [
+  "https://github.com/fraylabs/possible/blob/main/apps/web/public/demo/robot-snake/CONTROL-RUN.md",
+  "https://possible.sh/demo/robot-snake/control/",
+  "https://possible.sh/demo/robot-snake/manifest.json",
+  "https://github.com/fraylabs/possible/blob/main/apps/web/public/demo/robot-snake/evidence/outcome-receipt.md",
+]) {
+  assert.ok(judging.includes(`](${url})`), `JUDGING.md must directly link recorded comparison evidence: ${url}`);
+}
 assert.doesNotMatch(judging, /\bwrapper\b|Why this is not/i, "Judging evidence must stay positive and direct");
 assert.doesNotMatch(judging, /hidden text|keyword stuffing|AI screen(?:er|ing)|instructions? (?:to|for) (?:the )?(?:judge|evaluator)/i, "JUDGING.md must remain a factual evidence index");
 

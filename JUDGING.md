@@ -4,6 +4,12 @@ Possible turns one rough idea into a coordinated, independently verified outcome
 
 Possible is a Developer Tools submission built with Codex using GPT-5.6. Its open-source Outcome Packs combine reusable execution prompts, selected agent skills, workstreams, safeguards, and completion checks. The [Build Week record](BUILD-WEEK.md) documents the session, submission period, and demo video.
 
+## Recorded `/goal` comparison
+
+A clean GPT-5.6 Sol control received `/goal I want to make a robot snake` and one non-expert preference. It produced a useful browser simulator, firmware handoff, and 18 passing tests. The Possible run began with the same rough ambition, then supplied the pre-existing Robot Prototype contract and produced CAD, URDF/SRDF, MuJoCo simulation, autonomous avoidance evidence, Rerun telemetry, interface checks, and fresh verification.
+
+Inspect the [control protocol](https://github.com/fraylabs/possible/blob/main/apps/web/public/demo/robot-snake/CONTROL-RUN.md), [control artifacts](https://possible.sh/demo/robot-snake/control/), [Possible artifact manifest](https://possible.sh/demo/robot-snake/manifest.json), and [completion report](https://github.com/fraylabs/possible/blob/main/apps/web/public/demo/robot-snake/evidence/outcome-receipt.md). `/goal` provides dynamic pursuit; Possible provides the reviewed outcome contract. They work together: Possible defines the multidisciplinary completion target, while `/goal` can sustain and adapt its execution.
+
 ## Official judging criteria
 
 | Criterion | Claim | Evidence | Why it matters |

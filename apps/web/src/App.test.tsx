@@ -110,6 +110,18 @@ describe("Possible", () => {
     expect(await axe(container)).toHaveNoViolations();
   });
 
+  it("explains how /goal and Possible work together in the usage guide", async () => {
+    const { container } = renderRoute("/docs/how-to-use");
+    const section = container.querySelector("#goal-and-possible");
+    expect(section).toBeInTheDocument();
+    expect(container.querySelector('a[href="#goal-and-possible"]')).toBeInTheDocument();
+    expect(section).toHaveTextContent(/\/goal.*(?:pursuit|persist|adapt)/i);
+    expect(section).toHaveTextContent(/Possible.*(?:controlled outcome|reviewed contract)/i);
+    expect(section).toHaveTextContent(/contract.*(?:workstreams|safeguards|interfaces|evidence|definition of done)/i);
+    expect(section).toHaveTextContent(/together|combine|both/i);
+    expect(await axe(section!)).toHaveNoViolations();
+  });
+
   it("maps the four official judging criteria to direct evidence", async () => {
     const { container } = renderRoute("/judging");
     expect(screen.getByRole("heading", { name: /One rough idea\.\s*A verified outcome\./, level: 1 })).toBeInTheDocument();
@@ -124,6 +136,21 @@ describe("Possible", () => {
     expect(container.querySelector("main")).not.toHaveTextContent(/wrapper|Why this is not/i);
     expect(container.querySelector(".nav-links")).not.toHaveTextContent(/JUDGING/i);
     expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("makes the recorded /goal comparison and its protocol directly inspectable", () => {
+    const { container } = renderRoute("/judging");
+    const main = container.querySelector("main");
+    expect(main).toHaveTextContent(/recorded.*\/goal|\/goal.*(?:comparison|control)/i);
+    expect(main).toHaveTextContent(/\/goal.*(?:pursuit|persist|adapt)/i);
+    expect(main).toHaveTextContent(/Possible.*(?:reviewed|controlled).*outcome contract/i);
+    expect(main).toHaveTextContent(/18.*CAD.*(?:robot descriptions|URDF).*MuJoCo/i);
+    for (const href of [
+      "/demo/robot-snake/CONTROL-RUN.md",
+      "/demo/robot-snake/control/",
+      "/demo/robot-snake/manifest.json",
+      "/demo/robot-snake/evidence/outcome-receipt.md",
+    ]) expect(main?.querySelector(`a[href="${href}"]`)).toBeInTheDocument();
   });
 
   it("shows Still progressing from intake through a passing fresh rerun", () => {
