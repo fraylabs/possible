@@ -38,6 +38,7 @@ The repository preserves inspectable Codex outputs and verification evidence:
 - [Still completion report](apps/web/public/demo/still/OUTCOME-RECEIPT.md)
 - [Robot Snake intake transcript](apps/web/public/demo/robot-snake/INTAKE-TRANSCRIPT.md)
 - [Robot Snake completion report](apps/web/public/demo/robot-snake/evidence/outcome-receipt.md)
+- [Recorded clean `/goal` comparison](apps/web/public/demo/robot-snake/CONTROL-RUN.md)
 - [Fold verification](apps/web/public/demo/fold/verification.md)
 - [Web Presentation](apps/web/public/presentation/possible.html)
 
@@ -49,13 +50,14 @@ The human operator chose the product thesis, rejected the universal-skill and ma
 
 ## Current submission record
 
-The [official submission dates](https://openai.devpost.com/details/dates) define the eligibility window. The product-reset commit landed July 18 at 6:36am PDT. This repository has not yet been frozen for submission; the final commit will be recorded here immediately before submission.
+The [official submission dates](https://openai.devpost.com/details/dates) define the eligibility window. The product-reset commit landed July 18 at 6:36am PDT. Commit `1c1b3df` is the frozen implementation submitted for judging; later commits may clarify evidence but do not alter that implementation.
 
 ```text
 Built with: Codex using GPT-5.6
 Primary Codex /feedback session ID: 019f7517-658f-7723-8686-2ecda930c00a
 Eligible implementation start: afb5fc1c1e01d746753712ddc79f456df0984826
-Current submission state: open
+Frozen submission implementation: 1c1b3df65ba69b0a0bf76a61e86319a73fdcf637
+Current submission state: frozen
 Demo video: https://youtu.be/s35aGhVI2Eo
 ```
 
