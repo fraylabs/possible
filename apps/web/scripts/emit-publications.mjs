@@ -32,11 +32,13 @@ await write("packs/index.json", json({
 await write("llms.txt", [
   "# Possible",
   "",
-  "Possible is an outcome skill for Codex. Its packs compile dozens of coordinated tasks, specialist skills, and verification gates into one approved run.",
+  "Possible gives Codex the operational knowledge to coordinate individual tasks into a verified outcome.",
   "",
   "Skills are ingredients. Possible compiles the outcome.",
   "",
   "- Human documentation: /docs/",
+  "- Build Week proof: /proof/",
+  "  - Controlled-pilot summary: /benchmarks/outcome-v1/public-proof.md",
   "- Pack catalog: /packs/",
   "- Pack index: /packs/index.json",
   ...outcomePacks.flatMap((pack) => [

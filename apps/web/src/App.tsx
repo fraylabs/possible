@@ -32,7 +32,7 @@ const demoThread = demoThreadData as DemoThread;
 const openSourceThread = openSourceThreadData as DemoThread;
 const softwareThread = softwareThreadData as DemoThread;
 
-const installCommand = "npx @fraylabs/possible init";
+const installCommand = "npx @fraylabs/possible@0.1.6 init";
 const schedulePrompt = "I want to schedule operations.";
 const approvalDisclosure = "Saying yes authorizes repo-local ingredient skill installation, the shared outcome brief and state files, and local outcome work. External actions still require separate approval.";
 const laneOrder: PackLane[] = ["create", "launch", "release", "operate"];
@@ -96,6 +96,13 @@ const benchmarkCards = [
   { slug: "kickstarter-funding", number: "03", label: "FUNDING", title: "The Kickstarter Funding Benchmark", shortTitle: "Get it funded", question: "Can an agent turn a rough product idea into a Kickstarter campaign that receives real funding?", metric: "Net funds received", budget: "Campaign window", status: "PROTOCOL · NO RUNS", version: "FUNDING-0.1" },
   { slug: "kickstarter-shipped", number: "04", label: "SHIPPING", title: "The Kickstarter-to-Shipped Benchmark", shortTitle: "Get it shipped", question: "How long does a funded Kickstarter campaign take to reach 95% shipped?", metric: "Days to 95% shipped", budget: "Open-ended", status: "PROTOCOL · NO RUNS", version: "SHIPPED-0.1" },
 ] as const;
+const proofRuns = [
+  { id: "direct-r1", workflow: "Direct prompt", outcome: "Not verified", checks: "19 / 20", treatment: "Pass", elapsed: "11:55", followups: "0" },
+  { id: "spec-r1", workflow: "Spec-driven", outcome: "Verified", checks: "20 / 20", treatment: "Fail", elapsed: "18:21", followups: "0" },
+  { id: "plan-r1", workflow: "/plan", outcome: "Verified", checks: "20 / 20", treatment: "Fail", elapsed: "22:12", followups: "0" },
+  { id: "goal-r1", workflow: "/goal", outcome: "Verified", checks: "20 / 20", treatment: "Pass", elapsed: "25:11", followups: "0" },
+  { id: "possible-r1", workflow: "$possible", outcome: "Verified", checks: "20 / 20", treatment: "Pass", elapsed: "30:50", followups: "2 + approval" },
+] as const;
 type BenchmarkSlug = typeof benchmarkCards[number]["slug"];
 const benchmarkAliases = {
   "step-away": "simple-prompt",
@@ -156,6 +163,7 @@ function SiteNav({ label }: { label?: string }) {
       {label ? <div className="nav-meta"><span>POSSIBLE</span><strong>{label.toUpperCase()}</strong></div> : null}
       <div className="nav-links">
         <a href="/">START</a>
+        <a href="/proof">PROOF</a>
         <a href="/blogs">BLOGS</a>
         <a href="/benchmarks">BENCH</a>
         <a href="/docs">DOCS</a>
@@ -186,10 +194,10 @@ function CreatePage() {
           <div className="build-hero-copy">
             <p className="eyebrow">POSSIBLE / FOR CODEX</p>
             <h1>What do you want<br />{" "}to achieve <em>today?</em></h1>
-            <p className="build-hero-description">Possible is an outcome skill for Codex. Its packs compile dozens of coordinated tasks, specialist skills, and verification gates into one approved run—like taking a SaaS from idea to release.</p>
+            <p className="build-hero-description">Models know how to perform individual tasks. Possible provides the operational knowledge to coordinate those tasks into a verified outcome.</p>
             <div className="build-hero-actions">
               <a className="button-link" href="#try">Try with Codex <span>↓</span></a>
-              <a className="text-link" href="/demo">See real outcomes →</a>
+              <a className="text-link" href="/proof">See the evidence →</a>
             </div>
           </div>
 
@@ -199,6 +207,7 @@ function CreatePage() {
               <pre><code>{installCommand}</code></pre>
               <CopyButton label="Copy install command" value={installCommand} />
               <div className="install-next"><span>THEN ASK CODEX</span><code>$possible</code></div>
+              <p className="install-version-note">Published 0.1.6 · Candidate 0.1.7</p>
             </article>
           </div>
         </div>
@@ -234,21 +243,108 @@ function CreatePage() {
       <section className="home-benchmark" aria-labelledby="home-benchmark-heading">
         <header>
           <div>
-            <span>BENCHMARKS / OPEN PROTOCOL</span>
-            <h2 id="home-benchmark-heading">Benchmarks, <em>not claims.</em></h2>
+            <span>CONTROLLED PILOT / FROZEN PROTOCOL</span>
+            <h2 id="home-benchmark-heading">Direct stopped at <em>19/20.</em><br />Possible reached 20/20.</h2>
           </div>
-          <p>Each gets identical model, tools, workspace, time, and brief—no operator playbook. Independent verifiers score outcomes. Failures stay.</p>
+          <p>Five fresh Codex runs inherited the same model configuration and received the same brief, tools, workspace rules, and independent checks. This one-run pilot is evidence from these runs—not proof of typical superiority.</p>
         </header>
-
-        <ul className="home-benchmark-links" aria-label="$possible benchmarks">
-          <li><a href="/benchmarks/simple-prompt"><span>01</span><strong>Simple Prompt Benchmark</strong><em>Useful work from one prompt</em><i>→</i></a></li>
-          <li><a href="/benchmarks/billion-dollar-company"><span>02</span><strong>“Make Me a Billion-Dollar Company”</strong><em>Systems built + verified revenue</em><i>→</i></a></li>
-          <li><a href="/benchmarks/kickstarter-funding"><span>03</span><strong>Kickstarter Funding Benchmark</strong><em>Idea to funds received</em><i>→</i></a></li>
-          <li><a href="/benchmarks/kickstarter-shipped"><span>04</span><strong>Kickstarter-to-Shipped Benchmark</strong><em>Funded to 95% shipped</em><i>→</i></a></li>
-        </ul>
+        <div className="home-proof-result" aria-label="Controlled pilot headline result">
+          <div><span>DIRECT PROMPT</span><strong>19 / 20</strong><em>Not verified</em></div>
+          <div><span>$POSSIBLE</span><strong>20 / 20</strong><em>Verified · treatment passed</em></div>
+          <a href="/proof"><span>OPEN THE RUNS</span><strong>Protocol, results, traces, and limits →</strong></a>
+        </div>
       </section>
 
       <SiteFooter />
+    </main>
+  );
+}
+
+function ProofPage() {
+  return (
+    <main className="proof-page">
+      <SiteNav label="Build Week / Proof" />
+
+      <header className="proof-hero">
+        <p className="eyebrow">OUTCOME-V1 / MEASURED PILOT / 21 JUL 2026</p>
+        <h1>One frozen brief.<br /><em>Five workflows.</em><br />One verifier.</h1>
+        <div>
+          <p>A direct prompt stopped with one production interaction broken. Possible reached the frozen definition of done with a passing treatment and fresh verification.</p>
+          <strong>Observed in these runs—not an estimate of typical performance.</strong>
+        </div>
+      </header>
+
+      <section className="proof-thesis" aria-labelledby="proof-thesis-heading">
+        <span>THE OBSERVATION</span>
+        <h2 id="proof-thesis-heading">In this frozen pilot, Possible reached a verified outcome. The ordinary direct prompt did not.</h2>
+        <p>This observation motivates a reliability hypothesis; one run per condition cannot establish a general causal advantage, typical performance, variance, or expected speed.</p>
+      </section>
+
+      <section className="proof-compiler" aria-labelledby="proof-compiler-heading">
+        <header><span>01 / THE COMPILER</span><h2 id="proof-compiler-heading">Operational knowledge becomes an execution contract.</h2></header>
+        <ol aria-label="Possible compiler flow">
+          <li><span>01</span><strong>User intent</strong><p>A rough outcome, in the user’s words.</p></li>
+          <li><span>02</span><strong>Recommended pack</strong><p>Outputs, boundaries, and fit disclosed before work.</p></li>
+          <li><span>03</span><strong>Compiled contract</strong><p>Reviewed skills, bounded workstreams, owners, guardrails, verification, and a captain sequence.</p></li>
+          <li><span>04</span><strong>Execution</strong><p>Named workstreams integrate against an approved brief with outcome-specific checks.</p></li>
+          <li><span>05</span><strong>Fresh verification</strong><p>A reviewer that did not implement the outcome tests the integrated result.</p></li>
+          <li><span>06</span><strong>Verified outcome</strong><p>Receipts preserve passes, failures, limits, and unproven claims.</p></li>
+        </ol>
+        <div className="proof-compiler-actions"><a href="/packs/software-launch">Inspect a compiled pack →</a><a href="/packs/software-launch.json">Open compiled JSON ↗</a></div>
+      </section>
+
+      <section className="proof-results" aria-labelledby="proof-results-heading">
+        <header>
+          <div><span>02 / CONTROLLED COMPARISON</span><h2 id="proof-results-heading">The direct run produced a product. It did not complete the outcome.</h2></div>
+          <p>All five runs used the frozen brief and decision rule. Outcome success and assigned-treatment compliance are reported separately.</p>
+        </header>
+        <div className="proof-table-wrap">
+          <table>
+            <caption className="sr-only">Results of the Possible outcome-v1 controlled pilot</caption>
+            <thead><tr><th>Workflow</th><th>Outcome</th><th>Checks</th><th>Treatment</th><th>Elapsed</th><th>Human follow-ups</th></tr></thead>
+            <tbody>{proofRuns.map((run) => <tr className={run.id === "possible-r1" ? "is-possible" : run.id === "direct-r1" ? "is-direct" : undefined} key={run.id}><th scope="row"><strong>{run.workflow}</strong><code>{run.id}</code></th><td><b>{run.outcome}</b></td><td>{run.checks}</td><td>{run.treatment}</td><td>{run.elapsed}</td><td>{run.followups}</td></tr>)}</tbody>
+          </table>
+        </div>
+        <div className="proof-result-callout">
+          <div><span>DIRECT</span><strong>19 / 20</strong><p>Pointer entry worked, but three independent Enter attempts left the production textbox unchanged. The frozen outcome was not verified.</p></div>
+          <div><span>$POSSIBLE</span><strong>20 / 20</strong><p>The outcome and Possible treatment passed, including approval, audited ingredients, bounded named workstreams, preserved failures, and fresh verification.</p></div>
+        </div>
+      </section>
+
+      <section className="proof-verification" aria-labelledby="proof-verification-heading">
+        <header>
+          <span>03 / THE VERIFICATION MOMENT</span>
+          <h2 id="proof-verification-heading">Production is not completion.<br /><em>Possible stops only when the outcome passes—or returns an honest no-go.</em></h2>
+          <p>In the preserved Still Hardware Launch run, all three production workstreams finished before a fresh reviewer exercised the integrated result.</p>
+        </header>
+        <ol>
+          <li><span>01</span><strong>Output produced</strong><p>Site, 24-second film, STEP-first CAD, and outcome room were integrated.</p></li>
+          <li><span>02</span><strong>Completion withheld</strong><p>The captain handed the integrated result to a fresh verification-only agent.</p></li>
+          <li className="is-failure"><span>03</span><strong>Failure detected</strong><p>Root-absolute Vite asset URLs produced four 404 errors inside the outcome room.</p></li>
+          <li><span>04</span><strong>Narrow repair</strong><p>The captain fixed the base path, rebuilt, and recopied only the affected site bundle.</p></li>
+          <li className="is-pass"><span>05</span><strong>Fresh rerun passed</strong><p>50/50 browser responses and 58/58 artifact checks passed; the initial failure stayed public.</p></li>
+        </ol>
+        <div className="proof-verification-actions"><a href="/demo/hardware#evidence-output">See the verified outcome →</a><a href="/demo/still/verification/browser-results-initial-failure.json">Initial failed trace ↗</a><a href="/demo/still/verification/browser-results.json">Passing rerun ↗</a><a href="/demo/still/CODEX-THREAD.md">Complete public thread ↗</a></div>
+      </section>
+
+      <section className="proof-evidence" aria-labelledby="proof-evidence-heading">
+        <header><span>04 / OPEN EVIDENCE</span><h2 id="proof-evidence-heading">Inspect the procedure, not just the headline.</h2></header>
+        <div>
+          <a href="/benchmarks/outcome-v1/public-proof.md"><span>PUBLIC PROOF</span><strong>Fair result summary and evidence map</strong><i>MD ↗</i></a>
+          <a href="/benchmarks/outcome-v1/protocol.md"><span>FROZEN PROTOCOL</span><strong>Conditions and decision rule</strong><i>MD ↗</i></a>
+          <a href="/benchmarks/outcome-v1/brief.md"><span>COMMON BRIEF</span><strong>The task every run received</strong><i>MD ↗</i></a>
+          <a href="/benchmarks/outcome-v1/result.md"><span>INDEPENDENT REPORT</span><strong>Decisions, failures, and fallbacks</strong><i>MD ↗</i></a>
+          <a href="/benchmarks/outcome-v1/summary.json"><span>MACHINE READABLE</span><strong>All five run summaries</strong><i>JSON ↗</i></a>
+          <a href="https://github.com/fraylabs/possible/tree/main/benchmarks/outcome-v1" target="_blank" rel="noreferrer"><span>RAW REPOSITORY</span><strong>Transcripts, receipts, results, and screenshots</strong><i>GITHUB ↗</i></a>
+        </div>
+      </section>
+
+      <aside className="proof-limitations" aria-label="Pilot limitations">
+        <span>WHAT THIS DOES NOT PROVE</span>
+        <ul><li>One run per condition does not estimate typical performance or variance.</li><li>Runs were not randomized and shared environment resources.</li><li>Spec and Plan reached the outcome but failed their assigned treatment.</li><li>Timing includes condition-specific setup and environment friction; it is not a speed ranking.</li><li>Browser evidence is Chromium-only and the pilot included documented verification fallbacks.</li></ul>
+      </aside>
+
+      <footer className="proof-close"><p>Stop prompting tasks.<br />Start specifying outcomes.<br /><strong>Make it Possible.</strong></p><a href="/#try">INSTALL POSSIBLE →</a></footer>
     </main>
   );
 }
@@ -340,7 +436,7 @@ function WhatPage() {
           <a href="/docs">Read the documentation →</a>
         </div>
         <dl>
-          <div><dt>Install</dt><dd><code>npx @fraylabs/possible init</code></dd></div>
+          <div><dt>Install</dt><dd><code>{installCommand}</code></dd></div>
           <div><dt>Interface</dt><dd><code>$possible</code> and a conversation</dd></div>
           <div><dt>Knowledge</dt><dd>Reviewed outcome packs</dd></div>
           <div><dt>Execution</dt><dd>Codex and specialist skills</dd></div>
@@ -424,7 +520,7 @@ function WhyPage() {
             <p>Possible is not a pack browser. Users do not need to understand lanes, compare recipes, or decide which specialist skills belong together. Those are implementation details Possible resolves from the conversation.</p>
           </section>
 
-          <p className="why-thesis"><strong>Possible recommends the pack. You approve it.</strong> Nothing begins before the outcome and its boundaries make sense to you.</p>
+            <p className="why-thesis"><strong>Possible recommends the pack. You approve it.</strong> Before approval, intake and inspection remain read-only; no ingredient installs, outcome state, or production work begins.</p>
 
           <section id="process" aria-labelledby="why-process-heading">
             <h2 id="why-process-heading">From ambition to evidence.</h2>
@@ -470,7 +566,7 @@ function WhyPage() {
           </section>
 
           <footer className="why-article-cta">
-            <div><span>START HERE</span><strong>Bring a rough idea.</strong><p>Possible will help define the outcome before any work begins.</p></div>
+            <div><span>START HERE</span><strong>Bring a rough idea.</strong><p>Possible will help define the outcome before any project-writing or production work begins.</p></div>
             <div><pre><code>{installCommand}</code></pre><CopyButton label="Copy install command" value={installCommand} /></div>
             <p>Then open Codex and type <code>$possible</code>.</p>
           </footer>
@@ -1432,7 +1528,14 @@ function DemoArtifacts() {
       </div>
 
       <section className="demo-evidence-output" id="evidence-output">
-        <header><span>04 / EVIDENCE + VERIFICATION</span><strong>58 / 58 ARTIFACT CHECKS · 50 / 50 BROWSER CHECKS</strong></header>
+        <header><span>04 / EVIDENCE + VERIFICATION</span><strong>58 / 58 ARTIFACT CHECKS · 50 SUCCESSFUL BROWSER RESPONSES</strong></header>
+        <div className="demo-verification-story">
+          <p><span>01 / PRODUCED</span><strong>The three workstreams finished and the captain integrated the outcome.</strong></p>
+          <p><span>02 / WITHHELD</span><strong>Possible assigned a fresh verification-only agent before declaring completion.</strong></p>
+          <p className="is-failure"><span>03 / FAILED</span><strong>The reviewer found four 404s caused by the embedded site’s root-absolute asset paths.</strong></p>
+          <p><span>04 / REPAIRED</span><strong>The captain fixed the Vite base path and rebuilt only the affected bundle.</strong></p>
+          <p className="is-pass"><span>05 / PASSED</span><strong>The fresh rerun passed 50/50 browser responses; the failed trace remains public.</strong></p>
+        </div>
         <div>
           <a href="/demo/still/OUTCOME-RECEIPT.md" target="_blank" rel="noreferrer"><span>01 / OUTCOME</span><strong>Outcome receipt</strong><i>MARKDOWN ↗</i></a>
           <a href="/demo/still/evidence/final-receipt.md" target="_blank" rel="noreferrer"><span>02 / REVIEW</span><strong>Independent final receipt</strong><i>MARKDOWN ↗</i></a>
@@ -1492,7 +1595,7 @@ function DocsPage() {
           <header className="docs-title" id="overview">
             <p className="eyebrow">GETTING STARTED</p>
             <h1>Build complete outcomes with Possible</h1>
-            <p>Possible is a conversational Codex skill. Start with a rough idea or a repeatable job, clarify the outcome one question at a time, inspect a recommended pack, and approve it before any work begins.</p>
+            <p>Possible is a conversational Codex skill. Start with a rough idea or a repeatable job, clarify the outcome one question at a time, inspect a recommended pack, and approve it before any project-writing or execution begins.</p>
           </header>
 
           <aside className="docs-callout docs-callout--info">
@@ -1800,6 +1903,7 @@ function NotFoundPage() {
 export function PossibleSite({ path: requestedPath }: { path?: string }) {
   const path = (requestedPath ?? (typeof window === "undefined" ? "/" : window.location.pathname)).replace(/\/+$/, "") || "/";
   if (path === "/") return <CreatePage />;
+  if (path === "/proof") return <ProofPage />;
   if (path === "/blogs") return <BlogsPage />;
   if (path === "/blogs/what-is-possible") return <WhatPage />;
   if (path === "/blogs/why-possible") return <WhyPage />;

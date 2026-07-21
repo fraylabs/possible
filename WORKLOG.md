@@ -58,3 +58,15 @@
 - Published the site, film, hardware, evidence, and verification artifacts as direct sibling routes.
 - Updated every live demo link and manifest path while preserving the original run receipts and traces as historical evidence.
 - Added development and preview-server clean-route handling so `/demo/still/` resolves to the static output before the React SPA fallback.
+
+## 2026-07-21 — Build Week proof and judge path
+
+- Reframed the submission around one falsifiable claim: Possible adds the operational knowledge needed to coordinate individual Codex tasks into a verified outcome.
+- Published `/proof` with the visible intent → pack → compiled contract → execution → fresh review → verified outcome flow.
+- Presented the frozen five-condition pilot exactly: Direct stopped at 19/20; Possible reached 20/20 and passed treatment; Spec and Plan outcome/treatment distinctions and all pilot limits remain visible.
+- Added a public proof summary that maps every headline to the frozen protocol, brief, verifier contract, raw transcripts, receipts, machine decisions, screenshots, and independent report.
+- Turned the Still demo's verification evidence into an explicit produced → withheld → failed → repaired → fresh-pass sequence without changing or hiding the historical trace.
+- Added a five-minute Judge Quickstart, supported-platform evidence boundary, expected files, fast evidence path, troubleshooting, non-prompt-library explanation, and Build Week provenance record.
+- Prepared Devpost copy, a 2:54 video storyboard and capture list, and a claim ledger that separates benchmark failures from the independent Still repair story.
+- Passed `npm run check`: 5 pack tests, 8 CLI tests, 9 MCP tests, 30 web tests, 33 static-generation steps, 28 public HTML routes, eight pack publication sets, skill validation, and demo validation.
+- Attempted the required fresh browser review; the in-app browser exposed no available backend. No visual-pass claim was made. Desktop/mobile visual inspection remains open alongside npm publishing and submission-owner attestations.

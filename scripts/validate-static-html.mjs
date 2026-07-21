@@ -15,26 +15,23 @@ const plainText = (markup) => markup
 
 const homeMarkup = await html("index.html");
 const home = visibleText(homeMarkup);
-assert.match(home, /What do you want[\s\S]*to build[\s\S]*today\?/);
-assert.match(home, /Possible is an outcome skill for Codex\. Its packs compile dozens of coordinated tasks, specialist skills, and verification gates into one approved run/);
-assert.match(home, /npx @fraylabs\/possible init/);
+assert.match(home, /What do you want[\s\S]*to achieve[\s\S]*today\?/);
+assert.match(home, /Models know how to perform individual tasks\. Possible provides the operational knowledge to coordinate those tasks into a verified outcome\./);
+assert.match(home, /npx @fraylabs\/possible@0\.1\.6 init/);
 assert.match(home, /id="packs"/);
 assert.match(home, /Packs are complete recipes for[\s\S]*real outcomes/);
 assert.match(home, /Describe the outcome\. Possible recommends a pack before Codex begins—you do not need to choose one yourself\./);
 assert.match(home, /<section class="start-section"[^>]*>[\s\S]*id="start"[\s\S]*id="packs"[\s\S]*<\/section>/);
-assert.match(home, /BENCHMARKS \/ OPEN PROTOCOL/);
-assert.match(home, /Benchmarks,[\s\S]*not claims/);
-assert.match(home, /Each gets identical model, tools, workspace, time, and brief/);
-assert.match(home, /no operator playbook/);
-assert.match(home, /Independent verifiers score outcomes/);
-assert.match(home, /href="\/benchmarks\/simple-prompt"/);
-assert.match(home, /href="\/benchmarks\/billion-dollar-company"/);
-assert.match(home, /href="\/benchmarks\/kickstarter-funding"/);
-assert.match(home, /href="\/benchmarks\/kickstarter-shipped"/);
+assert.match(home, /CONTROLLED PILOT \/ FROZEN PROTOCOL/);
+assert.match(home, /Direct stopped at[\s\S]*19\/20/);
+assert.match(home, /Possible reached 20\/20/);
+assert.match(home, /same brief, tools, workspace rules, and independent checks/);
+assert.match(home, /one-run pilot is evidence from these runs—not proof of typical superiority/);
+assert.match(home, /href="\/proof"/);
 assert.doesNotMatch(home, /href="\/#packs"|Browse packs/);
 assert.match(homeMarkup, /<meta property="og:image" content="https:\/\/possible\.sh\/og\.png"\/>/);
 assert.match(homeMarkup, /<meta name="twitter:image" content="https:\/\/possible\.sh\/og\.png"\/>/);
-assert.match(homeMarkup, /<meta name="description" content="Possible is an outcome skill for Codex\. Its packs compile dozens of coordinated tasks, specialist skills, and verification gates into one approved run\."\/>/);
+assert.match(homeMarkup, /<meta name="description" content="Possible gives Codex the operational knowledge to coordinate individual tasks into a verified outcome\."\/>/);
 assert.doesNotMatch(home, /<div id="root"><\/div>/);
 assert.doesNotMatch(home, /conversational outcome compiler|outcome lanes|ingredient skills|pack knowledge|workstreams/i);
 assert.doesNotMatch(home, /class="[^"]*(?:journey|recommendation-example|starter-card)/);
@@ -96,6 +93,7 @@ for (const [relativePath, assetPrefix] of [
 }
 
 for (const [relativePath, expected] of [
+  ["proof/index.html", "One frozen brief"],
   ["blogs/index.html", "What is Possible?"],
   ["blogs/what-is-possible/index.html", "Possible is the outcome layer"],
   ["blogs/why-possible/index.html", "The bottleneck is no longer what AI can do"],
@@ -117,6 +115,21 @@ for (const [relativePath, expected] of [
 ]) {
   assert.match(visibleText(await html(relativePath)), new RegExp(expected));
 }
+
+const proof = visibleText(await html("proof/index.html"));
+assert.match(proof, /OUTCOME-V1 \/ MEASURED PILOT/);
+assert.match(proof, /One frozen brief[\s\S]*Five workflows[\s\S]*One verifier/);
+assert.match(proof, /Direct prompt[\s\S]*Not verified[\s\S]*19 \/ 20/);
+assert.match(proof, /\$possible[\s\S]*Verified[\s\S]*20 \/ 20/);
+assert.match(proof, /Production is not completion[\s\S]*Possible stops only when the outcome passes[\s\S]*honest no-go/);
+assert.match(proof, /four 404 errors inside the outcome room/);
+assert.match(proof, /One run per condition does not estimate typical performance or variance/);
+assert.match(proof, /href="\/benchmarks\/outcome-v1\/public-proof\.md"/);
+const [sourcePublicProof, exportedPublicProof] = await Promise.all([
+  readFile(new URL("../benchmarks/outcome-v1/PUBLIC-PROOF.md", import.meta.url), "utf8"),
+  html("benchmarks/outcome-v1/public-proof.md"),
+]);
+assert.equal(exportedPublicProof, sourcePublicProof, "The exported benchmark proof must match its canonical source");
 
 const benchmarkGallery = visibleText(await html("benchmarks/index.html"));
 assert.match(benchmarkGallery, /Measure the[\s\S]*whole outcome/);
@@ -176,4 +189,4 @@ assert.match(writingStandard, /Every benchmark page uses the same order/);
 assert.match(writingStandard, /Put results before explanation/);
 assert.match(writingStandard, /Observed:[\s\S]*Modeled:[\s\S]*Projected:[\s\S]*Unknown:/);
 
-console.log(`All ${outcomePacks.length + 19} public Next.js routes contain meaningful initial HTML.`);
+console.log(`All ${outcomePacks.length + 20} public Next.js routes contain meaningful initial HTML.`);

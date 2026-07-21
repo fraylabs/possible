@@ -12,7 +12,7 @@ assert.deepEqual(
 );
 
 const llms = await text("llms.txt");
-assert.match(llms, /Possible is an outcome skill for Codex\. Its packs compile dozens of coordinated tasks, specialist skills, and verification gates into one approved run\./);
+assert.match(llms, /Possible gives Codex the operational knowledge to coordinate individual tasks into a verified outcome\./);
 for (const pack of outcomePacks) {
   const compiled = compilePack(pack);
   const publication = JSON.parse(await text(`packs/${pack.slug}.json`));
