@@ -74,6 +74,6 @@ export const openSourceReleasePack: OutcomePack = {
     "Run the repository's narrowest relevant unit, type, lint, build, and packaging checks.",
     "Test documented installation and the primary example from a clean temporary directory.",
     "Validate workflow syntax, action pinning, token permissions, and release artifact contents.",
-    "Finish with a receipt listing passed, failed, skipped, and unproven checks.",
+    "Finish with a completion report listing passed, failed, skipped, and unproven checks.",
   ],
 };

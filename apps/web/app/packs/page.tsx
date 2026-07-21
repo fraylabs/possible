@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import PossibleRoute from "../_components/PossibleRoute";
 
 export const metadata: Metadata = {
-  title: "Outcome packs",
-  description: "Browse complete, reviewed recipes that coordinate multiple Codex skills around one verifiable outcome.",
+  title: "Outcome Packs",
+  description: "Browse reviewed Outcome Packs that combine execution prompts, agent skills, safeguards, and completion checks.",
 };
 
 export default function PacksPage() {

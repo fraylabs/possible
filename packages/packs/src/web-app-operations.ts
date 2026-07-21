@@ -20,7 +20,7 @@ export const webAppOperationsPack: OutcomePack = {
   name: "Web App Operations",
   eyebrow: "05 / OUTCOME PACK",
   promise: "Turn one live web app into a repeatable, optionally scheduled, evidence-backed operating loop.",
-  summary: "An executable health check, issue queue, maintenance cadence, incident and rollback runbooks, recovery drill, first dated receipt, and scheduling-ready recurring task—assembled once, then ready to repeat.",
+  summary: "An executable health check, issue queue, maintenance cadence, incident and rollback runbooks, recovery drill, first dated completion report, and scheduling-ready recurring task—assembled once, then ready to repeat.",
   useWhen: [
     "A web application is already live and needs a repeatable operating cadence.",
     "Critical flows, issue triage, dependency maintenance, and rollback readiness recur.",
@@ -62,7 +62,7 @@ export const webAppOperationsPack: OutcomePack = {
       name: "Reliability loop",
       skills: ["webapp-testing"],
       owns: ["operations/checks/", "operations/receipts/", "repository-native ops check command"],
-      brief: "Define the confirmed critical flows and implement one repository-native command that reruns their checks and writes a dated receipt. Run it now against an authorized environment; one snapshot is a baseline, never an uptime claim.",
+      brief: "Define the confirmed critical flows and implement one repository-native command that reruns their checks and writes a dated completion report. Run it now against an authorized environment; one snapshot is a baseline, never an uptime claim.",
     },
     {
       id: "maintenance",
@@ -86,8 +86,8 @@ export const webAppOperationsPack: OutcomePack = {
     "Dependency and security maintenance loop",
     "Incident, change, and rollback runbooks",
     "Exercised recovery drill",
-    "First dated operations receipt",
-    "Scheduling-ready task prompt and, when separately approved, an enabled schedule receipt",
+    "First dated operations completion report",
+    "Scheduling-ready task prompt and, when separately approved, an enabled schedule report",
   ],
   guardrails: [
     "Do not deploy, restart services, change production configuration, DNS, alerts, repository settings, issue trackers, or scheduled workflows, contact users, or enable automation without explicit approval.",
@@ -99,12 +99,12 @@ export const webAppOperationsPack: OutcomePack = {
   ],
   verification: [
     "Run the repository's narrowest relevant unit, type, lint, build, and integration checks and record the exact environment used.",
-    "Run the operations command twice against an authorized environment and prove it creates dated, repeatable receipts without resetting unresolved work.",
+    "Run the operations command twice against an authorized environment and prove it creates dated, repeatable completion reports without resetting unresolved work.",
     "Exercise each declared critical flow with a repeatable browser check; capture console, page, and material network failures without inferring uptime from one check.",
     "Dry-run intake, deduplication, prioritization, ownership, and escalation with a real issue or an explicitly labeled fixture excluded from the live queue.",
     "Verify the dependency inventory covers every detected ecosystem and that the security review states its inspected scope, evidence, limitations, and unproven claims.",
     "Tabletop the incident and rollback runbooks with a labeled simulation, proving decision points and recovery checks without touching production.",
-    "Finish with a dated receipt linking evidence, unresolved work, next review date, and passed, failed, skipped, and unproven checks.",
-    "When scheduling is requested, test the durable task prompt manually, verify that it runs exactly one cycle and stops at gated actions, then record either the approved external schedule identifier and state or an honest scheduling-ready no-go receipt.",
+    "Finish with a dated completion report linking evidence, unresolved work, next review date, and passed, failed, skipped, and unproven checks.",
+    "When scheduling is requested, test the durable task prompt manually, verify that it runs exactly one cycle and stops at gated actions, then record either the approved external schedule identifier and state or a completion report that records scheduling as no-go.",
   ],
 };

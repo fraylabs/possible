@@ -50,7 +50,7 @@ describe("Possible MCP", () => {
     assert.equal(envelope.data.installCommands.length, 3);
     assert.match(envelope.data.runPrompt, /\$mujoco-robotics/);
     assert.match(envelope.data.runPrompt, /Parametric STEP assembly/);
-    assert.match(envelope.data.runPrompt, /sim-to-real gap report/);
+    assert.match(envelope.data.runPrompt, /sim-to-real gap completion report/);
   });
 
   it("compiles Hardware Launch", async () => {
@@ -61,7 +61,7 @@ describe("Possible MCP", () => {
     assert.equal(envelope.data.pack.lane, "launch");
     assert.equal(envelope.data.installCommands.length, 4);
     assert.equal(envelope.data.pack.plugins.at(0)?.invocation, "@sites");
-    assert.match(envelope.data.runPrompt, /CAPTAIN WORKFLOW/);
+    assert.match(envelope.data.runPrompt, /LEAD AGENT WORKFLOW/);
     assert.match(envelope.data.runPrompt, /OPENAI SITES MVP PATH/);
   });
 
@@ -89,7 +89,7 @@ describe("Possible MCP", () => {
     assert.equal(envelope.data.pack.lane, "operate");
     assert.equal(envelope.data.installCommands.length, 2);
     assert.match(envelope.data.runPrompt, /\$impediment-prioritization/);
-    assert.match(envelope.data.runPrompt, /First dated operations receipt/);
+    assert.match(envelope.data.runPrompt, /First dated operations completion report/);
     assert.match(envelope.data.runPrompt, /OPERATING LOOP/);
     assert.match(envelope.data.runPrompt, /YYYY-MM-DDTHHMMSSZ\.md/);
   });

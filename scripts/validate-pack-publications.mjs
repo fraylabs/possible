@@ -13,7 +13,9 @@ assert.deepEqual(
 
 const llms = await text("llms.txt");
 assert.match(llms, /AI made execution accessible\. Possible makes operational judgment accessible\./);
-assert.match(llms, /Possible turns rough ambitions into expert-shaped, verified outcomes with Codex/);
+assert.match(llms, /Possible\.sh is an open-source library of Outcome Packs for Codex\./);
+assert.match(llms, /Each pack combines a reusable execution prompt, selected agent skills, sequencing, safeguards, and completion checks for one outcome\./);
+assert.doesNotMatch(llms, /\b(?:recipes?|ingredients?|megaprompt|captain)\b|outcome compiler|composition layer/i);
 for (const pack of outcomePacks) {
   const compiled = compilePack(pack);
   const publication = JSON.parse(await text(`packs/${pack.slug}.json`));

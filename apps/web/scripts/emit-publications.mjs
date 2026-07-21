@@ -34,9 +34,9 @@ await write("llms.txt", [
   "",
   "AI made execution accessible. Possible makes operational judgment accessible.",
   "",
-  "Possible turns rough ambitions into expert-shaped, verified outcomes with Codex by packaging reviewed operational judgment into executable outcome packs.",
+  "Possible.sh is an open-source library of Outcome Packs for Codex.",
   "",
-  "Skills are ingredients. Possible compiles the outcome.",
+  "Each pack combines a reusable execution prompt, selected agent skills, sequencing, safeguards, and completion checks for one outcome.",
   "",
   "- Human documentation: /docs/",
   "- Benchmark gallery: /benchmarks/",
@@ -46,13 +46,13 @@ await write("llms.txt", [
   "- Pack index: /packs/index.json",
   ...outcomePacks.flatMap((pack) => [
     `- ${pack.name}: /packs/${pack.slug}.json`,
-    `  - Human recipe: /packs/${pack.slug}/`,
+    `  - Outcome Pack page: /packs/${pack.slug}/`,
     `  - Install commands: /packs/${pack.slug}/install.txt`,
     `  - Compiled run prompt: /packs/${pack.slug}/run.txt`,
   ]),
   "- Source: https://github.com/fraylabs/possible",
   "",
-  "Review every external skill source before installation. A Possible pack does not authorize deployment, spending, outreach, fabrication, publishing, or unsupported real-world claims.",
+  "Review every external agent skill before installation. Approving an Outcome Pack run does not authorize deployment, spending, outreach, fabrication, publishing, or unsupported real-world claims.",
   "",
 ].join("\n"));
 

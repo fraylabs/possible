@@ -108,6 +108,6 @@ export const playableWebGamePack: OutcomePack = {
     "Use a fresh browser reviewer to complete the core loop with keyboard and touch-sized input paths and inspect console errors.",
     "Measure loading and frame behavior on the declared desktop and mobile profiles; report observations without inventing performance guarantees.",
     "Verify mute, pause, reduced-motion behavior, responsive HUD layout, asset attribution, and a clean production build.",
-    "Finish with a receipt listing passed, failed, skipped, and unproven checks.",
+    "Finish with a completion report listing passed, failed, skipped, and unproven checks.",
   ],
 };

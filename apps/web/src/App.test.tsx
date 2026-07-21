@@ -21,8 +21,8 @@ describe("Possible", () => {
     expect(screen.getByRole("heading", { name: "Complete a possible outcome!", level: 1 })).toBeInTheDocument();
     expect(container.querySelectorAll("h1")).toHaveLength(1);
     expect(screen.getByText("OPEN SOURCE / FOR CODEX")).toBeInTheDocument();
-    expect(screen.getByText(/Possible is an open-source library of long prompts and agent skills/i)).toBeInTheDocument();
-    expect(screen.getByText(/Each reusable pack coordinates 50–100 tasks to reproduce an outcome/i)).toBeInTheDocument();
+    expect(screen.getByText(/Possible\.sh is an open-source library of Outcome Packs/i)).toBeInTheDocument();
+    expect(screen.getByText(/Each pack combines a reusable execution prompt.*selected agent skills.*50–100 tasks.*one finished result/i)).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Star on GitHub ↗" })).toHaveAttribute("href", "https://github.com/fraylabs/possible");
     expect(screen.getByRole("link", { name: "Install ↓" })).toHaveAttribute("href", "#try");
     expect(screen.getByText("npx @fraylabs/possible@0.1.6 init")).toBeInTheDocument();
@@ -34,8 +34,8 @@ describe("Possible", () => {
     expect(screen.queryByRole("link", { name: "START" })).not.toBeInTheDocument();
     expect(screen.queryByRole("link", { name: /Browse packs/i })).not.toBeInTheDocument();
     const start = screen.getByRole("region", { name: "Start with Possible" });
-    expect(within(start).getByRole("heading", { name: /Packs are reviewed recipes for.*real outcomes/i, level: 2 })).toBeInTheDocument();
-    expect(within(start).getByText(/Describe the outcome.*Possible recommends the pack.*you approve it/i)).toBeInTheDocument();
+    expect(within(start).getByRole("heading", { name: /Outcome Packs coordinate.*complete results/i, level: 2 })).toBeInTheDocument();
+    expect(container.querySelector(".home-pack-index header > p")).toHaveTextContent(/Describe the outcome.*\$possible recommends the right pack.*you approve the run/i);
     expect(within(start).getByText("npx @fraylabs/possible@0.1.6 init")).toBeInTheDocument();
     const demo = within(start).getByRole("region", { name: /See \$possible brainstorm.*what it produced/i });
     const demoCards = within(demo).getAllByRole("listitem");
@@ -47,10 +47,10 @@ describe("Possible", () => {
     expect(within(demo).queryByRole("link", { name: /tiny-slug.*PACKAGE.*DOCS.*CI/i })).not.toBeInTheDocument();
     expectBefore(container.querySelector(".build-hero")!, demo);
     expectBefore(demo, container.querySelector(".home-pack-index")!);
-    const packs = screen.getByRole("list", { name: "Packs Possible can recommend" });
+    const packs = screen.getByRole("list", { name: "Outcome Packs Possible can recommend" });
     expect(within(packs).getAllByRole("listitem")).toHaveLength(12);
     for (const pack of outcomePacks) {
-      expect(within(packs).getByRole("link", { name: `${pack.name}, ${pack.lane[0].toUpperCase()}${pack.lane.slice(1)} pack` })).toHaveAttribute(
+      expect(within(packs).getByRole("link", { name: `${pack.name}, ${pack.lane[0].toUpperCase()}${pack.lane.slice(1)} Outcome Pack` })).toHaveAttribute(
         "href",
         `/packs/${pack.slug}`,
       );
@@ -64,10 +64,9 @@ describe("Possible", () => {
     }
     expect(container.querySelector(".journey")).not.toBeInTheDocument();
     expect(container.querySelector(".recommendation-example")).not.toBeInTheDocument();
-    expect(screen.queryByRole("group", { name: /Filter outcome packs by lane/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole("group", { name: /Filter Outcome Packs by category/i })).not.toBeInTheDocument();
     expect(container.querySelector(".schedule-entry, .quick-path, .boundary")).not.toBeInTheDocument();
-    expect(container.querySelector("main")).not.toHaveTextContent(/\bAI agents\b|megaprompt/i);
-    expect(container.querySelector("main")).not.toHaveTextContent(/conversational outcome compiler|outcome lanes|pack knowledge|workstreams/i);
+    expect(container.querySelector("main")).not.toHaveTextContent(/\bAI agents\b|\b(?:recipes?|ingredients?|captain|megaprompt|lanes?)\b|outcome (?:compiler|receipt)|pack knowledge|workstreams/i);
   });
 
   it("opens the six-link mobile sidebar and closes it with Escape", async () => {
@@ -102,13 +101,13 @@ describe("Possible", () => {
     expect(await axe(container)).toHaveNoViolations();
   });
 
-  it("defines Possible as the outcome layer without confusing the product with its parts", async () => {
+  it("distinguishes the Possible.sh library from the installed $possible skill", async () => {
     window.history.pushState({}, "", "/blogs/what-is-possible");
     const { container } = render(<App />);
     expect(container.querySelector(".what-page.editorial-page .editorial-article .editorial-header .editorial-byline")).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: /Possible is the.*outcome layer.*for AI agents/i, level: 1 })).toBeInTheDocument();
-    expect(screen.getByText("An installable Codex skill.")).toBeInTheDocument();
-    expect(screen.getByText(/The skill is the delivery mechanism.*Outcome orchestration is the product/i)).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /Possible\.sh is an.*open-source library.*of Outcome Packs/i, level: 1 })).toBeInTheDocument();
+    expect(container.querySelector(".what-definition-note")).toHaveTextContent(/Install.*\$possible.*in Codex/i);
+    expect(screen.getByText(/The skill connects your request to the open-source Outcome Pack library/i)).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "What each thing means." })).toBeInTheDocument();
     expect(container.querySelectorAll(".what-anatomy article")).toHaveLength(4);
     expect(screen.getByText(/The website is the public home, not the agent/i)).toBeInTheDocument();
@@ -141,7 +140,7 @@ describe("Possible", () => {
   it("makes scheduling operations discoverable from the pack gallery", () => {
     window.history.pushState({}, "", "/packs");
     render(<App />);
-    const catalog = screen.getByRole("region", { name: "All outcome packs" });
+    const catalog = screen.getByRole("region", { name: "All Outcome Packs" });
     expect(within(catalog).getByRole("link", { name: /Web App Operations.*Optional schedule/is })).toHaveAttribute(
       "href",
       "/packs/web-app-operations",
@@ -151,10 +150,10 @@ describe("Possible", () => {
   it("filters the packs catalog by occupied outcome lane", async () => {
     window.history.pushState({}, "", "/packs");
     const { container } = render(<App />);
-    expect(screen.getByRole("heading", { name: /Reviewed recipes.*Recommended by Possible/i })).toBeInTheDocument();
-    expect(screen.getByText(/Describe the outcome.*Possible recommends a pack.*you approve it/i)).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /Reviewed Outcome Packs.*Recommended by \$possible/i })).toBeInTheDocument();
+    expect(container.querySelector(".catalog-intro > p")).toHaveTextContent(/Each Outcome Pack combines a reusable execution prompt.*\$possible recommends the right pack/i);
     expect(screen.getByRole("link", { name: /Start with Possible/i })).toHaveAttribute("href", "/#start");
-    expect(screen.getByRole("button", { name: "All, 12 packs" })).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByRole("button", { name: "All, 12 Outcome Packs" })).toHaveAttribute("aria-pressed", "true");
     expect(screen.getByRole("heading", { name: "Hardware Launch" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Software Launch" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Open-Source Release" })).toBeInTheDocument();
@@ -171,35 +170,35 @@ describe("Possible", () => {
     expect(container.querySelector(".pack-art--production-release")).toBeInTheDocument();
     expect(container.querySelector(".pack-art--robot")).toBeInTheDocument();
 
-    await userEvent.click(screen.getByRole("button", { name: "Create, 4 packs" }));
+    await userEvent.click(screen.getByRole("button", { name: "Create, 4 Outcome Packs" }));
     expect(screen.getByRole("heading", { name: "Playable Web Game" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Working Web App" })).toBeInTheDocument();
     expect(screen.queryByRole("heading", { name: "Hardware Launch" })).not.toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Billion-Dollar SaaS" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Robot Prototype" })).toBeInTheDocument();
-    expect(screen.getByText("Showing 4 Create packs.")).toBeInTheDocument();
+    expect(screen.getByText("Showing 4 Create Outcome Packs.")).toBeInTheDocument();
     expect(container.querySelector(".pack-grid")).toHaveClass("pack-grid--filtered");
     expect(container.querySelector(".pack-grid")).not.toHaveClass("pack-grid--single");
 
-    await userEvent.click(screen.getByRole("button", { name: "Launch, 3 packs" }));
+    await userEvent.click(screen.getByRole("button", { name: "Launch, 3 Outcome Packs" }));
     expect(screen.getByRole("heading", { name: "Hardware Launch" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Software Launch" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Kickstarter Funding" })).toBeInTheDocument();
     expect(screen.queryByRole("heading", { name: "Playable Web Game" })).not.toBeInTheDocument();
-    expect(screen.getByText("PACK / 01")).toBeInTheDocument();
-    expect(screen.getByText("PACK / 02")).toBeInTheDocument();
+    expect(screen.getByText("OUTCOME PACK / 01")).toBeInTheDocument();
+    expect(screen.getByText("OUTCOME PACK / 02")).toBeInTheDocument();
 
-    await userEvent.click(screen.getByRole("button", { name: "Release, 2 packs" }));
+    await userEvent.click(screen.getByRole("button", { name: "Release, 2 Outcome Packs" }));
     expect(screen.getByRole("heading", { name: "Open-Source Release" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Production Web Release" })).toBeInTheDocument();
     expect(screen.queryByRole("heading", { name: "Software Launch" })).not.toBeInTheDocument();
 
-    await userEvent.click(screen.getByRole("button", { name: "Operate, 3 packs" }));
+    await userEvent.click(screen.getByRole("button", { name: "Operate, 3 Outcome Packs" }));
     expect(screen.getByRole("heading", { name: "Web App Operations" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Marketing Operations" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Kickstarter Fulfillment" })).toBeInTheDocument();
     expect(screen.queryByRole("heading", { name: "Open-Source Release" })).not.toBeInTheDocument();
-    expect(screen.getByText("Showing 3 Operate packs.")).toBeInTheDocument();
+    expect(screen.getByText("Showing 3 Operate Outcome Packs.")).toBeInTheDocument();
     expect(await axe(container)).toHaveNoViolations();
   });
 
@@ -214,9 +213,11 @@ describe("Possible", () => {
     expect(container.querySelectorAll(".docs-article > section")).toHaveLength(11);
     expect(screen.getByRole("heading", { name: "Glossary" })).toBeInTheDocument();
     expect(screen.getByText(/An observable end state that can be checked/i)).toBeInTheDocument();
-    expect(container.querySelectorAll(".docs-glossary > div")).toHaveLength(12);
+    expect(container.querySelectorAll(".docs-glossary > div")).toHaveLength(14);
+    expect(screen.getByText(/The open-source library of Outcome Packs, documentation, examples, and evidence/i)).toBeInTheDocument();
+    expect(screen.getByText(/The installed agent skill that understands a request, recommends an Outcome Pack, and runs it after approval/i)).toBeInTheDocument();
     expect(screen.getByText(/A task describes work; it does not define success/i)).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /EXAMPLE PACKHardware LaunchView recipe/i })).toHaveAttribute("href", "/packs/hardware-launch");
+    expect(screen.getByRole("link", { name: /EXAMPLE OUTCOME PACKHardware LaunchView specification/i })).toHaveAttribute("href", "/packs/hardware-launch");
     expect(screen.getByText(/WHAT.*YES.*AUTHORIZES/i)).toBeInTheDocument();
     expect(screen.getByText(/Deployment, scheduling changes, publishing, spending, outreach, fabrication/i)).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /complete recorded Hardware Launch run/i })).toHaveAttribute("href", "/demo/hardware");
@@ -236,7 +237,7 @@ describe("Possible", () => {
     expect(container.querySelectorAll(".docs-role-summary > div")).toHaveLength(2);
     expect(container.querySelectorAll(".docs-responsibility-list")).toHaveLength(2);
     expect(container.querySelectorAll(".docs-handshake li")).toHaveLength(7);
-    expect(screen.getByText(/Confirming a pack authorizes only the disclosed repo-local work/i)).toBeInTheDocument();
+    expect(screen.getByText(/Approving an Outcome Pack authorizes only the disclosed repo-local work/i)).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /Explore outcome packs/i })).toHaveAttribute("href", "/packs");
     expect(await axe(container)).toHaveNoViolations();
   });
@@ -248,9 +249,9 @@ describe("Possible", () => {
     expect(screen.getByRole("heading", { name: /The bottleneck is no longer what AI can do/i, level: 1 })).toBeInTheDocument();
     expect(screen.queryByRole("complementary", { name: /In this essay/i })).not.toBeInTheDocument();
     expect(screen.getByRole("heading", { name: /Three roles, clearly separated/i })).toBeInTheDocument();
-    expect(screen.getByText(/Possible is not a pack browser/i)).toBeInTheDocument();
-    expect(container.querySelector(".why-thesis")).toHaveTextContent(/Possible recommends the pack.*You approve it/i);
-    expect(screen.getByText(/This is a map for Possible, not an intake menu for the user/i)).toBeInTheDocument();
+    expect(screen.getByText(/You do not need to browse the library or decide which agent skills belong together/i)).toBeInTheDocument();
+    expect(container.querySelector(".why-thesis")).toHaveTextContent(/\$possible recommends the Outcome Pack.*You approve the run/i);
+    expect(screen.getByText(/The library currently covers four kinds of outcomes/i)).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /See the recorded Hardware Launch outcome/i })).toHaveAttribute("href", "/demo/hardware");
     expect(screen.getByText("npx @fraylabs/possible@0.1.6 init", { selector: ".why-article-cta code" })).toBeInTheDocument();
     expect(container.querySelectorAll(".why-responsibility-table article")).toHaveLength(3);
@@ -334,13 +335,13 @@ describe("Possible", () => {
       expect(screen.getByText(pack.notFor[0])).toBeInTheDocument();
       expect(container.querySelectorAll(".pack-contract-list li")).toHaveLength(pack.outputs.length);
       expect(container.querySelectorAll(".pack-workstream-table tbody tr")).toHaveLength(pack.workstreams.length);
-      expect(container.querySelectorAll(".pack-ingredient-table tbody tr")).toHaveLength(pack.skills.length + (pack.plugins?.length ?? 0));
+      expect(container.querySelectorAll(".pack-agent-skills-table tbody tr")).toHaveLength(pack.skills.length + (pack.plugins?.length ?? 0));
       expect(container.querySelectorAll(".pack-reference-list li")).toHaveLength(pack.guardrails.length);
       expect(container.querySelectorAll(".pack-verification-list li")).toHaveLength(pack.verification.length);
       expect(container.querySelectorAll(".pack-command-list > div")).toHaveLength(compiled.installCommands.length);
       expect(container.querySelector(".pack-command-list code")).toHaveTextContent(compiled.installCommands[0]);
       expect(container.querySelector(".pack-prompt-disclosure code")?.textContent).toBe(compiled.runPrompt);
-      expect(screen.getAllByRole("link", { name: "Compiled pack JSON ↗" })[0]).toHaveAttribute("href", `/packs/${pack.slug}.json`);
+      expect(screen.getAllByRole("link", { name: "Outcome Pack JSON ↗" })[0]).toHaveAttribute("href", `/packs/${pack.slug}.json`);
       expect(screen.getByRole("link", { name: "Download .txt ↓" })).toHaveAttribute("href", `/packs/${pack.slug}/run.txt`);
       expect(screen.getByRole("link", { name: "Install .txt ↓" })).toHaveAttribute("href", `/packs/${pack.slug}/install.txt`);
       expect(await axe(container)).toHaveNoViolations();
@@ -371,13 +372,13 @@ describe("Possible", () => {
     window.history.pushState({}, "", "/packs/web-app-operations");
     const { container } = render(<App />);
     expect(screen.getByRole("heading", { name: "Web App Operations" })).toBeInTheDocument();
-    expect(container.querySelectorAll(".pack-ingredient-table tbody tr")).toHaveLength(6);
+    expect(container.querySelectorAll(".pack-agent-skills-table tbody tr")).toHaveLength(6);
     expect(screen.getAllByText(/Executable operations check and dated health baseline/i).length).toBeGreaterThan(0);
-    expect(screen.getAllByText(/First dated operations receipt/i).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/First dated operations completion report/i).length).toBeGreaterThan(0);
     expect(screen.getAllByText(/one snapshot is a baseline, never an uptime claim/i).length).toBeGreaterThan(0);
   });
 
-  it("explains the test-first, separately approved scheduling flow and its recurring receipts", () => {
+  it("explains the test-first, separately approved scheduling flow and its completion reports", () => {
     window.history.pushState({}, "", "/packs/web-app-operations");
     render(<App />);
     const flow = screen.getByRole("list", { name: /Scheduling flow/i });
@@ -386,15 +387,15 @@ describe("Possible", () => {
     expect(within(flow).getByText(/Show the exact task, cadence, timezone, project, prompt, and permissions/i)).toBeInTheDocument();
     expect(within(flow).getByText(/Ask for separate approval before creating or enabling/i)).toBeInTheDocument();
     expect(
-      within(flow).getByText(/Each recurring run reads the latest receipt, runs one cycle, carries unresolved work forward, and writes a new dated receipt/i),
+      within(flow).getByText(/Each recurring run reads the latest report, runs one cycle, carries unresolved work forward, and writes a new dated report/i),
     ).toBeInTheDocument();
   });
 
   it("discovers pack 08 and gives both Operate packs the same safe scheduling UX", () => {
     window.history.pushState({}, "", "/packs");
     render(<App />);
-    const catalog = screen.getByRole("region", { name: "All outcome packs" });
-    expect(within(catalog).getByRole("link", { name: /PACK \/ 08.*Marketing Operations.*Optional schedule/is })).toHaveAttribute(
+    const catalog = screen.getByRole("region", { name: "All Outcome Packs" });
+    expect(within(catalog).getByRole("link", { name: /OUTCOME PACK \/ 08.*Marketing Operations.*Optional schedule/is })).toHaveAttribute(
       "href",
       "/packs/marketing-operations",
     );
@@ -425,9 +426,9 @@ describe("Possible", () => {
       const flow = screen.getByRole("list", { name: /Scheduling flow/i });
       expect(within(flow).getByText(/Test the first cycle manually before scheduling/i)).toBeInTheDocument();
       expect(within(flow).getByText(/Ask for separate approval before creating or enabling/i)).toBeInTheDocument();
-      expect(within(flow).getByText(/reads the latest receipt.*carries unresolved work forward.*new dated receipt/i)).toBeInTheDocument();
+      expect(within(flow).getByText(/reads the latest report.*carries unresolved work forward.*new dated report/i)).toBeInTheDocument();
       expect(screen.getByText(unattendedBoundary)).toBeInTheDocument();
-      expect(screen.getAllByRole("link", { name: "Compiled pack JSON ↗" })[0]).toHaveAttribute("href", `/packs/${slug}.json`);
+      expect(screen.getAllByRole("link", { name: "Outcome Pack JSON ↗" })[0]).toHaveAttribute("href", `/packs/${slug}.json`);
       expect(screen.getByRole("link", { name: "Download .txt ↓" })).toHaveAttribute("href", `/packs/${slug}/run.txt`);
     }
   });
@@ -446,7 +447,7 @@ describe("Possible", () => {
     window.history.pushState({}, "", "/packs/not-real");
     render(<App />);
     expect(screen.getByRole("heading", { name: /not possible yet/i })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /Browse all packs/i })).toHaveAttribute("href", "/packs");
+    expect(screen.getByRole("link", { name: /Browse all Outcome Packs/i })).toHaveAttribute("href", "/packs");
   });
 
   it("shows the recorded runs and the playable game proof in the demo gallery", () => {
@@ -503,7 +504,7 @@ describe("Possible", () => {
     expect(screen.getByRole("link", { name: /OPEN LOCAL GUIDE/i })).toHaveAttribute("href", "/demo/robot-snake/viewer/README.md");
     expect(screen.getByRole("link", { name: /VERIFY RECORDING/i })).toHaveAttribute("href", "/demo/robot-snake/viewer/robot-snake.manifest.json");
     expect(await axe(artifacts)).toHaveNoViolations();
-    expect(within(conversation).getByRole("link", { name: /Robot Prototype pack/i })).toHaveAttribute("href", "/packs/robot-prototype");
+    expect(within(conversation).getByRole("link", { name: /Robot Prototype Outcome Pack/i })).toHaveAttribute("href", "/packs/robot-prototype");
     expect(within(conversation).getByText("Yes, proceed.")).toBeInTheDocument();
     expect(container.querySelector(".demo-outcome-footer")).toHaveTextContent(/Physical locomotion.*remain unproven/i);
   });
@@ -512,12 +513,12 @@ describe("Possible", () => {
     window.history.pushState({}, "", "/demo/game");
     render(<App />);
     expect(screen.getByRole("heading", { name: /A strange idea.*made playable/i })).toBeInTheDocument();
-    expect(screen.getByText(/not presented as a clean-room pack evaluation/i)).toBeInTheDocument();
+    expect(screen.getByText(/not presented as a clean-room evaluation/i)).toBeInTheDocument();
     const artifacts = screen.getByRole("region", { name: "Outcome artifacts" });
     const conversation = screen.getByRole("region", { name: "$possible conversation" });
     expectBefore(artifacts, conversation);
-    expect(within(conversation).getByText("$possible")).toBeInTheDocument();
-    expect(within(conversation).getByRole("link", { name: /Playable Web Game pack/i })).toHaveAttribute("href", "/packs/playable-web-game");
+    expect(within(conversation).getByText("$possible", { selector: ".demo-conversation-thread span" })).toBeInTheDocument();
+    expect(within(conversation).getByRole("link", { name: /Playable Web Game Outcome Pack/i })).toHaveAttribute("href", "/packs/playable-web-game");
     expect(within(conversation).getByText("Yes, proceed.")).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: /Full Codex thread/i })).not.toBeInTheDocument();
     expect(screen.getByTitle("Fold paper plane game")).toHaveAttribute("src", "/demo/game/play");
@@ -533,9 +534,9 @@ describe("Possible", () => {
     const conversation = screen.getByRole("region", { name: "$possible conversation" });
     expectBefore(artifacts, conversation);
     expect(within(artifacts).getByText("OUTPUT", { selector: ".demo-output-label strong" })).toBeInTheDocument();
-    expect(within(conversation).getByText("$possible")).toBeInTheDocument();
-    expect(within(conversation).getByRole("link", { name: /Hardware Launch pack/i })).toHaveAttribute("href", "/packs/hardware-launch");
-    expect(within(conversation).getByText(/repo-local ingredient skill installation.*External actions still require separate approval/i)).toBeInTheDocument();
+    expect(within(conversation).getByText("$possible", { selector: ".demo-conversation-thread span" })).toBeInTheDocument();
+    expect(within(conversation).getByRole("link", { name: /Hardware Launch Outcome Pack/i })).toHaveAttribute("href", "/packs/hardware-launch");
+    expect(within(conversation).getByText(/repo-local agent skill installation.*External actions still require separate approval/i)).toBeInTheDocument();
     expect(within(conversation).getByText("Yes, proceed.")).toBeInTheDocument();
     expect(container.querySelector(".demo-artifacts-title")).not.toBeInTheDocument();
     expect(screen.getByTitle("Still launch website")).toHaveAttribute("src", "/demo/still/site/index.html");
@@ -564,12 +565,12 @@ describe("Possible", () => {
     const artifacts = screen.getByRole("region", { name: "Outcome artifacts" });
     const conversation = screen.getByRole("region", { name: "$possible conversation" });
     expectBefore(artifacts, conversation);
-    expect(within(conversation).getByRole("link", { name: /Software Launch pack/i })).toHaveAttribute("href", "/packs/software-launch");
+    expect(within(conversation).getByRole("link", { name: /Software Launch Outcome Pack/i })).toHaveAttribute("href", "/packs/software-launch");
     expect(within(conversation).getByText("Yes, proceed.")).toBeInTheDocument();
     expect(screen.getByTitle("Three local-first product")).toHaveAttribute("src", "/demo/three/product/index.html");
     expect(screen.getByTitle("Three launch website")).toHaveAttribute("src", "/demo/three/site/index.html");
     expect(document.querySelector("video source")).toHaveAttribute("src", "/demo/three/film/three-demo.mp4");
-    expect(screen.getByRole("link", { name: /15-test receipt/i })).toHaveAttribute("href", "/demo/three/evidence/product-test-receipt.md");
+    expect(screen.getByRole("link", { name: /15-test report/i })).toHaveAttribute("href", "/demo/three/evidence/product-test-receipt.md");
     expect(screen.getByRole("link", { name: /L0–L8 decision/i })).toHaveAttribute("href", "/demo/three/evidence/final-verification.md");
     expect(screen.getByRole("link", { name: /What review caught/i })).toHaveAttribute("href", "/demo/three/evidence/failed-review-01/README.md");
     await userEvent.click(screen.getByRole("button", { name: /Full Codex thread/i }));
@@ -585,10 +586,10 @@ describe("Possible", () => {
     const artifacts = screen.getByRole("region", { name: "Outcome artifacts" });
     const conversation = screen.getByRole("region", { name: "$possible conversation" });
     expectBefore(artifacts, conversation);
-    expect(within(conversation).getByRole("link", { name: /Open-Source Release pack/i })).toHaveAttribute("href", "/packs/open-source-release");
+    expect(within(conversation).getByRole("link", { name: /Open-Source Release Outcome Pack/i })).toHaveAttribute("href", "/packs/open-source-release");
     expect(within(conversation).getByText("Yes, proceed.")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /OPEN SOURCE/i })).toHaveAttribute("href", "/demo/tiny-slug/index.js");
-    expect(screen.getByRole("link", { name: /OPEN OUTCOME RECEIPT/i })).toHaveAttribute("href", "/demo/tiny-slug/.possible/outcome-receipt.md");
+    expect(screen.getByRole("link", { name: /OPEN COMPLETION REPORT/i })).toHaveAttribute("href", "/demo/tiny-slug/.possible/outcome-receipt.md");
     expect(screen.getByRole("link", { name: /Complete public run/i })).toHaveAttribute("href", "/demo/tiny-slug/CODEX-THREAD.md");
     await userEvent.click(screen.getByRole("button", { name: /Full Codex thread/i }));
     expect(screen.getByRole("dialog", { name: /full Codex thread/i })).toBeInTheDocument();

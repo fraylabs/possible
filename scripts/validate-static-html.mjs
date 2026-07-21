@@ -17,8 +17,8 @@ const homeMarkup = await html("index.html");
 const home = visibleText(homeMarkup);
 assert.match(home, /Complete a possible[\s\S]*outcome!/);
 assert.match(home, /OPEN SOURCE \/ FOR CODEX/);
-assert.match(home, /Possible is an open-source library of long prompts and agent skills\./);
-assert.match(home, /Each reusable pack coordinates 50–100 tasks to reproduce an outcome\./);
+assert.match(home, /Possible\.sh is an open-source library of Outcome Packs\./);
+assert.match(home, /Each pack combines a reusable execution prompt, selected agent skills, sequencing, safeguards, and completion checks to coordinate 50–100 tasks toward one finished result\./);
 assert.match(home, /href="https:\/\/github\.com\/fraylabs\/possible"[^>]*>Star on GitHub[\s\S]*↗[\s\S]*<\/a>/);
 assert.match(home, /href="#try">Install ↓<\/a>/);
 assert.match(home, /npx @fraylabs\/possible@0\.1\.6 init/);
@@ -31,12 +31,12 @@ assert.equal((headerLinks.match(/<a\b/g) ?? []).length, 6, "The shared header mu
 assert.doesNotMatch(headerLinks, /href="\/"[^>]*>START/);
 assert.match(home, /class="nav-menu-trigger"[^>]*aria-expanded="false"[^>]*aria-controls="mobile-navigation"/);
 assert.match(home, /id="packs"/);
-assert.match(home, /Packs are reviewed recipes for[\s\S]*real outcomes/);
-assert.match(home, /Describe the outcome\. Possible recommends the pack; you approve it\./);
+assert.match(home, /Outcome Packs coordinate[\s\S]*complete results/);
+assert.match(home, /Describe the outcome\.[\s\S]*\$possible[\s\S]*recommends the right pack; you approve the run\./);
 assert.match(home, /<section class="start-section"[^>]*>[\s\S]*id="start"[\s\S]*id="packs"[\s\S]*<\/section>/);
-assert.match(home, /RECORDED OUTCOMES \/ 04/);
+assert.match(home, /RECORDED OUTCOMES \/ 03/);
 assert.match(home, /See[\s\S]*\$possible[\s\S]*brainstorm—and what it produced/);
-for (const href of ["/demo/hardware", "/demo/software", "/demo/open-source", "/demo/game"]) {
+for (const href of ["/demo/robot-snake", "/demo/hardware", "/demo/game"]) {
   assert.match(home, new RegExp(`href="${href.replaceAll("/", "\\/")}"`));
 }
 const heroIndex = home.indexOf('class="build-hero"');
@@ -50,7 +50,7 @@ assert.doesNotMatch(home, /href="\/proof"/);
 assert.doesNotMatch(home, /href="\/#packs"|Browse packs/);
 assert.match(homeMarkup, /<meta property="og:image" content="https:\/\/possible\.sh\/og\.png"\/>/);
 assert.match(homeMarkup, /<meta name="twitter:image" content="https:\/\/possible\.sh\/og\.png"\/>/);
-assert.match(homeMarkup, /<meta name="description" content="Possible is an open-source library of reusable outcome packs for Codex, combining long prompts with agent skills\."\/>/);
+assert.match(homeMarkup, /<meta name="description" content="Possible\.sh is an open-source library of Outcome Packs for Codex\. Each pack combines a reusable execution prompt, agent skills, and verification\."\/>/);
 assert.doesNotMatch(home, /<div id="root"><\/div>/);
 assert.doesNotMatch(home, /conversational outcome compiler|outcome lanes|ingredient skills|pack knowledge|workstreams/i);
 assert.doesNotMatch(home, /class="[^"]*(?:journey|recommendation-example|starter-card)/);
@@ -69,7 +69,7 @@ for (const pack of outcomePacks) {
 assert.doesNotMatch(home, /Open the full pack reference/);
 
 const catalog = visibleText(await html("packs/index.html"));
-assert.match(catalog, /Reviewed recipes/);
+assert.match(catalog, /Reviewed Outcome Packs/);
 for (const pack of outcomePacks) {
   assert.match(catalog, new RegExp(pack.name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
   const detail = visibleText(await html(`packs/${pack.slug}/index.html`));

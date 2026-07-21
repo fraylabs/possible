@@ -164,7 +164,7 @@ export const robotPrototypePack: OutcomePack = {
     "MuJoCo robot model and task scene",
     "Bounded controller and ROS 2 interface baseline",
     "Deterministic simulation tests and inspectable rollout",
-    "Evidence receipt and sim-to-real gap report",
+    "Evidence and sim-to-real gap completion report",
   ],
   guardrails: [
     "Do not connect to, commission, or command physical hardware; real-hardware work requires a separate explicit approval and safety plan.",
@@ -180,6 +180,6 @@ export const robotPrototypePack: OutcomePack = {
     "Run the MuJoCo structural validator plus seeded nominal, boundary, and intentionally failing task scenarios; require finite states and explicit metrics.",
     "Exercise controller saturation, joint and workspace limits, reset behavior, watchdog or stop behavior, and the separation between simulated and real hardware adapters.",
     "Use CAD Viewer to inspect the actual CAD and robot descriptions; record visual-review limits instead of treating appearance as kinematic or dynamic proof.",
-    "Finish with a receipt listing passed, failed, skipped, and unproven checks plus every remaining sim-to-real gap.",
+    "Finish with a completion report listing passed, failed, skipped, and unproven checks plus every remaining sim-to-real gap.",
   ],
 };

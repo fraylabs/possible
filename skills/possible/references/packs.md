@@ -1,8 +1,8 @@
-# Possible pack catalog
+# Possible Outcome Pack catalog
 
-Use this bundled snapshot when the Possible MCP tools are unavailable. Link the recommended pack's public page during the recommendation; disclose its relevant source list and reviewed revisions before installing it.
+Use this bundled snapshot when the Possible MCP tools are unavailable. Link the recommended Outcome Pack's public page during the recommendation; disclose its selected agent skills, sources, and reviewed revisions before installing them.
 
-Lanes are browsing labels only: Create is a first complete usable thing, Launch is a compelling public presentation, Release is evidence-backed readiness to ship or distribute, and Operate is a repeatable ongoing workflow. Do not ask the user to choose a lane; select across the complete catalog from the desired finished outputs.
+Catalog categories are browsing labels only: Create is a first complete usable thing, Launch is a compelling public presentation, Release is evidence-backed readiness to ship or distribute, and Operate is a repeatable ongoing workflow. Do not ask the user to choose a category; select across the complete catalog from the desired finished outcome.
 
 ## Hardware Launch
 
@@ -14,9 +14,9 @@ Public page: `https://possible.sh/packs/hardware-launch`
 
 Use for a physical-product idea or prototype that needs one coherent launch presentation.
 
-Outputs: launch site, launch film, prototype CAD, honest waitlist contract, approved MVP deployment or deployment-ready no-go receipt, evidence report.
+Outputs: launch site, launch film, prototype CAD, honest waitlist contract, approved MVP deployment or a completion report explaining why deployment could not proceed, evidence report.
 
-Optional captain capability: OpenAI `@sites` plugin (`$sites-building`, `$sites-hosting`), reviewed at plugin version `0.1.30`. When it is available in the current Codex workspace, prefer it for a new MVP launch-site deployment so no separate Vercel registration is needed. It is not installed by the Skills CLI commands below. Deployment and provider mutations still require separate explicit approval.
+Optional lead-agent capability: OpenAI `@sites` plugin (`$sites-building`, `$sites-hosting`), reviewed at plugin version `0.1.30`. When it is available in the current Codex workspace, prefer it for a new MVP launch-site deployment so no separate Vercel registration is needed. It is not installed by the Skills CLI commands below. Deployment and provider mutations still require separate explicit approval.
 
 Workstreams:
 
@@ -53,16 +53,16 @@ Public page: `https://possible.sh/packs/software-launch`
 
 Use for an existing working software product whose primary flow already exists but needs a coherent release and launch presentation.
 
-Outputs: stabilized product release candidate, launch site, demo film, approved MVP deployment or deployment-ready no-go receipt, evidence report.
+Outputs: stabilized product release candidate, launch site, demo film, approved MVP deployment or a completion report explaining why deployment could not proceed, evidence report.
 
-Optional captain capability: OpenAI `@sites` plugin (`$sites-building`, `$sites-hosting`), reviewed at plugin version `0.1.30`. Prefer it for a new MVP deployment when it is available and no provider is already selected; retain `deploy-to-vercel` as the reviewed fallback for an existing authorized Vercel target. The plugin is not installed by the Skills CLI commands below. Either external path requires separate explicit approval.
+Optional lead-agent capability: OpenAI `@sites` plugin (`$sites-building`, `$sites-hosting`), reviewed at plugin version `0.1.30`. Prefer it for a new MVP deployment when it is available and no provider is already selected; retain `deploy-to-vercel` as the reviewed fallback for an existing authorized Vercel target. The plugin is not installed by the Skills CLI commands below. Either external path requires separate explicit approval.
 
 Workstreams:
 
-- Product release candidate — `vercel-react-best-practices`; stabilizes the existing release candidate and owns `product/` and its test receipt.
+- Product release candidate — `vercel-react-best-practices`; stabilizes the existing release candidate and owns `product/` and its test report.
 - Launch site — `frontend-design`; owns `site/` and the launch narrative.
 - Demo film — `remotion-best-practices`; owns `film/` and the rendered preview.
-- Release readiness — `web-design-guidelines`; owns `release/` and the deployment plan. The captain retains `sites-hosting` or `deploy-to-vercel` until separate deployment approval.
+- Release readiness — `web-design-guidelines`; owns `release/` and the deployment plan. The lead agent retains `sites-hosting` or `deploy-to-vercel` until separate deployment approval.
 - Fresh review — `webapp-testing`, `web-design-guidelines`; verifies the integrated outcome.
 
 Sources:
@@ -155,9 +155,9 @@ Lane: `operate`
 
 Public page: `https://possible.sh/packs/web-app-operations`
 
-Use for an existing live web app that needs a repeatable or scheduled operating loop for detecting problems, triaging work, maintaining dependencies, and recovering safely. A request such as “schedule operations” selects this pack when the application is already live.
+Use for an existing live web app that needs a repeatable or scheduled operating loop for detecting problems, triaging work, maintaining dependencies, and recovering safely. A request such as “schedule operations” selects this Outcome Pack when the application is already live.
 
-Outputs: executable operations check and dated health baseline, issue intake and prioritized operations queue, dependency and security maintenance loop, incident/change/rollback runbooks, exercised recovery drill, first dated operations receipt, scheduling-ready task prompt, and—only when separately approved—an enabled schedule receipt.
+Outputs: executable operations check and dated health baseline, issue intake and prioritized operations queue, dependency and security maintenance loop, incident/change/rollback runbooks, exercised recovery drill, first dated completion report, scheduling-ready task prompt, and—only when separately approved—an enabled schedule record.
 
 Workstreams:
 
@@ -178,7 +178,7 @@ npx skills@1.5.19 add anthropics/skills --skill webapp-testing --agent codex
 npx skills@1.5.19 add github/awesome-copilot --skill impediment-prioritization --skill dependabot --skill security-review --skill devops-rollout-plan --skill incident-postmortem --agent codex
 ```
 
-Establish the durable workflow and execute its first dated cycle manually before offering a schedule. For recurring operations, default to a standalone scheduled task in an isolated worktree whose prompt invokes `$possible resume`, runs one cycle, writes a new dated receipt, reports findings, and stops at every external-action gate. Show the exact cadence, timezone, project, execution mode, prompt, and permissions before requesting separate approval to create or enable it. If scheduled-task management is unavailable, provide a tested scheduling-ready prompt without claiming a task exists.
+Establish the durable workflow and execute its first dated cycle manually before offering a schedule. For recurring operations, default to a standalone scheduled task in an isolated worktree whose prompt invokes `$possible resume`, runs one cycle, writes a new dated completion report, reports findings, and stops at every external-action gate. Show the exact cadence, timezone, project, execution mode, prompt, and permissions before requesting separate approval to create or enable it. If scheduled-task management is unavailable, provide a tested scheduling-ready prompt without claiming a task exists.
 
 One health snapshot never proves uptime. Preserve empty queues, skipped checks, unavailable signals, unresolved work, and unproven claims honestly. Scheduled-task changes, production changes, issue-tracker writes, monitoring changes, deploys, rollbacks, paging, status communication, and customer-data access remain separate gates.
 
@@ -198,7 +198,7 @@ Workstreams:
 
 - Product flow and states — `frontend-design`; owns `product/flow.md`, `product/states.md`, and `product/data-contract.md`.
 - Working application — `frontend-design`; owns application source, fixtures, and the production build.
-- Automated product proof — `webapp-testing`; owns tests, the repeatable verification command, and the implementation receipt.
+- Automated product proof — `webapp-testing`; owns tests, the repeatable verification command, and the implementation report.
 - Fresh review — `webapp-testing`, `security-review`; verifies the integrated app and reports scoped risks without claiming security.
 
 Sources:
@@ -213,7 +213,7 @@ npx skills@1.5.19 add anthropics/skills --skill frontend-design --skill webapp-t
 npx skills@1.5.19 add github/awesome-copilot --skill security-review --agent codex
 ```
 
-Prove clean local setup, one complete user job, one material failure path, every promised state and persistence boundary, a production build, responsive browser behavior, and an exact receipt. Deployment, publishing, analytics, third-party services, and real customer data remain separate gates. Never call a local build secure, scalable, reliable, or production-ready.
+Prove clean local setup, one complete user job, one material failure path, every promised state and persistence boundary, a production build, responsive browser behavior, and an exact completion report. Deployment, publishing, analytics, third-party services, and real customer data remain separate gates. Never call a local build secure, scalable, reliable, or production-ready.
 
 ## Production Web Release
 
@@ -223,17 +223,17 @@ Lane: `release`
 
 Public page: `https://possible.sh/packs/production-web-release`
 
-Use when an existing tested web app needs a gated, reversible production release with an immutable candidate, verified preview, exact approval, rollback path, post-deploy smoke evidence, and final receipt. Automated execution supports the reviewed OpenAI Sites and Vercel adapters; other providers stop at a provider-neutral no-go receipt.
+Use when an existing tested web app needs a gated, reversible production release with an immutable candidate, verified preview, exact approval, rollback path, post-deploy smoke evidence, and final completion report. Automated execution supports the reviewed OpenAI Sites and Vercel adapters; other providers stop with a provider-neutral completion report explaining why release could not proceed.
 
-Optional captain capability: OpenAI `@sites` plugin (`$sites-building`, `$sites-hosting`), reviewed at plugin version `0.1.30`. If `.openai/hosting.json` exists, use Sites. Otherwise prefer it for a new MVP target when available, so no separate Vercel registration is needed. It is not installed by the Skills CLI commands below. Every Sites URL is production, and exact provider mutations remain separately gated.
+Optional lead-agent capability: OpenAI `@sites` plugin (`$sites-building`, `$sites-hosting`), reviewed at plugin version `0.1.30`. If `.openai/hosting.json` exists, use Sites. Otherwise prefer it for a new MVP target when available, so no separate Vercel registration is needed. It is not installed by the Skills CLI commands below. Every Sites URL is production, and exact provider mutations remain separately gated.
 
-Outputs: pinned release candidate and provider inventory, security and pipeline preflight, rollout and rollback plan, preview smoke receipt, approved production deployment or no-go receipt, post-deployment evidence, final release receipt.
+Outputs: pinned release candidate and provider inventory, security and pipeline preflight, rollout and rollback plan, preview smoke report, approved production deployment or a completion report explaining why deployment could not proceed, post-deployment evidence, final release report.
 
 Workstreams:
 
 - Candidate and release readiness — `devops-rollout-plan`, `security-review`; owns the candidate record, preflight, rollout plan, and rollback plan.
-- Provider and delivery path — `github-actions-hardening`; owns provider evidence, pipeline review, and exact deploy commands. The captain holds `sites-hosting` or `deploy-to-vercel` until the separate exact production approval.
-- Release verification — `webapp-testing`; owns repeatable preview, production, and rollback-recovery checks and receipts.
+- Provider and delivery path — `github-actions-hardening`; owns provider evidence, pipeline review, and exact deploy commands. The lead agent holds `sites-hosting` or `deploy-to-vercel` until the separate exact production approval.
+- Release verification — `webapp-testing`; owns repeatable preview, production, and rollback-recovery checks and reports.
 - Fresh review — `webapp-testing`, `devops-rollout-plan`; verifies the integrated release evidence before any promotion.
 
 Sources:
@@ -250,7 +250,7 @@ npx skills@1.5.19 add anthropics/skills --skill webapp-testing --agent codex
 npx skills@1.5.19 add vercel-labs/agent-skills --skill deploy-to-vercel --agent codex
 ```
 
-Pack confirmation does not authorize production. Workstreams prepare evidence first; the captain integrates it, records go or no-go, and asks again for approval naming the provider, account or team, project, production target, exact candidate, method, and accepted risks. Do not mutate provider state, secrets, databases, DNS, billing, repositories, or workflows without approval for that exact action. Never infer success, availability, security, or rollback readiness from a plan or one browser pass.
+Outcome Pack confirmation does not authorize production. Workstreams prepare evidence first; the lead agent integrates it, records go or no-go, and asks again for approval naming the provider, account or team, project, production target, exact candidate, method, and accepted risks. Do not mutate provider state, secrets, databases, DNS, billing, repositories, or workflows without approval for that exact action. Never infer success, availability, security, or rollback readiness from a plan or one browser pass.
 
 ## Marketing Operations
 
@@ -262,7 +262,7 @@ Public page: `https://possible.sh/packs/marketing-operations`
 
 Use for a real product or offer that needs a repeatable or scheduled marketing rhythm across positioning, campaign planning, channel-ready draft production, measurement, and review. The product and audience must be grounded in confirmed evidence; this is not a substitute for building the product or creating its first complete launch package.
 
-Outputs: versioned product-marketing source of truth and claims register, prioritized campaign plan and editorial calendar, first batch of channel-ready drafts, decision-led measurement and experiment plan, bounded recurring marketing loop, first dated receipt, scheduling-ready task prompt, and—only when separately approved—an enabled schedule receipt.
+Outputs: versioned product-marketing source of truth and claims register, prioritized campaign plan and editorial calendar, first batch of channel-ready drafts, decision-led measurement and experiment plan, bounded recurring marketing loop, first dated completion report, scheduling-ready task prompt, and—only when separately approved—an enabled schedule record.
 
 Workstreams:
 
@@ -291,14 +291,14 @@ Lane: `create`
 
 Public page: `https://possible.sh/packs/billion-dollar-saas`
 
-Use when the user asks for a successful, category-defining, Atlassian-scale, or billion-dollar software company without knowing every product, growth, revenue, trust, and operating system required. This pack supplies the operational map; it never guarantees valuation, customers, product-market fit, or revenue.
+Use when the user asks for a successful, category-defining, Atlassian-scale, or billion-dollar software company without knowing every product, growth, revenue, trust, and operating system required. This Outcome Pack supplies the operational map; it never guarantees valuation, customers, product-market fit, or revenue.
 
-Outputs: company and market thesis, working product and activation path, positioning and distribution system, pricing/revenue/sales/customer-success system, trust and reliability baseline, company operating cadence, system-coverage matrix, separate customer and revenue ledger beginning at zero, independent receipt.
+Outputs: company and market thesis, working product and activation path, positioning and distribution system, pricing/revenue/sales/customer-success system, trust and reliability baseline, company operating cadence, system-coverage matrix, separate customer and revenue ledger beginning at zero, independent completion report.
 
 Workstreams:
 
 - Market, category, and company thesis — `product-marketing`, `analytics`; owns `company/market/`, `company/thesis.md`, and the evidence register.
-- Product, onboarding, and activation — `frontend-design`, `vercel-react-best-practices`, `webapp-testing`; owns `company/product/`, `company/onboarding/`, and its receipt.
+- Product, onboarding, and activation — `frontend-design`, `vercel-react-best-practices`, `webapp-testing`; owns `company/product/`, `company/onboarding/`, and its report.
 - Positioning, acquisition, and distribution — `product-marketing`, `content-strategy`, `copywriting`, `social`; owns `company/brand/`, `company/acquisition/`, and `company/distribution/`.
 - Pricing, revenue, sales, and customer success — `product-marketing`, `analytics`; owns `company/revenue/`, `company/sales/`, and `company/customer-success/`.
 - Security, reliability, compliance, and release trust — `security-review`, `devops-rollout-plan`, `webapp-testing`; owns `company/trust/`, `company/reliability/`, and `company/release/`.
@@ -333,16 +333,16 @@ Public page: `https://possible.sh/packs/kickstarter-funding`
 
 Use when a rough product idea or prototype needs the complete Kickstarter path: feasibility, economics, offer, rewards, story, proof film, prelaunch audience, campaign operations, and payout evidence. Use Hardware Launch for a presentation without crowdfunding mechanics.
 
-Outputs: feasibility and fixed funding-goal model, audience/offer/rewards/risks, responsive campaign story, proof-led film, prelaunch and campaign distribution system, measurement and payout controls, approved live execution or publication-ready no-go, verified funding receipt.
+Outputs: feasibility and fixed funding-goal model, audience/offer/rewards/risks, responsive campaign story, proof-led film, prelaunch and campaign distribution system, measurement and payout controls, approved live execution or publication-ready blocked status, verified funding report.
 
 Workstreams:
 
 - Product feasibility, cost, and funding model — `product-marketing`, `analytics`; owns campaign feasibility, economics, and risk evidence.
 - Audience, promise, rewards, and offer — `product-marketing`, `copywriting`; owns the offer, rewards, and claims register.
 - Kickstarter story and campaign page — `frontend-design`, `copywriting`; owns the responsive local proof page and story.
-- Proof-led campaign film — `remotion-best-practices`; owns rendered media and its receipt.
+- Proof-led campaign film — `remotion-best-practices`; owns rendered media and its report.
 - Prelaunch audience and distribution — `content-strategy`, `social`, `copywriting`; owns audience research, calendar, and review-required drafts.
-- Campaign decisions and payout receipt — `analytics`, `marketing-loops`, `webapp-testing`; owns measurement, operations, fixtures, and receipts.
+- Campaign decisions and payout evidence — `analytics`, `marketing-loops`, `webapp-testing`; owns measurement, operations, fixtures, and reports.
 - Fresh review — `product-marketing`, `analytics`, `webapp-testing`; verifies economics, claims, media, local campaign behavior, and money evidence.
 
 Sources:
@@ -369,9 +369,9 @@ Lane: `operate`
 
 Public page: `https://possible.sh/packs/kickstarter-fulfillment`
 
-Use after a real Kickstarter campaign reaches its funding goal and needs a durable production-to-shipment operation. This pack manages obligations, suppliers, quality, privacy-safe orders, logistics, exceptions, communications, milestones, and a recurring control loop until 95% shipped or an honest blocked outcome.
+Use after a real Kickstarter campaign reaches its funding goal and needs a durable production-to-shipment operation. This Outcome Pack manages obligations, suppliers, quality, privacy-safe orders, logistics, exceptions, communications, milestones, and a recurring control loop until 95% shipped or an honest blocked outcome.
 
-Outputs: campaign-obligation baseline, production and quality system, privacy-safe order ledger, inventory/logistics/exception system, review-required backer communications, first control-loop receipt, scheduling-ready task, shipment milestone ledger, independent fulfillment receipt.
+Outputs: campaign-obligation baseline, production and quality system, privacy-safe order ledger, inventory/logistics/exception system, review-required backer communications, first control-loop report, scheduling-ready task, shipment milestone ledger, independent fulfillment report.
 
 Workstreams:
 
@@ -379,7 +379,7 @@ Workstreams:
 - Backer obligations and order ledger — `analytics`, `security-review`; owns privacy-safe backer, order, and data-boundary state.
 - Inventory, freight, carrier, and shipment — `analytics`, `impediment-prioritization`; owns inventory, logistics, and exceptions.
 - Backer communications — `product-marketing`, `copywriting`; owns evidence-grounded update and support drafts.
-- Fulfillment control tower — `analytics`, `marketing-loops`, `incident-postmortem`; owns control state, dated receipts, and scheduling handoff.
+- Fulfillment control tower — `analytics`, `marketing-loops`, `incident-postmortem`; owns control state, dated completion reports, and scheduling handoff.
 - Fresh review — `analytics`, `security-review`, `incident-postmortem`; verifies the frozen denominator, evidence milestones, privacy, exceptions, and exact shipment clocks.
 
 Sources:
@@ -406,7 +406,7 @@ Public page: `https://possible.sh/packs/robot-prototype`
 
 Use when a robot hand, gripper, arm, mobile robot, quadruped, or full robot needs one coherent digital prototype across mechanics, kinematics, planning semantics, controls, and simulation.
 
-Outputs: robot architecture and safety contract, parametric STEP assembly and component ledger, validated robot-description and planning-semantics package, MuJoCo model and task scene, bounded controller and ROS 2 interface baseline, deterministic tests and inspectable rollout, evidence receipt and sim-to-real gap report.
+Outputs: robot architecture and safety contract, parametric STEP assembly and component ledger, validated robot-description and planning-semantics package, MuJoCo model and task scene, bounded controller and ROS 2 interface baseline, deterministic tests and inspectable rollout, completion report and sim-to-real gap report.
 
 Workstreams:
 
@@ -434,14 +434,14 @@ Simulation is not physical validation. Do not connect to hardware, disable safet
 
 ## Selection rule
 
-Recommend the pack whose finished outputs most closely match the user's desired end state:
+Recommend the Outcome Pack whose finished outputs most closely match the user's desired end state:
 
 - Web-app idea or rough repository plus its first complete locally verified user flow → Working Web App.
 - Browser-game idea plus one polished playable build → Playable Web Game.
 - Physical product plus launch presentation → Hardware Launch.
 - Software product plus release and launch presentation → Software Launch.
 - Existing repository plus trustworthy public release materials → Open-Source Release.
-- Existing tested web app plus a reversible approved production deployment and smoke receipt → Production Web Release.
+- Existing tested web app plus a reversible approved production deployment and smoke report → Production Web Release.
 - Live web app plus a repeatable reliability, issue-triage, maintenance, incident-response, and safe-change cadence → Web App Operations.
 - Existing product or offer plus a repeatable positioning, campaign-planning, draft-production, measurement, and review cadence → Marketing Operations.
 - Rough ambition for an Atlassian-scale or billion-dollar SaaS company plus the complete product, growth, revenue, trust, and operating system → Billion-Dollar SaaS.
@@ -449,6 +449,6 @@ Recommend the pack whose finished outputs most closely match the user's desired 
 - Funded Kickstarter campaign plus production, backer, logistics, communication, and 95%-shipped operations → Kickstarter Fulfillment.
 - Robot hand, gripper, arm, mobile robot, quadruped, or full robot plus coherent CAD, description, controls, and simulation evidence → Robot Prototype.
 
-Use Working Web App when the missing outcome is the product itself. Use Software Launch when the product works and the missing outcome is its first public story, site, and demo. Use Billion-Dollar SaaS when the user explicitly wants the broader company operating system and accepts that operational coverage cannot guarantee economic success. Use Kickstarter Funding when crowdfunding mechanics and payout are part of the outcome; use Kickstarter Fulfillment only after the campaign is funded. Use Robot Prototype for a simulation-backed digital prototype, not a fabrication-ready machine or hardware commissioning. Use Production Web Release when a tested candidate exists and the missing outcome is a gated production promotion with rollback and smoke evidence. Use Web App Operations only after the app is live and the desired outcome is an ongoing reliability and maintenance rhythm. Use Marketing Operations when the product or offer exists and the missing outcome is a recurring marketing system. A distributable repository release belongs to Open-Source Release; one isolated bug, incident, or marketing asset with no requested recurring workflow is focused work, not a pack.
+Use Working Web App when the missing outcome is the product itself. Use Software Launch when the product works and the missing outcome is its first public story, site, and demo. Use Billion-Dollar SaaS when the user explicitly wants the broader company operating system and accepts that operational coverage cannot guarantee economic success. Use Kickstarter Funding when crowdfunding mechanics and payout are part of the outcome; use Kickstarter Fulfillment only after the campaign is funded. Use Robot Prototype for a simulation-backed digital prototype, not a fabrication-ready machine or hardware commissioning. Use Production Web Release when a tested candidate exists and the missing outcome is a gated production promotion with rollback and smoke evidence. Use Web App Operations only after the app is live and the desired outcome is an ongoing reliability and maintenance rhythm. Use Marketing Operations when the product or offer exists and the missing outcome is a recurring marketing system. A distributable repository release belongs to Open-Source Release; one isolated bug, incident, or marketing asset with no requested recurring workflow is focused work, not an Outcome Pack run.
 
-If none fits, say so. Do not force a pack or invent a new one during intake.
+If none fits, say so. Do not force an Outcome Pack or invent a new one during intake.

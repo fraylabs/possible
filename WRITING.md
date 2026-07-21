@@ -32,15 +32,21 @@ These are editing limits, not targets. Shorter is better when meaning survives.
 
 Use these terms consistently:
 
-- **Outcome:** an observable end state.
-- **Pack:** a reviewed recipe for a class of outcomes.
-- **Skill:** a specialist capability used by a pack.
-- **Possible:** the skill that clarifies, recommends, coordinates, and verifies.
+- **Possible.sh:** the open-source library of Outcome Packs.
+- **`$possible`:** the installed agent skill that understands a request, recommends an Outcome Pack, and runs it.
+- **Outcome:** the finished result the user wants.
+- **Outcome Pack:** a reusable execution prompt, selected agent skills, sequencing, safeguards, and completion checks for one class of outcomes.
+- **Agent skill:** a capability used while running an Outcome Pack.
+- **Run:** one Outcome Pack applied to one project.
+- **Verification:** the checks that determine whether an outcome is complete.
+- **Completion report:** the artifacts, evidence, failures, limitations, and final status from a run.
 - **Artifact:** a produced file, system, or asset.
 - **Evidence:** proof that a claim is true.
-- **Verifier:** the independent check that awards credit.
 
 Do not use `result`, `output`, `artifact`, and `outcome` as interchangeable terms.
+
+- **Public copy:** avoid competing metaphors such as `recipe`, `ingredient`, `megaprompt`, `captain`, `lane`, `composition layer`, and `outcome compiler`.
+- **Technical references:** preserve code symbols, paths, commands, and legacy filenames when accuracy requires them.
 
 ## Benchmark writing
 
@@ -52,7 +58,7 @@ Every benchmark page uses the same order:
 4. **Task:** fixed input and evaluation subject.
 5. **Metrics:** the primary metric, formula, and evidence that earns credit.
 6. **Protocol:** the procedure applied to every entry.
-7. **Reproducibility:** run manifest, full trace, and verifier receipt.
+7. **Reproducibility:** run manifest, full trace, and completion report.
 8. **Limitations:** what the score does not establish.
 
 Put results before explanation. Never place modeled or projected values in a results table. If no controlled run exists, say so.

@@ -78,7 +78,7 @@ test("install commands group skills by upstream repository", () => {
   assert.equal(software.pack.plugins[0].invocation, "@sites");
   assert.deepEqual(software.pack.plugins[0].skills, ["sites-building", "sites-hosting"]);
   assert.match(software.runPrompt, /prefer it for the MVP deployment path so the user does not need a separate Vercel registration/i);
-  assert.match(software.runPrompt, /Keep \$sites-hosting with the captain/);
+  assert.match(software.runPrompt, /Keep \$sites-hosting with the lead agent/);
   assert.deepEqual(software.pack.workstreams.find((stream) => stream.id === "release").skills, ["web-design-guidelines"]);
 
   const openSource = bySlug("open-source-release");
@@ -96,14 +96,14 @@ test("install commands group skills by upstream repository", () => {
   assert.match(operations.installCommands[0], /anthropics\/skills.+webapp-testing/);
   assert.match(operations.installCommands[1], /github\/awesome-copilot.+impediment-prioritization.+dependabot.+security-review.+devops-rollout-plan.+incident-postmortem/);
   assert.match(operations.runPrompt, /OPERATING LOOP/);
-  assert.match(operations.runPrompt, /prior receipt/);
+  assert.match(operations.runPrompt, /prior completion report/);
   assert.match(operations.runPrompt, /YYYY-MM-DDTHHMMSSZ\.md/);
-  assert.match(operations.runPrompt, /First dated operations receipt/);
+  assert.match(operations.runPrompt, /First dated operations completion report/);
   assert.match(operations.runPrompt, /SCHEDULE GATE/);
   assert.match(operations.runPrompt, /invokes \$possible resume/);
   assert.match(operations.runPrompt, /isolated worktree/);
   assert.match(operations.runPrompt, /Request direct approval for that exact schedule/);
-  assert.match(operations.runPrompt, /scheduling-ready prompt and an honest no-go receipt/);
+  assert.match(operations.runPrompt, /scheduling-ready prompt and a completion report with a no-go status/);
 
   const working = bySlug("working-web-app");
   assert.equal(working.installCommands.length, 2);
@@ -119,7 +119,7 @@ test("install commands group skills by upstream repository", () => {
   assert.match(production.runPrompt, /^Prepare and verify the Production Web Release outcome/);
   assert.match(production.runPrompt, /RELEASE GATE/);
   assert.match(production.runPrompt, /explicit approval for the exact candidate, target, method, and known risks/);
-  assert.match(production.runPrompt, /captain invokes the selected deployment adapter: \$sites-hosting for OpenAI Sites or \$deploy-to-vercel for Vercel/);
+  assert.match(production.runPrompt, /lead agent invokes the selected deployment adapter: \$sites-hosting for OpenAI Sites or \$deploy-to-vercel for Vercel/);
   assert.equal(production.pack.plugins[0].invocation, "@sites");
   assert.deepEqual(production.pack.workstreams.find((stream) => stream.id === "delivery").skills, ["github-actions-hardening"]);
 
@@ -187,7 +187,7 @@ test("Marketing Operations compiles a manual-first, truthfully gated recurring s
   assert.match(compiled.runPrompt, /exact task name, cadence, timezone, project/);
   assert.match(compiled.runPrompt, /Request direct approval for that exact schedule/);
   assert.match(compiled.runPrompt, /\.possible\/schedule\.json/);
-  assert.match(compiled.runPrompt, /scheduling-ready prompt and an honest no-go receipt/);
+  assert.match(compiled.runPrompt, /scheduling-ready prompt and a completion report with a no-go status/);
   assert.match(compiled.runPrompt, /never gain unattended authority.*communication, spending, publishing/is);
   assert.equal(marketing.schedule.request, "I want to schedule marketing operations.");
   assert.match(marketing.schedule.safeDefault, /write-capable connectors/i);
@@ -209,7 +209,7 @@ test("Marketing Operations compiles a manual-first, truthfully gated recurring s
   assert.match(guardrails, /invent|fabricate/i);
   assert.match(guardrails, /performance|attribution|engagement|conversion/i);
   assert.match(guardrails, /explicit approval/i);
-  assert.match(marketing.verification.join(" "), /approved external schedule identifier.*no-go receipt/i);
+  assert.match(marketing.verification.join(" "), /approved external schedule identifier.*completion report.*no-go/i);
   assert.match(marketing.verification.join(" "), /unsupported lift.*testimonial.*competitor-claim/i);
   assert.match(marketing.verification.join(" "), /publish.*email a list.*ad budget.*no external write/i);
   assert.doesNotMatch(compiled.runPrompt, /marketing on autopilot|always-on growth engine|set it and forget it|guaranteed leads/i);

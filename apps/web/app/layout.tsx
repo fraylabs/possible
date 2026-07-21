@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     default: "Possible — Complete a possible outcome!",
     template: "%s — Possible",
   },
-  description: "Possible is an open-source library of reusable outcome packs for Codex, combining long prompts with agent skills.",
+  description: "Possible.sh is an open-source library of Outcome Packs for Codex. Each pack combines a reusable execution prompt, agent skills, and verification.",
   applicationName: "Possible",
   alternates: {
     types: {
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     type: "website",
     siteName: "Possible",
     title: "Possible — Complete a possible outcome!",
-    description: "Possible is an open-source library of reusable outcome packs for Codex, combining long prompts with agent skills.",
+    description: "Possible.sh is an open-source library of Outcome Packs for Codex. Each pack combines a reusable execution prompt, agent skills, and verification.",
     url: "/",
     images: [{
       url: "/og.png",
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Possible — Complete a possible outcome!",
-    description: "Possible is an open-source library of reusable outcome packs for Codex, combining long prompts with agent skills.",
+    description: "Possible.sh is an open-source library of Outcome Packs for Codex. Each pack combines a reusable execution prompt, agent skills, and verification.",
     images: ["/og.png"],
   },
   other: {

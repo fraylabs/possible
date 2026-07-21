@@ -36,13 +36,13 @@ This audit treats completion as unproven. Each requirement below names the autho
 
 **Evidence:** Pack specification pages; compiled pack JSON; `packages/packs/src/types.ts`; `packages/packs/src/compiler.ts`; compiler tests.
 
-**Decision:** **Proved without schema inflation.** Public copy distinguishes typed manifest fields from the compiler-supplied captain sequence and the outcome-specific checks written only after approval.
+**Decision:** **Proved without schema inflation.** Public copy distinguishes typed manifest fields from the generator-supplied lead-agent sequence and the outcome-specific checks written only after approval.
 
 ### 5. Still failure → repair → fresh pass
 
 **Evidence:** `/demo/hardware#evidence-output`; `apps/web/public/demo/still/CODEX-THREAD.md`; initial and final browser JSON; artifact JSON; final receipt.
 
-**Decision:** **Proved.** The reviewer-owned failure, captain-owned repair, passing rerun, 58 artifact checks, 50 successful browser responses, remaining CAD Viewer limitation, and unproven headless video playback are kept distinct.
+**Decision:** **Proved.** The reviewer-owned failure, lead-agent-owned repair, passing rerun, 58 artifact checks, 50 successful browser responses, remaining CAD Viewer limitation, and unproven headless video playback are kept distinct.
 
 ### 6. Submission copy and sub-three-minute video package
 

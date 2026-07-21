@@ -201,7 +201,7 @@ const stylesSource = await readFile(path.join(repository, "apps/web/src/styles.c
 if (!appSource.includes('path === "/demo/game/play"') || !appSource.includes('<PaperPlaneGame />')) {
   failures.push("Playable Web Game proof must expose the full-screen /demo/game/play route");
 }
-if (!appSource.includes("not presented as a clean-room pack evaluation")) {
+if (!appSource.includes("not presented as a clean-room evaluation")) {
   failures.push("Playable Web Game proof must disclose that it is not a clean-room pack evaluation");
 }
 for (const file of robotManifest.files ?? []) {

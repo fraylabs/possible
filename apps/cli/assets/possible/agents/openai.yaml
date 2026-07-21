@@ -1,4 +1,4 @@
 interface:
   display_name: "Possible"
   short_description: "Turn ideas into outcomes that can run again"
-  default_prompt: "Use $possible to brainstorm what I want to make, recommend the right pack, and, if recurring, test and schedule it after my approval."
+  default_prompt: "Use $possible to clarify the outcome I want, recommend the right Outcome Pack, and run it after my approval. If the outcome is recurring, test one cycle before scheduling it."

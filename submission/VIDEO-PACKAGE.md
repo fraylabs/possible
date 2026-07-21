@@ -24,7 +24,7 @@ The narration below is intentionally short enough for pauses, cursor movement, a
 
 **Narration:**
 
-> Possible makes reviewed operational knowledge accessible. It turns rough ambition into expert-shaped, coordinated, independently verified work. Skills are ingredients. Possible compiles the outcome.
+> Possible.sh is an open-source library of Outcome Packs for Codex. Each pack combines a reusable execution prompt, selected agent skills, and completion checks for one outcome.
 
 **On-screen text:** `ROUGH AMBITION → EXPERT-SHAPED OUTCOME`
 
@@ -38,15 +38,15 @@ The narration below is intentionally short enough for pauses, cursor movement, a
 
 **On-screen text:** `THE USER NAMES THE AMBITION. POSSIBLE SUPPLIES THE MISSING MAP.`
 
-### 0:51–1:17 — Show the compiler
+### 0:51–1:17 — Show the Outcome Pack
 
 **Picture:** Open Hardware Launch pack JSON, then the workstream table, independent-review callout, guardrails, and compiled run prompt. Hold long enough to read `site/`, `film/`, `hardware/`, and `fresh verification subagent`.
 
 **Narration:**
 
-> This is not a prompt library. Typed manifests define outputs, workstreams, gates, and verification. The compiler sequences parallel execution, integration, and fresh review. Approved runs write outcome-specific checks into the shared brief.
+> The prompt is only one part. Typed manifests define outputs, specialist work, safeguards, and verification. Each approved run coordinates execution, integration, and fresh review, using completion checks written for that project.
 
-**On-screen flow:** `INTENT → PACK → COMPILED WORKSTREAMS → EXECUTION → FRESH REVIEW → RECEIPT`
+**On-screen flow:** `INTENT → OUTCOME PACK → EXECUTION → FRESH REVIEW → COMPLETION REPORT`
 
 ### 1:17–1:44 — Real outcome
 
@@ -60,11 +60,11 @@ The narration below is intentionally short enough for pauses, cursor movement, a
 
 ### 1:44–2:16 — Failure, repair, fresh pass
 
-**Picture:** Show the captain saying the room is ready, then the verifier's exact 404 finding. Open the preserved initial JSON trace. Show the narrow `base: "./"` repair as a one-line overlay or diff. Finish on the independent receipt and passing browser trace.
+**Picture:** Show the coordinating agent saying the room is ready, then the verifier's exact 404 finding. Open the preserved initial JSON trace. Show the narrow `base: "./"` repair as a one-line overlay or diff. Finish on the independent report and passing browser trace.
 
 **Narration:**
 
-> Production checks were green, but completion stayed open. A fresh reviewer found the embedded site's JavaScript and CSS returned 404. The captain repaired the base path. Fresh verification passed 58 artifact checks and 50 browser responses, with no console, page, or HTTP errors.
+> Production checks were green, but completion stayed open. A fresh reviewer found the embedded site's JavaScript and CSS returned 404. The coordinating agent repaired the base path. Fresh verification passed 58 artifact checks and 50 browser responses, with no console, page, or HTTP errors.
 
 **On-screen text:** `PRODUCED ≠ PASSED` then `FAILURE PRESERVED → REPAIR → FRESH PASS`
 
@@ -96,17 +96,17 @@ Use the production origin when stable; every route below also works from the loc
 | --- | --- | --- |
 | A01 | `https://possible.sh/` | Hero thesis without scrolling. |
 | A02 | `https://possible.sh/#try` | One-command install and `$possible` invocation. |
-| A03 | `apps/web/public/demo/still/CODEX-THREAD.md` lines 1–51 | Compiled Hardware Launch captain workflow. Prefer the public `/demo/still/CODEX-THREAD.md` route for filming. |
+| A03 | `apps/web/public/demo/still/CODEX-THREAD.md` lines 1–51 | Generated Hardware Launch execution prompt. Prefer the public `/demo/still/CODEX-THREAD.md` route for filming. |
 | A04 | `https://possible.sh/packs/hardware-launch.json` | Raw typed pack publication; frame outputs, workstreams, guardrails, and verification. |
 | A05 | `https://possible.sh/packs/hardware-launch#workstreams` | Owned workstream table and independent-review callout. |
-| A06 | `https://possible.sh/packs/hardware-launch#run-prompt` | “Deterministic captain workflow”; expand the compiled prompt and frame the fresh-verifier instruction. |
+| A06 | `https://possible.sh/packs/hardware-launch#run-prompt` | Generated coordination workflow; expand the prompt and frame the fresh-verifier instruction. |
 | A07 | `https://possible.sh/demo/hardware` | Outcome header and `58 / 58 ARTIFACT CHECKS`. |
 | A08 | `https://possible.sh/demo/hardware#artifacts` | Integrated launch site. |
 | A09 | `https://possible.sh/demo/hardware#film-output` | Film player; use the actual MP4 at `/demo/still/film/still-launch.mp4` for clean full-frame inserts. |
 | A10 | `https://possible.sh/demo/hardware#hardware-output` | Four CAD views plus STEP/GLB/STL/source downloads. |
 | A11 | `https://possible.sh/demo/hardware#evidence-output` | Evidence index, including the preserved failure. |
 | A12 | `https://possible.sh/demo/still/verification/browser-results-initial-failure.json` | Root-relative asset requests and 404 responses. Crop tightly; do not scroll through the full trace. |
-| A13 | `apps/web/public/demo/still/CODEX-THREAD.md` lines 247–287 | Exact verifier finding, captain repair, fresh rerun, and pass. Prefer the public raw Markdown route or the “FULL CODEX THREAD” panel on `/demo/hardware`. |
+| A13 | `apps/web/public/demo/still/CODEX-THREAD.md` lines 247–287 | Exact verifier finding, coordinating-agent repair, fresh rerun, and pass. Prefer the public raw Markdown route or the “FULL CODEX THREAD” panel on `/demo/hardware`. |
 | A14 | `https://possible.sh/demo/still/evidence/final-receipt.md` | “Material failure found and repaired” and passed evidence. |
 | A15 | `https://possible.sh/demo/still/verification/browser-results.json` | Empty console/page errors and successful post-repair asset paths. |
 | A16 | `https://possible.sh/demo/still/verification/artifact-results.json` | `58/58` artifact proof. |
