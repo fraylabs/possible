@@ -13,18 +13,18 @@ The repository now includes a five-minute Judge Quickstart, a non-prompt-library
 ## Verification receipt
 
 - `npm run check`: passed.
-- Pack compiler: 6/6 tests passed across all eleven packs.
+- Pack compiler: 8/8 tests passed across all thirteen packs.
 - CLI: 8/8 tests passed; the three-file installed skill snapshot matched.
-- MCP: 9/9 tests passed across the eleven-pack catalog and compilation behavior.
-- Web: 30/30 tests passed, including automated accessibility, the mobile navigation drawer, the retired-route check, benchmark links, and the Still verification sequence.
-- Production export: all 31 static-generation steps completed.
-- Static HTML: all 26 public routes contained meaningful initial HTML.
-- Pack publications: all eleven JSON/install/run publication sets matched the canonical compiler.
+- MCP: 11/11 tests passed across the thirteen-pack catalog and compilation behavior.
+- Web: 32/32 tests passed, including automated accessibility, the mobile navigation drawer, the retired-route check, benchmark links, and the Still verification sequence.
+- Production export: all 34 static-generation steps completed.
+- Static HTML: all 28 public routes contained meaningful initial HTML.
+- Pack publications: all thirteen JSON/install/run publication sets matched the canonical compiler.
 - Demo validation: Hardware, Software, Open-Source, and Playable Web Game evidence bundles passed.
 - Benchmark result files passed the frozen schema, exact-identifier, uniqueness, and decision-rule audit.
 
 ## Remaining external and visual checks
 
 - The in-app browser reported no available browser backend during this task, so no fresh manual visual-pass claim is made. Production build, static HTML, interaction tests, and automated accessibility passed; a desktop/mobile visual review remains required when a browser surface is available.
-- npm currently serves Possible `0.1.6` while this checkout is the `0.1.7` candidate. Publishing or changing the public package is an external action and was not performed.
-- The submission owner must deploy the pushed revision to possible.sh, verify the benchmark, demo, and raw evidence URLs live, decide whether to publish npm `0.1.7`, supply the official `/feedback` Codex session ID, confirm the exact GPT-5.6 session evidence, record the eligible Build Week range, film the prepared video, upload it to YouTube, and submit Devpost. None of those public actions were performed.
+- npm currently serves Possible `0.1.7` while this checkout is the `0.1.8` candidate. Publishing or changing the public package is an external action and was not performed.
+- The submission owner must deploy the pushed revision to possible.sh, verify the benchmark, demo, presentation, and raw evidence URLs live, decide whether to publish npm `0.1.8`, supply the official `/feedback` Codex session ID, confirm the exact GPT-5.6 session evidence, record the eligible Build Week range, film the prepared video, upload it to YouTube, and submit Devpost. None of those public actions were performed.

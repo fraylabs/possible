@@ -53,7 +53,7 @@ nav { height: 74px; padding: 0 3.5vw; border-bottom: 1px solid #aaa59a; display:
 .build-hero-copy h1 em { color: #ff4d00; font-style: normal; }
 .build-hero-copy > .build-hero-description { max-width: 650px; margin: 0; color: #5e5952; font-size: clamp(16px, 1.4vw, 21px); line-height: 1.5; }
 .build-hero-description strong { color: #151411; font-weight: 600; }
-.build-hero-actions { margin-top: 24px; display: flex; gap: 24px; align-items: center; }
+.build-hero-actions { margin-top: 24px; display: flex; flex-wrap: wrap; gap: 18px 24px; align-items: center; }
 .build-hero-actions .button-link { background: #ff4d00; }
 .build-hero-actions .text-link { font-size: 10px; }
 .build-hero-install { min-width: 0; scroll-margin-top: 22px; }
@@ -319,6 +319,7 @@ footer .wordmark span { color: #151411; }
 .pack-grid--filtered .pack-card--playable-web-game { grid-column: auto; }
 .pack-grid--filtered .pack-card--web-app-operations { grid-column: auto; }
 .pack-grid--filtered .pack-card--marketing-operations { grid-column: auto; }
+.pack-grid--filtered .pack-card--web-presentation { grid-column: auto; }
 .pack-grid--filtered .pack-cover, .pack-grid--filtered .pack-card--hardware-launch .pack-cover { min-height: 520px; }
 .pack-grid--filtered .pack-cover-title h2, .pack-grid--filtered .pack-card:not(.pack-card--hardware-launch) .pack-cover-title h2 { max-width: 730px; font-size: clamp(48px, 6vw, 98px); }
 .pack-card { min-width: 0; border: 1px solid #151411; display: flex; flex-direction: column; overflow: hidden; background: #f3f0e8; transition: transform .22s ease, box-shadow .22s ease; }
@@ -335,6 +336,7 @@ footer .wordmark span { color: #151411; }
 .pack-card--billion-dollar-saas .pack-cover { background: #c6ff4a; }
 .pack-card--kickstarter-funding .pack-cover { background: #ffb2dd; }
 .pack-card--kickstarter-fulfillment .pack-cover { background: #ffc75a; }
+.pack-card--web-presentation .pack-cover { background: #ffc7e5; }
 .pack-cover header { z-index: 2; display: grid; grid-template-columns: 1fr auto auto; gap: 20px; align-items: center; font: 9px "DM Mono", monospace; letter-spacing: .07em; }
 .pack-cover header small { opacity: .7; }
 .pack-cover header b { font-size: 16px; font-weight: 400; }
@@ -987,6 +989,17 @@ footer .wordmark span { color: #151411; }
 .pack-art--robot span:nth-of-type(1) { left: 4%; }
 .pack-art--robot span:nth-of-type(2) { left: 50%; transform: translateX(-50%); }
 .pack-art--robot span:nth-of-type(3) { right: 4%; background: #151411; color: #c9d0ff; }
+
+/* Web Presentation pack */
+.pack-card--web-presentation { grid-column: 1 / -1; }
+.pack-card--web-presentation .pack-cover { min-height: 430px; }
+.pack-art--presentation { bottom: 90px; overflow: hidden; border: 1px solid rgba(21,20,17,.42); background: #ffc7e5; }
+.presentation-atlas { width: min(39vw, 520px); aspect-ratio: 1; position: absolute; top: 50%; left: 50%; border: 1px solid #151411; background: #f4f0e6 url("/presentation/possible-visual-atlas.webp") center / cover no-repeat; transform: translate(-50%, -50%) rotate(-2deg); box-shadow: 9px 9px 0 #151411; }
+.pack-art--presentation strong { position: absolute; top: 7%; left: 3%; font: 8px "DM Mono", monospace; letter-spacing: .08em; }
+.pack-art--presentation span { position: absolute; bottom: 6%; padding: 5px 7px; border: 1px solid #151411; background: #f3f0e8; font: 8px "DM Mono", monospace; }
+.pack-art--presentation span:nth-of-type(1) { left: 3%; }
+.pack-art--presentation span:nth-of-type(2) { left: 50%; transform: translateX(-50%); }
+.pack-art--presentation span:nth-of-type(3) { right: 3%; background: #151411; color: #ffc7e5; }
 .pack-art--fulfillment > strong { right: 3%; left: auto; }
 
 .demo-example-card--game { grid-column: 1 / -1; background: #78d9ff; }
@@ -1049,6 +1062,7 @@ footer .wordmark span { color: #151411; }
   .pack-card--playable-web-game { grid-column: auto; }
   .pack-card--web-app-operations { grid-column: auto; }
   .pack-card--marketing-operations { grid-column: auto; }
+  .pack-card--web-presentation { grid-column: auto; }
   .game-evidence-index { grid-template-columns: 1fr 1fr; }
   .game-evidence-index a { border-bottom: 1px solid #151411; }
   .game-evidence-index a:nth-child(2n) { border-right: 0; }
@@ -1059,6 +1073,7 @@ footer .wordmark span { color: #151411; }
   .marketing-cycle { width: 118px; left: 21%; border-width: 19px; }
   .marketing-cycle::after { right: -29px; }
   .marketing-calendar { width: 54vw; right: 2%; }
+  .presentation-atlas { width: 68vw; }
   .demo-example-card--game { grid-column: auto; }
   .demo-example-visual--game { min-height: 360px; }
   .demo-game-plane { width: 105px; left: 15%; }

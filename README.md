@@ -28,10 +28,10 @@ The package declares a cross-platform Node.js runtime. The recorded local runs i
 From the repository you want `$possible` to work on:
 
 ```bash
-npx @fraylabs/possible@0.1.6 init
+npx @fraylabs/possible@0.1.7 init
 ```
 
-`0.1.6` is the published package used by the controlled `$possible` run and includes the Open-Source Release judge path below. This checkout is the separately verified `0.1.7` candidate; until that version is published, judges testing the exact checkout can invoke its installer from another target repository with `node /absolute/path/to/possible/apps/cli/src/index.mjs init`.
+`0.1.7` is the published package and contains the first twelve Outcome Packs. The controlled `$possible` pilot used `0.1.6`; this checkout is the separately verified `0.1.8` candidate that adds Web Presentation. Until `0.1.8` is published, judges testing the exact checkout can invoke its installer from another target repository with `node /absolute/path/to/possible/apps/cli/src/index.mjs init`.
 
 Open or reload that repository in Codex, then enter:
 
@@ -76,7 +76,7 @@ An Outcome Pack includes a reusable execution prompt, but its source of truth is
 
 Categories make the catalog easier to browse. The user does not need to choose one during intake.
 
-- **Create** — **Working Web App** produces a locally verified first usable product; **Playable Web Game** produces one polished Three.js game; **Billion-Dollar SaaS** expands a rough company ambition into an executable product, growth, revenue, trust, and operating system while keeping real revenue separate.
+- **Create** — **Working Web App** produces a locally verified first usable product; **Playable Web Game** produces one polished Three.js game; **Robot Prototype** produces a coherent simulation-backed digital prototype; **Web Presentation** produces an evidence-backed coded browser deck; **Billion-Dollar SaaS** expands a rough company ambition into an executable product, growth, revenue, trust, and operating system while keeping real revenue separate.
 - **Launch** — **Hardware Launch** and **Software Launch** turn a product into a coherent public presentation; **Kickstarter Funding** adds feasibility, economics, rewards, proof, audience, campaign control, and payout evidence.
 - **Release** — **Open-Source Release** prepares a trustworthy distributable repository; **Production Web Release** takes a tested OpenAI Sites or Vercel app through a gated, reversible deployment or an honest no-go.
 - **Operate** — **Web App Operations** runs a repeatable health and recovery loop; **Marketing Operations** runs a repeatable marketing loop; **Kickstarter Fulfillment** coordinates a funded campaign through production and a privacy-safe 95%-shipped completion report.
@@ -88,7 +88,7 @@ Operate Outcome Packs are recurring by definition: a checklist alone is not enou
 Install the skill once:
 
 ```bash
-npx @fraylabs/possible@0.1.6 init
+npx @fraylabs/possible@0.1.7 init
 ```
 
 The installer adds `$possible` to the current project without choosing an Outcome Pack or creating a brief. Open or reload that project in Codex and invoke:
@@ -129,7 +129,7 @@ npm run check
 
 Production builds emit `/packs/index.json`, plus JSON, install text, and run text for every Outcome Pack.
 
-The web surface keeps entry, understanding, discovery, and evidence separate. `/` introduces Possible.sh. `/benchmarks` compares one-prompt outcomes. `/docs` explains first use and safety. `/packs` is the category-filtered Outcome Pack gallery. `/packs/:slug` specifies fit, execution ownership, reviewed sources, boundaries, and verification. `/demo` shows intake, preserved runs, and completion reports.
+The web surface keeps entry, understanding, discovery, and evidence separate. `/` introduces Possible.sh. `/presentation` is the coded visual explainer. `/benchmarks` compares one-prompt outcomes. `/docs` explains first use and safety. `/packs` is the category-filtered Outcome Pack gallery. `/packs/:slug` specifies fit, execution ownership, reviewed sources, boundaries, and verification. `/demo` shows intake, preserved runs, and completion reports.
 
 ## Trust boundary
 

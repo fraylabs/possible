@@ -75,6 +75,6 @@ Before submission, record and link:
 2. the first eligible commit and frozen submission commit;
 3. the Codex task/session showing GPT-5.6 usage;
 4. any pre-event Possible work that must be excluded from the “built during Build Week” claim.
-5. the npm version judges should install and proof that it matches the frozen source. On 2026-07-21, `npm view @fraylabs/possible version` returned `0.1.6` while this checkout declared the not-yet-published `0.1.7` candidate.
+5. the npm version judges should install and proof that it matches the frozen source. On 2026-07-21, `0.1.7` was verified from npm while this checkout declared the not-yet-published `0.1.8` candidate.
 
 Until those facts are supplied, `afb5fc1^..HEAD` is a traceable product-reset range, not an independently proven eligibility range.

@@ -35,7 +35,7 @@ const demoThread = demoThreadData as DemoThread;
 const openSourceThread = openSourceThreadData as DemoThread;
 const softwareThread = softwareThreadData as DemoThread;
 
-const installCommand = "npx @fraylabs/possible@0.1.6 init";
+const installCommand = "npx @fraylabs/possible@0.1.7 init";
 const schedulePrompt = "I want to schedule operations.";
 const approvalDisclosure = "Saying yes authorizes repo-local agent skill installation, the shared outcome brief and state files, and local outcome work. External actions still require separate approval.";
 const laneOrder: PackLane[] = ["create", "launch", "release", "operate"];
@@ -58,6 +58,7 @@ const gallerySlugs = [
   "kickstarter-funding",
   "kickstarter-fulfillment",
   "robot-prototype",
+  "web-presentation",
 ] as const;
 const galleryPacks = gallerySlugs.map((slug) => outcomePacks.find((pack) => pack.slug === slug)!).filter(Boolean);
 const navigationItems = [
@@ -186,9 +187,10 @@ function CreatePage() {
           <div className="build-hero-copy">
             <p className="eyebrow">OPEN SOURCE / FOR CODEX</p>
               <h1>Complete a possible <br /><em>outcome!</em></h1>
-            <p className="build-hero-description"><strong>Possible.sh is an open-source library of Outcome Packs.</strong> Each pack combines a reusable execution prompt, selected agent skills, sequencing, safeguards, and completion checks to coordinate 50–100 tasks toward one finished result.</p>
+            <p className="build-hero-description"><strong>Possible.sh is an open-source library of Outcome Packs.</strong> Each pack combines a reusable execution prompt and selected agent skills for 50–100 coordinated tasks.</p>
             <div className="build-hero-actions">
               <a className="button-link" href="https://github.com/fraylabs/possible" target="_blank" rel="noreferrer">Star on GitHub <span>↗</span></a>
+              <a className="text-link" href="/presentation">See the visual explainer ↗</a>
               <a className="text-link" href="#try">Install ↓</a>
             </div>
           </div>
@@ -744,6 +746,15 @@ function PackArtwork({ slug }: { slug: string }) {
         <div className="robot-kinematic"><b />{Array.from({ length: 8 }, (_, index) => <i key={index} />)}</div>
         <strong>MODEL → CONTROL → PROOF</strong>
         <span>CAD</span><span>KINEMATICS</span><span>MUJOCO</span>
+      </div>
+    );
+  }
+  if (slug === "web-presentation") {
+    return (
+      <div className="pack-art pack-art--presentation" aria-hidden="true">
+        <div className="presentation-atlas" />
+        <strong>STORY → DECK → REVIEW</strong>
+        <span>HTML</span><span>MOTION</span><span>PRESENT</span>
       </div>
     );
   }

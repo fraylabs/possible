@@ -18,10 +18,11 @@ const home = visibleText(homeMarkup);
 assert.match(home, /Complete a possible[\s\S]*outcome!/);
 assert.match(home, /OPEN SOURCE \/ FOR CODEX/);
 assert.match(home, /Possible\.sh is an open-source library of Outcome Packs\./);
-assert.match(home, /Each pack combines a reusable execution prompt, selected agent skills, sequencing, safeguards, and completion checks to coordinate 50–100 tasks toward one finished result\./);
+assert.match(home, /Each pack combines a reusable execution prompt and selected agent skills for 50–100 coordinated tasks\./);
 assert.match(home, /href="https:\/\/github\.com\/fraylabs\/possible"[^>]*>Star on GitHub[\s\S]*↗[\s\S]*<\/a>/);
+assert.match(home, /href="\/presentation">See the visual explainer ↗<\/a>/);
 assert.match(home, /href="#try">Install ↓<\/a>/);
-assert.match(home, /npx @fraylabs\/possible@0\.1\.6 init/);
+assert.match(home, /npx @fraylabs\/possible@0\.1\.7 init/);
 const headerLinks = home.match(/<div class="nav-links">([\s\S]*?)<\/div>/)?.[1];
 assert.ok(headerLinks, "The shared header must render its desktop navigation links");
 for (const href of ["/blogs", "/packs", "/benchmarks", "/docs", "/demo", "https://github.com/fraylabs/possible"]) {
@@ -125,9 +126,19 @@ for (const [relativePath, expected] of [
   ["demo/software/index.html", "Software Launch"],
   ["demo/open-source/index.html", "Open-Source Release"],
   ["demo/game/index.html", "Playable Web Game"],
+  ["presentation/index.html", "Possible.sh visual explainer"],
 ]) {
   assert.match(visibleText(await html(relativePath)), new RegExp(expected));
 }
+
+const presentation = await html("presentation/possible.html");
+assert.equal((presentation.match(/class="slide(?: [^"]*)?"/g) ?? []).length, 10, "The visual explainer must contain ten coded slides");
+for (const phrase of ["Agent skill", "Execution prompt", "Outcome Pack", "$possible", "50–100 coordinated tasks", "npx @fraylabs/possible init"]) {
+  assert.match(presentation, new RegExp(phrase.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")), `The visual explainer must teach '${phrase}'`);
+}
+assert.match(presentation, /possible-visual-atlas\.webp/);
+assert.match(presentation, /data-action="notes"/);
+assert.match(presentation, /prefers-reduced-motion/);
 
 await assert.rejects(html("proof/index.html"), { code: "ENOENT" }, "The retired /proof route must not be exported");
 await assert.rejects(html("benchmarks/billion-dollar-company/index.html"), { code: "ENOENT" }, "The retired billion-dollar benchmark must not be exported");
@@ -181,4 +192,4 @@ assert.match(writingStandard, /Every benchmark page uses the same order/);
 assert.match(writingStandard, /Put results before explanation/);
 assert.match(writingStandard, /Observed:[\s\S]*Modeled:[\s\S]*Projected:[\s\S]*Unknown:/);
 
-console.log(`All ${outcomePacks.length + 14} public Next.js routes contain meaningful initial HTML.`);
+console.log(`All ${outcomePacks.length + 15} public Next.js routes contain meaningful initial HTML.`);

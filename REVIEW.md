@@ -25,7 +25,7 @@ The candidate demonstrates that statement through three distinct layers:
 
 1. Perform the outstanding desktop/mobile visual pass when a browser surface is available.
 2. Deploy the pushed revision to possible.sh, then verify the benchmark, demo, and raw evidence URLs live.
-3. Choose whether judges install published `0.1.6` or publish/freeze the matching `0.1.7` candidate; preserve that the measured Possible run used `0.1.6`.
+3. Keep judges on published `0.1.7` or publish and independently verify the matching `0.1.8` candidate; preserve that the measured Possible run used `0.1.6`.
 4. Record the final commit, eligible commit range, exact GPT-5.6 evidence, and `/feedback` session ID.
 5. Record and upload the final video, then submit the Devpost entry.
 

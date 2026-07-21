@@ -26,7 +26,7 @@ const [
   read("submission/VIDEO-PACKAGE.md"),
   read("submission/CLAIM-LEDGER.md"),
   read("BUILD-WEEK.md"),
-  read("submission/NPM-0.1.7-PREFLIGHT.md"),
+  read("submission/NPM-0.1.8-PREFLIGHT.md"),
   read("WORKLOG.md"),
 ]);
 
@@ -57,8 +57,8 @@ for (const [label, pattern] of [
 assert.match(publicProof, /evidence from one run per condition/i);
 assert.match(publicProof, /does \*\*not\*\* establish[\s\S]*causality/i);
 assert.match(app, /50 SUCCESSFUL BROWSER RESPONSES/);
-assert.match(readme, /@fraylabs\/possible@0\.1\.6 init/);
-assert.match(readme, /separately verified `0\.1\.7` candidate/);
+assert.match(readme, /@fraylabs\/possible@0\.1\.7 init/);
+assert.match(readme, /separately verified `0\.1\.8` candidate/);
 assert.match(devpost, /Possible condition used the then-published `@fraylabs\/possible@0\.1\.6`/);
 assert.match(devpost, /\[ADD THE CORE GPT-5\.6 BUILD SESSION\]/);
 assert.match(devpost, /\[FIRST ELIGIBLE COMMIT\]\.\.\[FINAL SUBMISSION COMMIT\]/);
@@ -66,6 +66,7 @@ assert.match(video, /One run(?: per condition is not proof of| cannot prove) typ
 assert.match(claims, /repository does not independently attest the GPT-5\.6 label/);
 assert.match(buildWeek, /submission owner should link the official Codex task\/session record/);
 assert.match(npmPreflight, /local tarball verified; not published/i);
+assert.match(npmPreflight, /npm view @fraylabs\/possible version` returns `0\.1\.7`/);
 assert.match(npmPreflight, /measured `possible-r1` pilot used `0\.1\.6`/);
 
 console.log(`Submission claims are internally consistent; narration is ${narrationWords} words (${narrationSecondsAt110Wpm}s at 110 wpm).`);

@@ -23,7 +23,7 @@ describe("Possible MCP", () => {
     assert.equal(client.getInstructions(), POSSIBLE_SERVER_INSTRUCTIONS);
   });
 
-  it("lists all twelve outcome packs", async () => {
+  it("lists all thirteen outcome packs", async () => {
     const result = await client.callTool({ name: "list_packs", arguments: {} });
     const envelope = result.structuredContent as { ok: boolean; data: { packs: Array<{ slug: string; lane: string }> } };
     assert.equal(envelope.ok, true);
@@ -40,7 +40,21 @@ describe("Possible MCP", () => {
       ["kickstarter-funding", "launch"],
       ["kickstarter-fulfillment", "operate"],
       ["robot-prototype", "create"],
+      ["web-presentation", "create"],
     ]);
+  });
+
+  it("compiles Web Presentation as a coded browser-deck outcome", async () => {
+    const result = await client.callTool({ name: "compile_pack", arguments: { slug: "web-presentation" } });
+    const envelope = result.structuredContent as { ok: boolean; data: { pack: { catalogNumber: number; lane: string; plugins: Array<{ invocation: string }> }; installCommands: string[]; runPrompt: string } };
+    assert.equal(envelope.ok, true);
+    assert.equal(envelope.data.pack.catalogNumber, 13);
+    assert.equal(envelope.data.pack.lane, "create");
+    assert.equal(envelope.data.installCommands.length, 4);
+    assert.equal(envelope.data.pack.plugins.at(0)?.invocation, "@sites");
+    assert.match(envelope.data.runPrompt, /\$frontend-slides/);
+    assert.match(envelope.data.runPrompt, /\$impeccable/);
+    assert.match(envelope.data.runPrompt, /Editable coded browser presentation/);
   });
 
   it("compiles Robot Prototype", async () => {

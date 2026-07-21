@@ -42,7 +42,7 @@ Possible adds three things to Codex:
 2. **Coordinated execution.** Typed TypeScript manifests record selected skills, outputs, bounded areas of work, safeguards, and verification. The approved run installs the disclosed skills, writes project-specific completion checks, coordinates parallel work, and integrates the result.
 3. **Completion with evidence.** A fresh verification-only agent checks the integrated result. Failures, skipped checks, limitations, and unproven claims remain in the completion report.
 
-The current source candidate contains twelve Outcome Packs across build, launch, release, and recurring operations. The published `0.1.6` judge package contains seven; a new candidate must be packed, independently installed, and published before claiming the five newer packs through the npm install path. The user does not need to choose a category, agent skill, or intermediate task. `$possible` recommends the pack from the desired result.
+The current source candidate contains thirteen Outcome Packs across creation, launch, release, and recurring operations. The published `0.1.7` package contains twelve; the unpublished `0.1.8` candidate adds Web Presentation. The user does not need to choose a category, agent skill, or intermediate task. `$possible` recommends the pack from the desired result.
 
 ## What an Outcome Pack contains
 
@@ -80,14 +80,14 @@ We also froze one Daymark product brief and ran five fresh Codex coordination co
 
 Direct passed its tests and build, but independent production-browser verification found keyboard submission did not work. Possible passed all 20 frozen checks and its treatment contract.
 
-The Possible condition used the then-published `@fraylabs/possible@0.1.6`; the submission source is the separately verified `0.1.7` candidate. The submission owner must attach the official GPT-5.6 Codex session evidence rather than asking the repository to prove a model label it did not record.
+The Possible condition used the then-published `@fraylabs/possible@0.1.6`; npm now serves `0.1.7`, and the submission source is the separately verified `0.1.8` candidate. The submission owner must attach the official GPT-5.6 Codex session evidence rather than asking the repository to prove a model label it did not record.
 
 This is a **one-run pilot, not proof of typical superiority**. It has no replication, randomization, variance estimate, or confidence interval. Possible also took longer and required an explicit approval. Spec-, plan-, and goal-led runs are preserved alongside these results; two failed their assigned treatment, so treatment fidelity and outcome success must not be conflated. We publish the protocol, traces, machine-readable results, verifier report, failures, and limitations so judges can inspect the observation rather than accept a marketing claim.
 
 ## How we built it
 
 - A TypeScript Outcome Pack registry produces installation commands and reusable execution prompts.
-- A repo-local npm CLI installs the Possible Codex skill with conflict checks; the repository candidate is `0.1.7`, the published package is `0.1.6`, and both require Node.js 22 or newer.
+- A repo-local npm CLI installs the Possible Codex skill with conflict checks; the repository candidate is `0.1.8`, the published package is `0.1.7`, and both require Node.js 22 or newer.
 - A read-only MCP server exposes `list_packs` and `compile_pack`.
 - The installed skill handles intake, recommendation, confirmation, execution, resume, and external-action gates.
 - A Next.js site publishes the pack catalog, raw JSON and text contracts, documentation, recorded runs, artifacts, transcripts, and benchmark evidence.
@@ -116,10 +116,10 @@ Next we will repeat the frozen pilot to measure variation, expand negative fixtu
 Requirements: Codex, Node.js 22+, and npm/npx.
 
 ```bash
-npx @fraylabs/possible@0.1.6 init
+npx @fraylabs/possible@0.1.7 init
 ```
 
-That pinned command reproduces the published package used by the controlled run. To test the exact unpublished source candidate from another target repository, run `node /absolute/path/to/possible/apps/cli/src/index.mjs init`. Update the judge command only after `0.1.7` is published and independently verified from npm.
+That pinned command installs the currently published package. The controlled pilot used `0.1.6`. To test the exact unpublished `0.1.8` source candidate from another target repository, run `node /absolute/path/to/possible/apps/cli/src/index.mjs init`.
 
 Open or reload the project in Codex, then invoke:
 

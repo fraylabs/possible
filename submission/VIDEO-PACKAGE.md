@@ -86,7 +86,7 @@ The narration below is intentionally short enough for pauses, cursor movement, a
 
 > Possible packages reviewed operational knowledge as open-source TypeScript and installs into a Codex project with one command. Stop prompting tasks. Start specifying outcomes. Make it Possible.
 
-**On-screen text:** `npx @fraylabs/possible@0.1.6 init` then `possible.sh` until `0.1.7` is published and verified
+**On-screen text:** `npx @fraylabs/possible@0.1.7 init` then `possible.sh`
 
 ## Exact capture list
 
@@ -126,7 +126,7 @@ Use the production origin when stable; every route below also works from the loc
 - Say “50 browser responses,” not “50 browser checks.”
 - Say “one-run pilot,” never “benchmark proves,” “faster,” or “wins.”
 - The repository does not itself prove the GPT-5.6 label. Show or link the official task/session evidence before naming the model in the final submission.
-- The Possible pilot used package `0.1.6`; do not imply that the pilot tested the separate `0.1.7` source candidate.
+- The Possible pilot used package `0.1.6`; do not imply that the pilot tested the published `0.1.7` package or separate `0.1.8` source candidate.
 - Do not claim deployment, customer demand, fabrication, production readiness, physical validation, or cross-platform equivalence.
 - Keep code and JSON readable: 16–20 px minimum after final 1080p export.
 - End no later than 2:57 even if title cards or transitions run long.

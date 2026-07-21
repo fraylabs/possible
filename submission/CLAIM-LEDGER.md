@@ -18,7 +18,7 @@ Use this ledger when editing the Devpost page, captions, overlays, or narration.
 | Possible took 1,850 seconds and required two follow-ups, 14 words, and one approval. | Same independent result and summary JSON | Include when comparing outcomes so the tradeoff remains visible. Direct stopped at 715 seconds with no follow-ups. |
 | The pilot proves Possible is typically better or causes superior outcomes. | No supporting evidence. Protocol explicitly rejects this. | **Do not claim.** No replication, randomization, variance estimate, or confidence interval. |
 | Spec and Plan both produced verified outcomes. | `benchmarks/outcome-v1/independent/RESULT.md` | Their assigned treatments failed. Do not count them as treatment-compliant wins or hide them. |
-| Possible CLI source candidate is version 0.1.7 and requires Node 22+. | `apps/cli/package.json` | npm still serves 0.1.6 until separately published. The Possible pilot used 0.1.6. Never imply the pilot tested 0.1.7. |
+| Possible CLI source candidate is version 0.1.8 and requires Node 22+. | `apps/cli/package.json` | npm serves 0.1.7. The Possible pilot used 0.1.6. Never imply the pilot tested 0.1.7 or 0.1.8. |
 | Possible works across macOS, Linux, and Windows. | Not established by the demo or pilot. | **Do not claim cross-platform outcome equivalence.** State Codex + Node 22+ requirements and the locally verified environment. |
 | Possible has customer validation or proven productivity gains. | No supporting evidence in this repository. | **Do not claim.** The target user and impact are product hypotheses pending user studies and repeated runs. |
 

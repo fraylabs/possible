@@ -24,7 +24,7 @@ This audit treats completion as unproven. Each requirement below names the autho
 
 **Evidence:** `README.md` → “Judge Quickstart.”
 
-**Decision:** **Proved with a version disclosure.** It documents Codex/Node/network requirements, the macOS/Linux/Windows evidence boundary, pinned published install, exact-source fallback, sample request, approval step, expected `.possible/` files, fast preserved-evidence path, and troubleshooting. The published registry remains `0.1.6`; local `0.1.7` tarball readiness is separately proved in `submission/NPM-0.1.7-PREFLIGHT.md`.
+**Decision:** **Proved with a version disclosure.** It documents Codex/Node/network requirements, the macOS/Linux/Windows evidence boundary, pinned published install, exact-source fallback, sample request, approval step, expected `.possible/` files, fast preserved-evidence path, and troubleshooting. The published registry serves `0.1.7`; local `0.1.8` tarball readiness is separately proved in `submission/NPM-0.1.8-PREFLIGHT.md`.
 
 ### 3. Honest controlled-comparison evidence
 
@@ -59,25 +59,25 @@ This audit treats completion as unproven. Each requirement below names the autho
 ## Verifiers
 
 - `npm run check`: **passed** after the final claim corrections.
-- Packs: **6/6** across the eleven-pack catalog.
+- Packs: **8/8** across the thirteen-pack catalog.
 - CLI: **8/8**, canonical three-file snapshot matched.
-- MCP: **9/9**.
-- Web: **30/30**, including automated accessibility, mobile navigation, and retired-route behavior.
-- Production export: **31/31** static-generation steps.
-- Static HTML: **26 routes**.
-- Pack publications: **11/11** matched the compiler.
+- MCP: **11/11**.
+- Web: **32/32**, including automated accessibility, mobile navigation, and retired-route behavior.
+- Production export: **34/34** static-generation steps.
+- Static HTML: **28 routes**.
+- Pack publications: **13/13** matched the compiler.
 - Demo validator: **passed**.
 - `git diff --check`: **passed**.
 - Fresh-context claim audit: **materially clean** after corrections; remaining findings are the external deployment, npm decision, and owner evidence listed here.
-- `@fraylabs/possible@0.1.7` local tarball: **packed and installed successfully** into a disposable target; publication not performed.
+- `@fraylabs/possible@0.1.8` local tarball: **packed and installed successfully** into a disposable target; publication not performed.
 
 ## Missing completion evidence
 
-1. **Fresh visual browser review:** not proved. Across three consecutive goal turns, the permitted browser connection reported no available backend; on the final retry its supported discovery API returned an empty browser list. No desktop/mobile screenshots or manual visual-pass claim were fabricated. Automated accessibility, responsive CSS, static HTML, unit interactions, installation, and local-link checks passed, but they do not substitute for visual inspection.
-2. **Live deployment:** intentionally not performed without public-action approval; the candidate's benchmark, demo, and raw evidence URLs have not been verified live.
+1. **Fresh visual browser review:** the new coded presentation was reviewed locally across representative desktop slides and the stacked mobile layout, with clean browser logs and no horizontal mobile overflow. A new full-site visual audit was not repeated in this change.
+2. **Live deployment:** intentionally not performed without public-action approval; the candidate's benchmark, demo, presentation, and raw evidence URLs have not been verified live.
 3. **Owner/account provenance:** the official GPT-5.6 `/feedback` session ID and eligible commit endpoints are unavailable in repository state.
 4. **Video:** storyboard exists; recording and public YouTube upload do not.
 
 ## Completion decision
 
-**Not complete.** The local implementation and claim audit satisfy every repository-controlled requirement, but the explicit fresh-browser requirement is missing. Public release and owner evidence are also required for the actual Devpost handoff, though `GOAL.md` correctly keeps those external actions approval-gated. Keep the active goal open until those facts are supplied or the browser review can run.
+**Not complete as a submitted entry.** The local implementation, presentation review, and claim audit satisfy the repository-controlled requirements. Public release, owner evidence, and the final video remain external submission actions, and `GOAL.md` correctly keeps them approval-gated.

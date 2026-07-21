@@ -16,6 +16,7 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
     "kickstarter-funding",
     "kickstarter-fulfillment",
     "robot-prototype",
+    "web-presentation",
   ]);
   assert.deepEqual(outcomePacks.map(({ slug, lane }) => [slug, lane]), [
     ["hardware-launch", "launch"],
@@ -30,8 +31,9 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
     ["kickstarter-funding", "launch"],
     ["kickstarter-fulfillment", "operate"],
     ["robot-prototype", "create"],
+    ["web-presentation", "create"],
   ]);
-  assert.deepEqual(outcomePacks.map((pack) => pack.catalogNumber), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
+  assert.deepEqual(outcomePacks.map((pack) => pack.catalogNumber), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]);
   assert.equal(new Set(outcomePacks.map((pack) => pack.catalogNumber)).size, outcomePacks.length);
   assert.equal(new Set(outcomePacks.map((pack) => pack.slug)).size, outcomePacks.length);
 
@@ -130,6 +132,34 @@ test("install commands group skills by upstream repository", () => {
   assert.match(robot.installCommands[2], /arpitg1304\/robotics-agent-skills.+robotics-design-patterns.+robotics-software-principles.+ros2-development.+robotics-testing/);
   assert.match(robot.runPrompt, /MuJoCo simulation and control baseline/);
   assert.match(robot.runPrompt, /Do not connect to, commission, or command physical hardware/i);
+
+  const presentation = bySlug("web-presentation");
+  assert.equal(presentation.installCommands.length, 4);
+  assert.match(presentation.installCommands[0], /coreyhaines31\/marketingskills.+copywriting/);
+  assert.match(presentation.installCommands[1], /zarazhangrui\/frontend-slides.+frontend-slides/);
+  assert.match(presentation.installCommands[2], /pbakaus\/impeccable.+impeccable/);
+  assert.match(presentation.installCommands[3], /anthropics\/skills.+webapp-testing/);
+  assert.match(presentation.runPrompt, /Coded presentation and presenter experience/);
+  assert.match(presentation.runPrompt, /Impeccable hooks.*separate inspection and approval/i);
+  assert.equal(presentation.pack.plugins[0].invocation, "@sites");
+});
+
+test("Web Presentation produces a coded, evidence-backed deck instead of a PowerPoint file", () => {
+  const presentation = outcomePacks.find((pack) => pack.slug === "web-presentation");
+  assert.ok(presentation);
+  assert.equal(presentation.catalogNumber, 13);
+  assert.equal(presentation.lane, "create");
+  assert.match(presentation.promise, /runs in the browser/i);
+  assert.match(presentation.useWhen.join(" "), /HTML, CSS, and JavaScript instead of PowerPoint/i);
+  assert.match(presentation.outputs.join(" "), /coded browser presentation.*presenter-note controls.*PDF export.*contact sheet/i);
+  assert.deepEqual(presentation.reviewSkills, ["webapp-testing", "impeccable"]);
+  assert.match(presentation.guardrails.join(" "), /Do not invent citations, evidence, metrics, testimonials/i);
+  assert.match(presentation.verification.join(" "), /1920×1080.*contact sheet.*keyboard and touch.*reduced-motion.*rehearsal time/i);
+
+  const skillIds = new Set(presentation.skills.map((skill) => skill.id));
+  for (const required of ["copywriting", "frontend-slides", "impeccable", "webapp-testing"]) {
+    assert.equal(skillIds.has(required), true, `missing ${required}`);
+  }
 });
 
 test("Robot Prototype generalizes one verified digital-prototype contract across robot forms", () => {
@@ -157,7 +187,7 @@ test("Robot Prototype generalizes one verified digital-prototype contract across
 
 test("Sites is exposed only on web deployment outcomes and never as a fake Skills CLI install", () => {
   const sitesPacks = outcomePacks.filter((pack) => pack.plugins?.some((plugin) => plugin.id === "sites"));
-  assert.deepEqual(sitesPacks.map((pack) => pack.slug), ["hardware-launch", "software-launch", "production-web-release"]);
+  assert.deepEqual(sitesPacks.map((pack) => pack.slug), ["hardware-launch", "software-launch", "production-web-release", "web-presentation"]);
   for (const pack of sitesPacks) {
     const compiled = compilePack(pack);
     assert.doesNotMatch(compiled.installCommands.join("\n"), /sites|openai-bundled/i);

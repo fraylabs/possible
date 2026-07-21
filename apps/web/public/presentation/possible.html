@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#f4f0e6" />
+  <title>Possible.sh — What it is and how it works</title>
+  <meta name="description" content="A coded presentation explaining Possible.sh, Outcome Packs, agent skills, and the $possible skill." />
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap");
+
+    /* === FOUNDATION === */
+    :root { --paper:#f4f0e6; --ink:#171512; --orange:#ff4d00; --lime:#b6f34a; --sky:#79d7ff; --lavender:#cdb8ff; --muted:#777169; }
+    * { box-sizing:border-box; }
+    html, body { width:100%; height:100%; margin:0; overflow:hidden; background:#111; color:var(--ink); font-family:Manrope,sans-serif; }
+    button, a { color:inherit; font:inherit; }
+    button { cursor:pointer; }
+    code, .mono { font-family:"DM Mono",monospace; }
+    .sr-only { width:1px; height:1px; padding:0; position:absolute; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0; }
+
+    /* === FIXED 16:9 STAGE === */
+    .deck { width:min(100vw,177.7778vh); height:min(100vh,56.25vw); position:absolute; top:50%; left:50%; overflow:hidden; background:var(--paper); transform:translate(-50%,-50%); container-type:size; }
+    .slides { position:absolute; inset:0; }
+    .slide { position:absolute; inset:0; padding:5.4cqh 5.2cqw 6.4cqh; display:grid; opacity:0; visibility:hidden; transform:translateX(2.5%); transition:opacity .28s ease,transform .38s cubic-bezier(.2,.8,.2,1); background:var(--paper); }
+    .slide.is-active { z-index:2; opacity:1; visibility:visible; transform:none; }
+    .slide[data-tone="dark"] { background:var(--ink); color:var(--paper); }
+    .slide[data-tone="orange"] { background:var(--orange); }
+    .slide[data-tone="lime"] { background:var(--lime); }
+    .slide[data-tone="sky"] { background:var(--sky); }
+    .slide::before { content:attr(data-kicker); position:absolute; top:3.2cqh; left:5.2cqw; font:500 1.05cqh "DM Mono",monospace; letter-spacing:.08em; text-transform:uppercase; }
+    .slide::after { content:attr(data-number); position:absolute; top:3.2cqh; right:5.2cqw; font:500 1.05cqh "DM Mono",monospace; letter-spacing:.08em; }
+    h1,h2,h3,p { margin:0; }
+    h1,h2 { letter-spacing:-.07em; line-height:.92; }
+    h1 { max-width:13ch; font-size:8.8cqh; font-weight:650; }
+    h2 { max-width:13ch; font-size:7.3cqh; font-weight:650; }
+    h3 { font-size:2.8cqh; line-height:1.05; letter-spacing:-.04em; }
+    p { font-size:2.05cqh; line-height:1.38; }
+    em { color:var(--orange); font-style:normal; }
+    .slide[data-tone="orange"] em,.slide[data-tone="lime"] em,.slide[data-tone="sky"] em { color:var(--ink); text-decoration:underline; text-decoration-thickness:.08em; text-underline-offset:.12em; }
+
+    /* === SHARED COMPONENTS === */
+    .eyebrow { margin-bottom:2.3cqh; font:500 1.25cqh "DM Mono",monospace; letter-spacing:.08em; text-transform:uppercase; }
+    .big-rule { width:100%; height:1px; margin:3.2cqh 0; background:currentColor; opacity:.45; }
+    .pill { width:max-content; padding:.7cqh 1cqw; border:1px solid currentColor; font:500 1.1cqh "DM Mono",monospace; text-transform:uppercase; }
+    .wordmark { font-size:2.8cqh; font-weight:800; letter-spacing:-.07em; }
+    .wordmark b { color:var(--orange); }
+    .slide[data-tone="orange"] .wordmark b { color:var(--paper); }
+    .atlas { background-image:url("/presentation/possible-visual-atlas.webp"); background-repeat:no-repeat; background-size:200% 200%; }
+    .atlas--skill { background-position:0 0; }
+    .atlas--prompt { background-position:100% 0; }
+    .atlas--pack { background-position:0 100%; }
+    .atlas--guide { background-position:100% 100%; }
+
+    /* === SLIDE 01 === */
+    .title-slide { grid-template-columns:1.08fr .92fr; align-items:center; gap:4cqw; }
+    .title-slide .lede { max-width:31ch; margin-top:3.1cqh; color:#5d5850; font-size:2.35cqh; }
+    .title-slide .art { aspect-ratio:1; position:relative; border:1px solid var(--ink); background:var(--orange); box-shadow:1.1cqw 1.1cqw 0 var(--ink); }
+    .title-slide .art img { width:100%; height:100%; display:block; object-fit:cover; mix-blend-mode:multiply; }
+    .title-slide .art span { position:absolute; right:1.2cqw; bottom:1.8cqh; padding:.9cqh 1cqw; border:1px solid var(--ink); background:var(--lime); font:500 1.15cqh "DM Mono",monospace; }
+
+    /* === SLIDE 02 === */
+    .gap-slide { grid-template-columns:.8fr 1.2fr; align-items:center; gap:5cqw; }
+    .gap-slide h2 { font-size:8.5cqh; }
+    .task-storm { height:67cqh; position:relative; }
+    .task-storm span { position:absolute; padding:1.1cqh 1.2cqw; border:1px solid var(--ink); background:var(--paper); box-shadow:.45cqw .55cqw 0 var(--ink); font:500 1.15cqh "DM Mono",monospace; transform:rotate(var(--r)); }
+    .task-storm span:nth-child(1){top:4%;left:4%;--r:-5deg}.task-storm span:nth-child(2){top:6%;right:5%;--r:4deg}.task-storm span:nth-child(3){top:24%;left:22%;--r:2deg}.task-storm span:nth-child(4){top:40%;right:2%;--r:-6deg}.task-storm span:nth-child(5){top:53%;left:3%;--r:5deg}.task-storm span:nth-child(6){bottom:7%;left:29%;--r:-2deg}.task-storm span:nth-child(7){bottom:3%;right:4%;--r:7deg}.task-storm strong { width:14cqw; aspect-ratio:1; position:absolute; top:50%; left:50%; display:grid; place-items:center; border:1px solid var(--ink); border-radius:50%; background:var(--orange); font-size:5cqh; transform:translate(-50%,-50%); }
+
+    /* === SLIDE 03 === */
+    .parts-slide { grid-template-rows:auto 1fr; gap:4cqh; }
+    .parts-slide h2 { max-width:18ch; font-size:6.5cqh; }
+    .parts-grid { display:grid; grid-template-columns:repeat(4,1fr); border-top:1px solid var(--ink); border-left:1px solid var(--ink); }
+    .part { min-width:0; padding:2cqh 1.2cqw; border-right:1px solid var(--ink); border-bottom:1px solid var(--ink); display:grid; grid-template-rows:auto 1fr auto; gap:1.5cqh; }
+    .part .picture { width:100%; aspect-ratio:1; border:1px solid var(--ink); background-color:var(--paper); }
+    .part:nth-child(1){background:var(--sky)}.part:nth-child(2){background:var(--lavender)}.part:nth-child(3){background:var(--orange)}.part:nth-child(4){background:var(--lime)}
+    .part span { font:500 1.05cqh "DM Mono",monospace; }
+    .part p { font-size:1.45cqh; }
+
+    /* === CONCEPT SLIDES === */
+    .concept-slide { grid-template-columns:.92fr 1.08fr; align-items:center; gap:5cqw; }
+    .concept-picture { width:100%; aspect-ratio:1; border:1px solid var(--ink); background-color:var(--paper); box-shadow:.8cqw .8cqw 0 var(--ink); }
+    .concept-copy > span { display:block; margin-bottom:2cqh; font:500 1.2cqh "DM Mono",monospace; letter-spacing:.08em; }
+    .concept-copy h2 { font-size:8.3cqh; }
+    .concept-copy p { max-width:34ch; margin-top:3cqh; }
+    .concept-list { margin:3.2cqh 0 0; padding:0; display:flex; flex-wrap:wrap; gap:.8cqh .7cqw; list-style:none; }
+    .concept-list li { padding:.7cqh .85cqw; border:1px solid currentColor; font:500 1.05cqh "DM Mono",monospace; }
+    .formula { margin-top:3.4cqh; display:grid; grid-template-columns:1fr auto 1fr auto 1fr; align-items:center; gap:.6cqw; }
+    .formula span { min-height:7cqh; padding:1cqh .8cqw; border:1px solid currentColor; display:grid; place-items:center; text-align:center; font:500 1.3cqh "DM Mono",monospace; }
+    .formula b { font-size:2.5cqh; }
+
+    /* === FLOW SLIDE === */
+    .flow-slide { grid-template-rows:auto 1fr; gap:5cqh; }
+    .flow-slide h2 { max-width:17ch; }
+    .flow { display:grid; grid-template-columns:repeat(6,1fr); border-top:1px solid var(--ink); border-left:1px solid var(--ink); }
+    .flow li { min-width:0; padding:2cqh 1.1cqw; border-right:1px solid var(--ink); border-bottom:1px solid var(--ink); display:flex; flex-direction:column; gap:2cqh; list-style:none; background:var(--paper); }
+    .flow li:nth-child(2),.flow li:nth-child(4),.flow li:nth-child(6){background:var(--lime)}
+    .flow span { font:500 1.05cqh "DM Mono",monospace; }
+    .flow strong { font-size:2.2cqh; line-height:1.05; letter-spacing:-.04em; }
+    .flow p { margin-top:auto; font-size:1.28cqh; }
+
+    /* === CONVERSATION SLIDE === */
+    .conversation-slide { grid-template-columns:.75fr 1.25fr; align-items:center; gap:5cqw; }
+    .conversation-slide h2 { font-size:7.8cqh; }
+    .chat { border:1px solid var(--paper); }
+    .chat header { padding:1.2cqh 1.1cqw; border-bottom:1px solid var(--paper); display:flex; justify-content:space-between; font:500 1cqh "DM Mono",monospace; }
+    .chat ol { margin:0; padding:2cqh 1.4cqw; display:grid; gap:1.4cqh; list-style:none; }
+    .chat li { max-width:82%; padding:1.2cqh 1.1cqw; border:1px solid var(--paper); font-size:1.4cqh; line-height:1.38; }
+    .chat li:nth-child(even) { margin-left:auto; background:var(--lime); color:var(--ink); border-color:var(--lime); }
+    .chat li strong { display:block; margin-bottom:.5cqh; font:500 .95cqh "DM Mono",monospace; }
+
+    /* === PROOF SLIDE === */
+    .proof-slide { grid-template-columns:.72fr 1.28fr; align-items:center; gap:4cqw; }
+    .proof-slide h2 { font-size:7.5cqh; }
+    .proof-slide .proof-copy p { max-width:28ch; margin-top:2.7cqh; }
+    .proof-grid { height:68cqh; display:grid; grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr; gap:1cqh; }
+    .proof-grid figure { margin:0; position:relative; overflow:hidden; border:1px solid var(--ink); background:#ddd; }
+    .proof-grid img { width:100%; height:100%; display:block; object-fit:cover; }
+    .proof-grid figure:first-child { grid-row:1 / 3; }
+    .proof-grid figcaption { position:absolute; right:.8cqw; bottom:1cqh; left:.8cqw; padding:.7cqh .8cqw; border:1px solid var(--ink); background:var(--paper); font:500 .95cqh "DM Mono",monospace; }
+
+    /* === CLOSING SLIDE === */
+    .closing-slide { place-items:center; text-align:center; }
+    .closing-slide h2 { max-width:17ch; font-size:8.6cqh; }
+    .closing-slide p { max-width:42ch; margin:2.8cqh auto 0; }
+    .command { margin-top:4.2cqh; padding:1.8cqh 1.8cqw; border:1px solid var(--ink); background:var(--paper); box-shadow:.8cqw .8cqw 0 var(--ink); font:500 1.65cqh "DM Mono",monospace; }
+    .closing-slide .invoke { margin-top:2.2cqh; font:500 2.6cqh "DM Mono",monospace; }
+
+    /* === DECK CONTROLS === */
+    .controls { z-index:20; position:absolute; right:1.4cqw; bottom:1.6cqh; display:flex; gap:.4cqw; }
+    .controls button { width:3.1cqh; aspect-ratio:1; padding:0; border:1px solid currentColor; display:grid; place-items:center; background:var(--paper); color:var(--ink); font:500 1.1cqh "DM Mono",monospace; }
+    .controls button:hover,.controls button:focus-visible { background:var(--lime); outline:2px solid var(--ink); outline-offset:2px; }
+    .progress { z-index:20; height:.65cqh; position:absolute; right:0; bottom:0; left:0; background:rgb(0 0 0 / 14%); }
+    .progress i { width:10%; height:100%; display:block; background:var(--orange); transition:width .35s ease; }
+    .notes { z-index:30; width:36cqw; max-height:35cqh; padding:1.8cqh 1.5cqw; position:absolute; right:1.4cqw; bottom:6.5cqh; overflow:auto; border:1px solid var(--paper); background:var(--ink); color:var(--paper); box-shadow:.8cqw .8cqw 0 var(--orange); font-size:1.35cqh; line-height:1.5; }
+    .notes[hidden] { display:none; }
+    .notes strong { display:block; margin-bottom:.8cqh; color:var(--lime); font:500 1cqh "DM Mono",monospace; }
+
+    /* === PRINT / SMALL SCREEN / MOTION === */
+    @media print { html,body{height:auto;overflow:visible;background:#fff}.deck{width:100%;height:auto;position:static;transform:none;overflow:visible}.slides{position:static}.slide{width:1920px;height:1080px;position:relative;page-break-after:always;opacity:1;visibility:visible;transform:none}.controls,.progress,.notes{display:none!important} }
+    @media (max-aspect-ratio:4/5) { body{overflow:auto;background:var(--paper)}.deck{width:100%;height:auto;position:static;transform:none;overflow:visible}.slides{position:static}.slide{min-height:100svh;padding:72px 22px;position:relative;opacity:1;visibility:visible;transform:none;grid-template-columns:1fr!important;align-items:start!important;gap:32px}.slide::before,.slide::after{top:22px;font-size:8px}.slide::before{left:22px}.slide::after{right:22px}.title-slide .art{margin-top:28px}.title-slide .lede{font-size:18px}.wordmark{font-size:26px}.eyebrow,.part span,.concept-copy>span,.concept-list li,.flow span,.pill,.chat header,.chat li strong,.proof-grid figcaption{font-size:10px}.parts-grid,.flow{grid-template-columns:1fr 1fr}.part p,.flow p{font-size:14px}.part h3{font-size:24px}.concept-picture{max-width:520px}.formula span{font-size:10px}.formula b{font-size:20px}.chat li{font-size:14px}.proof-grid{min-height:620px}.controls,.progress,.notes{display:none!important}h1,h2{font-size:clamp(48px,12vw,84px)}p{font-size:18px} }
+    @media (prefers-reduced-motion:reduce) { .slide,.progress i{transition:none} }
+  </style>
+</head>
+<body>
+  <main class="deck" aria-label="Possible.sh presentation">
+    <div class="slides" aria-live="polite">
+      <section class="slide title-slide is-active" data-kicker="Possible.sh / The simple explanation" data-number="01 / 10" data-notes="Open with the human gap. Models can execute tasks. The missing thing is knowing all the work an ambitious outcome requires.">
+        <div>
+          <div class="wordmark">possible<b>.sh</b></div>
+          <div class="big-rule"></div>
+          <h1>AI can do the tasks. <em>Do you know all the tasks?</em></h1>
+          <p class="lede">Possible turns a rough ambition into an expert-shaped, coordinated, checked result.</p>
+        </div>
+        <div class="art"><img src="/presentation/possible-visual-atlas.webp" alt="Four friendly illustrations representing a skill, a long execution prompt, an Outcome Pack, and the Possible guide" /><span>OPEN SOURCE</span></div>
+      </section>
+
+      <section class="slide gap-slide" data-tone="orange" data-kicker="The problem" data-number="02 / 10" data-notes="A novice can ask for a launch, robot, or company. The model can perform each task, but the user still has to discover the work, order it, and judge it.">
+        <div><p class="eyebrow">THE OLD WAY</p><h2>You have to <em>know what to ask for.</em></h2></div>
+        <div class="task-storm" aria-label="A cloud of hidden tasks"><span>POSITIONING</span><span>DESIGN</span><span>BUILD</span><span>SAFETY</span><span>TESTS</span><span>LAUNCH</span><span>VERIFY</span><strong>?</strong></div>
+      </section>
+
+      <section class="slide parts-slide" data-kicker="The four parts" data-number="03 / 10" data-notes="This is the taxonomy. A skill is not a pack. A pack is not Possible. The website is the open-source library; $possible is the installed guide.">
+        <h2>Four parts. <em>One complete system.</em></h2>
+        <div class="parts-grid">
+          <article class="part"><div class="picture atlas atlas--skill"></div><h3>Agent skill</h3><p>One reusable capability.</p><span>THE TOOL</span></article>
+          <article class="part"><div class="picture atlas atlas--prompt"></div><h3>Execution prompt</h3><p>The ordered work.</p><span>THE ROUTE</span></article>
+          <article class="part"><div class="picture atlas atlas--pack"></div><h3>Outcome Pack</h3><p>Tools + route + checks.</p><span>THE SYSTEM</span></article>
+          <article class="part"><div class="picture atlas atlas--guide"></div><h3><code>$possible</code></h3><p>Finds and runs the fit.</p><span>THE GUIDE</span></article>
+        </div>
+      </section>
+
+      <section class="slide concept-slide" data-tone="sky" data-kicker="01 / Agent skill" data-number="04 / 10" data-notes="Skills are focused capabilities. They teach an agent how to do one class of work well. Possible does not replace them; it selects and coordinates them.">
+        <div class="concept-picture atlas atlas--skill" role="img" aria-label="A friendly tool character holding a wrench"></div>
+        <div class="concept-copy"><span>THE TOOL</span><h2>A skill does <em>one kind of work.</em></h2><p>Design. Code. Test. CAD. Research. Each skill adds focused procedural knowledge to an agent.</p><ul class="concept-list"><li>FRONTEND</li><li>TESTING</li><li>CAD</li><li>MUJOCO</li><li>RELEASE</li></ul></div>
+      </section>
+
+      <section class="slide concept-slide" data-tone="dark" data-kicker="02 / Reusable execution prompt" data-number="05 / 10" data-notes="The long prompt is operational knowledge: workstreams, sequence, ownership, dependencies, safety gates, and completion criteria. Users should not need to write it.">
+        <div class="concept-picture atlas atlas--prompt" role="img" aria-label="A long folded instruction route with many connected steps"></div>
+        <div class="concept-copy"><span>THE ROUTE</span><h2>A long prompt knows <em>the whole journey.</em></h2><p>It compresses 50–100 coordinated tasks into workstreams, order, ownership, safeguards, and completion checks.</p><ul class="concept-list"><li>WORKSTREAMS</li><li>DEPENDENCIES</li><li>GATES</li><li>DONE</li></ul></div>
+      </section>
+
+      <section class="slide concept-slide" data-tone="orange" data-kicker="03 / Outcome Pack" data-number="06 / 10" data-notes="The pack is the reusable execution system for one class of outcomes. It combines the long prompt with selected skills. It is open source and inspectable.">
+        <div class="concept-picture atlas atlas--pack" role="img" aria-label="An open orange field kit containing several tools and a folded instruction route"></div>
+        <div class="concept-copy"><span>THE REUSABLE SYSTEM</span><h2>An Outcome Pack <em>combines both.</em></h2><div class="formula" aria-label="Long prompt plus agent skills plus checks"><span>LONG<br/>PROMPT</span><b>+</b><span>AGENT<br/>SKILLS</span><b>+</b><span>ORDER · SAFETY<br/>CHECKS</span></div><p>One reviewed package for one finished outcome—such as a robot prototype, software launch, or web presentation.</p></div>
+      </section>
+
+      <section class="slide flow-slide" data-tone="lime" data-kicker="04 / $possible" data-number="07 / 10" data-notes="$possible is the installed conversational skill. The user does not choose a pack. It clarifies the intended result, recommends one, waits for approval, then coordinates Codex and the selected skills.">
+        <h2><code>$possible</code> is <em>the guide.</em></h2>
+        <ol class="flow"><li><span>01</span><strong>Hear the rough idea</strong><p>Natural language is enough.</p></li><li><span>02</span><strong>Clarify the outcome</strong><p>One useful question at a time.</p></li><li><span>03</span><strong>Recommend one pack</strong><p>The user does not browse first.</p></li><li><span>04</span><strong>Wait for approval</strong><p>No work begins before yes.</p></li><li><span>05</span><strong>Run the work</strong><p>Codex coordinates the skills.</p></li><li><span>06</span><strong>Verify the result</strong><p>Failed checks stay visible.</p></li></ol>
+      </section>
+
+      <section class="slide conversation-slide" data-tone="dark" data-kicker="The interface" data-number="08 / 10" data-notes="Show the interaction. No forms and no pack knowledge. The user brings the ambition and irreplaceable context; Possible supplies the operational map.">
+        <div><p class="eyebrow">NO FORMS. NO PACK KNOWLEDGE.</p><h2>Start with <em>an ambition.</em></h2></div>
+        <div class="chat"><header><span>CODEX / POSSIBLE</span><span>LOCAL PROJECT</span></header><ol><li><strong>USER</strong><code>$possible</code><br/>I want to make a robot snake.</li><li><strong>POSSIBLE</strong>What should it be able to do when the prototype feels real?</li><li><strong>USER</strong>Move through obstacles, with CAD and a simulation I can inspect.</li><li><strong>POSSIBLE</strong>I recommend the Robot Prototype Outcome Pack. It coordinates mechanics, robot descriptions, controls, simulation, tests, and independent review. Proceed?</li><li><strong>USER</strong>Yes, proceed.</li></ol></div>
+      </section>
+
+      <section class="slide proof-slide" data-kicker="A real outcome" data-number="09 / 10" data-notes="This is a real Possible outcome. A rough robot-snake request produced coherent CAD, URDF and SRDF, MuJoCo locomotion and obstacle tests, and a completion report with sim-to-real gaps.">
+        <div class="proof-copy"><span class="pill">ROBOT PROTOTYPE</span><h2>One request. <em>A complete outcome.</em></h2><p>CAD, robot descriptions, controls, MuJoCo tests, inspectable rollouts, and an honest sim-to-real gap report.</p></div>
+        <div class="proof-grid"><figure><img src="/demo/robot-snake/cad/iso.png" alt="Isometric CAD render of the robot snake"/><figcaption>PARAMETRIC CAD</figcaption></figure><figure><img src="/demo/robot-snake/simulation/locomotion/contact_sheet.png" alt="Contact sheet from the robot snake locomotion simulation"/><figcaption>LOCOMOTION / VERIFIED</figcaption></figure><figure><img src="/demo/robot-snake/simulation/obstacle-course/contact_sheet.png" alt="Contact sheet from the robot snake obstacle course simulation"/><figcaption>OBSTACLE COURSE / VERIFIED</figcaption></figure></div>
+      </section>
+
+      <section class="slide closing-slide" data-tone="orange" data-kicker="Start here" data-number="10 / 10" data-notes="Close simply. Install the open-source library's conversational skill once, then state what you want to achieve. Possible selects and runs the appropriate Outcome Pack with Codex.">
+        <div><div class="wordmark">possible<b>.sh</b></div><h2>Bring the ambition. <em>Possible brings the operational knowledge.</em></h2><p>An open-source library of reusable Outcome Packs for Codex.</p><div class="command">npx @fraylabs/possible init</div><div class="invoke">$possible</div></div>
+      </section>
+    </div>
+
+    <aside class="notes" id="speaker-notes" hidden><strong>SPEAKER NOTES</strong><span></span></aside>
+    <nav class="controls" aria-label="Presentation controls"><button type="button" data-action="notes" aria-label="Toggle speaker notes">N</button><button type="button" data-action="previous" aria-label="Previous slide">←</button><button type="button" data-action="next" aria-label="Next slide">→</button><button type="button" data-action="fullscreen" aria-label="Toggle fullscreen">⛶</button></nav>
+    <div class="progress" aria-hidden="true"><i></i></div>
+    <p class="sr-only" id="slide-status" aria-live="polite"></p>
+  </main>
+
+  <script>
+    /* === PRESENTATION CONTROLLER === */
+    (() => {
+      const slides = [...document.querySelectorAll('.slide')];
+      const progress = document.querySelector('.progress i');
+      const notes = document.getElementById('speaker-notes');
+      const notesText = notes.querySelector('span');
+      const status = document.getElementById('slide-status');
+      let index = Math.max(0, Math.min(slides.length - 1, Number(location.hash.slice(1)) - 1 || 0));
+      let touchStart = 0;
+      const mobileLayout = matchMedia('(max-aspect-ratio: 4/5)');
+
+      const render = (nextIndex, updateHash = true) => {
+        index = (nextIndex + slides.length) % slides.length;
+        slides.forEach((slide, slideIndex) => {
+          const active = slideIndex === index;
+          slide.classList.toggle('is-active', active);
+          slide.setAttribute('aria-hidden', String(mobileLayout.matches ? false : !active));
+        });
+        progress.style.width = `${((index + 1) / slides.length) * 100}%`;
+        notesText.textContent = slides[index].dataset.notes || 'No notes for this slide.';
+        status.textContent = `Slide ${index + 1} of ${slides.length}`;
+        if (updateHash) history.replaceState(null, '', `#${index + 1}`);
+      };
+
+      const action = (name) => {
+        if (name === 'next') render(index + 1);
+        if (name === 'previous') render(index - 1);
+        if (name === 'notes') notes.hidden = !notes.hidden;
+        if (name === 'fullscreen') document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen?.();
+      };
+
+      document.querySelector('.controls').addEventListener('click', (event) => {
+        const button = event.target.closest('button[data-action]');
+        if (button) action(button.dataset.action);
+      });
+      addEventListener('keydown', (event) => {
+        if (['ArrowRight', 'PageDown', ' '].includes(event.key)) { event.preventDefault(); action('next'); }
+        if (['ArrowLeft', 'PageUp'].includes(event.key)) { event.preventDefault(); action('previous'); }
+        if (event.key.toLowerCase() === 'n') action('notes');
+        if (event.key.toLowerCase() === 'f') action('fullscreen');
+        if (event.key === 'Home') render(0);
+        if (event.key === 'End') render(slides.length - 1);
+      });
+      addEventListener('hashchange', () => render(Number(location.hash.slice(1)) - 1 || 0, false));
+      addEventListener('touchstart', (event) => { touchStart = event.changedTouches[0].clientX; }, { passive:true });
+      addEventListener('touchend', (event) => {
+        const distance = event.changedTouches[0].clientX - touchStart;
+        if (Math.abs(distance) > 55) action(distance < 0 ? 'next' : 'previous');
+      }, { passive:true });
+      mobileLayout.addEventListener?.('change', () => render(index, false));
+      render(index, false);
+    })();
+  </script>
+</body>
+</html>

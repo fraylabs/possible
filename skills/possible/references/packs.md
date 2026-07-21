@@ -432,6 +432,44 @@ npx skills@1.5.19 add arpitg1304/robotics-agent-skills --skill robotics-design-p
 
 Simulation is not physical validation. Do not connect to hardware, disable safety limits, purchase parts, fabricate components, or claim fabrication readiness, functional safety, payload, precision, stability, durability, or real-world task success without separate approval and direct evidence.
 
+## Web Presentation
+
+Slug: `web-presentation`
+
+Lane: `create`
+
+Public page: `https://possible.sh/packs/web-presentation`
+
+Use when a pitch, talk, lesson, demo, or internal presentation should be an editable browser experience rather than a PowerPoint file, and the story, evidence, visual direction, motion, presenter experience, export, and review must work together.
+
+Outputs: narrative, audience, timing, and evidence map; selected visual direction and asset ledger; editable coded browser presentation; keyboard, touch, fullscreen, progress, and presenter-note controls; responsive and reduced-motion behavior; PDF export and contact sheet; approved shareable deployment or deployment no-go completion report; evidence and completion report.
+
+Workstreams:
+
+- Narrative and evidence map — `copywriting`; owns `presentation/story/` and `presentation/evidence/`.
+- Visual direction and illustration system — `frontend-slides`, `impeccable`; owns `presentation/direction/` and `presentation/assets/`.
+- Coded presentation and presenter experience — `frontend-slides`, `impeccable`; owns `presentation/index.html`, `presentation/notes/`, and `presentation/export/`.
+- Fresh review — `webapp-testing`, `impeccable`; verifies claims, every rendered slide, interaction paths, accessibility, timing, exports, provenance, and public/private boundaries.
+
+Sources:
+
+- `coreyhaines31/marketingskills`: `copywriting`; reviewed `67264763cb107d61749f418d081c56e5bcbc0209`.
+- `zarazhangrui/frontend-slides`: `frontend-slides`; reviewed `9906a34d640d2111f724544cbc50f7f130569ae1`.
+- `pbakaus/impeccable`: `impeccable`; reviewed `4d849eb75f216109ea7053ed21530a11fafcc786`.
+- `anthropics/skills`: `webapp-testing`; reviewed `fa0fa64bdc967915dc8399e803be67759e1e62b8`.
+- Optional OpenAI plugin: `@sites` with `$sites-building` and `$sites-hosting`, reviewed as a separate capability and not installed by the Skills CLI.
+
+Install:
+
+```bash
+npx skills@1.5.19 add coreyhaines31/marketingskills --skill copywriting --agent codex
+npx skills@1.5.19 add zarazhangrui/frontend-slides --skill frontend-slides --agent codex
+npx skills@1.5.19 add pbakaus/impeccable --skill impeccable --agent codex
+npx skills@1.5.19 add anthropics/skills --skill webapp-testing --agent codex
+```
+
+Do not invent evidence, metrics, testimonials, users, product capabilities, citations, or competitive claims. Generated imagery is illustrative, not factual proof. Do not copy protected deck or brand expression, publish private notes, install project hooks, deploy, upload, or share without the required inspection and separate approval.
+
 ## Selection rule
 
 Recommend the Outcome Pack whose finished outputs most closely match the user's desired end state:
@@ -448,7 +486,8 @@ Recommend the Outcome Pack whose finished outputs most closely match the user's 
 - Rough product idea plus feasibility, offer, campaign assets, audience system, and a real Kickstarter funding path → Kickstarter Funding.
 - Funded Kickstarter campaign plus production, backer, logistics, communication, and 95%-shipped operations → Kickstarter Fulfillment.
 - Robot hand, gripper, arm, mobile robot, quadruped, or full robot plus coherent CAD, description, controls, and simulation evidence → Robot Prototype.
+- Pitch, talk, lesson, demo, or internal presentation plus a coded browser deck, presenter experience, export, and evidence review → Web Presentation.
 
-Use Working Web App when the missing outcome is the product itself. Use Software Launch when the product works and the missing outcome is its first public story, site, and demo. Use Billion-Dollar SaaS when the user explicitly wants the broader company operating system and accepts that operational coverage cannot guarantee economic success. Use Kickstarter Funding when crowdfunding mechanics and payout are part of the outcome; use Kickstarter Fulfillment only after the campaign is funded. Use Robot Prototype for a simulation-backed digital prototype, not a fabrication-ready machine or hardware commissioning. Use Production Web Release when a tested candidate exists and the missing outcome is a gated production promotion with rollback and smoke evidence. Use Web App Operations only after the app is live and the desired outcome is an ongoing reliability and maintenance rhythm. Use Marketing Operations when the product or offer exists and the missing outcome is a recurring marketing system. A distributable repository release belongs to Open-Source Release; one isolated bug, incident, or marketing asset with no requested recurring workflow is focused work, not an Outcome Pack run.
+Use Working Web App when the missing outcome is the product itself. Use Software Launch when the product works and the missing outcome is its first public story, site, and demo. Use Web Presentation when the primary deliverable is a slide-based browser presentation; a conventional landing page belongs elsewhere. Use Billion-Dollar SaaS when the user explicitly wants the broader company operating system and accepts that operational coverage cannot guarantee economic success. Use Kickstarter Funding when crowdfunding mechanics and payout are part of the outcome; use Kickstarter Fulfillment only after the campaign is funded. Use Robot Prototype for a simulation-backed digital prototype, not a fabrication-ready machine or hardware commissioning. Use Production Web Release when a tested candidate exists and the missing outcome is a gated production promotion with rollback and smoke evidence. Use Web App Operations only after the app is live and the desired outcome is an ongoing reliability and maintenance rhythm. Use Marketing Operations when the product or offer exists and the missing outcome is a recurring marketing system. A distributable repository release belongs to Open-Source Release; one isolated bug, incident, or marketing asset with no requested recurring workflow is focused work, not an Outcome Pack run.
 
 If none fits, say so. Do not force an Outcome Pack or invent a new one during intake.
