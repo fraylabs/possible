@@ -109,6 +109,31 @@ const benchmarkFulfillmentMeasures = [
   ["FUNDED TO FIRST SHIPMENT", "T4 → T7", "AWAITING FULFILLMENT"],
   ["IDEA TO 95% SHIPPED", "T0 → T9", "AWAITING FULFILLMENT"],
 ] as const;
+const benchmarkCards = [
+  { slug: "step-away", number: "01", label: "AUTONOMY", title: "Step-away benchmark", summary: "How long useful work continues after the operator stops prompting.", status: "PROTOCOL MODEL" },
+  { slug: "company-systems", number: "02", label: "COVERAGE", title: "Company-system benchmark", summary: "How much of a mature software company an independent verifier can prove.", status: "PROTOCOL MODEL" },
+  { slug: "fulfillment", number: "03", label: "DELIVERY", title: "Fulfillment benchmark", summary: "How long a rough idea takes to reach funding and 95% shipped.", status: "AWAITING FIRST RUN" },
+] as const;
+type BenchmarkSlug = typeof benchmarkCards[number]["slug"];
+const benchmarkSourceGroups = {
+  "company-systems": [
+    ["Atlassian FY2025 Form 10-K ↗", "https://www.sec.gov/Archives/edgar/data/1650372/000165037225000036/team-20250630.htm"],
+    ["Atlassian 2015 prospectus ↗", "https://www.sec.gov/Archives/edgar/data/1650372/000104746915009069/a2226799zf-1a.htm"],
+    ["GitLab public marketing handbook ↗", "https://handbook.gitlab.com/handbook/marketing/"],
+    ["GitLab public customer-success handbook ↗", "https://handbook.gitlab.com/handbook/customer-success/"],
+    ["GitLab 2021 prospectus ↗", "https://www.sec.gov/Archives/edgar/data/1653482/000162828021018818/gitlab-sx1.htm"],
+    ["Cloudflare 2019 prospectus ↗", "https://www.sec.gov/Archives/edgar/data/1477333/000119312519235734/d735023ds1a.htm"],
+  ],
+  fulfillment: [
+    ["Kickstarter fulfillment dashboard guidance ↗", "https://help.kickstarter.com/hc/en-us/articles/360035848053-How-can-I-use-the-Fulfillment-dashboard-to-manage-reward-production-and-fulfillment"],
+    ["Kickstarter estimated-delivery guidance ↗", "https://help.kickstarter.com/hc/en-us/articles/115005134193-What-does-estimated-delivery-date-mean"],
+    ["Kickstarter creator fulfillment obligations ↗", "https://help.kickstarter.com/hc/en-us/articles/115005028834-What-is-a-creator-obligated-to-do-once-their-project-is-funded"],
+  ],
+} as const;
+
+function getBenchmark(slug: string) {
+  return benchmarkCards.find((benchmark) => benchmark.slug === slug);
+}
 
 function formatBenchmarkDuration(minutes: number) {
   const hours = Math.floor(minutes / 60);
@@ -223,30 +248,16 @@ function CreatePage() {
         <header>
           <div>
             <span>BENCHMARKS / OPEN PROTOCOL</span>
-            <h2 id="home-benchmark-heading">Can Possible keep working when <em>you step away?</em></h2>
+            <h2 id="home-benchmark-heading">Benchmarks, <em>not claims.</em></h2>
           </div>
-          <p>One unreasonable brief. Eight hours without supervision. We measure whether useful work continues—and whether an independent verifier can prove what was made.</p>
+          <p>A good <code>$possible</code> benchmark gives every workflow the same model, tools, workspace, time, and rough brief. It removes the operator playbook and counts only independently verified outcomes. Failures stay in the cohort.</p>
         </header>
 
-        <dl aria-label="Possible benchmark protocol">
-          <div>
-            <dt><strong>8</strong> HOURS</dt>
-            <dd>Useful autonomous progress before human authority is genuinely required.</dd>
-          </div>
-          <div>
-            <dt><strong>12</strong> DOMAINS</dt>
-            <dd>Working, independently checked company systems—not plans.</dd>
-          </div>
-          <div>
-            <dt><strong>T0→T9</strong></dt>
-            <dd>Rough idea to campaign, funding, first shipment, and 95% fulfillment.</dd>
-          </div>
-        </dl>
-
-        <div className="home-benchmark-status">
-          <p><span>STATUS</span><strong>PROTOCOL PUBLISHED · CONTROLLED RESULTS PENDING</strong></p>
-          <a href="/benchmarks">Read the benchmark protocol →</a>
-        </div>
+        <ul className="home-benchmark-links" aria-label="$possible benchmarks">
+          <li><a href="/benchmarks/step-away"><span>01</span><strong>Step-away benchmark</strong><em>Useful work without supervision</em><i>→</i></a></li>
+          <li><a href="/benchmarks/company-systems"><span>02</span><strong>Company-system benchmark</strong><em>Verified operating coverage</em><i>→</i></a></li>
+          <li><a href="/benchmarks/fulfillment"><span>03</span><strong>Fulfillment benchmark</strong><em>Idea to 95% shipped</em><i>→</i></a></li>
+        </ul>
       </section>
 
       <SiteFooter />
@@ -483,32 +494,74 @@ function WhyPage() {
   );
 }
 
-function BenchmarksPage() {
+function BenchmarkGalleryPage() {
+  return (
+    <main className="benchmark-gallery-page">
+      <SiteNav label="Benchmarks / 03" />
+
+      <section className="benchmark-gallery" aria-labelledby="benchmark-gallery-heading">
+        <header>
+          <p className="eyebrow">OPEN PROTOCOLS / 03</p>
+          <h1 id="benchmark-gallery-heading">Benchmarks,<br /><em>not claims.</em></h1>
+          <p>Every benchmark fixes the model, tools, workspace, time, and rough brief. It removes the operator playbook and counts only independently verified outcomes.</p>
+        </header>
+
+        <div className="benchmark-gallery-grid">
+          {benchmarkCards.map((benchmark) => (
+            <a href={`/benchmarks/${benchmark.slug}`} key={benchmark.slug}>
+              <header><span>{benchmark.number} / {benchmark.label}</span><i>↗</i></header>
+              <div><h2>{benchmark.title}</h2><p>{benchmark.summary}</p></div>
+              <div className="benchmark-card-footer"><span>{benchmark.status}</span><strong>OPEN PROTOCOL →</strong></div>
+            </a>
+          ))}
+        </div>
+
+        <aside><strong>GOOD BENCHMARK</strong><span>Same inputs · no operator playbook · independent verification · failures stay in the cohort</span></aside>
+      </section>
+
+      <SiteFooter />
+    </main>
+  );
+}
+
+function BenchmarkDetailPage({ slug }: { slug: BenchmarkSlug }) {
+  const benchmark = getBenchmark(slug)!;
   return (
     <main className="benchmarks-page editorial-page">
-      <SiteNav label="Blog / Benchmark" />
+      <SiteNav label={`Benchmark / ${benchmark.number}`} />
 
       <article className="benchmark-article editorial-article">
         <header className="benchmark-hero editorial-header">
-          <p className="eyebrow">THE STEP-AWAY BENCHMARK</p>
-          <h1>“Build me a <em>$100M/year software company.</em> Make no mistakes.”</h1>
-          <p className="editorial-dek">One unreasonable request. Eight hours without supervision. How long does the agent keep doing useful work—and how much of a mature software company’s operating system does it put in place?</p>
-          <div className="benchmark-byline editorial-byline"><span>FRAY LABS · 21 JUL 2026</span><span>PROTOCOL MODEL · NOT OBSERVED RESULTS</span></div>
+          <p className="eyebrow">BENCHMARK {benchmark.number} / {benchmark.label}</p>
+          {slug === "step-away" ? <>
+            <h1>“Build me a <em>$100M/year software company.</em> Make no mistakes.”</h1>
+            <p className="editorial-dek">How long does useful work continue after the operator steps away?</p>
+          </> : null}
+          {slug === "company-systems" ? <>
+            <h1>What does a <em>$100M/year company</em> actually require?</h1>
+            <p className="editorial-dek">The verifier scores company systems—not startup theater or generated claims.</p>
+          </> : null}
+          {slug === "fulfillment" ? <>
+            <h1>How long from a rough idea to <em>95% shipped?</em></h1>
+            <p className="editorial-dek">Funding validates demand. Fulfillment proves delivery.</p>
+          </> : null}
+          <div className="benchmark-byline editorial-byline"><span>FRAY LABS · 21 JUL 2026</span><span>{benchmark.status} · NOT OBSERVED RESULTS</span></div>
         </header>
 
+        {slug === "step-away" ? <>
         <section className="benchmark-method" aria-labelledby="benchmark-method-heading">
           <div>
             <span>ROUGH INTENT · NO OPERATOR PLAYBOOK</span>
-            <h2 id="benchmark-method-heading">The agent has to understand what the request actually requires.</h2>
+            <h2 id="benchmark-method-heading">The agent must infer the required work.</h2>
           </div>
-          <p>Every workflow starts with the same sentence, model, tools, workspace, and eight-hour window. Possible enters with its published outcome knowledge; the other workflows receive only their named method. That difference is the product being tested. The operator approves the direction, then steps away until the agent exhausts useful work or genuinely needs human authority.</p>
+          <p>Every workflow receives the same brief, model, tools, workspace, and eight hours. Only Possible receives its published outcome knowledge. After approval, the operator steps away until the agent needs authority or exhausts useful work.</p>
         </section>
 
-        <section className="benchmark-outcome" aria-labelledby="benchmark-outcome-heading">
+        <section className="benchmark-outcome" id="step-away" aria-labelledby="benchmark-outcome-heading">
           <header>
             <span>WORK TIME × COMPANY-SYSTEM COVERAGE</span>
             <h2 id="benchmark-outcome-heading">Longer is better when the work still matters.</h2>
-            <p id="benchmark-outcome-description">Time records useful autonomous progress. Coverage records how much of a twelve-domain company system an independent verifier can prove. The values below demonstrate the reporting model; live controlled runs must replace them before they are treated as results.</p>
+            <p id="benchmark-outcome-description">Time measures useful autonomous work. Coverage measures verified company systems. These values show the reporting format, not measured results.</p>
           </header>
 
           <figure aria-labelledby="benchmark-outcome-heading" aria-describedby="benchmark-outcome-description">
@@ -530,14 +583,16 @@ function BenchmarksPage() {
                 </li>
               ))}
             </ul>
-            <figcaption>Eight-hour step-away window. These protocol-model values are not measurements. The first controlled run will replace them with timestamped transcripts and independent verifier receipts.</figcaption>
+            <figcaption>Protocol model only. Controlled runs will replace these values with timestamped transcripts and verifier receipts.</figcaption>
           </figure>
         </section>
+        </> : null}
 
-        <section className="benchmark-verifier" aria-labelledby="benchmark-verifier-heading">
+        {slug === "company-systems" ? <>
+        <section className="benchmark-verifier" id="company-systems" aria-labelledby="benchmark-verifier-heading">
           <span>INDEPENDENT VERIFIER</span>
           <h2 id="benchmark-verifier-heading">Ingredients are verifiable now. Success is earned later.</h2>
-          <p>The rubric is derived from operating capabilities documented by mature public software companies—not from a generic startup checklist. Each domain receives zero to four points: missing, described, artifact produced, executable, or evidenced in real use. Instagram and Twitter schedules count inside demand generation only when the audience warrants them; they are not universal requirements.</p>
+          <p>The rubric uses documented practices from mature software companies. Each domain scores 0–4: missing, described, produced, executable, or used. Social schedules count only when the audience requires them.</p>
 
           <div className="benchmark-evidence-layers" aria-label="Three layers of benchmark evidence">
             <article><span>01 · NOW</span><h3>Company ingredients</h3><p>Products, systems, and operating capabilities the agent can demonstrably create.</p></article>
@@ -555,7 +610,7 @@ function BenchmarksPage() {
           <header>
             <span>MODELED SCENARIO · NOT AN OBSERVED RESULT</span>
             <h2 id="benchmark-projection-heading">Projected time to $100M/year: <em>roughly 8–13 years.</em></h2>
-            <p id="benchmark-projection-description">This sensitivity model is separate from the benchmark score. It does not assume that company-system coverage causes revenue, and it does not attribute faster growth to Possible.</p>
+            <p id="benchmark-projection-description">This sensitivity model is not a benchmark score. It does not claim that coverage causes revenue or that Possible accelerates growth.</p>
           </header>
 
           <figure aria-labelledby="benchmark-projection-heading" aria-describedby="benchmark-projection-description">
@@ -568,7 +623,7 @@ function BenchmarksPage() {
                 </li>
               ))}
             </ul>
-            <figcaption>Illustrative compound-growth scenarios, not forecasts. Each assumes $1M in trailing-12-month revenue by the end of year one, followed by a constant annual growth rate with no slowdown. Formula: 1 year + ln($100M ÷ $1M) ÷ ln(1 + annual growth).</figcaption>
+            <figcaption>Illustrative scenarios, not forecasts. Each assumes $1M trailing-12-month revenue after year one, then constant growth. Formula: 1 year + ln($100M ÷ $1M) ÷ ln(1 + annual growth).</figcaption>
           </figure>
 
           <div className="benchmark-truth-line"><span>BENCHMARK STARTUP AT RUN END</span><strong>$0 VERIFIED REVENUE</strong><b>TIME TO $100M UNKNOWN</b></div>
@@ -583,12 +638,14 @@ function BenchmarksPage() {
             <small>Cloudflare crossed $100M between 2016 and 2017. GitLab crossed it between FY2020 and FY2021. Atlassian’s earliest disclosed comparison already shows $148.5M in FY2013, so its reference means “by year 11,” not necessarily its first crossing.</small>
           </aside>
         </section>
+        </> : null}
 
-        <section className="benchmark-fulfillment" aria-labelledby="benchmark-fulfillment-heading">
+        {slug === "fulfillment" ? <>
+        <section className="benchmark-fulfillment" id="fulfillment" aria-labelledby="benchmark-fulfillment-heading">
           <header>
             <span>THIRD BENCHMARK · IDEA TO 95% SHIPPED</span>
             <h2 id="benchmark-fulfillment-heading">Funding is validation. <em>Shipping is the outcome.</em></h2>
-            <p>The fulfillment benchmark timestamps the entire Possible run—from a rough idea to a campaign, real funding, and rewards leaving the warehouse. Nothing is scored as shipped from an estimate, plan, render, or generated claim.</p>
+            <p>The benchmark timestamps rough idea, campaign, funding, and shipment. Plans, renders, estimates, and generated claims never count as shipped.</p>
           </header>
 
           <ol className="benchmark-fulfillment-timeline" aria-label="Idea-to-shipment benchmark milestones">
@@ -604,29 +661,29 @@ function BenchmarksPage() {
           </dl>
 
           <div className="benchmark-fulfillment-comparison">
-            <article><span>POSSIBLE CLOCK</span><h3>The full journey is observable.</h3><p>Possible records T0 itself, so time from the first rough idea to campaign launch and 95% shipped can be measured exactly.</p></article>
-            <article><span>KICKSTARTER COHORT</span><h3>The public comparison starts later.</h3><p>Public campaigns rarely reveal when the original idea began. Their fair comparison starts at campaign close: time to first shipment, time to substantial fulfillment, and variance from estimated delivery.</p></article>
+            <article><span>POSSIBLE CLOCK</span><h3>The full journey is observable.</h3><p>Possible records T0. This enables exact measurement from rough idea to campaign launch and 95% shipped.</p></article>
+            <article><span>KICKSTARTER COHORT</span><h3>The public comparison starts later.</h3><p>Public campaigns rarely disclose idea dates. Compare them from campaign close through fulfillment, including delivery variance.</p></article>
           </div>
 
-          <p className="benchmark-fulfillment-boundary"><strong>Matched campaigns stay in the cohort even when they are delayed or never report fulfillment.</strong> Removing unfinished projects would make real Kickstarter timelines look artificially fast. A Possible shipment requires creator-dashboard status plus privacy-safe carrier evidence; 95% shipped is the completion threshold.</p>
+          <p className="benchmark-fulfillment-boundary"><strong>Delayed and unfinished campaigns remain in the cohort.</strong> Shipment requires creator-dashboard status and privacy-safe carrier evidence. Completion means 95% shipped.</p>
         </section>
+        </> : null}
 
+        {slug !== "step-away" ?
         <section className="benchmark-sources" aria-labelledby="benchmark-sources-heading">
           <span>PRIMARY SOURCE BASIS</span>
-          <h2 id="benchmark-sources-heading">The rubric and horizon stay inspectable.</h2>
-          <p>Jira and Confluence are Atlassian products, so company-level systems and financials are used rather than invented product revenue. GitLab’s public handbook supplies unusually transparent operating detail; SEC filings supply historical revenue milestones; Kickstarter’s own guidance defines what estimated delivery, collected pledges, and shipped rewards actually mean.</p>
+          <h2 id="benchmark-sources-heading">{slug === "company-systems" ? "The rubric and projection stay inspectable." : "The fulfillment rules stay inspectable."}</h2>
+          <p>{slug === "company-systems" ? "Public company filings and operating handbooks ground the company-system rubric and revenue context." : "Kickstarter’s guidance defines estimated delivery, creator obligations, and fulfillment status."}</p>
           <ul>
-            <li><a href="https://www.sec.gov/Archives/edgar/data/1650372/000165037225000036/team-20250630.htm" target="_blank" rel="noreferrer">Atlassian FY2025 Form 10-K ↗</a></li>
-            <li><a href="https://www.sec.gov/Archives/edgar/data/1650372/000104746915009069/a2226799zf-1a.htm" target="_blank" rel="noreferrer">Atlassian 2015 prospectus ↗</a></li>
-            <li><a href="https://handbook.gitlab.com/handbook/marketing/" target="_blank" rel="noreferrer">GitLab public marketing handbook ↗</a></li>
-            <li><a href="https://handbook.gitlab.com/handbook/customer-success/" target="_blank" rel="noreferrer">GitLab public customer-success handbook ↗</a></li>
-            <li><a href="https://www.sec.gov/Archives/edgar/data/1653482/000162828021018818/gitlab-sx1.htm" target="_blank" rel="noreferrer">GitLab 2021 prospectus ↗</a></li>
-            <li><a href="https://www.sec.gov/Archives/edgar/data/1477333/000119312519235734/d735023ds1a.htm" target="_blank" rel="noreferrer">Cloudflare 2019 prospectus ↗</a></li>
-            <li><a href="https://help.kickstarter.com/hc/en-us/articles/360035848053-How-can-I-use-the-Fulfillment-dashboard-to-manage-reward-production-and-fulfillment" target="_blank" rel="noreferrer">Kickstarter fulfillment dashboard guidance ↗</a></li>
-            <li><a href="https://help.kickstarter.com/hc/en-us/articles/115005134193-What-does-estimated-delivery-date-mean" target="_blank" rel="noreferrer">Kickstarter estimated-delivery guidance ↗</a></li>
-            <li><a href="https://help.kickstarter.com/hc/en-us/articles/115005028834-What-is-a-creator-obligated-to-do-once-their-project-is-funded" target="_blank" rel="noreferrer">Kickstarter creator fulfillment obligations ↗</a></li>
+            {benchmarkSourceGroups[slug].map(([label, href]) => <li key={href}><a href={href} target="_blank" rel="noreferrer">{label}</a></li>)}
           </ul>
         </section>
+        : null}
+
+        <div className="benchmark-detail-nav">
+          <a href="/benchmarks">← All benchmarks</a>
+          <span>{benchmark.number} / 03</span>
+        </div>
       </article>
 
       <SiteFooter />
@@ -1811,7 +1868,11 @@ export function PossibleSite({ path: requestedPath }: { path?: string }) {
   if (path === "/blogs") return <BlogsPage />;
   if (path === "/blogs/what-is-possible") return <WhatPage />;
   if (path === "/blogs/why-possible") return <WhyPage />;
-  if (path === "/benchmarks") return <BenchmarksPage />;
+  if (path === "/benchmarks") return <BenchmarkGalleryPage />;
+  if (path.startsWith("/benchmarks/")) {
+    const benchmark = getBenchmark(path.slice("/benchmarks/".length));
+    return benchmark ? <BenchmarkDetailPage slug={benchmark.slug} /> : <NotFoundPage />;
+  }
   if (path === "/packs") return <PacksPage />;
   if (path === "/docs") return <DocsPage />;
   if (path === "/docs/how-to-use") return <HowToUsePage />;

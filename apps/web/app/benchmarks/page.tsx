@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import PossibleRoute from "../_components/PossibleRoute";
 
 export const metadata: Metadata = {
-  title: "Step-Away Company Benchmark",
-  description: "Compare autonomous work, company-system coverage, time to $100M, and the complete Kickstarter journey from rough idea to 95% shipped.",
+  title: "Benchmarks",
+  description: "Browse Possible's open benchmark protocols for autonomy, company-system coverage, and fulfillment.",
 };
 
 export default function BenchmarksPage() {

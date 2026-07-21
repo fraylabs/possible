@@ -23,10 +23,13 @@ assert.match(home, /Packs are complete recipes for[\s\S]*real outcomes/);
 assert.match(home, /Describe the outcome\. Possible recommends a pack before Codex begins—you do not need to choose one yourself\./);
 assert.match(home, /<section class="start-section"[^>]*>[\s\S]*id="start"[\s\S]*id="packs"[\s\S]*<\/section>/);
 assert.match(home, /BENCHMARKS \/ OPEN PROTOCOL/);
-assert.match(home, /Can Possible keep working when[\s\S]*you step away\?/);
-assert.match(home, /8[\s\S]*HOURS[\s\S]*12[\s\S]*DOMAINS[\s\S]*T0→T9/);
-assert.match(home, /PROTOCOL PUBLISHED · CONTROLLED RESULTS PENDING/);
-assert.match(home, /href="\/benchmarks"[^>]*>Read the benchmark protocol/);
+assert.match(home, /Benchmarks,[\s\S]*not claims/);
+assert.match(home, /same model, tools, workspace, time, and rough brief/);
+assert.match(home, /removes the operator playbook and counts only independently verified outcomes/);
+assert.match(home, /Failures stay in the cohort/);
+assert.match(home, /href="\/benchmarks\/step-away"/);
+assert.match(home, /href="\/benchmarks\/company-systems"/);
+assert.match(home, /href="\/benchmarks\/fulfillment"/);
 assert.doesNotMatch(home, /href="\/#packs"|Browse packs/);
 assert.match(homeMarkup, /<meta property="og:image" content="https:\/\/possible\.sh\/og\.png"\/>/);
 assert.match(homeMarkup, /<meta name="twitter:image" content="https:\/\/possible\.sh\/og\.png"\/>/);
@@ -38,7 +41,7 @@ assert.doesNotMatch(home, /class="[^"]*(?:journey|recommendation-example|starter
 const homeMain = home.match(/<main[\s\S]*<\/main>/i)?.[0];
 assert.ok(homeMain, "The homepage must contain a semantic main element");
 const homepageWordCount = plainText(homeMain).split(/\s+/).filter(Boolean).length;
-assert.ok(homepageWordCount <= 270, `Homepage must stay at or below 270 words; found ${homepageWordCount}`);
+assert.ok(homepageWordCount <= 250, `Homepage must stay at or below 250 words; found ${homepageWordCount}`);
 assert.doesNotMatch(homeMain, /\bAI agents\b|50[–-]100|megaprompt|class="[^"]*(?:schedule-entry|quick-path|boundary)/i);
 
 for (const pack of outcomePacks) {
@@ -95,7 +98,10 @@ for (const [relativePath, expected] of [
   ["blogs/index.html", "What is Possible?"],
   ["blogs/what-is-possible/index.html", "Possible is the outcome layer"],
   ["blogs/why-possible/index.html", "The bottleneck is no longer what AI can do"],
-  ["benchmarks/index.html", "THE STEP-AWAY BENCHMARK"],
+  ["benchmarks/index.html", "OPEN PROTOCOLS / 03"],
+  ["benchmarks/step-away/index.html", "BENCHMARK[\\s\\S]*01[\\s\\S]*/[\\s\\S]*AUTONOMY"],
+  ["benchmarks/company-systems/index.html", "BENCHMARK[\\s\\S]*02[\\s\\S]*/[\\s\\S]*COVERAGE"],
+  ["benchmarks/fulfillment/index.html", "BENCHMARK[\\s\\S]*03[\\s\\S]*/[\\s\\S]*DELIVERY"],
   ["docs/index.html", "Build complete outcomes with Possible"],
   ["docs/how-to-use/index.html", "How to use Possible"],
   ["demo/index.html", "HARDWARE LAUNCH"],
@@ -107,21 +113,36 @@ for (const [relativePath, expected] of [
   assert.match(visibleText(await html(relativePath)), new RegExp(expected));
 }
 
-const benchmarkMarkup = await html("benchmarks/index.html");
-const benchmarkText = visibleText(benchmarkMarkup);
-assert.match(benchmarkText, /PROTOCOL MODEL · NOT OBSERVED RESULTS/);
-assert.match(benchmarkText, /Company-system coverage is not probability of success/);
-assert.match(benchmarkText, /MODELED SCENARIO · NOT AN OBSERVED RESULT/);
-assert.match(benchmarkText, /\$0 VERIFIED REVENUE/);
-assert.match(benchmarkText, /TIME TO \$100M UNKNOWN/);
-assert.match(benchmarkText, /THIRD BENCHMARK · IDEA TO 95% SHIPPED/);
-assert.match(benchmarkText, /Funding is validation\.[\s\S]*Shipping is the outcome\./);
-assert.match(benchmarkText, /AWAITING FIRST RUN/);
-assert.match(benchmarkText, /Matched campaigns stay in the cohort even when they are delayed or never report fulfillment/);
-assert.match(benchmarkMarkup, /Atlassian FY2025 Form 10-K/);
-assert.match(benchmarkMarkup, /GitLab public marketing handbook/);
-assert.match(benchmarkMarkup, /Cloudflare 2019 prospectus/);
-assert.match(benchmarkMarkup, /Kickstarter fulfillment dashboard guidance/);
+const benchmarkGallery = visibleText(await html("benchmarks/index.html"));
+assert.match(benchmarkGallery, /Benchmarks,[\s\S]*not claims/);
+assert.match(benchmarkGallery, /href="\/benchmarks\/step-away"/);
+assert.match(benchmarkGallery, /href="\/benchmarks\/company-systems"/);
+assert.match(benchmarkGallery, /href="\/benchmarks\/fulfillment"/);
+assert.match(benchmarkGallery, /Same inputs · no operator playbook · independent verification · failures stay in the cohort/);
+
+const stepAwayBenchmark = visibleText(await html("benchmarks/step-away/index.html"));
+assert.match(stepAwayBenchmark, /PROTOCOL MODEL[\s\S]*NOT OBSERVED RESULTS/);
+assert.match(stepAwayBenchmark, /Autonomous work time and company-system coverage by workflow/);
+assert.match(stepAwayBenchmark, /Protocol model only[\s\S]*timestamped transcripts and verifier receipts/);
+assert.doesNotMatch(stepAwayBenchmark, /Funding is validation|PRIMARY SOURCE BASIS/);
+
+const companyBenchmark = visibleText(await html("benchmarks/company-systems/index.html"));
+assert.match(companyBenchmark, /Company-system coverage is not probability of success/);
+assert.match(companyBenchmark, /MODELED SCENARIO · NOT AN OBSERVED RESULT/);
+assert.match(companyBenchmark, /\$0 VERIFIED REVENUE/);
+assert.match(companyBenchmark, /TIME TO \$100M UNKNOWN/);
+assert.match(companyBenchmark, /Atlassian FY2025 Form 10-K/);
+assert.match(companyBenchmark, /GitLab public marketing handbook/);
+assert.match(companyBenchmark, /Cloudflare 2019 prospectus/);
+assert.doesNotMatch(companyBenchmark, /Idea-to-shipment benchmark milestones/);
+
+const fulfillmentBenchmark = visibleText(await html("benchmarks/fulfillment/index.html"));
+assert.match(fulfillmentBenchmark, /THIRD BENCHMARK · IDEA TO 95% SHIPPED/);
+assert.match(fulfillmentBenchmark, /Funding is validation\.[\s\S]*Shipping is the outcome\./);
+assert.match(fulfillmentBenchmark, /AWAITING FIRST RUN/);
+assert.match(fulfillmentBenchmark, /Delayed and unfinished campaigns remain in the cohort/);
+assert.match(fulfillmentBenchmark, /Kickstarter fulfillment dashboard guidance/);
+assert.doesNotMatch(fulfillmentBenchmark, /Projected time to \$100M\/year/);
 
 for (const [relativePath, heading] of [["blogs/index.html", "Possible writing"], ["demo/index.html", "Possible outcome demos"]]) {
   const markup = await html(relativePath);
@@ -136,4 +157,10 @@ const [appSource, stylesSource] = await Promise.all([
 assert.doesNotMatch(`${appSource}\n${stylesSource}`, /\breplay-page(?:--[\w-]+)?\b/);
 assert.doesNotMatch(stylesSource, /Editorial benchmark treatment/);
 
-console.log(`All ${outcomePacks.length + 12} public Next.js routes contain meaningful initial HTML.`);
+const writingStandard = await readFile(new URL("../WRITING.md", import.meta.url), "utf8");
+assert.match(writingStandard, /Google's \[Technical Writing One\]/);
+assert.match(writingStandard, /Give each sentence one idea/);
+assert.match(writingStandard, /Every benchmark page must answer five questions/);
+assert.match(writingStandard, /Observed:[\s\S]*Modeled:[\s\S]*Projected:[\s\S]*Unknown:/);
+
+console.log(`All ${outcomePacks.length + 15} public Next.js routes contain meaningful initial HTML.`);
