@@ -1,90 +1,90 @@
 # Possible — Build Week video package
 
-Target cut: **2:54**. Hard cap: **2:57**. Do not upload a cut that reaches 3:00.
+Target cut: **2:55**. Hard cap: **2:57**. Do not upload a cut that reaches 3:00.
 
-Verified narration: **252 words** — about **2:17 at 110 wpm** or **2:06 at 120 wpm**, leaving roughly 37 seconds at the slower pace for pauses, cursor movement, and artifact audio inside the 2:54 target.
+Verified narration: **252 words** — about **2:18 at 110 wpm** or **2:06 at 120 wpm**, leaving roughly 37 seconds at the slower pace for pauses, cursor movement, and artifact audio inside the 2:55 target.
 
 The narration below is intentionally short enough for pauses, cursor movement, and artifact audio. Read with calm authority, not ad-speed energy. Show real interfaces and evidence; avoid animated architecture theater when the actual compiler, manifest, trace, or artifact is available.
 
 ## Timecoded script and storyboard
 
-### 0:00–0:13 — The missing layer
+### 0:00–0:15 — The knowledge gap
 
-**Picture:** Begin in Codex on a complex product request. Rapidly reveal the work it implies: product, site, release, security, and proof. End on the Possible homepage thesis.
+**Picture:** Begin with a deliberately naïve request in Codex: `Launch my e-ink focus device.` Rapidly reveal the work the user did not name: product, site, film, CAD, safety, launch, and proof. End on the Possible homepage thesis.
 
 **Narration:**
 
-> Codex performs individual tasks. Complex outcomes still need someone to discover work, coordinate ownership, integrate pieces, and define proof.
+> AI made execution accessible. But people still need to know what a good outcome requires—and when it remains incomplete. Non-experts often do not.
 
-**On-screen text:** `TASK CAPABILITY ≠ COMPLETED OUTCOME`
+**On-screen text:** `EXECUTION IS ACCESSIBLE. OPERATIONAL JUDGMENT IS NOT.`
 
-### 0:13–0:27 — What Possible is
+### 0:15–0:29 — What Possible changes
 
 **Picture:** Homepage hero, then install card and `$possible`.
 
 **Narration:**
 
-> Possible is an open-source outcome compiler for Codex. It supplies operational knowledge that coordinates tasks into verified results. Skills are ingredients. Possible compiles the outcome.
+> Possible makes reviewed operational knowledge accessible. It turns rough ambition into expert-shaped, coordinated, independently verified work. Skills are ingredients. Possible compiles the outcome.
 
-**On-screen text:** `POSSIBLE / THE OUTCOME COMPILER FOR CODEX`
+**On-screen text:** `ROUGH AMBITION → EXPERT-SHAPED OUTCOME`
 
-### 0:27–0:50 — Intent and approval
+### 0:29–0:51 — Intent and approval
 
 **Picture:** Show a real `$possible` exchange: rough Still idea, one clarifying question, Hardware Launch recommendation, outputs and boundaries, then `Yes, proceed.` Do not simulate a long chat.
 
 **Narration:**
 
-> Start with rough intent. Possible recommends a reviewed pack, states its outputs and boundaries, then waits. Before approval, intake is read-only: no ingredient installs, outcome state, or production work.
+> The user chooses neither tasks nor packs. Possible clarifies the outcome, recommends a reviewed path, states its outputs and boundaries, then waits. Before approval, intake is read-only.
 
-**On-screen text:** `INTENT → RECOMMENDATION → EXPLICIT APPROVAL`
+**On-screen text:** `THE USER NAMES THE AMBITION. POSSIBLE SUPPLIES THE MISSING MAP.`
 
-### 0:50–1:16 — Show the compiler
+### 0:51–1:17 — Show the compiler
 
 **Picture:** Open Hardware Launch pack JSON, then the workstream table, independent-review callout, guardrails, and compiled run prompt. Hold long enough to read `site/`, `film/`, `hardware/`, and `fresh verification subagent`.
 
 **Narration:**
 
-> This is not a prompt library. Typed manifests record capabilities, outputs, bounded workstreams, gates, and verification. The compiler adds installs and a parallel-to-integration-to-review captain sequence. Approved runs write outcome-specific checks into the shared brief.
+> This is not a prompt library. Typed manifests define outputs, workstreams, gates, and verification. The compiler sequences parallel execution, integration, and fresh review. Approved runs write outcome-specific checks into the shared brief.
 
 **On-screen flow:** `INTENT → PACK → COMPILED WORKSTREAMS → EXECUTION → FRESH REVIEW → RECEIPT`
 
-### 1:16–1:43 — Real outcome
+### 1:17–1:44 — Real outcome
 
 **Picture:** Still outcome room. Move from launch site to the 24-second film, STEP-first CAD views/downloads, then evidence index. Let the artifacts dominate the frame.
 
 **Narration:**
 
-> For Still, a fictional e-ink device, Possible coordinated a launch site, 24-second film, STEP-first CAD, local-only waitlist contract, and evidence room. These are generated artifacts.
+> The user supplied one rough hardware idea. Possible coordinated the product story, launch site, 24-second film, STEP-first CAD, local waitlist contract, and evidence room for a credible launch package.
 
 **On-screen text:** `SITE · FILM · STEP CAD · WAITLIST CONTRACT · EVIDENCE`
 
-### 1:43–2:15 — Failure, repair, fresh pass
+### 1:44–2:16 — Failure, repair, fresh pass
 
 **Picture:** Show the captain saying the room is ready, then the verifier's exact 404 finding. Open the preserved initial JSON trace. Show the narrow `base: "./"` repair as a one-line overlay or diff. Finish on the independent receipt and passing browser trace.
 
 **Narration:**
 
-> Production checks were green, but completion stayed open. A fresh reviewer found the embedded site's JavaScript and CSS returned 404. The captain repaired the base path. Fresh verification passed 58 artifact checks and all 50 browser responses, with no console, page, or HTTP errors.
+> Production checks were green, but completion stayed open. A fresh reviewer found the embedded site's JavaScript and CSS returned 404. The captain repaired the base path. Fresh verification passed 58 artifact checks and 50 browser responses, with no console, page, or HTTP errors.
 
 **On-screen text:** `PRODUCED ≠ PASSED` then `FAILURE PRESERVED → REPAIR → FRESH PASS`
 
-### 2:15–2:41 — Controlled pilot, honestly
+### 2:16–2:42 — Controlled pilot, honestly
 
 **Picture:** Simple two-column Direct/Possible table first; then pull back to show all five preserved conditions and a visible `ONE RUN PER CONDITION` limitation.
 
 **Narration:**
 
-> We froze one brief across five Codex workflows with the same inherited model configuration and independent checks. Direct stopped at 19 of 20 when keyboard submission failed. Possible reached 20 of 20, but took longer and required approval. One run per condition is not proof of typical superiority; every trace and limitation is public.
+> We froze one brief across five Codex workflows with the same model configuration and independent checks. Direct stopped at 19 of 20 when keyboard submission failed. Possible reached 20 of 20, but took longer and required approval. One run cannot prove typical superiority; every trace and limitation is public.
 
 **On-screen text:** `DIRECT 19/20 · NOT VERIFIED` / `$POSSIBLE 20/20 · VERIFIED` / `ONE-RUN PILOT — NOT A GENERAL PERFORMANCE CLAIM`
 
-### 2:41–2:54 — Install and close
+### 2:42–2:55 — Install and close
 
 **Picture:** Three-beat architecture graphic using actual repository labels, then return to the one-command install card. End on wordmark.
 
 **Narration:**
 
-> Possible is open-source TypeScript and installs into a Codex project with one command. Stop prompting tasks. Start specifying outcomes. Make it Possible.
+> Possible packages reviewed operational knowledge as open-source TypeScript and installs into a Codex project with one command. Stop prompting tasks. Start specifying outcomes. Make it Possible.
 
 **On-screen text:** `npx @fraylabs/possible@0.1.6 init` then `possible.sh` until `0.1.7` is published and verified
 
@@ -120,6 +120,8 @@ Use the production origin when stable; every route below also works from the loc
 - Capture desktop at 1920×1080 and deliver 1080p. Keep browser zoom consistent.
 - Use a large cursor and purposeful movement; remove idle loading and terminal setup.
 - Record the real UI first, then add only labels, crops, and the one-line architecture flow in edit.
+- Open with the user's knowledge gap, not installation, architecture, pack inventory, or agent counts.
+- Make the naïve request and the work Possible inferred visible in the same sequence.
 - Keep the initial failure visible for at least three seconds and the limitation disclaimer visible for at least four.
 - Say “50 browser responses,” not “50 browser checks.”
 - Say “one-run pilot,” never “benchmark proves,” “faster,” or “wins.”

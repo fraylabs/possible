@@ -62,7 +62,7 @@ assert.match(readme, /separately verified `0\.1\.7` candidate/);
 assert.match(devpost, /Possible condition used the then-published `@fraylabs\/possible@0\.1\.6`/);
 assert.match(devpost, /\[ADD THE CORE GPT-5\.6 BUILD SESSION\]/);
 assert.match(devpost, /\[FIRST ELIGIBLE COMMIT\]\.\.\[FINAL SUBMISSION COMMIT\]/);
-assert.match(video, /One run per condition is not proof of typical superiority/);
+assert.match(video, /One run(?: per condition is not proof of| cannot prove) typical superiority/);
 assert.match(claims, /repository does not independently attest the GPT-5\.6 label/);
 assert.match(buildWeek, /submission owner should link the official Codex task\/session record/);
 assert.match(npmPreflight, /local tarball verified; not published/i);

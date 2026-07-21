@@ -1,8 +1,12 @@
 # Possible
 
+Possible gives non-experts access to reviewed operational judgment.
+
+People often know the outcome they want without knowing every decision, workstream, safeguard, and quality check it requires. Possible packages that missing judgment into executable outcome packs for Codex, turning a rough ambition into coordinated work with explicit boundaries and independent verification.
+
 **Skills are ingredients. Possible compiles the outcome.**
 
-Models know how to perform individual tasks. Possible gives Codex the operational knowledge to coordinate those tasks into a verified outcome. It is for solo developers and small technical teams building, launching, releasing, and operating software.
+Possible is an open-source outcome compiler for Codex, built for solo developers and small technical teams that build, launch, release, and operate software.
 
 ## Judge Quickstart
 

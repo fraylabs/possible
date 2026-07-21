@@ -32,7 +32,9 @@ await write("packs/index.json", json({
 await write("llms.txt", [
   "# Possible",
   "",
-  "Possible gives Codex the operational knowledge to coordinate individual tasks into a verified outcome.",
+  "AI made execution accessible. Possible makes operational judgment accessible.",
+  "",
+  "Possible turns rough ambitions into expert-shaped, verified outcomes with Codex by packaging reviewed operational judgment into executable outcome packs.",
   "",
   "Skills are ingredients. Possible compiles the outcome.",
   "",

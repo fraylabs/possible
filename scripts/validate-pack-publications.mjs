@@ -12,7 +12,8 @@ assert.deepEqual(
 );
 
 const llms = await text("llms.txt");
-assert.match(llms, /Possible gives Codex the operational knowledge to coordinate individual tasks into a verified outcome\./);
+assert.match(llms, /AI made execution accessible\. Possible makes operational judgment accessible\./);
+assert.match(llms, /Possible turns rough ambitions into expert-shaped, verified outcomes with Codex/);
 for (const pack of outcomePacks) {
   const compiled = compilePack(pack);
   const publication = JSON.parse(await text(`packs/${pack.slug}.json`));

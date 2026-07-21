@@ -16,7 +16,9 @@ const plainText = (markup) => markup
 const homeMarkup = await html("index.html");
 const home = visibleText(homeMarkup);
 assert.match(home, /What do you want[\s\S]*to achieve[\s\S]*today\?/);
-assert.match(home, /Models know how to perform individual tasks\. Possible provides the operational knowledge to coordinate those tasks into a verified outcome\./);
+assert.match(home, /AI made execution accessible\.[\s\S]*Possible makes operational judgment accessible\./);
+assert.match(home, /Most people know the result they want—not every decision,[\s\S]*expert-shaped, independently verified outcome/);
+assert.match(home, /Reviewed outcome packs give Codex the missing map/);
 assert.match(home, /npx @fraylabs\/possible@0\.1\.6 init/);
 const headerLinks = home.match(/<div class="nav-links">([\s\S]*?)<\/div>/)?.[1];
 assert.ok(headerLinks, "The shared header must render its desktop navigation links");
@@ -28,16 +30,16 @@ assert.doesNotMatch(headerLinks, /href="\/"[^>]*>START/);
 assert.match(home, /class="nav-menu-trigger"[^>]*aria-expanded="false"[^>]*aria-controls="mobile-navigation"/);
 assert.match(home, /id="packs"/);
 assert.match(home, /Packs are complete recipes for[\s\S]*real outcomes/);
-assert.match(home, /Describe the outcome\. Possible recommends a pack before Codex begins—you do not need to choose one yourself\./);
+assert.match(home, /Describe the outcome\. Possible recommends the pack; you approve it\./);
 assert.match(home, /<section class="start-section"[^>]*>[\s\S]*id="start"[\s\S]*id="packs"[\s\S]*<\/section>/);
 assert.match(home, /BENCHMARK SUITE \/ THREE OUTCOMES/);
-assert.match(home, /What does one rough prompt[\s\S]*actually produce/);
-assert.match(home, /visible outputs, agent runtime, and human coordination time/);
+assert.match(home, /Who supplies the judgment[\s\S]*you did not know to ask for/);
+assert.match(home, /Same ambition\.[\s\S]*identify,[\s\S]*safeguard,[\s\S]*verify,[\s\S]*human time/);
 assert.doesNotMatch(home, /href="\/proof"/);
 assert.doesNotMatch(home, /href="\/#packs"|Browse packs/);
 assert.match(homeMarkup, /<meta property="og:image" content="https:\/\/possible\.sh\/og\.png"\/>/);
 assert.match(homeMarkup, /<meta name="twitter:image" content="https:\/\/possible\.sh\/og\.png"\/>/);
-assert.match(homeMarkup, /<meta name="description" content="Possible gives Codex the operational knowledge to coordinate individual tasks into a verified outcome\."\/>/);
+assert.match(homeMarkup, /<meta name="description" content="Possible gives non-experts the operational judgment to turn rough ambitions into expert-shaped, verified outcomes with Codex\."\/>/);
 assert.doesNotMatch(home, /<div id="root"><\/div>/);
 assert.doesNotMatch(home, /conversational outcome compiler|outcome lanes|ingredient skills|pack knowledge|workstreams/i);
 assert.doesNotMatch(home, /class="[^"]*(?:journey|recommendation-example|starter-card)/);
@@ -125,12 +127,12 @@ const [sourcePublicProof, exportedPublicProof] = await Promise.all([
 assert.equal(exportedPublicProof, sourcePublicProof, "The exported benchmark proof must match its canonical source");
 
 const benchmarkGallery = visibleText(await html("benchmarks/index.html"));
-assert.match(benchmarkGallery, /One prompt[\s\S]*Compare the output/);
+assert.match(benchmarkGallery, /One rough ambition[\s\S]*Who supplies the judgment/);
 assert.doesNotMatch(benchmarkGallery, /href="\/benchmarks\/simple-prompt"/);
 assert.match(benchmarkGallery, /href="\/benchmarks\/billion-dollar-company"/);
 assert.match(benchmarkGallery, /href="\/benchmarks\/kickstarter-funding"/);
 assert.match(benchmarkGallery, /href="\/benchmarks\/kickstarter-shipped"/);
-assert.match(benchmarkGallery, /Same starting point · one prompt · compare outputs, agent runtime, and human coordination time/);
+assert.match(benchmarkGallery, /Same starting point · one prompt · test missing operational judgment · retain outputs and time as receipts/);
 
 const companyBenchmark = visibleText(await html("benchmarks/billion-dollar-company/index.html"));
 assert.match(companyBenchmark, /Make Me a Billion-Dollar Company/);
@@ -140,6 +142,8 @@ assert.match(companyBenchmark, /\$possible Make me Atlassian/);
 assert.match(companyBenchmark, /24[\s\S]*OUTPUTS/);
 assert.match(companyBenchmark, /3 hr 48 min/);
 assert.match(companyBenchmark, /company\/revenue\/ledger\.csv/);
+assert.match(companyBenchmark, /OPERATIONAL JUDGMENT[\s\S]*Evidence register[\s\S]*company\/evidence-register\.md/);
+assert.match(companyBenchmark, /OUTPUT RECEIPTS/);
 assert.match(companyBenchmark, /href="\/packs\/billion-dollar-saas"/);
 assert.doesNotMatch(companyBenchmark, /rubric points|Coverage evidence levels|Company-system domains/);
 

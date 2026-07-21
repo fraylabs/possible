@@ -4,7 +4,7 @@ import { axe } from "vitest-axe";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { compilePack, outcomePacks } from "@possible/packs";
 import App from "./App";
-import { benchmarkCards } from "./benchmark-data";
+import { benchmarkCards, benchmarkComparisons } from "./benchmark-data";
 
 afterEach(() => {
   cleanup();
@@ -20,7 +20,9 @@ describe("Possible", () => {
     const { container } = render(<App />);
     expect(screen.getByRole("heading", { name: "What do you want to achieve today?", level: 1 })).toBeInTheDocument();
     expect(container.querySelectorAll("h1")).toHaveLength(1);
-    expect(screen.getByText(/Models know how to perform individual tasks.*operational knowledge.*verified outcome/i)).toBeInTheDocument();
+    expect(container.querySelector(".build-hero-thesis")).toHaveTextContent(/AI made execution accessible.*Possible makes operational judgment accessible/i);
+    expect(screen.getByText(/Most people know the result they want.*expert-shaped.*independently verified outcome/i)).toBeInTheDocument();
+    expect(screen.getByText(/Reviewed outcome packs give Codex the missing map/i)).toBeInTheDocument();
     expect(screen.getByText("npx @fraylabs/possible@0.1.6 init")).toBeInTheDocument();
     expect(screen.getByText("$possible", { selector: ".install-next code" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "DOCS" })).toHaveAttribute("href", "/docs");
@@ -31,7 +33,7 @@ describe("Possible", () => {
     expect(screen.queryByRole("link", { name: /Browse packs/i })).not.toBeInTheDocument();
     const start = screen.getByRole("region", { name: "Start with Possible" });
     expect(within(start).getByRole("heading", { name: /Packs are complete recipes for.*real outcomes/i, level: 2 })).toBeInTheDocument();
-    expect(within(start).getByText(/Describe the outcome.*Possible recommends a pack before Codex begins.*you do not need to choose one yourself/i)).toBeInTheDocument();
+    expect(within(start).getByText(/Describe the outcome.*Possible recommends the pack.*you approve it/i)).toBeInTheDocument();
     expect(within(start).getByText("npx @fraylabs/possible@0.1.6 init")).toBeInTheDocument();
     expect(within(start).getByText(/Published 0\.1\.6.*Candidate 0\.1\.7/i)).toBeInTheDocument();
     const packs = screen.getByRole("list", { name: "Packs Possible can recommend" });
@@ -43,8 +45,8 @@ describe("Possible", () => {
       );
     }
     expect(screen.queryByRole("link", { name: /Open the full pack reference/i })).not.toBeInTheDocument();
-    const benchmark = screen.getByRole("region", { name: /What does one rough prompt.*actually produce/i });
-    expect(within(benchmark).getByText(/visible outputs, agent runtime, and human coordination time/i)).toBeInTheDocument();
+    const benchmark = screen.getByRole("region", { name: /Who supplies the judgment.*you did not know to ask for/i });
+    expect(within(benchmark).getByText(/Same ambition.*compare what Direct.*identify.*safeguard.*verify.*human time/i)).toBeInTheDocument();
     expect(within(benchmark).getAllByRole("link")).toHaveLength(3);
     for (const card of benchmarkCards) {
       expect(within(benchmark).getByRole("link", { name: new RegExp(card.shortTitle, "i") })).toHaveAttribute("href", `/benchmarks/${card.slug}`);
@@ -244,23 +246,30 @@ describe("Possible", () => {
   it("presents three one-prompt output comparisons backed by matching outcome packs", async () => {
     window.history.pushState({}, "", "/benchmarks");
     const { container } = render(<App />);
-    expect(screen.getByRole("heading", { name: /One prompt.*Compare the output/i, level: 1 })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /One rough ambition.*Who supplies the judgment/i, level: 1 })).toBeInTheDocument();
     expect(container.querySelectorAll(".benchmark-gallery-grid > a")).toHaveLength(3);
-    expect(screen.getByRole("link", { name: /\$1B-0\.1.*Make me a billion-dollar company.*Outputs.*time.*PREVIEW/i })).toHaveAttribute("href", "/benchmarks/billion-dollar-company");
-    expect(screen.getByRole("link", { name: /FUNDING-0\.1.*Get it funded.*Outputs.*time.*PREVIEW/i })).toHaveAttribute("href", "/benchmarks/kickstarter-funding");
-    expect(screen.getByRole("link", { name: /SHIPPED-0\.1.*Get it shipped.*Outputs.*time.*PREVIEW/i })).toHaveAttribute("href", "/benchmarks/kickstarter-shipped");
-    expect(screen.getByText(/Same starting point.*one prompt.*compare outputs.*agent runtime.*human coordination time/i)).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /\$1B-0\.1.*Make me a billion-dollar company.*Judgment.*receipts.*PREVIEW/i })).toHaveAttribute("href", "/benchmarks/billion-dollar-company");
+    expect(screen.getByRole("link", { name: /FUNDING-0\.1.*Get it funded.*Judgment.*receipts.*PREVIEW/i })).toHaveAttribute("href", "/benchmarks/kickstarter-funding");
+    expect(screen.getByRole("link", { name: /SHIPPED-0\.1.*Get it shipped.*Judgment.*receipts.*PREVIEW/i })).toHaveAttribute("href", "/benchmarks/kickstarter-shipped");
+    expect(screen.getByText(/Same starting point.*one prompt.*test missing operational judgment.*outputs and time as receipts/i)).toBeInTheDocument();
     expect(container.querySelector(".benchmark-article")).not.toBeInTheDocument();
     expect(await axe(container)).toHaveNoViolations();
   });
 
-  it("compares one-prompt company outputs without a checklist rubric", async () => {
+  it("compares one-prompt company judgment before its output receipts", async () => {
     window.history.pushState({}, "", "/benchmarks/billion-dollar-company");
     const { container } = render(<App />);
     expect(screen.getByRole("heading", { name: /Make Me a Billion-Dollar Company.*Benchmark/i, level: 1 })).toBeInTheDocument();
     expect(screen.getByText("“Make me Atlassian. Make no mistakes.”")).toBeInTheDocument();
     expect(screen.getByText("/goal Make me Atlassian. Make no mistakes.")).toBeInTheDocument();
     expect(screen.getByText("$possible Make me Atlassian. Make no mistakes.")).toBeInTheDocument();
+    const judgment = container.querySelector(".benchmark-judgment")!;
+    const outputs = container.querySelector(".benchmark-after")!;
+    expectBefore(judgment, outputs);
+    expect(within(judgment).getByRole("table", { name: /Operational judgment supplied/i })).toBeInTheDocument();
+    expect(within(judgment).getAllByRole("row")).toHaveLength(7);
+    expect(within(judgment).getByText("Evidence register")).toBeInTheDocument();
+    expect(within(judgment).getByText("company/evidence-register.md")).toBeInTheDocument();
     expect(within(screen.getByRole("list", { name: /Outputs produced after one prompt/i })).getAllByRole("listitem")).toHaveLength(3);
     expect(screen.getByText("24 OUTPUTS")).toBeInTheDocument();
     expect(screen.getByText("3 hr 48 min")).toBeInTheDocument();
@@ -295,6 +304,21 @@ describe("Possible", () => {
     expect(container.querySelectorAll(".benchmark-output-bars li")).toHaveLength(3);
     expect(screen.getAllByRole("link", { name: /Kickstarter Fulfillment/i })[0]).toHaveAttribute("href", "/packs/kickstarter-fulfillment");
     expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("backs every operational-judgment label with an output receipt", () => {
+    for (const comparison of Object.values(benchmarkComparisons)) {
+      const artifactsByWorkflow = {
+        direct: comparison.entries[0].artifacts,
+        goal: comparison.entries[1].artifacts,
+        possible: comparison.entries[2].artifacts,
+      };
+      for (const row of comparison.judgment) {
+        for (const workflow of ["direct", "goal", "possible"] as const) {
+          for (const evidence of row[workflow].evidence) expect(artifactsByWorkflow[workflow]).toContain(evidence);
+        }
+      }
+    }
   });
 
   it("renders every pack route as a manifest-derived, accessible outcome specification", async () => {
@@ -438,6 +462,10 @@ describe("Possible", () => {
     expect(screen.getByRole("link", { name: /SOFTWARE LAUNCH.*THREE/i })).toHaveAttribute("href", "/demo/software");
     expect(screen.getByRole("link", { name: /OPEN-SOURCE RELEASE.*TINY-SLUG/i })).toHaveAttribute("href", "/demo/open-source");
     expect(screen.getByRole("link", { name: /PLAYABLE WEB GAME.*FOLD/i })).toHaveAttribute("href", "/demo/game");
+    expect(screen.getByText(/A hardware novice supplied one rough idea.*credible launch package/i)).toBeInTheDocument();
+    expect(screen.getByText(/A software novice supplied one small app idea.*complete release/i)).toBeInTheDocument();
+    expect(screen.getByText(/A first-time maintainer supplied three files.*trustworthy release/i)).toBeInTheDocument();
+    expect(screen.getByText(/A creator supplied one strange idea.*playability work/i)).toBeInTheDocument();
   });
 
   it("keeps every outcome-first demo free of automated accessibility violations", async () => {

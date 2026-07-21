@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     default: "Possible — What do you want to achieve today?",
     template: "%s — Possible",
   },
-  description: "Possible gives Codex the operational knowledge to coordinate individual tasks into a verified outcome.",
+  description: "Possible gives non-experts the operational judgment to turn rough ambitions into expert-shaped, verified outcomes with Codex.",
   applicationName: "Possible",
   alternates: {
     types: {
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     type: "website",
     siteName: "Possible",
     title: "Possible — What do you want to achieve today?",
-    description: "Possible gives Codex the operational knowledge to coordinate individual tasks into a verified outcome.",
+    description: "Possible gives non-experts the operational judgment to turn rough ambitions into expert-shaped, verified outcomes with Codex.",
     url: "/",
     images: [{
       url: "/og.png",
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Possible — What do you want to achieve today?",
-    description: "Possible gives Codex the operational knowledge to coordinate individual tasks into a verified outcome.",
+    description: "Possible gives non-experts the operational judgment to turn rough ambitions into expert-shaped, verified outcomes with Codex.",
     images: ["/og.png"],
   },
   other: {

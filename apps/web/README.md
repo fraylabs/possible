@@ -1,5 +1,9 @@
 # @possible/web
 
+Possible gives non-experts access to reviewed operational judgment. People can name the outcome they want without already knowing every decision, workstream, safeguard, and quality check it requires. Possible packages that missing judgment into executable outcome packs for Codex.
+
+**Skills are ingredients. Possible compiles the outcome.**
+
 The interactive Possible surface has three layers:
 
 - `/` — install Possible, invoke `$possible`, and understand the brainstorm-first journey.

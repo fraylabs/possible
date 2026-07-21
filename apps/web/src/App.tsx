@@ -184,7 +184,9 @@ function CreatePage() {
           <div className="build-hero-copy">
             <p className="eyebrow">POSSIBLE / FOR CODEX</p>
             <h1>What do you want<br />{" "}to achieve <em>today?</em></h1>
-            <p className="build-hero-description">Models know how to perform individual tasks. Possible provides the operational knowledge to coordinate those tasks into a verified outcome.</p>
+            <p className="build-hero-thesis">AI made execution accessible. <strong>Possible makes operational judgment accessible.</strong></p>
+            <p className="build-hero-description">Most people know the result they want—not every decision, safeguard, or quality check it requires. Possible turns that ambition into an expert-shaped, independently verified outcome.</p>
+            <p className="build-hero-mechanism">Reviewed outcome packs give Codex the missing map.</p>
             <div className="build-hero-actions">
               <a className="button-link" href="#try">Try with Codex <span>↓</span></a>
               <a className="text-link" href="/benchmarks">View benchmarks →</a>
@@ -208,7 +210,7 @@ function CreatePage() {
               <span>PACKS POSSIBLE CAN RECOMMEND / {String(galleryPacks.length).padStart(2, "0")}</span>
               <h2 id="home-packs-heading">Packs are complete recipes for <em>real outcomes.</em></h2>
             </div>
-            <p>Describe the outcome. Possible recommends a pack before Codex begins—you do not need to choose one yourself.</p>
+            <p>Describe the outcome. Possible recommends the pack; you approve it.</p>
           </header>
 
           <div className="home-pack-columns" aria-hidden="true">
@@ -233,9 +235,9 @@ function CreatePage() {
         <header>
           <div>
             <span>BENCHMARK SUITE / THREE OUTCOMES</span>
-            <h2 id="home-benchmark-heading">What does one rough prompt <em>actually produce?</em></h2>
+            <h2 id="home-benchmark-heading">Who supplies the judgment <em>you did not know to ask for?</em></h2>
           </div>
-          <p>Compare Direct, <code>/goal</code>, and <code>$possible</code> from the same starting point. Each benchmark records visible outputs, agent runtime, and human coordination time.</p>
+          <p>Same ambition. We compare what Direct, <code>/goal</code>, and <code>$possible</code> identify, safeguard, verify, produce, and how much human time they require.</p>
         </header>
         <ol className="home-benchmark-links" aria-label="Possible benchmarks">
           {benchmarkCards.map((benchmark) => (
@@ -494,9 +496,9 @@ function BenchmarkGalleryPage() {
         <header>
           <div>
             <p className="eyebrow">POSSIBLE BENCHMARK SUITE / V0.1</p>
-            <h1 id="benchmark-gallery-heading">One prompt.<br /><em>Compare the output.</em></h1>
+            <h1 id="benchmark-gallery-heading">One rough ambition.<br /><em>Who supplies the judgment?</em></h1>
           </div>
-          <p>Direct, <code>/goal</code>, and <code>$possible</code> begin from the same rough ambition. The benchmark compares what each workflow leaves behind.</p>
+          <p>Direct, <code>/goal</code>, and <code>$possible</code> begin with a request from someone who does not already know all the work required. The benchmark asks what each workflow identifies, structures, safeguards, and verifies.</p>
         </header>
 
         <div className="benchmark-gallery-grid">
@@ -510,7 +512,7 @@ function BenchmarkGalleryPage() {
           ))}
         </div>
 
-        <aside><strong>BENCHMARK STANDARD</strong><span>Same starting point · one prompt · compare outputs, agent runtime, and human coordination time</span></aside>
+        <aside><strong>BENCHMARK STANDARD</strong><span>Same starting point · one prompt · test missing operational judgment · retain outputs and time as receipts</span></aside>
       </section>
 
       <SiteFooter />
@@ -539,7 +541,7 @@ function BenchmarkDetailPage({ slug }: { slug: BenchmarkSlug }) {
         <dl className="benchmark-facts" aria-label="Benchmark summary">
           <div><dt>INPUT</dt><dd>One prompt</dd></div>
           <div><dt>HUMAN TIME</dt><dd>Under 5 minutes</dd></div>
-          <div><dt>COMPARE</dt><dd>Outputs + time</dd></div>
+          <div><dt>PRIMARY</dt><dd>Operational judgment</dd></div>
           <div><dt>OUTCOME PACK</dt><dd><a href={`/packs/${pack.slug}`}>{pack.name} ↗</a></dd></div>
         </dl>
 
@@ -556,8 +558,30 @@ function BenchmarkDetailPage({ slug }: { slug: BenchmarkSlug }) {
           <div><strong>SAME STARTING POINT</strong><p>{comparison.before}</p></div>
         </section>
 
+        <section className="benchmark-section benchmark-judgment" aria-labelledby="benchmark-judgment-heading">
+          <header>
+            <span>03 / OPERATIONAL JUDGMENT</span>
+            <h2 id="benchmark-judgment-heading">Did the workflow supply work the user did not know to request?</h2>
+            <p>This benchmark does not reward file volume. It tests whether one rough ambition produces visible evidence of the operational judgment the user omitted. Labels describe the output snapshot—not the unseen quality of each file.</p>
+          </header>
+          <div className="benchmark-judgment-table-wrap" role="region" aria-label="Scrollable operational judgment comparison" tabIndex={0}>
+            <table className="benchmark-judgment-table">
+              <caption className="sr-only">Operational judgment supplied by Direct, /goal, and $possible</caption>
+              <thead><tr><th scope="col">Missing expertise</th><th scope="col">Direct</th><th scope="col">/goal</th><th scope="col">$possible</th></tr></thead>
+              <tbody>{comparison.judgment.map((row) => <tr key={row.dimension}>
+                <th scope="row">{row.dimension}</th>
+                {([row.direct, row.goal, row.possible] as const).map((result, index) => <td key={index}>
+                  <strong className={`benchmark-judgment-level benchmark-judgment-level--${result.level.toLowerCase()}`}>{result.level}</strong>
+                  <span>{result.label}</span>
+                  {result.evidence.length > 0 ? <code>{result.evidence.join(" · ")}</code> : null}
+                </td>)}
+              </tr>)}</tbody>
+            </table>
+          </div>
+        </section>
+
         <section className="benchmark-section benchmark-after" aria-labelledby="benchmark-after-heading">
-          <header><span>03 / AFTER</span><h2 id="benchmark-after-heading">Compare what one prompt produces.</h2></header>
+          <header><span>04 / OUTPUT RECEIPTS</span><h2 id="benchmark-after-heading">The output inventory supports the comparison.</h2></header>
           <figure aria-label={`Output comparison for ${benchmark.title}`}>
             <div className="benchmark-output-axis"><span>0</span><span>{Math.round(maxOutputs / 2)}</span><span>{maxOutputs} outputs</span></div>
             <ol className="benchmark-output-bars" aria-label="Outputs produced after one prompt">
@@ -579,7 +603,7 @@ function BenchmarkDetailPage({ slug }: { slug: BenchmarkSlug }) {
         </section>
 
         <section className="benchmark-section benchmark-why" aria-labelledby="benchmark-why-heading">
-          <header><span>04 / WHY THE GAP EXISTS</span><h2 id="benchmark-why-heading">Possible starts with the outcome already mapped.</h2></header>
+          <header><span>05 / WHY THE GAP EXISTS</span><h2 id="benchmark-why-heading">Possible starts with the outcome already mapped.</h2></header>
           <p>Direct and <code>/goal</code> must infer the missing work from the sentence. <code>$possible</code> compiles the matching outcome pack into the product, launch, operating, and verification work the ambition requires.</p>
           <a className="why-text-link" href={`/packs/${pack.slug}`}>Inspect the {pack.name} outcome pack →</a>
         </section>
@@ -1115,6 +1139,7 @@ function DemoGalleryPage() {
           <div className="demo-example-copy">
             <p>STILL / E-INK FOCUS DEVICE</p>
             <h2>Idea to site,<br />film, and CAD.</h2>
+            <p className="demo-example-transformation">A hardware novice supplied one rough idea. Possible identified and coordinated the product, website, film, CAD, safety, and verification work behind a credible launch package.</p>
             <div><span>{demoThread.agents.length} agent threads</span><span>{demoThread.messages.length} public messages</span><span>58 artifact checks</span></div>
           </div>
         </a>
@@ -1127,6 +1152,7 @@ function DemoGalleryPage() {
           <div className="demo-example-copy">
             <p>THREE / LOCAL-FIRST WEB APP</p>
             <h2>Empty repo to a<br />complete launch.</h2>
+            <p className="demo-example-transformation">A software novice supplied one small app idea. Possible supplied the product, implementation, launch, testing, and verification work needed for a complete release.</p>
             <div><span>{softwareThread.agents.length} agent threads</span><span>{softwareThread.messages.length} public messages</span><span>15 / 15 tests</span></div>
           </div>
         </a>
@@ -1139,6 +1165,7 @@ function DemoGalleryPage() {
           <div className="demo-example-copy">
             <p>TINY-SLUG / ESM PACKAGE</p>
             <h2>Three files to a<br />trustworthy release.</h2>
+            <p className="demo-example-transformation">A first-time maintainer supplied three files. Possible identified the API, documentation, CI, security, packaging, and clean-consumer proof required for a trustworthy release.</p>
             <div><span>{openSourceThread.agents.length} agent threads</span><span>{openSourceThread.messages.length} public messages</span><span>9 / 9 tests</span></div>
           </div>
         </a>
@@ -1152,6 +1179,7 @@ function DemoGalleryPage() {
           <div className="demo-example-copy">
             <p>FOLD / PAPER PLANE STORM RUN</p>
             <h2>One strange idea.<br />One game to play.</h2>
+            <p className="demo-example-transformation">A creator supplied one strange idea. The outcome pack mapped the interaction, feel, runtime, input, and playability work needed to make it real.</p>
             <div><span>Three.js runtime</span><span>3 input modes</span><span>Play now</span></div>
           </div>
         </a>
@@ -1493,7 +1521,7 @@ function DocsPage() {
           <header className="docs-title" id="overview">
             <p className="eyebrow">GETTING STARTED</p>
             <h1>Build complete outcomes with Possible</h1>
-            <p>Possible is a conversational Codex skill. Start with a rough idea or a repeatable job, clarify the outcome one question at a time, inspect a recommended pack, and approve it before any project-writing or execution begins.</p>
+            <p>Possible is an operational-expertise layer for Codex that helps people turn rough ambitions into expert-shaped, verified outcomes—even when they do not know all the work required. It is delivered as a conversational Codex skill: clarify the outcome one question at a time, inspect a recommended pack, and approve it before any project-writing or execution begins.</p>
           </header>
 
           <aside className="docs-callout docs-callout--info">

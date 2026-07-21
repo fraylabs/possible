@@ -8,7 +8,7 @@
 
 **Tagline:** The outcome compiler for Codex.
 
-**One-line description:** Possible gives Codex the operational knowledge to turn rough intent into coordinated workstreams, guarded execution, and an independently verified outcome.
+**One-line description:** Possible turns a rough ambition into an expert-shaped, coordinated, independently verified outcome by giving Codex the reviewed operational knowledge a non-expert may not know to request.
 
 **Primary link after deploying and live-verifying the frozen candidate:** https://possible.sh
 
@@ -20,27 +20,29 @@
 
 ## Short pitch
 
-Models know how to perform individual tasks. Completing a complex outcome is a different problem: somebody still has to discover the work, assign ownership, order integration, enforce safety boundaries, and decide what evidence counts as done.
+AI made execution accessible. It did not make operational judgment accessible. A non-expert can ask Codex to launch a product, release software, or operate a company, but may not know all the work, decisions, safeguards, and quality checks a strong outcome requires.
 
-Possible is an open-source outcome compiler for Codex. A developer describes what they want to make real. Possible clarifies only the decisions that can change the result, recommends one reviewed outcome pack, explains its outputs and boundaries, and waits for explicit approval. After approval, it compiles the pack into repo-local ingredients, owned workstreams, an integration sequence, guardrails, acceptance checks, and a fresh verification lane.
+Possible makes that missing operational knowledge accessible. It turns a rough ambition into expert-shaped work: surfacing requirements the user omitted, asking only the decisions that can change the result, coordinating the necessary specialties, defining what done means, and independently checking the integrated outcome.
+
+Possible delivers this as an open-source outcome compiler for Codex. It recommends one reviewed outcome pack, explains its outputs and boundaries, and waits for explicit approval. After approval, it compiles the pack into repo-local ingredients, owned workstreams, an integration sequence, guardrails, acceptance checks, and a fresh verification lane.
 
 **Skills are ingredients. Possible compiles the outcome.**
 
 ## Inspiration
 
-Codex can build a frontend, review a repository, render a film, or produce CAD. The hard part of a real launch is knowing that all of those tasks belong to the same outcome—and ensuring their facts, interfaces, permissions, and evidence agree.
+Codex can build a frontend, review a repository, render a film, or produce CAD. But users are still expected to know which of those tasks a real outcome requires, what is missing, how the pieces must agree, where approval is necessary, and what evidence is strong enough to call the work complete.
 
-We built Possible for solo developers and small technical teams who want to build, launch, release, and operate software with Codex without becoming full-time prompt coordinators.
+We built Possible for solo developers and small technical teams who want to build, launch, release, and operate with Codex without already possessing every discipline involved—or becoming full-time prompt coordinators.
 
 ## What it does
 
 Possible adds three things to Codex:
 
-1. **Outcome discovery.** A short, one-question-at-a-time conversation turns rough intent into a confirmed end state. Before pack approval, Possible performs read-only intake only: it installs no ingredient skills, writes no outcome state, and starts no production work.
+1. **Operational discovery.** A short, one-question-at-a-time conversation turns rough intent into a confirmed end state, identifies consequential missing knowledge, and recommends a reviewed path. Before pack approval, Possible performs read-only intake only: it installs no ingredient skills, writes no outcome state, and starts no production work.
 2. **Deterministic composition.** Typed TypeScript manifests record reviewed skills, outputs, bounded workstreams, guardrails, and verification. The compiler renders inspectable installation commands and a fixed parallel → captain integration → fresh review sequence from the same registry used by the website and MCP server; the approved run writes outcome-specific checks into its shared brief.
 3. **Completion with evidence.** Work runs behind explicit ownership boundaries, is integrated by a captain, and is inspected by a fresh verification-only agent. Failures, skipped checks, limitations, and unproven claims remain in the final receipt.
 
-The current source candidate contains eleven outcome packs across build, launch, release, and recurring operations. The published `0.1.6` judge package contains seven; a new candidate must be packed, independently installed, and published before claiming the four newer packs through the npm install path. The user does not choose a category or assemble skills; Possible recommends the recipe from the desired result.
+The current source candidate contains eleven outcome packs across build, launch, release, and recurring operations. The published `0.1.6` judge package contains seven; a new candidate must be packed, independently installed, and published before claiming the four newer packs through the npm install path. The user does not need to know which category, skills, or intermediate tasks to choose; Possible recommends the reviewed recipe from the desired result.
 
 ## Why this is not a prompt library
 
