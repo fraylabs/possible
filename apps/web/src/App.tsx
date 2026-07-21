@@ -1,13 +1,10 @@
 "use client";
 
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
-import { compilePack, getPack, outcomePacks } from "@possible/packs";
-import type { OutcomePack, PackLane } from "@possible/packs";
-import { benchmarkCards, benchmarkComparisons, getBenchmark } from "./benchmark-data";
-import type { BenchmarkSlug } from "./benchmark-data";
+import { compilePack } from "@possible/packs";
+import type { OutcomePack } from "@possible/packs";
 import demoThreadData from "./demo-thread.json";
-import openSourceThreadData from "./open-source-thread.json";
-import softwareThreadData from "./software-thread.json";
+import { featuredPacks, getFeaturedPack, githubUrl, installCommand } from "./public-content";
 
 const PaperPlaneGame = lazy(() => import("./PaperPlaneGame"));
 const RobotSnakeViewer = lazy(() => import("./RobotSnakeViewer"));
@@ -32,42 +29,17 @@ type DemoThread = {
 };
 
 const demoThread = demoThreadData as DemoThread;
-const openSourceThread = openSourceThreadData as DemoThread;
-const softwareThread = softwareThreadData as DemoThread;
-
-const installCommand = "npx @fraylabs/possible@0.1.7 init";
-const schedulePrompt = "I want to schedule operations.";
 const approvalDisclosure = "Saying yes authorizes repo-local agent skill installation, the shared outcome brief and state files, and local outcome work. External actions still require separate approval.";
-const laneOrder: PackLane[] = ["create", "launch", "release", "operate"];
-const laneLabels: Record<PackLane, string> = {
+const laneLabels = {
   create: "Create",
   launch: "Launch",
   release: "Release",
   operate: "Operate",
-};
-const gallerySlugs = [
-  "hardware-launch",
-  "software-launch",
-  "open-source-release",
-  "playable-web-game",
-  "web-app-operations",
-  "working-web-app",
-  "production-web-release",
-  "marketing-operations",
-  "billion-dollar-saas",
-  "kickstarter-funding",
-  "kickstarter-fulfillment",
-  "robot-prototype",
-  "web-presentation",
-] as const;
-const galleryPacks = gallerySlugs.map((slug) => outcomePacks.find((pack) => pack.slug === slug)!).filter(Boolean);
+} as const;
 const navigationItems = [
-  { label: "BLOGS", href: "/blogs", external: false },
-  { label: "PACKS", href: "/packs", external: false },
-  { label: "BENCH", href: "/benchmarks", external: false },
-  { label: "DOCS", href: "/docs", external: false },
   { label: "DEMO", href: "/demo", external: false },
-  { label: "SOURCE", href: "https://github.com/fraylabs/possible", external: true },
+  { label: "DOCS", href: "/docs", external: false },
+  { label: "GITHUB", href: githubUrl, external: true },
 ] as const;
 function CopyButton({ label, value }: { label: string; value: string }) {
   const [state, setState] = useState<CopyState>("idle");
@@ -147,7 +119,7 @@ function SiteNav({ label }: { label?: string }) {
           <button className="mobile-nav-backdrop" type="button" aria-label="Close navigation" onClick={closeMenu} />
           <div id="mobile-navigation" className="mobile-nav-panel" role="dialog" aria-modal="true" aria-label="Mobile navigation">
             <header>
-              <span>NAVIGATION / 06</span>
+              <span>NAVIGATION</span>
               <button ref={closeRef} type="button" onClick={closeMenu}>CLOSE <i aria-hidden="true">×</i></button>
             </header>
             <ol>
@@ -186,11 +158,11 @@ function CreatePage() {
         <div className="build-hero">
           <div className="build-hero-copy">
             <p className="eyebrow">OPEN SOURCE / FOR CODEX</p>
-              <h1>Complete a possible <br /><em>outcome!</em></h1>
-            <p className="build-hero-description"><strong>Possible.sh is an open-source library of Outcome Packs.</strong> Each pack combines a reusable execution prompt and selected agent skills for 50–100 coordinated tasks.</p>
+            <h1>Complete a possible<br /><em>outcome.</em></h1>
+            <p className="build-hero-description">Possible gives Codex the workstreams, safeguards and verification needed to complete ambitious outcomes involving dozens of coordinated tasks.</p>
             <div className="build-hero-actions">
-              <a className="button-link" href="https://github.com/fraylabs/possible" target="_blank" rel="noreferrer">Star on GitHub <span>↗</span></a>
-              <a className="text-link" href="/presentation">See the visual explainer ↗</a>
+              <a className="button-link" href={githubUrl} target="_blank" rel="noreferrer">Star on GitHub <span>↗</span></a>
+              <a className="text-link" href="/demo">See the outcomes ↗</a>
               <a className="text-link" href="#try">Install ↓</a>
             </div>
           </div>
@@ -205,36 +177,47 @@ function CreatePage() {
           </div>
         </div>
 
+        <section className="home-workflow" aria-labelledby="home-workflow-heading">
+          <header><span>HOW IT WORKS</span><h2 id="home-workflow-heading">Bring the ambition.<br /><em>Possible supplies the missing work.</em></h2></header>
+          <ol>
+            <li><span>DESCRIBE</span><strong>Tell <code>$possible</code> what you want.</strong><p>A rough idea is enough.</p></li>
+            <li><span>APPROVE</span><strong>Review the proposed outcome.</strong><p>Possible recommends the Outcome Pack and names the boundaries.</p></li>
+            <li><span>EXECUTE</span><strong>Codex runs the workstreams.</strong><p>Selected agent skills create and integrate the artifacts.</p></li>
+            <li><span>VERIFY</span><strong>Evidence decides what is done.</strong><p>Failures are repaired and limitations remain visible.</p></li>
+          </ol>
+        </section>
+
         <section className="home-demo" aria-labelledby="home-demo-heading">
           <header>
-            <span>RECORDED OUTCOMES / 03</span>
-            <h2 id="home-demo-heading">See <code>$possible</code> brainstorm—and what it produced.</h2>
+            <span>FEATURED OUTCOMES</span>
+            <h2 id="home-demo-heading">See the conversation.<br /><em>Inspect the result.</em></h2>
           </header>
           <ol aria-label="Possible demo outcomes">
-            <li><a href="/demo/robot-snake"><span>01 / ROBOT PROTOTYPE</span><h3>Robot Snake</h3><p>CAD · SIM · RERUN</p><i>↗</i></a></li>
-            <li><a href="/demo/hardware"><span>02 / HARDWARE LAUNCH</span><h3>Still</h3><p>SITE · FILM · CAD</p><i>↗</i></a></li>
-            <li><a href="/demo/game"><span>03 / PLAYABLE WEB GAME</span><h3>Fold</h3><p>THREE.JS · TOUCH · PLAY</p><i>↗</i></a></li>
+            <li><a href="/demo/hardware"><span>HARDWARE LAUNCH</span><h3>Still</h3><p>SITE · FILM · CAD</p><i>↗</i></a></li>
+            <li><a href="/demo/robot-snake"><span>ROBOT PROTOTYPE</span><h3>Robot Snake</h3><p>CAD · MUJOCO · RERUN</p><i>↗</i></a></li>
+            <li><a href="/demo/game"><span>PLAYABLE WEB GAME</span><h3>Fold</h3><p>THREE.JS · TOUCH · PLAY</p><i>↗</i></a></li>
+            <li><a href="/demo/presentation"><span>WEB PRESENTATION</span><h3>Possible</h3><p>STORY · CODE · PRESENT</p><i>↗</i></a></li>
           </ol>
         </section>
 
         <div className="home-pack-index" id="packs" role="region" aria-labelledby="home-packs-heading">
           <header>
             <div>
-              <span>OUTCOME PACKS / {String(galleryPacks.length).padStart(2, "0")}</span>
-              <h2 id="home-packs-heading">Outcome Packs coordinate <em>complete results.</em></h2>
+              <span>THE TECHNICAL IDEA</span>
+              <h2 id="home-packs-heading">Skills perform tasks.<br /><em>Outcome Packs coordinate the outcome.</em></h2>
             </div>
-            <p>Describe the outcome. <code>$possible</code> recommends the right pack; you approve the run.</p>
+            <p>Each typed manifest compiles a reusable execution prompt, reviewed agent skills, owned workstreams, approval gates and completion checks.</p>
           </header>
 
           <div className="home-pack-columns" aria-hidden="true">
-            <span>#</span><span>OUTCOME PACK</span><span>CATEGORY</span><span>OPEN</span>
+            <span>OUTCOME PACK</span><span>PURPOSE</span><span>CATEGORY</span><span>OPEN</span>
           </div>
           <ol aria-label="Outcome Packs Possible can recommend">
-            {galleryPacks.map((pack) => (
+            {featuredPacks.map((pack) => (
               <li key={pack.slug}>
                 <a href={`/packs/${pack.slug}`} aria-label={`${pack.name}, ${laneLabels[pack.lane]} Outcome Pack`}>
-                  <span className="home-pack-number">{String(pack.catalogNumber).padStart(2, "0")}</span>
                   <strong>{pack.name}</strong>
+                  <span>{pack.promise}</span>
                   <span className={`home-pack-lane home-pack-lane--${pack.lane}`}>{laneLabels[pack.lane]}</span>
                   <i>↗</i>
                 </a>
@@ -244,26 +227,12 @@ function CreatePage() {
         </div>
       </section>
 
-      <section className="home-benchmark" aria-labelledby="home-benchmark-heading">
-        <header>
-          <div>
-            <span>BENCHMARK SUITE / TWO OUTCOMES</span>
-            <h2 id="home-benchmark-heading">Can Codex infer <em>what you forgot to ask for?</em></h2>
-          </div>
-          <p>Compare Direct, <code>/goal</code>, and <code>$possible</code>.</p>
-        </header>
-        <ol className="home-benchmark-links" aria-label="Possible benchmarks">
-          {benchmarkCards.map((benchmark) => (
-            <li key={benchmark.slug}>
-              <a href={`/benchmarks/${benchmark.slug}`}>
-                <span>{benchmark.number}</span>
-                <strong>{benchmark.shortTitle}</strong>
-                <em>{benchmark.metric} · {benchmark.budget}</em>
-                <i>↗</i>
-              </a>
-            </li>
-          ))}
-        </ol>
+      <section className="home-source" aria-labelledby="home-source-heading">
+        <header><div><span>OPEN SOURCE</span><h2 id="home-source-heading">Inspect the compiler.<br /><em>Run the tests.</em></h2></div><p>The manifests, generated prompts, safety gates, verifier contracts and preserved demo evidence are public.</p></header>
+        <div className="home-source-links">
+          <a href={githubUrl} target="_blank" rel="noreferrer"><strong>GitHub</strong><span>Read the source ↗</span></a>
+          <a href={`${githubUrl}#judge-quickstart`} target="_blank" rel="noreferrer"><strong>Judge quickstart</strong><span>Install and test ↗</span></a>
+        </div>
       </section>
 
       <SiteFooter />
@@ -271,372 +240,11 @@ function CreatePage() {
   );
 }
 
-function BlogsPage() {
-  return (
-    <main className="blogs-page">
-      <SiteNav label="Blogs / 02" />
-      <h1 className="sr-only">Possible writing</h1>
-
-      <section className="blogs-index" aria-label="Possible articles">
-        <a href="/blogs/what-is-possible">
-          <span>PRODUCT DEFINITION · 20 JUL 2026</span>
-          <h2>What is Possible?</h2>
-          <p>Possible.sh is an open-source library of Outcome Packs. The installed <code>$possible</code> skill recommends and runs them with Codex.</p>
-          <strong>READ ARTICLE →</strong>
-        </a>
-        <a href="/blogs/why-possible">
-          <span>ESSAY · 20 JUL 2026</span>
-          <h2>Why Possible?</h2>
-          <p>AI agents can perform increasingly complex work. The remaining bottleneck is our ability to define, coordinate, and verify what we want from them.</p>
-          <strong>READ ARTICLE →</strong>
-        </a>
-      </section>
-
-      <aside className="blogs-evidence">
-        <span>LOOKING FOR EVIDENCE?</span>
-        <p>The benchmark suite compares what Direct, <code>/goal</code>, and <code>$possible</code> produce from the same starting point and one rough prompt.</p>
-        <a href="/benchmarks">View benchmarks →</a>
-      </aside>
-
-      <SiteFooter />
-    </main>
-  );
-}
-
-function WhatPage() {
-  const productParts = [
-    { label: "THE RESULT", term: "Outcome", description: "The observable end state you want to make true—not the activity an agent performs." },
-    { label: "THE EXECUTION SYSTEM", term: "Outcome Pack", description: "A reusable execution prompt, selected agent skills, sequencing, safeguards, and completion checks for one class of outcomes." },
-    { label: "THE CAPABILITIES", term: "Agent skills", description: "Reusable capabilities that perform focused work such as design, coding, testing, CAD, release, or operations." },
-    { label: "THE GUIDE", term: "$possible", description: "The installed agent skill that understands your request, recommends an Outcome Pack, and runs it after approval." },
-  ] as const;
-
-  return (
-    <main className="what-page editorial-page">
-      <SiteNav label="Blog / What is Possible?" />
-
-      <article className="what-article editorial-article">
-      <header className="what-hero editorial-header">
-        <p className="eyebrow">PRODUCT DEFINITION / POSSIBLE.SH</p>
-        <h1>Possible.sh is an<br /><em>open-source library</em><br />of Outcome Packs.</h1>
-        <p className="editorial-dek">Describe the result you want. The installed <code>$possible</code> skill clarifies the outcome, recommends an Outcome Pack, and runs it with selected agent skills until completion checks pass.</p>
-        <div className="editorial-byline">
-          <span>FRAY LABS · 20 JUL 2026</span><span>PRODUCT DEFINITION</span>
-        </div>
-      </header>
-
-      <aside className="what-definition-note"><span>HOW YOU USE IT</span><strong>Install <code>$possible</code> in Codex.</strong><p>The skill connects your request to the open-source Outcome Pack library.</p></aside>
-
-      <section className="what-flow" aria-labelledby="what-flow-heading">
-        <header><span>THE COMPLETE MODEL</span><h2 id="what-flow-heading">One ambition. A coordinated path. A verified result.</h2></header>
-        <ol>
-          <li><span>01</span><strong>Your ambition</strong><p>You explain what you want to make possible in ordinary language.</p></li>
-          <li><span>02</span><strong><code>$possible</code></strong><p>Clarifies the intended end state and recommends the appropriate Outcome Pack.</p></li>
-          <li><span>03</span><strong>Outcome Pack + agent skills</strong><p>Sequence and perform the work after you approve the recommendation.</p></li>
-          <li><span>04</span><strong>Verified outcome</strong><p>Artifacts, checks, limitations, and a completion report show what is actually true.</p></li>
-        </ol>
-      </section>
-
-      <section className="what-anatomy" aria-labelledby="what-anatomy-heading">
-        <header><span>DO NOT CONFUSE THE PARTS</span><h2 id="what-anatomy-heading">What each thing means.</h2></header>
-        <div>
-          {productParts.map((part) => (
-            <article key={part.term}>
-              <span>{part.label}</span>
-              <h3>{part.term}</h3>
-              <p>{part.description}</p>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="what-surface" aria-labelledby="what-surface-heading">
-        <div>
-          <span>POSSIBLE.SH</span>
-          <h2 id="what-surface-heading">The website is the public home, not the agent.</h2>
-          <p>Possible.sh hosts the open-source Outcome Pack library, installer, documentation, demonstrations, and evidence. The installed <code>$possible</code> skill works with you inside the project and coordinates each run.</p>
-          <a href="/docs">Read the documentation →</a>
-        </div>
-        <dl>
-          <div><dt>Install</dt><dd><code>{installCommand}</code></dd></div>
-          <div><dt>Interface</dt><dd><code>$possible</code> and a conversation</dd></div>
-          <div><dt>Knowledge</dt><dd>Reviewed Outcome Packs</dd></div>
-          <div><dt>Execution</dt><dd>Codex and agent skills</dd></div>
-          <div><dt>Result</dt><dd>A verified outcome</dd></div>
-        </dl>
-      </section>
-
-      <section className="what-not" aria-labelledby="what-not-heading">
-        <header><span>BOUNDARIES</span><h2 id="what-not-heading">What Possible is not.</h2></header>
-        <ul>
-          <li>Not another directory where you must choose individual agent skills.</li>
-          <li>Not one giant skill that can perform every kind of work itself.</li>
-          <li>Not an outcome—the outcome is the result you are trying to achieve.</li>
-          <li>Not blanket permission to deploy, publish, spend, contact people, or change external systems.</li>
-        </ul>
-        <aside><strong>CURRENT SUPPORT</strong><p>Possible is delivered and verified as a Codex skill today. Its model can extend to other agent surfaces, but they are not yet a supported product claim.</p></aside>
-      </section>
-
-      <section className="what-cta">
-        <span>START WITH AN AMBITION</span>
-        <h2>What do you want to make possible?</h2>
-        <div><code>{installCommand}</code><CopyButton label="Copy install command" value={installCommand} /></div>
-        <p>Then open Codex and type <code>$possible</code>.</p>
-      </section>
-      </article>
-
-      <SiteFooter />
-    </main>
-  );
-}
-
-function WhyPage() {
-  return (
-    <main className="why-page editorial-page">
-      <SiteNav label="Blog / Why Possible" />
-
-      <article className="why-article editorial-article">
-        <header className="why-article-header editorial-header">
-          <p className="eyebrow">AN ESSAY FROM POSSIBLE</p>
-          <h1>The bottleneck is no longer what AI can do.</h1>
-          <p className="why-dek editorial-dek">It is our ability to see what is possible, define the outcome, and direct agents toward it.</p>
-          <div className="why-byline editorial-byline"><span>FRAY LABS · 20 JUL 2026</span><span>WHY POSSIBLE</span></div>
-        </header>
-
-        <div className="why-article-body editorial-body">
-          <section id="problem" aria-labelledby="why-problem-heading">
-            <p className="why-lead">The way most people work with AI still resembles a chat window from years ago: ask for one thing, wait for the answer, decide what comes next, and prompt again.</p>
-            <p>This interaction is useful for isolated tasks. It becomes exhausting when the ambition is larger than a task—launching a product, building a working application, preparing a release, or running an ongoing function.</p>
-            <h2 id="why-problem-heading">The agent is no longer the only bottleneck.</h2>
-            <p>The human must continuously hold the objective in mind, remember what has already happened, break the work into small instructions, inspect every response, and invent the next prompt. Over time, strategic thinking gives way to supervision. The user eventually asks the agent, “What should I do next?”</p>
-            <p>At that point, the human has become the project manager, memory, and orchestration layer for a system that is supposed to reduce their workload.</p>
-            <blockquote>
-              <p>Ask → wait → inspect → decide what comes next → prompt again.</p>
-              <footer>The prompt loop</footer>
-            </blockquote>
-          </section>
-
-          <section id="outcome" aria-labelledby="why-outcome-heading">
-            <h2 id="why-outcome-heading">The missing layer is the outcome.</h2>
-            <p>Possible starts one level above the prompt. You describe what you want to make real—even when the idea is rough. Possible asks a few questions that can materially change the result: who it is for, what already exists, what success must prove, and which real-world actions remain off limits.</p>
-            <p>From that conversation, <code>$possible</code> defines a finished outcome, recommends one reviewed Outcome Pack, and explains its outputs, checks, and boundaries. Only after you approve does the agent install the required capabilities and begin the run.</p>
-            <p>This changes the human’s job. You remain responsible for intent and consequential decisions. You no longer need to translate an ambition into every intermediate instruction.</p>
-          </section>
-
-          <section id="roles" aria-labelledby="why-roles-heading">
-            <h2 id="why-roles-heading">Three roles, clearly separated.</h2>
-            <div className="why-responsibility-table">
-              <article>
-                <header><span>YOU</span><strong>Steer</strong></header>
-                <p>Describe the ambition, provide essential context, and approve consequential decisions or external actions.</p>
-              </article>
-              <article>
-                <header><span>POSSIBLE</span><strong>Coordinate</strong></header>
-                <p>Clarify the outcome, inspect what exists, recommend the appropriate Outcome Pack, assemble reviewed capabilities, coordinate the run, and verify the result.</p>
-              </article>
-              <article>
-                <header><span>AGENTS</span><strong>Execute</strong></header>
-                <p>Complete bounded workstreams, create the artifacts, run the checks, and return evidence instead of unsupported claims.</p>
-              </article>
-            </div>
-            <p>You do not need to browse the library or decide which agent skills belong together. <code>$possible</code> resolves those details from the conversation.</p>
-          </section>
-
-            <p className="why-thesis"><strong><code>$possible</code> recommends the Outcome Pack. You approve the run.</strong> Before approval, intake and inspection remain read-only; no agent skills, outcome state, or production work are installed or created.</p>
-
-          <section id="process" aria-labelledby="why-process-heading">
-            <h2 id="why-process-heading">From ambition to evidence.</h2>
-            <ol className="why-process">
-              <li><strong>Describe what you want to make real.</strong><p>A rough idea is enough. Possible helps shape it without forcing you through a form.</p></li>
-              <li><strong>Review the proposed outcome.</strong><p><code>$possible</code> recommends one Outcome Pack and explains what it will produce, how it will be checked, and what remains gated.</p></li>
-              <li><strong>Decide whether to proceed.</strong><p>Your confirmation authorizes the disclosed local work—not deployment, publishing, spending, outreach, or other external actions.</p></li>
-              <li><strong>Receive the work and the proof.</strong><p>Agents execute coordinated work. <code>$possible</code> integrates their output and returns artifacts, checks, limitations, and a completion report.</p></li>
-            </ol>
-          </section>
-
-          <section id="example" aria-labelledby="why-example-heading">
-            <h2 id="why-example-heading">A concrete example.</h2>
-            <p>Imagine opening Codex and saying:</p>
-            <div className="why-transcript">
-              <p><span>YOU</span>“I want to launch my e-ink focus device.”</p>
-              <p><span>POSSIBLE</span>Clarifies what already exists, who the device is for, and what a credible launch must prove. It recommends Hardware Launch and explains the intended deliverables and boundaries.</p>
-              <p><span>YOU</span>“Yes, proceed.”</p>
-              <p><span>AGENTS</span>Coordinate product definition, CAD, positioning, website, launch film, and independent verification. Any deployment, fabrication, outreach, or spending still requires a separate decision.</p>
-            </div>
-            <p>The user chose the ambition and approved the outcome. Possible chose and coordinated the path. The agents performed the work.</p>
-            <a className="why-text-link" href="/demo/hardware">See the recorded Hardware Launch outcome →</a>
-          </section>
-
-          <section id="scope" aria-labelledby="why-lanes-heading">
-            <h2 id="why-lanes-heading">What can Possible coordinate?</h2>
-            <p>The library currently covers four kinds of outcomes. You do not choose a category during intake; <code>$possible</code> selects the relevant Outcome Pack from the conversation.</p>
-            <dl className="why-essay-lanes">
-              <div><dt>Create</dt><dd>Build products, assets, systems, and experiences.</dd></div>
-              <div><dt>Launch</dt><dd>Bring working software and hardware to an audience.</dd></div>
-              <div><dt>Operate</dt><dd>Run repeatable functions such as marketing and application reliability.</dd></div>
-              <div><dt>Release</dt><dd>Package, verify, deploy, and distribute completed work.</dd></div>
-            </dl>
-          </section>
-
-          <section aria-labelledby="why-conclusion-heading">
-            <h2 id="why-conclusion-heading">A different relationship with agents.</h2>
-            <p>Possible does not eliminate human judgment. It puts that judgment where it is most valuable: choosing the ambition, correcting the understanding, approving the outcome, and deciding when consequential actions should happen.</p>
-            <p>The agent handles the execution. Possible keeps that execution attached to the larger purpose.</p>
-            <p>Instead of asking, “What should I prompt next?” the human can return to the more important question:</p>
-            <p className="why-closing-line">What do I want to make possible?</p>
-            <a className="why-text-link" href="/benchmarks">Compare the workflows →</a>
-          </section>
-
-          <footer className="why-article-cta">
-            <div><span>START HERE</span><strong>Bring a rough idea.</strong><p>Possible will help define the outcome before any project-writing or production work begins.</p></div>
-            <div><pre><code>{installCommand}</code></pre><CopyButton label="Copy install command" value={installCommand} /></div>
-            <p>Then open Codex and type <code>$possible</code>.</p>
-          </footer>
-        </div>
-      </article>
-
-      <SiteFooter />
-    </main>
-  );
-}
-
-function BenchmarkGalleryPage() {
-  return (
-    <main className="benchmark-gallery-page">
-      <SiteNav label="Benchmarks / 02" />
-
-      <section className="benchmark-gallery" aria-labelledby="benchmark-gallery-heading">
-        <header>
-          <div>
-            <p className="eyebrow">POSSIBLE BENCHMARK SUITE / V0.1</p>
-            <h1 id="benchmark-gallery-heading">Which workflow supplies<br /><em>the missing judgment?</em></h1>
-          </div>
-          <p>Compare Direct, <code>/goal</code>, and <code>$possible</code> from the same prompt.</p>
-        </header>
-
-        <div className="benchmark-gallery-grid">
-          {benchmarkCards.map((benchmark) => (
-            <a href={`/benchmarks/${benchmark.slug}`} key={benchmark.slug}>
-              <header><span>{benchmark.version} / {benchmark.label}</span><i>↗</i></header>
-              <div><h2>{benchmark.shortTitle}</h2><p>{benchmark.question}</p></div>
-              <dl><div><dt>PRIMARY METRIC</dt><dd>{benchmark.metric}</dd></div><div><dt>STATUS</dt><dd>{benchmark.status}</dd></div></dl>
-              <div className="benchmark-card-footer"><span>{benchmark.budget}</span><strong>VIEW BENCHMARK →</strong></div>
-            </a>
-          ))}
-        </div>
-
-        <aside><strong>NO CONTROLLED RUNS</strong><span>Modeled · one prompt · same starting point · judgment, artifacts, and human time</span></aside>
-      </section>
-
-      <SiteFooter />
-    </main>
-  );
-}
-
-function BenchmarkDetailPage({ slug }: { slug: BenchmarkSlug }) {
-  const benchmark = getBenchmark(slug)!;
-  const comparison = benchmarkComparisons[slug];
-  const pack = getPack(benchmark.packSlug)!;
-  const maxOutputs = Math.max(...comparison.entries.map((entry) => entry.artifacts.length));
-
-  return (
-    <main className="benchmarks-page editorial-page">
-      <SiteNav label={`Benchmark / ${benchmark.number}`} />
-
-      <article className="benchmark-article editorial-article">
-        <header className="benchmark-hero editorial-header">
-          <p className="eyebrow">{benchmark.version} / {benchmark.label}</p>
-          <h1>{benchmark.title}</h1>
-          <p className="editorial-dek">{benchmark.question}</p>
-          <div className="benchmark-release"><span>RELEASE {benchmark.version}</span><span>21 JUL 2026</span><strong>{benchmark.status}</strong></div>
-        </header>
-
-        <dl className="benchmark-facts" aria-label="Benchmark summary">
-          <div><dt>STATUS</dt><dd>Modeled · no controlled runs</dd></div>
-          <div><dt>INPUT</dt><dd>One prompt</dd></div>
-          <div><dt>PRIMARY</dt><dd>Operational judgment</dd></div>
-          <div><dt>OUTCOME PACK</dt><dd><a href={`/packs/${pack.slug}`}>{pack.name} ↗</a></dd></div>
-        </dl>
-
-        <section className="benchmark-section benchmark-task" aria-labelledby="benchmark-task-heading">
-          <header><span>01 / ONE PROMPT</span><h2 id="benchmark-task-heading">Use the request a person would actually make.</h2></header>
-          <blockquote><span>USER INTENT</span><p>“{comparison.brief}”</p></blockquote>
-          <div className="benchmark-invocations" aria-label="Workflow invocations">
-            {comparison.entries.map((entry) => <code key={entry.workflow}>{entry.invocation}</code>)}
-          </div>
-        </section>
-
-        <section className="benchmark-section benchmark-before" aria-labelledby="benchmark-before-heading">
-          <header><span>02 / STARTING POINT</span><h2 id="benchmark-before-heading">Each workflow starts with the same subject.</h2></header>
-          <div><strong>SAME STARTING POINT</strong><p>{comparison.before}</p></div>
-        </section>
-
-        <section className="benchmark-section benchmark-judgment" aria-labelledby="benchmark-judgment-heading">
-          <header>
-            <span>03 / OPERATIONAL JUDGMENT</span>
-            <h2 id="benchmark-judgment-heading">What did each workflow know to add?</h2>
-            <p>Scores credit visible evidence only. They do not measure artifact quality.</p>
-          </header>
-          <div className="benchmark-judgment-table-wrap" role="region" aria-label="Scrollable operational judgment comparison" tabIndex={0}>
-            <table className="benchmark-judgment-table">
-              <caption className="sr-only">Operational judgment supplied by Direct, /goal, and $possible</caption>
-              <thead><tr><th scope="col">Missing expertise</th><th scope="col">Direct</th><th scope="col">/goal</th><th scope="col">$possible</th></tr></thead>
-              <tbody>{comparison.judgment.map((row) => <tr key={row.dimension}>
-                <th scope="row">{row.dimension}</th>
-                {([row.direct, row.goal, row.possible] as const).map((result, index) => <td key={index}>
-                  <strong className={`benchmark-judgment-level benchmark-judgment-level--${result.level.toLowerCase()}`}>{result.level}</strong>
-                  <span>{result.label}</span>
-                  {result.evidence.length > 0 ? <code>{result.evidence.join(" · ")}</code> : null}
-                </td>)}
-              </tr>)}</tbody>
-            </table>
-          </div>
-        </section>
-
-        <section className="benchmark-section benchmark-after" aria-labelledby="benchmark-after-heading">
-          <header><span>04 / ARTIFACTS AND TIME</span><h2 id="benchmark-after-heading">Artifacts and time support the comparison.</h2></header>
-          <figure aria-label={`Artifact comparison for ${benchmark.title}`}>
-            <div className="benchmark-output-axis"><span>0</span><span>{Math.round(maxOutputs / 2)}</span><span>{maxOutputs} artifacts</span></div>
-            <ol className="benchmark-output-bars" aria-label="Artifacts produced after one prompt">
-              {comparison.entries.map((entry) => <li className={entry.possible ? "is-possible" : undefined} key={entry.workflow}>
-                <header><strong>{entry.workflow}</strong><b>{entry.artifacts.length}</b></header>
-                <div className="benchmark-output-track"><i style={{ width: `${entry.artifacts.length / maxOutputs * 100}%` }} /></div>
-                <div className="benchmark-output-times"><span>AGENT RUNTIME <b>{entry.agentTime}</b></span><span>HUMAN COORDINATION <b>{entry.humanTime}</b></span></div>
-                <p>{entry.summary}</p>
-              </li>)}
-            </ol>
-          </figure>
-
-          <div className="benchmark-output-snapshots" aria-label="Artifact inventories">
-            {comparison.entries.map((entry) => <article className={entry.possible ? "is-possible" : undefined} key={entry.workflow}>
-              <header><strong>{entry.workflow}</strong><span>{entry.artifacts.length} ARTIFACTS</span></header>
-              <pre><code>{entry.artifacts.join("\n")}</code></pre>
-            </article>)}
-          </div>
-        </section>
-
-        <section className="benchmark-section benchmark-why" aria-labelledby="benchmark-why-heading">
-          <header><span>05 / WHY THE GAP EXISTS</span><h2 id="benchmark-why-heading">Possible starts with a reviewed outcome map.</h2></header>
-          <p>Direct and <code>/goal</code> infer the missing work. <code>$possible</code> loads that operational knowledge from the matching Outcome Pack.</p>
-          <a className="why-text-link" href={`/packs/${pack.slug}`}>Inspect the {pack.name} Outcome Pack →</a>
-        </section>
-
-        <div className="benchmark-detail-nav">
-          <a href="/benchmarks">← All benchmarks</a>
-          <span>{benchmark.number} / 02</span>
-        </div>
-      </article>
-
-      <SiteFooter />
-    </main>
-  );
-}
 function PackCard({ pack }: { pack: OutcomePack }) {
-  const isSchedulable = Boolean(pack.schedule);
   return (
     <a className={`pack-card pack-card--${pack.slug}`} href={`/packs/${pack.slug}`}>
       <div className="pack-cover">
-        <header><span>OUTCOME PACK / {String(pack.catalogNumber).padStart(2, "0")}</span><small>{pack.lane.toUpperCase()}{isSchedulable ? " · SCHEDULABLE" : ""}</small><b>↗</b></header>
+        <header><span>OUTCOME PACK</span><small>{pack.lane.toUpperCase()}</small><b>↗</b></header>
         <PackArtwork slug={pack.slug} />
         <div className="pack-cover-title">
           <small>POSSIBLE OUTCOME</small>
@@ -649,7 +257,6 @@ function PackCard({ pack }: { pack: OutcomePack }) {
           <span>{pack.skills.length} AGENT SKILLS{pack.plugins?.length ? ` + ${pack.plugins.length} PLUGIN` : ""}</span>
           <span>{pack.workstreams.length} WORKSTREAMS</span>
           <span>{pack.outputs.length} ARTIFACTS</span>
-          {isSchedulable ? <span>OPTIONAL SCHEDULE</span> : null}
         </div>
       </div>
     </a>
@@ -767,40 +374,19 @@ function PackArtwork({ slug }: { slug: string }) {
 }
 
 function PacksPage() {
-  const [activeLane, setActiveLane] = useState<"all" | PackLane>("all");
-  const laneCounts = Object.fromEntries(laneOrder.map((lane) => [lane, outcomePacks.filter((pack) => pack.lane === lane).length])) as Record<PackLane, number>;
-  const visibleLanes = laneOrder.filter((lane) => laneCounts[lane] > 0);
-  const visiblePacks = activeLane === "all" ? galleryPacks : galleryPacks.filter((pack) => pack.lane === activeLane);
-  const activeLabel = activeLane === "all" ? "All" : laneLabels[activeLane];
-  const resultNoun = visiblePacks.length === 1 ? "Outcome Pack" : "Outcome Packs";
-
   return (
     <main>
-      <SiteNav label={`Catalog / ${String(outcomePacks.length).padStart(2, "0")}`} />
+      <SiteNav label="Outcome Packs" />
       <section className="catalog-hero">
-        <p className="eyebrow">OUTCOME PACK LIBRARY / {String(outcomePacks.length).padStart(2, "0")}</p>
+        <p className="eyebrow">FEATURED OUTCOME PACKS</p>
         <h1>Reviewed Outcome Packs.<br /><em>Recommended by $possible.</em></h1>
         <div className="catalog-intro">
           <p>Each Outcome Pack combines a reusable execution prompt, selected agent skills, sequencing, safeguards, and completion checks. Describe the outcome; <code>$possible</code> recommends the right pack.</p>
           <a className="button-link" href="/#start">Start with Possible <span>→</span></a>
         </div>
       </section>
-      <div className="pack-filter-header">
-        <span>BROWSE BY OUTCOME</span>
-        <div className="pack-filters" role="group" aria-label="Filter Outcome Packs by category">
-          <button type="button" aria-label={`All, ${outcomePacks.length} Outcome Packs`} aria-pressed={activeLane === "all"} aria-controls="pack-catalog" onClick={() => setActiveLane("all")}>
-            <span>ALL</span><strong>{String(outcomePacks.length).padStart(2, "0")}</strong>
-          </button>
-          {visibleLanes.map((lane) => (
-            <button type="button" aria-label={`${laneLabels[lane]}, ${laneCounts[lane]} ${laneCounts[lane] === 1 ? "Outcome Pack" : "Outcome Packs"}`} aria-pressed={activeLane === lane} aria-controls="pack-catalog" onClick={() => setActiveLane(lane)} key={lane}>
-              <span>{lane.toUpperCase()}</span><strong>{String(laneCounts[lane]).padStart(2, "0")}</strong>
-            </button>
-          ))}
-        </div>
-        <p className="sr-only" aria-live="polite">Showing {visiblePacks.length} {activeLabel} {resultNoun}.</p>
-      </div>
-      <section id="pack-catalog" className={`pack-grid${activeLane === "all" ? "" : " pack-grid--filtered"}${visiblePacks.length === 1 ? " pack-grid--single" : ""}`} aria-label={`${activeLabel} Outcome Packs`}>
-        {visiblePacks.map((pack) => <PackCard pack={pack} key={pack.slug} />)}
+      <section id="pack-catalog" className="pack-grid" aria-label="Featured Outcome Packs">
+        {featuredPacks.map((pack) => <PackCard pack={pack} key={pack.slug} />)}
       </section>
       <section className="catalog-principle">
         <span>THE DIFFERENCE</span>
@@ -812,7 +398,6 @@ function PacksPage() {
 }
 
 function PackDetailPage({ pack }: { pack: OutcomePack }) {
-  const packNumber = pack.catalogNumber;
   const compiled = compilePack(pack);
   const reviewedLabel = new Date(`${pack.reviewedAt}T00:00:00Z`).toLocaleDateString("en-US", {
     month: "short",
@@ -820,7 +405,6 @@ function PackDetailPage({ pack }: { pack: OutcomePack }) {
     year: "numeric",
     timeZone: "UTC",
   });
-  const isSchedulable = Boolean(pack.schedule);
   const sections = [
     ["overview", "Overview"],
     ["fit", "Fit"],
@@ -829,7 +413,6 @@ function PackDetailPage({ pack }: { pack: OutcomePack }) {
     ["agent-skills", "Agent skills"],
     ["install", "Install"],
     ["run-prompt", "Run prompt"],
-    ...(isSchedulable ? [["schedule", "Schedule"]] : []),
     ["boundaries", "Boundaries"],
     ["verification", "Verification"],
   ];
@@ -837,14 +420,13 @@ function PackDetailPage({ pack }: { pack: OutcomePack }) {
   return (
     <main className="pack-reference-page">
       <a className="pack-reference-skip" href="#pack-specification">Skip to Outcome Pack specification</a>
-      <SiteNav label={`Outcome Pack / ${String(packNumber).padStart(2, "0")}`} />
+      <SiteNav label="Outcome Pack" />
       <div className="pack-reference-shell">
         <aside className="pack-reference-packs" aria-label="Outcome Pack navigation">
-          <header><span>OUTCOME PACKS</span><strong>{String(outcomePacks.length).padStart(2, "0")}</strong></header>
+          <header><span>OUTCOME PACKS</span></header>
           <nav aria-label="Outcome Packs">
-            {galleryPacks.map((candidate) => (
+            {featuredPacks.map((candidate) => (
               <a href={`/packs/${candidate.slug}`} aria-current={candidate.slug === pack.slug ? "page" : undefined} key={candidate.slug}>
-                <span>{String(candidate.catalogNumber).padStart(2, "0")}</span>
                 <strong>{candidate.name}</strong>
                 <small>{candidate.lane}</small>
               </a>
@@ -855,10 +437,9 @@ function PackDetailPage({ pack }: { pack: OutcomePack }) {
 
         <article className="pack-reference-document" id="pack-specification" tabIndex={-1}>
           <header className="pack-reference-header" id="overview">
-            <div className="pack-reference-breadcrumb"><a href="/packs">OUTCOME PACKS</a><span>/</span><strong>{pack.lane.toUpperCase()}</strong><span>/</span><strong>{String(packNumber).padStart(2, "0")}</strong></div>
+            <div className="pack-reference-breadcrumb"><a href="/packs">OUTCOME PACKS</a><span>/</span><strong>{pack.lane.toUpperCase()}</strong></div>
             <dl className="pack-reference-meta">
               <div><dt>CATEGORY</dt><dd>{pack.lane}</dd></div>
-              <div><dt>OUTCOME PACK</dt><dd>{String(packNumber).padStart(2, "0")}</dd></div>
               <div><dt>SCHEMA</dt><dd>v{pack.schemaVersion}</dd></div>
               <div><dt>LAST REVIEWED</dt><dd><time dateTime={pack.reviewedAt}>{reviewedLabel}</time></dd></div>
             </dl>
@@ -928,31 +509,14 @@ function PackDetailPage({ pack }: { pack: OutcomePack }) {
             <details className="pack-prompt-disclosure"><summary>Preview full compiled prompt <span>{compiled.runPrompt.split("\n").length} lines</span></summary><pre><code>{compiled.runPrompt}</code></pre></details>
           </section>
 
-          {isSchedulable ? (
-            <section className="pack-reference-section pack-schedule-section" id="schedule">
-              <header><span>07</span><h2>{pack.schedule?.title}</h2><p>{pack.schedule?.description}</p></header>
-              <div className="pack-schedule-prompt">
-                <header><span>START IN NATURAL LANGUAGE</span><strong>$possible</strong></header>
-                <code>{pack.schedule?.request}</code>
-              </div>
-              <ol className="pack-schedule-flow" aria-label="Scheduling flow">
-                <li><span>01</span><strong>Run it once</strong><p>Test the first cycle manually before scheduling.</p></li>
-                <li><span>02</span><strong>Draft the task</strong><p>Show the exact task, cadence, timezone, project, prompt, and permissions. Also disclose its worktree mode and stop conditions.</p></li>
-                <li><span>03</span><strong>Approve the schedule</strong><p>Ask for separate approval before creating or enabling the scheduled task.</p></li>
-                <li><span>04</span><strong>Review every completion report</strong><p>Each recurring run reads the latest report, runs one cycle, carries unresolved work forward, and writes a new dated report.</p></li>
-              </ol>
-              <aside className="pack-schedule-boundary"><strong>SAFE DEFAULT</strong><p>{pack.schedule?.safeDefault}</p></aside>
-            </section>
-          ) : null}
-
           <section className="pack-reference-section" id="boundaries">
-            <header><span>{isSchedulable ? "08" : "07"}</span><h2>Approval boundaries</h2><p>Outcome Pack approval permits local work only. External actions need separate approval.</p></header>
+            <header><span>07</span><h2>Approval boundaries</h2><p>Outcome Pack approval permits local work only. External actions need separate approval.</p></header>
             <div className="pack-approval-callout"><strong>What “yes” authorizes</strong><p>{approvalDisclosure}</p></div>
             <ul className="pack-reference-list">{pack.guardrails.map((item) => <li key={item}>{item}</li>)}</ul>
           </section>
 
           <section className="pack-reference-section" id="verification">
-            <header><span>{isSchedulable ? "09" : "08"}</span><h2>Verification</h2><p>Completion requires evidence. Missing or skipped proof stays visible.</p></header>
+            <header><span>08</span><h2>Verification</h2><p>Completion requires evidence. Missing or skipped proof stays visible.</p></header>
             <ol className="pack-verification-list">{pack.verification.map((item, index) => <li key={item}><span>{String(index + 1).padStart(2, "0")}</span><p>{item}</p></li>)}</ol>
           </section>
 
@@ -1157,25 +721,12 @@ function DemoOutcomeFooter({ text, href = "#top", linkLabel = "BACK TO TOP ↑" 
 function DemoGalleryPage() {
   return (
     <main className="demo-gallery-page">
-      <SiteNav label="Examples / 06" />
+      <SiteNav label="Demos" />
       <h1 className="sr-only">Possible outcome demos</h1>
 
       <section className="demo-gallery-grid" aria-label="Possible demos and recorded examples">
-        <a className="demo-example-card demo-example-card--presentation" href="/demo/presentation">
-          <header><span>00 / POSSIBLE EXPLAINER</span><strong>LIVE CODED DECK ↗</strong></header>
-          <div className="demo-example-visual demo-example-visual--presentation">
-            <img src="/presentation/possible-visual-atlas.webp" alt="Illustrations of an agent skill, execution prompt, Outcome Pack, and the Possible guide" />
-          </div>
-          <div className="demo-example-copy">
-            <p>POSSIBLE.SH / WEB PRESENTATION</p>
-            <h2>What Possible is.<br />In ten slides.</h2>
-            <p className="demo-example-transformation">See how agent skills, reusable execution prompts, Outcome Packs, and <code>$possible</code> fit together—then inspect a real Robot Prototype outcome.</p>
-            <div><span>10 coded slides</span><span>Keyboard + touch</span><span>Open presentation</span></div>
-          </div>
-        </a>
-
         <a className="demo-example-card demo-example-card--hardware" href="/demo/hardware">
-          <header><span>01 / HARDWARE LAUNCH</span><strong>VERIFIED RUN ↗</strong></header>
+          <header><span>HARDWARE LAUNCH</span><strong>VERIFIED RUN ↗</strong></header>
           <div className="demo-example-visual demo-example-visual--hardware">
             <img src="/demo/still/hardware/still-iso.png" alt="Still e-ink focus device CAD concept" />
           </div>
@@ -1187,34 +738,22 @@ function DemoGalleryPage() {
           </div>
         </a>
 
-        <a className="demo-example-card demo-example-card--software" href="/demo/software">
-          <header><span>02 / SOFTWARE LAUNCH</span><strong>VERIFIED RUN ↗</strong></header>
-          <div className="demo-example-visual demo-example-visual--software" aria-hidden="true">
-            <div className="three-card"><span>THREE / TODAY</span><b>1</b><i /><b>2</b><i /><b>3</b><i /><strong>THEN YOU’RE DONE.</strong></div>
+        <a className="demo-example-card demo-example-card--robot" href="/demo/robot-snake">
+          <header><span>ROBOT PROTOTYPE</span><strong>ISOLATED VERIFIED RUN ↗</strong></header>
+          <div className="demo-example-visual demo-example-visual--robot">
+            <img src="/demo/robot-snake/cad/iso.png" alt="Ten-link robot snake CAD prototype" />
+            <span>CAD · URDF · MUJOCO</span>
           </div>
           <div className="demo-example-copy">
-            <p>THREE / LOCAL-FIRST WEB APP</p>
-            <h2>Empty repo to a<br />complete launch.</h2>
-            <p className="demo-example-transformation">A software novice supplied one small app idea. Possible supplied the product, implementation, launch, testing, and verification work needed for a complete release.</p>
-            <div><span>{softwareThread.agents.length} agent threads</span><span>{softwareThread.messages.length} public messages</span><span>15 / 15 tests</span></div>
-          </div>
-        </a>
-
-        <a className="demo-example-card demo-example-card--open-source" href="/demo/open-source">
-          <header><span>03 / OPEN-SOURCE RELEASE</span><strong>VERIFIED RUN ↗</strong></header>
-          <div className="demo-example-visual demo-example-visual--release" aria-hidden="true">
-            <code><span>export function</span> slugify(value) {'{'}<br />&nbsp;&nbsp;return value<br />&nbsp;&nbsp;&nbsp;&nbsp;.toLowerCase()<br />&nbsp;&nbsp;&nbsp;&nbsp;.replace(…);<br />{'}'}</code>
-          </div>
-          <div className="demo-example-copy">
-            <p>TINY-SLUG / ESM PACKAGE</p>
-            <h2>Three files to a<br />trustworthy release.</h2>
-            <p className="demo-example-transformation">A first-time maintainer supplied three files. Possible identified the API, documentation, CI, security, packaging, and clean-consumer proof required for a trustworthy release.</p>
-            <div><span>{openSourceThread.agents.length} agent threads</span><span>{openSourceThread.messages.length} public messages</span><span>9 / 9 tests</span></div>
+            <p>ROBOT SNAKE / DIGITAL PROTOTYPE</p>
+            <h2>One rough idea.<br />A simulated robot.</h2>
+            <p className="demo-example-transformation">A robotics novice asked for a robot snake. Possible supplied the mechanical, description, control, simulation, safety, and verification work required for an inspectable digital prototype.</p>
+            <div><span>12 / 12 tests</span><span>186 interface checks</span><span>3 verifier repairs</span></div>
           </div>
         </a>
 
         <a className="demo-example-card demo-example-card--game" href="/demo/game">
-          <header><span>04 / PLAYABLE WEB GAME</span><strong>LIVE OUTCOME PROOF ↗</strong></header>
+          <header><span>PLAYABLE WEB GAME</span><strong>LIVE OUTCOME PROOF ↗</strong></header>
           <div className="demo-example-visual demo-example-visual--game" aria-hidden="true">
             <i className="demo-game-gate demo-game-gate--one" /><i className="demo-game-gate demo-game-gate--two" /><i className="demo-game-plane" />
             <span>POINTER</span><span>TOUCH</span><span>KEYS</span>
@@ -1227,17 +766,16 @@ function DemoGalleryPage() {
           </div>
         </a>
 
-        <a className="demo-example-card demo-example-card--robot" href="/demo/robot-snake">
-          <header><span>05 / ROBOT PROTOTYPE</span><strong>ISOLATED VERIFIED RUN ↗</strong></header>
-          <div className="demo-example-visual demo-example-visual--robot">
-            <img src="/demo/robot-snake/cad/iso.png" alt="Ten-link robot snake CAD prototype" />
-            <span>CAD · URDF · MUJOCO</span>
+        <a className="demo-example-card demo-example-card--presentation" href="/demo/presentation">
+          <header><span>WEB PRESENTATION</span><strong>LIVE CODED DECK ↗</strong></header>
+          <div className="demo-example-visual demo-example-visual--presentation">
+            <img src="/presentation/possible-visual-atlas.webp" alt="Illustrations of an agent skill, execution prompt, Outcome Pack, and the Possible guide" />
           </div>
           <div className="demo-example-copy">
-            <p>ROBOT SNAKE / DIGITAL PROTOTYPE</p>
-            <h2>One rough idea.<br />A simulated robot.</h2>
-            <p className="demo-example-transformation">A robotics novice asked for a robot snake. Possible supplied the mechanical, description, control, simulation, safety, and verification work required for an inspectable digital prototype.</p>
-            <div><span>12 / 12 tests</span><span>186 interface checks</span><span>3 verifier repairs</span></div>
+            <p>POSSIBLE.SH / WEB PRESENTATION</p>
+            <h2>What Possible is.<br />In ten slides.</h2>
+            <p className="demo-example-transformation">See how agent skills, reusable execution prompts, Outcome Packs, and <code>$possible</code> fit together—then inspect a real Robot Prototype outcome.</p>
+            <div><span>10 coded slides</span><span>Keyboard + touch</span><span>Open presentation</span></div>
           </div>
         </a>
       </section>
@@ -1284,147 +822,6 @@ function PresentationDemoPage() {
       />
 
       <DemoOutcomeFooter text="Live coded demonstration. The deck is browser-tested, but this page is not presented as a preserved $possible run." href="/demo" linkLabel="BACK TO DEMOS ↑" />
-    </main>
-  );
-}
-
-function OpenSourceDemoPage() {
-  const [threadOpen, setThreadOpen] = useState(false);
-
-  return (
-    <main className="demo-detail-page demo-detail-page--release" id="top">
-      <SiteNav label="Recorded run / tiny-slug" />
-      <DemoOutcomeHeader
-        eyebrow="OPEN-SOURCE RELEASE / VERIFIED OUTCOME"
-        title="A tiny package,"
-        accent="ready to trust."
-        description="Open the package, documentation, CI, security review, and clean-consumer evidence produced by a preserved Open-Source Release run."
-        metric="9 / 9 TESTS · 0 FINDINGS"
-        thread={openSourceThread}
-        onOpenThread={() => setThreadOpen(true)}
-      />
-
-      <section className="demo-artifacts release-artifacts" id="artifacts" aria-label="Outcome artifacts">
-        <DemoOutputLabel />
-        <div className="release-artifact-grid">
-          <article className="release-code-card">
-            <header><span>01 / PUBLIC API</span><strong>INDEX.JS</strong></header>
-            <pre><code>{`export function slugify(value) {
-  if (typeof value !== "string") {
-    throw new TypeError("slugify() expects a string");
-  }
-
-  return value
-    .replace(/[^A-Za-z0-9]+/g, "-")
-    .toLowerCase()
-    .replace(/^-|-$/g, "");
-}`}</code></pre>
-            <a href="/demo/tiny-slug/index.js" target="_blank" rel="noreferrer">OPEN SOURCE ↗</a>
-          </article>
-
-          <article className="release-package-card">
-            <header><span>02 / PACKAGE CONTRACT</span><strong>1.0.0 / ESM</strong></header>
-            <div><p><span>RUNTIME DEPS</span><strong>0</strong></p><p><span>PUBLIC EXPORTS</span><strong>1</strong></p><p><span>PACKED FILES</span><strong>6</strong></p><p><span>TESTS</span><strong>9 / 9</strong></p></div>
-            <a href="/demo/tiny-slug/package.json" target="_blank" rel="noreferrer">OPEN PACKAGE.JSON ↗</a>
-          </article>
-
-          <article className="release-verification-card">
-            <header><span>03 / INDEPENDENT REVIEW</span><strong>PASS</strong></header>
-            <h3>Offline install.<br />Clean consumer.<br />Zero remaining findings.</h3>
-            <p>The verifier packed the exact release artifact, installed it offline into a fresh project, imported the named ESM API, parsed JSON and YAML, checked documentation links, and reran the security review.</p>
-            <a href="/demo/tiny-slug/.possible/outcome-receipt.md" target="_blank" rel="noreferrer">OPEN COMPLETION REPORT ↗</a>
-          </article>
-        </div>
-
-        <div className="release-file-index">
-          <a href="/demo/tiny-slug/README.md" target="_blank" rel="noreferrer"><span>README</span><strong>Project entry point</strong><i>MD ↗</i></a>
-          <a href="/demo/tiny-slug/docs/api.md" target="_blank" rel="noreferrer"><span>DOCS</span><strong>API contract</strong><i>MD ↗</i></a>
-          <a href="/demo/tiny-slug/examples/basic.js" target="_blank" rel="noreferrer"><span>EXAMPLE</span><strong>Runnable usage</strong><i>JS ↗</i></a>
-          <a href="/demo/tiny-slug/.github/workflows/ci.yml" target="_blank" rel="noreferrer"><span>CI</span><strong>SHA-pinned workflow</strong><i>YML ↗</i></a>
-          <a href="/demo/tiny-slug/release/security-review.md" target="_blank" rel="noreferrer"><span>REVIEW</span><strong>Security evidence</strong><i>MD ↗</i></a>
-          <a href="/demo/tiny-slug/CODEX-THREAD.md" target="_blank" rel="noreferrer"><span>THREAD</span><strong>Complete public run</strong><i>MD ↗</i></a>
-        </div>
-      </section>
-
-      <DemoConversation
-        userIdea="I want to release tiny-slug, a tiny ASCII-only ESM slugifier."
-        possibleQuestion="When this is finished, what would make the release trustworthy to a consumer and a contributor?"
-        userOutcome="A clean package, API docs, runnable examples, CI, security review, and release plan—but do not publish, push, or tag anything."
-        packHref="/packs/open-source-release"
-        packLabel="Open-Source Release"
-        recommendation="It coordinates release engineering, documentation, CI, security assurance, and independent consumer verification."
-      />
-      <DemoOutcomeFooter text="Prepared locally. Nothing was published, pushed, tagged, or changed externally." />
-
-      {threadOpen ? <ThreadTranscript thread={openSourceThread} rawHref="/demo/tiny-slug/CODEX-THREAD.md" outputHref="#artifacts" onClose={() => setThreadOpen(false)} /> : null}
-    </main>
-  );
-}
-
-function SoftwareDemoPage() {
-  const [threadOpen, setThreadOpen] = useState(false);
-
-  return (
-    <main className="demo-detail-page demo-detail-page--software" id="top">
-      <SiteNav label="Recorded run / Three" />
-      <DemoOutcomeHeader
-        eyebrow="SOFTWARE LAUNCH / VERIFIED OUTCOME"
-        title="A real product,"
-        accent="ready to open."
-        description="Use the browser product, open its launch site, watch the film, and inspect the release evidence from a preserved Software Launch run."
-        metric="15 / 15 TESTS · 22 SECOND FILM"
-        thread={softwareThread}
-        onOpenThread={() => setThreadOpen(true)}
-      />
-
-      <section className="demo-artifacts software-artifacts" id="artifacts" aria-label="Outcome artifacts">
-        <DemoOutputLabel />
-        <div className="software-live-grid">
-          <article className="software-live-card software-live-card--product">
-            <header><span>01 / BROWSER PRODUCT</span><strong>INTERACTIVE BUILD</strong></header>
-            <iframe title="Three local-first product" src="/demo/three/product/index.html" loading="lazy" />
-            <footer><p><strong>Three / Today</strong><span>Add, complete, reload, remove, and reuse up to three lines.</span></p><a href="/demo/three/product/index.html" target="_blank" rel="noreferrer">OPEN PRODUCT ↗</a></footer>
-          </article>
-
-          <article className="software-live-card software-live-card--site">
-            <header><span>02 / LAUNCH SITE</span><strong>PRODUCTION BUILD</strong></header>
-            <iframe title="Three launch website" src="/demo/three/site/index.html" loading="lazy" />
-            <footer><p><strong>Three things. Then you’re done.</strong><span>Truthful local-only positioning with no fake waitlist or demand claims.</span></p><a href="/demo/three/site/index.html" target="_blank" rel="noreferrer">OPEN SITE ↗</a></footer>
-          </article>
-        </div>
-
-        <article className="software-film-card">
-          <header><span>03 / PRODUCT FILM</span><strong>1920 × 1080 · 30 FPS · 22.06S</strong></header>
-          <video controls preload="metadata" poster="/demo/three/film/stills/04-done.png">
-            <source src="/demo/three/film/three-demo.mp4" type="video/mp4" />
-          </video>
-          <footer><p><strong>From overload to done.</strong><span>Four scenes, eight inspected frames, full-file decode passed.</span></p><a href="/demo/three/film/three-demo.mp4" target="_blank" rel="noreferrer">OPEN MP4 ↗</a></footer>
-        </article>
-
-        <div className="software-evidence-index">
-          <a href="/demo/three/.possible/outcome-brief.md" target="_blank" rel="noreferrer"><span>BRIEF</span><strong>Confirmed outcome</strong><i>MD ↗</i></a>
-          <a href="/demo/three/evidence/product-test-receipt.md" target="_blank" rel="noreferrer"><span>PRODUCT</span><strong>15-test report</strong><i>MD ↗</i></a>
-          <a href="/demo/three/evidence/site-test-receipt.md" target="_blank" rel="noreferrer"><span>SITE</span><strong>Build report</strong><i>MD ↗</i></a>
-          <a href="/demo/three/evidence/film-render-receipt.md" target="_blank" rel="noreferrer"><span>FILM</span><strong>Render report</strong><i>MD ↗</i></a>
-          <a href="/demo/three/release/release-plan.md" target="_blank" rel="noreferrer"><span>RELEASE</span><strong>Gated plan</strong><i>MD ↗</i></a>
-          <a href="/demo/three/evidence/final-verification.md" target="_blank" rel="noreferrer"><span>FINAL</span><strong>L0–L8 decision</strong><i>MD ↗</i></a>
-          <a href="/demo/three/evidence/failed-review-01/README.md" target="_blank" rel="noreferrer"><span>FAILED PASS</span><strong>What review caught</strong><i>MD ↗</i></a>
-          <a href="/demo/three/evidence/integration-repairs.md" target="_blank" rel="noreferrer"><span>REPAIRS</span><strong>Failure history</strong><i>MD ↗</i></a>
-          <a href="/demo/three/CODEX-THREAD.md" target="_blank" rel="noreferrer"><span>THREAD</span><strong>Complete public run</strong><i>MD ↗</i></a>
-        </div>
-      </section>
-
-      <DemoConversation
-        userIdea="I want to launch Three, a local-first web app that helps people commit to exactly three things today."
-        possibleQuestion="Who is this for, and what must exist for you to consider it genuinely launched?"
-        userOutcome="Overloaded solo builders. I want the real app, launch site, product film, and release plan—without accounts, a backend, analytics, or deployment."
-        packHref="/packs/software-launch"
-        packLabel="Software Launch"
-        recommendation="It coordinates the product, launch website, demo film, release readiness, and fresh independent review."
-      />
-      <DemoOutcomeFooter text="Prepared and verified locally. Nothing was deployed, published, or sent externally." />
-
-      {threadOpen ? <ThreadTranscript thread={softwareThread} rawHref="/demo/three/CODEX-THREAD.md" outputHref="#artifacts" onClose={() => setThreadOpen(false)} /> : null}
     </main>
   );
 }
@@ -1723,7 +1120,6 @@ function DocsSidebar({ active }: { active: "overview" | "how-to-use" }) {
         <a href="/docs#recommend">Recommendation</a>
         <a href="/docs#confirm">Confirmation</a>
         <a href="/docs#execute">Execution</a>
-        <a href="/docs#schedule">Scheduling</a>
       </nav>
       <nav aria-label="Reference">
         <span>REFERENCE</span>
@@ -1756,7 +1152,7 @@ function DocsPage() {
 
           <aside className="docs-callout docs-callout--info">
             <strong>THE SHORT VERSION</strong>
-            <p>Install <code>$possible</code> once. Describe what you want to make—or say “I want to schedule operations.” The skill finds the right Outcome Pack with you.</p>
+            <p>Install <code>$possible</code> once. Describe what you want to make. The skill finds the right Outcome Pack with you.</p>
           </aside>
 
           <section id="installation">
@@ -1812,8 +1208,7 @@ function DocsPage() {
               <div><dt>Acceptance check</dt><dd>A concrete condition the finished work must satisfy. It turns “done” into something inspectable.</dd></div>
               <div><dt>Verification</dt><dd>The tests, review, measurements, or inspected evidence used to determine whether the promised end state is true.</dd></div>
               <div><dt>Completion report</dt><dd>The final evidence and status: artifacts created, checks passed or failed, limitations, unproven claims, and external actions not taken.</dd></div>
-              <div><dt>External action</dt><dd>A real-world change—such as deploying, publishing, spending, outreach, fabrication, or scheduling—that requires separate approval.</dd></div>
-              <div><dt>Schedule</dt><dd>An approved way to repeat a proven run. It is not an Outcome Pack and does not grant blanket permission for external actions.</dd></div>
+              <div><dt>External action</dt><dd>A real-world change—such as deploying, publishing, spending, outreach, or fabrication—that requires separate approval.</dd></div>
             </dl>
           </section>
 
@@ -1860,29 +1255,6 @@ function DocsPage() {
             <a className="docs-text-link" href="/demo/hardware">See a complete recorded Hardware Launch run →</a>
           </section>
 
-          <section id="schedule">
-            <h2>Schedule a recurring outcome</h2>
-            <p>Scheduling is for work that genuinely repeats, such as operating an already-live web app or running a bounded marketing review and draft cycle. It is not a new Outcome Pack or permission to rerun every launch unattended.</p>
-            <div className="docs-command docs-command--schedule">
-              <header><span>CODEX</span><strong>NATURAL LANGUAGE</strong></header>
-              <pre><code>$possible{"\n"}{schedulePrompt}</code></pre>
-              <CopyButton label="Copy scheduling prompt" value={`$possible\n${schedulePrompt}`} />
-            </div>
-            <p>For recurring plans, drafts, and measurement, say <code>I want to schedule marketing operations.</code> <code>$possible</code> will recommend the Marketing Operations Outcome Pack instead of Web App Operations.</p>
-            <ol>
-              <li><strong>Prove the first cycle</strong><span>Possible establishes the operating loop and runs it manually before offering recurrence.</span></li>
-              <li><strong>Inspect the exact task</strong><span>Review its cadence, timezone, project, worktree mode, prompt, permissions, completion report, and stop conditions.</span></li>
-              <li><strong>Approve scheduling separately</strong><span>Outcome Pack approval does not create, update, or enable a scheduled task.</span></li>
-              <li><strong>Review recurring evidence</strong><span>Each run invokes <code>$possible resume</code>, carries unresolved work forward, and writes one dated completion report.</span></li>
-            </ol>
-            <aside className="docs-callout docs-callout--approval">
-              <strong>DEFAULT SCHEDULE</strong>
-              <p>Use a standalone task in an isolated worktree. Report findings and prepare reviewable repo-local evidence. Stop before deployment, production changes, paging, publishing, posting, sending, outreach, spending, tracking changes, secrets, or private data. For local projects, the machine and Codex app must remain running and the project must stay available.</p>
-            </aside>
-            <a className="docs-reference-link" href="/packs/web-app-operations"><span>SCHEDULABLE OUTCOME PACK</span><strong>Web App Operations</strong><i>View schedule contract →</i></a>
-            <a className="docs-reference-link" href="/packs/marketing-operations"><span>SCHEDULABLE OUTCOME PACK</span><strong>Marketing Operations</strong><i>View schedule contract →</i></a>
-          </section>
-
           <section id="files">
             <h2>Project files</h2>
             <p>Possible creates outcome state only after confirmation.</p>
@@ -1891,7 +1263,6 @@ function DocsPage() {
               <div role="row"><code role="cell">.possible/outcome-brief.md</code><span role="cell">Confirmed intent, constraints, interfaces, acceptance checks, gates, and unknowns.</span></div>
               <div role="row"><code role="cell">.possible/pack.json</code><span role="cell">The exact Outcome Pack snapshot approved for this run.</span></div>
               <div role="row"><code role="cell">.possible/skills-lock.json</code><span role="cell">Resolved sources, revisions, paths, and content hashes.</span></div>
-              <div role="row"><code role="cell">.possible/schedule.json</code><span role="cell">Record of the last approved schedule. It stores the task identifier and configuration, but does not prove the external task is still enabled.</span></div>
             </div>
           </section>
 
@@ -1900,7 +1271,7 @@ function DocsPage() {
             <p>Outcome Pack approval authorizes local project work. It never grants real-world permission.</p>
             <aside className="docs-callout docs-callout--warning">
               <strong>SEPARATE APPROVAL REQUIRED</strong>
-              <p>Deployment, scheduling changes, publishing, spending, outreach, fabrication, data collection, credential use, private-data sharing, and unsupported claims remain separately gated.</p>
+              <p>Deployment, publishing, spending, outreach, fabrication, data collection, credential use, private-data sharing, and unsupported claims remain separately gated.</p>
             </aside>
             <ul>
               <li>Inspect external skill instructions before following them.</li>
@@ -1917,7 +1288,6 @@ function DocsPage() {
               <details><summary>Codex does not recognize $possible</summary><p>Confirm the skill exists at <code>.agents/skills/possible/SKILL.md</code>, then reopen or reload the project so Codex can discover it.</p></details>
               <details><summary>The recommended Outcome Pack lists @sites, but it is unavailable</summary><p>Sites is an optional OpenAI plugin, not a Skills CLI dependency. Possible records that it is unavailable and uses a reviewed provider fallback when one is compatible and authorized; otherwise its completion report marks deployment as blocked.</p></details>
               <details><summary>The recommended Outcome Pack feels wrong</summary><p>Do not confirm it. Correct Possible&apos;s understanding or continue brainstorming until the recommendation matches the outcome you actually want.</p></details>
-              <details><summary>Scheduling is unavailable in my current Codex surface</summary><p>Possible should still test and prepare the durable task prompt, then return a completion report that marks scheduling as blocked. Create and manage scheduled tasks from ChatGPT web or the desktop app; do not claim a schedule exists until its external state can be inspected.</p></details>
             </div>
           </section>
 
@@ -1936,7 +1306,6 @@ function DocsPage() {
           <a href="#recommend">Recommendation</a>
           <a href="#confirm">Confirmation</a>
           <a href="#execute">Execution</a>
-          <a href="#schedule">Scheduling</a>
           <a href="#files">Project files</a>
           <a href="#safety">Safety boundary</a>
           <a href="#troubleshooting">Troubleshooting</a>
@@ -1975,7 +1344,7 @@ function HowToUsePage() {
             <ol className="docs-responsibility-list">
               <li><strong>Install Possible once</strong><span>From the project root, run <code>{installCommand}</code>, then open or reload the project in Codex.</span></li>
               <li><strong>Start the conversation</strong><span>Type <code>$possible</code>. No form, Outcome Pack name, or special prompt format is required.</span></li>
-              <li><strong>Describe the ambition</strong><span>Say what you want to make, launch, operate, release, or repeat in your own words. A rough idea is enough.</span></li>
+              <li><strong>Describe the ambition</strong><span>Say what you want to make, launch, or release in your own words. A rough idea is enough.</span></li>
               <li><strong>Supply essential context</strong><span>Answer the questions that materially change the result. Correct assumptions instead of accepting a polished misunderstanding.</span></li>
               <li><strong>Review the recommendation</strong><span>Check the stated outcome, proposed Outcome Pack, expected outputs, acceptance checks, assumptions, and actions that remain gated.</span></li>
               <li><strong>Confirm—or revise</strong><span>Say “yes, proceed” only when the recommendation is right. Otherwise, correct it and continue the conversation.</span></li>
@@ -2021,7 +1390,7 @@ function HowToUsePage() {
             </aside>
             <aside className="docs-callout docs-callout--warning">
               <strong>SEPARATE YES REQUIRED</strong>
-              <p>Deployment, publishing, scheduling changes, spending, outreach, fabrication, data collection, credential use, private-data sharing, and unsupported public claims remain separately gated.</p>
+              <p>Deployment, publishing, spending, outreach, fabrication, data collection, credential use, private-data sharing, and unsupported public claims remain separately gated.</p>
             </aside>
           </section>
 
@@ -2050,8 +1419,8 @@ function NotFoundPage() {
       <SiteNav label="Not found" />
       <section className="not-found">
         <p className="eyebrow">404 / OUTCOME NOT FOUND</p>
-        <h1>This Outcome Pack is<br /><em>not possible yet.</em></h1>
-        <a className="button-link" href="/packs">Browse all Outcome Packs <span>→</span></a>
+        <h1>This outcome is<br /><em>not here.</em></h1>
+        <a className="button-link" href="/demo">Browse the demos <span>→</span></a>
       </section>
       <SiteFooter />
     </main>
@@ -2061,14 +1430,6 @@ function NotFoundPage() {
 export function PossibleSite({ path: requestedPath }: { path?: string }) {
   const path = (requestedPath ?? (typeof window === "undefined" ? "/" : window.location.pathname)).replace(/\/+$/, "") || "/";
   if (path === "/") return <CreatePage />;
-  if (path === "/blogs") return <BlogsPage />;
-  if (path === "/blogs/what-is-possible") return <WhatPage />;
-  if (path === "/blogs/why-possible") return <WhyPage />;
-  if (path === "/benchmarks") return <BenchmarkGalleryPage />;
-  if (path.startsWith("/benchmarks/")) {
-    const benchmark = getBenchmark(path.slice("/benchmarks/".length));
-    return benchmark ? <BenchmarkDetailPage slug={benchmark.slug} /> : <NotFoundPage />;
-  }
   if (path === "/packs") return <PacksPage />;
   if (path === "/docs") return <DocsPage />;
   if (path === "/docs/how-to-use") return <HowToUsePage />;
@@ -2078,10 +1439,8 @@ export function PossibleSite({ path: requestedPath }: { path?: string }) {
   if (path === "/demo/game") return <PlayableGameDemoPage />;
   if (path === "/demo/robot-snake") return <RobotSnakeDemoPage />;
   if (path === "/demo/hardware") return <HardwareDemoPage />;
-  if (path === "/demo/software") return <SoftwareDemoPage />;
-  if (path === "/demo/open-source") return <OpenSourceDemoPage />;
   if (path.startsWith("/packs/")) {
-    const pack = getPack(path.slice("/packs/".length));
+    const pack = getFeaturedPack(path.slice("/packs/".length));
     return pack ? <PackDetailPage pack={pack} /> : <NotFoundPage />;
   }
   return <NotFoundPage />;

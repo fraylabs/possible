@@ -4,9 +4,5 @@
   "installCommand": "npm ci",
   "outputDirectory": "apps/web/out",
   "cleanUrls": true,
-  "trailingSlash": false,
-  "redirects": [
-    { "source": "/what", "destination": "/blogs/what-is-possible", "permanent": true },
-    { "source": "/why", "destination": "/blogs/why-possible", "permanent": true }
-  ]
+  "trailingSlash": false
 }

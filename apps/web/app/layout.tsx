@@ -5,10 +5,10 @@ import "../src/styles.css";
 export const metadata: Metadata = {
   metadataBase: new URL("https://possible.sh"),
   title: {
-    default: "Possible — Complete a possible outcome!",
+    default: "Possible — Complete a possible outcome",
     template: "%s — Possible",
   },
-  description: "Possible.sh is an open-source library of Outcome Packs for Codex. Each pack combines a reusable execution prompt, agent skills, and verification.",
+  description: "Possible gives Codex the workstreams, safeguards and verification needed to complete ambitious outcomes involving dozens of coordinated tasks.",
   applicationName: "Possible",
   alternates: {
     types: {
@@ -19,20 +19,20 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     siteName: "Possible",
-    title: "Possible — Complete a possible outcome!",
-    description: "Possible.sh is an open-source library of Outcome Packs for Codex. Each pack combines a reusable execution prompt, agent skills, and verification.",
+    title: "Possible — Complete a possible outcome",
+    description: "Possible gives Codex the workstreams, safeguards and verification needed to complete ambitious outcomes involving dozens of coordinated tasks.",
     url: "/",
     images: [{
       url: "/og.png",
       width: 1731,
       height: 909,
-      alt: "Possible — Complete a possible outcome!",
+      alt: "Possible — Complete a possible outcome",
     }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Possible — Complete a possible outcome!",
-    description: "Possible.sh is an open-source library of Outcome Packs for Codex. Each pack combines a reusable execution prompt, agent skills, and verification.",
+    title: "Possible — Complete a possible outcome",
+    description: "Possible gives Codex the workstreams, safeguards and verification needed to complete ambitious outcomes involving dozens of coordinated tasks.",
     images: ["/og.png"],
   },
   other: {
