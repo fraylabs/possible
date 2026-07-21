@@ -9,7 +9,6 @@ const staticPaths = [
   "/blogs/what-is-possible",
   "/blogs/why-possible",
   "/benchmarks",
-  "/benchmarks/billion-dollar-company",
   "/benchmarks/kickstarter-funding",
   "/benchmarks/kickstarter-shipped",
   "/packs",

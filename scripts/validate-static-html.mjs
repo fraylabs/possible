@@ -15,7 +15,7 @@ const plainText = (markup) => markup
 
 const homeMarkup = await html("index.html");
 const home = visibleText(homeMarkup);
-assert.match(home, /What do you want[\s\S]*to achieve[\s\S]*today\?/);
+assert.match(home, /Complete a possible[\s\S]*outcome!/);
 assert.match(home, /Possible gives Codex the operational judgment to turn a rough request into a verified outcome\./);
 assert.match(home, /npx @fraylabs\/possible@0\.1\.6 init/);
 const headerLinks = home.match(/<div class="nav-links">([\s\S]*?)<\/div>/)?.[1];
@@ -30,7 +30,16 @@ assert.match(home, /id="packs"/);
 assert.match(home, /Packs are reviewed recipes for[\s\S]*real outcomes/);
 assert.match(home, /Describe the outcome\. Possible recommends the pack; you approve it\./);
 assert.match(home, /<section class="start-section"[^>]*>[\s\S]*id="start"[\s\S]*id="packs"[\s\S]*<\/section>/);
-assert.match(home, /BENCHMARK SUITE \/ THREE OUTCOMES/);
+assert.match(home, /RECORDED OUTCOMES \/ 04/);
+assert.match(home, /See[\s\S]*\$possible[\s\S]*brainstorm—and what it produced/);
+for (const href of ["/demo/hardware", "/demo/software", "/demo/open-source", "/demo/game"]) {
+  assert.match(home, new RegExp(`href="${href.replaceAll("/", "\\/")}"`));
+}
+const heroIndex = home.indexOf('class="build-hero"');
+const demoIndex = home.indexOf('class="home-demo"');
+const packsIndex = home.indexOf('class="home-pack-index"');
+assert.ok(heroIndex >= 0 && demoIndex > heroIndex && packsIndex > demoIndex, "The homepage must place demos between the hero and packs");
+assert.match(home, /BENCHMARK SUITE \/ TWO OUTCOMES/);
 assert.match(home, /Can Codex infer[\s\S]*what you forgot to ask for/);
 assert.match(home, /Compare Direct,[\s\S]*same ambition\.[\s\S]*judgment, artifacts, and human time/);
 assert.doesNotMatch(home, /href="\/proof"/);
@@ -56,7 +65,7 @@ for (const pack of outcomePacks) {
 assert.doesNotMatch(home, /Open the full pack reference/);
 
 const catalog = visibleText(await html("packs/index.html"));
-assert.match(catalog, /Complete recipes/);
+assert.match(catalog, /Reviewed recipes/);
 for (const pack of outcomePacks) {
   assert.match(catalog, new RegExp(pack.name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
   const detail = visibleText(await html(`packs/${pack.slug}/index.html`));
@@ -103,7 +112,6 @@ for (const [relativePath, expected] of [
   ["blogs/what-is-possible/index.html", "Possible is the outcome layer"],
   ["blogs/why-possible/index.html", "The bottleneck is no longer what AI can do"],
   ["benchmarks/index.html", "POSSIBLE BENCHMARK SUITE / V0.1"],
-  ["benchmarks/billion-dollar-company/index.html", "\\$1B-0.1[\\s\\S]*/[\\s\\S]*\\$1B COMPANY"],
   ["benchmarks/kickstarter-funding/index.html", "FUNDING-0.1[\\s\\S]*/[\\s\\S]*FUNDING"],
   ["benchmarks/kickstarter-shipped/index.html", "SHIPPED-0.1[\\s\\S]*/[\\s\\S]*SHIPPING"],
   ["docs/index.html", "Build complete outcomes with Possible"],
@@ -118,6 +126,7 @@ for (const [relativePath, expected] of [
 }
 
 await assert.rejects(html("proof/index.html"), { code: "ENOENT" }, "The retired /proof route must not be exported");
+await assert.rejects(html("benchmarks/billion-dollar-company/index.html"), { code: "ENOENT" }, "The retired billion-dollar benchmark must not be exported");
 const [sourcePublicProof, exportedPublicProof] = await Promise.all([
   readFile(new URL("../benchmarks/outcome-v1/PUBLIC-PROOF.md", import.meta.url), "utf8"),
   html("benchmarks/outcome-v1/public-proof.md"),
@@ -125,30 +134,17 @@ const [sourcePublicProof, exportedPublicProof] = await Promise.all([
 assert.equal(exportedPublicProof, sourcePublicProof, "The exported benchmark proof must match its canonical source");
 
 const benchmarkGallery = visibleText(await html("benchmarks/index.html"));
-assert.match(benchmarkGallery, /One rough ambition[\s\S]*Who supplies the judgment/);
+assert.match(benchmarkGallery, /Which workflow supplies[\s\S]*the missing judgment/);
 assert.doesNotMatch(benchmarkGallery, /href="\/benchmarks\/simple-prompt"/);
-assert.match(benchmarkGallery, /href="\/benchmarks\/billion-dollar-company"/);
+assert.doesNotMatch(benchmarkGallery, /href="\/benchmarks\/billion-dollar-company"/);
 assert.match(benchmarkGallery, /href="\/benchmarks\/kickstarter-funding"/);
 assert.match(benchmarkGallery, /href="\/benchmarks\/kickstarter-shipped"/);
-assert.match(benchmarkGallery, /Same starting point · one prompt · test missing operational judgment · retain outputs and time as receipts/);
-
-const companyBenchmark = visibleText(await html("benchmarks/billion-dollar-company/index.html"));
-assert.match(companyBenchmark, /Make Me a Billion-Dollar Company/);
-assert.match(companyBenchmark, /Make me Atlassian\. Make no mistakes\./);
-assert.match(companyBenchmark, /\/goal Make me Atlassian/);
-assert.match(companyBenchmark, /\$possible Make me Atlassian/);
-assert.match(companyBenchmark, /24[\s\S]*OUTPUTS/);
-assert.match(companyBenchmark, /3 hr 48 min/);
-assert.match(companyBenchmark, /company\/revenue\/ledger\.csv/);
-assert.match(companyBenchmark, /OPERATIONAL JUDGMENT[\s\S]*Evidence register[\s\S]*company\/evidence-register\.md/);
-assert.match(companyBenchmark, /OUTPUT RECEIPTS/);
-assert.match(companyBenchmark, /href="\/packs\/billion-dollar-saas"/);
-assert.doesNotMatch(companyBenchmark, /rubric points|Coverage evidence levels|Company-system domains/);
+assert.match(benchmarkGallery, /NO CONTROLLED RUNS[\s\S]*Modeled · one prompt · same starting point · judgment, artifacts, and human time/);
 
 const fundingBenchmark = visibleText(await html("benchmarks/kickstarter-funding/index.html"));
 assert.match(fundingBenchmark, /The Kickstarter Funding Benchmark/);
 assert.match(fundingBenchmark, /Get my product funded on Kickstarter/);
-assert.match(fundingBenchmark, /21[\s\S]*OUTPUTS/);
+assert.match(fundingBenchmark, /21[\s\S]*ARTIFACTS/);
 assert.match(fundingBenchmark, /4 hr 12 min/);
 assert.match(fundingBenchmark, /campaign\/receipts\/payout-ledger\.csv/);
 assert.match(fundingBenchmark, /href="\/packs\/kickstarter-funding"/);
@@ -156,7 +152,7 @@ assert.match(fundingBenchmark, /href="\/packs\/kickstarter-funding"/);
 const shippedBenchmark = visibleText(await html("benchmarks/kickstarter-shipped/index.html"));
 assert.match(shippedBenchmark, /The Kickstarter-to-Shipped Benchmark/);
 assert.match(shippedBenchmark, /Get this funded Kickstarter shipped/);
-assert.match(shippedBenchmark, /18[\s\S]*OUTPUTS/);
+assert.match(shippedBenchmark, /18[\s\S]*ARTIFACTS/);
 assert.match(shippedBenchmark, /5 hr 20 min/);
 assert.match(shippedBenchmark, /fulfillment\/milestones\/shipment-ledger\.csv/);
 assert.match(shippedBenchmark, /href="\/packs\/kickstarter-fulfillment"/);
@@ -181,4 +177,4 @@ assert.match(writingStandard, /Every benchmark page uses the same order/);
 assert.match(writingStandard, /Put results before explanation/);
 assert.match(writingStandard, /Observed:[\s\S]*Modeled:[\s\S]*Projected:[\s\S]*Unknown:/);
 
-console.log(`All ${outcomePacks.length + 15} public Next.js routes contain meaningful initial HTML.`);
+console.log(`All ${outcomePacks.length + 14} public Next.js routes contain meaningful initial HTML.`);

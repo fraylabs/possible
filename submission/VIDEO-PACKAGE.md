@@ -110,7 +110,7 @@ Use the production origin when stable; every route below also works from the loc
 | A14 | `https://possible.sh/demo/still/evidence/final-receipt.md` | “Material failure found and repaired” and passed evidence. |
 | A15 | `https://possible.sh/demo/still/verification/browser-results.json` | Empty console/page errors and successful post-repair asset paths. |
 | A16 | `https://possible.sh/demo/still/verification/artifact-results.json` | `58/58` artifact proof. |
-| A17 | `https://possible.sh/benchmarks` | Benchmark gallery. Frame the three outcome comparisons and their one-prompt setup. |
+| A17 | `https://possible.sh/benchmarks` | Benchmark gallery. Frame the two outcome comparisons and their one-prompt setup. |
 | A18 | `https://possible.sh/benchmarks/outcome-v1/result.md` | Repository-backed fallback for the exact result table and limitations. |
 | A19 | `https://possible.sh/benchmarks/outcome-v1/summary.json` | Machine-readable pilot summary; frame `canSupportPerformanceClaim: false`. |
 | A20 | `ARCHITECTURE.md` and `packages/packs/src/compiler.ts` | Three-beat source/architecture close. Use editor line highlighting, not a tiny full-file capture. |

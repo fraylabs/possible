@@ -16,7 +16,7 @@ export const billionDollarSaasPack: OutcomePack = {
   slug: "billion-dollar-saas",
   name: "Billion-Dollar SaaS",
   eyebrow: "09 / OUTCOME PACK",
-  promise: "Turn a rough company ambition into the smallest executable, evidence-backed operating system for pursuing an Atlassian-scale SaaS outcome.",
+  promise: "Turn a company ambition into an executable, evidence-backed operating system for an Atlassian-scale SaaS.",
   summary: "A company thesis, working product and activation path, positioning and distribution system, revenue and customer-success motion, trust and reliability baseline, operating cadence, and independently verified company-system receipt—with real revenue kept separate from operational coverage.",
   useWhen: [
     "The user asks for a successful, category-defining, or billion-dollar software company without knowing every company system required.",

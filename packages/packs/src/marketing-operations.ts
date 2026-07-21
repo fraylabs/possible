@@ -20,7 +20,7 @@ export const marketingOperationsPack: OutcomePack = {
   slug: "marketing-operations",
   name: "Marketing Operations",
   eyebrow: "08 / OUTCOME PACK",
-  promise: "Turn one confirmed product and audience into a repeatable, optionally scheduled, evidence-backed marketing planning, drafting, and learning loop.",
+  promise: "Turn one product and audience into a repeatable, optionally scheduled marketing loop.",
   summary: "A versioned source of truth, prioritized campaign calendar, review-required channel drafts, decision-led measurement plan, durable loop state, first dated receipt, and scheduling-ready task—without posting, sending, spending, or changing live accounts unattended.",
   useWhen: [
     "A real product or offer already exists and needs a repeatable marketing cadence.",

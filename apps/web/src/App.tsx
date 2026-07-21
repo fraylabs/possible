@@ -183,7 +183,7 @@ function CreatePage() {
         <div className="build-hero">
           <div className="build-hero-copy">
             <p className="eyebrow">POSSIBLE / FOR CODEX</p>
-            <h1>What do you want<br />{" "}to achieve <em>today?</em></h1>
+              <h1>Complete a possible <br /><em>outcome!</em></h1>
             <p className="build-hero-description">Possible gives Codex the operational judgment to turn a rough request into a verified outcome.</p>
             <div className="build-hero-actions">
               <a className="button-link" href="#try">Try with Codex <span>↓</span></a>
@@ -197,10 +197,22 @@ function CreatePage() {
               <pre><code>{installCommand}</code></pre>
               <CopyButton label="Copy install command" value={installCommand} />
               <div className="install-next"><span>THEN ASK CODEX</span><code>$possible</code></div>
-              <p className="install-version-note">Published 0.1.6 · Candidate 0.1.7</p>
             </article>
           </div>
         </div>
+
+        <section className="home-demo" aria-labelledby="home-demo-heading">
+          <header>
+            <span>RECORDED OUTCOMES / 04</span>
+            <h2 id="home-demo-heading">See <code>$possible</code> brainstorm—and what it produced.</h2>
+          </header>
+          <ol aria-label="Possible demo outcomes">
+            <li><a href="/demo/hardware"><span>01 / HARDWARE LAUNCH</span><h3>Still</h3><p>SITE · FILM · CAD</p><i>↗</i></a></li>
+            <li><a href="/demo/software"><span>02 / SOFTWARE LAUNCH</span><h3>Three</h3><p>APP · SITE · TESTS</p><i>↗</i></a></li>
+            <li><a href="/demo/open-source"><span>03 / OPEN-SOURCE RELEASE</span><h3>tiny-slug</h3><p>PACKAGE · DOCS · CI</p><i>↗</i></a></li>
+            <li><a href="/demo/game"><span>04 / PLAYABLE WEB GAME</span><h3>Fold</h3><p>THREE.JS · TOUCH · PLAY</p><i>↗</i></a></li>
+          </ol>
+        </section>
 
         <div className="home-pack-index" id="packs" role="region" aria-labelledby="home-packs-heading">
           <header>
@@ -232,7 +244,7 @@ function CreatePage() {
       <section className="home-benchmark" aria-labelledby="home-benchmark-heading">
         <header>
           <div>
-            <span>BENCHMARK SUITE / THREE OUTCOMES</span>
+            <span>BENCHMARK SUITE / TWO OUTCOMES</span>
             <h2 id="home-benchmark-heading">Can Codex infer <em>what you forgot to ask for?</em></h2>
           </div>
           <p>Compare Direct, <code>/goal</code>, and <code>$possible</code> from the same ambition. See the judgment, artifacts, and human time each workflow requires.</p>
@@ -488,15 +500,15 @@ function WhyPage() {
 function BenchmarkGalleryPage() {
   return (
     <main className="benchmark-gallery-page">
-      <SiteNav label="Benchmarks / 03" />
+      <SiteNav label="Benchmarks / 02" />
 
       <section className="benchmark-gallery" aria-labelledby="benchmark-gallery-heading">
         <header>
           <div>
             <p className="eyebrow">POSSIBLE BENCHMARK SUITE / V0.1</p>
-            <h1 id="benchmark-gallery-heading">One rough ambition.<br /><em>Who supplies the judgment?</em></h1>
+            <h1 id="benchmark-gallery-heading">Which workflow supplies<br /><em>the missing judgment?</em></h1>
           </div>
-          <p>Direct, <code>/goal</code>, and <code>$possible</code> begin with a request from someone who does not already know all the work required. The benchmark asks what each workflow identifies, structures, safeguards, and verifies.</p>
+          <p>Compare Direct, <code>/goal</code>, and <code>$possible</code> from the same prompt.</p>
         </header>
 
         <div className="benchmark-gallery-grid">
@@ -510,7 +522,7 @@ function BenchmarkGalleryPage() {
           ))}
         </div>
 
-        <aside><strong>BENCHMARK STANDARD</strong><span>Same starting point · one prompt · test missing operational judgment · retain outputs and time as receipts</span></aside>
+        <aside><strong>NO CONTROLLED RUNS</strong><span>Modeled · one prompt · same starting point · judgment, artifacts, and human time</span></aside>
       </section>
 
       <SiteFooter />
@@ -537,14 +549,14 @@ function BenchmarkDetailPage({ slug }: { slug: BenchmarkSlug }) {
         </header>
 
         <dl className="benchmark-facts" aria-label="Benchmark summary">
+          <div><dt>STATUS</dt><dd>Modeled · no controlled runs</dd></div>
           <div><dt>INPUT</dt><dd>One prompt</dd></div>
-          <div><dt>HUMAN TIME</dt><dd>Under 5 minutes</dd></div>
           <div><dt>PRIMARY</dt><dd>Operational judgment</dd></div>
           <div><dt>OUTCOME PACK</dt><dd><a href={`/packs/${pack.slug}`}>{pack.name} ↗</a></dd></div>
         </dl>
 
         <section className="benchmark-section benchmark-task" aria-labelledby="benchmark-task-heading">
-          <header><span>01 / ONE PROMPT</span><h2 id="benchmark-task-heading">Start with the ambition exactly as a normal person would say it.</h2></header>
+          <header><span>01 / ONE PROMPT</span><h2 id="benchmark-task-heading">Use the request a person would actually make.</h2></header>
           <blockquote><span>USER INTENT</span><p>“{comparison.brief}”</p></blockquote>
           <div className="benchmark-invocations" aria-label="Workflow invocations">
             {comparison.entries.map((entry) => <code key={entry.workflow}>{entry.invocation}</code>)}
@@ -552,15 +564,15 @@ function BenchmarkDetailPage({ slug }: { slug: BenchmarkSlug }) {
         </section>
 
         <section className="benchmark-section benchmark-before" aria-labelledby="benchmark-before-heading">
-          <header><span>02 / BEFORE</span><h2 id="benchmark-before-heading">Every workflow begins here.</h2></header>
+          <header><span>02 / STARTING POINT</span><h2 id="benchmark-before-heading">Each workflow starts with the same subject.</h2></header>
           <div><strong>SAME STARTING POINT</strong><p>{comparison.before}</p></div>
         </section>
 
         <section className="benchmark-section benchmark-judgment" aria-labelledby="benchmark-judgment-heading">
           <header>
             <span>03 / OPERATIONAL JUDGMENT</span>
-            <h2 id="benchmark-judgment-heading">Did the workflow supply work the user did not know to request?</h2>
-            <p>This benchmark does not reward file volume. It tests whether one rough ambition produces visible evidence of the operational judgment the user omitted. Labels describe the output snapshot—not the unseen quality of each file.</p>
+            <h2 id="benchmark-judgment-heading">What did each workflow know to add?</h2>
+            <p>Scores credit visible evidence only. They do not measure artifact quality.</p>
           </header>
           <div className="benchmark-judgment-table-wrap" role="region" aria-label="Scrollable operational judgment comparison" tabIndex={0}>
             <table className="benchmark-judgment-table">
@@ -579,10 +591,10 @@ function BenchmarkDetailPage({ slug }: { slug: BenchmarkSlug }) {
         </section>
 
         <section className="benchmark-section benchmark-after" aria-labelledby="benchmark-after-heading">
-          <header><span>04 / OUTPUT RECEIPTS</span><h2 id="benchmark-after-heading">The output inventory supports the comparison.</h2></header>
-          <figure aria-label={`Output comparison for ${benchmark.title}`}>
-            <div className="benchmark-output-axis"><span>0</span><span>{Math.round(maxOutputs / 2)}</span><span>{maxOutputs} outputs</span></div>
-            <ol className="benchmark-output-bars" aria-label="Outputs produced after one prompt">
+          <header><span>04 / ARTIFACTS AND TIME</span><h2 id="benchmark-after-heading">Artifacts and time support the comparison.</h2></header>
+          <figure aria-label={`Artifact comparison for ${benchmark.title}`}>
+            <div className="benchmark-output-axis"><span>0</span><span>{Math.round(maxOutputs / 2)}</span><span>{maxOutputs} artifacts</span></div>
+            <ol className="benchmark-output-bars" aria-label="Artifacts produced after one prompt">
               {comparison.entries.map((entry) => <li className={entry.possible ? "is-possible" : undefined} key={entry.workflow}>
                 <header><strong>{entry.workflow}</strong><b>{entry.artifacts.length}</b></header>
                 <div className="benchmark-output-track"><i style={{ width: `${entry.artifacts.length / maxOutputs * 100}%` }} /></div>
@@ -592,23 +604,23 @@ function BenchmarkDetailPage({ slug }: { slug: BenchmarkSlug }) {
             </ol>
           </figure>
 
-          <div className="benchmark-output-snapshots" aria-label="Resulting output snapshots">
+          <div className="benchmark-output-snapshots" aria-label="Artifact inventories">
             {comparison.entries.map((entry) => <article className={entry.possible ? "is-possible" : undefined} key={entry.workflow}>
-              <header><strong>{entry.workflow}</strong><span>{entry.artifacts.length} OUTPUTS</span></header>
+              <header><strong>{entry.workflow}</strong><span>{entry.artifacts.length} ARTIFACTS</span></header>
               <pre><code>{entry.artifacts.join("\n")}</code></pre>
             </article>)}
           </div>
         </section>
 
         <section className="benchmark-section benchmark-why" aria-labelledby="benchmark-why-heading">
-          <header><span>05 / WHY THE GAP EXISTS</span><h2 id="benchmark-why-heading">Possible starts with the outcome already mapped.</h2></header>
-          <p>Direct and <code>/goal</code> must infer the missing work from the sentence. <code>$possible</code> compiles the matching outcome pack into the product, launch, operating, and verification work the ambition requires.</p>
+          <header><span>05 / WHY THE GAP EXISTS</span><h2 id="benchmark-why-heading">Possible starts with a reviewed outcome map.</h2></header>
+          <p>Direct and <code>/goal</code> infer the missing work. <code>$possible</code> compiles it from the matching pack.</p>
           <a className="why-text-link" href={`/packs/${pack.slug}`}>Inspect the {pack.name} outcome pack →</a>
         </section>
 
         <div className="benchmark-detail-nav">
           <a href="/benchmarks">← All benchmarks</a>
-          <span>{benchmark.number} / 03</span>
+          <span>{benchmark.number} / 02</span>
         </div>
       </article>
 
@@ -633,7 +645,7 @@ function PackCard({ pack }: { pack: OutcomePack }) {
         <div className="pack-card-stats">
           <span>{pack.skills.length} SKILLS{pack.plugins?.length ? ` + ${pack.plugins.length} PLUGIN` : ""}</span>
           <span>{pack.workstreams.length} WORKSTREAMS</span>
-          <span>{pack.outputs.length} OUTPUTS</span>
+          <span>{pack.outputs.length} ARTIFACTS</span>
           {isSchedulable ? <span>OPTIONAL SCHEDULE</span> : null}
         </div>
       </div>
@@ -746,9 +758,9 @@ function PacksPage() {
       <SiteNav label={`Catalog / ${String(outcomePacks.length).padStart(2, "0")}`} />
       <section className="catalog-hero">
         <p className="eyebrow">PACKS POSSIBLE CAN RECOMMEND / {String(outcomePacks.length).padStart(2, "0")}</p>
-        <h1>Complete recipes.<br /><em>Chosen through conversation.</em></h1>
+        <h1>Reviewed recipes.<br /><em>Recommended by Possible.</em></h1>
         <div className="catalog-intro">
-          <p>You do not need to choose a pack before starting. Invoke <code>$possible</code>, describe the outcome—or say “I want to schedule operations.” Possible will link the best fit for your approval.</p>
+          <p>Describe the outcome. Possible recommends a pack; you approve it.</p>
           <a className="button-link" href="/#start">Start with Possible <span>→</span></a>
         </div>
       </section>
@@ -771,7 +783,7 @@ function PacksPage() {
       </section>
       <section className="catalog-principle">
         <span>THE DIFFERENCE</span>
-        <p>Skills.sh helps you find an ingredient. Possible gives Codex the complete recipe, the team structure, and the definition of done.</p>
+        <p>Skills provide capabilities. Packs coordinate them toward a verified outcome.</p>
       </section>
       <SiteFooter />
     </main>
@@ -831,7 +843,6 @@ function PackDetailPage({ pack }: { pack: OutcomePack }) {
             </dl>
             <h1>{pack.name}</h1>
             <p className="pack-reference-promise">{pack.promise}</p>
-            <p className="pack-reference-summary">{pack.summary}</p>
             <div className="pack-reference-actions">
               <a href="/#start">Start with $possible <span>→</span></a>
               <a href={`/packs/${pack.slug}.json`}>Compiled pack JSON ↗</a>
@@ -844,7 +855,7 @@ function PackDetailPage({ pack }: { pack: OutcomePack }) {
           </details>
 
           <section className="pack-reference-section" id="fit">
-            <header><span>01</span><h2>Fit</h2><p>Choose from the finished outcome, not the lane or ingredient list.</p></header>
+            <header><span>01</span><h2>Fit</h2><p>Judge the outcome, not the lane or skill list.</p></header>
             <div className="pack-fit-grid">
               <div><h3>Use this when</h3><ul>{pack.useWhen.map((item) => <li key={item}>{item}</li>)}</ul></div>
               <div><h3>Not for</h3><ul>{pack.notFor.map((item) => <li key={item}>{item}</li>)}</ul></div>
@@ -852,12 +863,12 @@ function PackDetailPage({ pack }: { pack: OutcomePack }) {
           </section>
 
           <section className="pack-reference-section" id="outputs">
-            <header><span>02</span><h2>Outcome contract</h2><p>Every item must exist before this pack can be called complete.</p></header>
+            <header><span>02</span><h2>Outcome contract</h2><p>Completion requires every artifact below.</p></header>
             <ol className="pack-contract-list">{pack.outputs.map((output, index) => <li key={output}><span>{String(index + 1).padStart(2, "0")}</span><strong>{output}</strong></li>)}</ol>
           </section>
 
           <section className="pack-reference-section" id="workstreams">
-            <header><span>03</span><h2 id="workstreams-heading">Execution plan</h2><p>Delegate by independent ownership boundary—not one agent per skill.</p></header>
+            <header><span>03</span><h2 id="workstreams-heading">Execution plan</h2><p>Each workstream owns separate files.</p></header>
             <div className="pack-table-scroll">
               <table className="pack-reference-table pack-workstream-table" aria-labelledby="workstreams-heading">
                 <caption className="sr-only">Workstreams, invoked skills, owned files, and execution briefs for {pack.name}</caption>
@@ -867,11 +878,11 @@ function PackDetailPage({ pack }: { pack: OutcomePack }) {
                 </tbody>
               </table>
             </div>
-            <div className="pack-review-callout"><span>INDEPENDENT REVIEW</span><div>{pack.reviewSkills.map((skill) => <code key={skill}>${skill}</code>)}</div><p>Inspect the integrated outcome after production and return evidence, failures, skipped checks, and unproven claims. Reviewers do not own implementation.</p></div>
+            <div className="pack-review-callout"><span>INDEPENDENT REVIEW</span><div>{pack.reviewSkills.map((skill) => <code key={skill}>${skill}</code>)}</div><p>A verifier checks the integrated outcome. It reports evidence, failures, skipped checks, and unsupported claims.</p></div>
           </section>
 
           <section className="pack-reference-section" id="ingredients">
-            <header><span>04</span><h2 id="ingredients-heading">Reviewed ingredients</h2><p>Repo skills install through the Skills CLI. Agent plugins are detected separately and used only when available.</p></header>
+            <header><span>04</span><h2 id="ingredients-heading">Reviewed skills</h2><p>Skills install through the CLI. Possible uses available plugins without installing them.</p></header>
             <div className="pack-table-scroll">
               <table className="pack-reference-table pack-ingredient-table" aria-labelledby="ingredients-heading">
                 <caption className="sr-only">Reviewed ingredient skills and optional agent plugins for {pack.name}</caption>
@@ -885,13 +896,13 @@ function PackDetailPage({ pack }: { pack: OutcomePack }) {
           </section>
 
           <section className="pack-reference-section" id="install">
-            <header><span>05</span><h2>Install repo skills</h2><p>Run only after Possible recommends this pack and you confirm the outcome.</p></header>
+            <header><span>05</span><h2>Install skills</h2><p>Run these commands only after you approve the pack.</p></header>
             <div className="pack-command-list">{compiled.installCommands.map((command, index) => <div key={command}><span>COMMAND {String(index + 1).padStart(2, "0")}</span><pre><code>{command}</code></pre><CopyButton label={`Copy install command ${index + 1} of ${compiled.installCommands.length}`} value={command} /></div>)}</div>
-            <p className="pack-reference-note">These commands install repo-local skills. Review source drift before use. {pack.plugins?.length ? `Optional plugins such as ${pack.plugins.map((plugin) => plugin.invocation).join(", ")} are detected in Codex; these commands do not install them. ` : ""}Pack confirmation does not authorize deployment, publishing, spending, outreach, fabrication, or production data access.</p>
+            <p className="pack-reference-note">These commands install repo-local skills. Review source changes before use. {pack.plugins?.length ? `Possible can use available plugins such as ${pack.plugins.map((plugin) => plugin.invocation).join(", ")}; these commands do not install them. ` : ""}External actions require separate approval.</p>
           </section>
 
           <section className="pack-reference-section" id="run-prompt">
-            <header><span>06</span><h2>Compiled run prompt</h2><p>The deterministic captain workflow generated from this manifest.</p></header>
+            <header><span>06</span><h2>Compiled run prompt</h2><p>Possible compiles this workflow from the pack manifest.</p></header>
             <div className="pack-publication-actions"><CopyButton label="Copy full run prompt" value={compiled.runPrompt} /><a href={`/packs/${pack.slug}/run.txt`}>Download .txt ↓</a><a href={`/packs/${pack.slug}/install.txt`}>Install .txt ↓</a></div>
             <details className="pack-prompt-disclosure"><summary>Preview full compiled prompt <span>{compiled.runPrompt.split("\n").length} lines</span></summary><pre><code>{compiled.runPrompt}</code></pre></details>
           </section>
@@ -914,7 +925,7 @@ function PackDetailPage({ pack }: { pack: OutcomePack }) {
           ) : null}
 
           <section className="pack-reference-section" id="boundaries">
-            <header><span>{isSchedulable ? "08" : "07"}</span><h2>Approval boundaries</h2><p>Confirmation authorizes the disclosed local workflow, not external action.</p></header>
+            <header><span>{isSchedulable ? "08" : "07"}</span><h2>Approval boundaries</h2><p>Pack approval permits local work only. External actions need separate approval.</p></header>
             <div className="pack-approval-callout"><strong>What “yes” authorizes</strong><p>{approvalDisclosure}</p></div>
             <ul className="pack-reference-list">{pack.guardrails.map((item) => <li key={item}>{item}</li>)}</ul>
           </section>

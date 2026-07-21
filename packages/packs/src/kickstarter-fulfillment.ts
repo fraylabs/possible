@@ -15,7 +15,7 @@ export const kickstarterFulfillmentPack: OutcomePack = {
   slug: "kickstarter-fulfillment",
   name: "Kickstarter Fulfillment",
   eyebrow: "11 / OUTCOME PACK",
-  promise: "Turn one funded Kickstarter campaign into an evidence-backed production, backer, logistics, and communication operation that reaches 95% shipped—or returns an honest blocked outcome.",
+  promise: "Turn a funded Kickstarter into an evidence-backed operation that reaches 95% shipped.",
   summary: "A campaign and obligation baseline, production and quality plan, privacy-safe order ledger, logistics and exception system, review-required backer communications, recurring fulfillment control loop, shipment milestones, and independently verified 95%-shipped receipt.",
   useWhen: [
     "A real Kickstarter campaign has reached its funding goal and now needs to produce and ship rewards.",

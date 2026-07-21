@@ -1,7 +1,6 @@
 export const benchmarkCards = [
-  { slug: "billion-dollar-company", packSlug: "billion-dollar-saas", number: "01", label: "$1B COMPANY", title: "The “Make Me a Billion-Dollar Company” Benchmark", shortTitle: "Make me a billion-dollar company", question: "How much of the missing company-building judgment can each workflow supply from “Make me Atlassian”?", metric: "Judgment + receipts", budget: "One prompt · <5 min human", status: "PREVIEW", version: "$1B-0.1" },
-  { slug: "kickstarter-funding", packSlug: "kickstarter-funding", number: "02", label: "FUNDING", title: "The Kickstarter Funding Benchmark", shortTitle: "Get it funded", question: "How much of the missing funding judgment can each workflow supply from one rough request?", metric: "Judgment + receipts", budget: "One prompt · <5 min human", status: "PREVIEW", version: "FUNDING-0.1" },
-  { slug: "kickstarter-shipped", packSlug: "kickstarter-fulfillment", number: "03", label: "SHIPPING", title: "The Kickstarter-to-Shipped Benchmark", shortTitle: "Get it shipped", question: "How much of the missing fulfillment judgment can each workflow supply from one rough request?", metric: "Judgment + receipts", budget: "One prompt · <5 min human", status: "PREVIEW", version: "SHIPPED-0.1" },
+  { slug: "kickstarter-funding", packSlug: "kickstarter-funding", number: "01", label: "FUNDING", title: "The Kickstarter Funding Benchmark", shortTitle: "Get it funded", question: "How much missing funding judgment can each workflow supply from one request?", metric: "Judgment + evidence", budget: "One prompt · <5 min human", status: "MODELED", version: "FUNDING-0.1" },
+  { slug: "kickstarter-shipped", packSlug: "kickstarter-fulfillment", number: "02", label: "SHIPPING", title: "The Kickstarter-to-Shipped Benchmark", shortTitle: "Get it shipped", question: "How much missing fulfillment judgment can each workflow supply from one request?", metric: "Judgment + evidence", budget: "One prompt · <5 min human", status: "MODELED", version: "SHIPPED-0.1" },
 ] as const;
 
 export type BenchmarkSlug = typeof benchmarkCards[number]["slug"];
@@ -29,70 +28,6 @@ type BenchmarkComparison = {
 };
 
 export const benchmarkComparisons: Record<BenchmarkSlug, BenchmarkComparison> = {
-  "billion-dollar-company": {
-    brief: "Make me Atlassian. Make no mistakes.",
-    before: "A rough SaaS idea and a starter repository. No product, market, revenue, trust, or operating system exists yet.",
-    judgment: [
-      { dimension: "Infers omitted operational scope", direct: { level: "PARTIAL", label: "Product surface only", evidence: ["app/", "landing-page/"] }, goal: { level: "PARTIAL", label: "Product + delivery structure", evidence: ["tests/", "deploy/"] }, possible: { level: "EXPLICIT", label: "Market through operations", evidence: ["company/market/research.md", "company/revenue/pricing.md", "company/trust/security.md", "company/operations/cadence.md"] } },
-      { dimension: "Separates evidence from assumptions", direct: { level: "NONE", label: "No visible artifact", evidence: [] }, goal: { level: "NONE", label: "No visible artifact", evidence: [] }, possible: { level: "EXPLICIT", label: "Evidence register", evidence: ["company/evidence-register.md"] } },
-      { dimension: "Surfaces risk and safeguards", direct: { level: "NONE", label: "No visible artifact", evidence: [] }, goal: { level: "PARTIAL", label: "Tests only", evidence: ["tests/"] }, possible: { level: "EXPLICIT", label: "Security, privacy, reliability", evidence: ["company/trust/security.md", "company/trust/privacy.md", "company/reliability/runbook.md"] } },
-      { dimension: "Defines acceptance or decision gates", direct: { level: "NONE", label: "No visible artifact", evidence: [] }, goal: { level: "PARTIAL", label: "Checks, no visible gate", evidence: ["tests/"] }, possible: { level: "PARTIAL", label: "Review receipts, no explicit gate", evidence: ["company/product-receipt.md", "company/receipts/first-review.md"] } },
-      { dimension: "Creates durable operating state", direct: { level: "NONE", label: "No visible artifact", evidence: [] }, goal: { level: "NONE", label: "No visible artifact", evidence: [] }, possible: { level: "EXPLICIT", label: "Metrics and revenue state", evidence: ["company/metrics/definitions.md", "company/revenue/ledger.csv"] } },
-      { dimension: "Preserves review and completion evidence", direct: { level: "NONE", label: "No visible artifact", evidence: [] }, goal: { level: "PARTIAL", label: "Generic result record", evidence: ["RESULT.md"] }, possible: { level: "EXPLICIT", label: "Review + outcome receipt", evidence: ["company/receipts/first-review.md", "company/outcome-receipt.md"] } },
-    ],
-    entries: [
-      {
-        workflow: "Direct",
-        invocation: "Make me Atlassian. Make no mistakes.",
-        agentTime: "22 min",
-        humanTime: "1 min",
-        summary: "Builds the obvious software surface.",
-        artifacts: ["app/", "landing-page/", "README.md"],
-      },
-      {
-        workflow: "/goal",
-        invocation: "/goal Make me Atlassian. Make no mistakes.",
-        agentTime: "46 min",
-        humanTime: "2 min",
-        summary: "Adds a durable objective and completion structure.",
-        artifacts: ["GOAL.md", "app/", "landing-page/", "tests/", "deploy/", "README.md", "RESULT.md"],
-      },
-      {
-        workflow: "$possible",
-        invocation: "$possible Make me Atlassian. Make no mistakes.",
-        agentTime: "3 hr 48 min",
-        humanTime: "3 min",
-        summary: "Compiles the company—not only the app.",
-        possible: true,
-        artifacts: [
-          "company/market/research.md",
-          "company/market/segments.md",
-          "company/thesis.md",
-          "company/evidence-register.md",
-          "company/product/app/",
-          "company/product/core-flow.md",
-          "company/onboarding/",
-          "company/product-receipt.md",
-          "company/brand/voice.md",
-          "company/acquisition/site/",
-          "company/distribution/calendar.md",
-          "company/distribution/drafts/",
-          "company/revenue/pricing.md",
-          "company/revenue/ledger.csv",
-          "company/sales/playbook.md",
-          "company/customer-success/system.md",
-          "company/trust/security.md",
-          "company/trust/privacy.md",
-          "company/reliability/runbook.md",
-          "company/release/plan.md",
-          "company/operations/cadence.md",
-          "company/metrics/definitions.md",
-          "company/receipts/first-review.md",
-          "company/outcome-receipt.md",
-        ],
-      },
-    ],
-  },
   "kickstarter-funding": {
     brief: "Get my product funded on Kickstarter.",
     before: "A rough product idea. No feasibility model, campaign assets, audience system, or funding operation exists yet.",

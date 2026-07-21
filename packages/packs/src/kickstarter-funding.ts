@@ -15,7 +15,7 @@ export const kickstarterFundingPack: OutcomePack = {
   slug: "kickstarter-funding",
   name: "Kickstarter Funding",
   eyebrow: "10 / OUTCOME PACK",
-  promise: "Turn a rough product idea into an evidence-backed Kickstarter campaign system that can pursue a fixed funding goal and report the real payout—or an honest unfunded result.",
+  promise: "Turn a product idea into an evidence-backed Kickstarter campaign system.",
   summary: "Feasibility and unit economics, a truthful offer and reward structure, campaign page, proof-led film, prelaunch audience system, launch calendar, measurement and risk controls, and a verified funding receipt that counts deposited money rather than campaign theater.",
   useWhen: [
     "A product idea or prototype needs a complete Kickstarter funding path rather than only a launch page or video.",

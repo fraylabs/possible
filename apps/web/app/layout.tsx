@@ -5,7 +5,7 @@ import "../src/styles.css";
 export const metadata: Metadata = {
   metadataBase: new URL("https://possible.sh"),
   title: {
-    default: "Possible — What do you want to achieve today?",
+    default: "Possible — Complete a possible outcome!",
     template: "%s — Possible",
   },
   description: "Possible gives Codex the operational judgment to turn a rough request into a verified outcome.",
@@ -19,19 +19,19 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     siteName: "Possible",
-    title: "Possible — What do you want to achieve today?",
+    title: "Possible — Complete a possible outcome!",
     description: "Possible gives Codex the operational judgment to turn a rough request into a verified outcome.",
     url: "/",
     images: [{
       url: "/og.png",
       width: 1731,
       height: 909,
-      alt: "Possible — What do you want to achieve today?",
+      alt: "Possible — Complete a possible outcome!",
     }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Possible — What do you want to achieve today?",
+    title: "Possible — Complete a possible outcome!",
     description: "Possible gives Codex the operational judgment to turn a rough request into a verified outcome.",
     images: ["/og.png"],
   },

@@ -18,7 +18,7 @@ function expectBefore(first: Element, second: Element) {
 describe("Possible", () => {
   it("puts installation and the complete pack index in one clear starting journey", () => {
     const { container } = render(<App />);
-    expect(screen.getByRole("heading", { name: "What do you want to achieve today?", level: 1 })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Complete a possible outcome!", level: 1 })).toBeInTheDocument();
     expect(container.querySelectorAll("h1")).toHaveLength(1);
     expect(screen.getByText(/Possible gives Codex the operational judgment.*rough request.*verified outcome/i)).toBeInTheDocument();
     expect(screen.getByText("npx @fraylabs/possible@0.1.6 init")).toBeInTheDocument();
@@ -33,7 +33,14 @@ describe("Possible", () => {
     expect(within(start).getByRole("heading", { name: /Packs are reviewed recipes for.*real outcomes/i, level: 2 })).toBeInTheDocument();
     expect(within(start).getByText(/Describe the outcome.*Possible recommends the pack.*you approve it/i)).toBeInTheDocument();
     expect(within(start).getByText("npx @fraylabs/possible@0.1.6 init")).toBeInTheDocument();
-    expect(within(start).getByText(/Published 0\.1\.6.*Candidate 0\.1\.7/i)).toBeInTheDocument();
+    const demo = within(start).getByRole("region", { name: /See \$possible brainstorm.*what it produced/i });
+    expect(within(demo).getAllByRole("listitem")).toHaveLength(4);
+    expect(within(demo).getByRole("link", { name: /Still.*SITE.*FILM.*CAD/i })).toHaveAttribute("href", "/demo/hardware");
+    expect(within(demo).getByRole("link", { name: /Three.*APP.*SITE.*TESTS/i })).toHaveAttribute("href", "/demo/software");
+    expect(within(demo).getByRole("link", { name: /tiny-slug.*PACKAGE.*DOCS.*CI/i })).toHaveAttribute("href", "/demo/open-source");
+    expect(within(demo).getByRole("link", { name: /Fold.*THREE\.JS.*TOUCH.*PLAY/i })).toHaveAttribute("href", "/demo/game");
+    expectBefore(container.querySelector(".build-hero")!, demo);
+    expectBefore(demo, container.querySelector(".home-pack-index")!);
     const packs = screen.getByRole("list", { name: "Packs Possible can recommend" });
     expect(within(packs).getAllByRole("listitem")).toHaveLength(11);
     for (const pack of outcomePacks) {
@@ -45,7 +52,7 @@ describe("Possible", () => {
     expect(screen.queryByRole("link", { name: /Open the full pack reference/i })).not.toBeInTheDocument();
     const benchmark = screen.getByRole("region", { name: /Can Codex infer.*what you forgot to ask for/i });
     expect(within(benchmark).getByText(/Compare Direct.*same ambition.*judgment.*artifacts.*human time/i)).toBeInTheDocument();
-    expect(within(benchmark).getAllByRole("link")).toHaveLength(3);
+    expect(within(benchmark).getAllByRole("link")).toHaveLength(2);
     for (const card of benchmarkCards) {
       expect(within(benchmark).getByRole("link", { name: new RegExp(card.shortTitle, "i") })).toHaveAttribute("href", `/benchmarks/${card.slug}`);
     }
@@ -138,7 +145,8 @@ describe("Possible", () => {
   it("filters the packs catalog by occupied outcome lane", async () => {
     window.history.pushState({}, "", "/packs");
     const { container } = render(<App />);
-    expect(screen.getByRole("heading", { name: /Complete recipes.*Chosen through conversation/i })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /Reviewed recipes.*Recommended by Possible/i })).toBeInTheDocument();
+    expect(screen.getByText(/Describe the outcome.*Possible recommends a pack.*you approve it/i)).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /Start with Possible/i })).toHaveAttribute("href", "/#start");
     expect(screen.getByRole("button", { name: "All, 11 packs" })).toHaveAttribute("aria-pressed", "true");
     expect(screen.getByRole("heading", { name: "Hardware Launch" })).toBeInTheDocument();
@@ -241,49 +249,26 @@ describe("Possible", () => {
     expect(await axe(container)).toHaveNoViolations();
   });
 
-  it("presents three one-prompt output comparisons backed by matching outcome packs", async () => {
+  it("presents two one-prompt output comparisons backed by matching outcome packs", async () => {
     window.history.pushState({}, "", "/benchmarks");
     const { container } = render(<App />);
-    expect(screen.getByRole("heading", { name: /One rough ambition.*Who supplies the judgment/i, level: 1 })).toBeInTheDocument();
-    expect(container.querySelectorAll(".benchmark-gallery-grid > a")).toHaveLength(3);
-    expect(screen.getByRole("link", { name: /\$1B-0\.1.*Make me a billion-dollar company.*Judgment.*receipts.*PREVIEW/i })).toHaveAttribute("href", "/benchmarks/billion-dollar-company");
-    expect(screen.getByRole("link", { name: /FUNDING-0\.1.*Get it funded.*Judgment.*receipts.*PREVIEW/i })).toHaveAttribute("href", "/benchmarks/kickstarter-funding");
-    expect(screen.getByRole("link", { name: /SHIPPED-0\.1.*Get it shipped.*Judgment.*receipts.*PREVIEW/i })).toHaveAttribute("href", "/benchmarks/kickstarter-shipped");
-    expect(screen.getByText(/Same starting point.*one prompt.*test missing operational judgment.*outputs and time as receipts/i)).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /Which workflow supplies.*the missing judgment/i, level: 1 })).toBeInTheDocument();
+    expect(container.querySelectorAll(".benchmark-gallery-grid > a")).toHaveLength(2);
+    expect(screen.queryByRole("link", { name: /billion-dollar company/i })).not.toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /FUNDING-0\.1.*Get it funded.*Judgment.*evidence.*MODELED/i })).toHaveAttribute("href", "/benchmarks/kickstarter-funding");
+    expect(screen.getByRole("link", { name: /SHIPPED-0\.1.*Get it shipped.*Judgment.*evidence.*MODELED/i })).toHaveAttribute("href", "/benchmarks/kickstarter-shipped");
+    expect(screen.getByText(/No controlled runs/i)).toBeInTheDocument();
+    expect(screen.getByText(/Modeled.*one prompt.*same starting point.*judgment.*artifacts.*human time/i)).toBeInTheDocument();
     expect(container.querySelector(".benchmark-article")).not.toBeInTheDocument();
     expect(await axe(container)).toHaveNoViolations();
   });
 
-  it("compares one-prompt company judgment before its output receipts", async () => {
-    window.history.pushState({}, "", "/benchmarks/billion-dollar-company");
-    const { container } = render(<App />);
-    expect(screen.getByRole("heading", { name: /Make Me a Billion-Dollar Company.*Benchmark/i, level: 1 })).toBeInTheDocument();
-    expect(screen.getByText("“Make me Atlassian. Make no mistakes.”")).toBeInTheDocument();
-    expect(screen.getByText("/goal Make me Atlassian. Make no mistakes.")).toBeInTheDocument();
-    expect(screen.getByText("$possible Make me Atlassian. Make no mistakes.")).toBeInTheDocument();
-    const judgment = container.querySelector(".benchmark-judgment")!;
-    const outputs = container.querySelector(".benchmark-after")!;
-    expectBefore(judgment, outputs);
-    expect(within(judgment).getByRole("table", { name: /Operational judgment supplied/i })).toBeInTheDocument();
-    expect(within(judgment).getAllByRole("row")).toHaveLength(7);
-    expect(within(judgment).getByText("Evidence register")).toBeInTheDocument();
-    expect(within(judgment).getByText("company/evidence-register.md")).toBeInTheDocument();
-    expect(within(screen.getByRole("list", { name: /Outputs produced after one prompt/i })).getAllByRole("listitem")).toHaveLength(3);
-    expect(screen.getByText("24 OUTPUTS")).toBeInTheDocument();
-    expect(screen.getByText("3 hr 48 min")).toBeInTheDocument();
-    expect(screen.getByText("3 min")).toBeInTheDocument();
-    expect(container).toHaveTextContent("company/revenue/ledger.csv");
-    expect(container.querySelector(".benchmark-score-scale, .benchmark-ingredients-grid, .benchmark-definition-grid")).not.toBeInTheDocument();
-    expect(screen.getAllByRole("link", { name: /Billion-Dollar SaaS/i })[0]).toHaveAttribute("href", "/packs/billion-dollar-saas");
-    expect(await axe(container)).toHaveNoViolations();
-  });
-
-  it("compares one-prompt Kickstarter funding outputs", async () => {
+  it("compares one-prompt Kickstarter funding artifacts", async () => {
     window.history.pushState({}, "", "/benchmarks/kickstarter-funding");
     const { container } = render(<App />);
     expect(screen.getByRole("heading", { name: "The Kickstarter Funding Benchmark", level: 1 })).toBeInTheDocument();
     expect(screen.getByText("“Get my product funded on Kickstarter.”")).toBeInTheDocument();
-    expect(screen.getByText("21 OUTPUTS")).toBeInTheDocument();
+    expect(screen.getByText("21 ARTIFACTS")).toBeInTheDocument();
     expect(screen.getByText("4 hr 12 min")).toBeInTheDocument();
     expect(container).toHaveTextContent("campaign/receipts/payout-ledger.csv");
     expect(container.querySelectorAll(".benchmark-output-snapshots article")).toHaveLength(3);
@@ -291,12 +276,12 @@ describe("Possible", () => {
     expect(await axe(container)).toHaveNoViolations();
   });
 
-  it("compares one-prompt Kickstarter shipping outputs", async () => {
+  it("compares one-prompt Kickstarter shipping artifacts", async () => {
     window.history.pushState({}, "", "/benchmarks/kickstarter-shipped");
     const { container } = render(<App />);
     expect(screen.getByRole("heading", { name: "The Kickstarter-to-Shipped Benchmark", level: 1 })).toBeInTheDocument();
     expect(screen.getByText("“Get this funded Kickstarter shipped.”")).toBeInTheDocument();
-    expect(screen.getByText("18 OUTPUTS")).toBeInTheDocument();
+    expect(screen.getByText("18 ARTIFACTS")).toBeInTheDocument();
     expect(screen.getByText("5 hr 20 min")).toBeInTheDocument();
     expect(container).toHaveTextContent("fulfillment/milestones/shipment-ledger.csv");
     expect(container.querySelectorAll(".benchmark-output-bars li")).toHaveLength(3);
@@ -317,6 +302,11 @@ describe("Possible", () => {
         }
       }
     }
+  });
+
+  it("keeps pack cards and benchmark questions within the writing standard", () => {
+    for (const pack of outcomePacks) expect(pack.promise.trim().split(/\s+/).length).toBeLessThanOrEqual(16);
+    for (const benchmark of benchmarkCards) expect(benchmark.question.trim().split(/\s+/).length).toBeLessThanOrEqual(16);
   });
 
   it("renders every pack route as a manifest-derived, accessible outcome specification", async () => {
@@ -364,7 +354,7 @@ describe("Possible", () => {
     const { container } = render(<App />);
     expect(screen.getByText("OpenAI Sites")).toBeInTheDocument();
     expect(screen.getByText(/@sites · \$sites-building · \$sites-hosting/)).toBeInTheDocument();
-    expect(screen.getByText(/Optional plugins such as @sites are detected in Codex/)).toBeInTheDocument();
+    expect(screen.getByText(/Possible can use available plugins such as @sites.*commands do not install them/i)).toBeInTheDocument();
     expect(container.querySelector(".pack-command-list")).not.toHaveTextContent("sites");
   });
 
