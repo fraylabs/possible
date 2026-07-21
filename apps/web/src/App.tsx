@@ -205,14 +205,15 @@ function CreatePage() {
 
         <section className="home-demo" aria-labelledby="home-demo-heading">
           <header>
-            <span>RECORDED OUTCOMES / 04</span>
+            <span>RECORDED OUTCOMES / 05</span>
             <h2 id="home-demo-heading">See <code>$possible</code> brainstorm—and what it produced.</h2>
           </header>
           <ol aria-label="Possible demo outcomes">
-            <li><a href="/demo/hardware"><span>01 / HARDWARE LAUNCH</span><h3>Still</h3><p>SITE · FILM · CAD</p><i>↗</i></a></li>
-            <li><a href="/demo/software"><span>02 / SOFTWARE LAUNCH</span><h3>Three</h3><p>APP · SITE · TESTS</p><i>↗</i></a></li>
-            <li><a href="/demo/open-source"><span>03 / OPEN-SOURCE RELEASE</span><h3>tiny-slug</h3><p>PACKAGE · DOCS · CI</p><i>↗</i></a></li>
-            <li><a href="/demo/game"><span>04 / PLAYABLE WEB GAME</span><h3>Fold</h3><p>THREE.JS · TOUCH · PLAY</p><i>↗</i></a></li>
+            <li><a href="/demo/robot-snake"><span>01 / ROBOT PROTOTYPE</span><h3>Robot Snake</h3><p>CAD · SIM · RERUN</p><i>↗</i></a></li>
+            <li><a href="/demo/hardware"><span>02 / HARDWARE LAUNCH</span><h3>Still</h3><p>SITE · FILM · CAD</p><i>↗</i></a></li>
+            <li><a href="/demo/software"><span>03 / SOFTWARE LAUNCH</span><h3>Three</h3><p>APP · SITE · TESTS</p><i>↗</i></a></li>
+            <li><a href="/demo/open-source"><span>04 / OPEN-SOURCE RELEASE</span><h3>tiny-slug</h3><p>PACKAGE · DOCS · CI</p><i>↗</i></a></li>
+            <li><a href="/demo/game"><span>05 / PLAYABLE WEB GAME</span><h3>Fold</h3><p>THREE.JS · TOUCH · PLAY</p><i>↗</i></a></li>
           </ol>
         </section>
 
