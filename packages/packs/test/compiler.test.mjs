@@ -12,6 +12,9 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
     "working-web-app",
     "production-web-release",
     "marketing-operations",
+    "billion-dollar-saas",
+    "kickstarter-funding",
+    "kickstarter-fulfillment",
   ]);
   assert.deepEqual(outcomePacks.map(({ slug, lane }) => [slug, lane]), [
     ["hardware-launch", "launch"],
@@ -22,8 +25,11 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
     ["working-web-app", "create"],
     ["production-web-release", "release"],
     ["marketing-operations", "operate"],
+    ["billion-dollar-saas", "create"],
+    ["kickstarter-funding", "launch"],
+    ["kickstarter-fulfillment", "operate"],
   ]);
-  assert.deepEqual(outcomePacks.map((pack) => pack.catalogNumber), [1, 2, 3, 4, 5, 6, 7, 8]);
+  assert.deepEqual(outcomePacks.map((pack) => pack.catalogNumber), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
   assert.equal(new Set(outcomePacks.map((pack) => pack.catalogNumber)).size, outcomePacks.length);
   assert.equal(new Set(outcomePacks.map((pack) => pack.slug)).size, outcomePacks.length);
 
@@ -183,4 +189,52 @@ test("the web-app lifecycle packs have non-overlapping entry conditions", () => 
   assert.match(pack("software-launch").notFor.join(" "), /first complete usable application/i);
   assert.match(pack("production-web-release").useWhen.join(" "), /existing tested web app/i);
   assert.match(pack("web-app-operations").useWhen.join(" "), /already live/i);
+});
+
+test("benchmark outcome packs compile operational knowledge without upgrading coverage into success", () => {
+  const pack = (slug) => outcomePacks.find((candidate) => candidate.slug === slug);
+  const company = pack("billion-dollar-saas");
+  const funding = pack("kickstarter-funding");
+  const fulfillment = pack("kickstarter-fulfillment");
+
+  assert.ok(company);
+  assert.equal(company.catalogNumber, 9);
+  assert.equal(company.lane, "create");
+  assert.match(company.promise, /Atlassian-scale SaaS/i);
+  assert.match(company.outputs.join(" "), /company-system coverage matrix/i);
+  assert.match(company.outputs.join(" "), /revenue ledger beginning at zero/i);
+  assert.match(company.guardrails.join(" "), /operational coverage and economic outcomes remain separate/i);
+  assert.match(company.notFor.join(" "), /copying another company.*trademark/i);
+  assert.match(compilePack(company).runPrompt, /^Build the Billion-Dollar SaaS outcome/);
+
+  assert.ok(funding);
+  assert.equal(funding.catalogNumber, 10);
+  assert.equal(funding.lane, "launch");
+  assert.match(funding.promise, /Kickstarter campaign system/i);
+  assert.match(funding.outputs.join(" "), /deposited net payout/i);
+  assert.match(funding.guardrails.join(" "), /Only privacy-safe evidence of the deposited platform payout/i);
+  assert.match(funding.verification.join(" "), /unfunded and cancelled outcomes/i);
+  assert.match(compilePack(funding).runPrompt, /^Build the Kickstarter Funding outcome/);
+
+  assert.ok(fulfillment);
+  assert.equal(fulfillment.catalogNumber, 11);
+  assert.equal(fulfillment.lane, "operate");
+  assert.match(fulfillment.promise, /95% shipped/i);
+  assert.match(fulfillment.guardrails.join(" "), /personal names.*addresses.*version control/i);
+  assert.match(fulfillment.verification.join(" "), /frozen denominator/i);
+  assert.match(fulfillment.schedule.request, /schedule Kickstarter fulfillment operations/i);
+  const fulfillmentPrompt = compilePack(fulfillment).runPrompt;
+  assert.match(fulfillmentPrompt, /^Establish and run the first cycle of the Kickstarter Fulfillment outcome/);
+  assert.match(fulfillmentPrompt, /SCHEDULE GATE/);
+  assert.match(fulfillmentPrompt, /fulfillment\/receipts\/YYYY-MM-DDTHHMMSSZ\.md/);
+
+  for (const candidate of [company, funding, fulfillment]) {
+    const owned = candidate.workstreams.flatMap((stream) => stream.owns.map((path) => ({ stream: stream.id, path })));
+    for (const left of owned) {
+      for (const right of owned) {
+        if (left.stream === right.stream) continue;
+        assert.equal(left.path.startsWith(right.path) || right.path.startsWith(left.path), false, `${candidate.slug}: ${left.path} overlaps ${right.path}`);
+      }
+    }
+  }
 });

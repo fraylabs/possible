@@ -283,6 +283,119 @@ npx skills@1.5.19 add coreyhaines31/marketingskills@67264763cb107d61749f418d081c
 
 Establish the source of truth and execute the first dated cycle manually before offering a schedule. Scheduled cycles remain permanently repo-local and read-only toward external systems: they may inspect explicitly authorized evidence, maintain plans, and prepare reviewable drafts, but they never post, send, spend, perform outreach, change tracking or accounts, use write-capable connectors, or use credentials. Perform any such action later in a separate interactive task after separate explicit approval. Preserve one canonical durable state location, an atomic no-overlap lock, and a kill switch across runs. Never fabricate customer language, testimonials, metrics, baselines, attribution, rankings, competitor facts, demand, or results. Preserve honest no-signal and empty-calendar states.
 
+## Billion-Dollar SaaS
+
+Slug: `billion-dollar-saas`
+
+Lane: `create`
+
+Public page: `https://possible.sh/packs/billion-dollar-saas`
+
+Use when the user asks for a successful, category-defining, Atlassian-scale, or billion-dollar software company without knowing every product, growth, revenue, trust, and operating system required. This pack supplies the operational map; it never guarantees valuation, customers, product-market fit, or revenue.
+
+Outputs: company and market thesis, working product and activation path, positioning and distribution system, pricing/revenue/sales/customer-success system, trust and reliability baseline, company operating cadence, system-coverage matrix, separate customer and revenue ledger beginning at zero, independent receipt.
+
+Workstreams:
+
+- Market, category, and company thesis — `product-marketing`, `analytics`; owns `company/market/`, `company/thesis.md`, and the evidence register.
+- Product, onboarding, and activation — `frontend-design`, `vercel-react-best-practices`, `webapp-testing`; owns `company/product/`, `company/onboarding/`, and its receipt.
+- Positioning, acquisition, and distribution — `product-marketing`, `content-strategy`, `copywriting`, `social`; owns `company/brand/`, `company/acquisition/`, and `company/distribution/`.
+- Pricing, revenue, sales, and customer success — `product-marketing`, `analytics`; owns `company/revenue/`, `company/sales/`, and `company/customer-success/`.
+- Security, reliability, compliance, and release trust — `security-review`, `devops-rollout-plan`, `webapp-testing`; owns `company/trust/`, `company/reliability/`, and `company/release/`.
+- Measurement and company operations — `analytics`, `marketing-loops`; owns `company/operations/`, `company/metrics/`, and `company/receipts/`.
+- Fresh review — `webapp-testing`, `analytics`, `security-review`; scores company-system maturity and verifies economic evidence separately.
+
+Sources:
+
+- `coreyhaines31/marketingskills`: `product-marketing`, `content-strategy`, `copywriting`, `social`, `analytics`, `marketing-loops`; reviewed `67264763cb107d61749f418d081c56e5bcbc0209`.
+- `anthropics/skills`: `frontend-design`, `webapp-testing`; reviewed `fa0fa64bdc967915dc8399e803be67759e1e62b8`.
+- `vercel-labs/agent-skills`: `vercel-react-best-practices`; reviewed `f8a72b9603728bb92a217a879b7e62e43ad76c81`.
+- `github/awesome-copilot`: `security-review`, `devops-rollout-plan`; reviewed `26fe2d126bf79aafb38f43344d450b69632200f8`.
+
+Install:
+
+```bash
+npx skills@1.5.19 add coreyhaines31/marketingskills@67264763cb107d61749f418d081c56e5bcbc0209 --skill product-marketing --skill content-strategy --skill copywriting --skill social --skill analytics --skill marketing-loops --agent codex
+npx skills@1.5.19 add anthropics/skills --skill frontend-design --skill webapp-testing --agent codex
+npx skills@1.5.19 add vercel-labs/agent-skills --skill vercel-react-best-practices --agent codex
+npx skills@1.5.19 add github/awesome-copilot --skill security-review --skill devops-rollout-plan --agent codex
+```
+
+Do not copy a reference company's identity, code, private data, or copyrighted content. Public companies are system references, not cloning targets. Keep described, produced, executable, used, and economically validated systems distinct. Deployment, publishing, outreach, payments, contracts, spending, data collection, and provider mutations remain separate gates.
+
+## Kickstarter Funding
+
+Slug: `kickstarter-funding`
+
+Lane: `launch`
+
+Public page: `https://possible.sh/packs/kickstarter-funding`
+
+Use when a rough product idea or prototype needs the complete Kickstarter path: feasibility, economics, offer, rewards, story, proof film, prelaunch audience, campaign operations, and payout evidence. Use Hardware Launch for a presentation without crowdfunding mechanics.
+
+Outputs: feasibility and fixed funding-goal model, audience/offer/rewards/risks, responsive campaign story, proof-led film, prelaunch and campaign distribution system, measurement and payout controls, approved live execution or publication-ready no-go, verified funding receipt.
+
+Workstreams:
+
+- Product feasibility, cost, and funding model — `product-marketing`, `analytics`; owns campaign feasibility, economics, and risk evidence.
+- Audience, promise, rewards, and offer — `product-marketing`, `copywriting`; owns the offer, rewards, and claims register.
+- Kickstarter story and campaign page — `frontend-design`, `copywriting`; owns the responsive local proof page and story.
+- Proof-led campaign film — `remotion-best-practices`; owns rendered media and its receipt.
+- Prelaunch audience and distribution — `content-strategy`, `social`, `copywriting`; owns audience research, calendar, and review-required drafts.
+- Campaign decisions and payout receipt — `analytics`, `marketing-loops`, `webapp-testing`; owns measurement, operations, fixtures, and receipts.
+- Fresh review — `product-marketing`, `analytics`, `webapp-testing`; verifies economics, claims, media, local campaign behavior, and money evidence.
+
+Sources:
+
+- `coreyhaines31/marketingskills`: `product-marketing`, `content-strategy`, `copywriting`, `social`, `analytics`, `marketing-loops`; reviewed `67264763cb107d61749f418d081c56e5bcbc0209`.
+- `anthropics/skills`: `frontend-design`, `webapp-testing`; reviewed `fa0fa64bdc967915dc8399e803be67759e1e62b8`.
+- `remotion-dev/skills`: `remotion-best-practices`; reviewed `ab22f5fa89962ec943eaa18797cbf38c9d727743`.
+
+Install:
+
+```bash
+npx skills@1.5.19 add coreyhaines31/marketingskills@67264763cb107d61749f418d081c56e5bcbc0209 --skill product-marketing --skill content-strategy --skill copywriting --skill social --skill analytics --skill marketing-loops --agent codex
+npx skills@1.5.19 add anthropics/skills --skill frontend-design --skill webapp-testing --agent codex
+npx skills@1.5.19 add remotion-dev/skills --skill remotion-best-practices --agent codex
+```
+
+Never imply funding, demand, manufacturing feasibility, delivery, or payout. A local page must not impersonate Kickstarter or accept payment. Publishing, outreach, posting, email, advertising, account changes, and live campaign actions require separate approval. Count money only after privacy-safe evidence proves the platform payout was deposited.
+
+## Kickstarter Fulfillment
+
+Slug: `kickstarter-fulfillment`
+
+Lane: `operate`
+
+Public page: `https://possible.sh/packs/kickstarter-fulfillment`
+
+Use after a real Kickstarter campaign reaches its funding goal and needs a durable production-to-shipment operation. This pack manages obligations, suppliers, quality, privacy-safe orders, logistics, exceptions, communications, milestones, and a recurring control loop until 95% shipped or an honest blocked outcome.
+
+Outputs: campaign-obligation baseline, production and quality system, privacy-safe order ledger, inventory/logistics/exception system, review-required backer communications, first control-loop receipt, scheduling-ready task, shipment milestone ledger, independent fulfillment receipt.
+
+Workstreams:
+
+- Production readiness and quality — `impediment-prioritization`, `incident-postmortem`; owns production, quality, and supplier evidence.
+- Backer obligations and order ledger — `analytics`, `security-review`; owns privacy-safe backer, order, and data-boundary state.
+- Inventory, freight, carrier, and shipment — `analytics`, `impediment-prioritization`; owns inventory, logistics, and exceptions.
+- Backer communications — `product-marketing`, `copywriting`; owns evidence-grounded update and support drafts.
+- Fulfillment control tower — `analytics`, `marketing-loops`, `incident-postmortem`; owns control state, dated receipts, and scheduling handoff.
+- Fresh review — `analytics`, `security-review`, `incident-postmortem`; verifies the frozen denominator, evidence milestones, privacy, exceptions, and exact shipment clocks.
+
+Sources:
+
+- `coreyhaines31/marketingskills`: `product-marketing`, `copywriting`, `analytics`, `marketing-loops`; reviewed `67264763cb107d61749f418d081c56e5bcbc0209`.
+- `github/awesome-copilot`: `impediment-prioritization`, `security-review`, `incident-postmortem`; reviewed `26fe2d126bf79aafb38f43344d450b69632200f8`.
+
+Install:
+
+```bash
+npx skills@1.5.19 add coreyhaines31/marketingskills@67264763cb107d61749f418d081c56e5bcbc0209 --skill product-marketing --skill copywriting --skill analytics --skill marketing-loops --agent codex
+npx skills@1.5.19 add github/awesome-copilot --skill impediment-prioritization --skill security-review --skill incident-postmortem --agent codex
+```
+
+Run the first control cycle manually before offering a schedule. Scheduled cycles may inspect authorized privacy-safe evidence and prepare local state or drafts only. Purchasing, supplier contact, contracts, manufacturing orders, address exports, carrier bookings, labels, refunds, campaign changes, and backer messages remain separate explicit gates. Award 95% shipped only from privacy-safe campaign and carrier or fulfillment evidence against a frozen denominator; delivery is a separate claim.
+
 ## Selection rule
 
 Recommend the pack whose finished outputs most closely match the user's desired end state:
@@ -295,7 +408,10 @@ Recommend the pack whose finished outputs most closely match the user's desired 
 - Existing tested web app plus a reversible approved production deployment and smoke receipt → Production Web Release.
 - Live web app plus a repeatable reliability, issue-triage, maintenance, incident-response, and safe-change cadence → Web App Operations.
 - Existing product or offer plus a repeatable positioning, campaign-planning, draft-production, measurement, and review cadence → Marketing Operations.
+- Rough ambition for an Atlassian-scale or billion-dollar SaaS company plus the complete product, growth, revenue, trust, and operating system → Billion-Dollar SaaS.
+- Rough product idea plus feasibility, offer, campaign assets, audience system, and a real Kickstarter funding path → Kickstarter Funding.
+- Funded Kickstarter campaign plus production, backer, logistics, communication, and 95%-shipped operations → Kickstarter Fulfillment.
 
-Use Working Web App when the missing outcome is the product itself. Use Software Launch when the product works and the missing outcome is its first public story, site, and demo. Use Production Web Release when a tested candidate exists and the missing outcome is a gated production promotion with rollback and smoke evidence. Use Web App Operations only after the app is live and the desired outcome is an ongoing reliability and maintenance rhythm. Use Marketing Operations when the product or offer exists and the missing outcome is a recurring marketing system; one launch campaign remains Software Launch. A distributable repository release belongs to Open-Source Release; one isolated bug, incident, or marketing asset with no requested recurring workflow is focused work, not a pack.
+Use Working Web App when the missing outcome is the product itself. Use Software Launch when the product works and the missing outcome is its first public story, site, and demo. Use Billion-Dollar SaaS when the user explicitly wants the broader company operating system and accepts that operational coverage cannot guarantee economic success. Use Kickstarter Funding when crowdfunding mechanics and payout are part of the outcome; use Kickstarter Fulfillment only after the campaign is funded. Use Production Web Release when a tested candidate exists and the missing outcome is a gated production promotion with rollback and smoke evidence. Use Web App Operations only after the app is live and the desired outcome is an ongoing reliability and maintenance rhythm. Use Marketing Operations when the product or offer exists and the missing outcome is a recurring marketing system. A distributable repository release belongs to Open-Source Release; one isolated bug, incident, or marketing asset with no requested recurring workflow is focused work, not a pack.
 
 If none fits, say so. Do not force a pack or invent a new one during intake.

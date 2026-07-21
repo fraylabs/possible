@@ -70,10 +70,10 @@ Possible's source of truth is a [typed outcome-pack manifest](packages/packs/src
 
 Lanes make the catalog easier to browse; they are never a question the user must answer during intake.
 
-- **Create** — **Working Web App** produces a locally verified first usable product; **Playable Web Game** produces one polished, responsive Three.js game.
-- **Launch** — **Hardware Launch** and **Software Launch** turn a product into a coherent public presentation and verified launch package.
+- **Create** — **Working Web App** produces a locally verified first usable product; **Playable Web Game** produces one polished Three.js game; **Billion-Dollar SaaS** expands a rough company ambition into an executable product, growth, revenue, trust, and operating system while keeping real revenue separate.
+- **Launch** — **Hardware Launch** and **Software Launch** turn a product into a coherent public presentation; **Kickstarter Funding** adds feasibility, economics, rewards, proof, audience, campaign control, and payout evidence.
 - **Release** — **Open-Source Release** prepares a trustworthy distributable repository; **Production Web Release** takes a tested OpenAI Sites or Vercel app through a gated, reversible deployment or an honest no-go.
-- **Operate** — **Web App Operations** runs a repeatable health, triage, maintenance, and recovery loop; **Marketing Operations** runs a repeatable positioning, campaign, draft-production, measurement, and review loop.
+- **Operate** — **Web App Operations** runs a repeatable health and recovery loop; **Marketing Operations** runs a repeatable marketing loop; **Kickstarter Fulfillment** coordinates a funded campaign through production and a privacy-safe 95%-shipped receipt.
 
 Operate packs are recurring by definition: a checklist alone is not enough. The first cycle must run, leave evidence, carry unresolved work forward, and name its next review date.
 

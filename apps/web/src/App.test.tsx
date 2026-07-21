@@ -33,7 +33,7 @@ describe("Possible", () => {
     expect(within(start).getByText("npx @fraylabs/possible@0.1.6 init")).toBeInTheDocument();
     expect(within(start).getByText(/Published 0\.1\.6.*Candidate 0\.1\.7/i)).toBeInTheDocument();
     const packs = screen.getByRole("list", { name: "Packs Possible can recommend" });
-    expect(within(packs).getAllByRole("listitem")).toHaveLength(8);
+    expect(within(packs).getAllByRole("listitem")).toHaveLength(11);
     for (const pack of outcomePacks) {
       expect(within(packs).getByRole("link", { name: `${pack.name}, ${pack.lane[0].toUpperCase()}${pack.lane.slice(1)} pack` })).toHaveAttribute(
         "href",
@@ -128,7 +128,7 @@ describe("Possible", () => {
     const { container } = render(<App />);
     expect(screen.getByRole("heading", { name: /Complete recipes.*Chosen through conversation/i })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /Start with Possible/i })).toHaveAttribute("href", "/#start");
-    expect(screen.getByRole("button", { name: "All, 8 packs" })).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByRole("button", { name: "All, 11 packs" })).toHaveAttribute("aria-pressed", "true");
     expect(screen.getByRole("heading", { name: "Hardware Launch" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Software Launch" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Open-Source Release" })).toBeInTheDocument();
@@ -137,20 +137,25 @@ describe("Possible", () => {
     expect(screen.getByRole("heading", { name: "Working Web App" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Production Web Release" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Marketing Operations" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Billion-Dollar SaaS" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Kickstarter Funding" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Kickstarter Fulfillment" })).toBeInTheDocument();
     expect(container.querySelector(".pack-art--working")).toBeInTheDocument();
     expect(container.querySelector(".pack-art--production-release")).toBeInTheDocument();
 
-    await userEvent.click(screen.getByRole("button", { name: "Create, 2 packs" }));
+    await userEvent.click(screen.getByRole("button", { name: "Create, 3 packs" }));
     expect(screen.getByRole("heading", { name: "Playable Web Game" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Working Web App" })).toBeInTheDocument();
     expect(screen.queryByRole("heading", { name: "Hardware Launch" })).not.toBeInTheDocument();
-    expect(screen.getByText("Showing 2 Create packs.")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Billion-Dollar SaaS" })).toBeInTheDocument();
+    expect(screen.getByText("Showing 3 Create packs.")).toBeInTheDocument();
     expect(container.querySelector(".pack-grid")).toHaveClass("pack-grid--filtered");
     expect(container.querySelector(".pack-grid")).not.toHaveClass("pack-grid--single");
 
-    await userEvent.click(screen.getByRole("button", { name: "Launch, 2 packs" }));
+    await userEvent.click(screen.getByRole("button", { name: "Launch, 3 packs" }));
     expect(screen.getByRole("heading", { name: "Hardware Launch" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Software Launch" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Kickstarter Funding" })).toBeInTheDocument();
     expect(screen.queryByRole("heading", { name: "Playable Web Game" })).not.toBeInTheDocument();
     expect(screen.getByText("PACK / 01")).toBeInTheDocument();
     expect(screen.getByText("PACK / 02")).toBeInTheDocument();
@@ -160,11 +165,12 @@ describe("Possible", () => {
     expect(screen.getByRole("heading", { name: "Production Web Release" })).toBeInTheDocument();
     expect(screen.queryByRole("heading", { name: "Software Launch" })).not.toBeInTheDocument();
 
-    await userEvent.click(screen.getByRole("button", { name: "Operate, 2 packs" }));
+    await userEvent.click(screen.getByRole("button", { name: "Operate, 3 packs" }));
     expect(screen.getByRole("heading", { name: "Web App Operations" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Marketing Operations" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Kickstarter Fulfillment" })).toBeInTheDocument();
     expect(screen.queryByRole("heading", { name: "Open-Source Release" })).not.toBeInTheDocument();
-    expect(screen.getByText("Showing 2 Operate packs.")).toBeInTheDocument();
+    expect(screen.getByText("Showing 3 Operate packs.")).toBeInTheDocument();
     expect(await axe(container)).toHaveNoViolations();
   });
 
@@ -223,79 +229,59 @@ describe("Possible", () => {
     expect(await axe(container)).toHaveNoViolations();
   });
 
-  it("presents four outcome-shaped benchmark protocols", async () => {
+  it("presents three one-prompt output comparisons backed by matching outcome packs", async () => {
     window.history.pushState({}, "", "/benchmarks");
     const { container } = render(<App />);
-    expect(screen.getByRole("heading", { name: /Measure the.*whole outcome/i, level: 1 })).toBeInTheDocument();
-    expect(container.querySelectorAll(".benchmark-gallery-grid > a")).toHaveLength(4);
-    expect(screen.getByRole("link", { name: /SIMPLE-0\.1.*One simple prompt.*Useful verified work.*NO RUNS/i })).toHaveAttribute("href", "/benchmarks/simple-prompt");
-    expect(screen.getByRole("link", { name: /\$1B-0\.1.*Make me a billion-dollar company.*Verified revenue.*NO RUNS/i })).toHaveAttribute("href", "/benchmarks/billion-dollar-company");
-    expect(screen.getByRole("link", { name: /FUNDING-0\.1.*Get it funded.*Net funds received.*NO RUNS/i })).toHaveAttribute("href", "/benchmarks/kickstarter-funding");
-    expect(screen.getByRole("link", { name: /SHIPPED-0\.1.*Get it shipped.*Days to 95% shipped.*NO RUNS/i })).toHaveAttribute("href", "/benchmarks/kickstarter-shipped");
-    expect(screen.getByText(/Fixed task.*explicit metric.*reproducible protocol.*evidence-backed results.*disclosed limitations/i)).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /One prompt.*Compare the output/i, level: 1 })).toBeInTheDocument();
+    expect(container.querySelectorAll(".benchmark-gallery-grid > a")).toHaveLength(3);
+    expect(screen.getByRole("link", { name: /\$1B-0\.1.*Make me a billion-dollar company.*Outputs.*time.*PREVIEW/i })).toHaveAttribute("href", "/benchmarks/billion-dollar-company");
+    expect(screen.getByRole("link", { name: /FUNDING-0\.1.*Get it funded.*Outputs.*time.*PREVIEW/i })).toHaveAttribute("href", "/benchmarks/kickstarter-funding");
+    expect(screen.getByRole("link", { name: /SHIPPED-0\.1.*Get it shipped.*Outputs.*time.*PREVIEW/i })).toHaveAttribute("href", "/benchmarks/kickstarter-shipped");
+    expect(screen.getByText(/Same starting point.*one prompt.*compare outputs.*agent runtime.*human coordination time/i)).toBeInTheDocument();
     expect(container.querySelector(".benchmark-article")).not.toBeInTheDocument();
     expect(await axe(container)).toHaveNoViolations();
   });
 
-  it("measures useful work from one simple prompt", async () => {
-    window.history.pushState({}, "", "/benchmarks/simple-prompt");
-    const { container } = render(<App />);
-    expect(screen.getByRole("heading", { name: "The Simple Prompt Benchmark", level: 1 })).toBeInTheDocument();
-    expect(screen.getByText(/How much useful, verified work gets done from one simple prompt/i)).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: /No controlled results published/i })).toBeInTheDocument();
-    expect(screen.getByText(/Build me a successful software company.*Make no mistakes/i)).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: /Count useful work, not elapsed runtime/i })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: /A score requires a receipt/i })).toBeInTheDocument();
-    expect(container.querySelector(".benchmark-outcome-bars")).not.toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /All benchmarks/i })).toHaveAttribute("href", "/benchmarks");
-    expect(await axe(container)).toHaveNoViolations();
-  });
-
-  it("defines company coverage without presenting it as business success", async () => {
+  it("compares one-prompt company outputs without a checklist rubric", async () => {
     window.history.pushState({}, "", "/benchmarks/billion-dollar-company");
     const { container } = render(<App />);
     expect(screen.getByRole("heading", { name: /Make Me a Billion-Dollar Company.*Benchmark/i, level: 1 })).toBeInTheDocument();
-    expect(screen.getByText(/how much verified revenue does it generate/i)).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: /No controlled results published/i })).toBeInTheDocument();
-    expect(screen.getByText(/earned rubric points.*48.*100/i)).toBeInTheDocument();
-    expect(within(screen.getByRole("list", { name: /Coverage evidence levels/i })).getAllByRole("listitem")).toHaveLength(5);
-    expect(container.querySelectorAll(".benchmark-ingredients-grid > span")).toHaveLength(12);
-    expect(screen.getByRole("heading", { name: "Verified revenue", level: 3 })).toBeInTheDocument();
-    expect(container.querySelector(".benchmark-boundary")).toHaveTextContent(/Coverage never substitutes for money.*revenue record stays at \$0/i);
-    expect(screen.getByRole("link", { name: /Atlassian FY2025 Form 10-K/i })).toHaveAttribute("href", expect.stringContaining("sec.gov"));
-    expect(container.querySelector(".benchmark-projection")).not.toBeInTheDocument();
+    expect(screen.getByText("“Make me Atlassian. Make no mistakes.”")).toBeInTheDocument();
+    expect(screen.getByText("/goal Make me Atlassian. Make no mistakes.")).toBeInTheDocument();
+    expect(screen.getByText("$possible Make me Atlassian. Make no mistakes.")).toBeInTheDocument();
+    expect(within(screen.getByRole("list", { name: /Outputs produced after one prompt/i })).getAllByRole("listitem")).toHaveLength(3);
+    expect(screen.getByText("24 OUTPUTS")).toBeInTheDocument();
+    expect(screen.getByText("3 hr 48 min")).toBeInTheDocument();
+    expect(screen.getByText("3 min")).toBeInTheDocument();
+    expect(container).toHaveTextContent("company/revenue/ledger.csv");
+    expect(container.querySelector(".benchmark-score-scale, .benchmark-ingredients-grid, .benchmark-definition-grid")).not.toBeInTheDocument();
+    expect(screen.getAllByRole("link", { name: /Billion-Dollar SaaS/i })[0]).toHaveAttribute("href", "/packs/billion-dollar-saas");
     expect(await axe(container)).toHaveNoViolations();
   });
 
-  it("records Kickstarter funding through payout received", async () => {
+  it("compares one-prompt Kickstarter funding outputs", async () => {
     window.history.pushState({}, "", "/benchmarks/kickstarter-funding");
     const { container } = render(<App />);
     expect(screen.getByRole("heading", { name: "The Kickstarter Funding Benchmark", level: 1 })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: /Record money received, not campaign theater/i })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Net funds received", level: 3 })).toBeInTheDocument();
-    const timeline = screen.getByRole("list", { name: "Kickstarter funding benchmark milestones" });
-    expect(within(timeline).getAllByRole("listitem")).toHaveLength(7);
-    expect(within(timeline).getByText("Funding goal reached")).toBeInTheDocument();
-    expect(within(timeline).getByText("Payout received")).toBeInTheDocument();
-    expect(screen.getByText(/Unfunded campaigns remain in the cohort/i)).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /Kickstarter all-or-nothing funding/i })).toHaveAttribute("href", expect.stringContaining("help.kickstarter.com"));
+    expect(screen.getByText("“Get my product funded on Kickstarter.”")).toBeInTheDocument();
+    expect(screen.getByText("21 OUTPUTS")).toBeInTheDocument();
+    expect(screen.getByText("4 hr 12 min")).toBeInTheDocument();
+    expect(container).toHaveTextContent("campaign/receipts/payout-ledger.csv");
+    expect(container.querySelectorAll(".benchmark-output-snapshots article")).toHaveLength(3);
+    expect(screen.getAllByRole("link", { name: /Kickstarter Funding/i })[0]).toHaveAttribute("href", "/packs/kickstarter-funding");
     expect(await axe(container)).toHaveNoViolations();
   });
 
-  it("keeps Kickstarter shipping separate from funding", async () => {
+  it("compares one-prompt Kickstarter shipping outputs", async () => {
     window.history.pushState({}, "", "/benchmarks/kickstarter-shipped");
     const { container } = render(<App />);
     expect(screen.getByRole("heading", { name: "The Kickstarter-to-Shipped Benchmark", level: 1 })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: /No controlled results published/i })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: /Start the delivery clock after funding/i })).toBeInTheDocument();
-    const timeline = screen.getByRole("list", { name: "Kickstarter-to-shipped benchmark milestones" });
-    expect(within(timeline).getAllByRole("listitem")).toHaveLength(6);
-    expect(within(timeline).getByText("Funding goal reached")).toBeInTheDocument();
-    expect(within(timeline).getByText("95% of rewards shipped")).toBeInTheDocument();
-    expect(container.querySelectorAll(".benchmark-fulfillment-measures > div")).toHaveLength(4);
-    expect(screen.getByText(/Delayed and unfinished campaigns remain in the cohort/i)).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /Kickstarter fulfillment dashboard guidance/i })).toHaveAttribute("href", expect.stringContaining("help.kickstarter.com"));
-    expect(screen.getByText(/Funding does not count as shipping/i)).toBeInTheDocument();
+    expect(screen.getByText("“Get this funded Kickstarter shipped.”")).toBeInTheDocument();
+    expect(screen.getByText("18 OUTPUTS")).toBeInTheDocument();
+    expect(screen.getByText("5 hr 20 min")).toBeInTheDocument();
+    expect(container).toHaveTextContent("fulfillment/milestones/shipment-ledger.csv");
+    expect(container.querySelectorAll(".benchmark-output-bars li")).toHaveLength(3);
+    expect(screen.getAllByRole("link", { name: /Kickstarter Fulfillment/i })[0]).toHaveAttribute("href", "/packs/kickstarter-fulfillment");
     expect(await axe(container)).toHaveNoViolations();
   });
 

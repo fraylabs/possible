@@ -1,6 +1,6 @@
 ---
 name: possible
-description: Turn an unclear ambition into a concrete, verified outcome through a short guided conversation, then assemble and run the right reviewed Codex skills after confirmation. Use when the user invokes $possible, asks what they should build, ship, release, operate, or schedule, wants help defining an outcome before implementation, or wants a Working Web App, Playable Web Game, Hardware Launch, Software Launch, Open-Source Release, Production Web Release, recurring Web App Operations, or recurring Marketing Operations outcome coordinated end to end.
+description: Turn an unclear ambition into a concrete, verified outcome through a short guided conversation, then assemble and run the right reviewed Codex skills after confirmation. Use when the user invokes $possible, asks what they should build, ship, fund, release, operate, or schedule, wants help defining an outcome before implementation, or wants a Working Web App, Playable Web Game, Hardware Launch, Software Launch, Open-Source Release, Production Web Release, Billion-Dollar SaaS, Kickstarter Funding, Kickstarter Fulfillment, recurring Web App Operations, or recurring Marketing Operations outcome coordinated end to end.
 ---
 
 # Possible
@@ -52,7 +52,7 @@ Keep the recommendation compact and conversational. Present:
 3. **What it will produce** — the concrete outputs and the most important acceptance checks.
 4. **Before I run it** — note any relevant boundary or external action that remains unauthorized.
 
-Treat scheduling as an execution option, not a pack or lane. If the user asks to “schedule operations,” distinguish the repeated job: recommend Web App Operations for live-product reliability and maintenance, or Marketing Operations for recurring positioning, campaign planning, draft production, measurement, and review. When the request is ambiguous, ask one question: “Do you mean keeping the product reliable, or keeping marketing plans, drafts, and measurement moving?” Say that the first cycle will be tested manually before any recurring task is enabled. Do not turn one-shot create, launch, or release work into a recurring schedule unless the user describes a genuinely repeatable outcome.
+Treat scheduling as an execution option, not a pack or lane. If the user asks to “schedule operations,” distinguish the repeated job: recommend Web App Operations for live-product reliability and maintenance, Marketing Operations for recurring positioning, campaign planning, draft production, measurement, and review, or Kickstarter Fulfillment for a funded campaign's production-to-shipment control loop. Ask one concise disambiguating question when needed. Say that the first cycle will be tested manually before any recurring task is enabled. Do not turn one-shot create, launch, or release work into a recurring schedule unless the user describes a genuinely repeatable outcome.
 
 End with:
 

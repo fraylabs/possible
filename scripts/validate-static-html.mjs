@@ -98,13 +98,9 @@ for (const [relativePath, expected] of [
   ["blogs/what-is-possible/index.html", "Possible is the outcome layer"],
   ["blogs/why-possible/index.html", "The bottleneck is no longer what AI can do"],
   ["benchmarks/index.html", "POSSIBLE BENCHMARK SUITE / V0.1"],
-  ["benchmarks/simple-prompt/index.html", "SIMPLE-0.1[\\s\\S]*/[\\s\\S]*ONE PROMPT"],
   ["benchmarks/billion-dollar-company/index.html", "\\$1B-0.1[\\s\\S]*/[\\s\\S]*\\$1B COMPANY"],
   ["benchmarks/kickstarter-funding/index.html", "FUNDING-0.1[\\s\\S]*/[\\s\\S]*FUNDING"],
   ["benchmarks/kickstarter-shipped/index.html", "SHIPPED-0.1[\\s\\S]*/[\\s\\S]*SHIPPING"],
-  ["benchmarks/step-away/index.html", "The Simple Prompt Benchmark"],
-  ["benchmarks/company-systems/index.html", "Make Me a Billion-Dollar Company"],
-  ["benchmarks/fulfillment/index.html", "The Kickstarter-to-Shipped Benchmark"],
   ["docs/index.html", "Build complete outcomes with Possible"],
   ["docs/how-to-use/index.html", "How to use Possible"],
   ["demo/index.html", "HARDWARE LAUNCH"],
@@ -132,42 +128,39 @@ const [sourcePublicProof, exportedPublicProof] = await Promise.all([
 assert.equal(exportedPublicProof, sourcePublicProof, "The exported benchmark proof must match its canonical source");
 
 const benchmarkGallery = visibleText(await html("benchmarks/index.html"));
-assert.match(benchmarkGallery, /Measure the[\s\S]*whole outcome/);
-assert.match(benchmarkGallery, /href="\/benchmarks\/simple-prompt"/);
+assert.match(benchmarkGallery, /One prompt[\s\S]*Compare the output/);
+assert.doesNotMatch(benchmarkGallery, /href="\/benchmarks\/simple-prompt"/);
 assert.match(benchmarkGallery, /href="\/benchmarks\/billion-dollar-company"/);
 assert.match(benchmarkGallery, /href="\/benchmarks\/kickstarter-funding"/);
 assert.match(benchmarkGallery, /href="\/benchmarks\/kickstarter-shipped"/);
-assert.match(benchmarkGallery, /Fixed task · explicit metric · reproducible protocol · evidence-backed results · disclosed limitations/);
-
-const simplePromptBenchmark = visibleText(await html("benchmarks/simple-prompt/index.html"));
-assert.match(simplePromptBenchmark, /The Simple Prompt Benchmark/);
-assert.match(simplePromptBenchmark, /Useful verified work/);
-assert.match(simplePromptBenchmark, /A score requires a receipt/);
-assert.doesNotMatch(simplePromptBenchmark, /7h 20m|91% modeled|PRIMARY SOURCE BASIS/);
+assert.match(benchmarkGallery, /Same starting point · one prompt · compare outputs, agent runtime, and human coordination time/);
 
 const companyBenchmark = visibleText(await html("benchmarks/billion-dollar-company/index.html"));
 assert.match(companyBenchmark, /Make Me a Billion-Dollar Company/);
-assert.match(companyBenchmark, /Verified revenue/);
-assert.match(companyBenchmark, /earned rubric points ÷ 48 × 100/);
-assert.match(companyBenchmark, /Coverage never substitutes for money/);
-assert.match(companyBenchmark, /revenue record stays at \$0/);
-assert.match(companyBenchmark, /Atlassian FY2025 Form 10-K/);
-assert.match(companyBenchmark, /GitLab public marketing handbook/);
-assert.match(companyBenchmark, /Cloudflare 2019 prospectus/);
-assert.doesNotMatch(companyBenchmark, /Projected time to \$100M|8–13 years/);
+assert.match(companyBenchmark, /Make me Atlassian\. Make no mistakes\./);
+assert.match(companyBenchmark, /\/goal Make me Atlassian/);
+assert.match(companyBenchmark, /\$possible Make me Atlassian/);
+assert.match(companyBenchmark, /24[\s\S]*OUTPUTS/);
+assert.match(companyBenchmark, /3 hr 48 min/);
+assert.match(companyBenchmark, /company\/revenue\/ledger\.csv/);
+assert.match(companyBenchmark, /href="\/packs\/billion-dollar-saas"/);
+assert.doesNotMatch(companyBenchmark, /rubric points|Coverage evidence levels|Company-system domains/);
 
 const fundingBenchmark = visibleText(await html("benchmarks/kickstarter-funding/index.html"));
 assert.match(fundingBenchmark, /The Kickstarter Funding Benchmark/);
-assert.match(fundingBenchmark, /Net funds received/);
-assert.match(fundingBenchmark, /Payout received/);
-assert.match(fundingBenchmark, /Unfunded campaigns remain in the cohort/);
+assert.match(fundingBenchmark, /Get my product funded on Kickstarter/);
+assert.match(fundingBenchmark, /21[\s\S]*OUTPUTS/);
+assert.match(fundingBenchmark, /4 hr 12 min/);
+assert.match(fundingBenchmark, /campaign\/receipts\/payout-ledger\.csv/);
+assert.match(fundingBenchmark, /href="\/packs\/kickstarter-funding"/);
 
 const shippedBenchmark = visibleText(await html("benchmarks/kickstarter-shipped/index.html"));
 assert.match(shippedBenchmark, /The Kickstarter-to-Shipped Benchmark/);
-assert.match(shippedBenchmark, /FUNDED TO 95% SHIPPED/);
-assert.match(shippedBenchmark, /Delayed and unfinished campaigns remain in the cohort/);
-assert.match(shippedBenchmark, /Kickstarter fulfillment dashboard guidance/);
-assert.doesNotMatch(shippedBenchmark, /Net funds received|TIME TO KICKSTARTER/);
+assert.match(shippedBenchmark, /Get this funded Kickstarter shipped/);
+assert.match(shippedBenchmark, /18[\s\S]*OUTPUTS/);
+assert.match(shippedBenchmark, /5 hr 20 min/);
+assert.match(shippedBenchmark, /fulfillment\/milestones\/shipment-ledger\.csv/);
+assert.match(shippedBenchmark, /href="\/packs\/kickstarter-fulfillment"/);
 
 for (const [relativePath, heading] of [["blogs/index.html", "Possible writing"], ["demo/index.html", "Possible outcome demos"]]) {
   const markup = await html(relativePath);
@@ -189,4 +182,4 @@ assert.match(writingStandard, /Every benchmark page uses the same order/);
 assert.match(writingStandard, /Put results before explanation/);
 assert.match(writingStandard, /Observed:[\s\S]*Modeled:[\s\S]*Projected:[\s\S]*Unknown:/);
 
-console.log(`All ${outcomePacks.length + 20} public Next.js routes contain meaningful initial HTML.`);
+console.log(`All ${outcomePacks.length + 16} public Next.js routes contain meaningful initial HTML.`);

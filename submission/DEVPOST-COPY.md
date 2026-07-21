@@ -40,7 +40,7 @@ Possible adds three things to Codex:
 2. **Deterministic composition.** Typed TypeScript manifests record reviewed skills, outputs, bounded workstreams, guardrails, and verification. The compiler renders inspectable installation commands and a fixed parallel → captain integration → fresh review sequence from the same registry used by the website and MCP server; the approved run writes outcome-specific checks into its shared brief.
 3. **Completion with evidence.** Work runs behind explicit ownership boundaries, is integrated by a captain, and is inspected by a fresh verification-only agent. Failures, skipped checks, limitations, and unproven claims remain in the final receipt.
 
-The current source candidate contains eight outcome packs across build, launch, release, and recurring operations. The published `0.1.6` judge package contains seven; `0.1.7` must be published before claiming the eighth pack through the npm install path. The user does not choose a category or assemble skills; Possible recommends the recipe from the desired result.
+The current source candidate contains eleven outcome packs across build, launch, release, and recurring operations. The published `0.1.6` judge package contains seven; a new candidate must be packed, independently installed, and published before claiming the four newer packs through the npm install path. The user does not choose a category or assemble skills; Possible recommends the recipe from the desired result.
 
 ## Why this is not a prompt library
 

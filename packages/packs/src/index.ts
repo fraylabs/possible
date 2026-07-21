@@ -1,4 +1,7 @@
+import { billionDollarSaasPack } from "./billion-dollar-saas.js";
 import { hardwareLaunchPack } from "./hardware-launch.js";
+import { kickstarterFulfillmentPack } from "./kickstarter-fulfillment.js";
+import { kickstarterFundingPack } from "./kickstarter-funding.js";
 import { marketingOperationsPack } from "./marketing-operations.js";
 import { openSourceReleasePack } from "./open-source-release.js";
 import { playableWebGamePack } from "./playable-web-game.js";
@@ -7,7 +10,7 @@ import { softwareLaunchPack } from "./software-launch.js";
 import { webAppOperationsPack } from "./web-app-operations.js";
 import { workingWebAppPack } from "./working-web-app.js";
 
-export { hardwareLaunchPack, marketingOperationsPack, openSourceReleasePack, playableWebGamePack, productionWebReleasePack, softwareLaunchPack, webAppOperationsPack, workingWebAppPack };
+export { billionDollarSaasPack, hardwareLaunchPack, kickstarterFulfillmentPack, kickstarterFundingPack, marketingOperationsPack, openSourceReleasePack, playableWebGamePack, productionWebReleasePack, softwareLaunchPack, webAppOperationsPack, workingWebAppPack };
 export { compileInstallCommands, compilePack, compileRunPrompt } from "./compiler.js";
 export type { CompiledPack, OutcomePack, PackLane, PluginCapability, ScheduleContract, SkillSource, Workstream } from "./types.js";
 
@@ -20,6 +23,9 @@ export const outcomePacks = [
   workingWebAppPack,
   productionWebReleasePack,
   marketingOperationsPack,
+  billionDollarSaasPack,
+  kickstarterFundingPack,
+  kickstarterFulfillmentPack,
 ] as const;
 
 export function getPack(slug: string) {

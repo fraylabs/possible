@@ -59,13 +59,13 @@ This audit treats completion as unproven. Each requirement below names the autho
 ## Verifiers
 
 - `npm run check`: **passed** after the final claim corrections.
-- Packs: **5/5**.
+- Packs: **6/6** across the eleven-pack catalog.
 - CLI: **8/8**, canonical three-file snapshot matched.
 - MCP: **9/9**.
-- Web: **30/30**, including automated accessibility and proof-route behavior.
-- Production export: **33/33** static-generation steps; `/proof` emitted.
-- Static HTML: **28 routes**.
-- Pack publications: **8/8** matched the compiler.
+- Web: **29/29**, including automated accessibility and proof-route behavior.
+- Production export: **32/32** static-generation steps; `/proof` emitted.
+- Static HTML: **27 routes**.
+- Pack publications: **11/11** matched the compiler.
 - Demo validator: **passed**.
 - `git diff --check`: **passed**.
 - Fresh-context claim audit: **materially clean** after corrections; remaining findings are the external deployment, npm decision, and owner evidence listed here.

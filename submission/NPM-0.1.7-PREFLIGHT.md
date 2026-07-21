@@ -8,12 +8,12 @@ Status: **local tarball verified; not published**.
 - Version: `0.1.7`
 - Runtime: Node.js 22 or newer
 - Tarball: `fraylabs-possible-0.1.7.tgz`
-- Packed size: 12,752 bytes
-- Unpacked size: 40,091 bytes
+- Packed size: 14,800 bytes
+- Unpacked size: 49,908 bytes
 - Entries: 6
-- npm shasum: `701939ec98a3473643c9083a23a619393ee002f7`
-- SHA-256 of the preflight tarball: `10b6b29266574eb5fd581eee66c35781c697e3effe8de402351f763796fbfacc`
-- npm integrity: `sha512-5dMw3z+4kagDov2CHJzmFAJpWVZvG+4ZenACJRMce4CjcKVKfo6eQuwZT/+1mvQfKCiU6Kw3UXbVvwDWxc+x7Q==`
+- npm shasum: `9ba38e77d1bea527e611255a92f6fbd60a92bd89`
+- SHA-256 of the preflight tarball: `2518835751dbf64e620aab0677b639ea80aabc7a5a8ac3bd7542def54ce4ba10`
+- npm integrity: `sha512-Sv2l/6BJp40OGQZMektqtL3gl8W+T+WxenpTs9XTXU0vx3Tdri3zdXHZ4gIlYsfe9uq9nFGrRcKQwWZ9qCI1+A==`
 
 ## Packed files
 
@@ -26,7 +26,7 @@ src/index.mjs
 src/init.mjs
 ```
 
-The packaged fallback reference contains all eight source-candidate packs, including Marketing Operations.
+The tarball contains the current eleven-pack fallback snapshot, including Billion-Dollar SaaS, Kickstarter Funding, and Kickstarter Fulfillment.
 
 ## Commands exercised
 
@@ -38,7 +38,7 @@ rg -n '^## ' .agents/skills/possible/references/packs.md
 shasum -a 256 <temporary-directory>/fraylabs-possible-0.1.7.tgz
 ```
 
-The tarball installed successfully into a new disposable target and emitted exactly the three expected skill files. The installed agent metadata was readable, and the CLI returned the `$possible` invocation.
+The tarball installed successfully into a new disposable target and emitted exactly the three expected skill files. The installed agent metadata was readable, all eleven pack headings were present, and the CLI returned the `$possible` invocation.
 
 ## Publication gate
 
@@ -46,6 +46,6 @@ The tarball installed successfully into a new disposable target and emitted exac
 
 1. Run `npm view @fraylabs/possible@0.1.7 version engines bin dist --json`.
 2. Install the registry package—not this local tarball—into another clean disposable target.
-3. Confirm the three-file snapshot and eight-pack fallback reference.
+3. Confirm the three-file snapshot and eleven-pack fallback reference.
 4. Update the judge install command from pinned `0.1.6` only after those checks pass.
 5. Preserve that the measured `possible-r1` pilot used `0.1.6`; publishing `0.1.7` does not retroactively change the tested version.
