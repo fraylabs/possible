@@ -46,7 +46,7 @@ describe("Possible", () => {
     expectBefore(container.querySelector(".build-hero")!, demo);
     expectBefore(demo, container.querySelector(".home-pack-index")!);
     const packs = screen.getByRole("list", { name: "Packs Possible can recommend" });
-    expect(within(packs).getAllByRole("listitem")).toHaveLength(11);
+    expect(within(packs).getAllByRole("listitem")).toHaveLength(12);
     for (const pack of outcomePacks) {
       expect(within(packs).getByRole("link", { name: `${pack.name}, ${pack.lane[0].toUpperCase()}${pack.lane.slice(1)} pack` })).toHaveAttribute(
         "href",
@@ -55,7 +55,7 @@ describe("Possible", () => {
     }
     expect(screen.queryByRole("link", { name: /Open the full pack reference/i })).not.toBeInTheDocument();
     const benchmark = screen.getByRole("region", { name: /Can Codex infer.*what you forgot to ask for/i });
-    expect(within(benchmark).getByText(/Compare Direct.*judgment.*artifacts.*human time/i)).toBeInTheDocument();
+    expect(benchmark.querySelector("header > p")).toHaveTextContent("Compare Direct, /goal, and $possible.");
     expect(within(benchmark).getAllByRole("link")).toHaveLength(2);
     for (const card of benchmarkCards) {
       expect(within(benchmark).getByRole("link", { name: new RegExp(card.shortTitle, "i") })).toHaveAttribute("href", `/benchmarks/${card.slug}`);
@@ -152,7 +152,7 @@ describe("Possible", () => {
     expect(screen.getByRole("heading", { name: /Reviewed recipes.*Recommended by Possible/i })).toBeInTheDocument();
     expect(screen.getByText(/Describe the outcome.*Possible recommends a pack.*you approve it/i)).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /Start with Possible/i })).toHaveAttribute("href", "/#start");
-    expect(screen.getByRole("button", { name: "All, 11 packs" })).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByRole("button", { name: "All, 12 packs" })).toHaveAttribute("aria-pressed", "true");
     expect(screen.getByRole("heading", { name: "Hardware Launch" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Software Launch" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Open-Source Release" })).toBeInTheDocument();
@@ -164,15 +164,18 @@ describe("Possible", () => {
     expect(screen.getByRole("heading", { name: "Billion-Dollar SaaS" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Kickstarter Funding" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Kickstarter Fulfillment" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Robot Prototype" })).toBeInTheDocument();
     expect(container.querySelector(".pack-art--working")).toBeInTheDocument();
     expect(container.querySelector(".pack-art--production-release")).toBeInTheDocument();
+    expect(container.querySelector(".pack-art--robot")).toBeInTheDocument();
 
-    await userEvent.click(screen.getByRole("button", { name: "Create, 3 packs" }));
+    await userEvent.click(screen.getByRole("button", { name: "Create, 4 packs" }));
     expect(screen.getByRole("heading", { name: "Playable Web Game" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Working Web App" })).toBeInTheDocument();
     expect(screen.queryByRole("heading", { name: "Hardware Launch" })).not.toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Billion-Dollar SaaS" })).toBeInTheDocument();
-    expect(screen.getByText("Showing 3 Create packs.")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Robot Prototype" })).toBeInTheDocument();
+    expect(screen.getByText("Showing 4 Create packs.")).toBeInTheDocument();
     expect(container.querySelector(".pack-grid")).toHaveClass("pack-grid--filtered");
     expect(container.querySelector(".pack-grid")).not.toHaveClass("pack-grid--single");
 

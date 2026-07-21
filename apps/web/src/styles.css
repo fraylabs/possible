@@ -970,6 +970,23 @@ footer .wordmark span { color: #151411; }
 .pack-art--fulfillment i { width: 13%; aspect-ratio: 1.25; border: 1px solid #151411; background: #f3f0e8; box-shadow: 5px 5px 0 #ff4d00; }
 .pack-art--fulfillment i:nth-child(2) { transform: translateY(-22px); }
 .pack-art--fulfillment i:nth-child(4) { transform: translateY(-11px); }
+.pack-art--robot { background: #c9d0ff; }
+.robot-kinematic { width: min(44vw, 560px); height: 58%; position: absolute; top: 17%; left: 50%; border: 1px solid #151411; background: linear-gradient(90deg, transparent 49.8%, #151411 50%, transparent 50.2%), linear-gradient(transparent 49.8%, #151411 50%, transparent 50.2%); transform: translateX(-50%) rotate(-2deg); box-shadow: 9px 9px 0 #151411; }
+.robot-kinematic b { width: 28%; height: 36%; position: absolute; top: 32%; left: 36%; border: 1px solid #151411; background: #ff4d00; }
+.robot-kinematic i { width: 19px; aspect-ratio: 1; position: absolute; border: 1px solid #151411; border-radius: 50%; background: #f3f0e8; box-shadow: 3px 3px 0 #151411; }
+.robot-kinematic i:nth-of-type(1) { top: 14%; left: 13%; }
+.robot-kinematic i:nth-of-type(2) { top: 14%; right: 13%; }
+.robot-kinematic i:nth-of-type(3) { bottom: 14%; left: 13%; }
+.robot-kinematic i:nth-of-type(4) { right: 13%; bottom: 14%; }
+.robot-kinematic i:nth-of-type(5) { top: 25%; left: 31%; }
+.robot-kinematic i:nth-of-type(6) { top: 25%; right: 31%; }
+.robot-kinematic i:nth-of-type(7) { bottom: 25%; left: 31%; }
+.robot-kinematic i:nth-of-type(8) { right: 31%; bottom: 25%; }
+.pack-art--robot strong { position: absolute; top: 8%; left: 4%; font: 9px "DM Mono", monospace; }
+.pack-art--robot span { position: absolute; bottom: 6%; padding: 5px 7px; border: 1px solid #151411; background: #f3f0e8; font: 8px "DM Mono", monospace; }
+.pack-art--robot span:nth-of-type(1) { left: 4%; }
+.pack-art--robot span:nth-of-type(2) { left: 50%; transform: translateX(-50%); }
+.pack-art--robot span:nth-of-type(3) { right: 4%; background: #151411; color: #c9d0ff; }
 .pack-art--fulfillment > strong { right: 3%; left: auto; }
 
 .demo-example-card--game { grid-column: 1 / -1; background: #78d9ff; }

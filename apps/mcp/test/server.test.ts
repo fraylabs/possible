@@ -23,7 +23,7 @@ describe("Possible MCP", () => {
     assert.equal(client.getInstructions(), POSSIBLE_SERVER_INSTRUCTIONS);
   });
 
-  it("lists all eleven outcome packs", async () => {
+  it("lists all twelve outcome packs", async () => {
     const result = await client.callTool({ name: "list_packs", arguments: {} });
     const envelope = result.structuredContent as { ok: boolean; data: { packs: Array<{ slug: string; lane: string }> } };
     assert.equal(envelope.ok, true);
@@ -39,7 +39,18 @@ describe("Possible MCP", () => {
       ["billion-dollar-saas", "create"],
       ["kickstarter-funding", "launch"],
       ["kickstarter-fulfillment", "operate"],
+      ["robot-prototype", "create"],
     ]);
+  });
+
+  it("compiles Robot Prototype", async () => {
+    const result = await client.callTool({ name: "compile_pack", arguments: { slug: "robot-prototype" } });
+    const envelope = result.structuredContent as { ok: boolean; data: { installCommands: string[]; runPrompt: string } };
+    assert.equal(envelope.ok, true);
+    assert.equal(envelope.data.installCommands.length, 3);
+    assert.match(envelope.data.runPrompt, /\$mujoco-robotics/);
+    assert.match(envelope.data.runPrompt, /Parametric STEP assembly/);
+    assert.match(envelope.data.runPrompt, /sim-to-real gap report/);
   });
 
   it("compiles Hardware Launch", async () => {

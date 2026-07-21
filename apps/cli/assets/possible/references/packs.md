@@ -396,6 +396,42 @@ npx skills@1.5.19 add github/awesome-copilot --skill impediment-prioritization -
 
 Run the first control cycle manually before offering a schedule. Scheduled cycles may inspect authorized privacy-safe evidence and prepare local state or drafts only. Purchasing, supplier contact, contracts, manufacturing orders, address exports, carrier bookings, labels, refunds, campaign changes, and backer messages remain separate explicit gates. Award 95% shipped only from privacy-safe campaign and carrier or fulfillment evidence against a frozen denominator; delivery is a separate claim.
 
+## Robot Prototype
+
+Slug: `robot-prototype`
+
+Lane: `create`
+
+Public page: `https://possible.sh/packs/robot-prototype`
+
+Use when a robot hand, gripper, arm, mobile robot, quadruped, or full robot needs one coherent digital prototype across mechanics, kinematics, planning semantics, controls, and simulation.
+
+Outputs: robot architecture and safety contract, parametric STEP assembly and component ledger, validated robot-description and planning-semantics package, MuJoCo model and task scene, bounded controller and ROS 2 interface baseline, deterministic tests and inspectable rollout, evidence receipt and sim-to-real gap report.
+
+Workstreams:
+
+- Robot architecture and safety contract — `robotics-design-patterns`, `robotics-software-principles`; owns `robot/architecture/` and `robot/interfaces/`.
+- Mechanical system and component model — `cad`, `step-parts`; owns `robot/mechanical/` and `robot/bom/`.
+- Robot description and planning semantics — `urdf`, `srdf`, `cad-viewer`; owns `robot/description/` and `robot/planning/`.
+- MuJoCo simulation and control baseline — `mujoco-robotics`, `ros2-development`; owns `robot/simulation/`, `robot/control/`, and `robot/tests/`.
+- Fresh review — `robotics-testing`, `cad-viewer`; verifies the integrated digital prototype and reports remaining sim-to-real gaps.
+
+Sources:
+
+- `fraylabs/possible`: `mujoco-robotics`; reviewed `9adb697c211d2cebc07164554d7a9f859e7f763d`.
+- `earthtojake/text-to-cad`: `cad`, `step-parts`, `urdf`, `srdf`, `cad-viewer`; reviewed `fdbb4b4fb62d95ae298cfe9a46fdc7092bdaf423`.
+- `arpitg1304/robotics-agent-skills`: `robotics-design-patterns`, `robotics-software-principles`, `ros2-development`, `robotics-testing`; reviewed `54f7b578f3dc269d29c0beb623b3f2611fd3a430`.
+
+Install:
+
+```bash
+npx skills@1.5.19 add fraylabs/possible --skill mujoco-robotics --agent codex
+npx skills@1.5.19 add earthtojake/text-to-cad --skill cad --skill step-parts --skill urdf --skill srdf --skill cad-viewer --agent codex
+npx skills@1.5.19 add arpitg1304/robotics-agent-skills --skill robotics-design-patterns --skill robotics-software-principles --skill ros2-development --skill robotics-testing --agent codex
+```
+
+Simulation is not physical validation. Do not connect to hardware, disable safety limits, purchase parts, fabricate components, or claim fabrication readiness, functional safety, payload, precision, stability, durability, or real-world task success without separate approval and direct evidence.
+
 ## Selection rule
 
 Recommend the pack whose finished outputs most closely match the user's desired end state:
@@ -411,7 +447,8 @@ Recommend the pack whose finished outputs most closely match the user's desired 
 - Rough ambition for an Atlassian-scale or billion-dollar SaaS company plus the complete product, growth, revenue, trust, and operating system → Billion-Dollar SaaS.
 - Rough product idea plus feasibility, offer, campaign assets, audience system, and a real Kickstarter funding path → Kickstarter Funding.
 - Funded Kickstarter campaign plus production, backer, logistics, communication, and 95%-shipped operations → Kickstarter Fulfillment.
+- Robot hand, gripper, arm, mobile robot, quadruped, or full robot plus coherent CAD, description, controls, and simulation evidence → Robot Prototype.
 
-Use Working Web App when the missing outcome is the product itself. Use Software Launch when the product works and the missing outcome is its first public story, site, and demo. Use Billion-Dollar SaaS when the user explicitly wants the broader company operating system and accepts that operational coverage cannot guarantee economic success. Use Kickstarter Funding when crowdfunding mechanics and payout are part of the outcome; use Kickstarter Fulfillment only after the campaign is funded. Use Production Web Release when a tested candidate exists and the missing outcome is a gated production promotion with rollback and smoke evidence. Use Web App Operations only after the app is live and the desired outcome is an ongoing reliability and maintenance rhythm. Use Marketing Operations when the product or offer exists and the missing outcome is a recurring marketing system. A distributable repository release belongs to Open-Source Release; one isolated bug, incident, or marketing asset with no requested recurring workflow is focused work, not a pack.
+Use Working Web App when the missing outcome is the product itself. Use Software Launch when the product works and the missing outcome is its first public story, site, and demo. Use Billion-Dollar SaaS when the user explicitly wants the broader company operating system and accepts that operational coverage cannot guarantee economic success. Use Kickstarter Funding when crowdfunding mechanics and payout are part of the outcome; use Kickstarter Fulfillment only after the campaign is funded. Use Robot Prototype for a simulation-backed digital prototype, not a fabrication-ready machine or hardware commissioning. Use Production Web Release when a tested candidate exists and the missing outcome is a gated production promotion with rollback and smoke evidence. Use Web App Operations only after the app is live and the desired outcome is an ongoing reliability and maintenance rhythm. Use Marketing Operations when the product or offer exists and the missing outcome is a recurring marketing system. A distributable repository release belongs to Open-Source Release; one isolated bug, incident, or marketing asset with no requested recurring workflow is focused work, not a pack.
 
 If none fits, say so. Do not force a pack or invent a new one during intake.

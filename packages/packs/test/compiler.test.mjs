@@ -15,6 +15,7 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
     "billion-dollar-saas",
     "kickstarter-funding",
     "kickstarter-fulfillment",
+    "robot-prototype",
   ]);
   assert.deepEqual(outcomePacks.map(({ slug, lane }) => [slug, lane]), [
     ["hardware-launch", "launch"],
@@ -28,8 +29,9 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
     ["billion-dollar-saas", "create"],
     ["kickstarter-funding", "launch"],
     ["kickstarter-fulfillment", "operate"],
+    ["robot-prototype", "create"],
   ]);
-  assert.deepEqual(outcomePacks.map((pack) => pack.catalogNumber), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
+  assert.deepEqual(outcomePacks.map((pack) => pack.catalogNumber), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
   assert.equal(new Set(outcomePacks.map((pack) => pack.catalogNumber)).size, outcomePacks.length);
   assert.equal(new Set(outcomePacks.map((pack) => pack.slug)).size, outcomePacks.length);
 
@@ -120,6 +122,37 @@ test("install commands group skills by upstream repository", () => {
   assert.match(production.runPrompt, /captain invokes the selected deployment adapter: \$sites-hosting for OpenAI Sites or \$deploy-to-vercel for Vercel/);
   assert.equal(production.pack.plugins[0].invocation, "@sites");
   assert.deepEqual(production.pack.workstreams.find((stream) => stream.id === "delivery").skills, ["github-actions-hardening"]);
+
+  const robot = bySlug("robot-prototype");
+  assert.equal(robot.installCommands.length, 3);
+  assert.match(robot.installCommands[0], /fraylabs\/possible.+mujoco-robotics/);
+  assert.match(robot.installCommands[1], /earthtojake\/text-to-cad.+cad.+step-parts.+urdf.+srdf.+cad-viewer/);
+  assert.match(robot.installCommands[2], /arpitg1304\/robotics-agent-skills.+robotics-design-patterns.+robotics-software-principles.+ros2-development.+robotics-testing/);
+  assert.match(robot.runPrompt, /MuJoCo simulation and control baseline/);
+  assert.match(robot.runPrompt, /Do not connect to, commission, or command physical hardware/i);
+});
+
+test("Robot Prototype generalizes one verified digital-prototype contract across robot forms", () => {
+  const robot = outcomePacks.find((pack) => pack.slug === "robot-prototype");
+  assert.ok(robot);
+  assert.equal(robot.catalogNumber, 12);
+  assert.equal(robot.lane, "create");
+  assert.match(robot.useWhen.join(" "), /robot hand.*gripper.*arm.*mobile robot.*quadruped.*full robot/i);
+  assert.match(robot.outputs.join(" "), /STEP assembly.*robot-description.*MuJoCo.*controller.*simulation tests.*sim-to-real gap/i);
+  assert.deepEqual(robot.reviewSkills, ["robotics-testing", "cad-viewer"]);
+
+  const skillIds = new Set(robot.skills.map((skill) => skill.id));
+  for (const required of ["mujoco-robotics", "cad", "step-parts", "urdf", "srdf", "cad-viewer", "robotics-design-patterns", "robotics-software-principles", "ros2-development", "robotics-testing"]) {
+    assert.equal(skillIds.has(required), true, `missing ${required}`);
+  }
+
+  const owned = robot.workstreams.flatMap((stream) => stream.owns.map((path) => ({ stream: stream.id, path })));
+  for (const left of owned) {
+    for (const right of owned) {
+      if (left.stream === right.stream) continue;
+      assert.equal(left.path.startsWith(right.path) || right.path.startsWith(left.path), false, `${left.path} overlaps ${right.path}`);
+    }
+  }
 });
 
 test("Sites is exposed only on web deployment outcomes and never as a fake Skills CLI install", () => {

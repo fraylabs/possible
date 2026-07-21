@@ -8,7 +8,7 @@
   "scripts": {
     "build": "npm run build -w @possible/packs && npm run build -w @fraylabs/possible && npm run build -w @possible/mcp && npm run build -w @possible/web",
     "test": "npm run test -w @possible/packs && npm run test -w @fraylabs/possible && npm run test -w @possible/mcp && npm run test -w @possible/web",
-    "skill:validate": "node scripts/validate-skill.mjs && python /Users/brianlim/.codex/skills/.system/skill-creator/scripts/quick_validate.py skills/possible",
+    "skill:validate": "node scripts/validate-skill.mjs && python /Users/brianlim/.codex/skills/.system/skill-creator/scripts/quick_validate.py skills/possible && python /Users/brianlim/.codex/skills/.system/skill-creator/scripts/quick_validate.py skills/mujoco-robotics",
     "demo:validate": "node scripts/validate-demo-bundle.mjs",
     "routes:validate": "node scripts/validate-routes.mjs",
     "submission:validate": "node scripts/validate-submission.mjs",

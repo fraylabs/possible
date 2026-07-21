@@ -56,6 +56,7 @@ const gallerySlugs = [
   "billion-dollar-saas",
   "kickstarter-funding",
   "kickstarter-fulfillment",
+  "robot-prototype",
 ] as const;
 const galleryPacks = gallerySlugs.map((slug) => outcomePacks.find((pack) => pack.slug === slug)!).filter(Boolean);
 const navigationItems = [
@@ -247,7 +248,7 @@ function CreatePage() {
             <span>BENCHMARK SUITE / TWO OUTCOMES</span>
             <h2 id="home-benchmark-heading">Can Codex infer <em>what you forgot to ask for?</em></h2>
           </div>
-          <p>Compare Direct, <code>/goal</code>, and <code>$possible</code> on judgment, artifacts, and human time.</p>
+          <p>Compare Direct, <code>/goal</code>, and <code>$possible</code>.</p>
         </header>
         <ol className="home-benchmark-links" aria-label="Possible benchmarks">
           {benchmarkCards.map((benchmark) => (
@@ -734,6 +735,15 @@ function PackArtwork({ slug }: { slug: string }) {
       <div className="pack-art pack-art--fulfillment" aria-hidden="true">
         <div><i /><i /><i /><i /><i /></div><strong>95% SHIPPED</strong>
         <span>BUILD</span><span>PACK</span><span>SHIP</span>
+      </div>
+    );
+  }
+  if (slug === "robot-prototype") {
+    return (
+      <div className="pack-art pack-art--robot" aria-hidden="true">
+        <div className="robot-kinematic"><b />{Array.from({ length: 8 }, (_, index) => <i key={index} />)}</div>
+        <strong>MODEL → CONTROL → PROOF</strong>
+        <span>CAD</span><span>KINEMATICS</span><span>MUJOCO</span>
       </div>
     );
   }

@@ -1,6 +1,6 @@
 ---
 name: possible
-description: Turn an unclear ambition into a concrete, verified outcome through a short guided conversation, then assemble and run the right reviewed Codex skills after confirmation. Use when the user invokes $possible, asks what they should build, ship, fund, release, operate, or schedule, wants help defining an outcome before implementation, or wants a Working Web App, Playable Web Game, Hardware Launch, Software Launch, Open-Source Release, Production Web Release, Billion-Dollar SaaS, Kickstarter Funding, Kickstarter Fulfillment, recurring Web App Operations, or recurring Marketing Operations outcome coordinated end to end.
+description: Turn an unclear ambition into a concrete, verified outcome through a short guided conversation, then assemble and run the right reviewed Codex skills after confirmation. Use when the user invokes $possible, asks what they should build, ship, fund, release, operate, or schedule, wants help defining an outcome before implementation, or wants a Working Web App, Playable Web Game, Robot Prototype, Hardware Launch, Software Launch, Open-Source Release, Production Web Release, Billion-Dollar SaaS, Kickstarter Funding, Kickstarter Fulfillment, recurring Web App Operations, or recurring Marketing Operations outcome coordinated end to end.
 ---
 
 # Possible

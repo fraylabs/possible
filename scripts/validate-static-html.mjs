@@ -45,7 +45,7 @@ const packsIndex = home.indexOf('class="home-pack-index"');
 assert.ok(heroIndex >= 0 && demoIndex > heroIndex && packsIndex > demoIndex, "The homepage must place demos between the hero and packs");
 assert.match(home, /BENCHMARK SUITE \/ TWO OUTCOMES/);
 assert.match(home, /Can Codex infer[\s\S]*what you forgot to ask for/);
-assert.match(home, /Compare Direct,[\s\S]*judgment, artifacts, and human time/);
+assert.match(home, /Compare Direct,[\s\S]*\/goal[\s\S]*\$possible/);
 assert.doesNotMatch(home, /href="\/proof"/);
 assert.doesNotMatch(home, /href="\/#packs"|Browse packs/);
 assert.match(homeMarkup, /<meta property="og:image" content="https:\/\/possible\.sh\/og\.png"\/>/);
