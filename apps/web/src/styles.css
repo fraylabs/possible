@@ -843,7 +843,7 @@ footer .wordmark span { color: #151411; }
 .demo-verification-story strong { margin-top: auto; font-size: 13px; line-height: 1.45; }
 .demo-verification-story .is-failure { background: #ff8c5a; }
 .demo-verification-story .is-pass { background: #a8ff52; }
-.demo-evidence-output a { min-height: 190px; padding: 16px; border-right: 1px solid #aaa59a; border-bottom: 1px solid #aaa59a; display: flex; flex-direction: column; }
+.demo-evidence-output a { min-width: 0; min-height: 190px; padding: 16px; border-right: 1px solid #aaa59a; border-bottom: 1px solid #aaa59a; display: flex; flex-direction: column; }
 .demo-evidence-output a:nth-child(3n) { border-right: 0; }
 .demo-evidence-output a:nth-last-child(-n+3) { border-bottom: 0; }
 .demo-evidence-output a span, .demo-evidence-output a i { color: #777169; font: 7px "DM Mono", monospace; font-style: normal; }
@@ -885,7 +885,7 @@ footer .wordmark span { color: #151411; }
   .demo-outcome-header, .demo-conversation > header { grid-template-columns: 1fr; }
   .demo-outcome-summary, .demo-conversation > header > p { margin-top: 24px; }
   .demo-output-grid { grid-template-columns: 1fr; gap: 55px; }
-  .demo-evidence-output > div { grid-template-columns: repeat(2, 1fr); }
+  .demo-evidence-output > div:not(.demo-verification-story) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .demo-evidence-output a:nth-child(3n) { border-right: 1px solid #aaa59a; }
   .demo-evidence-output a:nth-child(2n) { border-right: 0; }
   .demo-evidence-output a:nth-last-child(-n+3) { border-bottom: 1px solid #aaa59a; }
@@ -1422,7 +1422,7 @@ footer .wordmark span { color: #151411; }
   .demo-site-output > footer, .demo-output-card > footer { align-items: flex-start; flex-direction: column; }
   .demo-output-card > footer > div { justify-content: flex-start; }
   .demo-evidence-output > header { align-items: flex-start; flex-direction: column; justify-content: center; gap: 6px; }
-  .demo-evidence-output > div { grid-template-columns: 1fr; }
+  .demo-evidence-output > div:not(.demo-verification-story) { grid-template-columns: minmax(0, 1fr); }
   .demo-evidence-output a, .demo-evidence-output a:nth-child(2n), .demo-evidence-output a:nth-child(3n), .demo-evidence-output a:nth-last-child(-n+2) { border-right: 0; border-bottom: 1px solid #aaa59a; }
   .demo-evidence-output a:last-child { border-bottom: 0; }
   .demo-outcome-footer { padding: 35px 18px; align-items: flex-start; flex-direction: column; }

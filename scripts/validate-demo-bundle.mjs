@@ -197,6 +197,7 @@ if (!robotViewerGuide.includes("uvx --from 'rerun-sdk==0.34.1' rerun robot-snake
 }
 
 const appSource = await readFile(path.join(repository, "apps/web/src/App.tsx"), "utf8");
+const stylesSource = await readFile(path.join(repository, "apps/web/src/styles.css"), "utf8");
 if (!appSource.includes('path === "/demo/game/play"') || !appSource.includes('<PaperPlaneGame />')) {
   failures.push("Playable Web Game proof must expose the full-screen /demo/game/play route");
 }
@@ -210,6 +211,13 @@ for (const claimBoundary of ["Aggregate propulsion", "Physical locomotion", "act
   if (!appSource.toLowerCase().includes(claimBoundary.toLowerCase())) {
     failures.push(`Robot Prototype page is missing claim boundary: ${claimBoundary}`);
   }
+}
+if (
+  !stylesSource.includes(".demo-evidence-output a { min-width: 0;")
+  || !stylesSource.includes(".demo-evidence-output > div:not(.demo-verification-story) { grid-template-columns: repeat(2, minmax(0, 1fr)); }")
+  || !stylesSource.includes(".demo-evidence-output > div:not(.demo-verification-story) { grid-template-columns: minmax(0, 1fr); }")
+) {
+  failures.push("Demo evidence grids must preserve shrinkable tablet and single-column mobile layouts");
 }
 
 const packageJson = JSON.parse(await readFile(path.join(releaseRoot, "package.json"), "utf8"));
