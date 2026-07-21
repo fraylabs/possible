@@ -61,9 +61,11 @@ More agent output does not create a complete outcome. Strong outcomes require th
 
 The user should supply the ambition. Possible should supply the operational knowledge needed to pursue it.
 
+`/goal` sustains pursuit. Possible supplies the reviewed outcome contract. Together, they combine persistence with operational judgment.
+
 ## What's next for Possible.sh
 
-Next, we will test whether outside users can author Outcome Packs and reproduce the recorded outcomes.
+Next, we will test outside-authored Outcome Packs.
 
 ## Quickstart
 

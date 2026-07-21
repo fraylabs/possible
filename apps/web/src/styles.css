@@ -1327,6 +1327,17 @@ footer .wordmark span { color: #151411; }
 .robot-comparison-row--head > * { color: #b7b2a9 !important; font-size: 9px; }
 .robot-comparison-note { max-width: 760px; margin: 24px 0 0; color: #928d84; font: 400 13px/1.55 "DM Sans", sans-serif; }
 .robot-comparison-note strong { color: #f8f5ed; }
+.robot-comparison-roles { margin-top: 72px; border-top: 1px solid #57534d; display: grid; grid-template-columns: 1.15fr 1fr 1fr; }
+.robot-comparison-roles > * { min-width: 0; padding: 28px 24px; border-right: 1px solid #57534d; }
+.robot-comparison-roles > header { padding-left: 0; }
+.robot-comparison-roles > article:last-of-type { border-right: 0; }
+.robot-comparison-roles h3 { margin: 34px 0 0; font: 500 clamp(27px, 3vw, 44px)/.94 "DM Sans", sans-serif; letter-spacing: -.055em; }
+.robot-comparison-roles article { display: flex; flex-direction: column; }
+.robot-comparison-roles article span { color: #a8ff52; font: 500 9px "DM Mono", monospace; }
+.robot-comparison-roles article strong { margin: auto 0 12px; font: 500 20px "DM Sans", sans-serif; }
+.robot-comparison-roles article p { margin: 0; color: #928d84; font: 400 13px/1.55 "DM Sans", sans-serif; }
+.robot-comparison-roles footer { grid-column: 1 / -1; padding-inline: 0; border-top: 1px solid #57534d; border-right: 0; color: #b7b2a9; font: 400 15px/1.55 "DM Sans", sans-serif; }
+.robot-comparison-roles footer code { color: #fff; font: inherit; }
 .robot-viewer-card,
 .robot-simulation-card,
 .robot-cad-review {
@@ -1432,6 +1443,10 @@ footer .wordmark span { color: #151411; }
   .robot-comparison-row > *:first-child { grid-column: 1 / -1; border-bottom: 1px solid #3c3934; }
   .robot-comparison-row > span:nth-child(2) { border-left: 0; }
   .robot-comparison-row--head > *:first-child { display: none; }
+  .robot-comparison-roles { grid-template-columns: 1fr; }
+  .robot-comparison-roles > * { padding-inline: 0; border-right: 0; border-bottom: 1px solid #57534d; }
+  .robot-comparison-roles > article { min-height: 190px; }
+  .robot-comparison-roles footer { grid-column: auto; border-top: 0; border-bottom: 0; }
   .demo-gallery-grid { padding: 18px 18px 70px; grid-template-columns: 1fr; }
   .demo-example-card--presentation { grid-column: auto; }
   .demo-example-card--hardware { grid-row: auto; }

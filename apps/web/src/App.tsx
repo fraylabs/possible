@@ -912,6 +912,12 @@ function RobotSnakeComparison() {
         {rows.map(([requirement, control, possible]) => <div className="robot-comparison-row" role="row" key={requirement}><strong>{requirement}</strong><span>{control}</span><span>{possible}</span></div>)}
       </div>
       <p className="robot-comparison-note"><strong>The control was not weakened.</strong> It produced gait controls, collision handling, telemetry, a BOM, compiled ESP32 firmware, and 18 passing tests. The difference is the expert work the rough request never named.</p>
+      <div className="robot-comparison-roles">
+        <header><p className="eyebrow">DIFFERENT JOBS / BETTER TOGETHER</p><h3>Persistence meets<br />operational judgment.</h3></header>
+        <article><span>/GOAL</span><strong>Dynamic pursuit</strong><p>Keeps Codex moving toward an objective, adapting as the repository and evidence change.</p></article>
+        <article><span>$POSSIBLE</span><strong>Controlled outcome</strong><p>Supplies a reviewed definition of the work, safeguards, interfaces, evidence, and completion required.</p></article>
+        <footer>Possible can shape the initial goal. <code>/goal</code> can sustain its execution and expose useful discoveries. Reviewed discoveries can then strengthen the next Outcome Pack version.</footer>
+      </div>
     </section>
   );
 }

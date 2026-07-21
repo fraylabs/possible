@@ -8,6 +8,8 @@ The run produced CAD, URDF/SRDF, MuJoCo control, obstacle avoidance, and Rerun t
 
 A clean `/goal` control given the same rough idea produced a capable browser simulator, hardware plan, compiled firmware, and 18 tests. It did not infer the pack's CAD, robot descriptions, MuJoCo physics, autonomy proof, Rerun evidence, or fresh verification. [Inspect the preserved comparison](apps/web/public/demo/robot-snake/CONTROL-RUN.md).
 
+`/goal` sustains dynamic pursuit. Possible supplies the reviewed outcome contract. They work together: persistence toward a stronger definition of done.
+
 Possible.sh is an open-source library of Outcome Packs for Codex. An Outcome Pack combines an execution prompt, agent skills, sequencing, safeguards, and completion checks. The `$possible` skill understands the request, recommends a pack, asks for approval, and runs it.
 
 ## OpenAI Build Week

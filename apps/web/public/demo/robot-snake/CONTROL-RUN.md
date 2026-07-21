@@ -48,3 +48,11 @@ The control was not a straw man. It produced a browser-based kinematic simulator
 `/goal` turned the idea into a capable simulator and firmware handoff. Possible turned the same level of non-expert intent into the multidisciplinary digital-prototype contract it already knew to pursue: geometry, robot descriptions, physics, autonomy, telemetry, integration checks, and independent verification.
 
 The comparison tests transferred operational judgment, not whether Codex can write code.
+
+## Different jobs, better together
+
+`/goal` provides dynamic pursuit. It keeps Codex working toward an objective and adapting as the repository and evidence change.
+
+Possible provides a controlled outcome. It begins with reviewed operational knowledge: required workstreams, safeguards, interfaces, evidence, and completion conditions.
+
+They are complementary. Possible can shape a stronger initial goal; `/goal` can sustain its execution and expose useful discoveries. The control's firmware, bill of materials, and safety work are concrete candidates to review when strengthening a future Robot Prototype pack version.
