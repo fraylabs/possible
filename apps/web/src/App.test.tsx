@@ -495,6 +495,8 @@ describe("Possible", () => {
     expect(screen.getByRole("link", { name: /Generated URDF/i })).toHaveAttribute("href", "/demo/robot-snake/model/robot-snake.urdf");
     expect(screen.getByRole("link", { name: /What remains unproven/i })).toHaveAttribute("href", "/demo/robot-snake/evidence/sim-to-real-gaps.md");
     expect(screen.getByRole("group", { name: /Interactive static CAD viewer/i })).toBeInTheDocument();
+    expect(screen.getByText(/Static CAD view.*Interactive preview loads when supported/i)).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /Rotate CAD left/i })).not.toBeInTheDocument();
     expect(screen.getByRole("link", { name: /DOWNLOAD RRD/i })).toHaveAttribute("href", "/demo/robot-snake/viewer/robot-snake.rrd");
     expect(screen.getByRole("link", { name: /OPEN LOCAL GUIDE/i })).toHaveAttribute("href", "/demo/robot-snake/viewer/README.md");
     expect(screen.getByRole("link", { name: /VERIFY RECORDING/i })).toHaveAttribute("href", "/demo/robot-snake/viewer/robot-snake.manifest.json");

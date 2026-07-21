@@ -10,7 +10,7 @@ export default function RobotSnakeViewer() {
   const controlsRef = useRef<OrbitControls | null>(null);
   const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
   const rotatingRef = useRef(true);
-  const [status, setStatus] = useState("Loading CAD…");
+  const [status, setStatus] = useState("Static CAD view · Interactive preview loads when supported");
   const [ready, setReady] = useState(false);
   const [rotating, setRotating] = useState(true);
 
@@ -22,10 +22,15 @@ export default function RobotSnakeViewer() {
   useEffect(() => {
     const host = hostRef.current;
     if (!host) return;
-    if (typeof WebGLRenderingContext === "undefined" || navigator.userAgent.toLowerCase().includes("jsdom")) {
-      setStatus("Static CAD view · Download GLB below");
+    if (process.env.NODE_ENV === "test") return;
+
+    const probe = document.createElement("canvas");
+    const webgl = probe.getContext("webgl2") ?? probe.getContext("webgl");
+    if (!webgl) {
+      setStatus("Static CAD view · WebGL unavailable; download GLB below");
       return;
     }
+    setStatus("Static CAD view · Preparing interactive preview…");
 
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0xe9edf3);
@@ -34,15 +39,19 @@ export default function RobotSnakeViewer() {
     camera.position.set(1.55, 1.1, 1.25);
     cameraRef.current = camera;
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+    let renderer: THREE.WebGLRenderer;
+    try {
+      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+    } catch {
+      setStatus("Static CAD view · WebGL unavailable; download GLB below");
+      return;
+    }
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.15;
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-    host.appendChild(renderer.domElement);
-
     const controls = new OrbitControls(camera, renderer.domElement);
     controlsRef.current = controls;
     controls.enableDamping = true;
@@ -79,6 +88,7 @@ export default function RobotSnakeViewer() {
     scene.add(floor);
 
     let disposed = false;
+    let loadFailed = false;
     let frame = 0;
 
     const resize = () => {
@@ -108,14 +118,20 @@ export default function RobotSnakeViewer() {
           child.receiveShadow = true;
         });
         scene.add(model);
+        host.appendChild(renderer.domElement);
         setReady(true);
         setStatus("Drag to inspect · Scroll to zoom");
       },
       undefined,
-      () => setStatus("CAD preview unavailable · Download GLB below"),
+      () => {
+        loadFailed = true;
+        window.cancelAnimationFrame(frame);
+        setStatus("Static CAD view · Interactive GLB unavailable; download below");
+      },
     );
 
     const animate = () => {
+      if (disposed || loadFailed) return;
       controls.update();
       renderer.render(scene, camera);
       frame = window.requestAnimationFrame(animate);
@@ -176,12 +192,12 @@ export default function RobotSnakeViewer() {
       <img className={ready ? "is-hidden" : undefined} src="/demo/robot-snake/cad/iso.png" alt="Isometric CAD view of the ten-link robot snake digital prototype" />
       <p aria-live="polite">{status}</p>
       <span>STATIC CAD / GLB</span>
-      <div className="robot-model-controls" aria-label="CAD view controls">
-        <button type="button" onClick={() => rotateCamera(-1)} disabled={!ready} aria-label="Rotate CAD left">←</button>
-        <button type="button" onClick={() => setRotating((value) => !value)} disabled={!ready}>{rotating ? "PAUSE" : "ROTATE"}</button>
-        <button type="button" onClick={() => rotateCamera(1)} disabled={!ready} aria-label="Rotate CAD right">→</button>
-        <button type="button" onClick={resetCamera} disabled={!ready}>RESET</button>
-      </div>
+      {ready ? <div className="robot-model-controls" aria-label="CAD view controls">
+        <button type="button" onClick={() => rotateCamera(-1)} aria-label="Rotate CAD left">←</button>
+        <button type="button" onClick={() => setRotating((value) => !value)}>{rotating ? "PAUSE" : "ROTATE"}</button>
+        <button type="button" onClick={() => rotateCamera(1)} aria-label="Rotate CAD right">→</button>
+        <button type="button" onClick={resetCamera}>RESET</button>
+      </div> : null}
     </div>
   );
 }
