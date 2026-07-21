@@ -1,6 +1,6 @@
 # Possible
 
-Possible gives Codex the workstreams, safeguards and verification needed to complete ambitious outcomes involving dozens of coordinated tasks.
+Possible.sh is an open-source library of Outcome Packs. Each pack combines a reusable execution prompt and selected agent skills for dozens of coordinated tasks.
 
 People often know what they want without knowing every task, decision or quality check it requires. `$possible` turns that rough request into an approved Outcome Pack, coordinates the work and verifies the result.
 
@@ -69,7 +69,7 @@ The run records the confirmed brief and exact pack snapshot. A fresh verifier ch
 
 Commit [`afb5fc1`](https://github.com/fraylabs/possible/commit/afb5fc1c1e01d746753712ddc79f456df0984826) marks the product reset that introduced the current Outcome Pack architecture. The repository history after that boundary records the typed manifests, compiler, installable skill, CLI, public site, preserved runs and verification repairs.
 
-[BUILD-WEEK.md](BUILD-WEEK.md) documents the before-and-after boundary, Codex contributions, human product decisions, required session evidence and `/feedback` submission information. The submission owner must confirm the official event time range and GPT-5.6 session record from the Build Week account.
+[BUILD-WEEK.md](BUILD-WEEK.md) documents the before-and-after boundary, Codex contributions, human product decisions and primary Codex task evidence. The submission owner must confirm the official event time range and GPT-5.6 model record from the Build Week account.
 
 ## Repository
 

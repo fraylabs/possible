@@ -12,7 +12,7 @@ const [readme, devpost, video, buildWeek, npmRelease] = await Promise.all([
   read("submission/NPM-0.1.8-RELEASE.md"),
 ]);
 
-const coreLanguage = "Possible gives Codex the workstreams, safeguards and verification needed to complete ambitious outcomes involving dozens of coordinated tasks.";
+const coreLanguage = "Possible.sh is an open-source library of Outcome Packs. Each pack combines a reusable execution prompt and selected agent skills for dozens of coordinated tasks.";
 for (const [label, source] of [["README", readme], ["Devpost", devpost], ["video", video]]) {
   assert.match(source, new RegExp(coreLanguage.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")), `${label} must use the core language`);
   assert.match(source, /npx @fraylabs\/possible@0\.1\.8 init/, `${label} must use the canonical install`);
@@ -26,9 +26,36 @@ for (const name of ["Still", "Robot Snake", "Fold", "Web Presentation"]) {
   assert.match(video, new RegExp(name), `Video must feature ${name}`);
 }
 
+for (const heading of [
+  "Inspiration",
+  "What it does",
+  "How we built it",
+  "Challenges we ran into",
+  "Accomplishments that we're proud of",
+  "What we learned",
+  "What's next for Possible.sh",
+  "Built with",
+  "Try it out links",
+]) {
+  assert.match(devpost, new RegExp(`^## ${heading.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`, "m"), `Devpost must include ${heading}`);
+}
+for (const url of [
+  "https://possible.sh",
+  "https://possible.sh/demo",
+  "https://www.npmjs.com/package/@fraylabs/possible",
+  "https://github.com/fraylabs/possible",
+  "https://youtu.be/s35aGhVI2Eo",
+]) {
+  assert.match(devpost, new RegExp(url.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")), `Devpost must include ${url}`);
+}
+
 assert.doesNotMatch(devpost, /\bMCP\b|recurring operations?|schedule operations/i, "Devpost must keep the primary pitch focused");
 assert.doesNotMatch(video, /\bMCP\b|recurring operations?|schedule operations/i, "Video must keep the primary pitch focused");
-assert.match(buildWeek, /Primary Codex \/feedback session ID: \[ADD SESSION ID\]/);
+assert.match(buildWeek, /Primary Codex task\/session ID: 019f7517-658f-7723-8686-2ecda930c00a/);
+assert.match(buildWeek, /Demo video: https:\/\/youtu\.be\/s35aGhVI2Eo/);
+assert.match(devpost, /Demo video: https:\/\/youtu\.be\/s35aGhVI2Eo/);
+assert.match(video, /Published demo: https:\/\/youtu\.be\/s35aGhVI2Eo/);
+assert.doesNotMatch(`${readme}\n${devpost}\n${video}\n${buildWeek}`, /feedback session ID/i, "Submission copy must not conflate feedback references with Codex task IDs");
 assert.match(buildWeek, /Eligible commit range: \[FIRST ELIGIBLE COMMIT\]\.\.\[FINAL SUBMISSION COMMIT\]/);
 assert.match(npmRelease, /dist-tag: latest/);
 assert.match(npmRelease, /b37e601945cadfe800da92ab59bf0b059546ae36/);

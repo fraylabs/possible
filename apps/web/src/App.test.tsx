@@ -25,7 +25,7 @@ describe("Possible", () => {
     const { container } = render(<App />);
 
     expect(screen.getByRole("heading", { name: /Complete a possible\s*outcome\./, level: 1 })).toBeInTheDocument();
-    expect(screen.getByText(/Possible gives Codex the workstreams, safeguards and verification needed.*dozens of coordinated tasks/i)).toBeInTheDocument();
+    expect(container.querySelector(".build-hero-description")).toHaveTextContent(/Possible\.sh is an open-source library of Outcome Packs.*dozens of coordinated tasks/i);
     expect(screen.getByText(installCommand)).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Star on GitHub ↗" })).toHaveAttribute("href", "https://github.com/fraylabs/possible");
 

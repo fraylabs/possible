@@ -54,13 +54,13 @@ Before submission, add:
 1. official Build Week start and end timestamps;
 2. first eligible commit and frozen submission commit;
 3. the GPT-5.6 Codex task/session record;
-4. the primary Codex `/feedback` session ID;
+4. the primary Codex task/session ID shown by `/status`;
 5. the final demo-video URL.
 
 ```text
-Primary Codex /feedback session ID: [ADD SESSION ID]
+Primary Codex task/session ID: 019f7517-658f-7723-8686-2ecda930c00a
 Eligible commit range: [FIRST ELIGIBLE COMMIT]..[FINAL SUBMISSION COMMIT]
-Demo video: [ADD URL]
+Demo video: https://youtu.be/s35aGhVI2Eo
 ```
 
 The canonical judge package is `@fraylabs/possible@0.1.8`.

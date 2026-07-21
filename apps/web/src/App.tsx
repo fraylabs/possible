@@ -159,7 +159,7 @@ function CreatePage() {
           <div className="build-hero-copy">
             <p className="eyebrow">OPEN SOURCE / FOR CODEX</p>
             <h1>Complete a possible<br /><em>outcome.</em></h1>
-            <p className="build-hero-description">Possible gives Codex the workstreams, safeguards and verification needed to complete ambitious outcomes involving dozens of coordinated tasks.</p>
+            <p className="build-hero-description"><strong>Possible.sh is an open-source library of Outcome Packs.</strong> Each pack combines a reusable execution prompt and selected agent skills for dozens of coordinated tasks.</p>
             <div className="build-hero-actions">
               <a className="button-link" href={githubUrl} target="_blank" rel="noreferrer">Star on GitHub <span>↗</span></a>
               <a className="text-link" href="/demo">See the outcomes ↗</a>

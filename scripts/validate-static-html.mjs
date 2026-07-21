@@ -14,7 +14,7 @@ assert.ok(featuredPacks.every(Boolean), "Every featured Outcome Pack must exist"
 const homeMarkup = await html("index.html");
 const home = visibleText(homeMarkup);
 assert.match(home, /Complete a possible[\s\S]*outcome\./);
-assert.match(home, /Possible gives Codex the workstreams, safeguards and verification needed to complete ambitious outcomes involving dozens of coordinated tasks\./);
+assert.match(home, /Possible\.sh is an open-source library of Outcome Packs\.[\s\S]*dozens of coordinated tasks\./);
 assert.match(home, /npx @fraylabs\/possible@0\.1\.8 init/);
 assert.match(home, /DESCRIBE[\s\S]*APPROVE[\s\S]*EXECUTE[\s\S]*VERIFY/);
 assert.match(home, /FEATURED OUTCOMES/);

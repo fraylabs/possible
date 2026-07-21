@@ -8,7 +8,7 @@ Show a blank Codex project and the request: “I want to make a robot snake.”
 
 ## 0:15–0:30 — The product
 
-> Possible gives Codex the workstreams, safeguards and verification needed to complete ambitious outcomes involving dozens of coordinated tasks.
+> Possible.sh is an open-source library of Outcome Packs. Each pack combines a reusable execution prompt and selected agent skills for dozens of coordinated tasks.
 
 Show:
 
@@ -80,4 +80,4 @@ github.com/fraylabs/possible
 - Show GPT-5.6 and Codex in the recorded task.
 - Show the actual `$possible` conversation and generated artifacts.
 - Show at least one failed verifier result, repair and passing rerun.
-- Add the final YouTube URL and `/feedback` session ID to the submission.
+- Published demo: https://youtu.be/s35aGhVI2Eo. Keep the primary Codex task/session ID consistent with `BUILD-WEEK.md`.
