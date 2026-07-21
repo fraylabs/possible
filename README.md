@@ -26,7 +26,7 @@ Requirements: Codex with project skills enabled, Node.js 22 or newer, npm and a 
 From that project:
 
 ```bash
-npx @fraylabs/possible@0.1.8 init
+npx @fraylabs/possible@0.1.9 init
 ```
 
 Open or reload the project in Codex, then enter:

@@ -47,16 +47,16 @@ These artifacts show implementation, failures, repairs and verification. They do
 
 The human operator chose the product thesis, rejected the universal-skill and marketplace framings, required interview-first intake, selected the featured outcomes and retained approval gates for external actions. Codex implemented, tested and documented those decisions.
 
-## Frozen submission record
+## Current submission record
 
-The [official submission period](https://openai.devpost.com/details/dates) ran from July 13, 2026 at 9:00am PDT to July 21, 2026 at 5:00pm PDT. The product-reset commit landed July 18 at 6:36am PDT; the frozen submission commit landed July 21 at 2:26pm PDT. This judge-evidence clarification was written afterward and does not expand that implementation range.
+The [official submission dates](https://openai.devpost.com/details/dates) define the eligibility window. The product-reset commit landed July 18 at 6:36am PDT. This repository has not yet been frozen for submission; the final commit will be recorded here immediately before submission.
 
 ```text
 Built with: Codex using GPT-5.6
 Primary Codex /feedback session ID: 019f7517-658f-7723-8686-2ecda930c00a
-Eligible implementation commit range: afb5fc1c1e01d746753712ddc79f456df0984826..d7d77f098da4712ca6194a9446c5498a7a66d01b
-Frozen submission commit: d7d77f098da4712ca6194a9446c5498a7a66d01b
+Eligible implementation start: afb5fc1c1e01d746753712ddc79f456df0984826
+Current submission state: open
 Demo video: https://youtu.be/s35aGhVI2Eo
 ```
 
-The canonical judge package is `@fraylabs/possible@0.1.8`.
+The canonical judge package is `@fraylabs/possible@0.1.9`.

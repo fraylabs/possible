@@ -70,7 +70,7 @@ describe("Possible", () => {
     Object.assign(navigator, { clipboard: { writeText } });
     render(<App />);
     await userEvent.click(screen.getByRole("button", { name: /Copy install command/i }));
-    expect(writeText).toHaveBeenCalledWith("npx @fraylabs/possible@0.1.8 init");
+    expect(writeText).toHaveBeenCalledWith("npx @fraylabs/possible@0.1.9 init");
   });
 
   it("exposes only the four featured Outcome Packs", async () => {

@@ -1,21 +1,21 @@
-# `@fraylabs/possible@0.1.8` release receipt
+# `@fraylabs/possible@0.1.9` release receipt
 
-Verified from the public npm registry on 2026-07-21.
+Verified from the release tarball and public npm registry on 2026-07-22.
 
 ```text
 package: @fraylabs/possible
-version: 0.1.8
+version: 0.1.9
 dist-tag: latest
 node: >=22
 binary: possible -> src/index.mjs
-shasum: b37e601945cadfe800da92ab59bf0b059546ae36
-integrity: sha512-UtyCRm9AqbHY5bOmk19Y4a9gqEJ46lf1kBvEmjM5uMZAKrt4rvMz533lHt/73YHLJb0lLKZpXyfZbyEPPupMVQ==
+shasum: 8a12fb444ba885e023b564b646fe3948279abb8e
+integrity: sha512-4g45i78fXPz+F9RaNlpM3e1L39Y+I3IpNmntZd1oL9JxRezEk5uqHj6fmd+OcMAqdgLGmLhdbl6Ondfa8HcSKQ==
 ```
 
 Canonical install:
 
 ```bash
-npx @fraylabs/possible@0.1.8 init
+npx @fraylabs/possible@0.1.9 init
 ```
 
 A clean installation into a disposable directory passed. The installed snapshot contained `SKILL.md`, `agents/openai.yaml`, `references/packs.md`, and all four featured Outcome Packs. The CLI printed the expected `$possible` invocation.
@@ -23,7 +23,7 @@ A clean installation into a disposable directory passed. The installed snapshot 
 Verification commands:
 
 ```bash
-npm view @fraylabs/possible@0.1.8 version engines bin dist --json
+npm view @fraylabs/possible@0.1.9 version engines bin dist --json
 npm view @fraylabs/possible dist-tags --json
-npm exec --yes --package @fraylabs/possible@0.1.8 -- possible init
+npm exec --yes --package @fraylabs/possible@0.1.9 -- possible init
 ```

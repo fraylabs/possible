@@ -54,7 +54,7 @@ const discoveryGraph = {
       downloadUrl: "https://www.npmjs.com/package/@fraylabs/possible",
       programmingLanguage: ["TypeScript", "JavaScript"],
       runtimePlatform: "Codex",
-      softwareVersion: "0.1.8",
+      softwareVersion: "0.1.9",
       license: "https://spdx.org/licenses/MIT.html",
       isAccessibleForFree: true,
       sameAs: [

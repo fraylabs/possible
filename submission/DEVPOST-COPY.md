@@ -62,7 +62,7 @@ We also had to keep external actions explicit. Approval of an outcome permits di
 
 ## Accomplishments that we're proud of
 
-- Published `@fraylabs/possible@0.1.8` as a one-command, conflict-safe installer.
+- Published `@fraylabs/possible@0.1.9` as a one-command, conflict-safe installer.
 - Built four reusable Outcome Packs and four inspectable demos.
 - Preserved failed verifier results, repairs, passing reruns, and remaining limitations.
 - Combined software, hardware CAD, robotics simulation, a playable game, and a coded presentation through one consistent workflow.
@@ -81,7 +81,7 @@ We want to make Outcome Packs easier to author, validate, and evaluate. The next
 ## Quickstart
 
 ```bash
-npx @fraylabs/possible@0.1.8 init
+npx @fraylabs/possible@0.1.9 init
 ```
 
 Then open Codex and enter:

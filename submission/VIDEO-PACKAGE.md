@@ -13,7 +13,7 @@ Show a blank Codex project and the request: “I want to make a robot snake.”
 Show:
 
 ```bash
-npx @fraylabs/possible@0.1.8 init
+npx @fraylabs/possible@0.1.9 init
 ```
 
 Then type `$possible`.
@@ -70,7 +70,7 @@ End card:
 
 ```text
 possible.sh
-npx @fraylabs/possible@0.1.8 init
+npx @fraylabs/possible@0.1.9 init
 github.com/fraylabs/possible
 ```
 

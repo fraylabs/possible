@@ -9,7 +9,7 @@ const [readme, devpost, video, buildWeek, npmRelease, judging, robotManifestSour
   read("submission/DEVPOST-COPY.md"),
   read("submission/VIDEO-PACKAGE.md"),
   read("BUILD-WEEK.md"),
-  read("submission/NPM-0.1.8-RELEASE.md"),
+  read("submission/NPM-0.1.9-RELEASE.md"),
   read("JUDGING.md"),
   read("apps/web/public/demo/robot-snake/manifest.json"),
   read("apps/web/public/demo/robot-snake/evidence/outcome-receipt.md"),
@@ -23,8 +23,8 @@ for (const [label, source] of [["Devpost", devpost], ["video", video]]) {
   assert.match(source, new RegExp(coreLanguage.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")), `${label} must use the core language`);
 }
 for (const [label, source] of [["README", readme], ["Devpost", devpost], ["video", video]]) {
-  assert.match(source, /npx @fraylabs\/possible@0\.1\.8 init/, `${label} must use the canonical install`);
-  assert.doesNotMatch(source, /@fraylabs\/possible@0\.1\.[0-7]\b|unpublished|candidate/i, `${label} must not discuss historical package versions`);
+  assert.match(source, /npx @fraylabs\/possible@0\.1\.9 init/, `${label} must use the canonical install`);
+  assert.doesNotMatch(source, /@fraylabs\/possible@0\.1\.[0-8]\b|unpublished|candidate/i, `${label} must not discuss historical package versions`);
   assert.doesNotMatch(source, /50[–-]100 coordinated tasks/i, `${label} must use a bounded task claim`);
   assert.doesNotMatch(source, /NO CONTROLLED RUNS|modeled benchmark|Direct[-– ]vs[-– ]Possible|\/goal comparison/i, `${label} must not revive the retired benchmark story`);
 }
@@ -100,11 +100,11 @@ assert.match(buildWeek, /Demo video: https:\/\/youtu\.be\/s35aGhVI2Eo/);
 assert.match(devpost, /Demo video: https:\/\/youtu\.be\/s35aGhVI2Eo/);
 assert.match(video, /Published demo: https:\/\/youtu\.be\/s35aGhVI2Eo/);
 assert.match(buildWeek, /Built with: Codex using GPT-5\.6/);
-assert.match(buildWeek, /Eligible implementation commit range: afb5fc1c1e01d746753712ddc79f456df0984826\.\.d7d77f098da4712ca6194a9446c5498a7a66d01b/);
-assert.match(buildWeek, /Frozen submission commit: d7d77f098da4712ca6194a9446c5498a7a66d01b/);
+assert.match(buildWeek, /Eligible implementation start: afb5fc1c1e01d746753712ddc79f456df0984826/);
+assert.match(buildWeek, /Current submission state: open/);
 assert.doesNotMatch(buildWeek, /\[[A-Z][A-Z -]+\]/, "Build Week evidence must not contain unresolved placeholders");
 assert.match(npmRelease, /dist-tag: latest/);
-assert.match(npmRelease, /b37e601945cadfe800da92ab59bf0b059546ae36/);
+assert.match(npmRelease, /8a12fb444ba885e023b564b646fe3948279abb8e/);
 
 const narration = video.split("\n").filter((line) => line.startsWith("> ")).map((line) => line.slice(2)).join(" ");
 const narrationWords = narration.trim().split(/\s+/).filter(Boolean).length;
