@@ -26,7 +26,8 @@ describe("Possible", () => {
     expect(screen.getByRole("link", { name: "DOCS" })).toHaveAttribute("href", "/docs");
     expect(screen.getByRole("link", { name: "BLOGS" })).toHaveAttribute("href", "/blogs");
     expect(screen.queryByRole("link", { name: "PROOF" })).not.toBeInTheDocument();
-    expect(screen.queryByRole("link", { name: "PACKS" })).not.toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "PACKS" })).toHaveAttribute("href", "/packs");
+    expect(screen.queryByRole("link", { name: "START" })).not.toBeInTheDocument();
     expect(screen.queryByRole("link", { name: /Browse packs/i })).not.toBeInTheDocument();
     const start = screen.getByRole("region", { name: "Start with Possible" });
     expect(within(start).getByRole("heading", { name: /Packs are complete recipes for.*real outcomes/i, level: 2 })).toBeInTheDocument();
@@ -54,6 +55,26 @@ describe("Possible", () => {
     expect(container.querySelector(".schedule-entry, .quick-path, .boundary")).not.toBeInTheDocument();
     expect(container.querySelector("main")).not.toHaveTextContent(/\bAI agents\b|50[–-]100|megaprompt/i);
     expect(container.querySelector("main")).not.toHaveTextContent(/conversational outcome compiler|outcome lanes|pack knowledge|workstreams/i);
+  });
+
+  it("opens the six-link mobile sidebar and closes it with Escape", async () => {
+    const { container } = render(<App />);
+    const desktopLinks = Array.from(container.querySelectorAll(".nav-links a")).map((link) => link.textContent);
+    expect(desktopLinks).toEqual(["BLOGS", "PACKS", "BENCH", "DOCS", "DEMO", "SOURCE ↗"]);
+
+    const trigger = screen.getByRole("button", { name: "MENU" });
+    expect(trigger).toHaveAttribute("aria-expanded", "false");
+    await userEvent.click(trigger);
+
+    const sidebar = screen.getByRole("dialog", { name: "Mobile navigation" });
+    expect(trigger).toHaveAttribute("aria-expanded", "true");
+    expect(within(sidebar).getAllByRole("link")).toHaveLength(6);
+    expect(within(sidebar).getByRole("link", { name: "PACKS" })).toHaveAttribute("href", "/packs");
+    expect(await axe(container)).toHaveNoViolations();
+
+    await userEvent.keyboard("{Escape}");
+    expect(screen.queryByRole("dialog", { name: "Mobile navigation" })).not.toBeInTheDocument();
+    expect(trigger).toHaveAttribute("aria-expanded", "false");
   });
 
   it("collects Possible writing under one blogs index", async () => {

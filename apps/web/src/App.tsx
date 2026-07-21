@@ -1,6 +1,6 @@
 "use client";
 
-import { lazy, Suspense, useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { compilePack, getPack, outcomePacks } from "@possible/packs";
 import type { OutcomePack, PackLane } from "@possible/packs";
 import { benchmarkCards, benchmarkComparisons, getBenchmark } from "./benchmark-data";
@@ -58,6 +58,14 @@ const gallerySlugs = [
   "kickstarter-fulfillment",
 ] as const;
 const galleryPacks = gallerySlugs.map((slug) => outcomePacks.find((pack) => pack.slug === slug)!).filter(Boolean);
+const navigationItems = [
+  { label: "BLOGS", href: "/blogs", external: false },
+  { label: "PACKS", href: "/packs", external: false },
+  { label: "BENCH", href: "/benchmarks", external: false },
+  { label: "DOCS", href: "/docs", external: false },
+  { label: "DEMO", href: "/demo", external: false },
+  { label: "SOURCE", href: "https://github.com/fraylabs/possible", external: true },
+] as const;
 function CopyButton({ label, value }: { label: string; value: string }) {
   const [state, setState] = useState<CopyState>("idle");
 
@@ -80,19 +88,79 @@ function CopyButton({ label, value }: { label: string; value: string }) {
 }
 
 function SiteNav({ label }: { label?: string }) {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const focusTimer = window.setTimeout(() => closeRef.current?.focus(), 0);
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      setMenuOpen(false);
+      window.setTimeout(() => triggerRef.current?.focus(), 0);
+    };
+    window.addEventListener("keydown", closeOnEscape);
+
+    return () => {
+      window.clearTimeout(focusTimer);
+      window.removeEventListener("keydown", closeOnEscape);
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [menuOpen]);
+
+  function closeMenu() {
+    setMenuOpen(false);
+    window.setTimeout(() => triggerRef.current?.focus(), 0);
+  }
+
   return (
-    <nav aria-label="Primary">
-      <a className="wordmark" href="/">possible<span>.sh</span></a>
-      {label ? <div className="nav-meta"><span>POSSIBLE</span><strong>{label.toUpperCase()}</strong></div> : null}
-      <div className="nav-links">
-        <a href="/">START</a>
-        <a href="/blogs">BLOGS</a>
-        <a href="/benchmarks">BENCH</a>
-        <a href="/docs">DOCS</a>
-        <a href="/demo">DEMO</a>
-        <a href="https://github.com/fraylabs/possible" target="_blank" rel="noreferrer">SOURCE ↗</a>
-      </div>
-    </nav>
+    <>
+      <nav aria-label="Primary">
+        <a className="wordmark" href="/">possible<span>.sh</span></a>
+        {label ? <div className="nav-meta"><span>POSSIBLE</span><strong>{label.toUpperCase()}</strong></div> : null}
+        <div className="nav-links">
+          {navigationItems.map((item) => (
+            <a key={item.href} href={item.href} target={item.external ? "_blank" : undefined} rel={item.external ? "noreferrer" : undefined}>{item.label}{item.external ? " ↗" : ""}</a>
+          ))}
+        </div>
+        <button
+          ref={triggerRef}
+          className="nav-menu-trigger"
+          type="button"
+          aria-expanded={menuOpen}
+          aria-controls="mobile-navigation"
+          onClick={() => setMenuOpen(true)}
+        >
+          <span>MENU</span><i aria-hidden="true" />
+        </button>
+      </nav>
+
+      {menuOpen ? (
+        <div className="mobile-nav-layer">
+          <button className="mobile-nav-backdrop" type="button" aria-label="Close navigation" onClick={closeMenu} />
+          <div id="mobile-navigation" className="mobile-nav-panel" role="dialog" aria-modal="true" aria-label="Mobile navigation">
+            <header>
+              <span>NAVIGATION / 06</span>
+              <button ref={closeRef} type="button" onClick={closeMenu}>CLOSE <i aria-hidden="true">×</i></button>
+            </header>
+            <ol>
+              {navigationItems.map((item, index) => (
+                <li key={item.href}>
+                  <a href={item.href} target={item.external ? "_blank" : undefined} rel={item.external ? "noreferrer" : undefined} onClick={() => setMenuOpen(false)}>
+                    <span aria-hidden="true">{String(index + 1).padStart(2, "0")}</span><strong>{item.label}</strong><i aria-hidden="true">↗</i>
+                  </a>
+                </li>
+              ))}
+            </ol>
+            <footer><span>POSSIBLE.SH</span><strong>MAKE OUTCOMES POSSIBLE.</strong></footer>
+          </div>
+        </div>
+      ) : null}
+    </>
   );
 }
 

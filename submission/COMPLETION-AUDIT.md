@@ -62,7 +62,7 @@ This audit treats completion as unproven. Each requirement below names the autho
 - Packs: **6/6** across the eleven-pack catalog.
 - CLI: **8/8**, canonical three-file snapshot matched.
 - MCP: **9/9**.
-- Web: **29/29**, including automated accessibility and retired-route behavior.
+- Web: **30/30**, including automated accessibility, mobile navigation, and retired-route behavior.
 - Production export: **31/31** static-generation steps.
 - Static HTML: **26 routes**.
 - Pack publications: **11/11** matched the compiler.

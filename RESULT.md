@@ -16,7 +16,7 @@ The repository now includes a five-minute Judge Quickstart, a non-prompt-library
 - Pack compiler: 6/6 tests passed across all eleven packs.
 - CLI: 8/8 tests passed; the three-file installed skill snapshot matched.
 - MCP: 9/9 tests passed across the eleven-pack catalog and compilation behavior.
-- Web: 29/29 tests passed, including automated accessibility, the retired-route check, benchmark links, and the Still verification sequence.
+- Web: 30/30 tests passed, including automated accessibility, the mobile navigation drawer, the retired-route check, benchmark links, and the Still verification sequence.
 - Production export: all 31 static-generation steps completed.
 - Static HTML: all 26 public routes contained meaningful initial HTML.
 - Pack publications: all eleven JSON/install/run publication sets matched the canonical compiler.

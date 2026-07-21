@@ -18,6 +18,14 @@ const home = visibleText(homeMarkup);
 assert.match(home, /What do you want[\s\S]*to achieve[\s\S]*today\?/);
 assert.match(home, /Models know how to perform individual tasks\. Possible provides the operational knowledge to coordinate those tasks into a verified outcome\./);
 assert.match(home, /npx @fraylabs\/possible@0\.1\.6 init/);
+const headerLinks = home.match(/<div class="nav-links">([\s\S]*?)<\/div>/)?.[1];
+assert.ok(headerLinks, "The shared header must render its desktop navigation links");
+for (const href of ["/blogs", "/packs", "/benchmarks", "/docs", "/demo", "https://github.com/fraylabs/possible"]) {
+  assert.match(headerLinks, new RegExp(`href="${href.replaceAll("/", "\\/")}"`));
+}
+assert.equal((headerLinks.match(/<a\b/g) ?? []).length, 6, "The shared header must contain exactly six navigation destinations");
+assert.doesNotMatch(headerLinks, /href="\/"[^>]*>START/);
+assert.match(home, /class="nav-menu-trigger"[^>]*aria-expanded="false"[^>]*aria-controls="mobile-navigation"/);
 assert.match(home, /id="packs"/);
 assert.match(home, /Packs are complete recipes for[\s\S]*real outcomes/);
 assert.match(home, /Describe the outcome\. Possible recommends a pack before Codex begins—you do not need to choose one yourself\./);
