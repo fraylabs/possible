@@ -54,8 +54,8 @@ for (const [label, pattern] of [
   ["all-pack disjoint-ownership claim", /delegates disjoint workstreams/i],
 ]) assert.doesNotMatch(historicalClaims, pattern, label);
 
-assert.match(app, /In this frozen pilot, Possible reached a verified outcome\. The ordinary direct prompt did not\./);
-assert.match(app, /one run per condition cannot establish a general causal advantage/i);
+assert.match(publicProof, /evidence from one run per condition/i);
+assert.match(publicProof, /does \*\*not\*\* establish[\s\S]*causality/i);
 assert.match(app, /50 SUCCESSFUL BROWSER RESPONSES/);
 assert.match(readme, /@fraylabs\/possible@0\.1\.6 init/);
 assert.match(readme, /separately verified `0\.1\.7` candidate/);

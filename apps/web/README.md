@@ -3,7 +3,7 @@
 The interactive Possible surface has three layers:
 
 - `/` — install Possible, invoke `$possible`, and understand the brainstorm-first journey.
-- `/proof` — inspect the measured workflow pilot, compiler flow, verification repair, raw evidence, and limitations.
+- `/benchmarks` — compare what Direct, `/goal`, and `$possible` produce from the same rough prompt.
 - `/docs` — learn the complete install, conversation, recommendation, confirmation, execution, and safety contract.
 - `/packs` — inspect the outcome recipes Possible may recommend.
 - `/packs/:slug` — inspect a pack's outputs, specialists, sources, guardrails, and verification before confirming it.

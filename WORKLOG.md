@@ -62,7 +62,7 @@
 ## 2026-07-21 — Build Week proof and judge path
 
 - Reframed the submission around one falsifiable claim: Possible adds the operational knowledge needed to coordinate individual Codex tasks into a verified outcome.
-- Published `/proof` with the visible intent → pack → compiled contract → execution → fresh review → verified outcome flow.
+- Published a dedicated proof presentation with the visible intent → pack → compiled contract → execution → fresh review → verified outcome flow. It was later retired in favor of the benchmark gallery, recorded demos, and raw evidence.
 - Presented the frozen five-condition pilot exactly: Direct stopped at 19/20; Possible reached 20/20 and passed treatment; Spec and Plan outcome/treatment distinctions and all pilot limits remain visible.
 - Added a public proof summary that maps every headline to the frozen protocol, brief, verifier contract, raw transcripts, receipts, machine decisions, screenshots, and independent report.
 - Turned the Still demo's verification evidence into an explicit produced → withheld → failed → repaired → fresh-pass sequence without changing or hiding the historical trace.

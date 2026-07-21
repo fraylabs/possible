@@ -37,8 +37,9 @@ await write("llms.txt", [
   "Skills are ingredients. Possible compiles the outcome.",
   "",
   "- Human documentation: /docs/",
-  "- Build Week proof: /proof/",
-  "  - Controlled-pilot summary: /benchmarks/outcome-v1/public-proof.md",
+  "- Benchmark gallery: /benchmarks/",
+  "- Recorded outcome demos: /demo/",
+  "- Controlled-pilot evidence: /benchmarks/outcome-v1/public-proof.md",
   "- Pack catalog: /packs/",
   "- Pack index: /packs/index.json",
   ...outcomePacks.flatMap((pack) => [

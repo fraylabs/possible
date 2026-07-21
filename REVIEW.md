@@ -14,8 +14,8 @@ The candidate demonstrates that statement through three distinct layers:
 
 ## Acceptance checks
 
-- `/proof` exposes the compiler, exact pilot table, verification moment, raw evidence, and limitations.
-- The homepage leads with measured proof and the target user is solo developers and small technical teams.
+- `/benchmarks` exposes the outcome comparisons, while the raw pilot files preserve the exact result table and limitations.
+- The homepage links directly to the three benchmarks and the target user is solo developers and small technical teams.
 - The README provides a five-minute judge path, requirements, supported-platform evidence boundary, expected output, and troubleshooting.
 - Devpost copy, a sub-three-minute video package, and a claim ledger are ready under `submission/`.
 - Build Week history separates observed repository facts from owner attestations.
@@ -24,7 +24,7 @@ The candidate demonstrates that statement through three distinct layers:
 ## Required owner actions
 
 1. Perform the outstanding desktop/mobile visual pass when a browser surface is available.
-2. Freeze and commit the candidate, push it, deploy that exact revision to possible.sh, then verify `/proof` and every raw evidence URL live.
+2. Deploy the pushed revision to possible.sh, then verify the benchmark, demo, and raw evidence URLs live.
 3. Choose whether judges install published `0.1.6` or publish/freeze the matching `0.1.7` candidate; preserve that the measured Possible run used `0.1.6`.
 4. Record the final commit, eligible commit range, exact GPT-5.6 evidence, and `/feedback` session ID.
 5. Record and upload the final video, then submit the Devpost entry.

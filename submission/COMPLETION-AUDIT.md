@@ -8,9 +8,9 @@ This audit treats completion as unproven. Each requirement below names the autho
 
 **Requirement:** A judge can assess that Possible reached a verified outcome where Direct did not in the frozen pilot, understand the differing mechanism, and inspect the limits without inferring causality.
 
-**Evidence:** `apps/web/src/App.tsx` (`ProofPage`), `benchmarks/outcome-v1/PUBLIC-PROOF.md`, `benchmarks/outcome-v1/PROTOCOL.md`, `benchmarks/outcome-v1/independent/RESULT.md`, `submission/CLAIM-LEDGER.md`.
+**Evidence:** `benchmarks/outcome-v1/PUBLIC-PROOF.md`, `benchmarks/outcome-v1/PROTOCOL.md`, `benchmarks/outcome-v1/independent/RESULT.md`, `submission/CLAIM-LEDGER.md`.
 
-**Decision:** **Proved in the local candidate.** The page reports all five workflows, separates outcome from treatment, includes the Direct and Possible tradeoffs, and explicitly rejects typical-performance, speed, statistical, and causal conclusions.
+**Decision:** **Proved in the local candidate.** The raw evidence reports all five workflows, separates outcome from treatment, includes the Direct and Possible tradeoffs, and explicitly rejects typical-performance, speed, statistical, and causal conclusions.
 
 ## Required judge experience
 
@@ -26,15 +26,15 @@ This audit treats completion as unproven. Each requirement below names the autho
 
 **Decision:** **Proved with a version disclosure.** It documents Codex/Node/network requirements, the macOS/Linux/Windows evidence boundary, pinned published install, exact-source fallback, sample request, approval step, expected `.possible/` files, fast preserved-evidence path, and troubleshooting. The published registry remains `0.1.6`; local `0.1.7` tarball readiness is separately proved in `submission/NPM-0.1.7-PREFLIGHT.md`.
 
-### 3. Honest controlled-comparison proof surface
+### 3. Honest controlled-comparison evidence
 
-**Evidence:** `/proof` implementation in `apps/web/src/App.tsx`; static route `apps/web/app/proof/page.tsx`; `apps/web/public/benchmarks/outcome-v1/{public-proof.md,protocol.md,brief.md,result.md,summary.json}`; repository raw results/transcripts/receipts/screenshots under `benchmarks/outcome-v1/`.
+**Evidence:** `apps/web/public/benchmarks/outcome-v1/{public-proof.md,protocol.md,brief.md,result.md,summary.json}`; repository raw results/transcripts/receipts/screenshots under `benchmarks/outcome-v1/`.
 
-**Decision:** **Proved locally; not live.** The production static export contains `/proof` and all locally hosted evidence URLs. `https://possible.sh/proof` and the public-proof URL currently return 404 because the frozen candidate has not been pushed/deployed; deployment is explicitly approval-gated by `GOAL.md`.
+**Decision:** **Proved locally; not live.** The production static export contains the locally hosted evidence URLs. Live verification remains pending deployment and is explicitly approval-gated by `GOAL.md`.
 
 ### 4. Visible compiler flow
 
-**Evidence:** `/proof` compiler sequence; pack specification pages; compiled pack JSON; `packages/packs/src/types.ts`; `packages/packs/src/compiler.ts`; compiler tests.
+**Evidence:** Pack specification pages; compiled pack JSON; `packages/packs/src/types.ts`; `packages/packs/src/compiler.ts`; compiler tests.
 
 **Decision:** **Proved without schema inflation.** Public copy distinguishes typed manifest fields from the compiler-supplied captain sequence and the outcome-specific checks written only after approval.
 
@@ -62,9 +62,9 @@ This audit treats completion as unproven. Each requirement below names the autho
 - Packs: **6/6** across the eleven-pack catalog.
 - CLI: **8/8**, canonical three-file snapshot matched.
 - MCP: **9/9**.
-- Web: **29/29**, including automated accessibility and proof-route behavior.
-- Production export: **32/32** static-generation steps; `/proof` emitted.
-- Static HTML: **27 routes**.
+- Web: **29/29**, including automated accessibility and retired-route behavior.
+- Production export: **31/31** static-generation steps.
+- Static HTML: **26 routes**.
 - Pack publications: **11/11** matched the compiler.
 - Demo validator: **passed**.
 - `git diff --check`: **passed**.
@@ -74,7 +74,7 @@ This audit treats completion as unproven. Each requirement below names the autho
 ## Missing completion evidence
 
 1. **Fresh visual browser review:** not proved. Across three consecutive goal turns, the permitted browser connection reported no available backend; on the final retry its supported discovery API returned an empty browser list. No desktop/mobile screenshots or manual visual-pass claim were fabricated. Automated accessibility, responsive CSS, static HTML, unit interactions, installation, and local-link checks passed, but they do not substitute for visual inspection.
-2. **Live deployment:** intentionally not performed without public-action approval; current live proof URLs return 404.
+2. **Live deployment:** intentionally not performed without public-action approval; the candidate's benchmark, demo, and raw evidence URLs have not been verified live.
 3. **Owner/account provenance:** the official GPT-5.6 `/feedback` session ID and eligible commit endpoints are unavailable in repository state.
 4. **Video:** storyboard exists; recording and public YouTube upload do not.
 

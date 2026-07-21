@@ -22,12 +22,10 @@ assert.match(home, /id="packs"/);
 assert.match(home, /Packs are complete recipes for[\s\S]*real outcomes/);
 assert.match(home, /Describe the outcome\. Possible recommends a pack before Codex begins—you do not need to choose one yourself\./);
 assert.match(home, /<section class="start-section"[^>]*>[\s\S]*id="start"[\s\S]*id="packs"[\s\S]*<\/section>/);
-assert.match(home, /CONTROLLED PILOT \/ FROZEN PROTOCOL/);
-assert.match(home, /Direct stopped at[\s\S]*19\/20/);
-assert.match(home, /Possible reached 20\/20/);
-assert.match(home, /same brief, tools, workspace rules, and independent checks/);
-assert.match(home, /one-run pilot is evidence from these runs—not proof of typical superiority/);
-assert.match(home, /href="\/proof"/);
+assert.match(home, /BENCHMARK SUITE \/ THREE OUTCOMES/);
+assert.match(home, /What does one rough prompt[\s\S]*actually produce/);
+assert.match(home, /visible outputs, agent runtime, and human coordination time/);
+assert.doesNotMatch(home, /href="\/proof"/);
 assert.doesNotMatch(home, /href="\/#packs"|Browse packs/);
 assert.match(homeMarkup, /<meta property="og:image" content="https:\/\/possible\.sh\/og\.png"\/>/);
 assert.match(homeMarkup, /<meta name="twitter:image" content="https:\/\/possible\.sh\/og\.png"\/>/);
@@ -93,7 +91,6 @@ for (const [relativePath, assetPrefix] of [
 }
 
 for (const [relativePath, expected] of [
-  ["proof/index.html", "One frozen brief"],
   ["blogs/index.html", "What is Possible?"],
   ["blogs/what-is-possible/index.html", "Possible is the outcome layer"],
   ["blogs/why-possible/index.html", "The bottleneck is no longer what AI can do"],
@@ -112,15 +109,7 @@ for (const [relativePath, expected] of [
   assert.match(visibleText(await html(relativePath)), new RegExp(expected));
 }
 
-const proof = visibleText(await html("proof/index.html"));
-assert.match(proof, /OUTCOME-V1 \/ MEASURED PILOT/);
-assert.match(proof, /One frozen brief[\s\S]*Five workflows[\s\S]*One verifier/);
-assert.match(proof, /Direct prompt[\s\S]*Not verified[\s\S]*19 \/ 20/);
-assert.match(proof, /\$possible[\s\S]*Verified[\s\S]*20 \/ 20/);
-assert.match(proof, /Production is not completion[\s\S]*Possible stops only when the outcome passes[\s\S]*honest no-go/);
-assert.match(proof, /four 404 errors inside the outcome room/);
-assert.match(proof, /One run per condition does not estimate typical performance or variance/);
-assert.match(proof, /href="\/benchmarks\/outcome-v1\/public-proof\.md"/);
+await assert.rejects(html("proof/index.html"), { code: "ENOENT" }, "The retired /proof route must not be exported");
 const [sourcePublicProof, exportedPublicProof] = await Promise.all([
   readFile(new URL("../benchmarks/outcome-v1/PUBLIC-PROOF.md", import.meta.url), "utf8"),
   html("benchmarks/outcome-v1/public-proof.md"),
@@ -182,4 +171,4 @@ assert.match(writingStandard, /Every benchmark page uses the same order/);
 assert.match(writingStandard, /Put results before explanation/);
 assert.match(writingStandard, /Observed:[\s\S]*Modeled:[\s\S]*Projected:[\s\S]*Unknown:/);
 
-console.log(`All ${outcomePacks.length + 16} public Next.js routes contain meaningful initial HTML.`);
+console.log(`All ${outcomePacks.length + 15} public Next.js routes contain meaningful initial HTML.`);

@@ -4,6 +4,7 @@ import { axe } from "vitest-axe";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { compilePack, outcomePacks } from "@possible/packs";
 import App from "./App";
+import { benchmarkCards } from "./benchmark-data";
 
 afterEach(() => {
   cleanup();
@@ -24,7 +25,7 @@ describe("Possible", () => {
     expect(screen.getByText("$possible", { selector: ".install-next code" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "DOCS" })).toHaveAttribute("href", "/docs");
     expect(screen.getByRole("link", { name: "BLOGS" })).toHaveAttribute("href", "/blogs");
-    expect(screen.getByRole("link", { name: "PROOF" })).toHaveAttribute("href", "/proof");
+    expect(screen.queryByRole("link", { name: "PROOF" })).not.toBeInTheDocument();
     expect(screen.queryByRole("link", { name: "PACKS" })).not.toBeInTheDocument();
     expect(screen.queryByRole("link", { name: /Browse packs/i })).not.toBeInTheDocument();
     const start = screen.getByRole("region", { name: "Start with Possible" });
@@ -41,10 +42,12 @@ describe("Possible", () => {
       );
     }
     expect(screen.queryByRole("link", { name: /Open the full pack reference/i })).not.toBeInTheDocument();
-    const benchmark = screen.getByRole("region", { name: /Direct stopped at 19\/20.*Possible reached 20\/20/i });
-    expect(within(benchmark).getByText(/same brief, tools, workspace rules, and independent checks/i)).toBeInTheDocument();
-    expect(within(benchmark).getByText(/one-run pilot.*not proof of typical superiority/i)).toBeInTheDocument();
-    expect(within(benchmark).getByRole("link", { name: /OPEN THE RUNS.*Protocol, results, traces, and limits/i })).toHaveAttribute("href", "/proof");
+    const benchmark = screen.getByRole("region", { name: /What does one rough prompt.*actually produce/i });
+    expect(within(benchmark).getByText(/visible outputs, agent runtime, and human coordination time/i)).toBeInTheDocument();
+    expect(within(benchmark).getAllByRole("link")).toHaveLength(3);
+    for (const card of benchmarkCards) {
+      expect(within(benchmark).getByRole("link", { name: new RegExp(card.shortTitle, "i") })).toHaveAttribute("href", `/benchmarks/${card.slug}`);
+    }
     expect(container.querySelector(".journey")).not.toBeInTheDocument();
     expect(container.querySelector(".recommendation-example")).not.toBeInTheDocument();
     expect(screen.queryByRole("group", { name: /Filter outcome packs by lane/i })).not.toBeInTheDocument();
@@ -94,23 +97,11 @@ describe("Possible", () => {
     expect(await axe(container)).toHaveNoViolations();
   });
 
-  it("publishes the measured Build Week proof with compiler, outcomes, failure repair, and limits", async () => {
+  it("does not expose the retired proof route", () => {
     window.history.pushState({}, "", "/proof");
     const { container } = render(<App />);
-    expect(screen.getByRole("heading", { name: /One frozen brief.*Five workflows.*One verifier/i, level: 1 })).toBeInTheDocument();
-    expect(screen.getByText(/Observed in these runs.*not an estimate of typical performance/i)).toBeInTheDocument();
-    const flow = screen.getByRole("list", { name: "Possible compiler flow" });
-    expect(within(flow).getAllByRole("listitem")).toHaveLength(6);
-    expect(within(flow).getByText("Compiled contract")).toBeInTheDocument();
-    const results = screen.getByRole("table", { name: /Results of the Possible outcome-v1 controlled pilot/i });
-    expect(within(results).getByRole("row", { name: /Direct prompt.*Not verified.*19 \/ 20.*Pass/i })).toBeInTheDocument();
-    expect(within(results).getByRole("row", { name: /\$possible.*Verified.*20 \/ 20.*Pass/i })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: /Production is not completion.*Possible stops only when the outcome passes.*honest no-go/i })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: /In this frozen pilot, Possible reached a verified outcome.*ordinary direct prompt did not/i })).toBeInTheDocument();
-    expect(screen.getByText(/four 404 errors inside the outcome room/i)).toBeInTheDocument();
-    expect(screen.getByRole("complementary", { name: "Pilot limitations" })).toHaveTextContent(/One run per condition.*typical performance/i);
-    expect(screen.getByRole("link", { name: /Conditions and decision rule/i })).toHaveAttribute("href", "/benchmarks/outcome-v1/protocol.md");
-    expect(await axe(container)).toHaveNoViolations();
+    expect(screen.getByText(/404 \/ OUTCOME NOT FOUND/i)).toBeInTheDocument();
+    expect(container.querySelector(".proof-page")).not.toBeInTheDocument();
   });
 
   it("makes scheduling operations discoverable from the pack gallery", () => {
