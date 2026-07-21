@@ -17,7 +17,13 @@ The command writes:
 - `robot/simulation/rerun/obstacle_course.rrd`
 - one adjacent `.manifest.json` receipt per recording
 
-Open either recording locally:
+After downloading `robot-snake.rrd`, open it from the download directory without cloning the source repository:
+
+```bash
+uvx --from 'rerun-sdk==0.34.1' rerun robot-snake.rrd
+```
+
+Inside the source repository, either generated recording can also be opened with:
 
 ```bash
 uv run rerun robot/simulation/rerun/obstacle_course.rrd

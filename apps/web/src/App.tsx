@@ -1447,7 +1447,7 @@ function RobotSnakeArtifacts() {
           <a href="/demo/robot-snake/viewer/preview.png" target="_blank" rel="noreferrer"><img src="/demo/robot-snake/viewer/preview.png" alt="Rerun engineering viewer showing the robot snake, obstacle, sensor rays, controller state, and telemetry plots" loading="lazy" decoding="async" /></a>
           <div>
             <p className="eyebrow">PRESERVED TRAJECTORY / NO PHYSICS RERUN</p>
-            <h3>Inspect the whole run<br />on one timeline.</h3>
+            <h2>Inspect the whole run<br />on one timeline.</h2>
             <p>The recording replays ten link poses, five range rays, the route, controller state, joint commands, tracking error, and range telemetry from the saved MuJoCo evidence.</p>
             <code>rerun robot-snake.rrd</code>
             <div><a href="/demo/robot-snake/viewer/robot-snake.rrd" download>DOWNLOAD RRD · 10.4 MB ↓</a><a href="/demo/robot-snake/viewer/README.md" target="_blank" rel="noreferrer">OPEN LOCAL GUIDE ↗</a><a href="/demo/robot-snake/viewer/robot-snake.manifest.json" target="_blank" rel="noreferrer">VERIFY RECORDING ↗</a></div>

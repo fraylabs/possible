@@ -144,6 +144,13 @@ if (robotManifest.pack?.revision !== "9b3d3dfcc28af2b78d947f80dfa447d03eb35c75")
 if (!/aggregate propulsion and steering.*surrogates/i.test(robotManifest.boundary ?? "")) {
   failures.push("Robot Prototype manifest must disclose the aggregate propulsion/steering surrogate");
 }
+const rerunGenerator = robotManifest.generators?.find((generator) => generator.sourcePath === "robot/simulation/export_rerun.py");
+if (
+  rerunGenerator?.sourceSha256 !== "c2facb7aa6725f05295c09e5893667e18629084f82dc63fc2e35f96b7f67dafa"
+  || rerunGenerator?.command !== "uv run python -m robot.simulation.export_rerun obstacle_course"
+) {
+  failures.push("Robot Prototype manifest must preserve the verified Rerun exporter source and command");
+}
 
 for (const file of robotManifest.files ?? []) {
   if (!file.publishedUrl?.startsWith("/demo/robot-snake/") || file.publishedUrl.includes("..")) {
@@ -175,8 +182,18 @@ for (const file of robotManifest.files ?? []) {
 }
 const robotViewerReceipt = JSON.parse(await readFile(path.join(robotRoot, "viewer/robot-snake.manifest.json"), "utf8"));
 const publishedRrd = robotManifest.files.find((file) => file.publishedUrl.endsWith(".rrd"));
-if (!publishedRrd || robotViewerReceipt.recording_sha256 !== publishedRrd.publishedSha256 || robotViewerReceipt.coverage?.frames !== 3801) {
+if (
+  !publishedRrd
+  || robotViewerReceipt.recording !== "robot-snake.rrd"
+  || robotViewerReceipt.source_recording !== "obstacle_course.rrd"
+  || robotViewerReceipt.recording_sha256 !== publishedRrd.publishedSha256
+  || robotViewerReceipt.coverage?.frames !== 3801
+) {
   failures.push("Robot Prototype Rerun receipt does not match the published recording or expected frame coverage");
+}
+const robotViewerGuide = await readFile(path.join(robotRoot, "viewer/README.md"), "utf8");
+if (!robotViewerGuide.includes("uvx --from 'rerun-sdk==0.34.1' rerun robot-snake.rrd")) {
+  failures.push("Robot Prototype Rerun guide must include a clean-download uvx quickstart");
 }
 
 const appSource = await readFile(path.join(repository, "apps/web/src/App.tsx"), "utf8");

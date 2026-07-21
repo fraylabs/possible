@@ -1,7 +1,8 @@
 {
   "schema_version": 1,
   "scenario": "obstacle_course",
-  "recording": "obstacle_course.rrd",
+  "recording": "robot-snake.rrd",
+  "source_recording": "obstacle_course.rrd",
   "recording_sha256": "bc2bc4cc19054e5a2d438e46a4f4788cb87ed6b4459ee56dd263428c8259bddb",
   "rerun_sdk": "0.34.1",
   "source_artifacts": {

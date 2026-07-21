@@ -1249,7 +1249,7 @@ footer .wordmark span { color: #151411; }
 .robot-model-viewer > p { left: 14px; bottom: 14px; }
 .robot-model-viewer > span { top: 14px; right: 14px; color: #a8ff52; }
 .robot-model-controls { z-index: 3; position: absolute; right: 14px; bottom: 14px; display: flex; }
-.robot-model-controls button { min-width: 42px; min-height: 36px; padding: 0 10px; border: 1px solid #151411; border-right: 0; background: #f8f5ed; color: #151411; cursor: pointer; font: 7px "DM Mono", monospace; }
+.robot-model-controls button { min-width: 44px; min-height: 44px; padding: 0 10px; border: 1px solid #151411; border-right: 0; background: #f8f5ed; color: #151411; cursor: pointer; font: 7px "DM Mono", monospace; }
 .robot-model-controls button:last-child { border-right: 1px solid #151411; }
 .robot-model-controls button:hover:not(:disabled),
 .robot-model-controls button:focus-visible:not(:disabled) { background: #a8ff52; }
@@ -1261,7 +1261,7 @@ footer .wordmark span { color: #151411; }
 .robot-rerun-layout > a { min-width: 0; border-right: 1px solid #615d55; background: #090a0b; }
 .robot-rerun-layout > a img { width: 100%; height: 100%; min-height: 500px; display: block; object-fit: contain; }
 .robot-rerun-layout > div { padding: clamp(24px, 3.5vw, 56px); display: flex; flex-direction: column; }
-.robot-rerun-layout h3 { margin: 24px 0; font-size: clamp(36px, 4vw, 62px); font-weight: 500; line-height: .9; letter-spacing: -.06em; }
+.robot-rerun-layout h2 { margin: 24px 0; font-size: clamp(36px, 4vw, 62px); font-weight: 500; line-height: .9; letter-spacing: -.06em; }
 .robot-rerun-layout > div > p:not(.eyebrow) { margin: 0; color: #aaa49b; font-size: 13px; line-height: 1.65; }
 .robot-rerun-layout code { margin: auto 0 22px; padding: 15px; border: 1px solid #615d55; display: block; overflow-x: auto; color: #a8ff52; font: 9px "DM Mono", monospace; white-space: nowrap; }
 .robot-rerun-layout > div > div { display: grid; }

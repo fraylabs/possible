@@ -43,6 +43,11 @@
       "sourcePath": "robot/simulation/render_rollout.py",
       "sourceSha256": "9a13c86a738f4f470c112ed742b03ccbd895e96ce51e7537fc26fdc7ff026f00",
       "command": "uv run python -m robot.simulation.render_rollout robot/simulation/rollouts/<scenario>"
+    },
+    {
+      "sourcePath": "robot/simulation/export_rerun.py",
+      "sourceSha256": "c2facb7aa6725f05295c09e5893667e18629084f82dc63fc2e35f96b7f67dafa",
+      "command": "uv run python -m robot.simulation.export_rerun obstacle_course"
     }
   ],
   "files": [
@@ -168,18 +173,18 @@
       "sourceSha256": "7512185dd1216bd9b658dd5672aead6bce14ee635a46837d38a2528bab2e8b8b",
       "sourceBytes": 1359,
       "publishedUrl": "/demo/robot-snake/viewer/robot-snake.manifest.json",
-      "publishedSha256": "7512185dd1216bd9b658dd5672aead6bce14ee635a46837d38a2528bab2e8b8b",
-      "publishedBytes": 1359,
-      "derivation": "renamed byte-for-byte copy"
+      "publishedSha256": "2cf1db28f70acf6c51041ea4317a5d1246819a764398c897c81cd19ba7b69d95",
+      "publishedBytes": 1400,
+      "derivation": "publication adaptation: record the public filename and retain source_recording"
     },
     {
       "sourcePath": "robot/simulation/RERUN-VIEWER.md",
       "sourceSha256": "8bebec3e8c05e324d541df4f12d26ff16d3ea86afbaefdf61ca4b7022dd50ae0",
       "sourceBytes": 2475,
       "publishedUrl": "/demo/robot-snake/viewer/README.md",
-      "publishedSha256": "8bebec3e8c05e324d541df4f12d26ff16d3ea86afbaefdf61ca4b7022dd50ae0",
-      "publishedBytes": 2475,
-      "derivation": "renamed byte-for-byte copy"
+      "publishedSha256": "3c7da10be5df4f1a4c8d790be9ac41e03c7909d204c4e0c83c0d43132a041780",
+      "publishedBytes": 2705,
+      "derivation": "publication adaptation: add a clean-download uvx quickstart"
     },
     {
       "sourcePath": "robot/simulation/rerun/obstacle_course-viewer.png",

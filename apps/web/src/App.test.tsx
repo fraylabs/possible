@@ -482,14 +482,14 @@ describe("Possible", () => {
     }
   });
 
-  it("publishes the robot-snake CAD, simulation, model, and fresh-review proof without claiming physical validation", () => {
+  it("publishes the robot-snake CAD, simulation, model, and fresh-review proof without claiming physical validation", async () => {
     window.history.pushState({}, "", "/demo/robot-snake");
     const { container } = render(<App />);
     expect(screen.getByRole("heading", { name: /A robot snake.*simulated and checked/i })).toBeInTheDocument();
     const artifacts = screen.getByRole("region", { name: "Outcome artifacts" });
     const conversation = screen.getByRole("region", { name: "$possible conversation" });
     expectBefore(artifacts, conversation);
-    expect(screen.getByAltText(/Isometric CAD view of the ten-link robot snake/i)).toBeInTheDocument();
+    expect(await screen.findByAltText(/Isometric CAD view of the ten-link robot snake/i)).toBeInTheDocument();
     expect(screen.getByAltText(/detecting, clearing, and passing a cylindrical obstacle/i)).toHaveAttribute("src", "/demo/robot-snake/simulation/obstacle-course/preview.gif");
     expect(within(artifacts).getByText(/unlatching safe stop.*unsafe stop targets.*velocity-limit overshoot/i)).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /Generated URDF/i })).toHaveAttribute("href", "/demo/robot-snake/model/robot-snake.urdf");
@@ -500,6 +500,7 @@ describe("Possible", () => {
     expect(screen.getByRole("link", { name: /DOWNLOAD RRD/i })).toHaveAttribute("href", "/demo/robot-snake/viewer/robot-snake.rrd");
     expect(screen.getByRole("link", { name: /OPEN LOCAL GUIDE/i })).toHaveAttribute("href", "/demo/robot-snake/viewer/README.md");
     expect(screen.getByRole("link", { name: /VERIFY RECORDING/i })).toHaveAttribute("href", "/demo/robot-snake/viewer/robot-snake.manifest.json");
+    expect(await axe(artifacts)).toHaveNoViolations();
     expect(within(conversation).getByRole("link", { name: /Robot Prototype pack/i })).toHaveAttribute("href", "/packs/robot-prototype");
     expect(within(conversation).getByText("Yes, proceed.")).toBeInTheDocument();
     expect(container.querySelector(".demo-outcome-footer")).toHaveTextContent(/Physical locomotion.*remain unproven/i);
