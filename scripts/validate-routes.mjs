@@ -7,6 +7,9 @@ if (config.outputDirectory !== "apps/web/out") {
 if ((config.routes ?? []).some((route) => route.dest === "/index.html")) {
   throw new Error("SPA fallback routing must not replace statically rendered Next.js routes");
 }
+if (config.cleanUrls !== true || config.trailingSlash !== true) {
+  throw new Error("Vercel URLs must preserve the trailing-slash canonicals emitted by the static Next.js build");
+}
 
 if ((config.redirects ?? []).length) throw new Error("Retired public routes must not survive as redirects");
 

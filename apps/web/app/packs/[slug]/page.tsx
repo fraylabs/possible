@@ -2,6 +2,7 @@ import { featuredPacks, getFeaturedPack } from "../../../src/public-content";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import PossibleRoute from "../../_components/PossibleRoute";
+import { pageMetadata } from "../../_metadata";
 
 export const dynamicParams = false;
 
@@ -13,16 +14,15 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const pack = getFeaturedPack(slug);
   if (!pack) return {};
-  return {
+  return pageMetadata({
     title: pack.name,
     description: pack.summary,
+    path: `/packs/${pack.slug}`,
     alternates: {
-      types: {
-        "application/json": `/packs/${pack.slug}.json`,
-        "text/plain": `/packs/${pack.slug}/run.txt`,
-      },
+      "application/json": `/packs/${pack.slug}.json`,
+      "text/plain": `/packs/${pack.slug}/run.txt`,
     },
-  };
+  });
 }
 
 export default async function PackPage({ params }: { params: Promise<{ slug: string }> }) {

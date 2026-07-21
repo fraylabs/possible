@@ -1,9 +1,10 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "../_metadata";
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: "Visual explainer",
   description: "A coded presentation explaining Possible.sh, Outcome Packs, agent skills, and the $possible skill.",
-};
+  path: "/presentation",
+});
 
 export default function PresentationPage() {
   return (

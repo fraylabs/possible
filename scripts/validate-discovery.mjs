@@ -1,0 +1,88 @@
+import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
+
+const repository = new URL("../", import.meta.url);
+const output = new URL("../apps/web/out/", import.meta.url);
+const readOutput = (path) => readFile(new URL(path, output), "utf8");
+const escape = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+const routes = [
+  ["index.html", "https://possible.sh/"],
+  ["packs/index.html", "https://possible.sh/packs/"],
+  ["docs/index.html", "https://possible.sh/docs/"],
+  ["docs/how-to-use/index.html", "https://possible.sh/docs/how-to-use/"],
+  ["judging/index.html", "https://possible.sh/judging/"],
+  ["demo/index.html", "https://possible.sh/demo/"],
+  ["demo/hardware/index.html", "https://possible.sh/demo/hardware/"],
+  ["demo/game/index.html", "https://possible.sh/demo/game/"],
+  ["demo/game/play/index.html", "https://possible.sh/demo/game/play/"],
+  ["demo/robot-snake/index.html", "https://possible.sh/demo/robot-snake/"],
+  ["demo/presentation/index.html", "https://possible.sh/demo/presentation/"],
+  ["presentation/index.html", "https://possible.sh/presentation/"],
+  ["packs/hardware-launch/index.html", "https://possible.sh/packs/hardware-launch/"],
+  ["packs/robot-prototype/index.html", "https://possible.sh/packs/robot-prototype/"],
+  ["packs/playable-web-game/index.html", "https://possible.sh/packs/playable-web-game/"],
+  ["packs/web-presentation/index.html", "https://possible.sh/packs/web-presentation/"],
+];
+
+const descriptions = new Set();
+const titles = new Set();
+for (const [file, canonical] of routes) {
+  const markup = await readOutput(file);
+  assert.match(markup, new RegExp(`<link rel="canonical" href="${escape(canonical)}"`), `${file} must publish its own canonical URL`);
+  assert.match(markup, new RegExp(`<meta property="og:url" content="${escape(canonical)}"`), `${file} must publish its own Open Graph URL`);
+  assert.match(markup, /<meta name="robots" content="index, follow"\/>/, `${file} must explicitly allow indexing`);
+  assert.doesNotMatch(markup, /noindex/i, `${file} must not block indexing`);
+
+  const title = markup.match(/<title>([^<]+)<\/title>/)?.[1];
+  const description = markup.match(/<meta name="description" content="([^"]+)"\/>/)?.[1];
+  const openGraphDescription = markup.match(/<meta property="og:description" content="([^"]+)"\/>/)?.[1];
+  const twitterDescription = markup.match(/<meta name="twitter:description" content="([^"]+)"\/>/)?.[1];
+  assert.ok(title, `${file} must publish a title`);
+  assert.ok(description, `${file} must publish a description`);
+  assert.equal(openGraphDescription, description, `${file} Open Graph description must match its page description`);
+  assert.equal(twitterDescription, description, `${file} Twitter description must match its page description`);
+  assert.ok(!titles.has(title), `${file} must not reuse another page title: ${title}`);
+  assert.ok(!descriptions.has(description), `${file} must not reuse another page description`);
+  titles.add(title);
+  descriptions.add(description);
+}
+
+const home = await readOutput("index.html");
+assert.match(home, /"@type":"WebSite"/);
+assert.match(home, /"@type":"SoftwareSourceCode"/);
+for (const url of [
+  "https://possible.sh/",
+  "https://github.com/fraylabs/possible",
+  "https://www.npmjs.com/package/@fraylabs/possible",
+]) assert.match(home, new RegExp(escape(url)), `Structured discovery data must include ${url}`);
+
+const sitemap = await readOutput("sitemap.xml");
+for (const [, canonical] of routes) {
+  assert.match(sitemap, new RegExp(`<loc>${escape(canonical)}</loc>`), `Sitemap must include ${canonical}`);
+}
+assert.equal((sitemap.match(/<lastmod>2026-07-22<\/lastmod>/g) ?? []).length, routes.length, "Every sitemap entry must publish the current indexed revision date");
+
+const robots = await readOutput("robots.txt");
+assert.match(robots, /^User-agent: \*\nAllow: \/\nSitemap: https:\/\/possible\.sh\/sitemap\.xml\n$/);
+
+const llms = await readOutput("llms.txt");
+for (const phrase of [
+  "Possible turns one rough idea into a coordinated, independently verified, multidisciplinary outcome.",
+  "simulated autonomous obstacle avoidance",
+  "three material defects",
+  "12/12 tests and 186/186 interface checks",
+  "https://github.com/fraylabs/possible",
+  "https://www.npmjs.com/package/@fraylabs/possible",
+]) assert.match(llms, new RegExp(escape(phrase)), `llms.txt must publish ${phrase}`);
+
+const cliPackage = JSON.parse(await readFile(new URL("apps/cli/package.json", repository), "utf8"));
+assert.equal(cliPackage.homepage, "https://possible.sh");
+assert.equal(cliPackage.repository?.url, "git+https://github.com/fraylabs/possible.git");
+assert.equal(cliPackage.repository?.directory, "apps/cli");
+assert.equal(cliPackage.bugs?.url, "https://github.com/fraylabs/possible/issues");
+for (const keyword of ["codex", "ai-agents", "agent-skills", "outcome-packs", "developer-tools", "verification"]) {
+  assert.ok(cliPackage.keywords?.includes(keyword), `CLI metadata must include ${keyword}`);
+}
+
+console.log(`Discovery metadata is consistent across ${routes.length} public routes, GitHub, npm, sitemap, and llms.txt.`);

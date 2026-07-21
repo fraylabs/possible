@@ -1,7 +1,24 @@
 {
   "name": "@fraylabs/possible",
   "version": "0.1.8",
-  "description": "Install the Possible Codex skill into a project",
+  "description": "Install the Possible Outcome Pack skill for Codex",
+  "keywords": [
+    "codex",
+    "ai-agents",
+    "agent-skills",
+    "outcome-packs",
+    "developer-tools",
+    "verification"
+  ],
+  "homepage": "https://possible.sh",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fraylabs/possible.git",
+    "directory": "apps/cli"
+  },
+  "bugs": {
+    "url": "https://github.com/fraylabs/possible/issues"
+  },
   "type": "module",
   "bin": {
     "possible": "src/index.mjs"
