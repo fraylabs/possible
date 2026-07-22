@@ -1,12 +1,11 @@
 import assert from "node:assert/strict";
 import { access, readFile } from "node:fs/promises";
-import { compilePack, outcomePacks } from "../packages/packs/dist/index.js";
+import { compilePack, stableOutcomePacks } from "../packages/packs/dist/index.js";
 
 const webDist = new URL("../apps/web/out/", import.meta.url);
 const text = (relative) => readFile(new URL(relative, webDist), "utf8");
 const index = JSON.parse(await text("packs/index.json"));
-const featuredSlugs = new Set(["hardware-launch", "robot-prototype", "playable-web-game", "web-presentation"]);
-const featuredPacks = outcomePacks.filter((pack) => featuredSlugs.has(pack.slug));
+const featuredPacks = stableOutcomePacks;
 const evidence = JSON.parse(await text("evidence.json"));
 const judgingDocument = await readFile(new URL("../JUDGING.md", import.meta.url), "utf8");
 const nonEmptyString = (value, label) => {

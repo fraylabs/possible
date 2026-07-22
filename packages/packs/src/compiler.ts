@@ -3,7 +3,10 @@ import type { CompiledPack, OutcomePack } from "./types.js";
 export function compileInstallCommands(pack: OutcomePack): string[] {
   const groups = new Map<string, string[]>();
   for (const source of pack.skills) {
-    const installSource = source.installSource ?? source.repository;
+    const installSource = source.installSource ?? `${source.repository}@${source.reviewedRevision}`;
+    if (!installSource.endsWith(`@${source.reviewedRevision}`)) {
+      throw new Error(`${source.id} must install the exact reviewed revision ${source.reviewedRevision}`);
+    }
     const skills = groups.get(installSource) ?? [];
     skills.push(source.skill);
     groups.set(installSource, skills);

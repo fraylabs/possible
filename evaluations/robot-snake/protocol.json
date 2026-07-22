@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "name": "Robot Snake rough-intent comparison",
+  "question": "What operational knowledge does the same non-expert request cause each workflow to include?",
+  "model": "gpt-5.6-sol",
+  "control": {
+    "taskId": "019f86da-0b60-7fb0-a6d3-5617c0aac144",
+    "prompt": "/goal I want to make a robot snake",
+    "onlyFollowUp": "Simulation first. I do not have a fixed budget or access to a 3D printer.",
+    "environment": "Empty Git repository, fresh CODEX_HOME, no AGENTS.md, Possible, Outcome Pack, robotics, CAD or MuJoCo skill.",
+    "snapshotAfter": "PT21M26S"
+  },
+  "possible": {
+    "taskId": "019f8493-b105-7be1-bcce-9f38005e7d81",
+    "prompt": "I want to make a robot snake",
+    "pack": "robot-prototype",
+    "packRevision": "9b3d3dfcc28af2b78d947f80dfa447d03eb35c75"
+  },
+  "contractPredatesControl": true,
+  "limitations": [
+    "This is a preserved comparison, not a statistically powered model benchmark.",
+    "The runs are evidence snapshots rather than equal-time repeated trials.",
+    "Coverage shows inferred operational work, not physical robot performance."
+  ]
+}

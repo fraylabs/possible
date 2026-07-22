@@ -36,8 +36,7 @@ function readJsonLines(file) {
 
 function sanitize(message) {
   return message
-    .replaceAll(`${path.dirname(repository)}/possible-hardware-demo-run/`, "repos/possible-hardware-demo-run/")
-    .replaceAll("/Users/brianlim/coding/fray/repos/possible-hardware-demo-run/", "repos/possible-hardware-demo-run/");
+    .replaceAll(`${runDirectory}/`, "repos/possible-hardware-demo-run/");
 }
 
 const agents = [];

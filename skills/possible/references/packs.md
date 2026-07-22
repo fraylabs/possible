@@ -35,10 +35,10 @@ Sources:
 Install:
 
 ```bash
-npx skills@1.5.19 add anthropics/skills --skill frontend-design --skill webapp-testing --agent codex
-npx skills@1.5.19 add vercel-labs/agent-skills --skill vercel-react-best-practices --agent codex
-npx skills@1.5.19 add remotion-dev/skills --skill remotion-best-practices --agent codex
-npx skills@1.5.19 add earthtojake/text-to-cad --skill cad --agent codex
+npx skills@1.5.19 add anthropics/skills@fa0fa64bdc967915dc8399e803be67759e1e62b8 --skill frontend-design --skill webapp-testing --agent codex
+npx skills@1.5.19 add vercel-labs/agent-skills@f8a72b9603728bb92a217a879b7e62e43ad76c81 --skill vercel-react-best-practices --agent codex
+npx skills@1.5.19 add remotion-dev/skills@ab22f5fa89962ec943eaa18797cbf38c9d727743 --skill remotion-best-practices --agent codex
+npx skills@1.5.19 add earthtojake/text-to-cad@fdbb4b4fb62d95ae298cfe9a46fdc7092bdaf423 --skill cad --agent codex
 ```
 
 Never imply manufacturing readiness, physical validation, certification, or customer demand. Deployment, fabrication, purchasing, outreach, and real waitlist collection remain separate gates.
@@ -74,9 +74,9 @@ Sources:
 Install:
 
 ```bash
-npx skills@1.5.19 add anthropics/skills --skill frontend-design --skill webapp-testing --agent codex
-npx skills@1.5.19 add vercel-labs/agent-skills --skill vercel-react-best-practices --skill web-design-guidelines --skill deploy-to-vercel --agent codex
-npx skills@1.5.19 add remotion-dev/skills --skill remotion-best-practices --agent codex
+npx skills@1.5.19 add anthropics/skills@fa0fa64bdc967915dc8399e803be67759e1e62b8 --skill frontend-design --skill webapp-testing --agent codex
+npx skills@1.5.19 add vercel-labs/agent-skills@f8a72b9603728bb92a217a879b7e62e43ad76c81 --skill vercel-react-best-practices --skill web-design-guidelines --skill deploy-to-vercel --agent codex
+npx skills@1.5.19 add remotion-dev/skills@ab22f5fa89962ec943eaa18797cbf38c9d727743 --skill remotion-best-practices --agent codex
 ```
 
 Never imply demand, uptime, security, performance, or production readiness. Deployment, DNS, analytics, outreach, and real data collection remain separate gates.
@@ -107,7 +107,7 @@ Sources:
 Install:
 
 ```bash
-npx skills@1.5.19 add github/awesome-copilot --skill github-release --skill create-readme --skill documentation-writer --skill github-actions-hardening --skill security-review --agent codex
+npx skills@1.5.19 add github/awesome-copilot@26fe2d126bf79aafb38f43344d450b69632200f8 --skill github-release --skill create-readme --skill documentation-writer --skill github-actions-hardening --skill security-review --agent codex
 ```
 
 Never imply security, compatibility, production readiness, or release authority. Pushing, tagging, publishing packages, creating releases, and changing repository settings remain separate gates.
@@ -140,9 +140,9 @@ Sources:
 Install:
 
 ```bash
-npx skills@1.5.19 add mrgoonie/claudekit-skills --skill threejs --agent codex
-npx skills@1.5.19 add dylantarre/animation-principles --skill game-designer --skill mobile-touch --agent codex
-npx skills@1.5.19 add anthropics/skills --skill frontend-design --skill webapp-testing --agent codex
+npx skills@1.5.19 add mrgoonie/claudekit-skills@80113d86bc4407f105af40a2c4ea58194f7c370a --skill threejs --agent codex
+npx skills@1.5.19 add dylantarre/animation-principles@83597134ba8ff59838270f94d7ac7282ffa3b54d --skill game-designer --skill mobile-touch --agent codex
+npx skills@1.5.19 add anthropics/skills@fa0fa64bdc967915dc8399e803be67759e1e62b8 --skill frontend-design --skill webapp-testing --agent codex
 ```
 
 Never imply player demand, accessibility, compatibility, performance, or production readiness beyond direct evidence. Deployment, publishing, analytics, paid assets, and external distribution remain separate gates.
@@ -174,8 +174,8 @@ Sources:
 Install:
 
 ```bash
-npx skills@1.5.19 add anthropics/skills --skill webapp-testing --agent codex
-npx skills@1.5.19 add github/awesome-copilot --skill impediment-prioritization --skill dependabot --skill security-review --skill devops-rollout-plan --skill incident-postmortem --agent codex
+npx skills@1.5.19 add anthropics/skills@fa0fa64bdc967915dc8399e803be67759e1e62b8 --skill webapp-testing --agent codex
+npx skills@1.5.19 add github/awesome-copilot@26fe2d126bf79aafb38f43344d450b69632200f8 --skill impediment-prioritization --skill dependabot --skill security-review --skill devops-rollout-plan --skill incident-postmortem --agent codex
 ```
 
 Establish the durable workflow and execute its first dated cycle manually before offering a schedule. For recurring operations, default to a standalone scheduled task in an isolated worktree whose prompt invokes `$possible resume`, runs one cycle, writes a new dated completion report, reports findings, and stops at every external-action gate. Show the exact cadence, timezone, project, execution mode, prompt, and permissions before requesting separate approval to create or enable it. If scheduled-task management is unavailable, provide a tested scheduling-ready prompt without claiming a task exists.
@@ -209,8 +209,8 @@ Sources:
 Install:
 
 ```bash
-npx skills@1.5.19 add anthropics/skills --skill frontend-design --skill webapp-testing --agent codex
-npx skills@1.5.19 add github/awesome-copilot --skill security-review --agent codex
+npx skills@1.5.19 add anthropics/skills@fa0fa64bdc967915dc8399e803be67759e1e62b8 --skill frontend-design --skill webapp-testing --agent codex
+npx skills@1.5.19 add github/awesome-copilot@26fe2d126bf79aafb38f43344d450b69632200f8 --skill security-review --agent codex
 ```
 
 Prove clean local setup, one complete user job, one material failure path, every promised state and persistence boundary, a production build, responsive browser behavior, and an exact completion report. Deployment, publishing, analytics, third-party services, and real customer data remain separate gates. Never call a local build secure, scalable, reliable, or production-ready.
@@ -245,9 +245,9 @@ Sources:
 Install:
 
 ```bash
-npx skills@1.5.19 add github/awesome-copilot --skill devops-rollout-plan --skill github-actions-hardening --skill security-review --agent codex
-npx skills@1.5.19 add anthropics/skills --skill webapp-testing --agent codex
-npx skills@1.5.19 add vercel-labs/agent-skills --skill deploy-to-vercel --agent codex
+npx skills@1.5.19 add github/awesome-copilot@26fe2d126bf79aafb38f43344d450b69632200f8 --skill devops-rollout-plan --skill github-actions-hardening --skill security-review --agent codex
+npx skills@1.5.19 add anthropics/skills@fa0fa64bdc967915dc8399e803be67759e1e62b8 --skill webapp-testing --agent codex
+npx skills@1.5.19 add vercel-labs/agent-skills@f8a72b9603728bb92a217a879b7e62e43ad76c81 --skill deploy-to-vercel --agent codex
 ```
 
 Outcome Pack confirmation does not authorize production. Workstreams prepare evidence first; the lead agent integrates it, records go or no-go, and asks again for approval naming the provider, account or team, project, production target, exact candidate, method, and accepted risks. Do not mutate provider state, secrets, databases, DNS, billing, repositories, or workflows without approval for that exact action. Never infer success, availability, security, or rollback readiness from a plan or one browser pass.
@@ -316,9 +316,9 @@ Install:
 
 ```bash
 npx skills@1.5.19 add coreyhaines31/marketingskills@67264763cb107d61749f418d081c56e5bcbc0209 --skill product-marketing --skill content-strategy --skill copywriting --skill social --skill analytics --skill marketing-loops --agent codex
-npx skills@1.5.19 add anthropics/skills --skill frontend-design --skill webapp-testing --agent codex
-npx skills@1.5.19 add vercel-labs/agent-skills --skill vercel-react-best-practices --agent codex
-npx skills@1.5.19 add github/awesome-copilot --skill security-review --skill devops-rollout-plan --agent codex
+npx skills@1.5.19 add anthropics/skills@fa0fa64bdc967915dc8399e803be67759e1e62b8 --skill frontend-design --skill webapp-testing --agent codex
+npx skills@1.5.19 add vercel-labs/agent-skills@f8a72b9603728bb92a217a879b7e62e43ad76c81 --skill vercel-react-best-practices --agent codex
+npx skills@1.5.19 add github/awesome-copilot@26fe2d126bf79aafb38f43344d450b69632200f8 --skill security-review --skill devops-rollout-plan --agent codex
 ```
 
 Do not copy a reference company's identity, code, private data, or copyrighted content. Public companies are system references, not cloning targets. Keep described, produced, executable, used, and economically validated systems distinct. Deployment, publishing, outreach, payments, contracts, spending, data collection, and provider mutations remain separate gates.
@@ -355,8 +355,8 @@ Install:
 
 ```bash
 npx skills@1.5.19 add coreyhaines31/marketingskills@67264763cb107d61749f418d081c56e5bcbc0209 --skill product-marketing --skill content-strategy --skill copywriting --skill social --skill analytics --skill marketing-loops --agent codex
-npx skills@1.5.19 add anthropics/skills --skill frontend-design --skill webapp-testing --agent codex
-npx skills@1.5.19 add remotion-dev/skills --skill remotion-best-practices --agent codex
+npx skills@1.5.19 add anthropics/skills@fa0fa64bdc967915dc8399e803be67759e1e62b8 --skill frontend-design --skill webapp-testing --agent codex
+npx skills@1.5.19 add remotion-dev/skills@ab22f5fa89962ec943eaa18797cbf38c9d727743 --skill remotion-best-practices --agent codex
 ```
 
 Never imply funding, demand, manufacturing feasibility, delivery, or payout. A local page must not impersonate Kickstarter or accept payment. Publishing, outreach, posting, email, advertising, account changes, and live campaign actions require separate approval. Count money only after privacy-safe evidence proves the platform payout was deposited.
@@ -391,7 +391,7 @@ Install:
 
 ```bash
 npx skills@1.5.19 add coreyhaines31/marketingskills@67264763cb107d61749f418d081c56e5bcbc0209 --skill product-marketing --skill copywriting --skill analytics --skill marketing-loops --agent codex
-npx skills@1.5.19 add github/awesome-copilot --skill impediment-prioritization --skill security-review --skill incident-postmortem --agent codex
+npx skills@1.5.19 add github/awesome-copilot@26fe2d126bf79aafb38f43344d450b69632200f8 --skill impediment-prioritization --skill security-review --skill incident-postmortem --agent codex
 ```
 
 Run the first control cycle manually before offering a schedule. Scheduled cycles may inspect authorized privacy-safe evidence and prepare local state or drafts only. Purchasing, supplier contact, contracts, manufacturing orders, address exports, carrier bookings, labels, refunds, campaign changes, and backer messages remain separate explicit gates. Award 95% shipped only from privacy-safe campaign and carrier or fulfillment evidence against a frozen denominator; delivery is a separate claim.
@@ -425,9 +425,9 @@ Sources:
 Install:
 
 ```bash
-npx skills@1.5.19 add fraylabs/possible --skill mujoco-robotics --agent codex
-npx skills@1.5.19 add earthtojake/text-to-cad --skill cad --skill step-parts --skill urdf --skill srdf --skill cad-viewer --agent codex
-npx skills@1.5.19 add arpitg1304/robotics-agent-skills --skill robotics-design-patterns --skill robotics-software-principles --skill ros2-development --skill robotics-testing --agent codex
+npx skills@1.5.19 add fraylabs/possible@9adb697c211d2cebc07164554d7a9f859e7f763d --skill mujoco-robotics --agent codex
+npx skills@1.5.19 add earthtojake/text-to-cad@fdbb4b4fb62d95ae298cfe9a46fdc7092bdaf423 --skill cad --skill step-parts --skill urdf --skill srdf --skill cad-viewer --agent codex
+npx skills@1.5.19 add arpitg1304/robotics-agent-skills@54f7b578f3dc269d29c0beb623b3f2611fd3a430 --skill robotics-design-patterns --skill robotics-software-principles --skill ros2-development --skill robotics-testing --agent codex
 ```
 
 Simulation is not physical validation. Do not connect to hardware, disable safety limits, purchase parts, fabricate components, or claim fabrication readiness, functional safety, payload, precision, stability, durability, or real-world task success without separate approval and direct evidence.
@@ -462,10 +462,10 @@ Sources:
 Install:
 
 ```bash
-npx skills@1.5.19 add coreyhaines31/marketingskills --skill copywriting --agent codex
-npx skills@1.5.19 add zarazhangrui/frontend-slides --skill frontend-slides --agent codex
-npx skills@1.5.19 add pbakaus/impeccable --skill impeccable --agent codex
-npx skills@1.5.19 add anthropics/skills --skill webapp-testing --agent codex
+npx skills@1.5.19 add coreyhaines31/marketingskills@67264763cb107d61749f418d081c56e5bcbc0209 --skill copywriting --agent codex
+npx skills@1.5.19 add zarazhangrui/frontend-slides@9906a34d640d2111f724544cbc50f7f130569ae1 --skill frontend-slides --agent codex
+npx skills@1.5.19 add pbakaus/impeccable@4d849eb75f216109ea7053ed21530a11fafcc786 --skill impeccable --agent codex
+npx skills@1.5.19 add anthropics/skills@fa0fa64bdc967915dc8399e803be67759e1e62b8 --skill webapp-testing --agent codex
 ```
 
 Do not invent evidence, metrics, testimonials, users, product capabilities, citations, or competitive claims. Generated imagery is illustrative, not factual proof. Do not copy protected deck or brand expression, publish private notes, install project hooks, deploy, upload, or share without the required inspection and separate approval.

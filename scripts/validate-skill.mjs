@@ -12,6 +12,24 @@ const [skill, metadata, catalog, entries] = await Promise.all([
 ]);
 const errors = [];
 const check = (condition, message) => { if (!condition) errors.push(message); };
+const validateSkillStructure = async (name, allowedEntries) => {
+  const skillDirectory = join(root, "skills", name);
+  const [contents, skillEntries] = await Promise.all([
+    readFile(join(skillDirectory, "SKILL.md"), "utf8"),
+    readdir(skillDirectory),
+  ]);
+  const skillFrontmatter = contents.match(/^---\n([\s\S]*?)\n---\n/);
+  check(Boolean(skillFrontmatter), `${name}/SKILL.md must start with frontmatter`);
+  if (skillFrontmatter) {
+    const keys = [...skillFrontmatter[1].matchAll(/^([a-z]+):/gm)].map((match) => match[1]).sort();
+    check(JSON.stringify(keys) === JSON.stringify(["description", "name"]), `${name} frontmatter must contain only name and description`);
+    check(new RegExp(`^name: ${name}$`, "m").test(skillFrontmatter[1]), `${name} frontmatter must use the directory name`);
+  }
+  check(skillEntries.every((entry) => allowedEntries.includes(entry)), `${name} contains an unexpected top-level file`);
+};
+
+await validateSkillStructure("possible", ["SKILL.md", "agents", "references"]);
+await validateSkillStructure("mujoco-robotics", ["SKILL.md", "agents", "assets", "scripts"]);
 const frontmatter = skill.match(/^---\n([\s\S]*?)\n---\n/);
 check(Boolean(frontmatter), "SKILL.md must start with frontmatter");
 if (frontmatter) {
@@ -49,4 +67,4 @@ check(metadata.includes("$possible"), "default prompt must mention $possible");
 check(entries.every((entry) => ["SKILL.md", "agents", "references"].includes(entry)), "skill directory contains unexpected top-level files");
 check(skill.split("\n").length <= 500, "SKILL.md must stay under 500 lines");
 if (errors.length) throw new Error(`Possible skill validation failed:\n- ${errors.join("\n- ")}`);
-console.log("Possible skill is valid.");
+console.log("Possible and MuJoCo Robotics skills are valid.");

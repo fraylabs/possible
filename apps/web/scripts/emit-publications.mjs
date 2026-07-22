@@ -1,8 +1,7 @@
 import { mkdir, writeFile } from "node:fs/promises";
-import { compilePack, outcomePacks } from "@possible/packs";
+import { compilePack, stableOutcomePacks } from "@possible/packs";
 
-const featuredSlugs = new Set(["hardware-launch", "robot-prototype", "playable-web-game", "web-presentation"]);
-const featuredPacks = outcomePacks.filter((pack) => featuredSlugs.has(pack.slug));
+const featuredPacks = stableOutcomePacks;
 
 const evidenceManifest = {
   schemaVersion: 1,

@@ -1,15 +1,13 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
-import { outcomePacks } from "../packages/packs/dist/index.js";
+import { stableOutcomePacks } from "../packages/packs/dist/index.js";
 
 const output = new URL("../apps/web/out/", import.meta.url);
 const html = (relativePath) => readFile(new URL(relativePath, output), "utf8");
 const visibleText = (markup) => markup.replace(/<script[\s\S]*?<\/script>/gi, " ").replace(/<style[\s\S]*?<\/style>/gi, " ");
 const plainText = (markup) => markup.replace(/<[^>]+>/g, " ").replace(/&[a-z0-9#]+;/gi, " ").replace(/\s+/g, " ").trim();
 const escape = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-const featuredSlugs = ["hardware-launch", "robot-prototype", "playable-web-game", "web-presentation"];
-const featuredPacks = featuredSlugs.map((slug) => outcomePacks.find((pack) => pack.slug === slug));
-assert.ok(featuredPacks.every(Boolean), "Every featured Outcome Pack must exist");
+const featuredPacks = stableOutcomePacks;
 
 const homeMarkup = await html("index.html");
 const home = visibleText(homeMarkup);

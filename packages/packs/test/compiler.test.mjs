@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { compilePack, outcomePacks } from "../dist/index.js";
+import { compilePack, experimentalOutcomePacks, getPackStatus, outcomePacks, stableOutcomePacks } from "../dist/index.js";
 
 test("every outcome pack compiles to inspectable installs and a complete prompt", () => {
   assert.deepEqual(outcomePacks.map((pack) => pack.slug), [
@@ -36,6 +36,16 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
   assert.deepEqual(outcomePacks.map((pack) => pack.catalogNumber), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]);
   assert.equal(new Set(outcomePacks.map((pack) => pack.catalogNumber)).size, outcomePacks.length);
   assert.equal(new Set(outcomePacks.map((pack) => pack.slug)).size, outcomePacks.length);
+  assert.deepEqual(stableOutcomePacks.map((pack) => pack.slug), [
+    "hardware-launch",
+    "playable-web-game",
+    "robot-prototype",
+    "web-presentation",
+  ]);
+  assert.equal(experimentalOutcomePacks.length, 9);
+  assert.equal(getPackStatus("hardware-launch"), "stable");
+  assert.equal(getPackStatus("software-launch"), "experimental");
+  assert.equal(getPackStatus("missing"), undefined);
 
   for (const pack of outcomePacks) {
     assert.ok(["create", "launch", "release", "operate"].includes(pack.lane));
@@ -55,6 +65,10 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
       assert.match(compiled.runPrompt, new RegExp("\\$" + source.skill.replaceAll("-", "\\-")));
       assert.equal(source.reviewedRevision.length, 40);
       assert.match(source.reviewUrl, new RegExp(source.reviewedRevision));
+      assert.ok(
+        compiled.installCommands.some((command) => command.includes(`@${source.reviewedRevision}`) && command.includes(`--skill ${source.skill}`)),
+        `${source.id} must install the reviewed revision`,
+      );
     }
     for (const plugin of pack.plugins ?? []) {
       assert.match(plugin.invocation, /^@/);
@@ -69,6 +83,12 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
     assert.match(compiled.runPrompt, /passed\/failed\/skipped/);
     assert.doesNotMatch(compiled.runPrompt, /choose a lane|\nLANE\n/i);
   }
+});
+
+test("custom install sources cannot drift from the reviewed revision", () => {
+  const pack = structuredClone(outcomePacks[0]);
+  pack.skills[0].installSource = `${pack.skills[0].repository}@main`;
+  assert.throws(() => compilePack(pack), /must install the exact reviewed revision/);
 });
 
 test("install commands group skills by upstream repository", () => {

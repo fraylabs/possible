@@ -49,6 +49,8 @@ The installer is idempotent and refuses to overwrite conflicting skill files. Ou
 
 ## Four outcomes
 
+These are the four stable public packs. Nine additional registry packs are experimental and may change before they have equivalent preserved evidence.
+
 - [Hardware Launch](packages/packs/src/hardware-launch.ts) — product story, site, film, prototype CAD and independent review.
 - [Robot Prototype](packages/packs/src/robot-prototype.ts) — mechanical model, robot descriptions, control, simulation and sim-to-real boundaries.
 - [Playable Web Game](packages/packs/src/playable-web-game.ts) — a polished browser game with responsive controls and playability review.
@@ -98,6 +100,8 @@ npm run check
 ```
 
 The build publishes the four featured pack specifications and their compiled JSON and text contracts.
+
+The [Robot Snake evaluation protocol](evaluations/robot-snake/README.md) preserves the exact comparison input, maps the pre-existing contract to direct evidence and verifies every published artifact checksum with `npm run evaluation:verify`.
 
 ## Supported surface
 

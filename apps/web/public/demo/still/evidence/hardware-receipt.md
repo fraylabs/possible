@@ -30,9 +30,9 @@ From repository root unless noted:
 
 ```bash
 # Environment (requirements command was run from .agents/skills/cad)
-uv venv --clear --python 3.12 /Users/brianlim/coding/fray/repos/possible-hardware-demo-run/hardware/.venv
+uv venv --clear --python 3.12 $RUN_ROOT/hardware/.venv
 uv pip install \
-  --python /Users/brianlim/coding/fray/repos/possible-hardware-demo-run/hardware/.venv/bin/python \
+  --python $RUN_ROOT/hardware/.venv/bin/python \
   -r requirements.txt
 
 # Required help checks
@@ -90,14 +90,13 @@ file hardware/still.step hardware/exports/still.stl hardware/exports/still.glb h
 
 ## Viewer handoff attempt
 
-Run from `/Users/brianlim/.codex/plugins/cache/text-to-cad/cad/0.3.9/skills/cad-viewer`:
+Run from the installed CAD viewer skill directory (`$CAD_VIEWER_ROOT`):
 
 ```bash
 npm --prefix scripts/viewer run agent:start -- \
   --host 127.0.0.1 \
-  --dir /Users/brianlim/coding/fray/repos/possible-hardware-demo-run/hardware \
+  --dir $RUN_ROOT/hardware \
   --json
 ```
 
 Result: failed with `npm error Missing script: "agent:start"`. No live Viewer URL can be honestly supplied from this installed skill version.
-

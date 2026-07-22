@@ -1,4 +1,4 @@
-import { compilePack, getPack, outcomePacks } from "@possible/packs";
+import { compilePack, getPack, getPackStatus, outcomePacks } from "@possible/packs";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod/v4";
 import { errorResult, successResult } from "./result.js";
@@ -11,10 +11,10 @@ export async function createPossibleServer(): Promise<McpServer> {
   const server = new McpServer({ name: "possible", version: "0.1.0" }, { instructions: POSSIBLE_SERVER_INSTRUCTIONS });
   server.registerTool("list_packs", {
     title: "List Possible outcome packs",
-    description: "List the reviewed outcome packs currently published by Possible.",
+    description: "List Possible outcome packs and whether each is stable or experimental.",
     annotations: READ_ONLY,
   }, async () => successResult({
-    packs: outcomePacks.map(({ catalogNumber, slug, lane, name, promise, reviewedAt }) => ({ catalogNumber, slug, lane, name, promise, reviewedAt })),
+    packs: outcomePacks.map(({ catalogNumber, slug, lane, name, promise, reviewedAt }) => ({ catalogNumber, slug, lane, name, promise, reviewedAt, status: getPackStatus(slug) })),
   }));
   server.registerTool("compile_pack", {
     title: "Compile a Possible outcome pack",

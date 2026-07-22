@@ -329,7 +329,7 @@
     {
       "name": "ffprobe-film-facts",
       "status": "passed",
-      "command": "ffprobe -v error -show_entries stream=codec_name,width,height,r_frame_rate,duration -show_entries format=size,duration,format_name -of json /Users/brianlim/coding/fray/repos/possible-hardware-demo-run/outcome-room/assets/film/still-launch.mp4",
+      "command": "ffprobe -v error -show_entries stream=codec_name,width,height,r_frame_rate,duration -show_entries format=size,duration,format_name -of json $RUN_ROOT/outcome-room/assets/film/still-launch.mp4",
       "facts": {
         "programs": [],
         "stream_groups": [],
@@ -360,7 +360,7 @@
     {
       "name": "silent-film-audio-track",
       "status": "passed",
-      "command": "ffmpeg -hide_banner -i /Users/brianlim/coding/fray/repos/possible-hardware-demo-run/outcome-room/assets/film/still-launch.mp4 -map 0:a:0 -af volumedetect -f null -",
+      "command": "ffmpeg -hide_banner -i $RUN_ROOT/outcome-room/assets/film/still-launch.mp4 -map 0:a:0 -af volumedetect -f null -",
       "evidence": "max_volume: -91.0 dB"
     },
     {

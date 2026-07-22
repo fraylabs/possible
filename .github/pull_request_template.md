@@ -1,16 +1,16 @@
-## Guide contribution
+## Outcome
 
-- [ ] The change covers one coherent subject or improves an existing guide.
-- [ ] Applicability, project-specific decisions, limits, and alternatives are explicit.
-- [ ] Validation guidance tells the consuming agent what evidence to seek without claiming Possible ran the checks.
-- [ ] Primary or authoritative sources are used where practical.
-- [ ] Contributor judgment and material conflicts are disclosed.
-- [ ] Link adjacency is not presented as a workflow; any conditional sequence is explained in prose with its counterconditions.
-- [ ] `reviewedAt` reflects an actual source review date.
-- [ ] No secrets, private artifacts, execution logs, customer data, or absolute local paths are included.
-- [ ] `npm run knowledge:validate` and the relevant focused tests pass.
+What can a user rely on after this change?
 
-## What this does not establish
+## Evidence
 
-Describe any project outcomes, live provider facts, environments, or use cases
-that this contribution does not prove.
+- [ ] `npm run check` passes.
+- [ ] New skill sources install the exact reviewed commit.
+- [ ] External actions remain behind explicit approval.
+- [ ] New or changed outcome claims link to preserved evidence.
+- [ ] No secrets, customer data or absolute local paths are included.
+- [ ] Non-scope and unproven claims are explicit.
+
+## Limits
+
+What does this change not establish?

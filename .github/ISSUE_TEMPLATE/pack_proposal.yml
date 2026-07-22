@@ -1,0 +1,26 @@
+name: Outcome Pack proposal
+description: Propose a reusable, verifiable outcome contract.
+title: "[Pack]: "
+labels: [outcome-pack]
+body:
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Outcome
+      description: What should a user be able to rely on when this pack completes?
+    validations:
+      required: true
+  - type: textarea
+    id: workstreams
+    attributes:
+      label: Required workstreams
+      description: What independent expertise and owned outputs are required?
+    validations:
+      required: true
+  - type: textarea
+    id: verification
+    attributes:
+      label: Completion evidence
+      description: What fresh checks prove completion, and what remains unproven?
+    validations:
+      required: true

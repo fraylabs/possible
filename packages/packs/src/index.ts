@@ -16,6 +16,13 @@ export { billionDollarSaasPack, hardwareLaunchPack, kickstarterFulfillmentPack, 
 export { compileInstallCommands, compilePack, compileRunPrompt } from "./compiler.js";
 export type { CompiledPack, OutcomePack, PackLane, PluginCapability, ScheduleContract, SkillSource, Workstream } from "./types.js";
 
+export const stablePackSlugs = [
+  "hardware-launch",
+  "robot-prototype",
+  "playable-web-game",
+  "web-presentation",
+] as const;
+
 export const outcomePacks = [
   hardwareLaunchPack,
   softwareLaunchPack,
@@ -31,6 +38,16 @@ export const outcomePacks = [
   robotPrototypePack,
   webPresentationPack,
 ] as const;
+
+const stablePackSlugSet = new Set<string>(stablePackSlugs);
+
+export const stableOutcomePacks = outcomePacks.filter((pack) => stablePackSlugSet.has(pack.slug));
+export const experimentalOutcomePacks = outcomePacks.filter((pack) => !stablePackSlugSet.has(pack.slug));
+
+export function getPackStatus(slug: string): "stable" | "experimental" | undefined {
+  if (!outcomePacks.some((pack) => pack.slug === slug)) return undefined;
+  return stablePackSlugSet.has(slug) ? "stable" : "experimental";
+}
 
 export function getPack(slug: string) {
   return outcomePacks.find((pack) => pack.slug === slug);

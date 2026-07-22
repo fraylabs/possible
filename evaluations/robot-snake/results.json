@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "criteria": [
+    { "id": "mechanical-cad", "control": "not-recorded", "possible": "met", "possibleEvidence": "apps/web/public/demo/robot-snake/cad/robot-snake.step" },
+    { "id": "robot-description", "control": "not-recorded", "possible": "met", "possibleEvidence": "apps/web/public/demo/robot-snake/model/robot-snake.urdf" },
+    { "id": "motion-planning-semantics", "control": "not-recorded", "possible": "met", "possibleEvidence": "apps/web/public/demo/robot-snake/model/robot-snake.srdf" },
+    { "id": "rigid-body-simulation", "control": "partial", "controlEvidence": "apps/web/public/demo/robot-snake/control/index.html", "possible": "met", "possibleEvidence": "apps/web/public/demo/robot-snake/evidence/simulation-contract.md" },
+    { "id": "autonomous-obstacle-avoidance", "control": "not-recorded", "possible": "met", "possibleEvidence": "apps/web/public/demo/robot-snake/simulation/obstacle-course/metrics.json" },
+    { "id": "engineering-telemetry", "control": "partial", "controlEvidence": "apps/web/public/demo/robot-snake/control/src/app.js", "possible": "met", "possibleEvidence": "apps/web/public/demo/robot-snake/viewer/robot-snake.rrd" },
+    { "id": "deterministic-checks", "control": "met", "controlEvidence": "apps/web/public/demo/robot-snake/control/test/snake.test.js", "possible": "met", "possibleEvidence": "apps/web/public/demo/robot-snake/evidence/outcome-receipt.md" },
+    { "id": "fresh-independent-verification", "control": "not-recorded", "possible": "met", "possibleEvidence": "apps/web/public/demo/robot-snake/evidence/outcome-receipt.md" },
+    { "id": "sim-to-real-boundaries", "control": "partial", "controlEvidence": "apps/web/public/demo/robot-snake/control/docs/bench-validation.md", "possible": "met", "possibleEvidence": "apps/web/public/demo/robot-snake/evidence/sim-to-real-gaps.md" }
+  ]
+}
