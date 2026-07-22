@@ -1,0 +1,36 @@
+{
+  "id": "stale-log",
+  "title": "Stale or ambiguous log",
+  "description": "A log from a previous revision remains unknown.",
+  "expectedClaimStatuses": { "tests-stale": "unknown" },
+  "expectedEvidence": {
+    "changedFiles": [
+      { "path": "src/schema.js", "change": "modified", "status": "passed" }
+    ],
+    "checks": [{ "command": "npm test", "exitCode": 0, "status": "unknown" }],
+    "artifacts": []
+  },
+  "expectedWarnings": [
+    "The supplied check log is stale, ambiguous, truncated, or conflicting.",
+    "Changed path is not referenced by any claim: src/schema.js."
+  ],
+  "expectedLimitations": ["The command must be rerun against this change."],
+  "draft": {
+    "kind": "patchproof.draft",
+    "schemaVersion": 1,
+    "task": "Change the receipt schema.",
+    "unifiedDiff": "diff --git a/src/schema.js b/src/schema.js\n--- a/src/schema.js\n+++ b/src/schema.js\n@@ -1 +1 @@\n-export const version = 0;\n+export const version = 1;",
+    "checkLog": "$ npm test\nTests passed from previous revision; current revision unknown.\nexit code: 0",
+    "artifacts": [],
+    "claims": [
+      {
+        "id": "tests-stale",
+        "text": "Current schema tests pass",
+        "kind": "tests",
+        "target": "npm test",
+        "evidenceRefs": ["check-001"]
+      }
+    ],
+    "limitations": ["The command must be rerun against this change."]
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "originalAmbition": "Discover, build, and launch a useful developer tool without assuming which problem is worth solving.",
+  "currentStage": null,
+  "stages": [
+    {"slug": "software-opportunity-discovery", "state": "completed-pursue", "runId": "20260722-software-opportunity-discovery-001", "workspaceRevision": "3cdefb90807a8a7d65a2131b73cf568a490fe43a"},
+    {"slug": "working-web-app", "state": "completed-passed", "runId": "20260722-working-web-app-001", "workspaceRevision": "ae88d46686b23b6374899c5f0606e17859b93b99"},
+    {"slug": "developer-project-launch", "state": "completed-passed-local-only", "runId": "20260722-developer-project-launch-001", "workspaceRevision": "29b6e94a0c45ba8b996d7f0036f276d2ceda1e25"}
+  ],
+  "pendingTransition": null,
+  "externalAuthority": "none"
+}

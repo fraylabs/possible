@@ -1,0 +1,12 @@
+{
+  "source": "https://github.com/coreyhaines31/marketingskills.git",
+  "reviewedRevision": "67264763cb107d61749f418d081c56e5bcbc0209",
+  "installedBy": "npx skills@1.5.19",
+  "skills": [
+    {"name": "customer-research", "path": ".agents/skills/customer-research", "available": true, "skillMdSha256": "f44c116c46904bba256604f62e97048c2872f389a963843254129cc511cdf1ff", "skillsCliComputedHash": "a432ee6d37151c4b5b89045e8611f755d657e1339d9d67d928d73875ccd03a01"},
+    {"name": "competitor-profiling", "path": ".agents/skills/competitor-profiling", "available": true, "skillMdSha256": "ea7b5b7feb79ead8df038653c33aae96d38890784018a2b0afae9b2a1e21b3af", "skillsCliComputedHash": "d691200df7b02d85327192dd2203f97eec5a01e7748e9b171a5c9d6a584dc181"},
+    {"name": "product-marketing", "path": ".agents/skills/product-marketing", "available": true, "skillMdSha256": "6dfd6bd485f62448385844cb9eceefcee0977c843d7a1c9e6077590d4e19d1ec", "skillsCliComputedHash": "b8a9cd747705923a7a29cda12e478594e3a5062d8f7c7bfbf19d7fc0b24cee76"},
+    {"name": "analytics", "path": ".agents/skills/analytics", "available": true, "skillMdSha256": "16aab197f87bf6e2599d179061f1947d96acafe0a340837432d8ab96d2f8c55a", "skillsCliComputedHash": "11fcba681577e36b5ad88e391d932a9c94fb1e593e94010c750739eefa9c4057"}
+  ],
+  "drift": "not detected against the exact reviewed source requested by the pack"
+}

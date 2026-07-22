@@ -4,6 +4,8 @@ import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { compilePack, getPackStatus } from "@possible/packs";
 import type { OutcomePack } from "@possible/packs";
 import demoThreadData from "./demo-thread.json";
+import { exampleCatalog, getExample } from "./example-content";
+import type { PossibleExample } from "./example-content";
 import { experimentalPreviewPacks, featuredPacks, getPublishedPack, githubUrl, installCommand } from "./public-content";
 
 const PaperPlaneGame = lazy(() => import("./PaperPlaneGame"));
@@ -37,7 +39,7 @@ const laneLabels = {
   operate: "Operate",
 } as const;
 const navigationItems = [
-  { label: "DEMO", href: "/demo", external: false },
+  { label: "EXAMPLES", href: "/examples", external: false },
   { label: "DOCS", href: "/docs", external: false },
   { label: "GITHUB", href: githubUrl, external: true },
 ] as const;
@@ -162,7 +164,7 @@ function CreatePage() {
             <p className="build-hero-description"><strong>Possible.sh is an open-source library of Outcome Packs.</strong> Each pack combines a reusable execution prompt and selected agent skills for dozens of coordinated tasks.</p>
             <div className="build-hero-actions">
               <a className="button-link" href={githubUrl} target="_blank" rel="noreferrer">Star on GitHub <span>↗</span></a>
-              <a className="text-link" href="/demo">See the outcomes ↗</a>
+              <a className="text-link" href="/examples">See the outcomes ↗</a>
               <a className="text-link" href="#try">Install ↓</a>
             </div>
           </div>
@@ -192,11 +194,10 @@ function CreatePage() {
             <span>FEATURED OUTCOMES</span>
             <h2 id="home-demo-heading">See the conversation.<br /><em>Inspect the result.</em></h2>
           </header>
-          <ol aria-label="Possible demo outcomes">
-            <li><a href="/demo/hardware"><span>HARDWARE LAUNCH</span><h3>Still</h3><p>SITE · FILM · CAD</p><i>↗</i></a></li>
-            <li><a href="/demo/robot-snake"><span>ROBOT PROTOTYPE</span><h3>Robot Snake</h3><p>CAD · MUJOCO · RERUN</p><i>↗</i></a></li>
-            <li><a href="/demo/game"><span>PLAYABLE WEB GAME</span><h3>Fold</h3><p>THREE.JS · TOUCH · PLAY</p><i>↗</i></a></li>
-            <li><a href="/demo/presentation"><span>WEB PRESENTATION</span><h3>Possible</h3><p>STORY · CODE · PRESENT</p><i>↗</i></a></li>
+          <ol aria-label="Possible example outcomes">
+            {exampleCatalog.slice(0, 4).map((example) => (
+              <li key={example.slug}><a href={`/examples/${example.slug}`}><span>{example.outcomeLabel}</span><h3>{example.name}</h3><i>↗</i></a></li>
+            ))}
           </ol>
         </section>
 
@@ -735,68 +736,110 @@ function DemoOutcomeFooter({ text, href = "#top", linkLabel = "BACK TO TOP ↑" 
   return <footer className="demo-outcome-footer"><p>{text}</p><a href={href}>{linkLabel}</a></footer>;
 }
 
-function DemoGalleryPage() {
+function ExampleCard({ example }: { example: PossibleExample }) {
   return (
-    <main className="demo-gallery-page">
-      <SiteNav label="Demos" />
-      <h1 className="sr-only">Possible outcome demos</h1>
+    <a className={`example-card example-card--${example.slug}`} href={`/examples/${example.slug}`} aria-label={`Open ${example.outcomeLabel}: ${example.name} example`}>
+      <header><span>{example.outcomeLabel}</span><strong>OPEN ↗</strong></header>
+      <div className="example-card-visual">
+        {example.visual.kind === "image"
+          ? <img src={example.visual.src} alt={example.visual.alt} loading="lazy" decoding="async" />
+          : <div className="example-card-game" aria-label={example.visual.alt}><i /><i /><strong>PLAYABLE</strong></div>}
+      </div>
+      <div className="example-card-copy">
+        <p>{example.projectLabel}</p>
+        <h2>{example.name}</h2>
+        <p>“{example.roughRequest}”</p>
+        <div>{example.proofMetrics.map((metric) => <span key={metric}>{metric}</span>)}</div>
+      </div>
+    </a>
+  );
+}
 
-      <section className="demo-gallery-grid" aria-label="Possible demos and recorded examples">
-        <a className="demo-example-card demo-example-card--hardware" href="/demo/hardware">
-          <header><span>HARDWARE LAUNCH</span><strong>VERIFIED RUN ↗</strong></header>
-          <div className="demo-example-visual demo-example-visual--hardware">
-            <img src="/demo/still/hardware/still-iso.png" alt="Still e-ink focus device CAD concept" />
-          </div>
-          <div className="demo-example-copy">
-            <p>STILL / E-INK FOCUS DEVICE</p>
-            <h2>Idea to site,<br />film, and CAD.</h2>
-            <p className="demo-example-transformation">A hardware novice supplied one rough idea. Possible identified and coordinated the product, website, film, CAD, safety, and verification work behind a credible launch package.</p>
-            <div><span>{demoThread.agents.length} agent threads</span><span>{demoThread.messages.length} public messages</span><span>58 artifact checks</span></div>
-          </div>
-        </a>
+function ExampleModal({ example, onDismiss }: { example: PossibleExample; onDismiss: () => void }) {
+  const closeRef = useRef<HTMLAnchorElement>(null);
+  const modalRef = useRef<HTMLElement>(null);
 
-        <a className="demo-example-card demo-example-card--robot" href="/demo/robot-snake">
-          <header><span>ROBOT PROTOTYPE</span><strong>ISOLATED VERIFIED RUN ↗</strong></header>
-          <div className="demo-example-visual demo-example-visual--robot">
-            <img src="/demo/robot-snake/cad/iso.png" alt="Ten-link robot snake CAD prototype" />
-            <span>CAD · URDF · MUJOCO</span>
-          </div>
-          <div className="demo-example-copy">
-            <p>ROBOT SNAKE / DIGITAL PROTOTYPE</p>
-            <h2>One rough idea.<br />A simulated robot.</h2>
-            <p className="demo-example-transformation">A robotics novice asked for a robot snake. Possible supplied the mechanical, description, control, simulation, safety, and verification work required for an inspectable digital prototype.</p>
-            <div><span>12 / 12 tests</span><span>186 interface checks</span><span>3 verifier repairs</span></div>
-          </div>
-        </a>
+  useEffect(() => {
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    closeRef.current?.focus();
+    const handleKeyboard = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        document.body.style.overflow = previousOverflow;
+        window.history.replaceState({}, "", "/examples");
+        onDismiss();
+        return;
+      }
 
-        <a className="demo-example-card demo-example-card--game" href="/demo/game">
-          <header><span>PLAYABLE WEB GAME</span><strong>LIVE OUTCOME PROOF ↗</strong></header>
-          <div className="demo-example-visual demo-example-visual--game" aria-hidden="true">
-            <i className="demo-game-gate demo-game-gate--one" /><i className="demo-game-gate demo-game-gate--two" /><i className="demo-game-plane" />
-            <span>POINTER</span><span>TOUCH</span><span>KEYS</span>
-          </div>
-          <div className="demo-example-copy">
-            <p>FOLD / PAPER PLANE STORM RUN</p>
-            <h2>One strange idea.<br />One game to play.</h2>
-            <p className="demo-example-transformation">A creator supplied one strange idea. The Outcome Pack mapped the interaction, feel, runtime, input, and playability work needed to make it real.</p>
-            <div><span>Three.js runtime</span><span>3 input modes</span><span>Play now</span></div>
-          </div>
-        </a>
+      if (event.key !== "Tab") return;
+      const focusable = Array.from(modalRef.current?.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), iframe, [tabindex]:not([tabindex="-1"])',
+      ) ?? []);
+      if (!focusable.length) return;
 
-        <a className="demo-example-card demo-example-card--presentation" href="/demo/presentation">
-          <header><span>WEB PRESENTATION</span><strong>LIVE CODED DECK ↗</strong></header>
-          <div className="demo-example-visual demo-example-visual--presentation">
-            <img src="/presentation/possible-visual-atlas.webp" alt="Illustrations of an agent skill, execution prompt, Outcome Pack, and the Possible guide" />
+      const first = focusable[0]!;
+      const last = focusable[focusable.length - 1]!;
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+    window.addEventListener("keydown", handleKeyboard);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", handleKeyboard);
+    };
+  }, [onDismiss]);
+
+  return (
+    <div className="example-modal-backdrop">
+      <section ref={modalRef} className="example-modal" role="dialog" aria-modal="true" aria-labelledby="example-modal-title">
+        <header><span>{example.outcomeLabel}</span><a ref={closeRef} href="/examples" aria-label="Close example">CLOSE ×</a></header>
+        <div className="example-modal-layout">
+          <div className="example-modal-preview" role="region" aria-label="Preview">
+            {example.visual.kind === "embed"
+              ? <iframe src={example.visual.src} title={`${example.name} interactive preview`} />
+              : <img src={example.visual.src} alt={example.visual.alt} />}
           </div>
-          <div className="demo-example-copy">
-            <p>POSSIBLE.SH / WEB PRESENTATION</p>
-            <h2>What Possible is.<br />In ten slides.</h2>
-            <p className="demo-example-transformation">See how agent skills, reusable execution prompts, Outcome Packs, and <code>$possible</code> fit together—then inspect a real Robot Prototype outcome.</p>
-            <div><span>10 coded slides</span><span>Keyboard + touch</span><span>Open presentation</span></div>
-          </div>
-        </a>
+          <article>
+            <p className="eyebrow">{example.projectLabel}</p>
+            <h1 id="example-modal-title">{example.name}</h1>
+            <div className="example-modal-details">
+              <section aria-label="Original request"><span>Original request</span><p>“{example.roughRequest}”</p></section>
+              <section aria-label={example.inferenceLabel ?? "What Possible inferred"}><span>{example.inferenceLabel ?? "What Possible inferred"}</span><p>{example.inference}</p></section>
+              <section aria-label={example.outcomeLabel.includes("Chain") ? "Outcome Chain" : "Outcome Pack"}><span>{example.outcomeLabel.includes("Chain") ? "Outcome Chain" : "Outcome Pack"}</span><p>{example.outcomeLabel}</p></section>
+            </div>
+            <section aria-label="Proof"><span>PROOF</span><ul>{example.proofMetrics.map((metric) => <li key={metric}>{metric}</li>)}</ul></section>
+            <footer><a href={example.primaryOutput.href}><span>OPEN OUTPUT</span><strong>{example.primaryOutput.label} ↗</strong></a><a href={example.evidence.href}><span>INSPECT EVIDENCE</span><strong>{example.evidence.label} ↗</strong></a></footer>
+          </article>
+        </div>
       </section>
-      <SiteFooter />
+    </div>
+  );
+}
+
+function ExamplesPage({ activeSlug }: { activeSlug?: string }) {
+  const [modalDismissed, setModalDismissed] = useState(false);
+  const activeExample = activeSlug ? getExample(activeSlug) : undefined;
+  const visibleExample = modalDismissed ? undefined : activeExample;
+  return (
+    <main className="examples-page">
+      <div className="examples-background" inert={visibleExample ? true : undefined} aria-hidden={visibleExample ? true : undefined}>
+        <SiteNav label="Examples" />
+        <section className="examples-intro" aria-labelledby="examples-heading">
+          <p className="eyebrow">POSSIBLE EXAMPLES</p>
+          <h1 id="examples-heading">Rough requests.<br /><em>Real outcomes.</em></h1>
+          <p>Open any example for the request, the work its Outcome Pack supplies, the finished output, and its supporting evidence.</p>
+        </section>
+        <section className="examples-grid" aria-label="Possible examples">
+          {exampleCatalog.map((example) => <ExampleCard key={example.slug} example={example} />)}
+        </section>
+        <SiteFooter />
+      </div>
+      {visibleExample ? <ExampleModal example={visibleExample} onDismiss={() => setModalDismissed(true)} /> : null}
     </main>
   );
 }
@@ -1612,7 +1655,11 @@ export function PossibleSite({ path: requestedPath }: { path?: string }) {
   if (path === "/docs") return <DocsPage />;
   if (path === "/docs/how-to-use") return <HowToUsePage />;
   if (path === "/judging") return <JudgingPage />;
-  if (path === "/demo") return <DemoGalleryPage />;
+  if (path === "/examples" || path === "/demo") return <ExamplesPage />;
+  if (path.startsWith("/examples/")) {
+    const example = getExample(path.slice("/examples/".length));
+    return example ? <ExamplesPage activeSlug={example.slug} /> : <NotFoundPage />;
+  }
   if (path === "/demo/presentation") return <PresentationDemoPage />;
   if (path === "/demo/game/play") return <Suspense fallback={<main className="plane-game-shell plane-game-loading"><span>FOLD / LOADING FLIGHT</span></main>}><PaperPlaneGame /></Suspense>;
   if (path === "/demo/game") return <PlayableGameDemoPage />;

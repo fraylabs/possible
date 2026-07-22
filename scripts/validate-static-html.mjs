@@ -8,6 +8,13 @@ const visibleText = (markup) => markup.replace(/<script[\s\S]*?<\/script>/gi, " 
 const plainText = (markup) => markup.replace(/<[^>]+>/g, " ").replace(/&[a-z0-9#]+;/gi, " ").replace(/\s+/g, " ").trim();
 const escape = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 const featuredPacks = stableOutcomePacks;
+const exampleRoutes = [
+  ["still", "Still", "helps me focus"],
+  ["robot-snake", "Robot Snake", "robot snake"],
+  ["fold", "Fold", "paper plane"],
+  ["web-presentation", "Web Presentation", "wall of text"],
+  ["patchproof", "PatchProof", "problem is worth solving"],
+];
 
 const homeMarkup = await html("index.html");
 const home = visibleText(homeMarkup);
@@ -51,17 +58,17 @@ assert.doesNotMatch(judgingMarkup, /href="\/packs\/hardware-launch\/run\.txt"/, 
 
 const headerLinks = home.match(/<div class="nav-links">([\s\S]*?)<\/div>/)?.[1];
 assert.ok(headerLinks, "The shared header must render desktop navigation");
-assert.equal((headerLinks.match(/<a\b/g) ?? []).length, 3, "The header must contain Demo, Docs, and GitHub only");
-for (const [href, label] of [["/demo", "DEMO"], ["/docs", "DOCS"], ["https://github.com/fraylabs/possible", "GITHUB"]]) {
+assert.equal((headerLinks.match(/<a\b/g) ?? []).length, 3, "The header must contain Examples, Docs, and GitHub only");
+for (const [href, label] of [["/examples", "EXAMPLES"], ["/docs", "DOCS"], ["https://github.com/fraylabs/possible", "GITHUB"]]) {
   assert.match(headerLinks, new RegExp(`href="${escape(href)}"[^>]*>${label}`));
 }
 assert.doesNotMatch(headerLinks, /BLOGS|PACKS|BENCH|SOURCE/);
 
 for (const [href, name] of [
-  ["/demo/hardware", "Still"],
-  ["/demo/robot-snake", "Robot Snake"],
-  ["/demo/game", "Fold"],
-  ["/demo/presentation", "Possible"],
+  ["/examples/still", "Still"],
+  ["/examples/robot-snake", "Robot Snake"],
+  ["/examples/fold", "Fold"],
+  ["/examples/web-presentation", "Web Presentation"],
 ]) {
   assert.match(home, new RegExp(`href="${escape(href)}"[\\s\\S]*?${escape(name)}`));
 }
@@ -120,10 +127,48 @@ for (const slug of ["software-launch", "open-source-release", "marketing-operati
   await assert.rejects(html(`packs/${slug}/index.html`), { code: "ENOENT" }, `${slug} must not be exported`);
 }
 
-const demoGallery = visibleText(await html("demo/index.html"));
-assert.equal((demoGallery.match(/class="demo-example-card/g) ?? []).length, 4, "The gallery must contain four demos");
-for (const href of ["/demo/hardware", "/demo/robot-snake", "/demo/game", "/demo/presentation"]) assert.match(demoGallery, new RegExp(`href="${escape(href)}"`));
-assert.doesNotMatch(demoGallery, /Software Launch|Open-Source Release|Tiny Slug/i);
+for (const galleryFile of ["examples/index.html", "demo/index.html"]) {
+  const gallery = visibleText(await html(galleryFile));
+  const canonicalCardLinks = gallery.match(/href="\/examples\/(?:still|robot-snake|fold|web-presentation|patchproof)"/g) ?? [];
+  assert.equal(canonicalCardLinks.length, exampleRoutes.length, `${galleryFile} must contain five canonical example cards`);
+  for (const [slug, name] of exampleRoutes) {
+    assert.match(gallery, new RegExp(`href="/examples/${escape(slug)}"[\\s\\S]*?${escape(name)}`), `${galleryFile} must link ${name} to its canonical example route`);
+  }
+  assert.doesNotMatch(gallery, /Software Launch|Open-Source Release|Tiny Slug/i);
+}
+
+for (const [slug, name, requestSnippet] of exampleRoutes) {
+  const markup = await html(`examples/${slug}/index.html`);
+  const text = plainText(visibleText(markup));
+  assert.match(markup, /role="dialog"[^>]*aria-modal="true"|aria-modal="true"[^>]*role="dialog"/, `${name} must render as an accessible modal`);
+  for (const label of ["Original request", "Preview"]) assert.match(markup, new RegExp(`aria-label="${escape(label)}"`), `${name} must expose its ${label} region`);
+  assert.match(markup, /aria-label="What (?:Possible inferred|the pack defines)"/, `${name} must explain the operational judgment behind the result`);
+  assert.match(markup, /aria-label="Proof(?: metrics)?"/i, `${name} must expose its proof metrics region`);
+  assert.match(markup, /aria-label="Outcome (?:Pack|Chain)"/, `${name} must identify the Outcome Pack or Outcome Chain behind the result`);
+  assert.match(markup, /href="\/examples"[^>]*>[\s\S]*?(?:CLOSE|BACK TO EXAMPLES)/i, `${name} must close back to /examples`);
+  assert.match(text, /OPEN OUTPUT/i, `${name} must expose its primary output`);
+  assert.match(text, /INSPECT EVIDENCE/i, `${name} must expose its preserved evidence`);
+
+  assert.match(text, new RegExp(escape(requestSnippet), "i"), `${name} must preserve its unique original request in static HTML`);
+}
+
+const exampleContentSource = await readFile(new URL("../apps/web/src/example-content.ts", import.meta.url), "utf8");
+const appSource = await readFile(new URL("../apps/web/src/App.tsx", import.meta.url), "utf8");
+assert.match(exampleContentSource, /export const exampleCatalog\s*=\s*\[/, "Examples must come from one shared catalog");
+assert.equal((exampleContentSource.match(/\n\s+slug:\s*"/g) ?? []).length, exampleRoutes.length, "The shared catalog must contain exactly five examples");
+assert.match(appSource, /exampleCatalog(?:\.slice\([^)]*\))?\.map\(/, "The gallery must render cards from the shared example catalog");
+
+const patchProofExample = visibleText(await html("examples/patchproof/index.html"));
+assert.doesNotMatch(patchProofExample, /class="chain-example-page"|One rough ambition[\s\S]*Three verified outcomes/, "PatchProof must use the shared compact example modal rather than its bespoke long page");
+for (const href of [
+  "/examples/patchproof-chain/product/index.html",
+  "/examples/patchproof-chain/evidence/chain.json",
+]) assert.match(patchProofExample, new RegExp(`href="${escape(href)}"`));
+
+const patchProofAlias = await html("examples/patchproof-chain/index.html");
+assert.doesNotMatch(patchProofAlias, /NEXT_REDIRECT/, "The legacy PatchProof URL must not export a broken redirect shell");
+assert.match(patchProofAlias, /role="dialog"[^>]*aria-modal="true"|aria-modal="true"[^>]*role="dialog"/, "The legacy PatchProof URL must render the canonical shared modal");
+assert.match(patchProofAlias, /rel="canonical" href="https:\/\/possible\.sh\/examples\/patchproof\/?"/, "The legacy PatchProof URL must canonicalize to /examples/patchproof");
 
 for (const [label, route, hasThread] of [
   ["hardware", "demo/hardware/index.html", true],
@@ -165,4 +210,4 @@ for (const retired of [
   "demo/open-source/index.html",
 ]) await assert.rejects(html(retired), { code: "ENOENT" }, `${retired} must not be exported`);
 
-console.log("All public routes match the four-outcome judge journey.");
+console.log("All public routes match the five-example gallery and evidence journey.");

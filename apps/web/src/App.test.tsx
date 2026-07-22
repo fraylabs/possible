@@ -20,6 +20,14 @@ function expectBefore(first: Element, second: Element) {
   expect(first.compareDocumentPosition(second) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
 }
 
+const exampleContracts = [
+  { slug: "still", name: "Still", title: "Still" },
+  { slug: "robot-snake", name: "Robot Snake", title: "Robot Snake" },
+  { slug: "fold", name: "Fold", title: "Fold" },
+  { slug: "web-presentation", name: "Web Presentation", title: "Possible" },
+  { slug: "patchproof", name: "PatchProof", title: "PatchProof" },
+] as const;
+
 describe("Possible", () => {
   it("presents one judge journey around four outcomes", async () => {
     const { container } = render(<App />);
@@ -30,7 +38,7 @@ describe("Possible", () => {
     expect(screen.getByRole("link", { name: "Star on GitHub ↗" })).toHaveAttribute("href", "https://github.com/fraylabs/possible");
 
     const navigation = Array.from(container.querySelectorAll(".nav-links a")).map((link) => link.textContent);
-    expect(navigation).toEqual(["DEMO", "DOCS", "GITHUB ↗"]);
+    expect(navigation).toEqual(["EXAMPLES", "DOCS", "GITHUB ↗"]);
 
     const workflow = screen.getByRole("region", { name: /Bring the ambition.*Possible supplies the missing work/i });
     expect(within(workflow).getAllByRole("listitem")).toHaveLength(4);
@@ -38,12 +46,12 @@ describe("Possible", () => {
 
     const demos = screen.getByRole("region", { name: /See the conversation.*Inspect the result/i });
     expect(within(demos).getAllByRole("listitem")).toHaveLength(4);
-    for (const [name, href] of [
-      ["Still", "/demo/hardware"],
-      ["Robot Snake", "/demo/robot-snake"],
-      ["Fold", "/demo/game"],
-      ["Possible", "/demo/presentation"],
-    ]) expect(within(demos).getByRole("link", { name: new RegExp(name) })).toHaveAttribute("href", href);
+    for (const [name, href] of ([
+      ["Still", "/examples/still"],
+      ["Robot Snake", "/examples/robot-snake"],
+      ["Fold", "/examples/fold"],
+      ["Web Presentation", "/examples/web-presentation"],
+    ] as const)) expect(within(demos).getByRole("link", { name: new RegExp(name) })).toHaveAttribute("href", href);
 
     const packs = screen.getByRole("list", { name: "Outcome Packs Possible can recommend" });
     expect(within(packs).getAllByRole("listitem")).toHaveLength(4);
@@ -186,15 +194,82 @@ describe("Possible", () => {
     expect(within(trail).getByRole("link", { name: /Completion receipt/i })).toHaveAttribute("href", "/demo/still/OUTCOME-RECEIPT.md");
   });
 
-  it("shows exactly four demos", async () => {
-    const { container } = renderRoute("/demo");
-    const gallery = container.querySelector(".demo-gallery-grid")!;
-    expect(within(gallery).getAllByRole("link")).toHaveLength(4);
-    for (const href of ["/demo/hardware", "/demo/robot-snake", "/demo/game", "/demo/presentation"]) {
-      expect(gallery.querySelector(`a[href='${href}']`)).toBeInTheDocument();
+  it("renders the same five data-backed example cards at the canonical gallery and compatibility alias", async () => {
+    for (const path of ["/examples", "/demo"]) {
+      const { container, unmount } = renderRoute(path);
+      const gallery = screen.getByRole("region", { name: "Possible examples" });
+      const cards = within(gallery).getAllByRole("link");
+      expect(cards).toHaveLength(exampleContracts.length);
+      expect(new Set(cards.map((card) => card.textContent?.trim())).size).toBe(exampleContracts.length);
+
+      for (const example of exampleContracts) {
+        expect(within(gallery).getByRole("link", { name: new RegExp(example.name, "i") })).toHaveAttribute("href", `/examples/${example.slug}`);
+      }
+
+      expect(container).not.toHaveTextContent(/Tiny Slug|Software Launch|Open-Source Release/i);
+      expect(await axe(container)).toHaveNoViolations();
+      unmount();
     }
-    expect(container).not.toHaveTextContent(/Tiny Slug|Software Launch|Open-Source Release/i);
-    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("opens every canonical example as the same compact, shareable evidence modal", async () => {
+    const requests = new Set<string>();
+    const titles = new Set<string>();
+
+    for (const example of exampleContracts) {
+      const { container, unmount } = renderRoute(`/examples/${example.slug}`);
+      const dialog = screen.getByRole("dialog", { name: new RegExp(example.title, "i") });
+      expect(dialog).toHaveAttribute("aria-modal", "true");
+
+      const title = within(dialog).getByRole("heading", { name: new RegExp(example.title, "i") }).textContent?.trim() ?? "";
+      const request = within(dialog).getByRole("region", { name: "Original request" }).textContent?.trim() ?? "";
+      titles.add(title);
+      requests.add(request);
+
+      expect(within(dialog).getByRole("region", { name: /What (?:Possible inferred|the pack defines)/i })).not.toBeEmptyDOMElement();
+      expect(within(dialog).getByRole("region", { name: /Outcome (?:Pack|Chain)/i })).not.toBeEmptyDOMElement();
+      expect(within(dialog).getByRole("region", { name: "Preview" })).not.toBeEmptyDOMElement();
+      expect(within(dialog).getByRole("region", { name: /Proof(?: metrics)?/i })).not.toBeEmptyDOMElement();
+
+      const output = within(dialog).getByRole("link", { name: /Open output/i });
+      const evidence = within(dialog).getByRole("link", { name: /Inspect evidence/i });
+      expect(output.getAttribute("href")).toMatch(/^\/(?!examples\/$)/);
+      expect(evidence.getAttribute("href")).toMatch(/^\/(?!examples\/$)/);
+      expect(within(dialog).getByRole("link", { name: /Close|Back to examples/i })).toHaveAttribute("href", "/examples");
+
+      expect(container.querySelector(".chain-example-page")).not.toBeInTheDocument();
+      for (const frame of container.querySelectorAll("iframe")) frame.remove();
+      expect(await axe(container)).toHaveNoViolations();
+      unmount();
+    }
+
+    expect(titles.size).toBe(exampleContracts.length);
+    expect(requests.size).toBe(exampleContracts.length);
+  });
+
+  it("confines modal focus, then dismisses with Escape and returns to the canonical gallery URL", async () => {
+    const { container } = renderRoute("/examples/patchproof");
+    const dialog = screen.getByRole("dialog", { name: "PatchProof" });
+    const close = within(dialog).getByRole("link", { name: "Close example" });
+    const evidence = within(dialog).getByRole("link", { name: /Inspect evidence/i });
+    const background = container.querySelector(".examples-background");
+
+    expect(close).toHaveFocus();
+    expect(background).toHaveAttribute("inert");
+    expect(background).toHaveAttribute("aria-hidden", "true");
+    expect(document.body.style.overflow).toBe("hidden");
+
+    await userEvent.keyboard("{Shift>}{Tab}{/Shift}");
+    expect(evidence).toHaveFocus();
+    await userEvent.keyboard("{Tab}");
+    expect(close).toHaveFocus();
+
+    await userEvent.keyboard("{Escape}");
+    expect(screen.queryByRole("dialog", { name: "PatchProof" })).not.toBeInTheDocument();
+    expect(window.location.pathname).toBe("/examples");
+    expect(document.body.style.overflow).not.toBe("hidden");
+    expect(background).not.toHaveAttribute("inert");
+    expect(background).not.toHaveAttribute("aria-hidden");
   });
 
   it("uses the same output-then-conversation structure for every outcome", async () => {

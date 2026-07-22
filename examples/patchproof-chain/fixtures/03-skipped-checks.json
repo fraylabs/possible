@@ -1,0 +1,35 @@
+{
+  "id": "skipped-checks",
+  "title": "Skipped checks",
+  "description": "Explicitly skipped work remains skipped.",
+  "expectedClaimStatuses": { "tests-skipped": "skipped" },
+  "expectedEvidence": {
+    "changedFiles": [
+      { "path": "src/import.js", "change": "modified", "status": "passed" }
+    ],
+    "checks": [{ "command": "npm test", "exitCode": 0, "status": "skipped" }],
+    "artifacts": []
+  },
+  "expectedWarnings": [
+    "Changed path is not referenced by any claim: src/import.js."
+  ],
+  "expectedLimitations": ["The skipped cases still need evidence."],
+  "draft": {
+    "kind": "patchproof.draft",
+    "schemaVersion": 1,
+    "task": "Add an import validator.",
+    "unifiedDiff": "diff --git a/src/import.js b/src/import.js\n--- a/src/import.js\n+++ b/src/import.js\n@@ -0,0 +1 @@\n+export const validate = Boolean;",
+    "checkLog": "$ npm test\n2 tests skipped; not run\nexit code: 0",
+    "artifacts": [],
+    "claims": [
+      {
+        "id": "tests-skipped",
+        "text": "Import edge cases were checked",
+        "kind": "tests",
+        "target": "npm test",
+        "evidenceRefs": ["check-001"]
+      }
+    ],
+    "limitations": ["The skipped cases still need evidence."]
+  }
+}

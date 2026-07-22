@@ -171,10 +171,56 @@ if (
   failures.push("Demo evidence grids must preserve shrinkable tablet and single-column mobile layouts");
 }
 
+const patchProofRoot = path.join(repository, "apps/web/public/examples/patchproof-chain");
+const patchProofFiles = [
+  "product/index.html",
+  "product/launch/site/index.html",
+  "product/launch/docs/quickstart.md",
+  "evidence/site-desktop.png",
+  "evidence/site-mobile.png",
+  "evidence/remix/continuous-form.png",
+  "evidence/remix/evidence-stamp.png",
+  "evidence/remix/patch-panel.png",
+  "evidence/discovery-receipt.json",
+  "evidence/product-receipt.json",
+  "evidence/launch-receipt.json",
+  "evidence/product-repair-log.md",
+  "evidence/launch-repair-log.md",
+  "evidence/product-verification.md",
+  "evidence/launch-verification.md",
+  "evidence/chain.json",
+];
+for (const relative of patchProofFiles) {
+  try {
+    const details = await stat(path.join(patchProofRoot, relative));
+    if (!details.isFile() || details.size === 0) failures.push(`PatchProof published evidence is empty: ${relative}`);
+  } catch {
+    failures.push(`Missing PatchProof published evidence: ${relative}`);
+  }
+}
+const patchProofProduct = await readFile(path.join(patchProofRoot, "product/index.html"), "utf8");
+const patchProofLaunch = await readFile(path.join(patchProofRoot, "product/launch/site/index.html"), "utf8");
+if (/\b(?:src|href)="\/assets\//.test(`${patchProofProduct}\n${patchProofLaunch}`)) {
+  failures.push("PatchProof compiled pages must use portable asset paths under the public example route");
+}
+const patchProofChain = JSON.parse(await readFile(path.join(patchProofRoot, "evidence/chain.json"), "utf8"));
+if (patchProofChain.stages?.length !== 3 || patchProofChain.stages?.some((stage) => !stage.state.startsWith("completed-"))) {
+  failures.push("PatchProof public chain state must preserve three completed stages");
+}
+const patchProofLaunchReceipt = JSON.parse(await readFile(path.join(patchProofRoot, "evidence/launch-receipt.json"), "utf8"));
+if (
+  patchProofLaunchReceipt.status !== "passed-local-only"
+  || patchProofLaunchReceipt.remix?.candidateCount !== 3
+  || patchProofLaunchReceipt.externalGate?.authority !== "none"
+  || patchProofLaunchReceipt.externalGate?.deploymentAttempted !== false
+) {
+  failures.push("PatchProof public launch receipt must preserve Remix coverage and its local-only authority boundary");
+}
+
 const publicTranscript = await readFile(path.join(root, "CODEX-THREAD.md"), "utf8");
 if (/\/Users\/|\/private\/tmp|\/tmp\//.test(publicTranscript)) {
   failures.push("A public example transcript leaks a local filesystem path");
 }
 
 if (failures.length) throw new Error(`Demo bundle validation failed:\n- ${failures.join("\n- ")}`);
-console.log("Still, Robot Snake, Playable Web Game, and Web Presentation demos are complete.");
+console.log("Four legacy demo evidence bundles and the PatchProof chain artifacts are complete.");

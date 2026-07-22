@@ -1,0 +1,44 @@
+{
+  "id": "ui-without-visual-evidence",
+  "title": "UI without visual evidence",
+  "description": "A UI claim needs a passing visual artifact, not only code.",
+  "expectedClaimStatuses": { "ui-no-visual": "unsupported" },
+  "expectedEvidence": {
+    "changedFiles": [
+      { "path": "src/dialog.css", "change": "modified", "status": "passed" }
+    ],
+    "checks": [{ "command": "npm test", "exitCode": 0, "status": "passed" }],
+    "artifacts": [{ "id": "browser-note", "type": "note", "status": "passed" }]
+  },
+  "expectedWarnings": [
+    "Changed path is not referenced by any claim: src/dialog.css."
+  ],
+  "expectedLimitations": ["No screenshot or browser artifact was supplied."],
+  "draft": {
+    "kind": "patchproof.draft",
+    "schemaVersion": 1,
+    "task": "Finish the responsive import dialog UI.",
+    "unifiedDiff": "diff --git a/src/dialog.css b/src/dialog.css\n--- a/src/dialog.css\n+++ b/src/dialog.css\n@@ -1 +1 @@\n-.dialog { width: 900px; }\n+.dialog { width: min(900px, 100%); }",
+    "checkLog": "$ npm test\nexit code: 0",
+    "artifacts": [
+      {
+        "id": "browser-note",
+        "label": "Browser note",
+        "type": "note",
+        "reference": "Operator says it looked correct",
+        "status": "passed",
+        "note": "Prose is not visual evidence."
+      }
+    ],
+    "claims": [
+      {
+        "id": "ui-no-visual",
+        "text": "The import dialog is responsive",
+        "kind": "ui",
+        "target": "import dialog",
+        "evidenceRefs": ["browser-note"]
+      }
+    ],
+    "limitations": ["No screenshot or browser artifact was supplied."]
+  }
+}

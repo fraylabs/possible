@@ -1,0 +1,36 @@
+{
+  "slug": "working-web-app",
+  "name": "Working Web App",
+  "lane": "create",
+  "status": "experimental",
+  "source": ".agents/skills/possible/references/packs.md",
+  "sourceReviewedRevision": "1edcf5b828562976de1f504dc4412ee486541806c6afc54028bdcbc3518544a1",
+  "outputs": [
+    "locally runnable working application",
+    "primary-flow and state contract",
+    "reproducible fixtures or demo data",
+    "automated checks",
+    "production build",
+    "evidence report",
+    "machine-readable product receipt"
+  ],
+  "workstreams": [
+    {"id": "product-flow", "owns": ["product/flow.md", "product/states.md", "product/data-contract.md"], "skills": ["frontend-design"]},
+    {"id": "working-application", "owns": ["src/", "public/", "fixtures/", "build/"], "skills": ["frontend-design"]},
+    {"id": "automated-proof", "owns": ["tests/", "outcome-room/implementation-report.md"], "skills": ["webapp-testing"]},
+    {"id": "fresh-review", "owns": ["outcome-room/verification.md", "outcome-room/security-review.md"], "skills": ["webapp-testing", "security-review"]}
+  ],
+  "chainEntry": [
+    {
+      "id": "selected-opportunity",
+      "description": "A Discovery stage selected one opportunity without erasing alternatives or uncertainty.",
+      "requiredEvidence": ["pursue decision receipt", "selected opportunity and rejected alternatives", "source evidence and unresolved assumptions"]
+    }
+  ],
+  "chainExit": {
+    "receiptPath": "outcome-room/product-receipt.json",
+    "advanceStatuses": ["passed"],
+    "pauseStatuses": ["repair-required"],
+    "stopStatuses": ["no-go"]
+  }
+}

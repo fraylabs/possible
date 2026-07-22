@@ -1,0 +1,38 @@
+{
+  "id": "malformed-import",
+  "title": "Malformed import",
+  "description": "Invalid JSON must leave the valid active draft unchanged.",
+  "expectedClaimStatuses": { "atomic-import": "passed" },
+  "expectedEvidence": {
+    "changedFiles": [
+      { "path": "src/import.js", "change": "modified", "status": "passed" }
+    ],
+    "checks": [
+      { "command": "npm test -- import", "exitCode": 0, "status": "passed" }
+    ],
+    "artifacts": []
+  },
+  "expectedWarnings": [],
+  "expectedLimitations": [
+    "This fixture demonstrates JSON syntax rejection only."
+  ],
+  "importText": "{\"kind\":\"patchproof.draft\",\"schemaVersion\":1,\"task\":\"truncated\"",
+  "draft": {
+    "kind": "patchproof.draft",
+    "schemaVersion": 1,
+    "task": "Keep this draft when malformed JSON is rejected.",
+    "unifiedDiff": "diff --git a/src/import.js b/src/import.js\n--- a/src/import.js\n+++ b/src/import.js\n@@ -1 +1 @@\n-export const atomic = false;\n+export const atomic = true;",
+    "checkLog": "$ npm test -- import\nexit code: 0",
+    "artifacts": [],
+    "claims": [
+      {
+        "id": "atomic-import",
+        "text": "The import module changed",
+        "kind": "file-change",
+        "target": "src/import.js",
+        "evidenceRefs": ["diff-001"]
+      }
+    ],
+    "limitations": ["This fixture demonstrates JSON syntax rejection only."]
+  }
+}

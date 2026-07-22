@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PatchProof Remix Preview — Continuous Form</title>
+    <style>
+      :root { --paper:#edf1ff; --ink:#291763; --ink2:#5d46a2; --rule:#aa9ad9; --signal:#ff4d6d; --back:#1b1237; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
+      * { box-sizing:border-box; }
+      body { margin:0; color:var(--ink); background:var(--back); }
+      .sheet { position:relative; width:min(1320px, calc(100% - 80px)); min-height:900px; margin:40px auto; padding:32px 76px 68px; overflow:hidden; background:var(--paper); box-shadow:18px 20px 0 #0c0820; }
+      .sheet::before,.sheet::after { content:""; position:absolute; top:0; bottom:0; width:28px; background:radial-gradient(circle at 50% 16px, var(--back) 0 6px, transparent 6.5px) 0 0/28px 32px; }
+      .sheet::before { left:9px; } .sheet::after { right:9px; }
+      nav { display:flex; justify-content:space-between; align-items:center; padding-bottom:20px; border-bottom:2px dashed var(--rule); font-size:13px; text-transform:uppercase; letter-spacing:.09em; }
+      .brand { font-size:20px; font-weight:900; letter-spacing:-.05em; }
+      .hero { display:grid; grid-template-columns:1.3fr .7fr; gap:60px; align-items:end; padding:74px 0 48px; }
+      .hero h1 { max-width:780px; margin:0; font-size:clamp(58px,7.2vw,104px); line-height:.88; letter-spacing:-.04em; text-transform:uppercase; }
+      .hero h1 span { display:block; color:var(--signal); }
+      .hero-copy { align-self:end; }
+      .hero-copy p { margin:0 0 26px; font-family:Arial,sans-serif; font-size:19px; line-height:1.55; }
+      .actions { display:flex; gap:12px; flex-wrap:wrap; }
+      a { display:inline-flex; min-height:46px; align-items:center; padding:0 18px; color:var(--paper); background:var(--ink); border:2px solid var(--ink); font-size:13px; font-weight:800; text-decoration:none; text-transform:uppercase; }
+      a.secondary { color:var(--ink); background:transparent; }
+      .run { margin:0 -76px; padding:15px 76px; color:var(--paper); background:var(--ink); font-size:13px; letter-spacing:.05em; }
+      .demo { display:grid; grid-template-columns:1fr 1fr; gap:0; margin-top:44px; border:2px solid var(--ink); }
+      .demo > div { min-height:280px; padding:28px; }
+      .demo > div + div { border-left:2px dashed var(--rule); }
+      .label { margin:0 0 22px; color:var(--ink2); font-size:12px; font-weight:800; text-transform:uppercase; }
+      h2 { margin:0 0 20px; font-size:28px; text-transform:uppercase; }
+      dl { display:grid; grid-template-columns:88px 1fr; gap:10px 16px; margin:0; font-size:13px; line-height:1.45; }
+      dt { color:var(--ink2); text-transform:uppercase; } dd { margin:0; }
+      .status { display:grid; gap:12px; }
+      .status div { display:flex; justify-content:space-between; padding:11px 0; border-bottom:1px dotted var(--rule); font-size:13px; }
+      .status strong { text-transform:uppercase; }
+      .passed { color:#196c53; }.unknown { color:#8b5600; }.unsupported { color:#a72b51; }
+      .boundary { margin:28px 0 0; padding-top:22px; border-top:2px dashed var(--rule); font-family:Arial,sans-serif; font-size:14px; line-height:1.5; }
+      @keyframes feed { from { background-position-y:0; } to { background-position-y:32px; } }
+      @media (prefers-reduced-motion:no-preference) { .sheet::before,.sheet::after { animation:feed 2s steps(1) infinite; } }
+      @media (max-width:800px) { .sheet { width:calc(100% - 24px); margin:12px auto; padding:24px 40px; }.hero,.demo{grid-template-columns:1fr}.hero{gap:24px;padding-top:48px}.demo>div+div{border-left:0;border-top:2px dashed var(--rule)}.run{margin-inline:-40px;padding-inline:40px}nav span:last-child{display:none}.hero h1{font-size:48px} }
+    </style>
+  </head>
+  <body>
+    <main class="sheet" data-preview="continuous-form" data-viewport="1440x900">
+      <nav><span class="brand">PatchProof</span><span>Local developer tool</span><a href="#">Open the local app</a></nav>
+      <section class="hero">
+        <h1>Know what <span>“done”</span> is made of.</h1>
+        <div class="hero-copy">
+          <p>PatchProof turns the task, diff, check log, artifacts, and limitations you already have into an inspectable completion receipt—without uploading them.</p>
+          <div class="actions"><a href="#">Open the local app</a><a class="secondary" href="#">Read the 5-minute quickstart</a></div>
+        </div>
+      </section>
+      <p class="run">34 unit assertions · 12 fixture contracts · desktop + mobile browser flow</p>
+      <section class="demo">
+        <div><p class="label">Supply evidence. Preserve the result.</p><h2>Input</h2><dl><dt>Task</dt><dd>Add deterministic receipt export.</dd><dt>Diff</dt><dd><code>src/lib/receipt.js</code> changed.</dd><dt>Check</dt><dd><code>npm test</code> exited 0.</dd><dt>Limitation</dt><dd>No semantic code review was performed.</dd></dl></div>
+        <div><p class="label">Generated receipt</p><h2>Output</h2><div class="status"><div><span>Export claim</span><strong class="passed">passed</strong></div><div><span>UI review claim</span><strong class="unknown">unknown</strong></div><div><span>Security claim</span><strong class="unsupported">unsupported</strong></div></div><p class="boundary">A receipt describes supplied evidence. It does not prove code correctness, security, readiness, or demand.</p></div>
+      </section>
+      <section><h2>Inspect the evidence before accepting “done.”</h2><p>Open the real local product or follow the verified quickstart.</p></section>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,45 @@
+{
+  "slug": "developer-project-launch",
+  "name": "Developer Project Launch",
+  "lane": "launch",
+  "status": "experimental",
+  "source": ".agents/skills/possible/references/packs.md",
+  "sourceReviewedRevision": "1edcf5b828562976de1f504dc4412ee486541806c6afc54028bdcbc3518544a1",
+  "outputs": [
+    "developer audience, pain, positioning, and claims register",
+    "three project-specific creative-direction previews and decision record",
+    "distinctive responsive local project launch site",
+    "evidence-backed demonstration",
+    "verified five-minute clean-room quickstart",
+    "installation path and runnable example",
+    "deployment no-go report",
+    "independent verification",
+    "machine-readable launch receipt"
+  ],
+  "workstreams": [
+    {"id": "positioning", "dependsOn": [], "owns": ["launch/positioning/", "launch/claims/"], "skills": ["copywriting"]},
+    {"id": "developer-experience", "dependsOn": [], "owns": ["launch/docs/", "launch/examples/", "launch/evidence/clean-room-quickstart.md"], "skills": ["create-readme", "documentation-writer"]},
+    {"id": "creative-direction", "dependsOn": ["positioning"], "owns": ["launch/direction/"], "skills": ["frontend-design", "impeccable"]},
+    {"id": "launch-site", "dependsOn": ["positioning", "developer-experience", "creative-direction"], "owns": ["launch/site/", "launch/demo/", "launch/assets/"], "skills": ["frontend-design", "impeccable", "vercel-react-best-practices"]},
+    {"id": "fresh-review", "dependsOn": ["launch-site"], "owns": ["launch/evidence/verification.md", "launch/evidence/claims-review.md", "launch/evidence/browser-report.json"], "skills": ["webapp-testing", "web-design-guidelines", "impeccable"]}
+  ],
+  "remix": {
+    "kind": "visual-direction",
+    "workstreamId": "creative-direction",
+    "candidateCount": 3,
+    "previewRoot": "launch/direction/previews/",
+    "decisionPath": "launch/direction/decision.json",
+    "onNoChoice": "agent-select",
+    "preserves": [
+      "confirmed product facts",
+      "claims register",
+      "demonstration behavior",
+      "quickstart and documentation",
+      "approval and verification boundaries"
+    ]
+  },
+  "chainEntry": [
+    {"id": "working-project", "requiredEvidence": ["immutable workspace revision", "documented local run command", "passing primary-flow smoke check"]},
+    {"id": "opportunity-alignment", "requiredEvidence": ["selected-opportunity reference", "project capability evidence", "recorded mismatches or unresolved assumptions"]}
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "runId": "20260722-developer-project-launch-001",
+  "packSlug": "developer-project-launch",
+  "status": "passed-local-only",
+  "verifiedWorkspaceRevision": "29b6e94a0c45ba8b996d7f0036f276d2ceda1e25",
+  "completionRevision": "96857c21c61a02eee40b513f482ad1ef854df3f5",
+  "externalAuthority": "none",
+  "artifacts": [
+    {
+      "path": "outcome-brief.md",
+      "sha256": "e6ff2d8f88839774d056c691163adb6a52b09669c4b7c8d6146753e66025f5f3"
+    },
+    {
+      "path": "pack.json",
+      "sha256": "f212fff685a7fc5c08f8fe9ceebe38fa9008e2493fc6359d7d559d4171bc8839"
+    },
+    {
+      "path": "skills-lock.json",
+      "sha256": "89f5ebd140842f63ac0366a80d7e2e846c41762f6736d1779f4d39c0d9fe25ac"
+    },
+    {
+      "path": "chain.json",
+      "sha256": "70b3687943442a2e5cfde5cf860c4d97651e26b0e65f07a76ebd3bd81a37e7ee"
+    },
+    {
+      "path": "launch-receipt.json",
+      "sha256": "c400753a7c098a1097a1ae5242af6f60967f1260fbf7c6a614dfd6bef88f48b5"
+    },
+    {
+      "path": "completion-report.md",
+      "sha256": "06e32e2e0f678a2ea3e712d2babe6d585e8749af1fbe176866007c6eddf95834"
+    },
+    {
+      "path": "verification.md",
+      "sha256": "2bc5806336f84ace60767b81428587657d1105bfdf49c16bfbf120a4c94db00f"
+    },
+    {
+      "path": "claims-review.md",
+      "sha256": "a84bc4dc32034f05047314c8cca02a723ab89a20c976368e26799b7ab5fc4bb4"
+    },
+    {
+      "path": "clean-room-quickstart.md",
+      "sha256": "6685f11ce1fdb97e94c7206c809090adff0c58babb3060dc50693cf350df757d"
+    },
+    {
+      "path": "implementation-report.md",
+      "sha256": "497fd4abec503f238bee99eec6d9abfe59b9e52be3692da60b00bd76ac25aa13"
+    },
+    {
+      "path": "repair-log.md",
+      "sha256": "5923aae09f46020583541b4bb937c053eb167e5cd33f9bfd025a9b57fa5d89a0"
+    },
+    {
+      "path": "browser-report.json",
+      "sha256": "896247948be41488afadaf35b10fa50dc230e18e100510b2608ead105f4f9104"
+    },
+    {
+      "path": "site-desktop.png",
+      "sha256": "1469191ad0f23fb8dcd4e9b059bb9e34ed4dbc01d81d3e27fc1c00eba6b6faf4"
+    },
+    {
+      "path": "site-mobile.png",
+      "sha256": "daf02ee8df33f6ae8e845fe2ab5033a9cb6e2db221a7aeea469633a45d455340"
+    },
+    {
+      "path": "remix-decision.json",
+      "sha256": "233036440f7b1a239e7c603f54c5e60ea23b20844430d7be4d644a3edeca2d3c"
+    }
+  ]
+}

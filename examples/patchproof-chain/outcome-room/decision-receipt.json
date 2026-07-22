@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "packSlug": "software-opportunity-discovery",
+  "status": "pursue",
+  "decidedAt": "2026-07-22T00:00:00+08:00",
+  "selectedOpportunity": {
+    "name": "PatchProof",
+    "summary": "A browser-only tool that turns a task, unified diff, check logs, and optional artifacts into a claim-to-evidence completion receipt.",
+    "score": 92,
+    "scoreScale": 100
+  },
+  "rejectedAlternatives": [
+    {"name": "Repo Contract Doctor", "reason": "credible pain but weak whitespace against multiple current tools"},
+    {"name": "ExampleLens", "reason": "narrower audience and established validation alternatives"},
+    {"name": "RunnerGap", "reason": "high honest implementation cost and mature local execution/linting incumbents"}
+  ],
+  "evidence": {
+    "sourceLedger": "opportunity/research/source-ledger.md",
+    "problemMap": "opportunity/research/problem-evidence-map.md",
+    "landscape": "opportunity/landscape/alternatives.md",
+    "scorecard": "outcome-room/scorecard.md"
+  },
+  "nextExperiment": "outcome-room/validation-plan.md",
+  "claims": {
+    "facts": [
+      "The cited Stack Overflow survey reports material trust and debugging friction among respondents using AI tools.",
+      "GitHub status checks and agent-session logs expose parts of the evidence workflow.",
+      "Multiple current products already address agent action records or receipts."
+    ],
+    "hypotheses": [
+      "Developers will value a lightweight manual receipt builder across agents.",
+      "A browser-only local workflow will be easier than reviewing raw logs.",
+      "Portable Markdown and JSON receipts will fit existing review habits."
+    ],
+    "unknowns": [
+      "willingness to use or pay",
+      "preferred automatic versus manual capture",
+      "distribution channel",
+      "commercial versus open-source model"
+    ]
+  },
+  "externalActionsTaken": [],
+  "externalActionsUnauthorized": [
+    "outreach",
+    "surveys",
+    "account creation",
+    "deployment",
+    "publishing",
+    "spending"
+  ],
+  "interpretation": "Pursue authorizes only a separately approved narrow build-and-test stage. It is not evidence of product-market fit or launch readiness."
+}

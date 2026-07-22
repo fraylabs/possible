@@ -56,7 +56,7 @@ These are the four stable public packs. Additional registry packs are experiment
 - [Playable Web Game](packages/packs/src/playable-web-game.ts) — a polished browser game with responsive controls and playability review.
 - [Web Presentation](packages/packs/src/web-presentation.ts) — an evidence-backed coded deck with responsive presenter behavior.
 
-Experimental previews: [Software Opportunity Discovery](packages/packs/src/software-opportunity-discovery.ts) finds one evidence-backed idea worth testing; [Developer Project Launch](packages/packs/src/developer-project-launch.ts) gives a working developer tool a credible adoption path. Both remain experimental until preserved end-to-end runs pass independent verification.
+Experimental previews: [Software Opportunity Discovery](packages/packs/src/software-opportunity-discovery.ts) finds one evidence-backed idea worth testing; [Developer Project Launch](packages/packs/src/developer-project-launch.ts) gives a working developer tool a credible adoption path. The preserved PatchProof chain exercises both; they remain experimental while we collect repeated independent runs.
 
 You do not need to choose a pack. `$possible` recommends one after understanding your outcome.
 
@@ -68,6 +68,16 @@ You do not need to choose a pack. `$possible` recommends one after understanding
 - [Possible / Web Presentation](apps/web/public/presentation/possible.html) is the coded browser deck itself.
 
 The public gallery is available at [possible.sh/demo](https://possible.sh/demo).
+
+## Preserved Outcome Chain
+
+The [PatchProof example](examples/patchproof-chain/EXAMPLE.md) began with “I want to discover, build, and launch a useful developer tool.” Three separate agents ran Software Opportunity Discovery → Working Web App → Developer Project Launch. Each stage advanced through a hashed, independently reviewed handoff.
+
+The launch stage also exercised Remix: it rendered three product-specific creative directions with the same truthful copy and viewport, selected Continuous Form from recorded evidence, then verified the integrated local launch. No deployment or publication was authorized.
+
+```bash
+npm run chain-example:verify
+```
 
 ## How Possible works
 

@@ -12,6 +12,12 @@ const routes = [
   ["docs/index.html", "https://possible.sh/docs/"],
   ["docs/how-to-use/index.html", "https://possible.sh/docs/how-to-use/"],
   ["judging/index.html", "https://possible.sh/judging/"],
+  ["examples/index.html", "https://possible.sh/examples/"],
+  ["examples/still/index.html", "https://possible.sh/examples/still/"],
+  ["examples/robot-snake/index.html", "https://possible.sh/examples/robot-snake/"],
+  ["examples/fold/index.html", "https://possible.sh/examples/fold/"],
+  ["examples/web-presentation/index.html", "https://possible.sh/examples/web-presentation/"],
+  ["examples/patchproof/index.html", "https://possible.sh/examples/patchproof/"],
   ["demo/index.html", "https://possible.sh/demo/"],
   ["demo/hardware/index.html", "https://possible.sh/demo/hardware/"],
   ["demo/game/index.html", "https://possible.sh/demo/game/"],
@@ -63,7 +69,7 @@ const sitemap = await readOutput("sitemap.xml");
 for (const [, canonical] of routes) {
   assert.match(sitemap, new RegExp(`<loc>${escape(canonical)}</loc>`), `Sitemap must include ${canonical}`);
 }
-assert.equal((sitemap.match(/<lastmod>2026-07-22<\/lastmod>/g) ?? []).length, routes.length, "Every sitemap entry must publish the current indexed revision date");
+assert.equal((sitemap.match(/<lastmod>2026-07-23<\/lastmod>/g) ?? []).length, routes.length, "Every sitemap entry must publish the current indexed revision date");
 
 const robots = await readOutput("robots.txt");
 assert.match(robots, /^User-agent: \*\nAllow: \/\nSitemap: https:\/\/possible\.sh\/sitemap\.xml\n$/);

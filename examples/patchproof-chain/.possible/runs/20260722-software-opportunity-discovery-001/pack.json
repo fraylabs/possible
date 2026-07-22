@@ -1,0 +1,31 @@
+{
+  "slug": "software-opportunity-discovery",
+  "name": "Software Opportunity Discovery",
+  "lane": "create",
+  "status": "experimental",
+  "source": ".agents/skills/possible/references/packs.md",
+  "sourceReviewedRevision": "local-installed-snapshot",
+  "outputs": [
+    "developer constraints and advantages",
+    "dated source ledger and problem-evidence map",
+    "alternatives and underserved-gap landscape",
+    "three to five traceable opportunities",
+    "comparable scorecard",
+    "one recommendation with rejected alternatives",
+    "smallest falsifiable validation experiment",
+    "pursue, investigate, or no-go decision receipt",
+    "independent review"
+  ],
+  "workstreams": [
+    {"id": "operator", "owns": "opportunity/operator/", "skills": ["product-marketing"]},
+    {"id": "research", "owns": "opportunity/research/", "skills": ["customer-research"]},
+    {"id": "landscape", "owns": "opportunity/landscape/", "skills": ["competitor-profiling"]},
+    {"id": "integration-review", "owns": "outcome-room/", "skills": ["product-marketing", "analytics", "customer-research"]}
+  ],
+  "chainExit": {
+    "receiptPath": "outcome-room/decision-receipt.json",
+    "advanceStatuses": ["pursue"],
+    "pauseStatuses": ["investigate"],
+    "stopStatuses": ["no-go"]
+  }
+}
