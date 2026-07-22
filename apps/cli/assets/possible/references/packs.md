@@ -512,6 +512,39 @@ npx skills@1.5.19 add github/awesome-copilot@26fe2d126bf79aafb38f43344d450b69632
 
 The underlying product must already work. Never invent adoption, benchmarks, compatibility, performance, security, or capabilities. Deployment, publishing, pushing, tagging, release creation, DNS, analytics, data collection, and provider mutations require separate explicit approval. A local site is prepared, not launched. `launch/launch-receipt.json` may use verified only with approval evidence, public URLs, immutable identifiers, a passing clean-room quickstart, fresh public checks, and rollback evidence.
 
+## Software Opportunity Discovery
+
+Slug: `software-opportunity-discovery`
+
+Lane: `create`
+
+Status: `experimental` — available to test; promote only after a preserved end-to-end run and independent verification.
+
+Public page: `https://possible.sh/packs/software-opportunity-discovery`
+
+Use when a developer wants to build software but does not yet know which problem or audience is worth pursuing, or when several ideas need an evidence-backed decision rather than another generic brainstorm.
+
+Outputs: developer constraints and advantages; dated source ledger and problem-evidence map; alternatives and underserved-gap landscape; three to five traceable opportunities; comparable scorecard; one recommendation with rejected alternatives; smallest falsifiable validation experiment; pursue, investigate, or no-go receipt; independent review.
+
+Workstreams:
+
+- Builder constraints and unfair advantages — `product-marketing`; owns `opportunity/operator/`.
+- Customer problems and demand signals — `customer-research`; owns `opportunity/research/`.
+- Alternatives and underserved gaps — `competitor-profiling`; owns `opportunity/landscape/`.
+- Lead integration and fresh review — `product-marketing`, `analytics`, then fresh `customer-research` and `analytics`; produces the candidate scorecard, recommendation, validation plan, decision receipt, and independent audit in `outcome-room/`.
+
+Sources:
+
+- `coreyhaines31/marketingskills`: `customer-research`, `competitor-profiling`, `product-marketing`, `analytics`; reviewed `67264763cb107d61749f418d081c56e5bcbc0209`.
+
+Install:
+
+```bash
+npx skills@1.5.19 add coreyhaines31/marketingskills@67264763cb107d61749f418d081c56e5bcbc0209 --skill customer-research --skill competitor-profiling --skill product-marketing --skill analytics --agent codex
+```
+
+Never invent customer quotes, demand, market size, willingness to pay, pricing, competitors, users, revenue, funding, growth, or product-market fit. Preserve source dates and bias, and leave weak evidence at low confidence. Research uses only authorized artifacts and accessible public sources. Contacting people, publishing surveys, purchasing data, creating accounts, spending, and other external actions require separate explicit approval. A no-go is a valid result; a proposed experiment is not proof that the opportunity is validated.
+
 ## Selection rule
 
 Recommend the Outcome Pack whose finished outputs most closely match the user's desired end state:
@@ -530,7 +563,8 @@ Recommend the Outcome Pack whose finished outputs most closely match the user's 
 - Robot hand, gripper, arm, mobile robot, quadruped, or full robot plus coherent CAD, description, controls, and simulation evidence → Robot Prototype.
 - Pitch, talk, lesson, demo, or internal presentation plus a coded browser deck, presenter experience, export, and evidence review → Web Presentation.
 - Working developer tool, library, CLI, API, agent project, or platform plus positioning, a distinctive site, honest demonstration, verified quickstart, and adoption path → Developer Project Launch.
+- Vague desire to build software plus customer-problem evidence, alternative research, ranked opportunities, and one falsifiable next bet → Software Opportunity Discovery.
 
-Use Working Web App when the missing outcome is the product itself. Use Developer Project Launch when a working developer project needs comprehension, presentation, proof, and a verified adoption path. Use Software Launch for a broader product release candidate, launch story, and film. Use Web Presentation when the primary deliverable is a slide-based browser presentation; a conventional landing page belongs elsewhere. Use Billion-Dollar SaaS when the user explicitly wants the broader company operating system and accepts that operational coverage cannot guarantee economic success. Use Kickstarter Funding when crowdfunding mechanics and payout are part of the outcome; use Kickstarter Fulfillment only after the campaign is funded. Use Robot Prototype for a simulation-backed digital prototype, not a fabrication-ready machine or hardware commissioning. Use Production Web Release when a tested candidate exists and the missing outcome is a gated production promotion with rollback and smoke evidence. Use Web App Operations only after the app is live and the desired outcome is an ongoing reliability and maintenance rhythm. Use Marketing Operations when the product or offer exists and the missing outcome is a recurring marketing system. Repository-only licensing, packaging, CI, versioning, and release engineering belong to Open-Source Release; one isolated bug, incident, or marketing asset with no requested recurring workflow is focused work, not an Outcome Pack run.
+Use Software Opportunity Discovery before Working Web App when the problem and audience are still undecided; use Working Web App once one product direction has been chosen. Use Developer Project Launch when a working developer project needs comprehension, presentation, proof, and a verified adoption path. Use Software Launch for a broader product release candidate, launch story, and film. Use Web Presentation when the primary deliverable is a slide-based browser presentation; a conventional landing page belongs elsewhere. Use Billion-Dollar SaaS when the user explicitly wants the broader company operating system and accepts that operational coverage cannot guarantee economic success. Use Kickstarter Funding when crowdfunding mechanics and payout are part of the outcome; use Kickstarter Fulfillment only after the campaign is funded. Use Robot Prototype for a simulation-backed digital prototype, not a fabrication-ready machine or hardware commissioning. Use Production Web Release when a tested candidate exists and the missing outcome is a gated production promotion with rollback and smoke evidence. Use Web App Operations only after the app is live and the desired outcome is an ongoing reliability and maintenance rhythm. Use Marketing Operations when the product or offer exists and the missing outcome is a recurring marketing system. Repository-only licensing, packaging, CI, versioning, and release engineering belong to Open-Source Release; one isolated bug, incident, or marketing asset with no requested recurring workflow is focused work, not an Outcome Pack run.
 
 If none fits, say so. Do not force an Outcome Pack or invent a new one during intake.

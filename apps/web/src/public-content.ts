@@ -16,12 +16,14 @@ export const featuredPacks = featuredPackSlugs.map((slug) => {
   return pack;
 });
 
-export const publishedPackSlugs = [...featuredPackSlugs, "developer-project-launch"] as const;
+export const publishedPackSlugs = [...featuredPackSlugs, "software-opportunity-discovery", "developer-project-launch"] as const;
 export const publishedPacks = publishedPackSlugs.map((slug) => {
   const pack = outcomePacks.find((candidate) => candidate.slug === slug);
   if (!pack) throw new Error(`Missing published Outcome Pack: ${slug}`);
   return pack;
 });
+
+export const experimentalPreviewPacks = publishedPacks.filter((pack) => !featuredPackSlugs.includes(pack.slug as typeof featuredPackSlugs[number]));
 
 export function getFeaturedPack(slug: string) {
   return featuredPacks.find((pack) => pack.slug === slug);

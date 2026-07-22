@@ -23,7 +23,7 @@ describe("Possible MCP", () => {
     assert.equal(client.getInstructions(), POSSIBLE_SERVER_INSTRUCTIONS);
   });
 
-  it("lists four stable and ten experimental outcome packs", async () => {
+  it("lists four stable and eleven experimental outcome packs", async () => {
     const result = await client.callTool({ name: "list_packs", arguments: {} });
     const envelope = result.structuredContent as { ok: boolean; data: { packs: Array<{ slug: string; lane: string; status: string }> } };
     assert.equal(envelope.ok, true);
@@ -42,9 +42,10 @@ describe("Possible MCP", () => {
       ["robot-prototype", "create"],
       ["web-presentation", "create"],
       ["developer-project-launch", "launch"],
+      ["software-opportunity-discovery", "create"],
     ]);
     assert.equal(envelope.data.packs.filter(({ status }) => status === "stable").length, 4);
-    assert.equal(envelope.data.packs.filter(({ status }) => status === "experimental").length, 10);
+    assert.equal(envelope.data.packs.filter(({ status }) => status === "experimental").length, 11);
   });
 
   it("compiles Web Presentation as a coded browser-deck outcome", async () => {
@@ -119,6 +120,19 @@ describe("Possible MCP", () => {
     assert.equal(envelope.data.pack.lane, "create");
     assert.equal(envelope.data.installCommands.length, 2);
     assert.match(envelope.data.runPrompt, /^Build the Working Web App outcome/);
+  });
+
+  it("compiles Software Opportunity Discovery", async () => {
+    const result = await client.callTool({ name: "compile_pack", arguments: { slug: "software-opportunity-discovery" } });
+    const envelope = result.structuredContent as { ok: boolean; data: { pack: { catalogNumber: number; lane: string }; installCommands: string[]; runPrompt: string } };
+    assert.equal(envelope.ok, true);
+    assert.equal(envelope.data.pack.catalogNumber, 15);
+    assert.equal(envelope.data.pack.lane, "create");
+    assert.equal(envelope.data.installCommands.length, 1);
+    assert.match(envelope.data.runPrompt, /\$customer-research/);
+    assert.match(envelope.data.runPrompt, /\$competitor-profiling/);
+    assert.match(envelope.data.runPrompt, /pursue, investigate, or no-go/i);
+    assert.match(envelope.data.runPrompt, /Do not claim the opportunity is validated/i);
   });
 
   it("compiles Production Web Release with its second approval gate", async () => {

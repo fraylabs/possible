@@ -3,8 +3,10 @@ import { compilePack, getPack, getPackStatus, stableOutcomePacks } from "@possib
 
 const featuredPacks = stableOutcomePacks;
 const developerProjectLaunch = getPack("developer-project-launch");
+const softwareOpportunityDiscovery = getPack("software-opportunity-discovery");
 if (!developerProjectLaunch) throw new Error("Missing Developer Project Launch pack");
-const publishedPacks = [...featuredPacks, developerProjectLaunch];
+if (!softwareOpportunityDiscovery) throw new Error("Missing Software Opportunity Discovery pack");
+const publishedPacks = [...featuredPacks, softwareOpportunityDiscovery, developerProjectLaunch];
 
 const evidenceManifest = {
   schemaVersion: 1,

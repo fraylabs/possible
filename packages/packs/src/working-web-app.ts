@@ -15,6 +15,7 @@ export const workingWebAppPack: OutcomePack = {
     "The immediate goal is a verified application, not a public launch campaign or deployment.",
   ],
   notFor: [
+    "Choosing which software problem or audience is worth pursuing; use Software Opportunity Discovery before building.",
     "A working product that mainly needs a launch site, demo film, and public story; use Software Launch.",
     "A browser game whose core outcome is a polished replayable loop; use Playable Web Game.",
     "Deploying an existing tested candidate or operating an already-live service.",

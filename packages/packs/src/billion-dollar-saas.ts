@@ -24,6 +24,7 @@ export const billionDollarSaasPack: OutcomePack = {
     "The operator wants Possible to supply the missing operational map and preserve actual customer and revenue evidence separately from plans and projections.",
   ],
   notFor: [
+    "Choosing one evidence-backed software opportunity before any company system exists; use Software Opportunity Discovery.",
     "Guaranteeing valuation, revenue, customers, product-market fit, or market success.",
     "Copying another company's trademarks, copyrighted material, proprietary code, private data, or deceptive brand identity.",
     "Launching one already-working product presentation with no company-system work; use Software Launch.",

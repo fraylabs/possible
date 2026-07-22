@@ -109,7 +109,8 @@ nav { height: 74px; padding: 0 3.5vw; border-bottom: 1px solid #aaa59a; display:
 .home-pack-lane--release { background: #a8ff52; }
 .home-pack-lane--operate { background: #d3b8ff; }
 .home-pack-index ol a i { justify-self: end; font-size: 14px; font-style: normal; }
-.home-pack-preview { margin-top: 18px; padding: 16px 18px; border: 1px dashed #8f897f; display: flex; gap: 18px; align-items: center; font-size: 13px; }
+.home-pack-preview-list { margin-top: 18px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.home-pack-preview { padding: 16px 18px; border: 1px dashed #8f897f; display: flex; gap: 18px; align-items: center; font-size: 13px; }
 .home-pack-preview span { color: #ff4d00; font: 9px "DM Mono", monospace; letter-spacing: .05em; }
 .home-pack-preview strong { font-weight: 600; }
 .home-pack-preview i { margin-left: auto; font-style: normal; }
@@ -509,7 +510,8 @@ footer .wordmark span { color: #151411; }
 .pack-art--release code:nth-of-type(2) { top: 20%; right: 1%; }
 .pack-art--release code:nth-of-type(3) { right: 8%; bottom: 2%; background: #151411; color: #a8ff52; }
 .catalog-principle { padding: 8vw 3.5vw; background: #151411; color: #f3f0e8; display: grid; grid-template-columns: 1fr 2fr; gap: 5vw; }
-.catalog-experimental { margin: 0 3.5vw 8vw; padding: 24px; border: 1px dashed #8f897f; display: grid; grid-template-columns: 120px 1fr auto; gap: 28px; align-items: center; }
+.catalog-experimental-list { margin: 0 3.5vw 8vw; display: grid; gap: 16px; }
+.catalog-experimental { padding: 24px; border: 1px dashed #8f897f; display: grid; grid-template-columns: 120px 1fr auto; gap: 28px; align-items: center; }
 .catalog-experimental > span { color: #ff4d00; font: 10px "DM Mono", monospace; }
 .catalog-experimental h2 { margin: 0 0 5px; font-size: clamp(24px, 2.8vw, 42px); letter-spacing: -.045em; }
 .catalog-experimental p { max-width: 720px; margin: 0; color: #625d55; line-height: 1.5; }
@@ -716,6 +718,7 @@ footer .wordmark span { color: #151411; }
   .home-pack-index ol a > span:not(.home-pack-lane) { grid-column: 1 / -1; grid-row: 2; }
   .home-pack-lane { grid-column: 1; grid-row: 3; padding: 4px 6px; }
   .home-pack-index ol a i { grid-column: 2; grid-row: 1; }
+  .home-pack-preview-list { grid-template-columns: 1fr; }
   .home-pack-preview { align-items: flex-start; flex-direction: column; }
   .home-pack-preview i { margin-left: 0; }
   .home-source { padding: 65px 18px; }
@@ -1599,7 +1602,8 @@ footer .wordmark span { color: #151411; }
   .software-window { width: 86%; }
   .release-ring { width: 170px; height: 170px; }
   .catalog-principle { grid-template-columns: 1fr; padding-block: 70px; }
-  .catalog-experimental { margin-inline: 18px; grid-template-columns: 1fr; gap: 14px; }
+  .catalog-experimental-list { margin-inline: 18px; }
+  .catalog-experimental { grid-template-columns: 1fr; gap: 14px; }
   .pack-hero h1 { margin-block: 22px 55px; font-size: 20vw; }
   .pack-promise { gap: 40px; }
   .pack-spec, .deliverables, .detail-compiler, .assurance { padding-block: 70px; }

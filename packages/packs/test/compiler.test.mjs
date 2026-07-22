@@ -18,6 +18,7 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
     "robot-prototype",
     "web-presentation",
     "developer-project-launch",
+    "software-opportunity-discovery",
   ]);
   assert.deepEqual(outcomePacks.map(({ slug, lane }) => [slug, lane]), [
     ["hardware-launch", "launch"],
@@ -34,8 +35,9 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
     ["robot-prototype", "create"],
     ["web-presentation", "create"],
     ["developer-project-launch", "launch"],
+    ["software-opportunity-discovery", "create"],
   ]);
-  assert.deepEqual(outcomePacks.map((pack) => pack.catalogNumber), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]);
+  assert.deepEqual(outcomePacks.map((pack) => pack.catalogNumber), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
   assert.equal(new Set(outcomePacks.map((pack) => pack.catalogNumber)).size, outcomePacks.length);
   assert.equal(new Set(outcomePacks.map((pack) => pack.slug)).size, outcomePacks.length);
   assert.deepEqual(stableOutcomePacks.map((pack) => pack.slug), [
@@ -44,7 +46,7 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
     "robot-prototype",
     "web-presentation",
   ]);
-  assert.equal(experimentalOutcomePacks.length, 10);
+  assert.equal(experimentalOutcomePacks.length, 11);
   assert.equal(getPackStatus("hardware-launch"), "stable");
   assert.equal(getPackStatus("software-launch"), "experimental");
   assert.equal(getPackStatus("missing"), undefined);
@@ -267,6 +269,57 @@ test("Developer Project Launch turns a working developer project into an evidenc
   assert.match(developer.verification.join(" "), /launch-receipt\.json.*prepared.*no-go.*published.*verified/i);
   assert.match(developer.verification.join(" "), /explicit approval evidence.*public URLs.*immutable source.*clean-room quickstart.*rollback target/i);
   assert.doesNotMatch(developer.outputs.join(" "), /\bLive launch\b/i);
+});
+
+test("Software Opportunity Discovery produces one traceable decision instead of a generic idea list", () => {
+  const discovery = outcomePacks.find((pack) => pack.slug === "software-opportunity-discovery");
+  const working = outcomePacks.find((pack) => pack.slug === "working-web-app");
+  const company = outcomePacks.find((pack) => pack.slug === "billion-dollar-saas");
+  assert.ok(discovery);
+  assert.equal(discovery.catalogNumber, 15);
+  assert.equal(discovery.lane, "create");
+  assert.match(discovery.eyebrow, /EXPERIMENTAL/);
+  assert.match(discovery.promise, /vague desire.*evidence-backed opportunity worth testing/i);
+  assert.match(discovery.useWhen.join(" "), /developer.*does not yet know which problem or audience/i);
+  assert.match(discovery.notFor.join(" "), /generic brainstorm/i);
+  assert.match(working.notFor.join(" "), /Software Opportunity Discovery/i);
+  assert.match(company.notFor.join(" "), /Software Opportunity Discovery/i);
+
+  const skillIds = new Set(discovery.skills.map(({ id }) => id));
+  assert.deepEqual([...skillIds], ["customer-research", "competitor-profiling", "product-marketing", "analytics"]);
+  const compiled = compilePack(discovery);
+  assert.equal(compiled.installCommands.length, 1);
+  assert.match(compiled.installCommands[0], /coreyhaines31\/marketingskills@67264763cb107d61749f418d081c56e5bcbc0209/);
+  for (const id of skillIds) assert.match(compiled.installCommands[0], new RegExp(`--skill ${id}`));
+
+  const outputs = discovery.outputs.join(" ");
+  assert.match(outputs, /source ledger.*customer-problem evidence/i);
+  assert.match(outputs, /Three to five.*opportunity candidates/i);
+  assert.match(outputs, /scorecard.*evidence and unknowns/i);
+  assert.match(outputs, /recommended opportunity.*rejected alternatives/i);
+  assert.match(outputs, /falsifiable validation experiment/i);
+  assert.match(outputs, /pursue, investigate, or no-go decision receipt/i);
+
+  const guardrails = discovery.guardrails.join(" ");
+  assert.match(guardrails, /Never invent customer quotes.*demand.*market size.*willingness to pay/i);
+  assert.match(guardrails, /Do not contact people.*publish surveys.*spend money/i);
+  assert.match(guardrails, /no-go or research-incomplete result is valid/i);
+  const verification = discovery.verification.join(" ");
+  assert.match(verification, /multiple independent sources or mark its confidence low/i);
+  assert.match(verification, /doing nothing.*strongest current alternative.*best rejected candidate/i);
+  assert.match(verification, /decision-receipt\.json.*pursue.*investigate.*no-go/i);
+  assert.match(verification, /Do not claim the opportunity is validated/i);
+
+  const owned = discovery.workstreams.flatMap((stream) => stream.owns.map((path) => ({ stream: stream.id, path })));
+  for (const item of owned) {
+    assert.doesNotMatch(item.path, /^(?:\/|[A-Za-z]:)|\.\.|[*?]/, `unsafe ownership path: ${item.path}`);
+    for (const other of owned) {
+      if (item.stream === other.stream) continue;
+      const left = item.path.replace(/\/+$/, "");
+      const right = other.path.replace(/\/+$/, "");
+      assert.equal(left === right || left.startsWith(`${right}/`) || right.startsWith(`${left}/`), false, `${item.path} overlaps ${other.path}`);
+    }
+  }
 });
 
 test("Marketing Operations compiles a manual-first, truthfully gated recurring schedule", () => {

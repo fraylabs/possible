@@ -1,10 +1,10 @@
 "use client";
 
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
-import { compilePack } from "@possible/packs";
+import { compilePack, getPackStatus } from "@possible/packs";
 import type { OutcomePack } from "@possible/packs";
 import demoThreadData from "./demo-thread.json";
-import { featuredPacks, getPublishedPack, githubUrl, installCommand } from "./public-content";
+import { experimentalPreviewPacks, featuredPacks, getPublishedPack, githubUrl, installCommand } from "./public-content";
 
 const PaperPlaneGame = lazy(() => import("./PaperPlaneGame"));
 const RobotSnakeViewer = lazy(() => import("./RobotSnakeViewer"));
@@ -206,7 +206,7 @@ function CreatePage() {
               <span>THE TECHNICAL IDEA</span>
               <h2 id="home-packs-heading">Skills perform tasks.<br /><em>Outcome Packs coordinate the outcome.</em></h2>
             </div>
-            <p>Each typed manifest compiles a reusable execution prompt, reviewed agent skills, owned workstreams, approval gates and completion checks.</p>
+            <p>Each manifest compiles reviewed skills, workstreams, safeguards and completion checks.</p>
           </header>
 
           <div className="home-pack-columns" aria-hidden="true">
@@ -224,7 +224,10 @@ function CreatePage() {
               </li>
             ))}
           </ol>
-          <a className="home-pack-preview" href="/packs/developer-project-launch"><span>EXPERIMENTAL</span><strong>Launch your developer project.</strong><i>Preview →</i></a>
+          <div className="home-pack-preview-list" aria-label="Experimental Outcome Packs">
+            <a className="home-pack-preview" href="/packs/software-opportunity-discovery"><span>EXPERIMENTAL</span><strong>Find software worth building.</strong><i>Preview →</i></a>
+            <a className="home-pack-preview" href="/packs/developer-project-launch"><span>EXPERIMENTAL</span><strong>Launch a developer project.</strong><i>Preview →</i></a>
+          </div>
         </div>
       </section>
 
@@ -389,10 +392,14 @@ function PacksPage() {
       <section id="pack-catalog" className="pack-grid" aria-label="Featured Outcome Packs">
         {featuredPacks.map((pack) => <PackCard pack={pack} key={pack.slug} />)}
       </section>
-      <section className="catalog-experimental" aria-labelledby="experimental-pack-heading">
-        <span>EXPERIMENTAL</span>
-        <div><h2 id="experimental-pack-heading">Developer Project Launch</h2><p>Turn a working developer project into an evidence-backed site, demonstration, five-minute quickstart, and adoption path.</p></div>
-        <a href="/packs/developer-project-launch">Preview the Outcome Pack →</a>
+      <section className="catalog-experimental-list" aria-label="Experimental Outcome Packs">
+        {experimentalPreviewPacks.map((pack) => (
+          <article className="catalog-experimental" key={pack.slug}>
+            <span>EXPERIMENTAL</span>
+            <div><h2>{pack.name}</h2><p>{pack.promise}</p></div>
+            <a href={`/packs/${pack.slug}`}>Preview the Outcome Pack →</a>
+          </article>
+        ))}
       </section>
       <section className="catalog-principle">
         <span>THE DIFFERENCE</span>
@@ -442,7 +449,7 @@ function PackDetailPage({ pack }: { pack: OutcomePack }) {
         </aside>
 
         <article className="pack-reference-document" id="pack-specification" tabIndex={-1}>
-          {pack.slug === "developer-project-launch" ? <div className="pack-experimental-notice"><strong>EXPERIMENTAL OUTCOME PACK</strong><span>Available to test. Preserved end-to-end evidence is still in progress.</span></div> : null}
+          {getPackStatus(pack.slug) === "experimental" ? <div className="pack-experimental-notice"><strong>EXPERIMENTAL OUTCOME PACK</strong><span>Available to test. Preserved end-to-end evidence is still in progress.</span></div> : null}
           <header className="pack-reference-header" id="overview">
             <div className="pack-reference-breadcrumb"><a href="/packs">OUTCOME PACKS</a><span>/</span><strong>{pack.lane.toUpperCase()}</strong></div>
             <dl className="pack-reference-meta">

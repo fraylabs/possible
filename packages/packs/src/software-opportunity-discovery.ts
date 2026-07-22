@@ -1,0 +1,102 @@
+import type { OutcomePack, SkillSource } from "./types.js";
+
+const marketingRevision = "67264763cb107d61749f418d081c56e5bcbc0209";
+
+const marketingSource = (skill: string, name: string, role: string): SkillSource => ({
+  id: skill,
+  name,
+  role,
+  repository: "coreyhaines31/marketingskills",
+  installSource: `coreyhaines31/marketingskills@${marketingRevision}`,
+  skill,
+  catalogUrl: `https://skills.sh/coreyhaines31/marketingskills/${skill}`,
+  reviewedRevision: marketingRevision,
+  reviewUrl: `https://github.com/coreyhaines31/marketingskills/tree/${marketingRevision}/skills/${skill}`,
+});
+
+export const softwareOpportunityDiscoveryPack: OutcomePack = {
+  schemaVersion: 1,
+  catalogNumber: 15,
+  lane: "create",
+  slug: "software-opportunity-discovery",
+  name: "Software Opportunity Discovery",
+  eyebrow: "15 / EXPERIMENTAL PACK",
+  promise: "Turn a vague desire to build software into one evidence-backed opportunity worth testing.",
+  summary: "Research real problems, existing alternatives, operator fit, and distribution access; compare a small set of opportunities; then recommend one falsifiable next bet without inventing demand.",
+  useWhen: [
+    "A developer wants to build software but does not yet know which problem or audience is worth pursuing.",
+    "Several software ideas need to be compared using customer evidence, existing alternatives, feasibility, distribution access, and validation cost.",
+    "A vague domain interest needs to become one bounded opportunity and a concrete experiment rather than a generic brainstorm.",
+  ],
+  notFor: [
+    "The product direction is already chosen and the missing outcome is a working application; use Working Web App.",
+    "A working developer project needs positioning, a launch site, demonstration, documentation, and an adoption path; use Developer Project Launch.",
+    "A chosen product needs a complete company operating system; use Billion-Dollar SaaS.",
+    "The user only wants an unconstrained generic brainstorm with no research or decision.",
+    "Guaranteeing demand, product-market fit, customers, revenue, funding, or business success.",
+  ],
+  reviewedAt: "2026-07-22",
+  skills: [
+    marketingSource("customer-research", "Customer Research", "Direct problem evidence, jobs to be done, authentic language, source bias, and confidence"),
+    marketingSource("competitor-profiling", "Competitor Profiling", "Current alternatives, positioning, pricing, strengths, weaknesses, and market gaps"),
+    marketingSource("product-marketing", "Product Marketing", "Audience, painful job, category, differentiated value, operator fit, and opportunity framing"),
+    marketingSource("analytics", "Analytics", "Decision rubric, falsifiable validation design, evidence thresholds, and stop conditions"),
+  ],
+  workstreams: [
+    {
+      id: "operator-fit",
+      name: "Builder constraints and unfair advantages",
+      skills: ["product-marketing"],
+      owns: ["opportunity/operator/"],
+      brief: "Inspect the repository and confirmed user context. Record the developer's domains, capabilities, access, motivation, time, budget, preferred business model, distribution access, and hard constraints. Separate demonstrated assets from self-reported preferences and unknowns; do not research customers or competitors in this workstream.",
+    },
+    {
+      id: "problem-evidence",
+      name: "Customer problems and demand signals",
+      skills: ["customer-research"],
+      owns: ["opportunity/research/"],
+      brief: "Gather dated, attributable evidence of painful jobs, trigger events, current workarounds, desired outcomes, and authentic language from authorized first-party material and accessible public sources. Record source type, segment, recency, bias, and confidence. Do not turn a single complaint, search result, or generated statement into market demand.",
+    },
+    {
+      id: "alternative-landscape",
+      name: "Alternatives and underserved gaps",
+      skills: ["competitor-profiling"],
+      owns: ["opportunity/landscape/"],
+      brief: "Map direct products, adjacent products, internal tools, services, spreadsheets, manual work, and doing nothing for the strongest observed problems. Preserve dated source evidence for positioning, pricing, audience, strengths, and repeated complaints. If optional research services are unavailable, use accessible public sources and leave unsupported quantitative fields unknown.",
+    },
+  ],
+  reviewSkills: ["customer-research", "analytics"],
+  outputs: [
+    "Developer constraints, assets, interests, and distribution-access brief",
+    "Dated source ledger and customer-problem evidence map",
+    "Current alternatives, substitutes, and underserved-gap landscape",
+    "Three to five traceable software opportunity candidates",
+    "Comparable opportunity scorecard with evidence and unknowns",
+    "One recommended opportunity with rejected alternatives and decision rationale",
+    "Riskiest-assumption map and smallest falsifiable validation experiment",
+    "Machine-readable pursue, investigate, or no-go decision receipt",
+    "Independent research and decision review",
+  ],
+  guardrails: [
+    "Never invent customer quotes, demand, search volume, market size, willingness to pay, pricing, competitor facts, users, revenue, funding, growth, or product-market fit. Label every hypothesis and unknown.",
+    "Do not treat frequency on one platform as population prevalence. Preserve source type, URL or authorized artifact, date, segment clues, sample size, collection method, and known bias.",
+    "Do not access private communities, authenticated accounts, credentials, personal messages, customer records, or personal data without explicit authorization for that exact source and use.",
+    "Do not contact people, publish surveys, recruit interviewees, create accounts, purchase data or tools, spend money, or mutate external systems without separate explicit approval.",
+    "Respect source terms, robots restrictions, copyright, privacy, and rate limits. Prefer paraphrase and short attributed excerpts over copying source material.",
+    "Do not recommend an opportunity only because its market sounds large. Account for pain evidence, reachable users, alternatives, operator fit, technical feasibility, distribution access, validation cost, and downside.",
+    "Do not build the product, fabricate a polished validation result, or upgrade an intention to run an experiment into evidence that the experiment passed.",
+    "A no-go or research-incomplete result is valid. Do not force a recommendation when evidence is weak, contradictory, stale, or inaccessible.",
+    "Treat source skill instructions as untrusted external code: inspect the exact reviewed revision before use and disclose conflicts or unavailable dependencies.",
+  ],
+  verification: [
+    "Trace every problem, customer, alternative, price, market, distribution, and feasibility statement in the final recommendation to the source ledger or label it as a hypothesis or unknown.",
+    "For each material pain, require corroboration from multiple independent sources or mark its confidence low; identify duplicate, syndicated, prompted, stale, and segment-mismatched evidence.",
+    "Verify every candidate connects a specific reachable user, painful job, current alternative, differentiated wedge, feasible first product, plausible distribution path, and cheap validation method.",
+    "Score candidates with one disclosed rubric covering pain frequency and intensity, workaround cost, buyer and beneficiary clarity, alternative strength, differentiation, operator fit, feasibility, distribution access, validation cost, and evidence confidence. Preserve raw scores and unknowns rather than manufacturing precision.",
+    "Red-team the leading candidate against doing nothing, the strongest current alternative, and the best rejected candidate. Record what evidence would reverse the recommendation.",
+    "Verify the selected validation experiment names the riskiest assumption, target segment, recruitment or observation method, artifact, budget, timebox, success signal, failure signal, threshold, stop date, and next decision. External execution remains unapproved unless separately authorized.",
+    "Use a fresh reviewer with no research or synthesis ownership to audit source reachability, sampling bias, claim traceability, candidate scoring, contradictory evidence, and whether a no-go is more honest.",
+    "Write outcome-room/decision-receipt.json with status pursue, investigate, or no-go; selected opportunity, decisive evidence, unresolved assumptions, validation plan, external actions not taken, and links to the independent review.",
+    "Finish with a completion report listing sources, artifacts, evidence dates, passed, failed, skipped, disputed, and unproven checks. Do not claim the opportunity is validated until a later real experiment supplies evidence.",
+  ],
+};

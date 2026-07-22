@@ -78,6 +78,13 @@ assert.match(developerPreview, /EXPERIMENTAL OUTCOME PACK/i);
 assert.match(developerPreview, /Preserved end-to-end evidence is still in progress/i);
 assert.match(developerPreview, new RegExp(escape(developerProjectLaunch.promise)));
 
+const softwareOpportunityDiscovery = getPack("software-opportunity-discovery");
+assert.ok(softwareOpportunityDiscovery);
+const opportunityPreview = visibleText(await html("packs/software-opportunity-discovery/index.html"));
+assert.match(opportunityPreview, /EXPERIMENTAL OUTCOME PACK/i);
+assert.match(opportunityPreview, /Preserved end-to-end evidence is still in progress/i);
+assert.match(opportunityPreview, new RegExp(escape(softwareOpportunityDiscovery.promise)));
+
 for (const forbidden of [
   /50[–-]100 coordinated tasks/i,
   /RECORDED OUTCOMES \/ \d+/i,
@@ -104,6 +111,10 @@ for (const pack of featuredPacks) {
   const detail = visibleText(await html(`packs/${pack.slug}/index.html`));
   assert.match(detail, new RegExp(escape(pack.promise)));
   assert.doesNotMatch(detail, /SCHEDULABLE|OPTIONAL SCHEDULE|Schedule the operating loop/i);
+}
+for (const pack of [softwareOpportunityDiscovery, developerProjectLaunch]) {
+  assert.match(catalog, new RegExp(escape(pack.name)));
+  assert.match(catalog, new RegExp(`href="/packs/${pack.slug}"`));
 }
 for (const slug of ["software-launch", "open-source-release", "marketing-operations", "billion-dollar-saas"]) {
   await assert.rejects(html(`packs/${slug}/index.html`), { code: "ENOENT" }, `${slug} must not be exported`);

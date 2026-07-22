@@ -95,14 +95,17 @@ describe("Possible", () => {
     }
   });
 
-  it("publishes Developer Project Launch as an experimental direct preview", async () => {
-    const pack = getPublishedPack("developer-project-launch");
-    expect(pack).toBeDefined();
-    const { container } = renderRoute("/packs/developer-project-launch");
-    expect(screen.getByRole("heading", { name: "Developer Project Launch", level: 1 })).toBeInTheDocument();
-    expect(container.querySelector(".pack-experimental-notice")).toHaveTextContent(/Experimental Outcome Pack.*Preserved end-to-end evidence is still in progress/i);
-    expect(container.querySelector(".pack-prompt-disclosure code")?.textContent).toBe(compilePack(pack!).runPrompt);
-    expect(await axe(container)).toHaveNoViolations();
+  it("publishes experimental Outcome Packs as direct previews", async () => {
+    for (const slug of ["software-opportunity-discovery", "developer-project-launch"]) {
+      const pack = getPublishedPack(slug);
+      expect(pack).toBeDefined();
+      const { container, unmount } = renderRoute(`/packs/${slug}`);
+      expect(screen.getByRole("heading", { name: pack!.name, level: 1 })).toBeInTheDocument();
+      expect(container.querySelector(".pack-experimental-notice")).toHaveTextContent(/Experimental Outcome Pack.*Preserved end-to-end evidence is still in progress/i);
+      expect(container.querySelector(".pack-prompt-disclosure code")?.textContent).toBe(compilePack(pack!).runPrompt);
+      expect(await axe(container)).toHaveNoViolations();
+      unmount();
+    }
   });
 
   it("keeps retired pack routes out of the public product", () => {

@@ -56,7 +56,7 @@ These are the four stable public packs. Additional registry packs are experiment
 - [Playable Web Game](packages/packs/src/playable-web-game.ts) — a polished browser game with responsive controls and playability review.
 - [Web Presentation](packages/packs/src/web-presentation.ts) — an evidence-backed coded deck with responsive presenter behavior.
 
-Experimental preview: [Developer Project Launch](packages/packs/src/developer-project-launch.ts) turns a working developer tool into an evidence-backed site, demonstration, five-minute quickstart, and adoption path. It remains experimental until a preserved end-to-end run passes independent verification.
+Experimental previews: [Software Opportunity Discovery](packages/packs/src/software-opportunity-discovery.ts) finds one evidence-backed idea worth testing; [Developer Project Launch](packages/packs/src/developer-project-launch.ts) gives a working developer tool a credible adoption path. Both remain experimental until preserved end-to-end runs pass independent verification.
 
 You do not need to choose a pack. `$possible` recommends one after understanding your outcome.
 

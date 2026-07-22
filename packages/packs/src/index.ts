@@ -8,12 +8,13 @@ import { openSourceReleasePack } from "./open-source-release.js";
 import { playableWebGamePack } from "./playable-web-game.js";
 import { productionWebReleasePack } from "./production-web-release.js";
 import { robotPrototypePack } from "./robot-prototype.js";
+import { softwareOpportunityDiscoveryPack } from "./software-opportunity-discovery.js";
 import { softwareLaunchPack } from "./software-launch.js";
 import { webAppOperationsPack } from "./web-app-operations.js";
 import { webPresentationPack } from "./web-presentation.js";
 import { workingWebAppPack } from "./working-web-app.js";
 
-export { billionDollarSaasPack, developerProjectLaunchPack, hardwareLaunchPack, kickstarterFulfillmentPack, kickstarterFundingPack, marketingOperationsPack, openSourceReleasePack, playableWebGamePack, productionWebReleasePack, robotPrototypePack, softwareLaunchPack, webAppOperationsPack, webPresentationPack, workingWebAppPack };
+export { billionDollarSaasPack, developerProjectLaunchPack, hardwareLaunchPack, kickstarterFulfillmentPack, kickstarterFundingPack, marketingOperationsPack, openSourceReleasePack, playableWebGamePack, productionWebReleasePack, robotPrototypePack, softwareLaunchPack, softwareOpportunityDiscoveryPack, webAppOperationsPack, webPresentationPack, workingWebAppPack };
 export { compileInstallCommands, compilePack, compileRunPrompt } from "./compiler.js";
 export type { CompiledPack, OutcomePack, PackLane, PluginCapability, ScheduleContract, SkillSource, Workstream } from "./types.js";
 
@@ -39,6 +40,7 @@ export const outcomePacks = [
   robotPrototypePack,
   webPresentationPack,
   developerProjectLaunchPack,
+  softwareOpportunityDiscoveryPack,
 ] as const;
 
 const stablePackSlugSet = new Set<string>(stablePackSlugs);

@@ -7,8 +7,10 @@ const text = (relative) => readFile(new URL(relative, webDist), "utf8");
 const index = JSON.parse(await text("packs/index.json"));
 const featuredPacks = stableOutcomePacks;
 const developerProjectLaunch = getPack("developer-project-launch");
+const softwareOpportunityDiscovery = getPack("software-opportunity-discovery");
 assert.ok(developerProjectLaunch, "Developer Project Launch must exist");
-const publishedPacks = [...featuredPacks, developerProjectLaunch];
+assert.ok(softwareOpportunityDiscovery, "Software Opportunity Discovery must exist");
+const publishedPacks = [...featuredPacks, softwareOpportunityDiscovery, developerProjectLaunch];
 const evidence = JSON.parse(await text("evidence.json"));
 const judgingDocument = await readFile(new URL("../JUDGING.md", import.meta.url), "utf8");
 const nonEmptyString = (value, label) => {
