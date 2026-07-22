@@ -77,6 +77,19 @@ export const workingWebAppPack: OutcomePack = {
       brief: "Create deterministic checks for the primary flow, one material failure path, responsive behavior, and any promised state reload. Exercise the integrated app without modifying product implementation.",
     },
   ],
+  chainEntry: [
+    {
+      id: "selected-opportunity",
+      description: "A prior discovery outcome selected one opportunity to pursue while preserving its evidence and uncertainty.",
+      requiredEvidence: ["pursue decision receipt", "selected opportunity and rejected alternatives", "source evidence and unresolved assumptions"],
+    },
+  ],
+  chainExit: {
+    receiptPath: "outcome-room/product-receipt.json",
+    advanceStatuses: ["passed"],
+    pauseStatuses: ["repair-required"],
+    stopStatuses: ["no-go"],
+  },
   reviewSkills: ["webapp-testing", "security-review"],
   outputs: [
     "Locally runnable working web application",
@@ -85,6 +98,7 @@ export const workingWebAppPack: OutcomePack = {
     "Automated product checks",
     "Production build",
     "Evidence report",
+    "Machine-readable product receipt",
   ],
   guardrails: [
     "Do not deploy, publish, change DNS, enable analytics, contact users, or collect real customer data without explicit approval.",
@@ -100,6 +114,7 @@ export const workingWebAppPack: OutcomePack = {
     "Verify every promised state, including reload or persistence behavior when the product contract includes it, using reproducible fixtures rather than hidden manual setup.",
     "Review the integrated flow at desktop and mobile sizes with keyboard access, console failures, and material network failures recorded.",
     "Perform a scoped security review that identifies inspected code and data flows, concrete findings, limitations, and unproven claims without declaring the application secure.",
+    "Write outcome-room/product-receipt.json with status passed, repair-required, or no-go; immutable workspace revision, setup and run commands, primary-flow evidence, limitations, and links to the independent review.",
     "Finish with a completion report listing setup commands, artifacts, passed, failed, skipped, and unproven checks.",
   ],
 };

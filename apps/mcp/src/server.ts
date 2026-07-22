@@ -1,10 +1,10 @@
-import { compilePack, getPack, getPackStatus, outcomePacks } from "@possible/packs";
+import { compileChain, compilePack, getPack, getPackStatus, outcomePacks } from "@possible/packs";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod/v4";
 import { errorResult, successResult } from "./result.js";
 
-export const POSSIBLE_TOOL_NAMES = ["list_packs", "compile_pack"] as const;
-export const POSSIBLE_SERVER_INSTRUCTIONS = "Possible publishes inspectable outcome packs: selected external skills, workstream ownership, integration order, guardrails, and verification. List packs first, then compile one exact pack. Review external sources before installation; a pack does not authorize external actions.";
+export const POSSIBLE_TOOL_NAMES = ["list_packs", "compile_pack", "compile_chain"] as const;
+export const POSSIBLE_SERVER_INSTRUCTIONS = "Possible publishes inspectable outcome packs: selected external skills, workstream ownership, integration order, guardrails, and verification. List packs first, then compile one exact pack or a conditional chain. Review external sources before installation; pack or chain approval does not authorize external actions.";
 const READ_ONLY = { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false } as const;
 
 export async function createPossibleServer(): Promise<McpServer> {
@@ -25,6 +25,24 @@ export async function createPossibleServer(): Promise<McpServer> {
     const pack = getPack(slug);
     if (pack === undefined) return errorResult("PACK_NOT_FOUND", `Outcome pack '${slug}' does not exist.`, { slug });
     return successResult(compilePack(pack));
+  });
+  server.registerTool("compile_chain", {
+    title: "Compile a Possible outcome chain",
+    description: "Return a conditional, separately approved sequence of two or more exact outcome packs.",
+    inputSchema: { slugs: z.array(z.string().trim().min(1)).min(2) },
+    annotations: READ_ONLY,
+  }, async ({ slugs }) => {
+    const packs: NonNullable<ReturnType<typeof getPack>>[] = [];
+    for (const slug of slugs) {
+      const pack = getPack(slug);
+      if (pack === undefined) return errorResult("PACK_NOT_FOUND", `Outcome pack '${slug}' does not exist.`, { slug });
+      packs.push(pack);
+    }
+    try {
+      return successResult(compileChain(packs));
+    } catch (error) {
+      return errorResult("CHAIN_INVALID", error instanceof Error ? error.message : "Outcome chain is invalid.", { slugs });
+    }
   });
   return server;
 }

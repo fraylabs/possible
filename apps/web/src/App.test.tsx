@@ -135,6 +135,17 @@ describe("Possible", () => {
     expect(await axe(section!)).toHaveNoViolations();
   });
 
+  it("explains Remix and Outcome Chains without treating them as one approval", async () => {
+    const { container } = renderRoute("/docs/how-to-use");
+    const section = container.querySelector("#remix-and-chain");
+    expect(section).toHaveTextContent(/Remix changes the expression/i);
+    expect(section).toHaveTextContent(/three project-specific creative directions/i);
+    expect(section).toHaveTextContent(/Software Opportunity Discovery.*Working Web App.*Developer Project Launch/i);
+    expect(section).toHaveTextContent(/NOW \/ IF THIS PASSES \/ LATER/i);
+    expect(section).toHaveTextContent(/separate approval/i);
+    expect(await axe(section!)).toHaveNoViolations();
+  });
+
   it("maps the four official judging criteria to direct evidence", async () => {
     const { container } = renderRoute("/judging");
     expect(screen.getByRole("heading", { name: /One rough idea\.\s*A verified outcome\./, level: 1 })).toBeInTheDocument();

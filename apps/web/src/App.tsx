@@ -487,13 +487,16 @@ function PackDetailPage({ pack }: { pack: OutcomePack }) {
             <header><span>03</span><h2 id="workstreams-heading">Execution plan</h2><p>Each workstream owns separate files.</p></header>
             <div className="pack-table-scroll">
               <table className="pack-reference-table pack-workstream-table" aria-labelledby="workstreams-heading">
-                <caption className="sr-only">Workstreams, invoked skills, owned files, and execution briefs for {pack.name}</caption>
-                <thead><tr><th>Workstream</th><th>Invokes</th><th>Owns</th><th>Brief</th></tr></thead>
+                <caption className="sr-only">Workstreams, dependencies, invoked skills, owned files, and execution briefs for {pack.name}</caption>
+                <thead><tr><th>Workstream</th><th>Depends on</th><th>Invokes</th><th>Owns</th><th>Brief</th></tr></thead>
                 <tbody>
-                  {pack.workstreams.map((stream) => <tr key={stream.id}><th scope="row"><strong>{stream.name}</strong></th><td>{stream.skills.map((skill) => <code key={skill}>${skill}</code>)}</td><td>{stream.owns.map((item) => <code key={item}>{item}</code>)}</td><td>{stream.brief}</td></tr>)}
+                  {pack.workstreams.map((stream) => <tr key={stream.id}><th scope="row"><strong>{stream.name}</strong></th><td>{stream.dependsOn?.length ? stream.dependsOn.map((dependency) => <code key={dependency}>{dependency}</code>) : <span>None</span>}</td><td>{stream.skills.map((skill) => <code key={skill}>${skill}</code>)}</td><td>{stream.owns.map((item) => <code key={item}>{item}</code>)}</td><td>{stream.brief}</td></tr>)}
                 </tbody>
               </table>
             </div>
+            {pack.remix ? <div className="pack-review-callout"><span>REMIX</span><div><code>{pack.remix.candidateCount} directions</code><code>{pack.remix.decisionPath}</code></div><p>Possible derives project-specific directions after product truth is known, then records one decision before dependent implementation begins. The outcome contract does not change.</p></div> : null}
+            {pack.chainEntry?.length ? <div className="pack-review-callout"><span>CHAIN ENTRY</span><div>{pack.chainEntry.map((requirement) => <code key={requirement.id}>{requirement.id}</code>)}</div><p>A prior outcome may hand work to this pack only after fresh review proves every entry requirement. The user approves this stage separately.</p></div> : null}
+            {pack.chainExit ? <div className="pack-review-callout"><span>CHAIN EXIT</span><div><code>{pack.chainExit.receiptPath}</code></div><p>Receipt status decides whether a later outcome may be proposed, paused, or stopped. Completion never pre-approves the next stage.</p></div> : null}
             <div className="pack-review-callout"><span>INDEPENDENT REVIEW</span><div>{pack.reviewSkills.map((skill) => <code key={skill}>${skill}</code>)}</div><p>A verifier checks the integrated outcome. It reports evidence, failures, skipped checks, and unsupported claims.</p></div>
           </section>
 
@@ -1245,6 +1248,9 @@ function DocsPage() {
               <div><dt>Possible.sh</dt><dd>The open-source library of Outcome Packs, documentation, examples, and evidence.</dd></div>
               <div><dt>$possible</dt><dd>The installed agent skill that understands a request, recommends an Outcome Pack, and runs it after approval.</dd></div>
               <div><dt>Outcome Pack</dt><dd>A reusable execution prompt, selected agent skills, sequencing, safeguards, and completion checks for one class of outcomes.</dd></div>
+              <div><dt>Creative direction</dt><dd>A project-specific visual system derived from its audience, product truth, evidence, assets, and constraints.</dd></div>
+              <div><dt>Remix</dt><dd>Reconsider how an outcome is expressed without changing its promised facts, safeguards, product behavior, or definition of done.</dd></div>
+              <div><dt>Outcome Chain</dt><dd>A conditional sequence of independently verified Outcome Packs. Each stage is approved separately and advances only when its evidence satisfies the next pack.</dd></div>
               <div><dt>Stable pack</dt><dd>An Outcome Pack backed by a preserved end-to-end run and independent verification.</dd></div>
               <div><dt>Experimental pack</dt><dd>An Outcome Pack available to inspect and test before equivalent preserved evidence exists.</dd></div>
               <div><dt>Agent skill</dt><dd>A reusable capability that performs focused work during a run.</dd></div>
@@ -1431,6 +1437,12 @@ function HowToUsePage() {
             </div>
           </section>
 
+          <section id="remix-and-chain">
+            <h2>Remix and chain outcomes</h2>
+            <p><strong>Remix changes the expression.</strong> A supporting pack can derive three project-specific creative directions from the audience and product truth, then select or ask about the choice before implementation. The promised outcome and its checks stay fixed.</p>
+            <p><strong>Chain changes the next outcome.</strong> For example, Software Opportunity Discovery can lead to Working Web App, then Developer Project Launch. Possible shows <strong>NOW / IF THIS PASSES / LATER</strong>; it verifies each handoff and asks for separate approval before the next stage.</p>
+          </section>
+
           <section id="handshake">
             <h2>The collaboration handshake</h2>
             <p>The handoff between human judgment and agent execution is explicit. Work begins only after the recommendation is understood and approved.</p>
@@ -1469,6 +1481,7 @@ function HowToUsePage() {
           <a href="#human">For the human</a>
           <a href="#possible">What Possible does</a>
           <a href="#goal-and-possible">Use with /goal</a>
+          <a href="#remix-and-chain">Remix and chain</a>
           <a href="#handshake">The handshake</a>
           <a href="#approval">Approval boundary</a>
         </aside>

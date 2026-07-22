@@ -1,4 +1,37 @@
-import type { CompiledPack, OutcomePack } from "./types.js";
+import type { ChainHandoff, CompiledChain, CompiledPack, OutcomePack, Workstream } from "./types.js";
+
+const safeRelativePath = (value: string) => !/^(?:\/|[A-Za-z]:)|(?:^|\/)\.\.(?:\/|$)|[*?]/.test(value);
+
+function requireSafeRelativePath(value: string, label: string): void {
+  if (!value || !safeRelativePath(value)) throw new Error(`${label} must be a safe repository-relative path`);
+}
+
+export function compileWorkstreamWaves(pack: OutcomePack): Workstream[][] {
+  const byId = new Map(pack.workstreams.map((stream) => [stream.id, stream]));
+  if (byId.size !== pack.workstreams.length) throw new Error(`${pack.slug} contains duplicate workstream ids`);
+  for (const stream of pack.workstreams) {
+    for (const dependency of stream.dependsOn ?? []) {
+      if (!byId.has(dependency)) throw new Error(`${pack.slug}/${stream.id} depends on missing workstream ${dependency}`);
+      if (dependency === stream.id) throw new Error(`${pack.slug}/${stream.id} cannot depend on itself`);
+    }
+  }
+
+  const remaining = new Set(byId.keys());
+  const complete = new Set<string>();
+  const waves: Workstream[][] = [];
+  while (remaining.size > 0) {
+    const wave = [...remaining]
+      .map((id) => byId.get(id)!)
+      .filter((stream) => (stream.dependsOn ?? []).every((dependency) => complete.has(dependency)));
+    if (wave.length === 0) throw new Error(`${pack.slug} contains a workstream dependency cycle`);
+    waves.push(wave);
+    for (const stream of wave) {
+      remaining.delete(stream.id);
+      complete.add(stream.id);
+    }
+  }
+  return waves;
+}
 
 export function compileInstallCommands(pack: OutcomePack): string[] {
   const groups = new Map<string, string[]>();
@@ -18,12 +51,15 @@ export function compileInstallCommands(pack: OutcomePack): string[] {
 
 export function compileRunPrompt(pack: OutcomePack): string {
   const artifactRoot = pack.artifactRoot ?? (pack.lane === "operate" ? "operations" : "outcome-room");
+  const waves = compileWorkstreamWaves(pack);
   const workstreams = pack.workstreams.map((stream) => [
     `- ${stream.name} (${stream.id})`,
     `  Invoke: ${stream.skills.map((skill) => `$${skill}`).join(", ")}`,
     `  Own: ${stream.owns.join(", ")}`,
+    `  Depends on: ${stream.dependsOn?.join(", ") || "none"}`,
     `  Brief: ${stream.brief}`,
   ].join("\n")).join("\n");
+  const workstreamSequence = waves.map((wave, index) => `- Wave ${index + 1}: ${wave.map((stream) => stream.id).join(", ")}`).join("\n");
 
   const operateLoop = pack.lane === "operate" ? `
 
@@ -73,6 +109,24 @@ OPENAI SITES MVP PATH
 3. Treat every Sites deployment URL as production. Before creating or linking provider state, pushing source, saving a version, deploying, changing access, adding a domain, or changing environment variables, request explicit approval for that exact external action. Possible's approval gate still applies to an owner-only deployment.
 4. After approval, deploy only the validated saved version, inspect deployment status, verify the named URL and access mode, and record the project, commit, version, deployment, and rollback version in the completion report.
 5. If @sites is unavailable, do not imitate it. Use another reviewed adapter only when it is installed, compatible, and authorized; otherwise finish with a completion report that records deployment as no-go.` : "";
+  const remixGate = pack.remix ? (() => {
+    const contract = pack.remix;
+    const workstream = pack.workstreams.find((stream) => stream.id === contract.workstreamId);
+    if (!workstream) throw new Error(`${pack.slug} remix workstream ${contract.workstreamId} does not exist`);
+    if (contract.candidateCount !== 3) throw new Error(`${pack.slug} remix must compare exactly three directions`);
+    requireSafeRelativePath(contract.previewRoot, `${pack.slug} remix previewRoot`);
+    requireSafeRelativePath(contract.decisionPath, `${pack.slug} remix decisionPath`);
+    return `
+
+REMIX GATE
+1. Remix changes creative direction, never the Outcome Pack's promised outputs, facts, safeguards, or completion checks. Preserve: ${contract.preserves.join(", ")}.
+2. After the ${contract.workstreamId} workstream's dependencies pass, create exactly ${contract.candidateCount} project-specific directions under ${contract.previewRoot}. Use the same truthful copy, content, and viewport for every preview.
+3. Give each direction a plain-language name and intended audience effect. Every pair must differ materially in at least three of typography role, color logic, composition, imagery or shape language, and motion or interaction; palette swaps fail.
+4. Infer from the audience, product truth, existing identity, assets, behavior, and constraints. Preserve or deliberately evolve a strong existing identity. Never randomize, copy a named reference, or ask the user to choose design jargon.
+5. If the user made taste material or asked to choose, show the three previews and ask one plain-language question. Otherwise select the best-supported direction using audience fit, product truth, accessibility, maintainability, and distinctiveness, with lower complexity as the tie-break.
+6. Record the evidence, candidates, preview hashes, provenance, decision mode, selected traits, rationale, and timestamp in ${contract.decisionPath}. Never call an agent selection user-approved.
+7. Do not begin dependent implementation until the decision exists. A later remix reruns only the direction and affected presentation surfaces after reporting scope; it does not silently change claims, documentation, product behavior, or prior evidence.`;
+  })() : "";
 
   return `${action} the ${pack.name} outcome for the product described below.
 
@@ -86,7 +140,9 @@ Deliver: ${pack.outputs.join(", ")}.
 LEAD AGENT WORKFLOW
 1. Inspect the workspace and this brief. Do not start production until you write a shared outcome-brief.md containing only confirmed facts, audience, promise, constraints, interfaces, and acceptance checks.
 2. Confirm these installed skills are visible: ${pack.skills.map((source) => `$${source.skill}`).join(", ")}. If any are missing, stop and identify them; do not silently imitate them.${pluginCheck}
-3. Create one subagent for each independent workstream below. Give every subagent outcome-brief.md, explicit ownership, its named skills, and its own completion verifier. Do not create one subagent per skill.
+3. Follow the dependency waves below. Do not create one subagent per skill. Create one subagent for each currently unblocked workstream. Give every subagent outcome-brief.md, explicit ownership, its named skills, and its own completion verifier. Do not start a dependent workstream until every named dependency passes its handoff checks.
+WORKSTREAM SEQUENCE
+${workstreamSequence}
 ${workstreams}
 4. Continue as the lead agent while the workstreams run: protect the shared facts, resolve interface decisions, and prepare the integration shell. Wait for all workstreams, review their evidence, then ${integrationTarget} without erasing unrelated user work.
 5. After integration, create a fresh verification subagent. It must invoke ${pack.reviewSkills.map((skill) => `$${skill}`).join(", ")}, inspect the actual integrated outcome, check every promised artifact, and return evidence—not implementation work.
@@ -97,9 +153,43 @@ ${pack.guardrails.map((guardrail) => `- ${guardrail}`).join("\n")}
 
 VERIFICATION CONTRACT
 ${pack.verification.map((item) => `- ${item}`).join("\n")}
-${releaseGate}${launchGate}${sitesPath}${operateLoop}
+${remixGate}${releaseGate}${launchGate}${sitesPath}${operateLoop}
 
 Do not ask me to choose implementation details that can be safely inferred from the brief and repository. Ask only when a missing decision would materially change the product or authorize an external action.`;
+}
+
+export function compileChain(packs: OutcomePack[]): CompiledChain {
+  if (packs.length < 2) throw new Error("An Outcome Chain requires at least two Outcome Packs");
+  const slugs = packs.map((pack) => pack.slug);
+  if (new Set(slugs).size !== slugs.length) throw new Error("An Outcome Chain cannot repeat a stage in V1");
+
+  const handoffs: ChainHandoff[] = [];
+  for (let index = 0; index < packs.length - 1; index += 1) {
+    const source = packs[index]!;
+    const destination = packs[index + 1]!;
+    if (!source.chainExit) throw new Error(`${source.slug} does not define a chain exit contract`);
+    if (!destination.chainEntry?.length) throw new Error(`${destination.slug} does not define chain entry requirements`);
+    requireSafeRelativePath(source.chainExit.receiptPath, `${source.slug} chain receiptPath`);
+    const statuses = [source.chainExit.advanceStatuses, source.chainExit.pauseStatuses, source.chainExit.stopStatuses].flat();
+    if (statuses.length === 0 || new Set(statuses).size !== statuses.length) throw new Error(`${source.slug} chain statuses must be non-empty and disjoint`);
+    handoffs.push({ from: source.slug, to: destination.slug, exit: source.chainExit, entry: destination.chainEntry });
+  }
+
+  const stages = packs.map((pack, index) => `${index + 1}. ${pack.name} (${pack.slug})`).join("\n");
+  const handoffText = handoffs.map((handoff, index) => [
+    `Handoff ${index + 1}: ${handoff.from} -> ${handoff.to}`,
+    `- Source receipt: ${handoff.exit.receiptPath}`,
+    `- Advance: ${handoff.exit.advanceStatuses.join(", ")}`,
+    `- Pause: ${handoff.exit.pauseStatuses.join(", ")}`,
+    `- Stop: ${handoff.exit.stopStatuses.join(", ")}`,
+    ...handoff.entry.map((requirement) => `- Entry ${requirement.id}: ${requirement.description} Evidence: ${requirement.requiredEvidence.join(", ")}.${requirement.satisfyWithPack ? ` If missing, propose ${requirement.satisfyWithPack} before continuing.` : ""}`),
+  ].join("\n")).join("\n\n");
+
+  return {
+    packs,
+    handoffs,
+    runPrompt: `Prepare this conditional Outcome Chain:\n${stages}\n\nCHAIN CONTRACT\n1. Record the original ambition and these stages in .possible/chain.json. Stages after the first are proposed, never pre-approved. Run only the first separately approved outcome now.\n2. Preserve each completed stage under .possible/runs/<run-id>/ with its brief, pack snapshot, skills lock, receipt, completion report, independent verification, workspace revision, and hashes. Top-level .possible files describe only the active stage.\n3. After a stage completes, map its raw receipt status using the exit contract below. Advance statuses permit an eligibility review, pause statuses resume the same outcome, and stop statuses end the chain honestly. A status never upgrades hypotheses into facts.\n4. Before proposing the next stage, create one repository-relative, path-safe, hashed handoff at .possible/handoffs/<source-run-id>--<destination-slug>.json. Carry facts, hypotheses, decisions, constraints, unknowns, and evidence as distinct fields.\n5. Use a fresh reviewer with no source or destination implementation ownership to verify artifact integrity, source verification, current pack snapshots, and every destination entry requirement. Missing evidence is deferred; contradictory evidence is blocked; changed evidence invalidates prior approval.\n6. Show NOW / IF THIS PASSES / LATER. Request direct approval for the exact destination pack, transferred evidence, skills, and disclosed repo-local work. Source approval never approves the destination, and no chain stage inherits external-action authority.\n7. Write chain state atomically, allow only one pending transition, and make resume idempotent. Never rerun a completed source stage or duplicate a destination after interruption.\n\n${handoffText}\n\nDo not merge these Outcome Packs into one prompt or run them in parallel. The chain advances only through verified evidence and separate approval.`,
+  };
 }
 
 export function compilePack(pack: OutcomePack): CompiledPack {

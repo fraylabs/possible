@@ -15,8 +15,8 @@ import { webPresentationPack } from "./web-presentation.js";
 import { workingWebAppPack } from "./working-web-app.js";
 
 export { billionDollarSaasPack, developerProjectLaunchPack, hardwareLaunchPack, kickstarterFulfillmentPack, kickstarterFundingPack, marketingOperationsPack, openSourceReleasePack, playableWebGamePack, productionWebReleasePack, robotPrototypePack, softwareLaunchPack, softwareOpportunityDiscoveryPack, webAppOperationsPack, webPresentationPack, workingWebAppPack };
-export { compileInstallCommands, compilePack, compileRunPrompt } from "./compiler.js";
-export type { CompiledPack, OutcomePack, PackLane, PluginCapability, ScheduleContract, SkillSource, Workstream } from "./types.js";
+export { compileChain, compileInstallCommands, compilePack, compileRunPrompt, compileWorkstreamWaves } from "./compiler.js";
+export type { ChainEntryRequirement, ChainExitContract, ChainHandoff, CompiledChain, CompiledPack, OutcomePack, PackLane, PluginCapability, RemixContract, ScheduleContract, SkillSource, Workstream } from "./types.js";
 
 export const stablePackSlugs = [
   "hardware-launch",

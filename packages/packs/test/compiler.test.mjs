@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { compilePack, experimentalOutcomePacks, getPackStatus, outcomePacks, stableOutcomePacks } from "../dist/index.js";
+import { compileChain, compilePack, compileWorkstreamWaves, experimentalOutcomePacks, getPackStatus, outcomePacks, stableOutcomePacks } from "../dist/index.js";
 
 test("every outcome pack compiles to inspectable installs and a complete prompt", () => {
   assert.deepEqual(outcomePacks.map((pack) => pack.slug), [
@@ -93,6 +93,88 @@ test("custom install sources cannot drift from the reviewed revision", () => {
   const pack = structuredClone(outcomePacks[0]);
   pack.skills[0].installSource = `${pack.skills[0].repository}@main`;
   assert.throws(() => compilePack(pack), /must install the exact reviewed revision/);
+});
+
+test("Developer Project Launch remixes project-specific direction before implementation", () => {
+  const developer = outcomePacks.find((pack) => pack.slug === "developer-project-launch");
+  assert.ok(developer);
+  assert.deepEqual(compileWorkstreamWaves(developer).map((wave) => wave.map(({ id }) => id)), [
+    ["positioning", "developer-experience"],
+    ["creative-direction"],
+    ["showcase"],
+  ]);
+  assert.equal(developer.remix?.candidateCount, 3);
+  assert.equal(developer.remix?.decisionPath, "launch/direction/decision.json");
+  assert.deepEqual(developer.workstreams.find(({ id }) => id === "showcase")?.dependsOn, ["positioning", "developer-experience", "creative-direction"]);
+  const prompt = compilePack(developer).runPrompt;
+  assert.match(prompt, /REMIX GATE/);
+  assert.match(prompt, /exactly 3 project-specific directions/i);
+  assert.match(prompt, /same truthful copy, content, and viewport/i);
+  assert.match(prompt, /differ materially in at least three/i);
+  assert.match(prompt, /Never randomize.*design jargon/is);
+  assert.match(prompt, /Otherwise select the best-supported direction/i);
+  assert.match(prompt, /launch\/direction\/decision\.json/);
+  assert.match(prompt, /does not silently change claims, documentation, product behavior/i);
+
+  const missing = structuredClone(developer);
+  missing.remix.workstreamId = "missing";
+  assert.throws(() => compilePack(missing), /does not exist/);
+  const unsafe = structuredClone(developer);
+  unsafe.remix.previewRoot = "../outside";
+  assert.throws(() => compilePack(unsafe), /safe repository-relative path/);
+  const wrongCount = structuredClone(developer);
+  wrongCount.remix.candidateCount = 4;
+  assert.throws(() => compilePack(wrongCount), /exactly three directions/);
+
+  const missingDependency = structuredClone(developer);
+  missingDependency.workstreams[0].dependsOn = ["missing"];
+  assert.throws(() => compileWorkstreamWaves(missingDependency), /depends on missing workstream/);
+  const cycle = structuredClone(developer);
+  cycle.workstreams.find(({ id }) => id === "positioning").dependsOn = ["creative-direction"];
+  assert.throws(() => compileWorkstreamWaves(cycle), /dependency cycle/);
+
+  assert.doesNotMatch(compilePack(outcomePacks.find((pack) => pack.slug === "hardware-launch")).runPrompt, /REMIX GATE/);
+});
+
+test("Outcome Chains advance verified stages without inheriting approval", () => {
+  const pack = (slug) => outcomePacks.find((candidate) => candidate.slug === slug);
+  const discovery = pack("software-opportunity-discovery");
+  const working = pack("working-web-app");
+  const developer = pack("developer-project-launch");
+  const chain = compileChain([discovery, working, developer]);
+  assert.deepEqual(chain.handoffs.map(({ from, to }) => [from, to]), [
+    ["software-opportunity-discovery", "working-web-app"],
+    ["working-web-app", "developer-project-launch"],
+  ]);
+  assert.deepEqual(discovery.chainExit, {
+    receiptPath: "outcome-room/decision-receipt.json",
+    advanceStatuses: ["pursue"],
+    pauseStatuses: ["investigate"],
+    stopStatuses: ["no-go"],
+  });
+  assert.equal(developer.chainEntry.find(({ id }) => id === "working-project").satisfyWithPack, "working-web-app");
+  assert.match(chain.runPrompt, /Software Opportunity Discovery.*Working Web App.*Developer Project Launch/s);
+  assert.match(chain.runPrompt, /\.possible\/chain\.json/);
+  assert.match(chain.runPrompt, /\.possible\/runs\/<run-id>/);
+  assert.match(chain.runPrompt, /hashed handoff/);
+  assert.match(chain.runPrompt, /facts, hypotheses, decisions, constraints, unknowns, and evidence as distinct fields/i);
+  assert.match(chain.runPrompt, /fresh reviewer/i);
+  assert.match(chain.runPrompt, /NOW \/ IF THIS PASSES \/ LATER/);
+  assert.match(chain.runPrompt, /Source approval never approves the destination/i);
+  assert.match(chain.runPrompt, /resume idempotent/i);
+
+  const direct = compileChain([discovery, developer]);
+  assert.match(direct.runPrompt, /If missing, propose working-web-app before continuing/i);
+  assert.throws(() => compileChain([discovery]), /at least two/);
+  assert.throws(() => compileChain([discovery, discovery]), /cannot repeat/);
+  assert.throws(() => compileChain([pack("hardware-launch"), developer]), /does not define a chain exit/);
+  assert.throws(() => compileChain([discovery, pack("hardware-launch")]), /does not define chain entry/);
+  const overlap = structuredClone(discovery);
+  overlap.chainExit.pauseStatuses = ["pursue"];
+  assert.throws(() => compileChain([overlap, working]), /non-empty and disjoint/);
+  const unsafe = structuredClone(discovery);
+  unsafe.chainExit.receiptPath = "../receipt.json";
+  assert.throws(() => compileChain([unsafe, working]), /safe repository-relative path/);
 });
 
 test("install commands group skills by upstream repository", () => {

@@ -65,6 +65,12 @@ export const softwareOpportunityDiscoveryPack: OutcomePack = {
       brief: "Map direct products, adjacent products, internal tools, services, spreadsheets, manual work, and doing nothing for the strongest observed problems. Preserve dated source evidence for positioning, pricing, audience, strengths, and repeated complaints. If optional research services are unavailable, use accessible public sources and leave unsupported quantitative fields unknown.",
     },
   ],
+  chainExit: {
+    receiptPath: "outcome-room/decision-receipt.json",
+    advanceStatuses: ["pursue"],
+    pauseStatuses: ["investigate"],
+    stopStatuses: ["no-go"],
+  },
   reviewSkills: ["customer-research", "analytics"],
   outputs: [
     "Developer constraints, assets, interests, and distribution-access brief",

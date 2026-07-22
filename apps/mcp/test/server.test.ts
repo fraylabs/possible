@@ -16,11 +16,24 @@ describe("Possible MCP", () => {
   });
   afterEach(async () => { await client.close(); await server.close(); });
 
-  it("exposes two read-only pack tools", async () => {
+  it("exposes three read-only outcome tools", async () => {
     const response = await client.listTools();
     assert.deepEqual(response.tools.map((tool) => tool.name).sort(), [...POSSIBLE_TOOL_NAMES].sort());
     for (const tool of response.tools) assert.equal(tool.annotations?.readOnlyHint, true);
     assert.equal(client.getInstructions(), POSSIBLE_SERVER_INSTRUCTIONS);
+  });
+
+  it("compiles a conditional discovery to product to launch chain", async () => {
+    const result = await client.callTool({ name: "compile_chain", arguments: { slugs: ["software-opportunity-discovery", "working-web-app", "developer-project-launch"] } });
+    const envelope = result.structuredContent as { ok: boolean; data: { handoffs: Array<{ from: string; to: string }>; runPrompt: string } };
+    assert.equal(envelope.ok, true);
+    assert.deepEqual(envelope.data.handoffs.map(({ from, to }) => [from, to]), [
+      ["software-opportunity-discovery", "working-web-app"],
+      ["working-web-app", "developer-project-launch"],
+    ]);
+    assert.match(envelope.data.runPrompt, /NOW \/ IF THIS PASSES \/ LATER/);
+    assert.match(envelope.data.runPrompt, /separate approval/i);
+    assert.match(envelope.data.runPrompt, /If missing, propose working-web-app before continuing/i);
   });
 
   it("lists four stable and eleven experimental outcome packs", async () => {
