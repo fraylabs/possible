@@ -1,7 +1,10 @@
 import { mkdir, writeFile } from "node:fs/promises";
-import { compilePack, stableOutcomePacks } from "@possible/packs";
+import { compilePack, getPack, getPackStatus, stableOutcomePacks } from "@possible/packs";
 
 const featuredPacks = stableOutcomePacks;
+const developerProjectLaunch = getPack("developer-project-launch");
+if (!developerProjectLaunch) throw new Error("Missing Developer Project Launch pack");
+const publishedPacks = [...featuredPacks, developerProjectLaunch];
 
 const evidenceManifest = {
   schemaVersion: 1,
@@ -134,7 +137,7 @@ const write = async (relativePath, contents) => {
   await writeFile(target, contents);
 };
 
-for (const pack of featuredPacks) {
+for (const pack of publishedPacks) {
   const compiled = compilePack(pack);
   await write(`packs/${pack.slug}.json`, json(compiled));
   await write(`packs/${pack.slug}/install.txt`, `${compiled.installCommands.join("\n")}\n`);
@@ -143,13 +146,14 @@ for (const pack of featuredPacks) {
 
 await write("packs/index.json", json({
   schemaVersion: 1,
-  packs: featuredPacks.map(({ slug, lane, name, promise, summary, reviewedAt }) => ({
+  packs: publishedPacks.map(({ slug, lane, name, promise, summary, reviewedAt }) => ({
     slug,
     lane,
     name,
     promise,
     summary,
     reviewedAt,
+    status: getPackStatus(slug),
   })),
 }));
 
@@ -182,7 +186,7 @@ await write("llms.txt", [
   "- Possible completion report: https://github.com/fraylabs/possible/blob/main/apps/web/public/demo/robot-snake/evidence/outcome-receipt.md",
   "- Pack catalog: /packs/",
   "- Pack index: /packs/index.json",
-  ...featuredPacks.flatMap((pack) => [
+  ...publishedPacks.flatMap((pack) => [
     `- ${pack.name}: /packs/${pack.slug}.json`,
     `  - Outcome Pack page: /packs/${pack.slug}/`,
     `  - Install commands: /packs/${pack.slug}/install.txt`,

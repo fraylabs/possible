@@ -48,7 +48,7 @@ Catalog categories are browsing metadata, not intake choices. Do not ask the use
 Keep the recommendation compact and conversational. Present:
 
 1. **What I think you want to make** — a brief outcome statement and any material assumption.
-2. **Recommended Outcome Pack** — link its name to `https://possible.sh/packs/<slug>` and explain in one or two sentences why it fits.
+2. **Recommended Outcome Pack** — use the public page listed in the bundled reference. If a pack has no published page, link its source specification instead and identify it as experimental. Explain in one or two sentences why it fits.
 3. **What it will produce** — the concrete outputs and the most important acceptance checks.
 4. **Before I run it** — note any relevant boundary or external action that remains unauthorized.
 

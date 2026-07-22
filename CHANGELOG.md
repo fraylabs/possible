@@ -4,6 +4,8 @@ All notable changes to Possible are documented here. The project follows semanti
 
 ## Unreleased
 
+- Add the experimental Developer Project Launch pack for evidence-backed developer positioning, websites, demonstrations, quickstarts, and adoption paths.
+- Add a shared launch gate so local preparation cannot be reported as a verified public launch without exact approval and public evidence.
 - Make repository validation portable and add Linux CI.
 - Enforce exact reviewed revisions in generated skill-install commands.
 - Distinguish four stable public packs from nine experimental registry packs.

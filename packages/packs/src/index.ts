@@ -1,4 +1,5 @@
 import { billionDollarSaasPack } from "./billion-dollar-saas.js";
+import { developerProjectLaunchPack } from "./developer-project-launch.js";
 import { hardwareLaunchPack } from "./hardware-launch.js";
 import { kickstarterFulfillmentPack } from "./kickstarter-fulfillment.js";
 import { kickstarterFundingPack } from "./kickstarter-funding.js";
@@ -12,7 +13,7 @@ import { webAppOperationsPack } from "./web-app-operations.js";
 import { webPresentationPack } from "./web-presentation.js";
 import { workingWebAppPack } from "./working-web-app.js";
 
-export { billionDollarSaasPack, hardwareLaunchPack, kickstarterFulfillmentPack, kickstarterFundingPack, marketingOperationsPack, openSourceReleasePack, playableWebGamePack, productionWebReleasePack, robotPrototypePack, softwareLaunchPack, webAppOperationsPack, webPresentationPack, workingWebAppPack };
+export { billionDollarSaasPack, developerProjectLaunchPack, hardwareLaunchPack, kickstarterFulfillmentPack, kickstarterFundingPack, marketingOperationsPack, openSourceReleasePack, playableWebGamePack, productionWebReleasePack, robotPrototypePack, softwareLaunchPack, webAppOperationsPack, webPresentationPack, workingWebAppPack };
 export { compileInstallCommands, compilePack, compileRunPrompt } from "./compiler.js";
 export type { CompiledPack, OutcomePack, PackLane, PluginCapability, ScheduleContract, SkillSource, Workstream } from "./types.js";
 
@@ -37,6 +38,7 @@ export const outcomePacks = [
   kickstarterFulfillmentPack,
   robotPrototypePack,
   webPresentationPack,
+  developerProjectLaunchPack,
 ] as const;
 
 const stablePackSlugSet = new Set<string>(stablePackSlugs);

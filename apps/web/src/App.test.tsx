@@ -4,7 +4,7 @@ import { axe } from "vitest-axe";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { compilePack } from "@possible/packs";
 import App from "./App";
-import { featuredPacks, installCommand } from "./public-content";
+import { featuredPacks, getPublishedPack, installCommand } from "./public-content";
 
 afterEach(() => {
   cleanup();
@@ -93,6 +93,16 @@ describe("Possible", () => {
       expect(await axe(container)).toHaveNoViolations();
       unmount();
     }
+  });
+
+  it("publishes Developer Project Launch as an experimental direct preview", async () => {
+    const pack = getPublishedPack("developer-project-launch");
+    expect(pack).toBeDefined();
+    const { container } = renderRoute("/packs/developer-project-launch");
+    expect(screen.getByRole("heading", { name: "Developer Project Launch", level: 1 })).toBeInTheDocument();
+    expect(container.querySelector(".pack-experimental-notice")).toHaveTextContent(/Experimental Outcome Pack.*Preserved end-to-end evidence is still in progress/i);
+    expect(container.querySelector(".pack-prompt-disclosure code")?.textContent).toBe(compilePack(pack!).runPrompt);
+    expect(await axe(container)).toHaveNoViolations();
   });
 
   it("keeps retired pack routes out of the public product", () => {

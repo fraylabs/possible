@@ -17,6 +17,7 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
     "kickstarter-fulfillment",
     "robot-prototype",
     "web-presentation",
+    "developer-project-launch",
   ]);
   assert.deepEqual(outcomePacks.map(({ slug, lane }) => [slug, lane]), [
     ["hardware-launch", "launch"],
@@ -32,8 +33,9 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
     ["kickstarter-fulfillment", "operate"],
     ["robot-prototype", "create"],
     ["web-presentation", "create"],
+    ["developer-project-launch", "launch"],
   ]);
-  assert.deepEqual(outcomePacks.map((pack) => pack.catalogNumber), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]);
+  assert.deepEqual(outcomePacks.map((pack) => pack.catalogNumber), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]);
   assert.equal(new Set(outcomePacks.map((pack) => pack.catalogNumber)).size, outcomePacks.length);
   assert.equal(new Set(outcomePacks.map((pack) => pack.slug)).size, outcomePacks.length);
   assert.deepEqual(stableOutcomePacks.map((pack) => pack.slug), [
@@ -42,7 +44,7 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
     "robot-prototype",
     "web-presentation",
   ]);
-  assert.equal(experimentalOutcomePacks.length, 9);
+  assert.equal(experimentalOutcomePacks.length, 10);
   assert.equal(getPackStatus("hardware-launch"), "stable");
   assert.equal(getPackStatus("software-launch"), "experimental");
   assert.equal(getPackStatus("missing"), undefined);
@@ -207,13 +209,64 @@ test("Robot Prototype generalizes one verified digital-prototype contract across
 
 test("Sites is exposed only on web deployment outcomes and never as a fake Skills CLI install", () => {
   const sitesPacks = outcomePacks.filter((pack) => pack.plugins?.some((plugin) => plugin.id === "sites"));
-  assert.deepEqual(sitesPacks.map((pack) => pack.slug), ["hardware-launch", "software-launch", "production-web-release", "web-presentation"]);
+  assert.deepEqual(sitesPacks.map((pack) => pack.slug), ["hardware-launch", "software-launch", "production-web-release", "web-presentation", "developer-project-launch"]);
   for (const pack of sitesPacks) {
     const compiled = compilePack(pack);
     assert.doesNotMatch(compiled.installCommands.join("\n"), /sites|openai-bundled/i);
     assert.match(compiled.runPrompt, /every Sites deployment URL as production/i);
     assert.match(compiled.runPrompt, /explicit approval/);
   }
+});
+
+test("Developer Project Launch turns a working developer project into an evidence-backed adoption path", () => {
+  const developer = outcomePacks.find((pack) => pack.slug === "developer-project-launch");
+  const software = outcomePacks.find((pack) => pack.slug === "software-launch");
+  const openSource = outcomePacks.find((pack) => pack.slug === "open-source-release");
+  assert.ok(developer);
+  assert.equal(developer.catalogNumber, 14);
+  assert.equal(developer.lane, "launch");
+  assert.match(developer.eyebrow, /EXPERIMENTAL/);
+  assert.match(developer.useWhen.join(" "), /working CLI.*library.*API.*developer platform/i);
+  assert.match(developer.notFor.join(" "), /core product.*Software Launch/i);
+  assert.match(developer.notFor.join(" "), /repository release engineering.*Open-Source Release/i);
+  assert.match(software.notFor.join(" "), /Developer Project Launch/i);
+  assert.match(openSource.notFor.join(" "), /Developer Project Launch/i);
+
+  const outputs = developer.outputs.join(" ");
+  assert.match(outputs, /positioning.*claims register/i);
+  assert.match(outputs, /responsive project launch site/i);
+  assert.match(outputs, /demonstration/i);
+  assert.match(outputs, /five-minute quickstart/i);
+  assert.match(outputs, /smallest runnable example/i);
+  assert.match(outputs, /launch receipt/i);
+
+  const skillIds = new Set(developer.skills.map(({ id }) => id));
+  for (const required of ["copywriting", "frontend-design", "impeccable", "create-readme", "documentation-writer", "webapp-testing", "web-design-guidelines"]) {
+    assert.equal(skillIds.has(required), true, `missing ${required}`);
+  }
+  assert.notDeepEqual([...skillIds].sort(), software.skills.map(({ id }) => id).sort());
+
+  const owned = developer.workstreams.flatMap((stream) => stream.owns.map((path) => ({ stream: stream.id, path })));
+  for (const item of owned) {
+    assert.doesNotMatch(item.path, /^(?:\/|[A-Za-z]:)|\.\.|[*?]/, `unsafe ownership path: ${item.path}`);
+    for (const other of owned) {
+      if (item.stream === other.stream) continue;
+      const left = item.path.replace(/\/+$/, "");
+      const right = other.path.replace(/\/+$/, "");
+      assert.equal(left === right || left.startsWith(`${right}/`) || right.startsWith(`${left}/`), false, `${item.path} overlaps ${other.path}`);
+    }
+  }
+
+  const compiled = compilePack(developer);
+  assert.equal(compiled.installCommands.length, 5);
+  assert.match(compiled.runPrompt, /LAUNCH GATE/);
+  assert.match(compiled.runPrompt, /local preparation only/i);
+  assert.match(compiled.runPrompt, /exact candidate and immutable source, account or target, method, risks, and rollback/i);
+  assert.match(compiled.runPrompt, /prepared or no-go—never launched/i);
+  assert.match(developer.guardrails.join(" "), /deploy.*publish.*push.*tag.*release.*DNS.*analytics/i);
+  assert.match(developer.verification.join(" "), /launch-receipt\.json.*prepared.*no-go.*published.*verified/i);
+  assert.match(developer.verification.join(" "), /explicit approval evidence.*public URLs.*immutable source.*clean-room quickstart.*rollback target/i);
+  assert.doesNotMatch(developer.outputs.join(" "), /\bLive launch\b/i);
 });
 
 test("Marketing Operations compiles a manual-first, truthfully gated recurring schedule", () => {

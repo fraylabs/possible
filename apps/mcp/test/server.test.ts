@@ -23,7 +23,7 @@ describe("Possible MCP", () => {
     assert.equal(client.getInstructions(), POSSIBLE_SERVER_INSTRUCTIONS);
   });
 
-  it("lists four stable and nine experimental outcome packs", async () => {
+  it("lists four stable and ten experimental outcome packs", async () => {
     const result = await client.callTool({ name: "list_packs", arguments: {} });
     const envelope = result.structuredContent as { ok: boolean; data: { packs: Array<{ slug: string; lane: string; status: string }> } };
     assert.equal(envelope.ok, true);
@@ -41,9 +41,10 @@ describe("Possible MCP", () => {
       ["kickstarter-fulfillment", "operate"],
       ["robot-prototype", "create"],
       ["web-presentation", "create"],
+      ["developer-project-launch", "launch"],
     ]);
     assert.equal(envelope.data.packs.filter(({ status }) => status === "stable").length, 4);
-    assert.equal(envelope.data.packs.filter(({ status }) => status === "experimental").length, 9);
+    assert.equal(envelope.data.packs.filter(({ status }) => status === "experimental").length, 10);
   });
 
   it("compiles Web Presentation as a coded browser-deck outcome", async () => {

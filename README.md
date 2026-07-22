@@ -49,12 +49,14 @@ The installer is idempotent and refuses to overwrite conflicting skill files. Ou
 
 ## Four outcomes
 
-These are the four stable public packs. Nine additional registry packs are experimental and may change before they have equivalent preserved evidence.
+These are the four stable public packs. Additional registry packs are experimental and may change before they have equivalent preserved evidence.
 
 - [Hardware Launch](packages/packs/src/hardware-launch.ts) — product story, site, film, prototype CAD and independent review.
 - [Robot Prototype](packages/packs/src/robot-prototype.ts) — mechanical model, robot descriptions, control, simulation and sim-to-real boundaries.
 - [Playable Web Game](packages/packs/src/playable-web-game.ts) — a polished browser game with responsive controls and playability review.
 - [Web Presentation](packages/packs/src/web-presentation.ts) — an evidence-backed coded deck with responsive presenter behavior.
+
+Experimental preview: [Developer Project Launch](packages/packs/src/developer-project-launch.ts) turns a working developer tool into an evidence-backed site, demonstration, five-minute quickstart, and adoption path. It remains experimental until a preserved end-to-end run passes independent verification.
 
 You do not need to choose a pack. `$possible` recommends one after understanding your outcome.
 

@@ -46,10 +46,10 @@ check(briefCheckpoint !== -1 && lockCheckpoint > briefCheckpoint && externalSkil
 for (const gate of ["credentials", "deployment", "DNS", "email", "purchases", "spending money", "fabrication", "scheduled-task changes"]) {
   check(skill.toLowerCase().includes(gate.toLowerCase()), `SKILL.md must retain the ${gate} gate`);
 }
-for (const slug of ["hardware-launch", "software-launch", "open-source-release", "playable-web-game", "web-app-operations", "working-web-app", "production-web-release", "marketing-operations", "billion-dollar-saas", "kickstarter-funding", "kickstarter-fulfillment", "robot-prototype", "web-presentation"]) {
+for (const slug of ["hardware-launch", "software-launch", "open-source-release", "playable-web-game", "web-app-operations", "working-web-app", "production-web-release", "marketing-operations", "billion-dollar-saas", "kickstarter-funding", "kickstarter-fulfillment", "robot-prototype", "web-presentation", "developer-project-launch"]) {
   check(catalog.includes(`Slug: \`${slug}\``), `pack reference must include ${slug}`);
 }
-for (const [slug, lane] of [["hardware-launch", "launch"], ["software-launch", "launch"], ["open-source-release", "release"], ["playable-web-game", "create"], ["web-app-operations", "operate"], ["working-web-app", "create"], ["production-web-release", "release"], ["marketing-operations", "operate"], ["billion-dollar-saas", "create"], ["kickstarter-funding", "launch"], ["kickstarter-fulfillment", "operate"], ["robot-prototype", "create"], ["web-presentation", "create"]]) {
+for (const [slug, lane] of [["hardware-launch", "launch"], ["software-launch", "launch"], ["open-source-release", "release"], ["playable-web-game", "create"], ["web-app-operations", "operate"], ["working-web-app", "create"], ["production-web-release", "release"], ["marketing-operations", "operate"], ["billion-dollar-saas", "create"], ["kickstarter-funding", "launch"], ["kickstarter-fulfillment", "operate"], ["robot-prototype", "create"], ["web-presentation", "create"], ["developer-project-launch", "launch"]]) {
   const start = catalog.indexOf(`Slug: \`${slug}\``);
   const end = catalog.indexOf("\n## ", start);
   const section = start === -1 ? "" : catalog.slice(start, end === -1 ? undefined : end);
@@ -61,7 +61,7 @@ for (const source of ["anthropics/skills", "vercel-labs/agent-skills", "remotion
 for (const phrase of ["@sites", "$sites-building", "$sites-hosting", "not installed by the Skills CLI"]) {
   check(catalog.includes(phrase), `pack reference must describe optional OpenAI Sites capability '${phrase}'`);
 }
-check((catalog.match(/npx skills@1\.5\.19 add/g) ?? []).length === 35, "pack reference must include all thirty-five grouped install commands");
+check((catalog.match(/npx skills@1\.5\.19 add/g) ?? []).length === 40, "pack reference must include all forty grouped install commands");
 check(/short_description: "Turn ideas into outcomes that can run again"/.test(metadata), "metadata must state the repeatable outcome promise");
 check(metadata.includes("$possible"), "default prompt must mention $possible");
 check(entries.every((entry) => ["SKILL.md", "agents", "references"].includes(entry)), "skill directory contains unexpected top-level files");

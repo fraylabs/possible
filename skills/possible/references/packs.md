@@ -470,6 +470,48 @@ npx skills@1.5.19 add anthropics/skills@fa0fa64bdc967915dc8399e803be67759e1e62b8
 
 Do not invent evidence, metrics, testimonials, users, product capabilities, citations, or competitive claims. Generated imagery is illustrative, not factual proof. Do not copy protected deck or brand expression, publish private notes, install project hooks, deploy, upload, or share without the required inspection and separate approval.
 
+## Developer Project Launch
+
+Slug: `developer-project-launch`
+
+Lane: `launch`
+
+Status: `experimental` — available to test; promote only after a preserved end-to-end run and independent verification.
+
+Public page: `https://possible.sh/packs/developer-project-launch`
+
+Use when a working CLI, library, API, application, agent tool, or developer platform needs one coherent public explanation across its positioning, website, demonstration, README, examples, installation path, and proof.
+
+Outputs: developer audience, pain, positioning, and claims register; distinctive responsive project launch site; evidence-backed demonstration; verified five-minute quickstart; installation path and runnable example; approved deployment or deployment no-go report; independent verification; machine-readable launch receipt.
+
+Workstreams:
+
+- Product truth and positioning — `copywriting`; owns `launch/positioning/` and `launch/claims/`.
+- Developer adoption path — `create-readme`, `documentation-writer`; owns `launch/docs/`, `launch/examples/`, and the clean-room quickstart report.
+- Launch site and project demonstration — `frontend-design`, `impeccable`, `vercel-react-best-practices`; owns `launch/site/`, `launch/demo/`, and `launch/assets/`.
+- Fresh review — `webapp-testing`, `web-design-guidelines`, `impeccable`; verifies the integrated launch without owning implementation files.
+
+Sources:
+
+- `coreyhaines31/marketingskills`: `copywriting`; reviewed `67264763cb107d61749f418d081c56e5bcbc0209`.
+- `anthropics/skills`: `frontend-design`, `webapp-testing`; reviewed `fa0fa64bdc967915dc8399e803be67759e1e62b8`.
+- `pbakaus/impeccable`: `impeccable`; reviewed `4d849eb75f216109ea7053ed21530a11fafcc786`.
+- `vercel-labs/agent-skills`: `vercel-react-best-practices`, `web-design-guidelines`, `deploy-to-vercel`; reviewed `f8a72b9603728bb92a217a879b7e62e43ad76c81`.
+- `github/awesome-copilot`: `create-readme`, `documentation-writer`; reviewed `26fe2d126bf79aafb38f43344d450b69632200f8`.
+- Optional OpenAI plugin: `@sites` with `$sites-building` and `$sites-hosting`, reviewed separately and not installed by the Skills CLI.
+
+Install:
+
+```bash
+npx skills@1.5.19 add coreyhaines31/marketingskills@67264763cb107d61749f418d081c56e5bcbc0209 --skill copywriting --agent codex
+npx skills@1.5.19 add anthropics/skills@fa0fa64bdc967915dc8399e803be67759e1e62b8 --skill frontend-design --skill webapp-testing --agent codex
+npx skills@1.5.19 add pbakaus/impeccable@4d849eb75f216109ea7053ed21530a11fafcc786 --skill impeccable --agent codex
+npx skills@1.5.19 add vercel-labs/agent-skills@f8a72b9603728bb92a217a879b7e62e43ad76c81 --skill vercel-react-best-practices --skill web-design-guidelines --skill deploy-to-vercel --agent codex
+npx skills@1.5.19 add github/awesome-copilot@26fe2d126bf79aafb38f43344d450b69632200f8 --skill create-readme --skill documentation-writer --agent codex
+```
+
+The underlying product must already work. Never invent adoption, benchmarks, compatibility, performance, security, or capabilities. Deployment, publishing, pushing, tagging, release creation, DNS, analytics, data collection, and provider mutations require separate explicit approval. A local site is prepared, not launched. `launch/launch-receipt.json` may use verified only with approval evidence, public URLs, immutable identifiers, a passing clean-room quickstart, fresh public checks, and rollback evidence.
+
 ## Selection rule
 
 Recommend the Outcome Pack whose finished outputs most closely match the user's desired end state:
@@ -487,7 +529,8 @@ Recommend the Outcome Pack whose finished outputs most closely match the user's 
 - Funded Kickstarter campaign plus production, backer, logistics, communication, and 95%-shipped operations → Kickstarter Fulfillment.
 - Robot hand, gripper, arm, mobile robot, quadruped, or full robot plus coherent CAD, description, controls, and simulation evidence → Robot Prototype.
 - Pitch, talk, lesson, demo, or internal presentation plus a coded browser deck, presenter experience, export, and evidence review → Web Presentation.
+- Working developer tool, library, CLI, API, agent project, or platform plus positioning, a distinctive site, honest demonstration, verified quickstart, and adoption path → Developer Project Launch.
 
-Use Working Web App when the missing outcome is the product itself. Use Software Launch when the product works and the missing outcome is its first public story, site, and demo. Use Web Presentation when the primary deliverable is a slide-based browser presentation; a conventional landing page belongs elsewhere. Use Billion-Dollar SaaS when the user explicitly wants the broader company operating system and accepts that operational coverage cannot guarantee economic success. Use Kickstarter Funding when crowdfunding mechanics and payout are part of the outcome; use Kickstarter Fulfillment only after the campaign is funded. Use Robot Prototype for a simulation-backed digital prototype, not a fabrication-ready machine or hardware commissioning. Use Production Web Release when a tested candidate exists and the missing outcome is a gated production promotion with rollback and smoke evidence. Use Web App Operations only after the app is live and the desired outcome is an ongoing reliability and maintenance rhythm. Use Marketing Operations when the product or offer exists and the missing outcome is a recurring marketing system. A distributable repository release belongs to Open-Source Release; one isolated bug, incident, or marketing asset with no requested recurring workflow is focused work, not an Outcome Pack run.
+Use Working Web App when the missing outcome is the product itself. Use Developer Project Launch when a working developer project needs comprehension, presentation, proof, and a verified adoption path. Use Software Launch for a broader product release candidate, launch story, and film. Use Web Presentation when the primary deliverable is a slide-based browser presentation; a conventional landing page belongs elsewhere. Use Billion-Dollar SaaS when the user explicitly wants the broader company operating system and accepts that operational coverage cannot guarantee economic success. Use Kickstarter Funding when crowdfunding mechanics and payout are part of the outcome; use Kickstarter Fulfillment only after the campaign is funded. Use Robot Prototype for a simulation-backed digital prototype, not a fabrication-ready machine or hardware commissioning. Use Production Web Release when a tested candidate exists and the missing outcome is a gated production promotion with rollback and smoke evidence. Use Web App Operations only after the app is live and the desired outcome is an ongoing reliability and maintenance rhythm. Use Marketing Operations when the product or offer exists and the missing outcome is a recurring marketing system. Repository-only licensing, packaging, CI, versioning, and release engineering belong to Open-Source Release; one isolated bug, incident, or marketing asset with no requested recurring workflow is focused work, not an Outcome Pack run.
 
 If none fits, say so. Do not force an Outcome Pack or invent a new one during intake.

@@ -20,6 +20,7 @@ export const softwareLaunchPack: OutcomePack = {
     "An idea or rough repository that still needs its first complete usable application; use Working Web App.",
     "Maintaining an already-live application through a recurring operating cadence.",
     "Preparing a library or repository for public open-source distribution.",
+    "A working developer tool whose missing outcome is developer positioning, an adoption-focused site, a demonstrable quickstart, and documentation; use Developer Project Launch.",
     "A marketing page that does not include a working product outcome.",
   ],
   reviewedAt: "2026-07-19",

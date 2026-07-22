@@ -1,11 +1,14 @@
 import assert from "node:assert/strict";
 import { access, readFile } from "node:fs/promises";
-import { compilePack, stableOutcomePacks } from "../packages/packs/dist/index.js";
+import { compilePack, getPack, getPackStatus, stableOutcomePacks } from "../packages/packs/dist/index.js";
 
 const webDist = new URL("../apps/web/out/", import.meta.url);
 const text = (relative) => readFile(new URL(relative, webDist), "utf8");
 const index = JSON.parse(await text("packs/index.json"));
 const featuredPacks = stableOutcomePacks;
+const developerProjectLaunch = getPack("developer-project-launch");
+assert.ok(developerProjectLaunch, "Developer Project Launch must exist");
+const publishedPacks = [...featuredPacks, developerProjectLaunch];
 const evidence = JSON.parse(await text("evidence.json"));
 const judgingDocument = await readFile(new URL("../JUDGING.md", import.meta.url), "utf8");
 const nonEmptyString = (value, label) => {
@@ -136,8 +139,9 @@ assert.match(passingBrowserResult, /"bad_response_count": 0/);
 
 assert.deepEqual(
   index.packs.map(({ slug, lane }) => ({ slug, lane })),
-  featuredPacks.map(({ slug, lane }) => ({ slug, lane })),
+  publishedPacks.map(({ slug, lane }) => ({ slug, lane })),
 );
+for (const item of index.packs) assert.equal(item.status, getPackStatus(item.slug));
 
 const llms = await text("llms.txt");
 assert.match(llms, /AI made execution accessible\. Possible makes operational judgment accessible\./);
@@ -154,7 +158,7 @@ for (const url of comparisonUrls) {
   assert.ok(acceptedTargets.some((target) => llms.includes(target)), `llms.txt must directly link recorded comparison evidence: ${url}`);
 }
 assert.doesNotMatch(llms, /\b(?:recipes?|ingredients?|megaprompt|captain)\b|outcome compiler|composition layer/i);
-for (const pack of featuredPacks) {
+for (const pack of publishedPacks) {
   const compiled = compilePack(pack);
   const publication = JSON.parse(await text(`packs/${pack.slug}.json`));
   assert.deepEqual(publication, compiled, `${pack.slug}.json must equal the canonical compiled pack`);
@@ -163,4 +167,4 @@ for (const pack of featuredPacks) {
   assert.match(llms, new RegExp(`- ${pack.name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}: /packs/${pack.slug}\\.json`));
 }
 
-console.log("All featured pack and judging evidence publications are valid.");
+console.log("All stable and experimental-preview pack publications are valid.");

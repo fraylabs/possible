@@ -1,4 +1,4 @@
-import { featuredPacks } from "../src/public-content";
+import { publishedPacks } from "../src/public-content";
 import type { MetadataRoute } from "next";
 
 const baseUrl = "https://possible.sh";
@@ -26,7 +26,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: siteUpdatedAt,
       changeFrequency: "weekly" as const,
     })),
-    ...featuredPacks.map((pack) => ({
+    ...publishedPacks.map((pack) => ({
       url: `${baseUrl}/packs/${pack.slug}/`,
       lastModified: siteUpdatedAt,
       changeFrequency: "weekly" as const,

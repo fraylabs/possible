@@ -51,6 +51,12 @@ RELEASE GATE
 2. Workstreams prepare evidence in parallel; the lead agent sequences any release action only after integrating their preflight, verification, and rollback findings.
 3. Record a go or no-go decision. Before any external deploy, tag, publish, push, provider mutation, or production change, request explicit approval for the exact candidate, target, method, and known risks.
 4. Execute only the approved action, then run fresh verification against the named result.${approvedReleaseAdapter} If approval, provider support, evidence, or rollback readiness is missing, finish with a completion report that clearly records the no-go status.` : "";
+  const launchGate = pack.lane === "launch" ? `
+
+LAUNCH GATE
+1. Pack confirmation authorizes local preparation only. Treat deployment, publishing, pushing, tagging, release creation, DNS or domain changes, analytics, outreach, data collection, spending, and provider mutations as separate external actions.
+2. After integrating and verifying the local candidate, record a go or no-go decision. Before any external action, request explicit approval naming the exact candidate and immutable source, account or target, method, risks, and rollback.
+3. Execute only the approved action and verify the named public result with fresh evidence. Missing approval, provider access, immutable identifiers, public evidence, or rollback readiness must finish as prepared or no-go—never launched.` : "";
   const integrationTarget = pack.lane === "operate"
     ? `integrate the durable workflow under ${artifactRoot}/ and use outcome-room/ only as its linked review surface`
     : "integrate them into outcome-room/";
@@ -91,7 +97,7 @@ ${pack.guardrails.map((guardrail) => `- ${guardrail}`).join("\n")}
 
 VERIFICATION CONTRACT
 ${pack.verification.map((item) => `- ${item}`).join("\n")}
-${releaseGate}${sitesPath}${operateLoop}
+${releaseGate}${launchGate}${sitesPath}${operateLoop}
 
 Do not ask me to choose implementation details that can be safely inferred from the brief and repository. Ask only when a missing decision would materially change the product or authorize an external action.`;
 }

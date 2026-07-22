@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
-import { stableOutcomePacks } from "../packages/packs/dist/index.js";
+import { getPack, stableOutcomePacks } from "../packages/packs/dist/index.js";
 
 const output = new URL("../apps/web/out/", import.meta.url);
 const html = (relativePath) => readFile(new URL(relativePath, output), "utf8");
@@ -70,6 +70,13 @@ for (const pack of featuredPacks) {
   assert.match(home, new RegExp(escape(pack.name)));
   assert.match(home, new RegExp(`href="/packs/${pack.slug}"`));
 }
+
+const developerProjectLaunch = getPack("developer-project-launch");
+assert.ok(developerProjectLaunch);
+const developerPreview = visibleText(await html("packs/developer-project-launch/index.html"));
+assert.match(developerPreview, /EXPERIMENTAL OUTCOME PACK/i);
+assert.match(developerPreview, /Preserved end-to-end evidence is still in progress/i);
+assert.match(developerPreview, new RegExp(escape(developerProjectLaunch.promise)));
 
 for (const forbidden of [
   /50[–-]100 coordinated tasks/i,

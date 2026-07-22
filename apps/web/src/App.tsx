@@ -4,7 +4,7 @@ import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { compilePack } from "@possible/packs";
 import type { OutcomePack } from "@possible/packs";
 import demoThreadData from "./demo-thread.json";
-import { featuredPacks, getFeaturedPack, githubUrl, installCommand } from "./public-content";
+import { featuredPacks, getPublishedPack, githubUrl, installCommand } from "./public-content";
 
 const PaperPlaneGame = lazy(() => import("./PaperPlaneGame"));
 const RobotSnakeViewer = lazy(() => import("./RobotSnakeViewer"));
@@ -224,6 +224,7 @@ function CreatePage() {
               </li>
             ))}
           </ol>
+          <a className="home-pack-preview" href="/packs/developer-project-launch"><span>EXPERIMENTAL</span><strong>Launch your developer project.</strong><i>Preview →</i></a>
         </div>
       </section>
 
@@ -388,6 +389,11 @@ function PacksPage() {
       <section id="pack-catalog" className="pack-grid" aria-label="Featured Outcome Packs">
         {featuredPacks.map((pack) => <PackCard pack={pack} key={pack.slug} />)}
       </section>
+      <section className="catalog-experimental" aria-labelledby="experimental-pack-heading">
+        <span>EXPERIMENTAL</span>
+        <div><h2 id="experimental-pack-heading">Developer Project Launch</h2><p>Turn a working developer project into an evidence-backed site, demonstration, five-minute quickstart, and adoption path.</p></div>
+        <a href="/packs/developer-project-launch">Preview the Outcome Pack →</a>
+      </section>
       <section className="catalog-principle">
         <span>THE DIFFERENCE</span>
         <p>Agent skills provide capabilities. Outcome Packs coordinate them toward a complete, verified result.</p>
@@ -436,6 +442,7 @@ function PackDetailPage({ pack }: { pack: OutcomePack }) {
         </aside>
 
         <article className="pack-reference-document" id="pack-specification" tabIndex={-1}>
+          {pack.slug === "developer-project-launch" ? <div className="pack-experimental-notice"><strong>EXPERIMENTAL OUTCOME PACK</strong><span>Available to test. Preserved end-to-end evidence is still in progress.</span></div> : null}
           <header className="pack-reference-header" id="overview">
             <div className="pack-reference-breadcrumb"><a href="/packs">OUTCOME PACKS</a><span>/</span><strong>{pack.lane.toUpperCase()}</strong></div>
             <dl className="pack-reference-meta">
@@ -1231,6 +1238,8 @@ function DocsPage() {
               <div><dt>Possible.sh</dt><dd>The open-source library of Outcome Packs, documentation, examples, and evidence.</dd></div>
               <div><dt>$possible</dt><dd>The installed agent skill that understands a request, recommends an Outcome Pack, and runs it after approval.</dd></div>
               <div><dt>Outcome Pack</dt><dd>A reusable execution prompt, selected agent skills, sequencing, safeguards, and completion checks for one class of outcomes.</dd></div>
+              <div><dt>Stable pack</dt><dd>An Outcome Pack backed by a preserved end-to-end run and independent verification.</dd></div>
+              <div><dt>Experimental pack</dt><dd>An Outcome Pack available to inspect and test before equivalent preserved evidence exists.</dd></div>
               <div><dt>Agent skill</dt><dd>A reusable capability that performs focused work during a run.</dd></div>
               <div><dt>Run</dt><dd>One approved Outcome Pack applied to one project.</dd></div>
               <div><dt>Workstream</dt><dd>A bounded part of the outcome with named inputs, outputs, ownership, and checks. Independent workstreams may run in parallel.</dd></div>
@@ -1590,7 +1599,7 @@ export function PossibleSite({ path: requestedPath }: { path?: string }) {
   if (path === "/demo/robot-snake") return <RobotSnakeDemoPage />;
   if (path === "/demo/hardware") return <HardwareDemoPage />;
   if (path.startsWith("/packs/")) {
-    const pack = getFeaturedPack(path.slice("/packs/".length));
+    const pack = getPublishedPack(path.slice("/packs/".length));
     return pack ? <PackDetailPage pack={pack} /> : <NotFoundPage />;
   }
   return <NotFoundPage />;

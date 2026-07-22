@@ -23,6 +23,7 @@ const routes = [
   ["packs/robot-prototype/index.html", "https://possible.sh/packs/robot-prototype/"],
   ["packs/playable-web-game/index.html", "https://possible.sh/packs/playable-web-game/"],
   ["packs/web-presentation/index.html", "https://possible.sh/packs/web-presentation/"],
+  ["packs/developer-project-launch/index.html", "https://possible.sh/packs/developer-project-launch/"],
 ];
 
 const descriptions = new Set();
