@@ -4,6 +4,8 @@ All notable changes to Possible are documented here. The project follows semanti
 
 ## Unreleased
 
+## 0.1.10 — 2026-07-22
+
 - Add the experimental Software Opportunity Discovery pack for evidence-backed problem selection, alternative research, opportunity scoring, and falsifiable validation plans.
 - Add the experimental Developer Project Launch pack for evidence-backed developer positioning, websites, demonstrations, quickstarts, and adoption paths.
 - Add a shared launch gate so local preparation cannot be reported as a verified public launch without exact approval and public evidence.

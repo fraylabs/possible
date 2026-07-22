@@ -22,12 +22,15 @@ for (const [label, source] of [["Devpost", devpost], ["video", video]]) {
   assert.match(source, /Possible\.sh is an open-source library of Outcome Packs\./, `${label} must define Possible`);
   assert.match(source, /reusable execution prompt and selected agent skills for dozens of coordinated tasks/, `${label} must explain an Outcome Pack`);
 }
-for (const [label, source] of [["README", readme], ["Devpost", devpost], ["video", video]]) {
-  assert.match(source, /npx @fraylabs\/possible@0\.1\.9 init/, `${label} must use the canonical install`);
+assert.match(readme, /npx @fraylabs\/possible@0\.1\.10 init/, "README must use the current install");
+for (const [label, source] of [["Devpost", devpost], ["video", video]]) {
+  assert.match(source, /npx @fraylabs\/possible@0\.1\.9 init/, `${label} must preserve the frozen submission install`);
   assert.doesNotMatch(source, /@fraylabs\/possible@0\.1\.[0-8]\b|unpublished|candidate/i, `${label} must not discuss historical package versions`);
   assert.doesNotMatch(source, /50[–-]100 coordinated tasks/i, `${label} must use a bounded task claim`);
   assert.doesNotMatch(source, /NO CONTROLLED RUNS|modeled benchmark|Direct[-– ]vs[-– ]Possible/i, `${label} must not revive the retired benchmark story`);
 }
+assert.doesNotMatch(readme, /@fraylabs\/possible@0\.1\.[0-9]\b|unpublished|candidate/i, "README must not advertise an older package version");
+assert.doesNotMatch(readme, /50[–-]100 coordinated tasks|NO CONTROLLED RUNS|modeled benchmark|Direct[-– ]vs[-– ]Possible/i, "README must retain the current product story");
 
 for (const name of ["Still", "Robot Snake", "Fold", "Web Presentation"]) {
   assert.match(devpost, new RegExp(name), `Devpost must feature ${name}`);

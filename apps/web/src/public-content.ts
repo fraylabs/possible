@@ -1,6 +1,6 @@
 import { outcomePacks } from "@possible/packs";
 
-export const installCommand = "npx @fraylabs/possible@0.1.9 init";
+export const installCommand = "npx @fraylabs/possible@0.1.10 init";
 export const githubUrl = "https://github.com/fraylabs/possible";
 
 export const featuredPackSlugs = [
