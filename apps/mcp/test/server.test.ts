@@ -23,17 +23,36 @@ describe("Possible MCP", () => {
     assert.equal(client.getInstructions(), POSSIBLE_SERVER_INSTRUCTIONS);
   });
 
-  it("compiles a conditional discovery to product to launch chain", async () => {
-    const result = await client.callTool({ name: "compile_chain", arguments: { slugs: ["software-opportunity-discovery", "working-web-app", "developer-project-launch"] } });
-    const envelope = result.structuredContent as { ok: boolean; data: { handoffs: Array<{ from: string; to: string }>; runPrompt: string } };
+  it("validates a completed checkpoint without making its candidate executable", async () => {
+    const checkpoint = {
+      schemaVersion: 1,
+      runId: "discovery-001",
+      packSlug: "software-opportunity-discovery",
+      completedAt: "2026-07-23T10:00:00.000Z",
+      receiptPath: "outcome-room/decision-receipt.json",
+      verificationStatus: "passed",
+      becameTrue: [{
+        statement: "Manual receipt import remains unvalidated.",
+        evidence: ["outcome-room/decision-receipt.json"],
+      }],
+      remainingUnknowns: ["Whether developers prefer automatic capture."],
+      riskiestAssumption: "Developers will manually import evidence.",
+      nextDecision: "Validate the preferred evidence-capture surface.",
+      candidateNextOutcomes: [{
+        outcome: "Validate whether developers prefer automatic evidence capture.",
+        rationale: "Test the riskiest assumption before choosing a product surface.",
+        addressesUnknowns: ["Whether developers prefer automatic capture."],
+        testsAssumption: "Developers will manually import evidence.",
+        approvalRequired: true,
+      }],
+    };
+    const result = await client.callTool({ name: "validate_checkpoint", arguments: { checkpoint } });
+    const envelope = result.structuredContent as { ok: boolean; data: { checkpoint: typeof checkpoint; retrospectiveOnly: boolean; executableNextOutcome: boolean } };
     assert.equal(envelope.ok, true);
-    assert.deepEqual(envelope.data.handoffs.map(({ from, to }) => [from, to]), [
-      ["software-opportunity-discovery", "working-web-app"],
-      ["working-web-app", "developer-project-launch"],
-    ]);
-    assert.match(envelope.data.runPrompt, /NOW \/ IF THIS PASSES \/ LATER/);
-    assert.match(envelope.data.runPrompt, /separate approval/i);
-    assert.match(envelope.data.runPrompt, /If missing, propose working-web-app before continuing/i);
+    assert.deepEqual(envelope.data.checkpoint, checkpoint);
+    assert.equal(envelope.data.retrospectiveOnly, true);
+    assert.equal(envelope.data.executableNextOutcome, false);
+    assert.doesNotMatch(client.getInstructions() ?? "", /chain/i);
   });
 
   it("lists six stable and nine experimental outcome packs", async () => {

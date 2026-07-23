@@ -2,7 +2,7 @@ import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 
 export type RetrievalErrorCode =
   | "PACK_NOT_FOUND"
-  | "CHAIN_INVALID"
+  | "CHECKPOINT_INVALID"
   | "RETRIEVAL_FAILED";
 
 export interface RetrievalError {

@@ -1,6 +1,6 @@
-# PatchProof Outcome Chain
+# PatchProof Fixed-Chain Experiment
 
-This is a preserved three-agent run of:
+This is a preserved three-agent experiment that predeclared:
 
 ```text
 Software Opportunity Discovery
@@ -16,6 +16,14 @@ The only starting instruction was:
 
 No product idea or acceptance checklist was supplied to the discovery agent.
 
+## What the experiment taught us
+
+The individual outcomes completed and preserved strong evidence. The sequence decision did not.
+
+Discovery explicitly recorded that demand, willingness to pay, capture preference, and distribution were unknown. Its recommended next experiment was a five-developer comparison of raw logs against PatchProof receipts. The fixed sequence instead advanced to a browser product and launch package.
+
+That is why current Possible does not compile future Outcome Packs into a prospective chain. It completes and verifies one outcome, inspects the new reality, recommends the next outcome, and waits for fresh approval. Only the outcomes that actually completed form an **Outcome Journey** in retrospect.
+
 ## What happened
 
 | Agent | Approved outcome | Result | Preserved source revision |
@@ -24,7 +32,7 @@ No product idea or acceptance checklist was supplied to the discovery agent.
 | `chain_product_run` | Working Web App | Built a local-first claim-to-evidence receipt tool; 34 assertions, 12 fixtures, production build, desktop/mobile flows | `ae88d46686b23b6374899c5f0606e17859b93b99` |
 | `chain_launch_run` | Developer Project Launch | Produced three Remix directions, implemented **Continuous Form**, and prepared a verified local launch package | `29b6e94a0c45ba8b996d7f0036f276d2ceda1e25` |
 
-Each stage stopped at its boundary. The next stage began only after a fresh reviewer verified the archived receipt, hashes, evidence classification, entry requirements, and separate approval. No stage inherited authority to deploy or publish.
+Each stage stopped at its boundary and required separate approval. That protected authority, but it did not correct the earlier mistake of choosing the stages before discovery changed what was known. No stage inherited authority to deploy or publish.
 
 ## Remix
 
@@ -54,21 +62,22 @@ Fresh review caught and caused repairs for material failures, including:
 
 See the [product repair log](outcome-room/repair-log.md) and [launch repair log](launch/evidence/repair-log.md).
 
-## Inspect the chain
+## Inspect the preserved journey
 
 - [Original request](REQUEST.md)
-- [Final chain state](.possible/chain.json)
+- [Historical fixed-chain state](.possible/chain.json)
 - [Discovery receipt](outcome-room/decision-receipt.json)
+- [Discovery validation plan](outcome-room/validation-plan.md)
 - [Product receipt](outcome-room/product-receipt.json)
 - [Launch receipt](launch/launch-receipt.json)
 - [Archived stage evidence](.possible/runs/)
 - [Verified handoffs](.possible/handoffs/)
 - [Local launch site](launch/site/index.html)
 
-Run the snapshot verifier from the Possible repository root:
+Run the historical snapshot verifier from the Possible repository root:
 
 ```bash
-npm run chain-example:verify
+npm run journey-example:verify
 ```
 
 To run PatchProof itself, follow its [project README](README.md). The source-run Git history is not embedded in this example directory; immutable revisions remain recorded as provenance, while `verify-example.mjs` checks the copied evidence and every archived artifact directly. The example package routes its chain check through that portable verifier instead of asking the parent repository for commits that belong to the isolated source run.

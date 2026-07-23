@@ -180,6 +180,8 @@ assert.doesNotMatch(exampleContentSource, /title: "Simulation controls"[\s\S]{0,
 
 const patchProofExample = visibleText(await html("examples/patchproof/index.html"));
 assert.doesNotMatch(patchProofExample, /class="chain-example-page"|One rough ambition[\s\S]*Three verified outcomes/, "PatchProof must use the shared compact example modal rather than its bespoke long page");
+assert.match(plainText(patchProofExample), /predeclared path[\s\S]{0,220}user validation[\s\S]{0,160}next risk/i, "PatchProof must explain the planning mismatch exposed by discovery");
+assert.match(plainText(patchProofExample), /went straight to a browser product[\s\S]{0,180}validation as the next outcome/i, "PatchProof must show why a fixed future sequence was wrong");
 for (const href of [
   "/examples/patchproof-chain/product/index.html",
 ]) assert.match(patchProofExample, new RegExp(`href="${escape(href)}"`));
@@ -208,6 +210,9 @@ assert.match(howToUseMarkup, /href="#goal-and-possible"/, "/docs/how-to-use must
 assert.match(howToUse, /\/goal[\s\S]{0,240}(?:pursuit|persist|adapt)/i, "/docs/how-to-use must explain the role of /goal");
 assert.match(howToUse, /Possible[\s\S]{0,240}(?:reviewed|controlled)[\s\S]{0,120}(?:outcome )?contract/i, "/docs/how-to-use must explain the role of Possible");
 assert.match(howToUse, /(?:together|combine|both)[\s\S]{0,320}(?:target|execution|revision|discover)/i, "/docs/how-to-use must explain their combined workflow");
+assert.match(howToUseMarkup, /id="remix-and-journey"/, "/docs/how-to-use must teach Outcome Journeys as retrospective");
+assert.match(howToUse, /Outcome Journey[\s\S]{0,120}visible only afterward[\s\S]{0,260}new reality[\s\S]{0,180}fresh approval/i, "/docs/how-to-use must recommend future outcomes one at a time");
+assert.doesNotMatch(howToUse, /Outcome Chain|NOW \/ IF THIS PASSES \/ LATER/i, "/docs/how-to-use must not predeclare an Outcome Chain");
 
 const presentation = await html("presentation/possible.html");
 assert.equal((presentation.match(/class="slide(?: [^"]*)?"/g) ?? []).length, 10, "The visual explainer must contain ten coded slides");

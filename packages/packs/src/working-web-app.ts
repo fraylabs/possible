@@ -77,19 +77,13 @@ export const workingWebAppPack: OutcomePack = {
       brief: "Create deterministic checks for the primary flow, one material failure path, responsive behavior, and any promised state reload. Exercise the integrated app without modifying product implementation.",
     },
   ],
-  chainEntry: [
+  prerequisites: [
     {
       id: "selected-opportunity",
-      description: "A prior discovery outcome selected one opportunity to pursue while preserving its evidence and uncertainty.",
-      requiredEvidence: ["pursue decision receipt", "selected opportunity and rejected alternatives", "source evidence and unresolved assumptions"],
+      description: "A specific software opportunity has been selected for implementation, with enough evidence to distinguish it from an untested feature request.",
+      requiredEvidence: ["selected opportunity and intended user", "source evidence or user-supplied rationale", "unresolved assumptions and validation boundary"],
     },
   ],
-  chainExit: {
-    receiptPath: "outcome-room/product-receipt.json",
-    advanceStatuses: ["passed"],
-    pauseStatuses: ["repair-required"],
-    stopStatuses: ["no-go"],
-  },
   reviewSkills: ["webapp-testing", "security-review"],
   outputs: [
     "Locally runnable working web application",

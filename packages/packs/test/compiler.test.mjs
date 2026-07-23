@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { compileChain, compilePack, compileWorkstreamWaves, experimentalOutcomePacks, getPackStatus, outcomePacks, stableOutcomePacks } from "../dist/index.js";
+import * as packApi from "../dist/index.js";
+import { compilePack, compileWorkstreamWaves, experimentalOutcomePacks, getPackStatus, outcomePacks, recordOutcomeJourney, stableOutcomePacks, validateOutcomeCheckpoint } from "../dist/index.js";
 
 test("every outcome pack compiles to inspectable installs and a complete prompt", () => {
   assert.deepEqual(outcomePacks.map((pack) => pack.slug), [
@@ -87,6 +88,15 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
     assert.match(compiled.runPrompt, /fresh verification subagent/);
     assert.match(compiled.runPrompt, /explicit approval|explicitly tested|direct evidence/i);
     assert.match(compiled.runPrompt, /passed\/failed\/skipped/);
+    assert.match(compiled.runPrompt, /NEW-REALITY CHECKPOINT/);
+    assert.match(compiled.runPrompt, /what became true, with direct evidence/i);
+    assert.match(compiled.runPrompt, /remaining unknowns/i);
+    assert.match(compiled.runPrompt, /single riskiest assumption/i);
+    assert.match(compiled.runPrompt, /next decision the user faces/i);
+    assert.match(compiled.runPrompt, /approvalRequired: true/);
+    assert.match(compiled.runPrompt, /Do not install, compile, start, or imply approval for a candidate next outcome/i);
+    assert.match(compiled.runPrompt, /retrospective journey history/i);
+    assert.match(compiled.runPrompt, /Do not add planned, pending, approved, or future stages to that history/i);
     assert.doesNotMatch(compiled.runPrompt, /choose a lane|\nLANE\n/i);
   }
 });
@@ -138,45 +148,136 @@ test("Developer Project Launch remixes project-specific direction before impleme
   assert.doesNotMatch(compilePack(outcomePacks.find((pack) => pack.slug === "hardware-launch")).runPrompt, /REMIX GATE/);
 });
 
-test("Outcome Chains advance verified stages without inheriting approval", () => {
+test("outcomes produce new-reality checkpoints, while journeys preserve only completed history", () => {
   const pack = (slug) => outcomePacks.find((candidate) => candidate.slug === slug);
   const discovery = pack("software-opportunity-discovery");
   const working = pack("working-web-app");
   const developer = pack("developer-project-launch");
-  const chain = compileChain([discovery, working, developer]);
-  assert.deepEqual(chain.handoffs.map(({ from, to }) => [from, to]), [
-    ["software-opportunity-discovery", "working-web-app"],
-    ["working-web-app", "developer-project-launch"],
-  ]);
-  assert.deepEqual(discovery.chainExit, {
-    receiptPath: "outcome-room/decision-receipt.json",
-    advanceStatuses: ["pursue"],
-    pauseStatuses: ["investigate"],
-    stopStatuses: ["no-go"],
-  });
-  assert.equal(developer.chainEntry.find(({ id }) => id === "working-project").satisfyWithPack, "working-web-app");
-  assert.match(chain.runPrompt, /Software Opportunity Discovery.*Working Web App.*Developer Project Launch/s);
-  assert.match(chain.runPrompt, /\.possible\/chain\.json/);
-  assert.match(chain.runPrompt, /\.possible\/runs\/<run-id>/);
-  assert.match(chain.runPrompt, /hashed handoff/);
-  assert.match(chain.runPrompt, /facts, hypotheses, decisions, constraints, unknowns, and evidence as distinct fields/i);
-  assert.match(chain.runPrompt, /fresh reviewer/i);
-  assert.match(chain.runPrompt, /NOW \/ IF THIS PASSES \/ LATER/);
-  assert.match(chain.runPrompt, /Source approval never approves the destination/i);
-  assert.match(chain.runPrompt, /resume idempotent/i);
+  assert.equal("compileChain" in packApi, false);
+  assert.equal("chainExit" in discovery, false);
+  assert.equal("chainEntry" in working, false);
+  assert.equal("chainExit" in working, false);
+  assert.deepEqual(working.prerequisites, [{
+    id: "selected-opportunity",
+    description: "A specific software opportunity has been selected for implementation, with enough evidence to distinguish it from an untested feature request.",
+    requiredEvidence: ["selected opportunity and intended user", "source evidence or user-supplied rationale", "unresolved assumptions and validation boundary"],
+  }]);
+  assert.equal(developer.prerequisites.find(({ id }) => id === "working-project").requiredEvidence[0], "immutable workspace revision");
+  assert.match(compilePack(working).runPrompt, /OUTCOME PREREQUISITES/);
+  assert.match(compilePack(working).runPrompt, /Do not silently compile or execute another Outcome Pack/i);
 
-  const direct = compileChain([discovery, developer]);
-  assert.match(direct.runPrompt, /If missing, propose working-web-app before continuing/i);
-  assert.throws(() => compileChain([discovery]), /at least two/);
-  assert.throws(() => compileChain([discovery, discovery]), /cannot repeat/);
-  assert.throws(() => compileChain([pack("hardware-launch"), developer]), /does not define a chain exit/);
-  assert.throws(() => compileChain([discovery, pack("hardware-launch")]), /does not define chain entry/);
-  const overlap = structuredClone(discovery);
-  overlap.chainExit.pauseStatuses = ["pursue"];
-  assert.throws(() => compileChain([overlap, working]), /non-empty and disjoint/);
-  const unsafe = structuredClone(discovery);
-  unsafe.chainExit.receiptPath = "../receipt.json";
-  assert.throws(() => compileChain([unsafe, working]), /safe repository-relative path/);
+  const discoveryCheckpoint = {
+    schemaVersion: 1,
+    runId: "discovery-001",
+    packSlug: discovery.slug,
+    completedAt: "2026-07-23T10:00:00.000Z",
+    receiptPath: "outcome-room/decision-receipt.json",
+    verificationStatus: "passed",
+    becameTrue: [{
+      statement: "Developers lose time checking whether agent completion claims are supported.",
+      evidence: ["outcome-room/research/interviews.md", "outcome-room/decision-receipt.json"],
+    }],
+    remainingUnknowns: ["Whether a receipt beats raw logs for real reviewers."],
+    riskiestAssumption: "Reviewers will trust and use a compact evidence receipt.",
+    nextDecision: "Which validation method can test reviewer utility before product implementation?",
+    candidateNextOutcomes: [{
+      outcome: "Validate whether completion receipts improve real developer review.",
+      rationale: "Test the riskiest user-behavior assumption before choosing a delivery mechanism.",
+      addressesUnknowns: ["Whether a receipt beats raw logs for real reviewers."],
+      testsAssumption: "Reviewers will trust and use a compact evidence receipt.",
+      approvalRequired: true,
+    }],
+  };
+  assert.equal(validateOutcomeCheckpoint(discoveryCheckpoint), discoveryCheckpoint);
+
+  const validationCheckpoint = {
+    ...structuredClone(discoveryCheckpoint),
+    runId: "validation-002",
+    packSlug: "developer-validation",
+    completedAt: "2026-07-23T12:00:00.000Z",
+    becameTrue: [{
+      statement: "Three reviewers completed evidence checks faster with an inline pull-request receipt.",
+      evidence: ["outcome-room/validation/results.json"],
+    }],
+    remainingUnknowns: ["Whether teams will enforce receipt policies in CI."],
+    riskiestAssumption: "Teams will accept merge enforcement.",
+    nextDecision: "Whether to pilot a GitHub Action or stop.",
+    candidateNextOutcomes: [{
+      outcome: "Pilot automatic completion receipts inside pull requests.",
+      rationale: "Test enforcement in the delivery surface supported by the validation result.",
+      addressesUnknowns: ["Whether teams will enforce receipt policies in CI."],
+      testsAssumption: "Teams will accept merge enforcement.",
+      approvalRequired: true,
+    }],
+  };
+  const journey = recordOutcomeJourney("Help developers trust agent-completed work.", [
+    discoveryCheckpoint,
+    validationCheckpoint,
+  ]);
+  assert.equal(journey.schemaVersion, 1);
+  assert.deepEqual(journey.completedOutcomes.map(({ runId }) => runId), ["discovery-001", "validation-002"]);
+  assert.equal("plannedOutcomes" in journey, false);
+  assert.equal("pendingOutcome" in journey, false);
+  assert.equal("runPrompt" in journey, false);
+
+  const repeat = recordOutcomeJourney("Improve a product until it passes.", [
+    discoveryCheckpoint,
+    { ...structuredClone(discoveryCheckpoint), runId: "discovery-002", completedAt: "2026-07-23T11:00:00.000Z" },
+  ]);
+  assert.deepEqual(repeat.completedOutcomes.map(({ packSlug }) => packSlug), [discovery.slug, discovery.slug]);
+
+  assert.throws(() => recordOutcomeJourney("Ambition", [discoveryCheckpoint, discoveryCheckpoint]), /duplicate run id/);
+  assert.throws(() => recordOutcomeJourney(" ", [discoveryCheckpoint]), /original ambition/);
+  assert.throws(() => recordOutcomeJourney("Ambition", []), /at least one completed outcome/);
+
+  const unapproved = structuredClone(discoveryCheckpoint);
+  unapproved.candidateNextOutcomes[0].approvalRequired = false;
+  assert.throws(() => validateOutcomeCheckpoint(unapproved), /requires fresh approval/);
+  const executable = structuredClone(discoveryCheckpoint);
+  executable.candidateNextOutcomes[0].runPrompt = "Start now";
+  assert.throws(() => validateOutcomeCheckpoint(executable), /cannot contain executable or approval state/);
+  const unsupported = structuredClone(discoveryCheckpoint);
+  unsupported.becameTrue[0].evidence = [];
+  assert.throws(() => validateOutcomeCheckpoint(unsupported), /direct evidence/);
+  const unsafe = structuredClone(discoveryCheckpoint);
+  unsafe.receiptPath = "../receipt.json";
+  assert.throws(() => validateOutcomeCheckpoint(unsafe), /safe repository-relative path/);
+  const duplicateCandidate = structuredClone(discoveryCheckpoint);
+  duplicateCandidate.candidateNextOutcomes.push(structuredClone(duplicateCandidate.candidateNextOutcomes[0]));
+  assert.throws(() => validateOutcomeCheckpoint(duplicateCandidate), /duplicated/);
+  const untetheredCandidate = structuredClone(discoveryCheckpoint);
+  untetheredCandidate.candidateNextOutcomes[0].addressesUnknowns = ["A different unknown."];
+  assert.throws(() => validateOutcomeCheckpoint(untetheredCandidate), /recorded remaining unknown/);
+  const wrongAssumption = structuredClone(discoveryCheckpoint);
+  wrongAssumption.candidateNextOutcomes[0].testsAssumption = "Building the browser app will prove demand.";
+  assert.throws(() => validateOutcomeCheckpoint(wrongAssumption), /recorded riskiest assumption/);
+});
+
+test("deterministic stages remain inside one separately approved outcome", () => {
+  const developer = outcomePacks.find((candidate) => candidate.slug === "developer-project-launch");
+  assert.deepEqual(compileWorkstreamWaves(developer).map((wave) => wave.map(({ id }) => id)), [
+    ["positioning", "developer-experience"],
+    ["creative-direction"],
+    ["showcase"],
+  ]);
+  assert.match(compilePack(developer).runPrompt, /WORKSTREAM SEQUENCE/);
+  assert.match(compilePack(developer).runPrompt, /Do not start a dependent workstream until every named dependency passes/i);
+  assert.doesNotMatch(compilePack(developer).runPrompt, /Prepare this conditional Outcome Chain/i);
+  assert.doesNotMatch(compilePack(developer).runPrompt, /\.possible\/chain\.json/);
+  assert.doesNotMatch(compilePack(developer).runPrompt, /IF THIS PASSES \/ LATER/);
+  assert.doesNotMatch(compilePack(developer).runPrompt, /hashed handoff/);
+  assert.deepEqual(developer.prerequisites, [
+    {
+      id: "working-project",
+      description: "A real project exists and its primary user flow can be reproduced before launch work begins.",
+      requiredEvidence: ["immutable workspace revision", "documented local run command", "passing primary-flow smoke check"],
+    },
+    {
+      id: "opportunity-alignment",
+      description: "The working project corresponds to a specific user opportunity rather than only presenting a polished implementation.",
+      requiredEvidence: ["intended user and problem reference", "project capability evidence", "recorded mismatches or unresolved assumptions"],
+    },
+  ]);
 });
 
 test("install commands group skills by upstream repository", () => {

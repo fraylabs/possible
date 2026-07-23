@@ -48,18 +48,10 @@ export interface RemixContract {
   preserves: string[];
 }
 
-export interface ChainExitContract {
-  receiptPath: string;
-  advanceStatuses: string[];
-  pauseStatuses: string[];
-  stopStatuses: string[];
-}
-
-export interface ChainEntryRequirement {
+export interface OutcomePrerequisite {
   id: string;
   description: string;
   requiredEvidence: string[];
-  satisfyWithPack?: string;
 }
 
 export type PackLane = "create" | "launch" | "release" | "operate";
@@ -86,8 +78,7 @@ export interface OutcomePack {
   guardrails: string[];
   verification: string[];
   remix?: RemixContract;
-  chainExit?: ChainExitContract;
-  chainEntry?: ChainEntryRequirement[];
+  prerequisites?: OutcomePrerequisite[];
 }
 
 export interface CompiledPack {
@@ -96,15 +87,36 @@ export interface CompiledPack {
   runPrompt: string;
 }
 
-export interface ChainHandoff {
-  from: string;
-  to: string;
-  exit: ChainExitContract;
-  entry: ChainEntryRequirement[];
+export interface EvidenceBackedFact {
+  statement: string;
+  evidence: string[];
 }
 
-export interface CompiledChain {
-  packs: OutcomePack[];
-  handoffs: ChainHandoff[];
-  runPrompt: string;
+export interface CandidateOutcomeRecommendation {
+  outcome: string;
+  matchingPackSlug?: string;
+  rationale: string;
+  addressesUnknowns: string[];
+  testsAssumption: string;
+  approvalRequired: true;
+}
+
+export interface OutcomeCheckpoint {
+  schemaVersion: 1;
+  runId: string;
+  packSlug: string;
+  completedAt: string;
+  receiptPath: string;
+  verificationStatus: "passed" | "partial" | "failed";
+  becameTrue: EvidenceBackedFact[];
+  remainingUnknowns: string[];
+  riskiestAssumption: string;
+  nextDecision: string;
+  candidateNextOutcomes: CandidateOutcomeRecommendation[];
+}
+
+export interface OutcomeJourneyHistory {
+  schemaVersion: 1;
+  originalAmbition: string;
+  completedOutcomes: OutcomeCheckpoint[];
 }

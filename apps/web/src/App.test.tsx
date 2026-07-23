@@ -39,6 +39,7 @@ describe("Possible", () => {
     const workflow = screen.getByRole("region", { name: /Bring the ambition.*Possible supplies the missing work/i });
     expect(within(workflow).getAllByRole("listitem")).toHaveLength(4);
     expect(workflow).toHaveTextContent(/DESCRIBE.*APPROVE.*EXECUTE.*VERIFY/i);
+    expect(workflow).toHaveTextContent(/verified new reality.*next recommendation/i);
 
     const demos = screen.getByRole("region", { name: /Finished outcomes.*Open one/i });
     expect(within(demos).getAllByRole("listitem")).toHaveLength(4);
@@ -129,6 +130,8 @@ describe("Possible", () => {
     const { container } = renderRoute("/docs");
     expect(screen.getByText(installCommand, { selector: ".docs-command code" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Glossary" })).toBeInTheDocument();
+    expect(container.querySelector(".docs-glossary")).toHaveTextContent(/Outcome Journey.*retrospective.*verified.*new reality/i);
+    expect(container.querySelector("#execute")).toHaveTextContent(/inspect the verified result.*recommend.*next outcome.*fresh approval/i);
     expect(screen.getByRole("link", { name: /complete recorded Hardware Launch run/i })).toHaveAttribute("href", "/examples/still?view=process");
     expect(container.querySelector("main")).not.toHaveTextContent(/schedule operations|recurring outcome|\.possible\/schedule\.json/i);
     expect(await axe(container)).toHaveNoViolations();
@@ -146,14 +149,14 @@ describe("Possible", () => {
     expect(await axe(section!)).toHaveNoViolations();
   });
 
-  it("explains Remix and Outcome Chains without treating them as one approval", async () => {
+  it("explains Remix and retrospective Outcome Journeys without predeclaring the future", async () => {
     const { container } = renderRoute("/docs/how-to-use");
-    const section = container.querySelector("#remix-and-chain");
+    const section = container.querySelector("#remix-and-journey");
     expect(section).toHaveTextContent(/Remix changes the expression/i);
     expect(section).toHaveTextContent(/three project-specific creative directions/i);
-    expect(section).toHaveTextContent(/Software Opportunity Discovery.*Working Web App.*Developer Project Launch/i);
-    expect(section).toHaveTextContent(/NOW \/ IF THIS PASSES \/ LATER/i);
-    expect(section).toHaveTextContent(/separate approval/i);
+    expect(section).toHaveTextContent(/Outcome Journey.*visible only afterward/i);
+    expect(section).toHaveTextContent(/completes and verifies one outcome.*inspects the new reality.*recommends one next outcome.*fresh approval/i);
+    expect(section).toHaveTextContent(/never fixes the future sequence in advance/i);
     expect(await axe(section!)).toHaveNoViolations();
   });
 
@@ -351,7 +354,16 @@ describe("Possible", () => {
     expect(document.body.style.overflow).not.toBe("hidden");
     expect(background).not.toHaveAttribute("inert");
     expect(background).not.toHaveAttribute("aria-hidden");
-    await waitFor(() => expect(screen.getByRole("link", { name: /Open Outcome Chain: PatchProof example/i })).toHaveFocus());
+    await waitFor(() => expect(screen.getByRole("link", { name: /Open Outcome Journey: PatchProof example/i })).toHaveFocus());
+  });
+
+  it("uses PatchProof to explain why future outcomes are recommended one at a time", () => {
+    renderRoute("/examples/patchproof?view=process");
+    const process = screen.getByRole("tabpanel", { name: "PROCESS" });
+    expect(process).toHaveTextContent(/predeclared path.*discovery learned.*user validation.*next risk/i);
+    expect(process).toHaveTextContent(/demand.*willingness to pay.*user validation unresolved/i);
+    expect(process).toHaveTextContent(/went straight to a browser product.*validation as the next outcome/i);
+    expect(process).toHaveTextContent(/OUTCOME JOURNEY \/ RETROSPECTIVE/i);
   });
 
   it("opens a shareable process query in the same example modal", async () => {

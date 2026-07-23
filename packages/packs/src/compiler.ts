@@ -1,4 +1,4 @@
-import type { ChainHandoff, CompiledChain, CompiledPack, OutcomePack, Workstream } from "./types.js";
+import type { CompiledPack, OutcomeCheckpoint, OutcomeJourneyHistory, OutcomePack, Workstream } from "./types.js";
 
 const safeRelativePath = (value: string) => !/^(?:\/|[A-Za-z]:)|(?:^|\/)\.\.(?:\/|$)|[*?]/.test(value);
 
@@ -96,6 +96,12 @@ LAUNCH GATE
   const integrationTarget = pack.lane === "operate"
     ? `integrate the durable workflow under ${artifactRoot}/ and use outcome-room/ only as its linked review surface`
     : "integrate them into outcome-room/";
+  const prerequisites = pack.prerequisites?.length ? `
+
+OUTCOME PREREQUISITES
+${pack.prerequisites.map((requirement) => `- ${requirement.id}: ${requirement.description} Evidence required: ${requirement.requiredEvidence.join(", ")}.`).join("\n")}
+
+Verify these prerequisites against the current repository before starting. If material evidence is missing, stop this outcome and explain the gap. Do not silently compile or execute another Outcome Pack to fill it; any alternative outcome is only a recommendation requiring fresh approval.` : "";
 
   const action = pack.lane === "operate" ? "Establish and run the first cycle of" : pack.lane === "release" ? "Prepare and verify" : "Build";
   const pluginCheck = pack.plugins?.length
@@ -153,43 +159,81 @@ ${pack.guardrails.map((guardrail) => `- ${guardrail}`).join("\n")}
 
 VERIFICATION CONTRACT
 ${pack.verification.map((item) => `- ${item}`).join("\n")}
-${remixGate}${releaseGate}${launchGate}${sitesPath}${operateLoop}
+${prerequisites}${remixGate}${releaseGate}${launchGate}${sitesPath}${operateLoop}
+
+NEW-REALITY CHECKPOINT
+Only after this bounded outcome finishes—including a partial or no-go result—write .possible/checkpoints/<run-id>.json with:
+- what became true, with direct evidence for every fact;
+- remaining unknowns;
+- the single riskiest assumption;
+- the next decision the user faces; and
+- zero or more candidate next outcomes, each with its rationale, the unknowns it addresses, how it directly tests the named riskiest assumption, and a matchingPackSlug only when that pack actually exists in the present catalog.
+Use schemaVersion 1, this pack slug, the completed run id and timestamp, the completion receipt path, and a verification status of passed, partial, or failed. Every candidate must state approvalRequired: true. A candidate without a matching pack records a catalog gap; it is not permission to improvise a new pack.
+Append only this completed checkpoint to retrospective journey history. Do not add planned, pending, approved, or future stages to that history. Do not install, compile, start, or imply approval for a candidate next outcome. Present the changed reality to the user first; selecting any candidate requires fresh intake, one present-pack recommendation, and separate approval.
 
 Do not ask me to choose implementation details that can be safely inferred from the brief and repository. Ask only when a missing decision would materially change the product or authorize an external action.`;
 }
 
-export function compileChain(packs: OutcomePack[]): CompiledChain {
-  if (packs.length < 2) throw new Error("An Outcome Chain requires at least two Outcome Packs");
-  const slugs = packs.map((pack) => pack.slug);
-  if (new Set(slugs).size !== slugs.length) throw new Error("An Outcome Chain cannot repeat a stage in V1");
-
-  const handoffs: ChainHandoff[] = [];
-  for (let index = 0; index < packs.length - 1; index += 1) {
-    const source = packs[index]!;
-    const destination = packs[index + 1]!;
-    if (!source.chainExit) throw new Error(`${source.slug} does not define a chain exit contract`);
-    if (!destination.chainEntry?.length) throw new Error(`${destination.slug} does not define chain entry requirements`);
-    requireSafeRelativePath(source.chainExit.receiptPath, `${source.slug} chain receiptPath`);
-    const statuses = [source.chainExit.advanceStatuses, source.chainExit.pauseStatuses, source.chainExit.stopStatuses].flat();
-    if (statuses.length === 0 || new Set(statuses).size !== statuses.length) throw new Error(`${source.slug} chain statuses must be non-empty and disjoint`);
-    handoffs.push({ from: source.slug, to: destination.slug, exit: source.chainExit, entry: destination.chainEntry });
+export function validateOutcomeCheckpoint(checkpoint: OutcomeCheckpoint): OutcomeCheckpoint {
+  if (checkpoint.schemaVersion !== 1) throw new Error("Outcome checkpoint schemaVersion must be 1");
+  if (!/^[a-z0-9][a-z0-9-]*$/.test(checkpoint.runId)) throw new Error("Outcome checkpoint runId must be a safe identifier");
+  if (!/^[a-z0-9][a-z0-9-]*$/.test(checkpoint.packSlug)) throw new Error("Outcome checkpoint packSlug must be a safe identifier");
+  if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3})?Z$/.test(checkpoint.completedAt) || Number.isNaN(Date.parse(checkpoint.completedAt))) {
+    throw new Error("Outcome checkpoint completedAt must be an ISO timestamp");
   }
+  requireSafeRelativePath(checkpoint.receiptPath, "Outcome checkpoint receiptPath");
+  if (!["passed", "partial", "failed"].includes(checkpoint.verificationStatus)) {
+    throw new Error("Outcome checkpoint verificationStatus must be passed, partial, or failed");
+  }
+  if (checkpoint.becameTrue.length === 0) throw new Error("Outcome checkpoint must record what became true");
+  for (const fact of checkpoint.becameTrue) {
+    if (!fact.statement.trim() || fact.evidence.length === 0 || fact.evidence.some((item) => !item.trim())) {
+      throw new Error("Every new-reality fact must have direct evidence");
+    }
+  }
+  if (!checkpoint.riskiestAssumption.trim()) throw new Error("Outcome checkpoint must identify the riskiest assumption");
+  if (!checkpoint.nextDecision.trim()) throw new Error("Outcome checkpoint must identify the next decision");
+  const remainingUnknowns = new Set(checkpoint.remainingUnknowns);
+  if (remainingUnknowns.size !== checkpoint.remainingUnknowns.length || checkpoint.remainingUnknowns.some((item) => !item.trim())) {
+    throw new Error("Outcome checkpoint remaining unknowns must be unique and non-empty");
+  }
+  const candidateKeys = new Set<string>();
+  for (const candidate of checkpoint.candidateNextOutcomes) {
+    if (!candidate.outcome.trim()) throw new Error("Candidate outcome must name the result to pursue");
+    if (candidate.matchingPackSlug !== undefined && !/^[a-z0-9][a-z0-9-]*$/.test(candidate.matchingPackSlug)) {
+      throw new Error(`Candidate outcome ${candidate.outcome} matchingPackSlug must be a safe identifier`);
+    }
+    const candidateKey = `${candidate.outcome}\0${candidate.matchingPackSlug ?? ""}`;
+    if (candidateKeys.has(candidateKey)) throw new Error(`Candidate outcome ${candidate.outcome} is duplicated`);
+    candidateKeys.add(candidateKey);
+    if (!candidate.rationale.trim()) throw new Error(`Candidate outcome ${candidate.outcome} must include a rationale`);
+    if (candidate.addressesUnknowns.length === 0 || candidate.addressesUnknowns.some((item) => !item.trim())) {
+      throw new Error(`Candidate outcome ${candidate.outcome} must identify the unknowns it addresses`);
+    }
+    if (candidate.addressesUnknowns.some((item) => !remainingUnknowns.has(item))) {
+      throw new Error(`Candidate outcome ${candidate.outcome} must address a recorded remaining unknown`);
+    }
+    if (candidate.testsAssumption !== checkpoint.riskiestAssumption) {
+      throw new Error(`Candidate outcome ${candidate.outcome} must test the recorded riskiest assumption`);
+    }
+    if (candidate.approvalRequired !== true) throw new Error(`Candidate outcome ${candidate.outcome} requires fresh approval`);
+    for (const forbidden of ["approved", "execute", "runPrompt", "installCommands"]) {
+      if (forbidden in candidate) throw new Error(`Candidate outcome ${candidate.outcome} cannot contain executable or approval state`);
+    }
+  }
+  return checkpoint;
+}
 
-  const stages = packs.map((pack, index) => `${index + 1}. ${pack.name} (${pack.slug})`).join("\n");
-  const handoffText = handoffs.map((handoff, index) => [
-    `Handoff ${index + 1}: ${handoff.from} -> ${handoff.to}`,
-    `- Source receipt: ${handoff.exit.receiptPath}`,
-    `- Advance: ${handoff.exit.advanceStatuses.join(", ")}`,
-    `- Pause: ${handoff.exit.pauseStatuses.join(", ")}`,
-    `- Stop: ${handoff.exit.stopStatuses.join(", ")}`,
-    ...handoff.entry.map((requirement) => `- Entry ${requirement.id}: ${requirement.description} Evidence: ${requirement.requiredEvidence.join(", ")}.${requirement.satisfyWithPack ? ` If missing, propose ${requirement.satisfyWithPack} before continuing.` : ""}`),
-  ].join("\n")).join("\n\n");
-
-  return {
-    packs,
-    handoffs,
-    runPrompt: `Prepare this conditional Outcome Chain:\n${stages}\n\nCHAIN CONTRACT\n1. Record the original ambition and these stages in .possible/chain.json. Stages after the first are proposed, never pre-approved. Run only the first separately approved outcome now.\n2. Preserve each completed stage under .possible/runs/<run-id>/ with its brief, pack snapshot, skills lock, receipt, completion report, independent verification, workspace revision, and hashes. Top-level .possible files describe only the active stage.\n3. After a stage completes, map its raw receipt status using the exit contract below. Advance statuses permit an eligibility review, pause statuses resume the same outcome, and stop statuses end the chain honestly. A status never upgrades hypotheses into facts.\n4. Before proposing the next stage, create one repository-relative, path-safe, hashed handoff at .possible/handoffs/<source-run-id>--<destination-slug>.json. Carry facts, hypotheses, decisions, constraints, unknowns, and evidence as distinct fields.\n5. Use a fresh reviewer with no source or destination implementation ownership to verify artifact integrity, source verification, current pack snapshots, and every destination entry requirement. Missing evidence is deferred; contradictory evidence is blocked; changed evidence invalidates prior approval.\n6. Show NOW / IF THIS PASSES / LATER. Request direct approval for the exact destination pack, transferred evidence, skills, and disclosed repo-local work. Source approval never approves the destination, and no chain stage inherits external-action authority.\n7. Write chain state atomically, allow only one pending transition, and make resume idempotent. Never rerun a completed source stage or duplicate a destination after interruption.\n\n${handoffText}\n\nDo not merge these Outcome Packs into one prompt or run them in parallel. The chain advances only through verified evidence and separate approval.`,
-  };
+export function recordOutcomeJourney(originalAmbition: string, completedOutcomes: OutcomeCheckpoint[]): OutcomeJourneyHistory {
+  if (!originalAmbition.trim()) throw new Error("Outcome journey requires the original ambition");
+  if (completedOutcomes.length === 0) throw new Error("Outcome journey requires at least one completed outcome");
+  const runIds = new Set<string>();
+  for (const checkpoint of completedOutcomes) {
+    validateOutcomeCheckpoint(checkpoint);
+    if (runIds.has(checkpoint.runId)) throw new Error(`Outcome journey contains duplicate run id ${checkpoint.runId}`);
+    runIds.add(checkpoint.runId);
+  }
+  return { schemaVersion: 1, originalAmbition, completedOutcomes };
 }
 
 export function compilePack(pack: OutcomePack): CompiledPack {

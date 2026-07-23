@@ -93,4 +93,4 @@ assert.equal(launch.externalGate.authority, "none");
 assert.equal(launch.externalGate.deploymentAttempted, false);
 assert.equal(launch.verification.freshReview.status, "passed");
 
-console.log(`PatchProof chain example verified: ${Object.keys(expected).length} public evidence files and ${archivedArtifacts} archived artifacts, 3 completed stages, 3 Remix directions, no external authority.`);
+console.log(`PatchProof historical outcome journey verified: ${Object.keys(expected).length} public evidence files and ${archivedArtifacts} archived artifacts, 3 completed outcomes, 3 Remix directions, no external authority.`);

@@ -108,17 +108,16 @@ export const developerProjectLaunchPack: OutcomePack = {
       "approval and verification boundaries",
     ],
   },
-  chainEntry: [
+  prerequisites: [
     {
       id: "working-project",
       description: "A real project exists and its primary user flow can be reproduced before launch work begins.",
       requiredEvidence: ["immutable workspace revision", "documented local run command", "passing primary-flow smoke check"],
-      satisfyWithPack: "working-web-app",
     },
     {
       id: "opportunity-alignment",
-      description: "The working project still corresponds to the selected opportunity rather than only sharing its name.",
-      requiredEvidence: ["selected-opportunity reference", "project capability evidence", "recorded mismatches or unresolved assumptions"],
+      description: "The working project corresponds to a specific user opportunity rather than only presenting a polished implementation.",
+      requiredEvidence: ["intended user and problem reference", "project capability evidence", "recorded mismatches or unresolved assumptions"],
     },
   ],
   reviewSkills: ["webapp-testing", "web-design-guidelines", "impeccable"],

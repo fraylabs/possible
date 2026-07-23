@@ -164,7 +164,7 @@ function CreatePage() {
             <li><span>DESCRIBE</span><strong>Tell <code>$possible</code> what you want.</strong><p>A rough idea is enough.</p></li>
             <li><span>APPROVE</span><strong>Review the proposed outcome.</strong><p>Possible recommends the Outcome Pack and names the boundaries.</p></li>
             <li><span>EXECUTE</span><strong>Codex runs the workstreams.</strong><p>Selected agent skills create and integrate the artifacts.</p></li>
-            <li><span>VERIFY</span><strong>Evidence decides what is done.</strong><p>Failures are repaired and limitations remain visible.</p></li>
+            <li><span>VERIFY</span><strong>Evidence decides what is done.</strong><p>The verified new reality informs the next recommendation.</p></li>
           </ol>
         </section>
 
@@ -527,8 +527,6 @@ function PackDetailPage({ pack }: { pack: OutcomePack }) {
               </table>
             </div>
             {pack.remix ? <div className="pack-review-callout"><span>REMIX</span><div><code>{pack.remix.candidateCount} directions</code><code>{pack.remix.decisionPath}</code></div><p>Possible derives project-specific directions after product truth is known, then records one decision before dependent implementation begins. The outcome contract does not change.</p></div> : null}
-            {pack.chainEntry?.length ? <div className="pack-review-callout"><span>CHAIN ENTRY</span><div>{pack.chainEntry.map((requirement) => <code key={requirement.id}>{requirement.id}</code>)}</div><p>A prior outcome may hand work to this pack only after fresh review proves every entry requirement. The user approves this stage separately.</p></div> : null}
-            {pack.chainExit ? <div className="pack-review-callout"><span>CHAIN EXIT</span><div><code>{pack.chainExit.receiptPath}</code></div><p>Receipt status decides whether a later outcome may be proposed, paused, or stopped. Completion never pre-approves the next stage.</p></div> : null}
             <div className="pack-review-callout"><span>INDEPENDENT REVIEW</span><div>{pack.reviewSkills.map((skill) => <code key={skill}>${skill}</code>)}</div><p>A verifier checks the integrated outcome. It reports evidence, failures, skipped checks, and unsupported claims.</p></div>
           </section>
 
@@ -632,7 +630,7 @@ function ExampleProcess({ example, showOutputs }: { example: PossibleExample; sh
 
       <section className="example-process-section example-process-added" aria-label="Possible added">
         <span>02 / POSSIBLE ADDED</span>
-        <p className="example-process-pack"><small>{demo.packs.length > 1 ? "OUTCOME CHAIN" : "OUTCOME PACK"}</small><strong>{demo.packs.map((pack) => pack.name).join(" → ")}</strong></p>
+        <p className="example-process-pack"><small>{demo.packs.length > 1 ? "OUTCOME JOURNEY / RETROSPECTIVE" : "OUTCOME PACK"}</small><strong>{demo.packs.map((pack) => pack.name).join(" → ")}</strong></p>
         <ol>
           {demo.workstreams.map((item, index) => <li key={item.title}><small>{String(index + 1).padStart(2, "0")}</small><div><strong>{item.title}</strong><p>{item.description}</p></div></li>)}
         </ol>
@@ -980,7 +978,7 @@ function DocsPage() {
               <div><dt>Outcome Pack</dt><dd>A reusable execution prompt, selected agent skills, sequencing, safeguards, and completion checks for one class of outcomes.</dd></div>
               <div><dt>Creative direction</dt><dd>A project-specific visual system derived from its audience, product truth, evidence, assets, and constraints.</dd></div>
               <div><dt>Remix</dt><dd>Reconsider how an outcome is expressed without changing its promised facts, safeguards, product behavior, or definition of done.</dd></div>
-              <div><dt>Outcome Chain</dt><dd>A conditional sequence of independently verified Outcome Packs. Each stage is approved separately and advances only when its evidence satisfies the next pack.</dd></div>
+              <div><dt>Outcome Journey</dt><dd>The retrospective sequence of outcomes completed for one ambition. It becomes visible only after each outcome is verified and the next is recommended from the new reality.</dd></div>
               <div><dt>Stable pack</dt><dd>An Outcome Pack backed by a preserved end-to-end run and independent verification.</dd></div>
               <div><dt>Experimental pack</dt><dd>An Outcome Pack available to inspect and test before equivalent preserved evidence exists.</dd></div>
               <div><dt>Agent skill</dt><dd>A reusable capability that performs focused work during a run.</dd></div>
@@ -1033,6 +1031,7 @@ function DocsPage() {
               <li><strong>Write shared state</strong><span>Record the confirmed brief, exact Outcome Pack snapshot, and resolved skill versions.</span></li>
               <li><strong>Coordinate workstreams</strong><span>Run independent specialist work in parallel where appropriate.</span></li>
               <li><strong>Integrate and verify</strong><span>Combine artifacts, run acceptance checks, and assign a fresh reviewer.</span></li>
+              <li><strong>Reassess what comes next</strong><span>Inspect the verified result and changed reality before recommending one next outcome for fresh approval.</span></li>
             </ol>
             <a className="docs-text-link" href="/examples/still?view=process">See a complete recorded Hardware Launch run →</a>
           </section>
@@ -1131,6 +1130,7 @@ function HowToUsePage() {
               <li><strong>Review the recommendation</strong><span>Check the stated outcome, proposed Outcome Pack, expected outputs, acceptance checks, assumptions, and actions that remain gated.</span></li>
               <li><strong>Confirm—or revise</strong><span>Say “yes, proceed” only when the recommendation is right. Otherwise, correct it and continue the conversation.</span></li>
               <li><strong>Review the evidence</strong><span>Inspect the artifacts, verification results, limitations, and completion report. Approve any external action separately.</span></li>
+              <li><strong>Decide what comes next</strong><span>Use the verified new reality—not an old roadmap—to review, revise, or reject Possible&apos;s next recommendation.</span></li>
             </ol>
           </section>
 
@@ -1146,6 +1146,7 @@ function HowToUsePage() {
               <li><strong>Assemble the capabilities</strong><span>After approval, it installs reviewed agent skills, records the approved Outcome Pack and versions, and creates shared outcome state.</span></li>
               <li><strong>Coordinate the work</strong><span>It assigns bounded workstreams, keeps them aligned to the same brief, and integrates their outputs.</span></li>
               <li><strong>Verify before declaring success</strong><span>It runs acceptance checks, uses fresh review where appropriate, and returns a completion report with failures, limitations, and unproven claims.</span></li>
+              <li><strong>Recommend from the new reality</strong><span>Only after the outcome closes does it inspect what changed, recommend one next outcome, and wait for fresh approval.</span></li>
             </ol>
           </section>
 
@@ -1167,10 +1168,10 @@ function HowToUsePage() {
             </div>
           </section>
 
-          <section id="remix-and-chain">
-            <h2>Remix and chain outcomes</h2>
+          <section id="remix-and-journey">
+            <h2>Remix and Outcome Journeys</h2>
             <p><strong>Remix changes the expression.</strong> A supporting pack can derive three project-specific creative directions from the audience and product truth, then select or ask about the choice before implementation. The promised outcome and its checks stay fixed.</p>
-            <p><strong>Chain changes the next outcome.</strong> For example, Software Opportunity Discovery can lead to Working Web App, then Developer Project Launch. Possible shows <strong>NOW / IF THIS PASSES / LATER</strong>; it verifies each handoff and asks for separate approval before the next stage.</p>
+            <p><strong>An Outcome Journey is visible only afterward.</strong> Possible completes and verifies one outcome, inspects the new reality, recommends one next outcome, and asks for fresh approval. It never fixes the future sequence in advance.</p>
           </section>
 
           <section id="handshake">
@@ -1183,7 +1184,7 @@ function HowToUsePage() {
               <li><span>YOU</span><strong>Confirmation</strong></li>
               <li><span>AGENTS</span><strong>Execution</strong></li>
               <li><span>POSSIBLE</span><strong>Verification</strong></li>
-              <li><span>YOU</span><strong>External decisions</strong></li>
+              <li><span>TOGETHER</span><strong>Inspect new reality</strong></li>
             </ol>
           </section>
 
@@ -1211,7 +1212,7 @@ function HowToUsePage() {
           <a href="#human">For the human</a>
           <a href="#possible">What Possible does</a>
           <a href="#goal-and-possible">Use with /goal</a>
-          <a href="#remix-and-chain">Remix and chain</a>
+          <a href="#remix-and-journey">Remix and journeys</a>
           <a href="#handshake">The handshake</a>
           <a href="#approval">Approval boundary</a>
         </aside>

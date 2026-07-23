@@ -58,7 +58,7 @@ Possible publishes six reviewed public packs. The remaining registry packs stay 
 - [Software Opportunity Discovery](packages/packs/src/software-opportunity-discovery.ts) — one evidence-backed software opportunity with explicit unknowns and a validation plan.
 - [Developer Project Launch](packages/packs/src/developer-project-launch.ts) — a credible adoption path for a working developer project.
 
-The preserved PatchProof chain verifies Software Opportunity Discovery and Developer Project Launch as separate, evidence-gated outcomes.
+The preserved PatchProof journey verifies Software Opportunity Discovery and Developer Project Launch as separate outcomes—and records why Possible no longer chooses their sequence in advance.
 
 You do not need to choose a pack. `$possible` recommends one after understanding your outcome.
 
@@ -71,14 +71,18 @@ You do not need to choose a pack. `$possible` recommends one after understanding
 
 The public gallery is available at [possible.sh/examples](https://possible.sh/examples). Each example contains both its finished outputs and its process record.
 
-## Preserved Outcome Chain
+## Preserved Outcome Journey
 
-The [PatchProof example](examples/patchproof-chain/EXAMPLE.md) began with “I want to discover, build, and launch a useful developer tool.” Three separate agents ran Software Opportunity Discovery → Working Web App → Developer Project Launch. Each stage advanced through a hashed, independently reviewed handoff.
+The [PatchProof example](examples/patchproof-chain/EXAMPLE.md) began with “I want to discover, build, and launch a useful developer tool.” Three separate agents ran Software Opportunity Discovery → Working Web App → Developer Project Launch.
 
-The launch stage also exercised Remix: it rendered three product-specific creative directions with the same truthful copy and viewport, selected Continuous Form from recorded evidence, then verified the integrated local launch. No deployment or publication was authorized.
+That fixed sequence exposed an important failure. Discovery identified direct developer validation as the next experiment and named manual evidence import as the largest unknown. The predeclared sequence still advanced to a browser app and launch package.
+
+Possible now selects one outcome at a time. After verification, it records what became true, what remains unknown, the riskiest assumption, and the next decision. It may recommend a next Outcome Pack, but it stops for fresh approval. The completed sequence becomes an Outcome Journey only in retrospect.
+
+The preserved hashes, reviews, receipts, and Remix work remain useful evidence of what each outcome produced. No deployment or publication was authorized.
 
 ```bash
-npm run chain-example:verify
+npm run journey-example:verify
 ```
 
 ## How Possible works
@@ -92,6 +96,8 @@ Each Outcome Pack has a [typed manifest](packages/packs/src/types.ts). The [comp
 - verification and the definition of done.
 
 Each run records the approved brief and exact pack version. A fresh verifier preserves failures and requires repair before completion.
+
+After a verified run, Possible creates a new-reality checkpoint. It does not automatically begin another Outcome Pack or inherit approval into a future outcome.
 
 ## Built During Build Week
 

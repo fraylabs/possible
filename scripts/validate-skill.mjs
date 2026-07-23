@@ -36,7 +36,7 @@ if (frontmatter) {
   const keys = [...frontmatter[1].matchAll(/^([a-z]+):/gm)].map((match) => match[1]).sort();
   check(JSON.stringify(keys) === JSON.stringify(["description", "name"]), "frontmatter must contain only name and description");
 }
-for (const phrase of ["What are you trying to make real?", "one question per turn", "Do not mention Outcome Pack names", "Recommend one primary Outcome Pack", "Do not ask the user to choose one", "Proceed with this outcome?", "Immediately write `.possible/outcome-brief.md`", "Immediately write `.possible/pack.json`", "not a Git or Jujutsu repository", "fresh verification subagent", "$possible resume", "Schedule a recurring outcome", "standalone scheduled task", ".possible/schedule.json", "scheduled-task management is unavailable"]) {
+for (const phrase of ["What are you trying to make real?", "one question per turn", "Do not mention Outcome Pack names", "Recommend one primary Outcome Pack", "building alone cannot answer", "catalog gap", "Do not ask the user to choose one", "Proceed with this outcome?", "Immediately write `.possible/outcome-brief.md`", "Immediately write `.possible/pack.json`", "not a Git or Jujutsu repository", "fresh verification subagent", "$possible resume", "Schedule a recurring outcome", "standalone scheduled task", ".possible/schedule.json", "scheduled-task management is unavailable"]) {
   check(skill.toLowerCase().includes(phrase.toLowerCase()), `SKILL.md must include '${phrase}'`);
 }
 const briefCheckpoint = skill.indexOf("Immediately write `.possible/outcome-brief.md`");
