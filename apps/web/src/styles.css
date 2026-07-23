@@ -1495,13 +1495,13 @@ footer .wordmark span { color: #151411; }
 .example-card-copy > div { margin-top: auto; display: flex; flex-wrap: wrap; gap: 6px; }
 .example-card-copy > div span { padding: 6px 7px; border: 1px solid #151411; font: 6px "DM Mono", monospace; text-transform: uppercase; }
 .example-modal-backdrop { z-index: 100; position: fixed; inset: 0; padding: 3vw; overflow-y: auto; display: grid; place-items: center; background: rgba(12, 11, 9, .78); backdrop-filter: blur(8px); }
-.example-modal { width: min(1220px, 100%); max-height: 92vh; border: 1px solid #151411; overflow: auto; background: #f3f0e8; color: #151411; box-shadow: 14px 14px 0 #ff4d00; }
+.example-modal { width: min(1320px, 100%); max-height: 92vh; border: 1px solid #151411; overflow: auto; background: #f3f0e8; color: #151411; box-shadow: 14px 14px 0 #ff4d00; }
 .example-modal > header { z-index: 2; min-height: 48px; padding: 0 16px; border-bottom: 1px solid #151411; position: sticky; top: 0; display: flex; align-items: center; justify-content: space-between; gap: 20px; background: #f3f0e8; font: 8px "DM Mono", monospace; letter-spacing: .07em; }
 .example-modal > header a { min-height: 32px; padding: 0 10px; border: 1px solid #151411; display: inline-flex; align-items: center; }
 .example-modal > header a:hover, .example-modal > header a:focus-visible { background: #151411; color: #f3f0e8; }
-.example-modal-layout { display: grid; grid-template-columns: 1.12fr .88fr; }
-.example-modal-preview { min-width: 0; min-height: 650px; border-right: 1px solid #151411; display: grid; place-items: center; overflow: hidden; background: #dedbd3; }
-.example-modal-preview img, .example-modal-preview iframe { width: 100%; height: 100%; min-height: 650px; border: 0; display: block; object-fit: contain; }
+.example-modal-layout { display: grid; grid-template-columns: .98fr 1.02fr; }
+.example-modal-preview { min-width: 0; height: 600px; min-height: 600px; border-right: 1px solid #151411; display: grid; place-items: center; overflow: hidden; background: #dedbd3; }
+.example-modal-preview img, .example-modal-preview iframe { width: 100%; height: 100%; min-height: 600px; border: 0; display: block; object-fit: contain; }
 .example-modal-layout > article { padding: clamp(26px, 3vw, 38px); display: flex; flex-direction: column; }
 .example-modal-layout > article h1 { margin: 16px 0 24px; font-size: clamp(48px, 5vw, 70px); font-weight: 500; line-height: .84; letter-spacing: -.075em; }
 .example-modal-details { margin: 0; }
@@ -1511,6 +1511,13 @@ footer .wordmark span { color: #151411; }
 .example-modal-layout > article > section { margin-top: 12px; padding-top: 10px; border-top: 1px solid #aaa59a; }
 .example-modal-layout > article > section ul { margin: 12px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; list-style: none; }
 .example-modal-layout > article > section li { padding: 7px 8px; border: 1px solid #151411; font: 7px "DM Mono", monospace; text-transform: uppercase; }
+.example-modal-outputs > div { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+.example-modal-output { min-width: 0; min-height: 132px; padding: 11px; border: 1px solid #151411; display: flex; flex-direction: column; transition: background .16s ease, color .16s ease; }
+.example-modal-output:hover, .example-modal-output:focus-visible { background: #a8ff52; }
+.example-modal-output small { color: #777169; font: 6px "DM Mono", monospace; letter-spacing: .08em; }
+.example-modal-output strong { margin-top: 12px; font-size: 13px; line-height: 1.15; }
+.example-modal-output p { margin: 6px 0 12px; color: #625d55; font-size: 9px; line-height: 1.4; }
+.example-modal-output i { margin-top: auto; font: 6px "DM Mono", monospace; font-style: normal; letter-spacing: .06em; text-transform: uppercase; }
 .example-modal-layout > article footer { margin-top: auto; padding-top: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .example-modal-layout > article footer a { min-height: 64px; padding: 10px; border: 1px solid #151411; display: flex; flex-direction: column; justify-content: space-between; }
 .example-modal-layout > article footer a:first-child { background: #ff4d00; }
@@ -1651,10 +1658,12 @@ footer .wordmark span { color: #151411; }
   .example-modal-backdrop { padding: 0; place-items: stretch; background: #f3f0e8; backdrop-filter: none; }
   .example-modal { width: 100%; max-height: 100vh; border: 0; box-shadow: none; }
   .example-modal-layout { grid-template-columns: 1fr; }
-  .example-modal-preview { min-height: 300px; max-height: 42vh; border-right: 0; border-bottom: 1px solid #151411; }
+  .example-modal-preview { height: 300px; min-height: 300px; max-height: 42vh; border-right: 0; border-bottom: 1px solid #151411; }
   .example-modal-preview img, .example-modal-preview iframe { min-height: 300px; max-height: 42vh; }
   .example-modal-layout > article { min-height: 58vh; padding: 28px 18px 34px; }
   .example-modal-layout > article h1 { font-size: 16vw; }
+  .example-modal-outputs > div { grid-template-columns: 1fr; }
+  .example-modal-output { min-height: 118px; }
   .robot-comparison { padding: 72px 18px; }
   .robot-comparison-intro { grid-template-columns: 1fr; gap: 22px; }
   .robot-comparison-intro .eyebrow, .robot-comparison-intro > div { grid-column: auto; }

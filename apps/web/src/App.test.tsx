@@ -255,13 +255,17 @@ describe("Possible", () => {
       const title = within(dialog).getByRole("heading", { name: new RegExp(example.title, "i") }).textContent?.trim() ?? "";
       titles.add(title);
 
-      expect(within(dialog).getByRole("region", { name: "Finished outcome" })).not.toBeEmptyDOMElement();
       const description = within(dialog).getByRole("region", { name: "Description" });
       const descriptionWords = description.textContent?.trim().split(/\s+/).filter(Boolean).length ?? 0;
       expect(descriptionWords).toBeGreaterThan(0);
       expect(descriptionWords).toBeLessThanOrEqual(60);
 
       expect(within(dialog).getByRole("region", { name: "Outcome Pack" })).not.toBeEmptyDOMElement();
+      const outputs = within(dialog).getByRole("region", { name: "Outputs produced" });
+      const outputLinks = within(outputs).getAllByRole("link");
+      expect(outputLinks.length).toBeGreaterThanOrEqual(2);
+      expect(new Set(outputLinks.map((link) => link.getAttribute("href"))).size).toBe(outputLinks.length);
+      for (const link of outputLinks) expect(link.getAttribute("href")).toMatch(/^\//);
 
       const output = within(dialog).getByRole("link", { name: /Open outcome/i });
       const evidence = within(dialog).getByRole("link", { name: /See how Possible made this/i });

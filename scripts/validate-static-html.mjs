@@ -148,9 +148,10 @@ for (const [slug, name] of exampleRoutes) {
   const markup = await html(`examples/${slug}/index.html`);
   const text = plainText(visibleText(markup));
   assert.match(markup, /role="dialog"[^>]*aria-modal="true"|aria-modal="true"[^>]*role="dialog"/, `${name} must render as an accessible modal`);
-  for (const label of ["Finished outcome", "Description", "Outcome Pack"]) {
+  for (const label of ["Description", "Outcome Pack", "Outputs produced"]) {
     assert.match(markup, new RegExp(`aria-label="${escape(label)}"`), `${name} must expose its ${label} region`);
   }
+  assert.ok((markup.match(/class="example-modal-output"/g) ?? []).length >= 2, `${name} must expose at least two finished outputs`);
   assert.match(markup, /href="\/examples"[^>]*>[\s\S]*?(?:CLOSE|BACK TO EXAMPLES)/i, `${name} must close back to /examples`);
   assert.match(text, /OPEN OUTCOME/i, `${name} must expose its finished outcome`);
   assert.match(text, /SEE HOW POSSIBLE MADE THIS/i, `${name} must lead to the run record`);

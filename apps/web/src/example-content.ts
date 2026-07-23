@@ -2,6 +2,8 @@ export type ExampleVisual = {
   src: string;
   alt: string;
   kind: "image" | "embed";
+  fit?: "contain" | "cover";
+  position?: string;
 };
 
 export type ExampleLink = {
@@ -31,6 +33,7 @@ export type DemoItem = {
   href?: string;
   label?: string;
   tone?: "neutral" | "failure" | "repair" | "pass";
+  showcase?: boolean;
 };
 
 export type PossibleDemo = {
@@ -105,7 +108,7 @@ export const exampleCatalog = [
         { title: "Launch website", description: "Responsive product story with a deliberately local-only waitlist.", href: "/demo/still/site/index.html", label: "Open site" },
         { title: "Product film", description: "A 24-second, 1080p launch film with preserved review frames.", href: "/demo/still/film/still-launch.mp4", label: "Play film" },
         { title: "Prototype CAD", description: "Measured concept geometry in STEP, GLB, and STL review formats.", href: "/demo/still/hardware/still.step", label: "Download STEP" },
-        { title: "Artifact manifest", description: "The complete local output inventory and recorded status.", href: "/demo/still/manifest.json", label: "Inspect manifest" },
+        { title: "Artifact manifest", description: "The complete local output inventory and recorded status.", href: "/demo/still/manifest.json", label: "Inspect manifest", showcase: false },
       ],
       verification: [
         { title: "Produced", description: "The first integrated launch package passed its artifact suite." },
@@ -299,6 +302,8 @@ export const exampleCatalog = [
       src: "/examples/patchproof-chain/evidence/site-desktop.png",
       alt: "PatchProof launch site produced by a three-stage Possible Outcome Chain",
       kind: "image",
+      fit: "cover",
+      position: "top",
     },
     primaryOutput: { href: "/examples/patchproof-chain/product/index.html", label: "Open product" },
     demoHref: "/demo/patchproof",
@@ -328,10 +333,10 @@ export const exampleCatalog = [
         { title: "Verify every handoff", description: "Require independent review and hashed evidence before advancing the chain." },
       ],
       artifacts: [
-        { title: "PatchProof product", description: "A local browser tool for converting supplied patch evidence into claim receipts.", href: "/examples/patchproof-chain/product/index.html", label: "Open product" },
+        { title: "PatchProof product", description: "A local browser tool for converting supplied patch evidence into inspectable claim results.", href: "/examples/patchproof-chain/product/index.html", label: "Open product" },
         { title: "Launch site", description: "The selected Continuous Form launch direction.", href: "/examples/patchproof-chain/product/launch/site/index.html", label: "Open launch site" },
         { title: "Remix directions", description: "Three comparable visual directions using identical factual copy.", href: "/examples/patchproof-chain/evidence/remix/continuous-form.png", label: "Open selected direction" },
-        { title: "Chain state", description: "The machine-readable record connecting all three stages.", href: "/examples/patchproof-chain/evidence/chain.json", label: "Inspect chain" },
+        { title: "Chain state", description: "The machine-readable record connecting all three stages.", href: "/examples/patchproof-chain/evidence/chain.json", label: "Inspect chain", showcase: false },
       ],
       verification: [
         { title: "Produced", description: "Each stage produced an artifact and a candidate completion receipt." },

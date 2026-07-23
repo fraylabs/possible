@@ -648,17 +648,28 @@ function ExampleModal({ example, onDismiss }: { example: PossibleExample; onDism
           <div className="example-modal-preview" role="region" aria-label="Preview">
             {example.visual.kind === "embed"
               ? <iframe src={example.visual.src} title={`${example.name} interactive preview`} />
-              : <img src={example.visual.src} alt={example.visual.alt} />}
+              : <img src={example.visual.src} alt={example.visual.alt} style={{ objectFit: example.visual.fit, objectPosition: example.visual.position }} />}
           </div>
           <article>
             <p className="eyebrow">{example.projectLabel}</p>
             <h1 id="example-modal-title">{example.name}</h1>
             <div className="example-modal-details">
-              <section aria-label="Finished outcome"><span>Finished outcome</span><p>{example.name}</p></section>
               <section aria-label="Description"><span>Description</span><p>{example.description}</p></section>
               <section aria-label="Outcome Pack"><span>Outcome Pack</span><p><a href={example.demo.packs[0].href}>{example.outcomeLabel} ↗</a></p></section>
             </div>
-            <section aria-label="Outcome highlights"><span>OUTCOME INCLUDES</span><ul>{example.highlights.map((highlight) => <li key={highlight}>{highlight}</li>)}</ul></section>
+            <section className="example-modal-outputs" aria-label="Outputs produced">
+              <span>OUTPUTS PRODUCED</span>
+              <div>
+                {example.demo.artifacts.filter((output) => output.showcase !== false).slice(0, 3).map((output, index) => (
+                  <a className="example-modal-output" href={output.href} key={output.title}>
+                    <small>{String(index + 1).padStart(2, "0")}</small>
+                    <strong>{output.title}</strong>
+                    <p>{output.description}</p>
+                    <i>{output.label ?? "Open output"} ↗</i>
+                  </a>
+                ))}
+              </div>
+            </section>
             <footer><a href={example.primaryOutput.href}><span>OPEN OUTCOME</span><strong>{example.primaryOutput.label} ↗</strong></a><a href={example.demoHref}><span>SEE HOW POSSIBLE MADE THIS</span><strong>Open process record ↗</strong></a></footer>
           </article>
         </div>
