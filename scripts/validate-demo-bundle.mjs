@@ -1,7 +1,7 @@
 import { access, readFile, stat } from "node:fs/promises";
 import { createHash } from "node:crypto";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 const repository = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const root = path.join(repository, "apps/web/public/demo/still");
@@ -149,6 +149,7 @@ if (!robotViewerGuide.includes("uvx --from 'rerun-sdk==0.34.1' rerun robot-snake
 
 const appSource = await readFile(path.join(repository, "apps/web/src/App.tsx"), "utf8");
 const exampleSource = await readFile(path.join(repository, "apps/web/src/example-content.ts"), "utf8");
+const { exampleCatalog } = await import(pathToFileURL(path.join(repository, "apps/web/src/example-content.ts")));
 const demoPageSource = `${appSource}\n${exampleSource}`;
 const stylesSource = await readFile(path.join(repository, "apps/web/src/styles.css"), "utf8");
 if (!appSource.includes('path === "/demo/game/play"') || !appSource.includes('<PaperPlaneGame />')) {
@@ -156,6 +157,38 @@ if (!appSource.includes('path === "/demo/game/play"') || !appSource.includes('<P
 }
 if (!demoPageSource.includes("not presented as a clean-room evaluation")) {
   failures.push("Playable Web Game proof must disclose that it is not a clean-room pack evaluation");
+}
+if (/title: "Simulation controls"[\s\S]{0,240}\/demo\/robot-snake\/control\//.test(exampleSource)) {
+  failures.push("Robot Prototype must not present the plain /goal control run as a Possible output");
+}
+for (const example of exampleCatalog) {
+  const ids = new Set();
+  const hrefs = new Set();
+  const evidenceHrefs = new Set([...example.demo.verification, ...example.demo.evidence].map((item) => item.href).filter(Boolean));
+  const featured = example.demo.outputs.filter((output) => output.featured);
+  if (!featured.length) failures.push(`${example.name} must expose at least one featured output`);
+  for (const output of example.demo.outputs) {
+    if (ids.has(output.id)) failures.push(`${example.name} repeats output id: ${output.id}`);
+    if (!output.href?.startsWith("/")) failures.push(`${example.name} output must use a root-relative public URL: ${output.id}`);
+    if (hrefs.has(output.href)) failures.push(`${example.name} repeats output URL: ${output.href}`);
+    if (evidenceHrefs.has(output.href)) failures.push(`${example.name} mixes an output into process evidence: ${output.href}`);
+    ids.add(output.id);
+    hrefs.add(output.href);
+
+    const publicTarget = path.join(repository, "apps/web/public", output.href.replace(/^\/+/, ""));
+    const routeTarget = path.join(repository, "apps/web/app", output.href.replace(/^\/+|\/+$/g, ""), "page.tsx");
+    let found = false;
+    for (const target of [publicTarget, routeTarget]) {
+      try {
+        await stat(target);
+        found = true;
+        break;
+      } catch {
+        // Try the route-backed or public-backed alternative.
+      }
+    }
+    if (!found) failures.push(`${example.name} output URL has no public file or app route: ${output.href}`);
+  }
 }
 for (const file of robotManifest.files ?? []) {
   if (!demoPageSource.includes(file.publishedUrl)) failures.push(`Robot Prototype page does not link its manifested artifact: ${file.publishedUrl}`);
@@ -185,6 +218,8 @@ if (
 const patchProofRoot = path.join(repository, "apps/web/public/examples/patchproof-chain");
 const patchProofSource = path.join(repository, "examples/patchproof-chain");
 const patchProofCopies = {
+  "product/launch/claims/claims-register.md": "launch/claims/claims-register.md",
+  "product/launch/assets/provenance.md": "launch/assets/provenance.md",
   "evidence/request.md": "REQUEST.md",
   "evidence/chain.json": ".possible/chain.json",
   "evidence/discovery-receipt.json": "outcome-room/decision-receipt.json",
@@ -243,6 +278,23 @@ const patchProofProduct = await readFile(path.join(patchProofRoot, "product/inde
 const patchProofLaunch = await readFile(path.join(patchProofRoot, "product/launch/site/index.html"), "utf8");
 if (/\b(?:src|href)="\/assets\//.test(`${patchProofProduct}\n${patchProofLaunch}`)) {
   failures.push("PatchProof compiled pages must use portable asset paths under the public example route");
+}
+for (const match of patchProofLaunch.matchAll(/href="(\.\.\/[^"#?]+)"/g)) {
+  const target = path.resolve(patchProofRoot, "product/launch/site", match[1]);
+  if (!target.startsWith(`${patchProofRoot}${path.sep}`)) {
+    failures.push(`PatchProof launch link escapes its public bundle: ${match[1]}`);
+    continue;
+  }
+  try {
+    const details = await stat(target);
+    if (details.isDirectory()) {
+      await stat(path.join(target, "index.html"));
+    } else if (!details.isFile()) {
+      failures.push(`PatchProof launch link is not a file or indexed directory: ${match[1]}`);
+    }
+  } catch {
+    failures.push(`PatchProof launch link is broken: ${match[1]}`);
+  }
 }
 const patchProofChain = JSON.parse(await readFile(path.join(patchProofRoot, "evidence/chain.json"), "utf8"));
 if (patchProofChain.stages?.length !== 3 || patchProofChain.stages?.some((stage) => !stage.state.startsWith("completed-"))) {

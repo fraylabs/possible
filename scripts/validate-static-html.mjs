@@ -144,12 +144,14 @@ for (const [slug, name] of exampleRoutes) {
   assert.match(markup, /role="tab"[^>]*aria-selected="false"[^>]*>PROCESS<\/button>/, `${name} must expose its inline Process view`);
   assert.match(markup, /aria-label="Previous output"[^>]*>[\s\S]*?&lt;[\s\S]*?<\/button>/, `${name} must expose a previous-output control`);
   assert.match(markup, /aria-label="Next output"[^>]*>[\s\S]*?&gt;[\s\S]*?<\/button>/, `${name} must expose a next-output control`);
-  assert.match(text, /01\s*\/\s*0[2-9]/, `${name} must expose at least two finished outputs in its carousel`);
-  assert.match(markup, /href="\/examples"[^>]*>[\s\S]*?(?:CLOSE|BACK TO EXAMPLES)/i, `${name} must close back to /examples`);
+  assert.match(text, /01\s*\/\s*0[1-9]/, `${name} must expose at least one truthful featured output in its carousel`);
+  assert.match(markup, /aria-label="Close example"[^>]*>[\s\S]*?CLOSE/i, `${name} must expose a modal close control`);
+  assert.match(markup, /class="example-output-inventory"/, `${name} must expose its complete output inventory in the same modal`);
+  assert.match(text, /VIEW ALL OUTPUTS[\s\S]*\d+ FEATURED\s*\/\s*\d+ TOTAL/, `${name} must distinguish featured and total outputs`);
   assert.doesNotMatch(text, /OPEN OUTCOME/i, `${name} must not repeat the active output as a second modal action`);
   assert.doesNotMatch(text, /SEE HOW POSSIBLE MADE THIS/i, `${name} must keep Process inside the example modal`);
   assert.doesNotMatch(markup, new RegExp(`href="/demo/${escape(slug)}"`), `${name} must not link a second process page`);
-  assert.match(markup, /class="example-process-evidence"/, `${name} must keep raw evidence optional`);
+  if (slug !== "web-presentation") assert.match(markup, /class="example-process-evidence"/, `${name} must keep preserved raw evidence optional`);
 }
 
 const exampleContentSource = await readFile(new URL("../apps/web/src/example-content.ts", import.meta.url), "utf8");
@@ -159,6 +161,9 @@ assert.match(exampleContentSource, /export const exampleCatalog\s*=\s*\[/, "Exam
 assert.equal((exampleContentSource.match(/\n\s+slug:\s*"/g) ?? []).length, exampleRoutes.length, "The shared catalog must contain exactly five examples");
 assert.match(appSource, /exampleCatalog(?:\.slice\([^)]*\))?\.map\(/, "The gallery must render cards from the shared example catalog");
 assert.match(stylesSource, /\.example-modal \[hidden\] \{ display: none !important; \}/, "Inactive example views must remain visually hidden when their layouts define display");
+assert.match(stylesSource, /\.example-output-inventory \{ margin-top: auto;/, "The complete output inventory control must stay visible in the modal information column");
+assert.match(stylesSource, /\.example-output-inventory ol \{[\s\S]*grid-template-columns: 1fr;/, "Complete output inventories must remain one readable column");
+assert.doesNotMatch(exampleContentSource, /title: "Simulation controls"[\s\S]{0,240}\/demo\/robot-snake\/control\//, "The plain /goal control run must not be presented as a Possible output");
 
 const patchProofExample = visibleText(await html("examples/patchproof/index.html"));
 assert.doesNotMatch(patchProofExample, /class="chain-example-page"|One rough ambition[\s\S]*Three verified outcomes/, "PatchProof must use the shared compact example modal rather than its bespoke long page");

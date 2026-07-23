@@ -34,7 +34,11 @@ export type DemoItem = {
     position?: string;
   };
   tone?: "neutral" | "failure" | "repair" | "pass";
-  showcase?: boolean;
+};
+
+export type DemoOutput = DemoItem & {
+  id: string;
+  featured: boolean;
 };
 
 export type PossibleDemo = {
@@ -45,7 +49,7 @@ export type PossibleDemo = {
   conversationNote: string;
   packs: readonly [DemoPack, ...DemoPack[]];
   workstreams: readonly DemoItem[];
-  artifacts: readonly DemoItem[];
+  outputs: readonly DemoOutput[];
   verification: readonly DemoItem[];
   evidence: readonly DemoItem[];
   boundary: string;
@@ -101,11 +105,22 @@ export const exampleCatalog = [
         { title: "Film and CAD", description: "Produce a short product film and portable concept geometry." },
         { title: "Independent verification", description: "Review every artifact against the shared completion contract." },
       ],
-      artifacts: [
-        { title: "Launch website", description: "Responsive product story with a deliberately local-only waitlist.", href: "/demo/still/site/index.html", label: "Open site", preview: { src: "/demo/still/site/index.html", kind: "embed" } },
-        { title: "Product film", description: "A 24-second, 1080p launch film with preserved review frames.", href: "/demo/still/film/still-launch.mp4", label: "Play film", preview: { src: "/demo/still/film/still-launch.mp4", kind: "video", poster: "/demo/still/film/still-launch-preview.png" } },
-        { title: "Prototype CAD", description: "Measured concept geometry in STEP, GLB, and STL review formats.", href: "/demo/still/hardware/still.step", label: "Download STEP", preview: { src: "/demo/still/hardware/still-iso.png", alt: "Isometric CAD view of the Still focus device", kind: "image" } },
-        { title: "Artifact manifest", description: "The complete local output inventory and recorded status.", href: "/demo/still/manifest.json", label: "Inspect manifest", showcase: false },
+      outputs: [
+        { id: "launch-site", featured: true, title: "Launch website", description: "Responsive product story with a deliberately local-only waitlist.", href: "/demo/still/site/index.html", label: "Open site", preview: { src: "/demo/still/site/index.html", kind: "embed" } },
+        { id: "product-film", featured: true, title: "Product film", description: "A 24-second, 1080p launch film.", href: "/demo/still/film/still-launch.mp4", label: "Play film", preview: { src: "/demo/still/film/still-launch.mp4", kind: "video", poster: "/demo/still/film/still-launch-preview.png" } },
+        { id: "film-contact-sheet", featured: false, title: "Film contact sheet", description: "Review frames from the complete product-film timeline.", href: "/demo/still/film/still-launch-contact-sheet.png", label: "Open image" },
+        { id: "film-interaction", featured: false, title: "Film interaction frame", description: "A preserved interaction frame from the launch film.", href: "/demo/still/film/still-launch-interaction.png", label: "Open image" },
+        { id: "film-preview", featured: false, title: "Film poster", description: "The launch film’s preserved preview frame.", href: "/demo/still/film/still-launch-preview.png", label: "Open image" },
+        { id: "cad-step", featured: true, title: "Prototype CAD", description: "Measured concept geometry in STEP format.", href: "/demo/still/hardware/still.step", label: "Download STEP", preview: { src: "/demo/still/hardware/still-iso.png", alt: "Isometric CAD view of the Still focus device", kind: "image" } },
+        { id: "cad-glb", featured: false, title: "Browser CAD", description: "Portable GLB geometry for browser inspection.", href: "/demo/still/hardware/still.glb", label: "Download GLB" },
+        { id: "cad-stl", featured: false, title: "Mesh CAD", description: "Portable STL mesh export of the concept.", href: "/demo/still/hardware/still.stl", label: "Download STL" },
+        { id: "cad-source", featured: false, title: "CAD source", description: "The preserved Python geometry generator.", href: "/demo/still/hardware/still.py", label: "Open source" },
+        { id: "cad-front", featured: false, title: "CAD front view", description: "Front orthographic review view.", href: "/demo/still/hardware/still-front.png", label: "Open image" },
+        { id: "cad-iso", featured: false, title: "CAD isometric view", description: "Isometric geometry review view.", href: "/demo/still/hardware/still-iso.png", label: "Open image" },
+        { id: "cad-rear", featured: false, title: "CAD rear view", description: "Rear orthographic review view.", href: "/demo/still/hardware/still-rear.png", label: "Open image" },
+        { id: "cad-top", featured: false, title: "CAD top view", description: "Top orthographic review view.", href: "/demo/still/hardware/still-top.png", label: "Open image" },
+        { id: "waitlist-contract", featured: false, title: "Waitlist contract", description: "The local-only interaction and data-handling contract.", href: "/demo/still/evidence/waitlist-contract.md", label: "Read contract" },
+        { id: "geometry-report", featured: false, title: "Geometry report", description: "Measured CAD dimensions, export checks, and physical assumptions.", href: "/demo/still/evidence/geometry-report.md", label: "Read report" },
       ],
       verification: [
         { title: "Produced", description: "The first integrated launch package passed its artifact suite." },
@@ -159,11 +174,27 @@ export const exampleCatalog = [
         { title: "Control and simulation", description: "Implement deterministic MuJoCo locomotion and autonomous obstacle avoidance." },
         { title: "Telemetry and verification", description: "Record the run, expose sim-to-real gaps, and assign fresh review." },
       ],
-      artifacts: [
-        { title: "Inspectable CAD", description: "Ten links and nine joints in STEP and GLB.", href: "/demo/robot-snake/cad/robot-snake.step", label: "Download STEP", preview: { src: "/demo/robot-snake/cad/iso.png", alt: "Isometric CAD view of the Robot Snake assembly", kind: "image" } },
-        { title: "Simulation controls", description: "Browser controls for the preserved digital prototype.", href: "/demo/robot-snake/control/index.html", label: "Open controls", preview: { src: "/demo/robot-snake/control/index.html", kind: "embed" } },
-        { title: "MuJoCo replay", description: "Seeded autonomous avoidance with zero obstacle contact steps.", href: "/demo/robot-snake/simulation/obstacle-course/preview.gif", label: "Watch replay", preview: { src: "/demo/robot-snake/simulation/obstacle-course/preview.gif", alt: "Robot Snake autonomous obstacle avoidance replay", kind: "image" } },
-        { title: "Rerun telemetry", description: "A 3,801-frame engineering timeline of geometry, state, and measurements.", href: "/demo/robot-snake/viewer/robot-snake.rrd", label: "Download RRD", preview: { src: "/demo/robot-snake/viewer/preview.png", alt: "Rerun telemetry viewer showing the Robot Snake engineering timeline", kind: "image" } },
+      outputs: [
+        { id: "cad-step", featured: true, title: "Inspectable CAD", description: "Ten links and nine joints in STEP format.", href: "/demo/robot-snake/cad/robot-snake.step", label: "Download STEP", preview: { src: "/demo/robot-snake/cad/iso.png", alt: "Isometric CAD view of the Robot Snake assembly", kind: "image" } },
+        { id: "cad-glb", featured: false, title: "Browser CAD", description: "Portable GLB geometry for browser and desktop inspection.", href: "/demo/robot-snake/cad/robot-snake.glb", label: "Download GLB" },
+        { id: "cad-front", featured: false, title: "CAD front view", description: "Front review image of the preserved assembly.", href: "/demo/robot-snake/cad/front.png", label: "Open image" },
+        { id: "cad-iso", featured: false, title: "CAD isometric view", description: "Isometric review image of the preserved assembly.", href: "/demo/robot-snake/cad/iso.png", label: "Open image" },
+        { id: "cad-iso-opposite", featured: false, title: "CAD opposite view", description: "Opposite isometric review image.", href: "/demo/robot-snake/cad/iso-opposite.png", label: "Open image" },
+        { id: "cad-top", featured: false, title: "CAD top view", description: "Top review image of the preserved assembly.", href: "/demo/robot-snake/cad/top.png", label: "Open image" },
+        { id: "urdf", featured: true, title: "URDF robot description", description: "Generated robot structure, links, joints, and limits.", href: "/demo/robot-snake/model/robot-snake.urdf", label: "Open URDF", preview: { kind: "document" } },
+        { id: "srdf", featured: false, title: "SRDF planning model", description: "Generated semantic planning groups and collision configuration.", href: "/demo/robot-snake/model/robot-snake.srdf", label: "Open SRDF" },
+        { id: "locomotion-replay", featured: true, title: "Locomotion replay", description: "The preserved seeded MuJoCo locomotion scenario.", href: "/demo/robot-snake/simulation/locomotion/preview.gif", label: "Watch replay", preview: { src: "/demo/robot-snake/simulation/locomotion/preview.gif", alt: "Robot Snake seeded locomotion replay", kind: "image" } },
+        { id: "locomotion-metrics", featured: false, title: "Locomotion metrics", description: "Machine-readable measurements from the locomotion scenario.", href: "/demo/robot-snake/simulation/locomotion/metrics.json", label: "Open metrics" },
+        { id: "locomotion-trajectory", featured: false, title: "Locomotion trajectory", description: "Time-series trajectory data from the locomotion scenario.", href: "/demo/robot-snake/simulation/locomotion/trajectory.csv", label: "Open CSV" },
+        { id: "locomotion-contact-sheet", featured: false, title: "Locomotion contact sheet", description: "Review frames across the locomotion scenario.", href: "/demo/robot-snake/simulation/locomotion/contact_sheet.png", label: "Open image" },
+        { id: "obstacle-replay", featured: true, title: "Obstacle-avoidance replay", description: "Seeded autonomous avoidance with zero obstacle contact steps.", href: "/demo/robot-snake/simulation/obstacle-course/preview.gif", label: "Watch replay", preview: { src: "/demo/robot-snake/simulation/obstacle-course/preview.gif", alt: "Robot Snake autonomous obstacle avoidance replay", kind: "image" } },
+        { id: "obstacle-metrics", featured: false, title: "Obstacle-course metrics", description: "Machine-readable measurements from autonomous avoidance.", href: "/demo/robot-snake/simulation/obstacle-course/metrics.json", label: "Open metrics" },
+        { id: "obstacle-trajectory", featured: false, title: "Obstacle-course trajectory", description: "Time-series trajectory data from autonomous avoidance.", href: "/demo/robot-snake/simulation/obstacle-course/trajectory.csv", label: "Open CSV" },
+        { id: "obstacle-contact-sheet", featured: false, title: "Obstacle-course contact sheet", description: "Review frames across autonomous avoidance.", href: "/demo/robot-snake/simulation/obstacle-course/contact_sheet.png", label: "Open image" },
+        { id: "rerun-recording", featured: true, title: "Rerun telemetry", description: "A 3,801-frame engineering timeline of geometry, state, and measurements.", href: "/demo/robot-snake/viewer/robot-snake.rrd", label: "Download RRD", preview: { src: "/demo/robot-snake/viewer/preview.png", alt: "Rerun telemetry viewer showing the Robot Snake engineering timeline", kind: "image" } },
+        { id: "rerun-preview", featured: false, title: "Rerun preview", description: "Static preview of the telemetry and geometry timeline.", href: "/demo/robot-snake/viewer/preview.png", label: "Open image" },
+        { id: "rerun-manifest", featured: false, title: "Rerun manifest", description: "Checksums and coverage for the engineering timeline.", href: "/demo/robot-snake/viewer/robot-snake.manifest.json", label: "Inspect manifest" },
+        { id: "rerun-guide", featured: false, title: "Rerun guide", description: "Clean-download instructions for opening the recording locally.", href: "/demo/robot-snake/viewer/README.md", label: "Read guide" },
       ],
       verification: [
         { title: "Produced", description: "CAD, robot descriptions, control, and seeded simulation passed the lead agent’s suite." },
@@ -176,18 +207,8 @@ export const exampleCatalog = [
         { title: "Intake transcript", description: "The preserved user–Possible conversation.", href: "/demo/robot-snake/INTAKE-TRANSCRIPT.md", label: "Read intake" },
         { title: "Outcome brief", description: "The shared robotics contract and definition of done.", href: "/demo/robot-snake/evidence/outcome-brief.md", label: "Read brief" },
         { title: "Published manifest", description: "Artifact inventory and provenance.", href: "/demo/robot-snake/manifest.json", label: "Inspect manifest" },
-        { title: "Review geometry", description: "Portable GLB geometry for browser and desktop inspection.", href: "/demo/robot-snake/cad/robot-snake.glb", label: "Download GLB" },
-        { title: "CAD snapshot", description: "Isometric review image of the preserved assembly.", href: "/demo/robot-snake/cad/iso.png", label: "Open image" },
-        { title: "Locomotion replay", description: "The preserved seeded locomotion preview.", href: "/demo/robot-snake/simulation/locomotion/preview.gif", label: "Watch replay" },
-        { title: "Locomotion metrics", description: "Machine-readable measurements from the locomotion scenario.", href: "/demo/robot-snake/simulation/locomotion/metrics.json", label: "Open metrics" },
-        { title: "Obstacle metrics", description: "Machine-readable measurements from autonomous avoidance.", href: "/demo/robot-snake/simulation/obstacle-course/metrics.json", label: "Open metrics" },
-        { title: "URDF", description: "Generated robot structure and joint limits.", href: "/demo/robot-snake/model/robot-snake.urdf", label: "Open URDF" },
-        { title: "SRDF", description: "Generated planning groups and semantic robot description.", href: "/demo/robot-snake/model/robot-snake.srdf", label: "Open SRDF" },
         { title: "Simulation contract", description: "Exactly what the deterministic scenarios prove.", href: "/demo/robot-snake/evidence/simulation-contract.md", label: "Read contract" },
         { title: "Sim-to-real gaps", description: "What the digital prototype does not prove.", href: "/demo/robot-snake/evidence/sim-to-real-gaps.md", label: "Read boundaries" },
-        { title: "Rerun manifest", description: "Checksums and coverage for the engineering timeline.", href: "/demo/robot-snake/viewer/robot-snake.manifest.json", label: "Inspect manifest" },
-        { title: "Rerun guide", description: "Clean-download instructions for opening the recording locally.", href: "/demo/robot-snake/viewer/README.md", label: "Read guide" },
-        { title: "Rerun preview", description: "Static preview of the telemetry and geometry timeline.", href: "/demo/robot-snake/viewer/preview.png", label: "Open preview" },
       ],
       boundary: "Digital prototype only. Aggregate propulsion and steering remain simulated surrogates. Physical locomotion, actuator suitability, fabrication readiness, manufacturability, and functional safety remain unproven.",
     },
@@ -221,9 +242,8 @@ export const exampleCatalog = [
         { title: "Runtime and controls", description: "Implement Three.js with pointer, touch, and keyboard input." },
         { title: "Review", description: "Test the full loop across responsive browser sizes." },
       ],
-      artifacts: [
-        { title: "Playable game", description: "The finished Fold browser game.", href: "/demo/game/play", label: "Play Fold", preview: { src: "/demo/game/play", kind: "embed" } },
-        { title: "Game brief", description: "The product and interaction contract used by the reference build.", href: "/demo/fold/game-brief.md", label: "Read brief", preview: { kind: "document" } },
+      outputs: [
+        { id: "playable-game", featured: true, title: "Playable game", description: "The finished Fold browser game.", href: "/demo/game/play", label: "Play Fold", preview: { src: "/demo/game/play", kind: "embed" } },
       ],
       verification: [
         { title: "Reviewed", description: "The reference build received an implementation review and one repair." },
@@ -267,17 +287,15 @@ export const exampleCatalog = [
         { title: "Implementation", description: "Build browser-native slides with presenter controls." },
         { title: "Responsive review", description: "Check the deck with keyboard, touch, and compact viewports." },
       ],
-      artifacts: [
-        { title: "Coded presentation", description: "The complete ten-slide browser deck.", href: "/presentation", label: "Open presentation", preview: { src: "/presentation", kind: "embed" } },
-        { title: "Visual atlas", description: "Custom illustrations used to explain the Possible system.", href: "/presentation/possible-visual-atlas.webp", label: "Open atlas", preview: { src: "/presentation/possible-visual-atlas.webp", alt: "Visual atlas used throughout the Possible presentation", kind: "image" } },
+      outputs: [
+        { id: "coded-presentation", featured: true, title: "Coded presentation", description: "The complete ten-slide browser deck.", href: "/presentation", label: "Open presentation", preview: { src: "/presentation", kind: "embed" } },
+        { id: "visual-atlas", featured: true, title: "Visual atlas", description: "Custom illustrations used to explain the Possible system.", href: "/presentation/possible-visual-atlas.webp", label: "Open atlas", preview: { src: "/presentation/possible-visual-atlas.webp", alt: "Visual atlas used throughout the Possible presentation", kind: "image" } },
       ],
       verification: [
         { title: "Browser checks", description: "The retained site suite exercises route, controls, and responsive behavior.", tone: "pass" },
         { title: "Not preserved", description: "No independent $possible verification run or repair receipt was preserved for this reference build.", tone: "neutral" },
       ],
       evidence: [
-        { title: "Coded deck", description: "The self-contained presentation artifact.", href: "/presentation/possible.html", label: "Open HTML" },
-        { title: "Visual atlas", description: "The supporting illustration sheet.", href: "/presentation/possible-visual-atlas.webp", label: "Open image" },
       ],
       boundary: "Reference build. It demonstrates the Web Presentation pack’s intended output, not a preserved end-to-end $possible run.",
     },
@@ -321,11 +339,13 @@ export const exampleCatalog = [
         { title: "Remix and launch", description: "Explore three factual-equivalent directions and implement the selected one." },
         { title: "Verify every handoff", description: "Require independent review and hashed evidence before advancing the chain." },
       ],
-      artifacts: [
-        { title: "PatchProof product", description: "A local browser tool for converting supplied patch evidence into inspectable claim results.", href: "/examples/patchproof-chain/product/index.html", label: "Open product", preview: { src: "/examples/patchproof-chain/product/index.html", kind: "embed" } },
-        { title: "Launch site", description: "The selected Continuous Form launch direction.", href: "/examples/patchproof-chain/product/launch/site/index.html", label: "Open launch site", preview: { src: "/examples/patchproof-chain/product/launch/site/index.html", kind: "embed" } },
-        { title: "Remix directions", description: "Three comparable visual directions using identical factual copy.", href: "/examples/patchproof-chain/evidence/remix/continuous-form.png", label: "Open selected direction", preview: { src: "/examples/patchproof-chain/evidence/remix/continuous-form.png", alt: "Continuous Form visual direction selected for PatchProof", kind: "image", fit: "cover", position: "top" } },
-        { title: "Chain state", description: "The machine-readable record connecting all three stages.", href: "/examples/patchproof-chain/evidence/chain.json", label: "Inspect chain", showcase: false },
+      outputs: [
+        { id: "product", featured: true, title: "PatchProof product", description: "A local browser tool for converting supplied patch evidence into inspectable claim results.", href: "/examples/patchproof-chain/product/index.html", label: "Open product", preview: { src: "/examples/patchproof-chain/product/index.html", kind: "embed" } },
+        { id: "launch-site", featured: true, title: "Launch site", description: "The selected Continuous Form launch direction.", href: "/examples/patchproof-chain/product/launch/site/index.html", label: "Open launch site", preview: { src: "/examples/patchproof-chain/product/launch/site/index.html", kind: "embed" } },
+        { id: "continuous-form", featured: true, title: "Continuous Form direction", description: "The selected visual direction using the verified factual copy.", href: "/examples/patchproof-chain/evidence/remix/continuous-form.png", label: "Open direction", preview: { src: "/examples/patchproof-chain/evidence/remix/continuous-form.png", alt: "Continuous Form visual direction selected for PatchProof", kind: "image", fit: "cover", position: "top" } },
+        { id: "evidence-stamp", featured: false, title: "Evidence Stamp direction", description: "A second factual-equivalent visual direction.", href: "/examples/patchproof-chain/evidence/remix/evidence-stamp.png", label: "Open direction" },
+        { id: "patch-panel", featured: false, title: "Patch Panel direction", description: "A third factual-equivalent visual direction.", href: "/examples/patchproof-chain/evidence/remix/patch-panel.png", label: "Open direction" },
+        { id: "quickstart", featured: false, title: "Project quickstart", description: "Local setup and verification instructions for the produced launch.", href: "/examples/patchproof-chain/product/launch/docs/quickstart.md", label: "Read quickstart" },
       ],
       verification: [
         { title: "Produced", description: "Each stage produced an artifact and a candidate completion receipt." },

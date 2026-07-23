@@ -17,11 +17,11 @@ function renderRoute(path: string) {
 }
 
 const exampleContracts = [
-  { slug: "still", name: "Still", title: "Still", preserved: true },
-  { slug: "robot-snake", name: "Robot Snake", title: "Robot Snake", preserved: true },
-  { slug: "fold", name: "Fold", title: "Fold", preserved: false },
-  { slug: "web-presentation", name: "Web Presentation", title: "Possible", preserved: false },
-  { slug: "patchproof", name: "PatchProof", title: "PatchProof", preserved: true },
+  { slug: "still", name: "Still", title: "Still", preserved: true, featured: 3, total: 15, secondId: "product-film", evidence: true },
+  { slug: "robot-snake", name: "Robot Snake", title: "Robot Snake", preserved: true, featured: 5, total: 20, secondId: "urdf", evidence: true },
+  { slug: "fold", name: "Fold", title: "Fold", preserved: false, featured: 1, total: 1, secondId: null, evidence: true },
+  { slug: "web-presentation", name: "Web Presentation", title: "Possible", preserved: false, featured: 2, total: 2, secondId: "visual-atlas", evidence: false },
+  { slug: "patchproof", name: "PatchProof", title: "PatchProof", preserved: true, featured: 3, total: 6, secondId: "launch-site", evidence: true },
 ] as const;
 
 describe("Possible", () => {
@@ -239,18 +239,36 @@ describe("Possible", () => {
       const next = within(outputs).getByRole("button", { name: "Next output" });
       expect(previous).toHaveTextContent("<");
       expect(next).toHaveTextContent(">");
-      expect(outputs).toHaveTextContent(/01\s*\/\s*0[2-9]/);
+      expect(outputs).toHaveTextContent(`01 / ${String(example.featured).padStart(2, "0")}`);
       const initialOutputHref = within(outputs).getByRole("link").getAttribute("href");
       expect(initialOutputHref).toMatch(/^\//);
       await userEvent.click(next);
-      expect(outputs).toHaveTextContent(/02\s*\/\s*0[2-9]/);
-      expect(within(outputs).getByRole("link").getAttribute("href")).toMatch(/^\//);
-      expect(within(outputs).getByRole("link").getAttribute("href")).not.toBe(initialOutputHref);
-      expect(window.location.search).toBe("?output=2");
+      if (example.secondId) {
+        expect(outputs).toHaveTextContent(`02 / ${String(example.featured).padStart(2, "0")}`);
+        expect(within(outputs).getByRole("link").getAttribute("href")).toMatch(/^\//);
+        expect(within(outputs).getByRole("link").getAttribute("href")).not.toBe(initialOutputHref);
+        expect(window.location.search).toBe(`?output=${example.secondId}`);
+      } else {
+        expect(outputs).toHaveTextContent("01 / 01");
+        expect(window.location.search).toBe("");
+      }
+
+      const inventory = within(dialog).getByText(/VIEW ALL OUTPUTS/i).closest("details");
+      expect(inventory).not.toHaveAttribute("open");
+      expect(inventory).toHaveTextContent(`${example.featured} FEATURED / ${example.total} TOTAL`);
+      await userEvent.click(within(inventory as HTMLElement).getByText(/VIEW ALL OUTPUTS/i));
+      const inventoryLinks = within(inventory as HTMLElement).getAllByRole("link");
+      expect(inventoryLinks).toHaveLength(example.total);
+      expect(new Set(inventoryLinks.map((link) => link.getAttribute("href"))).size).toBe(example.total);
+      expect(inventory).not.toHaveTextContent(/Outcome brief|Completion receipt|Repair log/i);
+      if (example.slug === "robot-snake") {
+        expect(inventory.querySelector('a[href^="/demo/robot-snake/control/"]')).not.toBeInTheDocument();
+        expect(inventory).toHaveTextContent(/URDF robot description|SRDF planning model|Locomotion replay|Rerun telemetry/i);
+      }
 
       expect(within(dialog).queryByRole("link", { name: /Open outcome/i })).not.toBeInTheDocument();
       expect(within(dialog).queryByRole("link", { name: /See how Possible made this/i })).not.toBeInTheDocument();
-      expect(within(dialog).getByRole("link", { name: /Close|Back to examples/i })).toHaveAttribute("href", "/examples");
+      expect(within(dialog).getByRole("button", { name: "Close example" })).toBeInTheDocument();
 
       await userEvent.click(processTab);
       expect(processTab).toHaveAttribute("aria-selected", "true");
@@ -274,12 +292,16 @@ describe("Possible", () => {
       }
 
       const evidenceDisclosure = process.querySelector(".example-process-evidence");
-      expect(evidenceDisclosure).not.toHaveAttribute("open");
-      await userEvent.click(within(evidenceDisclosure as HTMLElement).getByText(/Inspect supporting evidence/i));
-      const evidenceLinks = within(evidenceDisclosure as HTMLElement).getAllByRole("link");
-      expect(evidenceLinks.length).toBeGreaterThan(0);
-      expect(evidenceLinks.length).toBeLessThanOrEqual(3);
-      expect(new Set(evidenceLinks.map((link) => link.getAttribute("href"))).size).toBe(evidenceLinks.length);
+      if (example.evidence) {
+        expect(evidenceDisclosure).not.toHaveAttribute("open");
+        await userEvent.click(within(evidenceDisclosure as HTMLElement).getByText(/Inspect supporting evidence/i));
+        const evidenceLinks = within(evidenceDisclosure as HTMLElement).getAllByRole("link");
+        expect(evidenceLinks.length).toBeGreaterThan(0);
+        expect(evidenceLinks.length).toBeLessThanOrEqual(3);
+        expect(new Set(evidenceLinks.map((link) => link.getAttribute("href"))).size).toBe(evidenceLinks.length);
+      } else {
+        expect(evidenceDisclosure).not.toBeInTheDocument();
+      }
 
       await userEvent.click(outputsTab);
       expect(outputsTab).toHaveAttribute("aria-selected", "true");
@@ -297,8 +319,8 @@ describe("Possible", () => {
   it("confines modal focus, then dismisses with Escape and returns to the canonical gallery URL", async () => {
     const { container } = renderRoute("/examples/patchproof");
     const dialog = screen.getByRole("dialog", { name: "PatchProof" });
-    const close = within(dialog).getByRole("link", { name: "Close example" });
-    const next = within(dialog).getByRole("button", { name: "Next output" });
+    const close = within(dialog).getByRole("button", { name: "Close example" });
+    const inventorySummary = within(dialog).getByText(/VIEW ALL OUTPUTS/i).closest("summary");
     const background = container.querySelector(".examples-background");
 
     expect(close).toHaveFocus();
@@ -307,7 +329,7 @@ describe("Possible", () => {
     expect(document.body.style.overflow).toBe("hidden");
 
     await userEvent.keyboard("{Shift>}{Tab}{/Shift}");
-    expect(next).toHaveFocus();
+    expect(inventorySummary).toHaveFocus();
     await userEvent.keyboard("{Tab}");
     expect(close).toHaveFocus();
 
@@ -317,6 +339,7 @@ describe("Possible", () => {
     expect(document.body.style.overflow).not.toBe("hidden");
     expect(background).not.toHaveAttribute("inert");
     expect(background).not.toHaveAttribute("aria-hidden");
+    await waitFor(() => expect(screen.getByRole("link", { name: /Open Outcome Chain: PatchProof example/i })).toHaveFocus());
   });
 
   it("opens a shareable process query in the same example modal", async () => {
@@ -327,5 +350,26 @@ describe("Possible", () => {
     expect(within(dialog).getByRole("tabpanel", { name: "PROCESS" })).toBeInTheDocument();
     expect(within(dialog).queryByRole("region", { name: "Output carousel" })).not.toBeInTheDocument();
     expect(container.querySelector(".demo-template, .demo-index-page")).not.toBeInTheDocument();
+  });
+
+  it("deep-links featured outputs by stable id and keeps arrow keys scoped to the carousel", async () => {
+    renderRoute("/examples/robot-snake?output=urdf");
+    const dialog = screen.getByRole("dialog", { name: "Robot Snake" });
+    const carousel = within(dialog).getByRole("region", { name: "Output carousel" });
+    await waitFor(() => expect(carousel).toHaveTextContent("URDF robot description"));
+    expect(carousel).toHaveTextContent("02 / 05");
+
+    carousel.focus();
+    await userEvent.keyboard("{ArrowRight}");
+    expect(carousel).toHaveTextContent("Locomotion replay");
+    expect(window.location.search).toBe("?output=locomotion-replay");
+
+    const processTab = within(dialog).getByRole("tab", { name: "PROCESS" });
+    processTab.focus();
+    await userEvent.keyboard("{ArrowLeft}");
+    expect(within(dialog).getByRole("tab", { name: "OUTPUTS" })).toHaveAttribute("aria-selected", "true");
+    await userEvent.keyboard("{ArrowRight}");
+    expect(processTab).toHaveAttribute("aria-selected", "true");
+    expect(window.location.search).toBe("?view=process");
   });
 });

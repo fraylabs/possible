@@ -1,7 +1,7 @@
 "use client";
 
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
-import type { MouseEvent } from "react";
+import type { KeyboardEvent as ReactKeyboardEvent, MouseEvent } from "react";
 import { compilePack } from "@possible/packs";
 import type { OutcomePack } from "@possible/packs";
 import { exampleCatalog, getExample } from "./example-content";
@@ -605,7 +605,7 @@ type ExampleView = "outputs" | "process";
 
 function ExampleProcess({ example, showOutputs }: { example: PossibleExample; showOutputs: () => void }) {
   const { demo } = example;
-  const visibleArtifacts = demo.artifacts.filter((artifact) => artifact.showcase !== false);
+  const featuredOutputs = demo.outputs.filter((output) => output.featured);
   const evidence = [...demo.verification, ...demo.evidence]
     .filter((item): item is typeof item & { href: string } => Boolean(item.href))
     .filter((item, index, items) => items.findIndex((candidate) => candidate.href === item.href) === index)
@@ -648,26 +648,28 @@ function ExampleProcess({ example, showOutputs }: { example: PossibleExample; sh
       <section className="example-process-section example-process-result" aria-label="Final outcome">
         <span>04 / FINAL OUTCOME</span>
         <div>
-          <p><strong>{visibleArtifacts.length} inspectable outputs</strong><span>{visibleArtifacts.map((artifact) => artifact.title).join(" · ")}</span></p>
+          <p><strong>{demo.outputs.length} inspectable outputs</strong><span>{featuredOutputs.length} featured in the gallery. Open Outputs for the complete inventory.</span></p>
           <button type="button" onClick={showOutputs}>View finished outputs →</button>
         </div>
         <aside><strong>SCOPE</strong><p>{demo.boundary}</p></aside>
       </section>
 
-      <details className="example-process-evidence">
-        <summary>Inspect supporting evidence</summary>
-        <div>
-          {evidence.map((item) => <a href={item.href} key={item.href}><span>{item.title}</span><strong>{item.label ?? "Open evidence"} ↗</strong></a>)}
-        </div>
-      </details>
+      {evidence.length
+        ? <details className="example-process-evidence">
+            <summary>Inspect supporting evidence</summary>
+            <div>
+              {evidence.map((item) => <a href={item.href} key={item.href}><span>{item.title}</span><strong>{item.label ?? "Open evidence"} ↗</strong></a>)}
+            </div>
+          </details>
+        : null}
     </div>
   );
 }
 
 function ExampleModal({ example, onDismiss }: { example: PossibleExample; onDismiss: () => void }) {
-  const closeRef = useRef<HTMLAnchorElement>(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
   const modalRef = useRef<HTMLElement>(null);
-  const outputs = example.demo.artifacts.filter((output) => output.showcase !== false);
+  const outputs = example.demo.outputs.filter((output) => output.featured);
   const [activeOutputIndex, setActiveOutputIndex] = useState(0);
   const [view, setView] = useState<ExampleView>("outputs");
   const viewRef = useRef<ExampleView>("outputs");
@@ -685,8 +687,13 @@ function ExampleModal({ example, onDismiss }: { example: PossibleExample; onDism
     url.pathname = `/examples/${example.slug}`;
     url.search = "";
     if (nextView === "process") url.searchParams.set("view", "process");
-    if (nextView === "outputs" && outputIndex > 0) url.searchParams.set("output", String(outputIndex + 1));
+    if (nextView === "outputs" && outputIndex > 0) url.searchParams.set("output", outputs[outputIndex]!.id);
     window.history.replaceState({}, "", `${url.pathname}${url.search}`);
+  }
+
+  function dismiss() {
+    window.history.replaceState({}, "", "/examples");
+    onDismiss();
   }
 
   function selectView(nextView: ExampleView) {
@@ -703,10 +710,33 @@ function ExampleModal({ example, onDismiss }: { example: PossibleExample; onDism
     });
   }
 
+  function handleCarouselKeydown(event: ReactKeyboardEvent<HTMLDivElement>) {
+    if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+    event.preventDefault();
+    moveOutput(event.key === "ArrowLeft" ? -1 : 1);
+  }
+
+  function handleTabKeydown(event: ReactKeyboardEvent<HTMLButtonElement>) {
+    if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
+    event.preventDefault();
+    const nextView = event.key === "Home"
+      ? "outputs"
+      : event.key === "End"
+        ? "process"
+        : event.key === "ArrowLeft"
+          ? "outputs"
+          : "process";
+    selectView(nextView);
+    document.getElementById(`${nextView}-tab-${example.slug}`)?.focus();
+  }
+
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const requestedView = params.get("view") === "process" ? "process" : "outputs";
-    const requestedOutput = Math.max(0, Math.min(outputs.length - 1, Number(params.get("output") ?? "1") - 1));
+    const outputParam = params.get("output");
+    const numericOutput = outputParam && /^\d+$/.test(outputParam) ? Number(outputParam) - 1 : -1;
+    const outputId = outputParam ? outputs.findIndex((output) => output.id === outputParam) : -1;
+    const requestedOutput = Math.max(0, Math.min(outputs.length - 1, outputId >= 0 ? outputId : numericOutput));
     viewRef.current = requestedView;
     setView(requestedView);
     setActiveOutputIndex(Number.isFinite(requestedOutput) ? requestedOutput : 0);
@@ -717,27 +747,18 @@ function ExampleModal({ example, onDismiss }: { example: PossibleExample; onDism
     const handleKeyboard = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         document.body.style.overflow = previousOverflow;
-        window.history.replaceState({}, "", "/examples");
-        onDismiss();
-        return;
-      }
-
-      if (viewRef.current === "outputs" && event.key === "ArrowLeft") {
-        event.preventDefault();
-        setActiveOutputIndex((index) => (index - 1 + outputs.length) % outputs.length);
-        return;
-      }
-
-      if (viewRef.current === "outputs" && event.key === "ArrowRight") {
-        event.preventDefault();
-        setActiveOutputIndex((index) => (index + 1) % outputs.length);
+        dismiss();
         return;
       }
 
       if (event.key !== "Tab") return;
       const focusable = Array.from(modalRef.current?.querySelectorAll<HTMLElement>(
         'a[href], button:not([disabled]), summary, iframe, [tabindex]:not([tabindex="-1"])',
-      ) ?? []).filter((element) => !element.closest("[hidden]") && !element.closest("details:not([open])"));
+      ) ?? []).filter((element) => {
+        if (element.closest("[hidden]") || element.tabIndex < 0) return false;
+        const closedDetails = element.closest("details:not([open])");
+        return !closedDetails || closedDetails.querySelector(":scope > summary") === element;
+      });
       if (!focusable.length) return;
 
       const first = focusable[0]!;
@@ -759,17 +780,18 @@ function ExampleModal({ example, onDismiss }: { example: PossibleExample; onDism
 
   return (
     <div className="example-modal-backdrop">
-      <section ref={modalRef} className="example-modal" role="dialog" aria-modal="true" aria-labelledby="example-modal-title">
+      <section ref={modalRef} className="example-modal" role="dialog" aria-modal="true" aria-label={example.name}>
         <header>
-          <a className="example-modal-close" ref={closeRef} href="/examples" aria-label="Close example">CLOSE ×</a>
+          <button className="example-modal-close" ref={closeRef} type="button" onClick={dismiss} aria-label="Close example">CLOSE ×</button>
           <span>{example.outcomeLabel}</span>
           <div className="example-modal-tabs" role="tablist" aria-label="Example view">
-            <button id={`outputs-tab-${example.slug}`} type="button" role="tab" aria-selected={view === "outputs"} aria-controls={`outputs-panel-${example.slug}`} onClick={() => selectView("outputs")}>OUTPUTS</button>
-            <button id={`process-tab-${example.slug}`} type="button" role="tab" aria-selected={view === "process"} aria-controls={`process-panel-${example.slug}`} onClick={() => selectView("process")}>PROCESS</button>
+            <button id={`outputs-tab-${example.slug}`} type="button" role="tab" tabIndex={view === "outputs" ? 0 : -1} aria-selected={view === "outputs"} aria-controls={`outputs-panel-${example.slug}`} onClick={() => selectView("outputs")} onKeyDown={handleTabKeydown}>OUTPUTS</button>
+            <button id={`process-tab-${example.slug}`} type="button" role="tab" tabIndex={view === "process" ? 0 : -1} aria-selected={view === "process"} aria-controls={`process-panel-${example.slug}`} onClick={() => selectView("process")} onKeyDown={handleTabKeydown}>PROCESS</button>
           </div>
         </header>
-        <div hidden={view !== "outputs"} className="example-modal-layout" role="tabpanel" id={`outputs-panel-${example.slug}`} aria-labelledby={`outputs-tab-${example.slug}`}>
-          <div className="example-modal-preview" role="region" aria-label="Output carousel">
+        <div hidden={view !== "outputs"} role="tabpanel" id={`outputs-panel-${example.slug}`} aria-labelledby={`outputs-tab-${example.slug}`}>
+          <div className="example-modal-layout">
+          <div className="example-modal-preview" role="region" aria-label="Output carousel" tabIndex={0} onKeyDown={handleCarouselKeydown}>
             <div className="example-output-stage">
               {preview.kind === "embed" && preview.src
                 ? <iframe src={preview.src} title={`${example.name}: ${activeOutput.title}`} />
@@ -786,7 +808,7 @@ function ExampleModal({ example, onDismiss }: { example: PossibleExample; onDism
             </div>
             <div className="example-output-controls">
               <button type="button" onClick={() => moveOutput(-1)} aria-label="Previous output">{"<"}</button>
-              <div>
+              <div aria-live="polite" aria-atomic="true">
                 <small>{String(activeOutputIndex + 1).padStart(2, "0")} / {String(outputs.length).padStart(2, "0")}</small>
                 <strong>{activeOutput.title}</strong>
                 <p>{activeOutput.description}</p>
@@ -797,12 +819,23 @@ function ExampleModal({ example, onDismiss }: { example: PossibleExample; onDism
           </div>
           <article>
             <p className="eyebrow">{example.projectLabel}</p>
-            <h1 id="example-modal-title">{example.name}</h1>
+            <h1>{example.name}</h1>
             <div className="example-modal-details">
               <section aria-label="Description"><span>Description</span><p>{example.description}</p></section>
               <section aria-label="Outcome Pack"><span>Outcome Pack</span><p>{example.outcomeLabel}</p></section>
             </div>
+            <details className="example-output-inventory">
+              <summary><span>VIEW ALL OUTPUTS</span><strong>{outputs.length} FEATURED / {example.demo.outputs.length} TOTAL</strong></summary>
+              <ol>
+                {example.demo.outputs.map((output, index) => <li key={output.id}>
+                  {output.href
+                    ? <a href={output.href}><small>{String(index + 1).padStart(2, "0")}</small><span><strong>{output.title}</strong><em>{output.description}</em></span><b>{output.featured ? "FEATURED · " : ""}{output.label ?? "Open"} ↗</b></a>
+                    : <div><small>{String(index + 1).padStart(2, "0")}</small><span><strong>{output.title}</strong><em>{output.description}</em></span></div>}
+                </li>)}
+              </ol>
+            </details>
           </article>
+          </div>
         </div>
         <div hidden={view !== "process"}>
           <ExampleProcess example={example} showOutputs={() => selectView("outputs")} />
@@ -830,7 +863,10 @@ function ExamplesPage({ activeSlug }: { activeSlug?: string }) {
         </section>
         <SiteFooter />
       </div>
-      {visibleExample ? <ExampleModal example={visibleExample} onDismiss={() => setModalDismissed(true)} /> : null}
+      {visibleExample ? <ExampleModal example={visibleExample} onDismiss={() => {
+        setModalDismissed(true);
+        window.setTimeout(() => document.querySelector<HTMLElement>(`a[href="/examples/${visibleExample.slug}"]`)?.focus(), 0);
+      }} /> : null}
     </main>
   );
 }
