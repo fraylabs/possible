@@ -2,7 +2,7 @@ import PossibleRoute from "../../_components/PossibleRoute";
 import { pageMetadata } from "../../_metadata";
 
 export const metadata = pageMetadata({
-  title: "Robot Snake demo",
+  title: "Robot Snake process record",
   description: "A recorded Possible Robot Prototype run with CAD, URDF, MuJoCo simulation, deterministic tests, and independent verification.",
   path: "/demo/robot-snake",
 });

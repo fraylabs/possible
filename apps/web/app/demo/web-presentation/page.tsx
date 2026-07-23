@@ -2,7 +2,7 @@ import PossibleRoute from "../../_components/PossibleRoute";
 import { pageMetadata } from "../../_metadata";
 
 export const metadata = pageMetadata({
-  title: "Possible web presentation demo",
+  title: "Possible presentation process record",
   description: "Open the responsive ten-slide coded presentation that explains agent skills, Outcome Packs, and the Possible guide.",
   path: "/demo/web-presentation",
 });

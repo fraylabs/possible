@@ -155,7 +155,7 @@ for (const [slug, name] of exampleRoutes) {
   assert.match(markup, /aria-label="Next output"[^>]*>[\s\S]*?&gt;[\s\S]*?<\/button>/, `${name} must expose a next-output control`);
   assert.match(text, /01\s*\/\s*0[2-9]/, `${name} must expose at least two finished outputs in its carousel`);
   assert.match(markup, /href="\/examples"[^>]*>[\s\S]*?(?:CLOSE|BACK TO EXAMPLES)/i, `${name} must close back to /examples`);
-  assert.match(text, /OPEN OUTCOME/i, `${name} must expose its finished outcome`);
+  assert.doesNotMatch(text, /OPEN OUTCOME/i, `${name} must not repeat the active output as a second modal action`);
   assert.match(text, /SEE HOW POSSIBLE MADE THIS/i, `${name} must lead to the run record`);
   assert.match(markup, new RegExp(`href="/demo/${escape(slug)}"`), `${name} must link its canonical Demo`);
   for (const label of demoSectionLabels) {
@@ -194,6 +194,10 @@ async function assertDemoContract(route, name, preserved) {
   const marker = markup.match(/<main[^>]*data-demo-template="([^"]+)"/)?.[1];
   assert.ok(marker, `${route} must identify the shared Demo template`);
   demoTemplateMarkers.add(marker);
+  assert.match(markup, /aria-label="Process record sections"/, `${route} must expose its compact section index`);
+  const processHero = markup.match(/<section class="demo-template-hero"[\s\S]*?<\/section>/)?.[0] ?? "";
+  assert.doesNotMatch(processHero, /<img\b/, `${route} must read as a process record instead of a marketing hero`);
+  assert.doesNotMatch(plainText(visibleText(processHero)), /How .* was made|Open outcome/i, `${route} must avoid landing-page language`);
 
   const positions = demoSectionLabels.map((label) => {
     const index = markup.indexOf(`aria-label="${label}"`);

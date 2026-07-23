@@ -274,10 +274,8 @@ describe("Possible", () => {
       expect(within(outputs).getByRole("link").getAttribute("href")).toMatch(/^\//);
       expect(within(outputs).getByRole("link").getAttribute("href")).not.toBe(initialOutputHref);
 
-      const output = within(dialog).getByRole("link", { name: /Open outcome/i });
       const evidence = within(dialog).getByRole("link", { name: /See how Possible made this/i });
-      expect(output.getAttribute("href")).toMatch(/^\//);
-      expect(["/examples", "/examples/"]).not.toContain(output.getAttribute("href"));
+      expect(within(dialog).queryByRole("link", { name: /Open outcome/i })).not.toBeInTheDocument();
       expect(evidence).toHaveAttribute("href", `/demo/${example.slug}`);
       expect(within(dialog).getByRole("link", { name: /Close|Back to examples/i })).toHaveAttribute("href", "/examples");
 
@@ -330,6 +328,11 @@ describe("Possible", () => {
       const main = container.querySelector("main");
       expect(main).toHaveAttribute("data-demo-template");
       templateMarkers.add(main?.getAttribute("data-demo-template") ?? "");
+      expect(container.querySelector(".demo-template-hero img, .demo-template-playable")).not.toBeInTheDocument();
+      expect(main).not.toHaveTextContent(/How .* was made/i);
+      expect(main).not.toHaveTextContent(/Open outcome/i);
+      const sectionIndex = screen.getByRole("complementary", { name: "Process record sections" });
+      expect(within(sectionIndex).getAllByRole("link")).toHaveLength(demoSectionNames.length);
 
       const sections = demoSectionNames.map((name) => screen.getByRole("region", { name }));
       for (const section of sections) expect(section).not.toBeEmptyDOMElement();

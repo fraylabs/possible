@@ -704,7 +704,7 @@ function ExampleModal({ example, onDismiss }: { example: PossibleExample; onDism
               <section aria-label="Description"><span>Description</span><p>{example.description}</p></section>
               <section aria-label="Outcome Pack"><span>Outcome Pack</span><p><a href={example.demo.packs[0].href}>{example.outcomeLabel} ↗</a></p></section>
             </div>
-            <footer><a href={example.primaryOutput.href}><span>OPEN OUTCOME</span><strong>{example.primaryOutput.label} ↗</strong></a><a href={example.demoHref}><span>SEE HOW POSSIBLE MADE THIS</span><strong>Open process record ↗</strong></a></footer>
+            <footer><a href={example.demoHref}><span>SEE HOW POSSIBLE MADE THIS</span><strong>Open process record ↗</strong></a></footer>
           </article>
         </div>
       </section>
@@ -767,21 +767,35 @@ function DemoPage({ example }: { example: PossibleExample }) {
       <section className="demo-template-hero" aria-labelledby="demo-template-heading">
         <div>
           <p className="eyebrow">{demo.runKind === "preserved-run" ? "PRESERVED POSSIBLE RUN" : "OUTCOME PACK REFERENCE BUILD"}</p>
-          <h1 id="demo-template-heading">How <em>{example.name}</em><br />was made.</h1>
+          <h1 id="demo-template-heading">{example.name}</h1>
           <p>{demo.summary}</p>
-          <div><a className="button-link" href={example.primaryOutput.href}>Open outcome <span>↗</span></a><a className="text-link" href={`/examples/${example.slug}`}>View example ↗</a></div>
         </div>
-        {example.visual.kind === "image"
-          ? <img src={example.visual.src} alt={example.visual.alt} />
-          : <div className="demo-template-playable" aria-label={example.visual.alt}><span>PLAYABLE OUTCOME</span><strong>{example.name}</strong></div>}
+        <dl>
+          <div><dt>Record</dt><dd>{demo.runKind === "preserved-run" ? "Preserved run" : "Reference build"}</dd></div>
+          <div><dt>Outcome</dt><dd><a href={`/examples/${example.slug}`}>View finished example ↗</a></dd></div>
+          <div><dt>{demo.packs.length > 1 ? "Outcome chain" : "Outcome Pack"}</dt><dd>{demo.packs.map((pack) => pack.name).join(" → ")}</dd></div>
+          <div><dt>Completion</dt><dd>{demo.runKind === "preserved-run" ? "Verification evidence preserved" : "Available evidence stated below"}</dd></div>
+        </dl>
       </section>
 
-      <section className="demo-template-section demo-template-request" aria-label="Original request">
+      <aside className="demo-template-index" aria-label="Process record sections">
+        {[
+          ["01", "Request", "request"],
+          ["02", "Conversation", "conversation"],
+          ["03", demo.packs.length > 1 ? "Outcome chain" : "Outcome Pack", "pack"],
+          ["04", "Workstreams", "workstreams"],
+          ["05", "Artifacts", "artifacts"],
+          ["06", "Verification", "verification"],
+          ["07", "Evidence", "evidence"],
+        ].map(([number, label, id]) => <a href={`#${id}`} key={id}><span>{number}</span>{label}</a>)}
+      </aside>
+
+      <section id="request" className="demo-template-section demo-template-request" aria-label="Original request">
         <header><span>01</span><h2>Original request</h2></header>
         <blockquote>“{demo.request}”</blockquote>
       </section>
 
-      <section className="demo-template-section demo-template-conversation" aria-label="$possible conversation">
+      <section id="conversation" className="demo-template-section demo-template-conversation" aria-label="$possible conversation">
         <header><span>02</span><h2>$possible conversation</h2><p>{demo.conversationNote}</p></header>
         {demo.conversation.length ? (
           <div className="demo-template-thread">
@@ -792,7 +806,7 @@ function DemoPage({ example }: { example: PossibleExample }) {
         )}
       </section>
 
-      <section className="demo-template-section demo-template-packs" aria-label="Recommended Outcome Pack">
+      <section id="pack" className="demo-template-section demo-template-packs" aria-label="Recommended Outcome Pack">
         <header><span>03</span><h2>{demo.packs.length > 1 ? "Recommended Outcome Chain" : "Recommended Outcome Pack"}</h2></header>
         <div className="demo-template-grid">
           {demo.packs.map((pack, index) => (
@@ -801,14 +815,14 @@ function DemoPage({ example }: { example: PossibleExample }) {
         </div>
       </section>
 
-      <section className="demo-template-section demo-template-workstreams" aria-label="Compiled workstreams">
+      <section id="workstreams" className="demo-template-section demo-template-workstreams" aria-label="Compiled workstreams">
         <header><span>04</span><h2>Compiled workstreams</h2><p>The pack expands the request into owned, ordered work the user did not need to enumerate.</p></header>
         <ol className="demo-template-grid">
           {demo.workstreams.map((item, index) => <li key={item.title}><small>{String(index + 1).padStart(2, "0")}</small><h3>{item.title}</h3><p>{item.description}</p></li>)}
         </ol>
       </section>
 
-      <section className="demo-template-section demo-template-artifacts" aria-label="Outcome artifacts">
+      <section id="artifacts" className="demo-template-section demo-template-artifacts" aria-label="Outcome artifacts">
         <header><span>05</span><h2>Outcome artifacts</h2><p>The finished, inspectable outputs from this outcome.</p></header>
         <div className="demo-template-grid">
           {demo.artifacts.map((item, index) => (
@@ -817,7 +831,7 @@ function DemoPage({ example }: { example: PossibleExample }) {
         </div>
       </section>
 
-      <section className="demo-template-section demo-template-verification" aria-label="Verification, repair, and pass">
+      <section id="verification" className="demo-template-section demo-template-verification" aria-label="Verification, repair, and pass">
         <header><span>06</span><h2>Verification, repair, and pass</h2><p>{demo.runKind === "preserved-run" ? "Completion remained withheld until the recorded review finished." : "Only preserved review evidence is shown; missing run evidence is stated explicitly."}</p></header>
         <ol>
           {demo.verification.map((item, index) => (
@@ -826,7 +840,7 @@ function DemoPage({ example }: { example: PossibleExample }) {
         </ol>
       </section>
 
-      <section className="demo-template-section demo-template-evidence" aria-label="Evidence">
+      <section id="evidence" className="demo-template-section demo-template-evidence" aria-label="Evidence">
         <header><span>07</span><h2>Evidence</h2><p>Open the underlying records instead of taking the page’s claims on trust.</p></header>
         <div className="demo-template-grid">
           {demo.evidence.map((item, index) => (
