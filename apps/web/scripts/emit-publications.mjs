@@ -64,8 +64,8 @@ const evidenceManifest = {
     {
       criterion: "Design",
       claim: "Each demo presents the outcome beside its proof.",
-      implementationFact: "The demo gallery exposes four visual outcomes and their preserved evidence.",
-      significance: "Judges can inspect the work without reading agent logs first.",
+      implementationFact: "The demo gallery exposes five finished outcomes; each links to an honest preserved-run or reference-build record.",
+      significance: "Judges can inspect the work before opening the process and evidence behind it.",
       evidence: {
         label: "Demo gallery",
         url: "https://possible.sh/demo",

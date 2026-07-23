@@ -148,18 +148,20 @@ if (!robotViewerGuide.includes("uvx --from 'rerun-sdk==0.34.1' rerun robot-snake
 }
 
 const appSource = await readFile(path.join(repository, "apps/web/src/App.tsx"), "utf8");
+const exampleSource = await readFile(path.join(repository, "apps/web/src/example-content.ts"), "utf8");
+const demoPageSource = `${appSource}\n${exampleSource}`;
 const stylesSource = await readFile(path.join(repository, "apps/web/src/styles.css"), "utf8");
 if (!appSource.includes('path === "/demo/game/play"') || !appSource.includes('<PaperPlaneGame />')) {
   failures.push("Playable Web Game proof must expose the full-screen /demo/game/play route");
 }
-if (!appSource.includes("not presented as a clean-room evaluation")) {
+if (!demoPageSource.includes("not presented as a clean-room evaluation")) {
   failures.push("Playable Web Game proof must disclose that it is not a clean-room pack evaluation");
 }
 for (const file of robotManifest.files ?? []) {
-  if (!appSource.includes(file.publishedUrl)) failures.push(`Robot Prototype page does not link its manifested artifact: ${file.publishedUrl}`);
+  if (!demoPageSource.includes(file.publishedUrl)) failures.push(`Robot Prototype page does not link its manifested artifact: ${file.publishedUrl}`);
 }
 for (const claimBoundary of ["Aggregate propulsion", "Physical locomotion", "actuator suitability", "fabrication readiness", "functional safety"]) {
-  if (!appSource.toLowerCase().includes(claimBoundary.toLowerCase())) {
+  if (!demoPageSource.toLowerCase().includes(claimBoundary.toLowerCase())) {
     failures.push(`Robot Prototype page is missing claim boundary: ${claimBoundary}`);
   }
 }

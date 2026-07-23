@@ -4,34 +4,12 @@ import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import type { MouseEvent } from "react";
 import { compilePack } from "@possible/packs";
 import type { OutcomePack } from "@possible/packs";
-import demoThreadData from "./demo-thread.json";
 import { exampleCatalog, getExample } from "./example-content";
 import type { PossibleExample } from "./example-content";
 import { getPublishedPack, githubUrl, installCommand, publishedPacks } from "./public-content";
 
 const PaperPlaneGame = lazy(() => import("./PaperPlaneGame"));
-const RobotSnakeViewer = lazy(() => import("./RobotSnakeViewer"));
-
 type CopyState = "idle" | "copied" | "failed";
-
-type DemoThread = {
-  title: string;
-  runId: string;
-  recordedAt: string;
-  disclosure: string;
-  prompt: string;
-  agents: Array<{ name: string; role: string; thread: string }>;
-  messages: Array<{
-    timestamp: string;
-    agent: string;
-    role: string;
-    thread: string;
-    phase: string;
-    message: string;
-  }>;
-};
-
-const demoThread = demoThreadData as DemoThread;
 const approvalDisclosure = "Saying yes authorizes repo-local agent skill installation, the shared outcome brief and state files, and local outcome work. External actions still require separate approval.";
 const laneLabels = {
   create: "Create",
@@ -193,7 +171,7 @@ function CreatePage() {
         <section className="home-demo" aria-labelledby="home-demo-heading">
           <header>
             <span>FEATURED OUTCOMES</span>
-            <h2 id="home-demo-heading">See the conversation.<br /><em>Inspect the result.</em></h2>
+            <h2 id="home-demo-heading">Finished outcomes.<br /><em>Open one.</em></h2>
           </header>
           <ol aria-label="Possible example outcomes">
             {exampleCatalog.slice(0, 4).map((example) => (
@@ -604,191 +582,6 @@ function PackDetailPage({ pack }: { pack: OutcomePack }) {
   );
 }
 
-function ThreadTranscript({
-  thread,
-  rawHref,
-  outputHref = "#artifacts",
-  onClose,
-}: {
-  thread: DemoThread;
-  rawHref: string;
-  outputHref?: string;
-  onClose: () => void;
-}) {
-  const [copyState, setCopyState] = useState<CopyState>("idle");
-
-  useEffect(() => {
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") onClose();
-    };
-    window.addEventListener("keydown", closeOnEscape);
-    return () => {
-      document.body.style.overflow = previousOverflow;
-      window.removeEventListener("keydown", closeOnEscape);
-    };
-  }, [onClose]);
-
-  const copyableThread = [
-    `# ${thread.title} — Codex thread`,
-    thread.disclosure,
-    "## Run prompt",
-    thread.prompt,
-    "## Public thread",
-    ...thread.messages.map((message) =>
-      `### ${new Date(message.timestamp).toISOString().slice(11, 19)} UTC — ${message.agent} / ${message.role}\n${message.message}`,
-    ),
-  ].join("\n\n");
-
-  async function copyThread() {
-    try {
-      await navigator.clipboard.writeText(copyableThread);
-      setCopyState("copied");
-      window.setTimeout(() => setCopyState("idle"), 1600);
-    } catch {
-      setCopyState("failed");
-    }
-  }
-
-  return (
-    <div className="thread-backdrop" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}>
-      <section className="thread-panel" role="dialog" aria-modal="true" aria-labelledby="thread-title">
-        <header className="thread-header">
-          <div>
-            <span>ACTUAL RUN LOG / {thread.runId.slice(0, 8)}</span>
-            <h2 id="thread-title">The full Codex thread.</h2>
-            <p>{thread.messages.length} exact public messages across {thread.agents.length} real agent threads.</p>
-          </div>
-          <div className="thread-header-actions">
-            <button type="button" onClick={copyThread}>{copyState === "copied" ? "COPIED ✓" : copyState === "failed" ? "COPY FAILED" : "COPY THREAD"}</button>
-            <a href={rawHref} target="_blank" rel="noreferrer">RAW .MD ↗</a>
-            <a className="thread-output-button" href={outputHref} onClick={onClose}>SHOW OUTPUT ↓</a>
-            <button className="thread-close" type="button" aria-label="Close full Codex thread" onClick={onClose}>×</button>
-          </div>
-        </header>
-
-        <div className="thread-agents" aria-label="Agents in this run">
-          {thread.agents.map((agent, index) => (
-            <div key={agent.name} className={`thread-agent thread-agent-${index}`}>
-              <i /><span>{agent.name}</span><strong>{agent.role}</strong>
-            </div>
-          ))}
-        </div>
-
-        <div className="thread-scroll">
-          <article className="thread-prompt">
-            <header><span>USER / RUN PROMPT</span><strong>{thread.title.split(" / ").at(-1)?.toUpperCase().replaceAll(" ", "-")}@1</strong></header>
-            <pre>{thread.prompt}</pre>
-          </article>
-
-          <div className="thread-divider"><span>PARALLEL EXECUTION BEGINS</span><i /></div>
-
-          {thread.messages.map((message, index) => {
-            const agentIndex = thread.agents.findIndex((agent) => agent.name === message.agent);
-            return (
-              <article className={`thread-message thread-agent-${agentIndex}`} key={`${message.timestamp}-${message.agent}`}>
-                <aside><span>{String(index + 1).padStart(2, "0")}</span><i /></aside>
-                <div>
-                  <header>
-                    <p><strong>{message.agent}</strong><span>{message.role}</span></p>
-                    <time dateTime={message.timestamp}>{new Date(message.timestamp).toISOString().slice(11, 19)} UTC</time>
-                  </header>
-                  <p className="thread-message-body">{message.message}</p>
-                  <footer><span>{message.phase.replace("_", " ")}</span><code>{message.thread}</code></footer>
-                </div>
-              </article>
-            );
-          })}
-
-          <div className="thread-disclosure">
-            <span>EXPORT BOUNDARY</span>
-            <p>{thread.disclosure}</p>
-          </div>
-        </div>
-      </section>
-    </div>
-  );
-}
-
-function DemoOutcomeHeader({
-  eyebrow,
-  title,
-  accent,
-  description,
-  metric,
-  thread,
-  onOpenThread,
-}: {
-  eyebrow: string;
-  title: string;
-  accent: string;
-  description: string;
-  metric: string;
-  thread?: DemoThread;
-  onOpenThread?: () => void;
-}) {
-  return (
-    <section className="demo-outcome-header">
-      <div>
-        <p className="eyebrow">{eyebrow}</p>
-        <h1>{title}<br /><em>{accent}</em></h1>
-      </div>
-      <div className="demo-outcome-summary">
-        <p>{description}</p>
-        <strong><i /> {metric}</strong>
-        <div>
-          <a href="#artifacts"><span>01 / OUTPUT</span><b>OPEN ↓</b></a>
-          <a href="#conversation"><span>02 / CONVERSATION</span><b>READ ↓</b></a>
-          {thread && onOpenThread ? <button type="button" onClick={onOpenThread}><span>03 / FULL CODEX THREAD</span><b>{thread.messages.length} MESSAGES ↗</b></button> : null}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function DemoConversation({
-  userIdea,
-  possibleQuestion,
-  userOutcome,
-  packHref,
-  packLabel,
-  recommendation,
-}: {
-  userIdea: string;
-  possibleQuestion: string;
-  userOutcome: string;
-  packHref: string;
-  packLabel: string;
-  recommendation: string;
-}) {
-  return (
-    <section className="demo-conversation" id="conversation" aria-label="$possible conversation">
-      <header>
-        <div><p className="eyebrow">02 / CONVERSATION</p><h2>One short<br /><em>conversation.</em></h2></div>
-        <p><code>$possible</code> turns a rough idea into a concrete outcome, recommends an Outcome Pack, and waits for permission. Then Codex runs it.</p>
-      </header>
-      <article className="demo-conversation-thread">
-          <p><strong>USER</strong><span>$possible</span></p>
-          <p><strong>POSSIBLE</strong><span>What would you like to make possible today? A rough idea is enough — we can brainstorm it together.</span></p>
-          <p><strong>USER</strong><span>{userIdea}</span></p>
-          <p><strong>POSSIBLE</strong><span>{possibleQuestion}</span></p>
-          <p><strong>USER</strong><span>{userOutcome}</span></p>
-          <p className="demo-conversation-recommend"><strong>POSSIBLE</strong><span>I recommend the <a href={packHref}>{packLabel} Outcome Pack ↗</a>. {recommendation} {approvalDisclosure} Proceed with this outcome?</span></p>
-          <p className="demo-conversation-confirm"><strong>USER</strong><span>Yes, proceed.</span></p>
-      </article>
-    </section>
-  );
-}
-
-function DemoOutputLabel() {
-  return <p className="demo-output-label"><span>01 /</span><strong>OUTPUT</strong></p>;
-}
-
-function DemoOutcomeFooter({ text, href = "#top", linkLabel = "BACK TO TOP ↑" }: { text: string; href?: string; linkLabel?: string }) {
-  return <footer className="demo-outcome-footer"><p>{text}</p><a href={href}>{linkLabel}</a></footer>;
-}
-
 function ExampleCard({ example }: { example: PossibleExample }) {
   return (
     <a className={`example-card example-card--${example.slug}`} href={`/examples/${example.slug}`} aria-label={`Open ${example.outcomeLabel}: ${example.name} example`}>
@@ -801,8 +594,8 @@ function ExampleCard({ example }: { example: PossibleExample }) {
       <div className="example-card-copy">
         <p>{example.projectLabel}</p>
         <h2>{example.name}</h2>
-        <p>“{example.roughRequest}”</p>
-        <div>{example.proofMetrics.map((metric) => <span key={metric}>{metric}</span>)}</div>
+        <p>{example.description}</p>
+        <div>{example.highlights.map((highlight) => <span key={highlight}>{highlight}</span>)}</div>
       </div>
     </a>
   );
@@ -861,12 +654,12 @@ function ExampleModal({ example, onDismiss }: { example: PossibleExample; onDism
             <p className="eyebrow">{example.projectLabel}</p>
             <h1 id="example-modal-title">{example.name}</h1>
             <div className="example-modal-details">
-              <section aria-label="Original request"><span>Original request</span><p>“{example.roughRequest}”</p></section>
-              <section aria-label={example.inferenceLabel ?? "What Possible inferred"}><span>{example.inferenceLabel ?? "What Possible inferred"}</span><p>{example.inference}</p></section>
-              <section aria-label={example.outcomeLabel.includes("Chain") ? "Outcome Chain" : "Outcome Pack"}><span>{example.outcomeLabel.includes("Chain") ? "Outcome Chain" : "Outcome Pack"}</span><p>{example.outcomeLabel}</p></section>
+              <section aria-label="Finished outcome"><span>Finished outcome</span><p>{example.name}</p></section>
+              <section aria-label="Description"><span>Description</span><p>{example.description}</p></section>
+              <section aria-label="Outcome Pack"><span>Outcome Pack</span><p><a href={example.demo.packs[0].href}>{example.outcomeLabel} ↗</a></p></section>
             </div>
-            <section aria-label="Proof"><span>PROOF</span><ul>{example.proofMetrics.map((metric) => <li key={metric}>{metric}</li>)}</ul></section>
-            <footer><a href={example.primaryOutput.href}><span>OPEN OUTPUT</span><strong>{example.primaryOutput.label} ↗</strong></a><a href={example.evidence.href}><span>INSPECT EVIDENCE</span><strong>{example.evidence.label} ↗</strong></a></footer>
+            <section aria-label="Outcome highlights"><span>OUTCOME INCLUDES</span><ul>{example.highlights.map((highlight) => <li key={highlight}>{highlight}</li>)}</ul></section>
+            <footer><a href={example.primaryOutput.href}><span>OPEN OUTCOME</span><strong>{example.primaryOutput.label} ↗</strong></a><a href={example.demoHref}><span>SEE HOW POSSIBLE MADE THIS</span><strong>Open process record ↗</strong></a></footer>
           </article>
         </div>
       </section>
@@ -885,7 +678,7 @@ function ExamplesPage({ activeSlug }: { activeSlug?: string }) {
         <section className="examples-intro" aria-labelledby="examples-heading">
           <p className="eyebrow">POSSIBLE EXAMPLES</p>
           <h1 id="examples-heading">Rough requests.<br /><em>Real outcomes.</em></h1>
-          <p>Open any example for the request, the work its Outcome Pack supplies, the finished output, and its supporting evidence.</p>
+          <p>Finished things made with Possible. Open one to see the outcome; follow its process link only when you want the full run.</p>
         </section>
         <section className="examples-grid" aria-label="Possible examples">
           {exampleCatalog.map((example) => <ExampleCard key={example.slug} example={example} />)}
@@ -897,512 +690,109 @@ function ExamplesPage({ activeSlug }: { activeSlug?: string }) {
   );
 }
 
-function PatchProofDemoPage() {
-  const evidenceRoot = "/examples/patchproof-chain/evidence";
+function DemoIndexPage() {
   return (
-    <main className="patchproof-record">
-      <SiteNav label="Demo / PatchProof" />
-
-      <section className="patchproof-record-hero" id="top" aria-labelledby="patchproof-record-heading">
-        <div>
-          <p className="eyebrow">RECORDED RUN / PATCHPROOF</p>
-          <h1 id="patchproof-record-heading">How PatchProof<br />was <em>made.</em></h1>
-          <p>Possible chained three separately verified outcomes: compare developer problems, build the selected browser tool, then create its local launch package through Remix.</p>
-          <div className="patchproof-record-actions">
-            <a className="button-link" href="/examples/patchproof-chain/product/index.html">Open the tool <span>↗</span></a>
-            <a className="text-link" href="/examples/patchproof">View the example ↗</a>
-          </div>
-        </div>
-        <dl aria-label="PatchProof run summary">
-          <div><dt>OUTCOME STAGES</dt><dd>3</dd></div>
-          <div><dt>AGENT MESSAGES</dt><dd>46</dd></div>
-          <div><dt>REMIX DIRECTIONS</dt><dd>3</dd></div>
-          <div><dt>EXTERNAL ACTIONS</dt><dd>0</dd></div>
-        </dl>
+    <main className="demo-index-page">
+      <SiteNav label="Demos" />
+      <section className="demo-index-intro" aria-labelledby="demo-index-heading">
+        <p className="eyebrow">HOW THE OUTCOMES WERE MADE</p>
+        <h1 id="demo-index-heading">The process,<br /><em>not another gallery.</em></h1>
+        <p>Examples show the finished things. Demos show the request, conversation, Outcome Pack, compiled work, artifacts, verification, and evidence behind each one.</p>
       </section>
-
-      <section className="patchproof-record-request" aria-labelledby="patchproof-request-heading">
-        <header><span>00 / ORIGINAL REQUEST</span><h2 id="patchproof-request-heading">One ambition,<br /><em>without a chosen idea.</em></h2></header>
-        <blockquote>“I want to discover, build, and launch a useful developer tool. I do not already know which problem is worth solving. Keep external actions local-only unless I approve them separately.”</blockquote>
-        <p>This is a record of the real run—not a reconstructed chat. The transcripts retain public captain and specialist messages with UTC order, while excluding private reasoning, system instructions, user metadata, raw tool output, usage telemetry, and machine-specific paths. The hexadecimal IDs below are isolated-run revisions, not commits available in this repository; archived SHA-256 manifests verify the portable evidence.</p>
+      <section className="demo-index-list" aria-label="Possible demo records">
+        {exampleCatalog.map((example, index) => (
+          <a href={example.demoHref} key={example.slug} aria-label={example.name}>
+            <span>{String(index + 1).padStart(2, "0")}</span>
+            <div><small>{example.demo.runKind === "preserved-run" ? "PRESERVED RUN" : "REFERENCE BUILD"}</small><h2>{example.name}</h2><p>{example.demo.summary}</p></div>
+            <strong>VIEW PROCESS ↗</strong>
+          </a>
+        ))}
       </section>
-
-      <section className="patchproof-record-stages" id="run-stages" aria-labelledby="patchproof-stages-heading">
-        <header><span>01 / OUTCOME CHAIN</span><h2 id="patchproof-stages-heading">Evidence crossed<br /><em>every handoff.</em></h2></header>
-        <ol>
-          <li>
-            <div className="patchproof-stage-index"><span>01</span><i aria-hidden="true">→</i></div>
-            <article>
-              <header><p>SOFTWARE OPPORTUNITY DISCOVERY</p><strong>COMPLETED · PURSUE</strong></header>
-              <h3>Choose the problem before building the product.</h3>
-              <p>Four developer-tool opportunities were compared against 21 dated sources. PatchProof scored 92/100 and advanced only as a narrow build hypothesis—not as proof of demand.</p>
-              <dl><div><dt>CANDIDATES</dt><dd>4</dd></div><div><dt>SOURCES</dt><dd>21</dd></div><div><dt>ISOLATED RUN REV.</dt><dd><code>3cdefb9</code></dd></div></dl>
-              <footer>
-                <a href={`${evidenceRoot}/transcripts/discovery.md`}>Recorded thread ↗</a>
-                <a href={`${evidenceRoot}/discovery-receipt.json`}>Decision receipt ↗</a>
-                <a href={`${evidenceRoot}/discovery-verification.md`}>Independent review ↗</a>
-                <a href={`${evidenceRoot}/discovery-to-product-handoff.json`}>Hashed handoff ↗</a>
-              </footer>
-            </article>
-          </li>
-          <li>
-            <div className="patchproof-stage-index"><span>02</span><i aria-hidden="true">→</i></div>
-            <article>
-              <header><p>WORKING WEB APP</p><strong>COMPLETED · PASSED</strong></header>
-              <h3>Turn supplied patch evidence into an inspectable receipt.</h3>
-              <p>The local browser app derives five explicit claim states and exports deterministic Markdown and JSON. Integration and fresh review found real truth-model, fixture, UI, and chain-resume defects before passing it.</p>
-              <dl><div><dt>ASSERTIONS</dt><dd>34/34</dd></div><div><dt>FIXTURES</dt><dd>12/12</dd></div><div><dt>ISOLATED RUN REV.</dt><dd><code>ae88d46</code></dd></div></dl>
-              <footer>
-                <a href={`${evidenceRoot}/transcripts/product.md`}>Recorded thread ↗</a>
-                <a href={`${evidenceRoot}/product-receipt.json`}>Product receipt ↗</a>
-                <a href={`${evidenceRoot}/product-verification.md`}>Independent review ↗</a>
-                <a href={`${evidenceRoot}/product-to-launch-handoff.json`}>Hashed handoff ↗</a>
-              </footer>
-            </article>
-          </li>
-          <li>
-            <div className="patchproof-stage-index"><span>03</span><i aria-hidden="true">✓</i></div>
-            <article>
-              <header><p>DEVELOPER PROJECT LAUNCH</p><strong>COMPLETED · LOCAL ONLY</strong></header>
-              <h3>Explore the expression without changing product truth.</h3>
-              <p>Three comparable directions used the same factual copy at 1440×900. Continuous Form was selected, implemented, checked in a clean room, and stopped before deployment or publication.</p>
-              <dl><div><dt>DIRECTIONS</dt><dd>3</dd></div><div><dt>CLEAN VERIFY</dt><dd>12s</dd></div><div><dt>ISOLATED RUN REV.</dt><dd><code>29b6e94</code></dd></div></dl>
-              <footer>
-                <a href="/examples/patchproof-chain/product/launch/site/index.html">Open launch site ↗</a>
-                <a href={`${evidenceRoot}/transcripts/launch.md`}>Recorded thread ↗</a>
-                <a href={`${evidenceRoot}/launch-receipt.json`}>Launch receipt ↗</a>
-                <a href={`${evidenceRoot}/launch-verification.md`}>Independent review ↗</a>
-                <a href={`${evidenceRoot}/remix-decision.json`}>Remix decision ↗</a>
-              </footer>
-            </article>
-          </li>
-        </ol>
-      </section>
-
-      <section className="patchproof-record-remix" aria-labelledby="patchproof-remix-heading">
-        <header>
-          <div><span>02 / REMIX</span><h2 id="patchproof-remix-heading">Same facts.<br /><em>Three directions.</em></h2></div>
-          <p>Remix changed typography, color, composition, shape language, and motion. It did not change the confirmed product behavior, claims, quickstart, or verification boundary.</p>
-        </header>
-        <div>
-          <figure className="patchproof-remix-selected">
-            <img src={`${evidenceRoot}/remix/continuous-form.png`} alt="Continuous Form PatchProof launch direction" loading="lazy" />
-            <figcaption><span>01 / SELECTED</span><strong>Continuous Form</strong><p>Highest score across all six declared criteria.</p></figcaption>
-          </figure>
-          <figure>
-            <img src={`${evidenceRoot}/remix/evidence-stamp.png`} alt="Evidence Stamp PatchProof launch direction" loading="lazy" />
-            <figcaption><span>02 / EXPLORED</span><strong>Evidence Stamp</strong><p>Distinctive, with a risk of implying approval.</p></figcaption>
-          </figure>
-          <figure>
-            <img src={`${evidenceRoot}/remix/patch-panel.png`} alt="Patch Panel PatchProof launch direction" loading="lazy" />
-            <figcaption><span>03 / EXPLORED</span><strong>Patch Panel</strong><p>Expressive, with greater responsive complexity.</p></figcaption>
-          </figure>
-        </div>
-      </section>
-
-      <section className="patchproof-record-repairs" id="repairs" aria-labelledby="patchproof-repairs-heading">
-        <header><span>03 / REPAIR RECORD</span><h2 id="patchproof-repairs-heading">Passing came<br /><em>after failure.</em></h2></header>
-        <div>
-          <article><span>PRODUCT CONTRACT</span><h3>Claims became derived, not self-declared.</h3><p>An early flat status model let users force a result. Integration realigned the app so missing proof resolves to <code>unsupported</code>.</p></article>
-          <article><span>BROWSER FLOW</span><h3>A real import crash was caught.</h3><p>The dialog trigger lacked the DOM identifier its handler expected. The complete desktop and mobile flow was rerun after repair.</p></article>
-          <article><span>TRUTH MODEL</span><h3>“1 failing” could not pass anymore.</h3><p>A contradictory log with exit code 0 exposed a parser gap. The conflict detector and regression contract were tightened.</p></article>
-          <article><span>PROOF COVERAGE</span><h3>Fixtures had to prove more than results.</h3><p>All 12 fixtures now assert extracted evidence, warnings, and limitations—not only their final claim state.</p></article>
-          <article><span>CHAIN INTEGRITY</span><h3>Handoffs survived a moving workspace.</h3><p>Resume and completed-chain checks were repaired to verify immutable source revisions without weakening recorded hashes.</p></article>
-          <article><span>LAUNCH EVIDENCE</span><h3>Visual proof became deterministic.</h3><p>Screenshot generation, copy comparison, and creative-direction contracts were repaired before the local-only launch record was sealed.</p></article>
-        </div>
-      </section>
-
-      <section className="patchproof-record-evidence" id="evidence" aria-labelledby="patchproof-evidence-heading">
-        <header>
-          <div><span>04 / EVIDENCE INDEX</span><h2 id="patchproof-evidence-heading">Readable first.<br /><em>Raw when needed.</em></h2></div>
-          <p>The demo is the explanation layer. These files are the underlying record, copied byte-for-byte from the preserved run and checked for drift.</p>
-        </header>
-        <div>
-          <article>
-            <h3>Recorded threads</h3>
-            <a href={`${evidenceRoot}/transcripts/discovery.md`}><span>Discovery</span><strong>7 messages ↗</strong></a>
-            <a href={`${evidenceRoot}/transcripts/discovery.json`}><span>Discovery / raw export</span><strong>JSON ↗</strong></a>
-            <a href={`${evidenceRoot}/transcripts/product.md`}><span>Working Web App</span><strong>28 messages ↗</strong></a>
-            <a href={`${evidenceRoot}/transcripts/product.json`}><span>Working Web App / raw export</span><strong>JSON ↗</strong></a>
-            <a href={`${evidenceRoot}/transcripts/launch.md`}><span>Project Launch</span><strong>11 messages ↗</strong></a>
-            <a href={`${evidenceRoot}/transcripts/launch.json`}><span>Project Launch / raw export</span><strong>JSON ↗</strong></a>
-          </article>
-          <article>
-            <h3>State and handoffs</h3>
-            <a href={`${evidenceRoot}/request.md`}><span>Original request</span><strong>MD ↗</strong></a>
-            <a href={`${evidenceRoot}/chain.json`}><span>Completed chain</span><strong>JSON ↗</strong></a>
-            <a href={`${evidenceRoot}/discovery-to-product-handoff.json`}><span>Discovery → Product</span><strong>JSON ↗</strong></a>
-            <a href={`${evidenceRoot}/product-to-launch-handoff.json`}><span>Product → Launch</span><strong>JSON ↗</strong></a>
-          </article>
-          <article>
-            <h3>Receipts and reviews</h3>
-            <a href={`${evidenceRoot}/discovery-receipt.json`}><span>Discovery receipt</span><strong>JSON ↗</strong></a>
-            <a href={`${evidenceRoot}/product-receipt.json`}><span>Product receipt</span><strong>JSON ↗</strong></a>
-            <a href={`${evidenceRoot}/launch-receipt.json`}><span>Launch receipt</span><strong>JSON ↗</strong></a>
-            <a href={`${evidenceRoot}/product-repair-log.md`}><span>Product repair log</span><strong>MD ↗</strong></a>
-            <a href={`${evidenceRoot}/launch-repair-log.md`}><span>Launch repair log</span><strong>MD ↗</strong></a>
-          </article>
-        </div>
-      </section>
-
-      <aside className="patchproof-record-boundary" aria-label="Authority boundary">
-        <span>AUTHORITY BOUNDARY</span>
-        <p><strong>The recorded run stopped before external launch.</strong> It did not deploy, publish, configure DNS, contact users, collect data, or spend money. Possible published this evidence copy later; that does not retroactively change the run’s local-only status.</p>
-        <a href={`${evidenceRoot}/launch-receipt.json`}>Inspect the external gate ↗</a>
-      </aside>
-
-      <DemoOutcomeFooter text="The finished tool belongs in Examples. This page records how Possible made it." href="/examples/patchproof" linkLabel="VIEW PATCHPROOF EXAMPLE ↗" />
       <SiteFooter />
     </main>
   );
 }
 
-function PresentationDemoPage() {
+function DemoPage({ example }: { example: PossibleExample }) {
+  const { demo } = example;
   return (
-    <main className="demo-detail-page demo-detail-page--presentation" id="top">
-      <SiteNav label="Live demo / Possible explainer" />
-      <DemoOutcomeHeader
-        eyebrow="WEB PRESENTATION / LIVE EXPLAINER"
-        title="What Possible is,"
-        accent="in ten slides."
-        description="A coded browser deck that makes agent skills, reusable execution prompts, Outcome Packs, and the $possible guide immediately understandable."
-        metric="10 SLIDES / BROWSER-TESTED"
-      />
+    <main className={`demo-template demo-template--${example.slug}`} id="top" data-demo-template="outcome-process-v1">
+      <SiteNav label={`Demo / ${example.name}`} />
 
-      <section className="presentation-artifacts" id="artifacts" aria-label="Outcome artifacts">
-        <DemoOutputLabel />
-        <header>
-          <div><p className="eyebrow">LIVE / HTML · CSS · JAVASCRIPT</p><h2>The explanation<br /><em>is the output.</em></h2></div>
-          <p>Navigate with arrow keys or swipe. On a phone, scroll through the complete presentation as one readable story.</p>
-        </header>
-        <article className="demo-site-output presentation-live-card">
-          <header><span>POSSIBLE.SH / VISUAL EXPLAINER</span><strong>INTERACTIVE OUTPUT</strong></header>
-          <iframe src="/presentation/possible.html" title="Possible.sh visual explainer" allow="fullscreen" />
-          <footer>
-            <p><strong>Ten coded slides.</strong><span>No PowerPoint, proprietary editor, or exported screenshot deck.</span></p>
-            <a href="/presentation">OPEN FULLSCREEN ↗</a>
-          </footer>
-        </article>
-      </section>
-
-      <DemoConversation
-        userIdea="I need people to understand what Possible.sh is without reading a wall of text."
-        possibleQuestion="Should this be a downloadable slide file, or a live visual experience people can open in the browser?"
-        userOutcome="A distinctive coded presentation with simple visuals, a clear story, and a real outcome at the end."
-        packHref="/packs/web-presentation"
-        packLabel="Web Presentation"
-        recommendation="It coordinates the narrative, evidence, visual direction, coded deck, presenter experience, responsive behavior, and browser review."
-      />
-
-      <DemoOutcomeFooter text="Live coded demonstration. The deck is browser-tested, but this page is not presented as a preserved $possible run." href="/demo" linkLabel="BACK TO DEMOS ↑" />
-    </main>
-  );
-}
-
-function PlayableGameDemoPage() {
-  return (
-    <main className="demo-detail-page demo-detail-page--game" id="top">
-      <SiteNav label="Live outcome proof / Fold" />
-      <DemoOutcomeHeader
-        eyebrow="PLAYABLE WEB GAME / LIVE OUTCOME PROOF"
-        title="A strange idea,"
-        accent="made playable."
-        description="Fold is a real Three.js reference build made alongside the Playable Web Game Outcome Pack. It proves the promised output and interaction shape; it is not presented as a clean-room evaluation."
-        metric="1 LOOP · 3 INPUT MODES"
-      />
-
-      <section className="demo-artifacts game-artifacts" id="artifacts" aria-label="Outcome artifacts">
-        <DemoOutputLabel />
-        <article className="game-live-card">
-          <header><span>01 / FOLD</span><strong>THREE.JS · POINTER · TOUCH · KEYS</strong></header>
-          <iframe title="Fold paper plane game" src="/demo/game/play" loading="lazy" />
-          <footer><p><strong>Thread the orange.</strong><span>Move to steer. P pauses. Space starts again.</span></p><a href="/demo/game/play" target="_blank" rel="noreferrer">PLAY FULL SCREEN ↗</a></footer>
-        </article>
-
-        <div className="game-evidence-index">
-          <a href="/demo/fold/game-brief.md" target="_blank" rel="noreferrer"><span>01 / BRIEF</span><strong>One-loop contract</strong><i>MD ↗</i></a>
-          <a href="/demo/fold/review.md" target="_blank" rel="noreferrer"><span>02 / FAILURE</span><strong>What review caught</strong><i>MD ↗</i></a>
-          <a href="/demo/fold/verification.md" target="_blank" rel="noreferrer"><span>03 / EVIDENCE</span><strong>Verification report</strong><i>MD ↗</i></a>
-          <a href="/packs/playable-web-game"><span>04 / OUTCOME PACK</span><strong>Playable Web Game</strong><i>PACK ↗</i></a>
-        </div>
-
-      </section>
-
-      <DemoConversation
-        userIdea="I want to make a tiny browser game where you pilot a paper plane through a storm."
-        possibleQuestion="What should a player understand in five seconds—and what single action should feel good enough to repeat?"
-        userOutcome="Steer through storm gates, build a score, crash, and instantly try again. It should work with pointer, touch, or keys."
-        packHref="/packs/playable-web-game"
-        packLabel="Playable Web Game"
-        recommendation="It coordinates the core loop, Three.js runtime, responsive controls, game feel, and an independent browser review."
-      />
-      <DemoOutcomeFooter text="A Playable Web Game run should finish with a game—not a design document, a framework, or a list of ideas." href="/packs/playable-web-game" linkLabel="INSPECT THE OUTCOME PACK →" />
-    </main>
-  );
-}
-
-function RobotSnakeDemoPage() {
-  return (
-    <main className="demo-detail-page demo-detail-page--robot" id="top">
-      <SiteNav label="Recorded run / Robot Snake" />
-      <DemoOutcomeHeader
-        eyebrow="ROBOT PROTOTYPE / ISOLATED VERIFIED RUN"
-        title="A robot snake,"
-        accent="simulated and checked."
-        description="Inspect the CAD, replay both seeded MuJoCo scenarios, open the robot descriptions, and audit the fresh-review repairs from an isolated Robot Prototype run."
-        metric="12 / 12 TESTS · 186 INTERFACE CHECKS · 0 OBSTACLE CONTACTS"
-      />
-
-      <RobotSnakeComparison />
-      <RobotSnakeArtifacts />
-      <RobotSnakeConversation />
-      <DemoOutcomeFooter text="Digital prototype only. Physical locomotion, actuator suitability, fabrication readiness, and functional safety remain unproven." href="/demo/robot-snake/evidence/sim-to-real-gaps.md" linkLabel="READ THE GAPS ↗" />
-    </main>
-  );
-}
-
-function RobotSnakeComparison() {
-  const rows = [
-    ["Mechanical CAD", "—", "STEP + GLB"],
-    ["Robot description", "—", "URDF + SRDF"],
-    ["Physics", "Browser kinematics", "MuJoCo"],
-    ["Autonomous avoidance", "—", "Seeded + measured"],
-    ["Engineering timeline", "CSV export", "3,801-frame Rerun"],
-    ["Deterministic checks", "18 tests", "12 tests + 186 interfaces"],
-    ["Fresh verification", "—", "3 defects repaired"],
-  ];
-
-  return (
-    <section className="robot-comparison" aria-labelledby="robot-comparison-title">
-      <div className="robot-comparison-intro">
-        <p className="eyebrow">RECORDED COMPARISON / SAME ROUGH IDEA</p>
-        <h2 id="robot-comparison-title">What did the user<br />not know to ask for?</h2>
-        <p>A clean GPT-5.6 Sol task received <code>/goal I want to make a robot snake</code> and one non-expert preference. It built a strong simulator and hardware handoff. Possible supplied the missing multidisciplinary outcome contract.</p>
-        <div><a href="/demo/robot-snake/control/" target="_blank" rel="noreferrer">OPEN THE CONTROL ↗</a><a href="/demo/robot-snake/CONTROL-RUN.md" target="_blank" rel="noreferrer">READ THE PROTOCOL ↗</a></div>
-      </div>
-      <div className="robot-comparison-table" role="table" aria-label="Robot Prototype contract comparison">
-        <div className="robot-comparison-row robot-comparison-row--head" role="row"><span>PRE-EXISTING CONTRACT</span><span>/GOAL</span><span>$POSSIBLE</span></div>
-        {rows.map(([requirement, control, possible]) => <div className="robot-comparison-row" role="row" key={requirement}><strong>{requirement}</strong><span>{control}</span><span>{possible}</span></div>)}
-      </div>
-      <p className="robot-comparison-note"><strong>The control was not weakened.</strong> It produced gait controls, collision handling, telemetry, a BOM, compiled ESP32 firmware, and 18 passing tests. The difference is the expert work the rough request never named.</p>
-      <p className="robot-comparison-relationship"><code>/goal</code> sustains dynamic pursuit; Possible supplies the reviewed outcome contract.</p>
-    </section>
-  );
-}
-
-function RobotSnakeArtifacts() {
-  return (
-    <section className="demo-artifacts robot-artifacts" id="artifacts" aria-label="Outcome artifacts">
-      <DemoOutputLabel />
-
-      <article className="robot-viewer-card">
-        <header><span>01 / INSPECTABLE CAD</span><strong>10 LINKS · 9 JOINTS · 945 × 55 × 35 MM</strong></header>
-        <Suspense fallback={<div className="robot-viewer-loading">LOADING REVIEW GEOMETRY…</div>}>
-          <RobotSnakeViewer />
-        </Suspense>
-        <footer>
-          <p><strong>Interactive static CAD.</strong><span>Rotate the GLB in-browser or download the STEP source geometry. Verified motion appears only in the saved simulation replays below.</span></p>
-          <div><a href="/demo/robot-snake/cad/robot-snake.step" download>STEP ↓</a><a href="/demo/robot-snake/cad/robot-snake.glb" download>GLB ↓</a></div>
-        </footer>
-      </article>
-
-      <article className="robot-rerun-card">
-        <header><span>02 / LOCAL ENGINEERING VIEWER</span><strong>RERUN · 3,801 FRAMES · VERIFIED RRD</strong></header>
-        <div className="robot-rerun-layout">
-          <a href="/demo/robot-snake/viewer/preview.png" target="_blank" rel="noreferrer"><img src="/demo/robot-snake/viewer/preview.png" alt="Rerun engineering viewer showing the robot snake, obstacle, sensor rays, controller state, and telemetry plots" loading="lazy" decoding="async" /></a>
-          <div>
-            <p className="eyebrow">PRESERVED TRAJECTORY / NO PHYSICS RERUN</p>
-            <h2>Inspect the whole run<br />on one timeline.</h2>
-            <p>The recording replays ten link poses, five range rays, the route, controller state, joint commands, tracking error, and range telemetry from the saved MuJoCo evidence.</p>
-            <code>rerun robot-snake.rrd</code>
-            <div><a href="/demo/robot-snake/viewer/robot-snake.rrd" download>DOWNLOAD RRD · 10.4 MB ↓</a><a href="/demo/robot-snake/viewer/README.md" target="_blank" rel="noreferrer">OPEN LOCAL GUIDE ↗</a><a href="/demo/robot-snake/viewer/robot-snake.manifest.json" target="_blank" rel="noreferrer">VERIFY RECORDING ↗</a></div>
-          </div>
-        </div>
-      </article>
-
-      <div className="robot-simulation-grid">
-        <article className="robot-simulation-card robot-simulation-card--obstacle">
-          <header><span>03 / SEEDED AUTONOMOUS AVOIDANCE</span><strong>SEED 42 · 190 SIM SECONDS</strong></header>
-          <picture><source media="(prefers-reduced-motion: reduce)" srcSet="/demo/robot-snake/simulation/obstacle-course/contact_sheet.png" /><img src="/demo/robot-snake/simulation/obstacle-course/preview.gif" alt="MuJoCo verification replay of the robot snake detecting, clearing, and passing a cylindrical obstacle" loading="lazy" decoding="async" /></picture>
-          <footer><p><strong>Detect. Detour. Rejoin.</strong><span>2.94 m forward · zero contact steps · entire body cleared.</span></p><a href="/demo/robot-snake/simulation/obstacle-course/metrics.json" target="_blank" rel="noreferrer">OPEN METRICS ↗</a></footer>
-        </article>
-
-        <article className="robot-simulation-card">
-          <header><span>04 / SEEDED LOCOMOTION</span><strong>SEED 42 · 12 SIM SECONDS</strong></header>
-          <picture><source media="(prefers-reduced-motion: reduce)" srcSet="/demo/robot-snake/simulation/locomotion/contact_sheet.png" /><img src="/demo/robot-snake/simulation/locomotion/preview.gif" alt="MuJoCo verification replay of the robot snake's traveling lateral wave" loading="lazy" decoding="async" /></picture>
-          <footer><p><strong>Bounded traveling wave.</strong><span>0.15 m forward · commands and joint limits passed.</span></p><a href="/demo/robot-snake/simulation/locomotion/metrics.json" target="_blank" rel="noreferrer">OPEN METRICS ↗</a></footer>
-        </article>
-      </div>
-
-      <section className="robot-metrics" aria-label="Verified simulation metrics">
-        <p><span>OBSTACLE CONTACT</span><strong>0</strong><small>physics steps</small></p>
-        <p><span>FORWARD PROGRESS</span><strong>2.94 m</strong><small>obstacle scenario</small></p>
-        <p><span>MAX JOINT SPEED</span><strong>3.38</strong><small>rad/s · limit 4.0</small></p>
-        <p><span>FRESH SUITE</span><strong>12 / 12</strong><small>tests passed</small></p>
-      </section>
-
-      <aside className="robot-proof-boundary">
-        <span>SIMULATION BOUNDARY</span>
-        <p>The model uses an explicit aggregate propulsion and steering surrogate. These replays prove the declared deterministic simulation checks—not physical locomotion, actuator suitability, fabrication readiness, manufacturability, or functional safety.</p>
-        <a href="/demo/robot-snake/evidence/sim-to-real-gaps.md" target="_blank" rel="noreferrer">INSPECT EVERY GAP ↗</a>
-      </aside>
-
-      <article className="robot-cad-review">
-        <header><span>05 / CAD REVIEW PACKET</span><strong>FOUR INSPECTED VIEWS</strong></header>
-        <div className="demo-cad-views">
-          <a href="/demo/robot-snake/cad/iso.png" target="_blank" rel="noreferrer"><figure><img src="/demo/robot-snake/cad/iso.png" alt="Isometric robot snake CAD view" loading="lazy" decoding="async" /><figcaption><span>01</span><strong>ISO</strong></figcaption></figure></a>
-          <a href="/demo/robot-snake/cad/iso-opposite.png" target="_blank" rel="noreferrer"><figure><img src="/demo/robot-snake/cad/iso-opposite.png" alt="Opposite isometric robot snake CAD view" loading="lazy" decoding="async" /><figcaption><span>02</span><strong>OPPOSITE</strong></figcaption></figure></a>
-          <a href="/demo/robot-snake/cad/top.png" target="_blank" rel="noreferrer"><figure><img src="/demo/robot-snake/cad/top.png" alt="Top robot snake CAD view" loading="lazy" decoding="async" /><figcaption><span>03</span><strong>TOP</strong></figcaption></figure></a>
-          <a href="/demo/robot-snake/cad/front.png" target="_blank" rel="noreferrer"><figure><img src="/demo/robot-snake/cad/front.png" alt="Front robot snake CAD view" loading="lazy" decoding="async" /><figcaption><span>04</span><strong>FRONT</strong></figcaption></figure></a>
-        </div>
-      </article>
-
-      <section className="demo-evidence-output robot-evidence-output" id="evidence-output">
-        <header><span>06 / FRESH VERIFICATION</span><strong>THREE MATERIAL DEFECTS CAUGHT AND REPAIRED</strong></header>
-        <div className="demo-verification-story">
-          <p><span>01 / PRODUCED</span><strong>CAD, robot descriptions, control, and seeded simulation passed the lead agent’s first suite.</strong></p>
-          <p><span>02 / WITHHELD</span><strong>Possible assigned a fresh verification-only workstream before declaring the outcome complete.</strong></p>
-          <p className="is-failure"><span>03 / FAILED</span><strong>The reviewer found an unlatching safe stop, unsafe stop targets, and a hidden velocity-limit overshoot.</strong></p>
-          <p><span>04 / REPAIRED</span><strong>Stop behavior was latched and frozen; physics-step measurement exposed and removed the overshoot.</strong></p>
-          <p className="is-pass"><span>05 / PASSED</span><strong>The fresh suite passed 12/12 tests after regeneration. The failure history remains in the completion report.</strong></p>
-        </div>
+      <section className="demo-template-hero" aria-labelledby="demo-template-heading">
         <div>
-          <a href="/demo/robot-snake/evidence/outcome-receipt.md" target="_blank" rel="noreferrer"><span>01 / COMPLETION REPORT</span><strong>Passes, repairs, skips, and limits</strong><i>MD ↗</i></a>
-          <a href="/demo/robot-snake/evidence/simulation-contract.md" target="_blank" rel="noreferrer"><span>02 / CONTRACT</span><strong>What the simulation proves</strong><i>MD ↗</i></a>
-          <a href="/demo/robot-snake/evidence/sim-to-real-gaps.md" target="_blank" rel="noreferrer"><span>03 / BOUNDARY</span><strong>What remains unproven</strong><i>MD ↗</i></a>
-          <a href="/demo/robot-snake/model/robot-snake.urdf" target="_blank" rel="noreferrer"><span>04 / MODEL</span><strong>Generated URDF</strong><i>URDF ↗</i></a>
-          <a href="/demo/robot-snake/model/robot-snake.srdf" target="_blank" rel="noreferrer"><span>05 / PLANNING</span><strong>Generated SRDF</strong><i>SRDF ↗</i></a>
-          <a href="/demo/robot-snake/INTAKE-TRANSCRIPT.md" target="_blank" rel="noreferrer"><span>06 / INTAKE</span><strong>Preserved conversation</strong><i>MD ↗</i></a>
-          <a href="/demo/robot-snake/simulation/obstacle-course/contact_sheet.png" target="_blank" rel="noreferrer"><span>07 / REVIEW</span><strong>Obstacle contact sheet</strong><i>PNG ↗</i></a>
-          <a href="/demo/robot-snake/simulation/obstacle-course/trajectory.csv" target="_blank" rel="noreferrer"><span>08 / DATA</span><strong>Obstacle trajectory</strong><i>CSV ↗</i></a>
-          <a href="/demo/robot-snake/manifest.json" target="_blank" rel="noreferrer"><span>09 / MANIFEST</span><strong>Published provenance</strong><i>JSON ↗</i></a>
+          <p className="eyebrow">{demo.runKind === "preserved-run" ? "PRESERVED POSSIBLE RUN" : "OUTCOME PACK REFERENCE BUILD"}</p>
+          <h1 id="demo-template-heading">How <em>{example.name}</em><br />was made.</h1>
+          <p>{demo.summary}</p>
+          <div><a className="button-link" href={example.primaryOutput.href}>Open outcome <span>↗</span></a><a className="text-link" href={`/examples/${example.slug}`}>View example ↗</a></div>
         </div>
+        {example.visual.kind === "image"
+          ? <img src={example.visual.src} alt={example.visual.alt} />
+          : <div className="demo-template-playable" aria-label={example.visual.alt}><span>PLAYABLE OUTCOME</span><strong>{example.name}</strong></div>}
       </section>
-    </section>
-  );
-}
 
-function RobotSnakeConversation() {
-  return (
-    <section className="demo-conversation" id="conversation" aria-label="$possible conversation">
-      <header>
-        <div><p className="eyebrow">02 / CONVERSATION</p><h2>One rough idea.<br /><em>A bounded outcome.</em></h2></div>
-        <p>The user did not choose CAD, URDF, MuJoCo, control architecture, safety behavior, or tests. Possible elicited the intended behavior and supplied the missing robotics work.</p>
-      </header>
-      <article className="demo-conversation-thread">
-        <p><strong>USER</strong><span>$possible<br />I want to make a robot snake.</span></p>
-        <p><strong>POSSIBLE</strong><span>What should it be able to do when it is finished?</span></p>
-        <p><strong>USER</strong><span>Slither convincingly and navigate around obstacles on its own.</span></p>
-        <p><strong>POSSIBLE</strong><span>Where should it operate, what are we starting from, and should the first proof be physical or digital?</span></p>
-        <p><strong>USER</strong><span>A smooth indoor floor. Starting from scratch, only the idea. I want a convincing digital prototype I can inspect and simulate now, with a clear path toward fabricating later.</span></p>
-        <p className="demo-conversation-recommend"><strong>POSSIBLE</strong><span>I recommend the <a href="/packs/robot-prototype">Robot Prototype Outcome Pack ↗</a>. It coordinates the STEP assembly, URDF/SRDF, MuJoCo simulation, controls, deterministic tests, sim-to-real gaps, and independent verification. {approvalDisclosure} Proceed with this outcome?</span></p>
-        <p className="demo-conversation-confirm"><strong>USER</strong><span>Yes, proceed.</span></p>
-      </article>
-    </section>
-  );
-}
+      <section className="demo-template-section demo-template-request" aria-label="Original request">
+        <header><span>01</span><h2>Original request</h2></header>
+        <blockquote>“{demo.request}”</blockquote>
+      </section>
 
-function HardwareDemoPage() {
-  const [threadOpen, setThreadOpen] = useState(false);
-
-  useEffect(() => {
-    const target = new Set(["artifacts", "film-output", "hardware-output", "evidence-output", "conversation"])
-      .has(window.location.hash.slice(1))
-      ? document.querySelector(window.location.hash)
-      : null;
-    if (target) window.requestAnimationFrame(() => target.scrollIntoView());
-  }, []);
-
-  return (
-    <main className="demo-detail-page" id="top">
-      <SiteNav label="Recorded run / Still" />
-      <DemoOutcomeHeader
-        eyebrow="HARDWARE LAUNCH / VERIFIED OUTCOME"
-        title="A focus device,"
-        accent="made believable."
-        description="Open the launch website, watch the product film, inspect every CAD view, and audit the completion reports from a preserved Hardware Launch run."
-        metric="58 / 58 ARTIFACT CHECKS"
-        thread={demoThread}
-        onOpenThread={() => setThreadOpen(true)}
-      />
-      <DemoArtifacts />
-      <DemoConversation
-        userIdea="I want to make a small device that helps me focus without opening my phone."
-        possibleQuestion="Interesting — it sounds like a physical focus ritual, not another app. When this is finished, what would make it feel real to you?"
-        userOutcome="A believable launch: the device concept, a website, and a short product film."
-        packHref="/packs/hardware-launch"
-        packLabel="Hardware Launch"
-        recommendation="It coordinates the site, film, prototype CAD, waitlist contract, and independent review."
-      />
-      <DemoOutcomeFooter text="Fictional concept. Nothing was deployed, fabricated, purchased, emailed, or connected to real data collection." />
-      {threadOpen ? <ThreadTranscript thread={demoThread} rawHref="/demo/still/CODEX-THREAD.md" outputHref="#artifacts" onClose={() => setThreadOpen(false)} /> : null}
-    </main>
-  );
-}
-
-function DemoArtifacts() {
-  return (
-    <section className="demo-artifacts" id="artifacts" aria-label="Outcome artifacts">
-      <DemoOutputLabel />
-      <article className="demo-site-output">
-        <header>
-          <span>01 / LAUNCH WEBSITE</span>
-          <a href="/demo/still/site/index.html" target="_blank" rel="noreferrer">OPEN FULL SITE ↗</a>
-        </header>
-        <iframe src="/demo/still/site/index.html" title="Still launch website" loading="lazy" />
-        <footer><p>Responsive launch story with a deliberately local-only waitlist interaction.</p><a href="/demo/still/evidence/site-receipt.md" target="_blank" rel="noreferrer">SITE REPORT ↗</a></footer>
-      </article>
-
-      <div className="demo-output-grid">
-        <article className="demo-output-card demo-output-card--film" id="film-output">
-          <header><span>02 / LAUNCH FILM</span><strong>24 SEC / 1080P</strong></header>
-          <video controls muted playsInline preload="metadata" poster="/demo/still/film/still-launch-preview.png" src="/demo/still/film/still-launch.mp4" />
-          <footer><p>Deterministic product film with preserved review frames.</p><a href="/demo/still/evidence/film-receipt.md" target="_blank" rel="noreferrer">FILM REPORT ↗</a></footer>
-        </article>
-
-        <article className="demo-output-card demo-output-card--cad" id="hardware-output">
-          <header><span>03 / PROTOTYPE CAD</span><strong>4 VIEWS / STEP-FIRST / CONCEPT</strong></header>
-          <div className="demo-cad-views">
-            <a href="/demo/still/hardware/still-iso.png" target="_blank" rel="noreferrer">
-              <figure><img src="/demo/still/hardware/still-iso.png" alt="Isometric CAD view of the Still focus device concept" /><figcaption><span>01</span><strong>ISO</strong></figcaption></figure>
-            </a>
-            <a href="/demo/still/hardware/still-rear.png" target="_blank" rel="noreferrer">
-              <figure><img src="/demo/still/hardware/still-rear.png" alt="Rear CAD view of the Still focus device concept" /><figcaption><span>02</span><strong>REAR</strong></figcaption></figure>
-            </a>
-            <a href="/demo/still/hardware/still-top.png" target="_blank" rel="noreferrer">
-              <figure><img src="/demo/still/hardware/still-top.png" alt="Top CAD view of the Still focus device concept" /><figcaption><span>03</span><strong>TOP</strong></figcaption></figure>
-            </a>
-            <a href="/demo/still/hardware/still-front.png" target="_blank" rel="noreferrer">
-              <figure><img src="/demo/still/hardware/still-front.png" alt="Front CAD view of the Still focus device concept" /><figcaption><span>04</span><strong>FRONT</strong></figcaption></figure>
-            </a>
+      <section className="demo-template-section demo-template-conversation" aria-label="$possible conversation">
+        <header><span>02</span><h2>$possible conversation</h2><p>{demo.conversationNote}</p></header>
+        {demo.conversation.length ? (
+          <div className="demo-template-thread">
+            {demo.conversation.map((message, index) => <p key={`${message.speaker}-${index}`}><strong>{message.speaker}</strong><span>{message.text}</span></p>)}
           </div>
-          <footer>
-            <p>Measured exterior geometry in portable review formats.</p>
-            <div><a href="/demo/still/hardware/still.step" download>STEP ↓</a><a href="/demo/still/hardware/still.glb" download>GLB ↓</a><a href="/demo/still/hardware/still.stl" download>STL ↓</a><a href="/demo/still/hardware/still.py" download>SOURCE ↓</a><a href="/demo/still/evidence/geometry-report.md" target="_blank" rel="noreferrer">REPORT ↗</a></div>
-          </footer>
-        </article>
-      </div>
+        ) : (
+          <aside className="demo-template-missing"><strong>NOT RECORDED</strong><p>{demo.conversationNote}</p></aside>
+        )}
+      </section>
 
-      <section className="demo-evidence-output" id="evidence-output">
-        <header><span>04 / EVIDENCE + VERIFICATION</span><strong>58 / 58 ARTIFACT CHECKS · 50 SUCCESSFUL BROWSER RESPONSES</strong></header>
-        <div className="demo-verification-story">
-          <p><span>01 / PRODUCED</span><strong>The three workstreams finished and Codex integrated the outcome.</strong></p>
-          <p><span>02 / WITHHELD</span><strong>Possible assigned a fresh verification-only agent before declaring completion.</strong></p>
-          <p className="is-failure"><span>03 / FAILED</span><strong>The reviewer found four 404s caused by the embedded site’s root-absolute asset paths.</strong></p>
-          <p><span>04 / REPAIRED</span><strong>Codex fixed the Vite base path and rebuilt only the affected bundle.</strong></p>
-          <p className="is-pass"><span>05 / PASSED</span><strong>The fresh rerun passed 50/50 browser responses; the failed trace remains public.</strong></p>
-        </div>
-        <div>
-          <a href="/demo/still/OUTCOME-RECEIPT.md" target="_blank" rel="noreferrer"><span>01 / OUTCOME</span><strong>Completion report</strong><i>MARKDOWN ↗</i></a>
-          <a href="/demo/still/evidence/final-receipt.md" target="_blank" rel="noreferrer"><span>02 / REVIEW</span><strong>Independent final report</strong><i>MARKDOWN ↗</i></a>
-          <a href="/demo/still/verification/artifact-results.json" target="_blank" rel="noreferrer"><span>03 / TEST</span><strong>Artifact results</strong><i>JSON ↗</i></a>
-          <a href="/demo/still/verification/browser-results.json" target="_blank" rel="noreferrer"><span>04 / TEST</span><strong>Browser results</strong><i>JSON ↗</i></a>
-          <a href="/demo/still/verification/browser-results-initial-failure.json" target="_blank" rel="noreferrer"><span>05 / FAILURE</span><strong>Initial failed trace</strong><i>JSON ↗</i></a>
-          <a href="/demo/still/manifest.json" target="_blank" rel="noreferrer"><span>06 / MANIFEST</span><strong>All generated files</strong><i>JSON ↗</i></a>
+      <section className="demo-template-section demo-template-packs" aria-label="Recommended Outcome Pack">
+        <header><span>03</span><h2>{demo.packs.length > 1 ? "Recommended Outcome Chain" : "Recommended Outcome Pack"}</h2></header>
+        <div className="demo-template-grid">
+          {demo.packs.map((pack, index) => (
+            <a href={pack.href} key={pack.name}><small>{String(index + 1).padStart(2, "0")} / OUTCOME PACK</small><h3>{pack.name}</h3><p>{pack.role}</p><strong>OPEN PACK ↗</strong></a>
+          ))}
         </div>
       </section>
 
-    </section>
+      <section className="demo-template-section demo-template-workstreams" aria-label="Compiled workstreams">
+        <header><span>04</span><h2>Compiled workstreams</h2><p>The pack expands the request into owned, ordered work the user did not need to enumerate.</p></header>
+        <ol className="demo-template-grid">
+          {demo.workstreams.map((item, index) => <li key={item.title}><small>{String(index + 1).padStart(2, "0")}</small><h3>{item.title}</h3><p>{item.description}</p></li>)}
+        </ol>
+      </section>
+
+      <section className="demo-template-section demo-template-artifacts" aria-label="Outcome artifacts">
+        <header><span>05</span><h2>Outcome artifacts</h2><p>The finished, inspectable outputs from this outcome.</p></header>
+        <div className="demo-template-grid">
+          {demo.artifacts.map((item, index) => (
+            <article key={item.title}><small>{String(index + 1).padStart(2, "0")} / ARTIFACT</small><h3>{item.title}</h3><p>{item.description}</p>{item.href ? <a href={item.href}>{item.label ?? "Open artifact"} ↗</a> : null}</article>
+          ))}
+        </div>
+      </section>
+
+      <section className="demo-template-section demo-template-verification" aria-label="Verification, repair, and pass">
+        <header><span>06</span><h2>Verification, repair, and pass</h2><p>{demo.runKind === "preserved-run" ? "Completion remained withheld until the recorded review finished." : "Only preserved review evidence is shown; missing run evidence is stated explicitly."}</p></header>
+        <ol>
+          {demo.verification.map((item, index) => (
+            <li className={item.tone ? `is-${item.tone}` : undefined} key={item.title}><small>{String(index + 1).padStart(2, "0")}</small><div><h3>{item.title}</h3><p>{item.description}</p>{item.href ? <a href={item.href}>{item.label ?? "Open evidence"} ↗</a> : null}</div></li>
+          ))}
+        </ol>
+      </section>
+
+      <section className="demo-template-section demo-template-evidence" aria-label="Evidence">
+        <header><span>07</span><h2>Evidence</h2><p>Open the underlying records instead of taking the page’s claims on trust.</p></header>
+        <div className="demo-template-grid">
+          {demo.evidence.map((item, index) => (
+            <a href={item.href} key={item.title}><small>{String(index + 1).padStart(2, "0")} / EVIDENCE</small><h3>{item.title}</h3><p>{item.description}</p><strong>{item.label ?? "Open evidence"} ↗</strong></a>
+          ))}
+        </div>
+        <aside><strong>SCOPE BOUNDARY</strong><p>{demo.boundary}</p></aside>
+      </section>
+
+      <footer className="demo-template-footer"><a href="/examples">View all outcomes ←</a><a href="/demo">View all process records →</a></footer>
+    </main>
   );
 }
 
@@ -1560,7 +950,7 @@ function DocsPage() {
               <li><strong>Coordinate workstreams</strong><span>Run independent specialist work in parallel where appropriate.</span></li>
               <li><strong>Integrate and verify</strong><span>Combine artifacts, run acceptance checks, and assign a fresh reviewer.</span></li>
             </ol>
-            <a className="docs-text-link" href="/demo/hardware">See a complete recorded Hardware Launch run →</a>
+            <a className="docs-text-link" href="/demo/still">See a complete recorded Hardware Launch run →</a>
           </section>
 
           <section id="files">
@@ -1773,8 +1163,8 @@ const judgingCriteria = [
   {
     name: "Design",
     claim: "Each demo presents the outcome beside its proof.",
-    fact: "The demo gallery exposes four visual outcomes and their preserved evidence.",
-    significance: "Judges can inspect the work without reading agent logs first.",
+    fact: "The demo gallery exposes five finished outcomes; each links to an honest preserved-run or reference-build record.",
+    significance: "Judges can inspect the work before opening the process and evidence behind it.",
     href: "/demo",
     evidence: "Demo gallery",
   },
@@ -1868,17 +1258,20 @@ export function PossibleSite({ path: requestedPath }: { path?: string }) {
   if (path === "/docs") return <DocsPage />;
   if (path === "/docs/how-to-use") return <HowToUsePage />;
   if (path === "/judging") return <JudgingPage />;
-  if (path === "/examples" || path === "/demo") return <ExamplesPage />;
+  if (path === "/examples") return <ExamplesPage />;
+  if (path === "/demo") return <DemoIndexPage />;
   if (path.startsWith("/examples/")) {
     const example = getExample(path.slice("/examples/".length));
     return example ? <ExamplesPage activeSlug={example.slug} /> : <NotFoundPage />;
   }
-  if (path === "/demo/patchproof") return <PatchProofDemoPage />;
-  if (path === "/demo/presentation") return <PresentationDemoPage />;
   if (path === "/demo/game/play") return <Suspense fallback={<main className="plane-game-shell plane-game-loading"><span>FOLD / LOADING FLIGHT</span></main>}><PaperPlaneGame /></Suspense>;
-  if (path === "/demo/game") return <PlayableGameDemoPage />;
-  if (path === "/demo/robot-snake") return <RobotSnakeDemoPage />;
-  if (path === "/demo/hardware") return <HardwareDemoPage />;
+  if (path === "/demo/hardware") return <DemoPage example={getExample("still")!} />;
+  if (path === "/demo/game") return <DemoPage example={getExample("fold")!} />;
+  if (path === "/demo/presentation") return <DemoPage example={getExample("web-presentation")!} />;
+  if (path.startsWith("/demo/")) {
+    const example = getExample(path.slice("/demo/".length));
+    return example ? <DemoPage example={example} /> : <NotFoundPage />;
+  }
   if (path.startsWith("/packs/")) {
     const pack = getPublishedPack(path.slice("/packs/".length));
     return pack ? <PackDetailPage pack={pack} /> : <NotFoundPage />;

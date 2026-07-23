@@ -3,10 +3,10 @@ import { pageMetadata } from "../../_metadata";
 
 export const metadata = pageMetadata({
   title: "Still hardware launch demo",
-  description: "A recorded Possible Hardware Launch run with site, film, CAD, evidence, and verification artifacts.",
+  description: "Inspect the Still hardware launch: a finished local site, film, CAD package, honest waitlist, verifier repair, and preserved evidence.",
   path: "/demo/still",
 });
 
-export default function HardwareDemoPage() {
+export default function StillDemoPage() {
   return <PossibleRoute path="/demo/still" />;
 }

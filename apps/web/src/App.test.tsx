@@ -28,6 +28,24 @@ const exampleContracts = [
   { slug: "patchproof", name: "PatchProof", title: "PatchProof" },
 ] as const;
 
+const demoContracts = [
+  { slug: "still", name: "Still", aliases: ["hardware"], preserved: true },
+  { slug: "robot-snake", name: "Robot Snake", aliases: [], preserved: true },
+  { slug: "fold", name: "Fold", aliases: ["game"], preserved: false },
+  { slug: "web-presentation", name: "Possible", aliases: ["presentation"], preserved: false },
+  { slug: "patchproof", name: "PatchProof", aliases: [], preserved: true },
+] as const;
+
+const demoSectionNames = [
+  "Original request",
+  "$possible conversation",
+  "Recommended Outcome Pack",
+  "Compiled workstreams",
+  "Outcome artifacts",
+  "Verification, repair, and pass",
+  "Evidence",
+] as const;
+
 describe("Possible", () => {
   it("presents one judge journey around four outcomes", async () => {
     const { container } = render(<App />);
@@ -44,7 +62,7 @@ describe("Possible", () => {
     expect(within(workflow).getAllByRole("listitem")).toHaveLength(4);
     expect(workflow).toHaveTextContent(/DESCRIBE.*APPROVE.*EXECUTE.*VERIFY/i);
 
-    const demos = screen.getByRole("region", { name: /See the conversation.*Inspect the result/i });
+    const demos = screen.getByRole("region", { name: /Finished outcomes.*Open one/i });
     expect(within(demos).getAllByRole("listitem")).toHaveLength(4);
     for (const [name, href] of ([
       ["Still", "/examples/still"],
@@ -133,7 +151,7 @@ describe("Possible", () => {
     const { container } = renderRoute("/docs");
     expect(screen.getByText(installCommand, { selector: ".docs-command code" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Glossary" })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /complete recorded Hardware Launch run/i })).toHaveAttribute("href", "/demo/hardware");
+    expect(screen.getByRole("link", { name: /complete recorded Hardware Launch run/i })).toHaveAttribute("href", "/demo/still");
     expect(container.querySelector("main")).not.toHaveTextContent(/schedule operations|recurring outcome|\.possible\/schedule\.json/i);
     expect(await axe(container)).toHaveNoViolations();
   });
@@ -201,26 +219,32 @@ describe("Possible", () => {
     expect(within(trail).getByRole("link", { name: /Completion receipt/i })).toHaveAttribute("href", "/demo/still/OUTCOME-RECEIPT.md");
   });
 
-  it("renders the same five data-backed example cards at the canonical gallery and compatibility alias", async () => {
-    for (const path of ["/examples", "/demo"]) {
-      const { container, unmount } = renderRoute(path);
-      const gallery = screen.getByRole("region", { name: "Possible examples" });
-      const cards = within(gallery).getAllByRole("link");
-      expect(cards).toHaveLength(exampleContracts.length);
-      expect(new Set(cards.map((card) => card.textContent?.trim())).size).toBe(exampleContracts.length);
+  it("renders exactly five finished-outcome cards at /examples", async () => {
+    const { container } = renderRoute("/examples");
+    const gallery = screen.getByRole("region", { name: "Possible examples" });
+    const cards = within(gallery).getAllByRole("link");
+    expect(cards).toHaveLength(exampleContracts.length);
+    expect(new Set(cards.map((card) => card.textContent?.trim())).size).toBe(exampleContracts.length);
 
-      for (const example of exampleContracts) {
-        expect(within(gallery).getByRole("link", { name: new RegExp(example.name, "i") })).toHaveAttribute("href", `/examples/${example.slug}`);
-      }
+    for (const example of exampleContracts) {
+      expect(within(gallery).getByRole("link", { name: new RegExp(example.name, "i") })).toHaveAttribute("href", `/examples/${example.slug}`);
+    }
 
-      expect(container).not.toHaveTextContent(/Tiny Slug|Software Launch|Open-Source Release/i);
-      expect(await axe(container)).toHaveNoViolations();
-      unmount();
+    expect(container).not.toHaveTextContent(/Tiny Slug|Software Launch|Open-Source Release/i);
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("keeps /demo as the process index for the same five outcomes", () => {
+    renderRoute("/demo");
+    const index = screen.getByRole("region", { name: "Possible demo records" });
+    const links = within(index).getAllByRole("link");
+    expect(links).toHaveLength(demoContracts.length);
+    for (const demo of demoContracts) {
+      expect(within(index).getByRole("link", { name: new RegExp(demo.name, "i") })).toHaveAttribute("href", `/demo/${demo.slug}`);
     }
   });
 
-  it("opens every canonical example as the same compact, shareable evidence modal", async () => {
-    const requests = new Set<string>();
+  it("keeps every example modal focused on the finished outcome, not the run record", async () => {
     const titles = new Set<string>();
 
     for (const example of exampleContracts) {
@@ -229,36 +253,44 @@ describe("Possible", () => {
       expect(dialog).toHaveAttribute("aria-modal", "true");
 
       const title = within(dialog).getByRole("heading", { name: new RegExp(example.title, "i") }).textContent?.trim() ?? "";
-      const request = within(dialog).getByRole("region", { name: "Original request" }).textContent?.trim() ?? "";
       titles.add(title);
-      requests.add(request);
 
-      expect(within(dialog).getByRole("region", { name: /What (?:Possible inferred|the pack defines)/i })).not.toBeEmptyDOMElement();
-      expect(within(dialog).getByRole("region", { name: /Outcome (?:Pack|Chain)/i })).not.toBeEmptyDOMElement();
-      expect(within(dialog).getByRole("region", { name: "Preview" })).not.toBeEmptyDOMElement();
-      expect(within(dialog).getByRole("region", { name: /Proof(?: metrics)?/i })).not.toBeEmptyDOMElement();
+      expect(within(dialog).getByRole("region", { name: "Finished outcome" })).not.toBeEmptyDOMElement();
+      const description = within(dialog).getByRole("region", { name: "Description" });
+      const descriptionWords = description.textContent?.trim().split(/\s+/).filter(Boolean).length ?? 0;
+      expect(descriptionWords).toBeGreaterThan(0);
+      expect(descriptionWords).toBeLessThanOrEqual(60);
 
-      const output = within(dialog).getByRole("link", { name: /Open output/i });
-      const evidence = within(dialog).getByRole("link", { name: /Inspect evidence/i });
-      expect(output.getAttribute("href")).toMatch(/^\/(?!examples\/$)/);
-      expect(evidence.getAttribute("href")).toMatch(/^\/(?!examples\/$)/);
+      expect(within(dialog).getByRole("region", { name: "Outcome Pack" })).not.toBeEmptyDOMElement();
+
+      const output = within(dialog).getByRole("link", { name: /Open outcome/i });
+      const evidence = within(dialog).getByRole("link", { name: /See how Possible made this/i });
+      expect(output.getAttribute("href")).toMatch(/^\//);
+      expect(["/examples", "/examples/"]).not.toContain(output.getAttribute("href"));
+      expect(evidence).toHaveAttribute("href", `/demo/${example.slug}`);
       expect(within(dialog).getByRole("link", { name: /Close|Back to examples/i })).toHaveAttribute("href", "/examples");
 
-      expect(container.querySelector(".chain-example-page")).not.toBeInTheDocument();
+      for (const name of demoSectionNames) {
+        expect(within(dialog).queryByRole("region", { name })).not.toBeInTheDocument();
+      }
+      for (const term of [/conversation/i, /workstreams?/i, /verifiers?/i, /receipts?/i]) {
+        expect(within(dialog).queryByRole("link", { name: term })).not.toBeInTheDocument();
+        expect(within(dialog).queryByRole("heading", { name: term })).not.toBeInTheDocument();
+      }
+      expect(container.querySelector(".demo-record-page, .chain-example-page")).not.toBeInTheDocument();
       for (const frame of container.querySelectorAll("iframe")) frame.remove();
       expect(await axe(container)).toHaveNoViolations();
       unmount();
     }
 
     expect(titles.size).toBe(exampleContracts.length);
-    expect(requests.size).toBe(exampleContracts.length);
   });
 
   it("confines modal focus, then dismisses with Escape and returns to the canonical gallery URL", async () => {
     const { container } = renderRoute("/examples/patchproof");
     const dialog = screen.getByRole("dialog", { name: "PatchProof" });
     const close = within(dialog).getByRole("link", { name: "Close example" });
-    const evidence = within(dialog).getByRole("link", { name: /Inspect evidence/i });
+    const evidence = within(dialog).getByRole("link", { name: /See how Possible made this/i });
     const background = container.querySelector(".examples-background");
 
     expect(close).toHaveFocus();
@@ -279,62 +311,50 @@ describe("Possible", () => {
     expect(background).not.toHaveAttribute("aria-hidden");
   });
 
-  it("keeps PatchProof as the finished example and records how it was made in Demo", async () => {
-    const modalRender = renderRoute("/examples/patchproof");
-    const dialog = screen.getByRole("dialog", { name: "PatchProof" });
-    expect(within(dialog).getByRole("link", { name: /See how it was made/i })).toHaveAttribute("href", "/demo/patchproof");
-    modalRender.unmount();
+  it("uses one ordered run-record contract for all five canonical demos", async () => {
+    const templateMarkers = new Set<string>();
 
-    const { container } = renderRoute("/demo/patchproof");
-    expect(screen.getByRole("heading", { name: /How PatchProof\s*was made/i, level: 1 })).toBeInTheDocument();
-    expect(screen.getByText(/I want to discover, build, and launch a useful developer tool/i)).toBeInTheDocument();
-    expect(screen.getByText(/isolated-run revisions, not commits available in this repository/i)).toBeInTheDocument();
+    for (const demo of demoContracts) {
+      const { container, unmount } = renderRoute(`/demo/${demo.slug}`);
+      const main = container.querySelector("main");
+      expect(main).toHaveAttribute("data-demo-template");
+      templateMarkers.add(main?.getAttribute("data-demo-template") ?? "");
 
-    const stages = screen.getByRole("region", { name: /Evidence crossed\s*every handoff/i });
-    expect(within(stages).getAllByRole("listitem")).toHaveLength(3);
-    expect(stages).toHaveTextContent(/SOFTWARE OPPORTUNITY DISCOVERY.*WORKING WEB APP.*DEVELOPER PROJECT LAUNCH/i);
-    expect(stages).toHaveTextContent(/COMPLETED · PURSUE.*COMPLETED · PASSED.*COMPLETED · LOCAL ONLY/i);
-    expect(stages).toHaveTextContent(/ISOLATED RUN REV\./i);
-    expect(within(stages).getAllByRole("link", { name: /Recorded thread/i })).toHaveLength(3);
+      const sections = demoSectionNames.map((name) => screen.getByRole("region", { name }));
+      for (const section of sections) expect(section).not.toBeEmptyDOMElement();
+      for (let index = 1; index < sections.length; index += 1) expectBefore(sections[index - 1]!, sections[index]!);
 
-    const evidence = screen.getByRole("region", { name: /Readable first\.\s*Raw when needed/i });
-    for (const href of [
-      "/examples/patchproof-chain/evidence/transcripts/discovery.md",
-      "/examples/patchproof-chain/evidence/transcripts/discovery.json",
-      "/examples/patchproof-chain/evidence/transcripts/product.md",
-      "/examples/patchproof-chain/evidence/transcripts/product.json",
-      "/examples/patchproof-chain/evidence/transcripts/launch.md",
-      "/examples/patchproof-chain/evidence/transcripts/launch.json",
-      "/examples/patchproof-chain/evidence/chain.json",
-      "/examples/patchproof-chain/evidence/discovery-to-product-handoff.json",
-      "/examples/patchproof-chain/evidence/product-to-launch-handoff.json",
-    ]) expect(evidence.querySelector(`a[href="${href}"]`)).toBeInTheDocument();
-
-    expect(screen.getByRole("complementary", { name: "Authority boundary" })).toHaveTextContent(/stopped before external launch/i);
-    expect(container.querySelector(".demo-conversation")).not.toBeInTheDocument();
-    expect(await axe(container)).toHaveNoViolations();
-  });
-
-  it("uses the same output-then-conversation structure for every outcome", async () => {
-    for (const path of ["/demo/hardware", "/demo/robot-snake", "/demo/game", "/demo/presentation"]) {
-      const { container, unmount } = renderRoute(path);
-      const artifacts = screen.getByRole("region", { name: "Outcome artifacts" });
-      const conversation = screen.getByRole("region", { name: "$possible conversation" });
-      expectBefore(artifacts, conversation);
-      expectBefore(conversation, container.querySelector(".demo-outcome-footer")!);
-      expect(await axe(container.querySelector(".demo-outcome-header")!)).toHaveNoViolations();
+      const pack = sections[2]!;
+      const packLinks = within(pack).getAllByRole("link");
+      expect(packLinks.length).toBeGreaterThan(0);
+      for (const link of packLinks) expect(link.getAttribute("href")).toMatch(/^\/packs\/[^/]+$/);
+      expect(within(sections[3]!).getAllByRole("listitem").length).toBeGreaterThan(0);
+      expect(within(sections[5]!).getAllByRole("listitem").length).toBeGreaterThan(0);
+      if (demo.preserved) {
+        expect(sections[5]).toHaveTextContent(/fail/i);
+        expect(sections[5]).toHaveTextContent(/repair/i);
+        expect(sections[5]).toHaveTextContent(/pass/i);
+      } else {
+        expect(sections[5]).toHaveTextContent(/reference|not preserved/i);
+      }
+      expect(within(sections[6]!).getAllByRole("link").length).toBeGreaterThan(0);
+      expect(await axe(main!)).toHaveNoViolations();
       unmount();
     }
+
+    expect(templateMarkers.size).toBe(1);
+    expect([...templateMarkers][0]).not.toBe("");
   });
 
-  it("preserves the Still verification and repair evidence", async () => {
-    const { container } = renderRoute("/demo/hardware");
-    const artifacts = screen.getByRole("region", { name: "Outcome artifacts" });
-    expect(within(artifacts).getByText(/fresh verification-only agent before declaring completion/i)).toBeInTheDocument();
-    expect(within(artifacts).getByText(/four 404s caused by the embedded site/i)).toBeInTheDocument();
-    expect(within(artifacts).getByText(/fresh rerun passed 50\/50 browser responses/i)).toBeInTheDocument();
-    await userEvent.click(screen.getByRole("button", { name: /Full Codex thread/i }));
-    expect(screen.getByRole("dialog", { name: /full Codex thread/i })).toBeInTheDocument();
-    expect(container).toHaveTextContent(/fresh browser review has found a material integration failure/i);
+  it("keeps the legacy demo URLs compatible with their canonical run records", async () => {
+    for (const demo of demoContracts) {
+      for (const alias of demo.aliases) {
+        const { container, unmount } = renderRoute(`/demo/${alias}`);
+        expect(container.querySelector("main")).toHaveAttribute("data-demo-template");
+        expect(screen.getByRole("heading", { name: new RegExp(demo.name, "i"), level: 1 })).toBeInTheDocument();
+        for (const name of demoSectionNames) expect(screen.getByRole("region", { name })).not.toBeEmptyDOMElement();
+        unmount();
+      }
+    }
   });
 });

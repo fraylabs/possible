@@ -2,8 +2,8 @@ import PossibleRoute from "../_components/PossibleRoute";
 import { pageMetadata } from "../_metadata";
 
 export const metadata = pageMetadata({
-  title: "Recorded outcomes",
-  description: "Open the live Possible explainer and inspect complete runs produced by coordinated Codex skills.",
+  title: "How Possible made the outcomes",
+  description: "Inspect the request, conversation, Outcome Pack, compiled workstreams, artifacts, verification, and evidence behind each Possible outcome.",
   path: "/demo",
 });
 

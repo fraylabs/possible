@@ -3,10 +3,10 @@ import { pageMetadata } from "../../_metadata";
 
 export const metadata = pageMetadata({
   title: "Fold playable web game demo",
-  description: "Play Fold and inspect the retained brief, review notes, and checks from this reference build.",
+  description: "Play Fold and inspect the brief, review repair, and verification evidence behind the Three.js paper-plane game.",
   path: "/demo/fold",
 });
 
-export default function GameDemoPage() {
+export default function FoldDemoPage() {
   return <PossibleRoute path="/demo/fold" />;
 }

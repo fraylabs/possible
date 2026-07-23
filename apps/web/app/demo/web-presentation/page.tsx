@@ -3,10 +3,10 @@ import { pageMetadata } from "../../_metadata";
 
 export const metadata = pageMetadata({
   title: "Possible web presentation demo",
-  description: "Open the coded browser presentation that explains agent skills, reusable execution prompts, Outcome Packs, and the $possible guide.",
+  description: "Open the responsive ten-slide coded presentation that explains agent skills, Outcome Packs, and the Possible guide.",
   path: "/demo/web-presentation",
 });
 
-export default function PresentationDemoPage() {
+export default function WebPresentationDemoPage() {
   return <PossibleRoute path="/demo/web-presentation" />;
 }
