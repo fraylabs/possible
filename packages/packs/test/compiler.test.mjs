@@ -45,8 +45,10 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
     "playable-web-game",
     "robot-prototype",
     "web-presentation",
+    "developer-project-launch",
+    "software-opportunity-discovery",
   ]);
-  assert.equal(experimentalOutcomePacks.length, 11);
+  assert.equal(experimentalOutcomePacks.length, 9);
   assert.equal(getPackStatus("hardware-launch"), "stable");
   assert.equal(getPackStatus("software-launch"), "experimental");
   assert.equal(getPackStatus("missing"), undefined);

@@ -1,12 +1,13 @@
 "use client";
 
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
-import { compilePack, getPackStatus } from "@possible/packs";
+import type { MouseEvent } from "react";
+import { compilePack } from "@possible/packs";
 import type { OutcomePack } from "@possible/packs";
 import demoThreadData from "./demo-thread.json";
 import { exampleCatalog, getExample } from "./example-content";
 import type { PossibleExample } from "./example-content";
-import { experimentalPreviewPacks, featuredPacks, getPublishedPack, githubUrl, installCommand } from "./public-content";
+import { getPublishedPack, githubUrl, installCommand, publishedPacks } from "./public-content";
 
 const PaperPlaneGame = lazy(() => import("./PaperPlaneGame"));
 const RobotSnakeViewer = lazy(() => import("./RobotSnakeViewer"));
@@ -207,14 +208,14 @@ function CreatePage() {
               <span>THE TECHNICAL IDEA</span>
               <h2 id="home-packs-heading">Skills perform tasks.<br /><em>Outcome Packs coordinate the outcome.</em></h2>
             </div>
-            <p>Each manifest compiles reviewed skills, workstreams, safeguards and completion checks.</p>
+            <p>Each manifest compiles skills, safeguards and completion checks.</p>
           </header>
 
           <div className="home-pack-columns" aria-hidden="true">
             <span>OUTCOME PACK</span><span>PURPOSE</span><span>CATEGORY</span><span>OPEN</span>
           </div>
           <ol aria-label="Outcome Packs Possible can recommend">
-            {featuredPacks.map((pack) => (
+            {publishedPacks.map((pack) => (
               <li key={pack.slug}>
                 <a href={`/packs/${pack.slug}`} aria-label={`${pack.name}, ${laneLabels[pack.lane]} Outcome Pack`}>
                   <strong>{pack.name}</strong>
@@ -225,10 +226,6 @@ function CreatePage() {
               </li>
             ))}
           </ol>
-          <div className="home-pack-preview-list" aria-label="Experimental Outcome Packs">
-            <a className="home-pack-preview" href="/packs/software-opportunity-discovery"><span>EXPERIMENTAL</span><strong>Find software worth building.</strong><i>Preview →</i></a>
-            <a className="home-pack-preview" href="/packs/developer-project-launch"><span>EXPERIMENTAL</span><strong>Launch a developer project.</strong><i>Preview →</i></a>
-          </div>
         </div>
       </section>
 
@@ -370,6 +367,23 @@ function PackArtwork({ slug }: { slug: string }) {
       </div>
     );
   }
+  if (slug === "software-opportunity-discovery") {
+    return (
+      <div className="pack-art pack-art--discovery" aria-hidden="true">
+        <i className="discovery-radar" /><i className="discovery-signal" />
+        <strong>EVIDENCE → DECISION</strong>
+        <span>PROBLEM</span><span>PROOF</span><span>GO / NO-GO</span>
+      </div>
+    );
+  }
+  if (slug === "developer-project-launch") {
+    return (
+      <div className="pack-art pack-art--developer-launch" aria-hidden="true">
+        <div className="developer-launch-path"><i /><i /><i /><b>ADOPT</b></div>
+        <span>POSITION / CLEAR</span><span>QUICKSTART / TESTED</span><span>LAUNCH / GATED</span>
+      </div>
+    );
+  }
   return (
     <div className="pack-art pack-art--release" aria-hidden="true">
       <i className="release-ring" /><i className="release-dot" />
@@ -379,29 +393,69 @@ function PackArtwork({ slug }: { slug: string }) {
 }
 
 function PacksPage() {
+  const pageSize = 4;
+  const pageCount = Math.ceil(publishedPacks.length / pageSize);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  useEffect(() => {
+    const syncPage = () => {
+      const requestedPage = Number(new URLSearchParams(window.location.search).get("page") ?? "1");
+      setCurrentPage(Number.isInteger(requestedPage) && requestedPage >= 1 && requestedPage <= pageCount ? requestedPage : 1);
+    };
+    syncPage();
+    window.addEventListener("popstate", syncPage);
+    return () => window.removeEventListener("popstate", syncPage);
+  }, [pageCount]);
+
+  function selectPage(event: MouseEvent<HTMLAnchorElement>, page: number) {
+    event.preventDefault();
+    const href = page === 1 ? "/packs" : `/packs?page=${page}`;
+    window.history.pushState({}, "", href);
+    setCurrentPage(page);
+    window.requestAnimationFrame(() => {
+      const catalog = document.getElementById("pack-catalog");
+      document.getElementById(`pack-catalog-page-${page}`)?.focus({ preventScroll: true });
+      catalog?.scrollIntoView?.({ block: "start" });
+    });
+  }
+
+  const pages = Array.from({ length: pageCount }, (_, index) => publishedPacks.slice(index * pageSize, (index + 1) * pageSize));
+
   return (
     <main>
       <SiteNav label="Outcome Packs" />
       <section className="catalog-hero">
-        <p className="eyebrow">FEATURED OUTCOME PACKS</p>
+        <p className="eyebrow">OUTCOME PACKS</p>
         <h1>Reviewed Outcome Packs.<br /><em>Recommended by $possible.</em></h1>
         <div className="catalog-intro">
           <p>Each Outcome Pack combines a reusable execution prompt, selected agent skills, sequencing, safeguards, and completion checks. Describe the outcome; <code>$possible</code> recommends the right pack.</p>
           <a className="button-link" href="/#start">Start with Possible <span>→</span></a>
         </div>
       </section>
-      <section id="pack-catalog" className="pack-grid" aria-label="Featured Outcome Packs">
-        {featuredPacks.map((pack) => <PackCard pack={pack} key={pack.slug} />)}
-      </section>
-      <section className="catalog-experimental-list" aria-label="Experimental Outcome Packs">
-        {experimentalPreviewPacks.map((pack) => (
-          <article className="catalog-experimental" key={pack.slug}>
-            <span>EXPERIMENTAL</span>
-            <div><h2>{pack.name}</h2><p>{pack.promise}</p></div>
-            <a href={`/packs/${pack.slug}`}>Preview the Outcome Pack →</a>
-          </article>
-        ))}
-      </section>
+      <div id="pack-catalog" className="pack-catalog-pages">
+        {pages.map((packs, index) => {
+          const page = index + 1;
+          return (
+            <section
+              id={`pack-catalog-page-${page}`}
+              className={`pack-grid${packs.length < pageSize ? " pack-grid--filtered" : ""}`}
+              aria-label={`Outcome Packs page ${page} of ${pageCount}`}
+              hidden={currentPage !== page}
+              tabIndex={-1}
+              key={page}
+            >
+              {packs.map((pack) => <PackCard pack={pack} key={pack.slug} />)}
+            </section>
+          );
+        })}
+      </div>
+      <nav className="pack-pagination" aria-label="Outcome Pack pages">
+        <span>PAGE {String(currentPage).padStart(2, "0")} / {String(pageCount).padStart(2, "0")}</span>
+        <div>{pages.map((_, index) => {
+          const page = index + 1;
+          return <a href={page === 1 ? "/packs" : `/packs?page=${page}`} aria-current={currentPage === page ? "page" : undefined} onClick={(event) => selectPage(event, page)} key={page}>{String(page).padStart(2, "0")}</a>;
+        })}</div>
+      </nav>
       <section className="catalog-principle">
         <span>THE DIFFERENCE</span>
         <p>Agent skills provide capabilities. Outcome Packs coordinate them toward a complete, verified result.</p>
@@ -439,7 +493,7 @@ function PackDetailPage({ pack }: { pack: OutcomePack }) {
         <aside className="pack-reference-packs" aria-label="Outcome Pack navigation">
           <header><span>OUTCOME PACKS</span></header>
           <nav aria-label="Outcome Packs">
-            {featuredPacks.map((candidate) => (
+            {publishedPacks.map((candidate) => (
               <a href={`/packs/${candidate.slug}`} aria-current={candidate.slug === pack.slug ? "page" : undefined} key={candidate.slug}>
                 <strong>{candidate.name}</strong>
                 <small>{candidate.lane}</small>
@@ -450,7 +504,6 @@ function PackDetailPage({ pack }: { pack: OutcomePack }) {
         </aside>
 
         <article className="pack-reference-document" id="pack-specification" tabIndex={-1}>
-          {getPackStatus(pack.slug) === "experimental" ? <div className="pack-experimental-notice"><strong>EXPERIMENTAL OUTCOME PACK</strong><span>Available to test. Preserved end-to-end evidence is still in progress.</span></div> : null}
           <header className="pack-reference-header" id="overview">
             <div className="pack-reference-breadcrumb"><a href="/packs">OUTCOME PACKS</a><span>/</span><strong>{pack.lane.toUpperCase()}</strong></div>
             <dl className="pack-reference-meta">

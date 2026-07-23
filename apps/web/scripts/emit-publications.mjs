@@ -1,12 +1,7 @@
 import { mkdir, writeFile } from "node:fs/promises";
-import { compilePack, getPack, getPackStatus, stableOutcomePacks } from "@possible/packs";
+import { compilePack, getPackStatus, stableOutcomePacks } from "@possible/packs";
 
-const featuredPacks = stableOutcomePacks;
-const developerProjectLaunch = getPack("developer-project-launch");
-const softwareOpportunityDiscovery = getPack("software-opportunity-discovery");
-if (!developerProjectLaunch) throw new Error("Missing Developer Project Launch pack");
-if (!softwareOpportunityDiscovery) throw new Error("Missing Software Opportunity Discovery pack");
-const publishedPacks = [...featuredPacks, softwareOpportunityDiscovery, developerProjectLaunch];
+const publishedPacks = stableOutcomePacks;
 
 const evidenceManifest = {
   schemaVersion: 1,

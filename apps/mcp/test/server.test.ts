@@ -36,7 +36,7 @@ describe("Possible MCP", () => {
     assert.match(envelope.data.runPrompt, /If missing, propose working-web-app before continuing/i);
   });
 
-  it("lists four stable and eleven experimental outcome packs", async () => {
+  it("lists six stable and nine experimental outcome packs", async () => {
     const result = await client.callTool({ name: "list_packs", arguments: {} });
     const envelope = result.structuredContent as { ok: boolean; data: { packs: Array<{ slug: string; lane: string; status: string }> } };
     assert.equal(envelope.ok, true);
@@ -57,8 +57,8 @@ describe("Possible MCP", () => {
       ["developer-project-launch", "launch"],
       ["software-opportunity-discovery", "create"],
     ]);
-    assert.equal(envelope.data.packs.filter(({ status }) => status === "stable").length, 4);
-    assert.equal(envelope.data.packs.filter(({ status }) => status === "experimental").length, 11);
+    assert.equal(envelope.data.packs.filter(({ status }) => status === "stable").length, 6);
+    assert.equal(envelope.data.packs.filter(({ status }) => status === "experimental").length, 9);
   });
 
   it("compiles Web Presentation as a coded browser-deck outcome", async () => {

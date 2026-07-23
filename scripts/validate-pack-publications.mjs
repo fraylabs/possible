@@ -1,16 +1,11 @@
 import assert from "node:assert/strict";
 import { access, readFile } from "node:fs/promises";
-import { compilePack, getPack, getPackStatus, stableOutcomePacks } from "../packages/packs/dist/index.js";
+import { compilePack, getPackStatus, stableOutcomePacks } from "../packages/packs/dist/index.js";
 
 const webDist = new URL("../apps/web/out/", import.meta.url);
 const text = (relative) => readFile(new URL(relative, webDist), "utf8");
 const index = JSON.parse(await text("packs/index.json"));
-const featuredPacks = stableOutcomePacks;
-const developerProjectLaunch = getPack("developer-project-launch");
-const softwareOpportunityDiscovery = getPack("software-opportunity-discovery");
-assert.ok(developerProjectLaunch, "Developer Project Launch must exist");
-assert.ok(softwareOpportunityDiscovery, "Software Opportunity Discovery must exist");
-const publishedPacks = [...featuredPacks, softwareOpportunityDiscovery, developerProjectLaunch];
+const publishedPacks = stableOutcomePacks;
 const evidence = JSON.parse(await text("evidence.json"));
 const judgingDocument = await readFile(new URL("../JUDGING.md", import.meta.url), "utf8");
 const nonEmptyString = (value, label) => {
@@ -169,4 +164,4 @@ for (const pack of publishedPacks) {
   assert.match(llms, new RegExp(`- ${pack.name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}: /packs/${pack.slug}\\.json`));
 }
 
-console.log("All stable and experimental-preview pack publications are valid.");
+console.log("All reviewed public pack publications are valid.");

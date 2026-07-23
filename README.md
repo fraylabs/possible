@@ -47,16 +47,18 @@ After approval, inspect `.possible/outcome-brief.md`, `.possible/pack.json`, `.p
 
 The installer is idempotent and refuses to overwrite conflicting skill files. Outcome approval permits disclosed repo-local work only. Deployment, publishing, spending, outreach, fabrication and other external actions require separate approval.
 
-## Four outcomes
+## Public Outcome Packs
 
-These are the four stable public packs. Additional registry packs are experimental and may change before they have equivalent preserved evidence.
+Possible publishes six reviewed public packs. The remaining registry packs stay experimental until they have equivalent preserved evidence.
 
 - [Hardware Launch](packages/packs/src/hardware-launch.ts) — product story, site, film, prototype CAD and independent review.
 - [Robot Prototype](packages/packs/src/robot-prototype.ts) — mechanical model, robot descriptions, control, simulation and sim-to-real boundaries.
 - [Playable Web Game](packages/packs/src/playable-web-game.ts) — a polished browser game with responsive controls and playability review.
 - [Web Presentation](packages/packs/src/web-presentation.ts) — an evidence-backed coded deck with responsive presenter behavior.
+- [Software Opportunity Discovery](packages/packs/src/software-opportunity-discovery.ts) — one evidence-backed software opportunity with explicit unknowns and a validation plan.
+- [Developer Project Launch](packages/packs/src/developer-project-launch.ts) — a credible adoption path for a working developer project.
 
-Experimental previews: [Software Opportunity Discovery](packages/packs/src/software-opportunity-discovery.ts) finds one evidence-backed idea worth testing; [Developer Project Launch](packages/packs/src/developer-project-launch.ts) gives a working developer tool a credible adoption path. The preserved PatchProof chain exercises both; they remain experimental while we collect repeated independent runs.
+The preserved PatchProof chain verifies Software Opportunity Discovery and Developer Project Launch as separate, evidence-gated outcomes.
 
 You do not need to choose a pack. `$possible` recommends one after understanding your outcome.
 

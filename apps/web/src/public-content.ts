@@ -23,8 +23,6 @@ export const publishedPacks = publishedPackSlugs.map((slug) => {
   return pack;
 });
 
-export const experimentalPreviewPacks = publishedPacks.filter((pack) => !featuredPackSlugs.includes(pack.slug as typeof featuredPackSlugs[number]));
-
 export function getFeaturedPack(slug: string) {
   return featuredPacks.find((pack) => pack.slug === slug);
 }

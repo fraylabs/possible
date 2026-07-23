@@ -4,7 +4,7 @@ import { axe } from "vitest-axe";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { compilePack } from "@possible/packs";
 import App from "./App";
-import { featuredPacks, getPublishedPack, installCommand } from "./public-content";
+import { getPublishedPack, installCommand, publishedPacks } from "./public-content";
 
 afterEach(() => {
   cleanup();
@@ -54,8 +54,8 @@ describe("Possible", () => {
     ] as const)) expect(within(demos).getByRole("link", { name: new RegExp(name) })).toHaveAttribute("href", href);
 
     const packs = screen.getByRole("list", { name: "Outcome Packs Possible can recommend" });
-    expect(within(packs).getAllByRole("listitem")).toHaveLength(4);
-    for (const pack of featuredPacks) expect(within(packs).getByRole("link", { name: new RegExp(pack.name) })).toHaveAttribute("href", `/packs/${pack.slug}`);
+    expect(within(packs).getAllByRole("listitem")).toHaveLength(publishedPacks.length);
+    for (const pack of publishedPacks) expect(within(packs).getByRole("link", { name: new RegExp(pack.name) })).toHaveAttribute("href", `/packs/${pack.slug}`);
 
     expect(container.querySelector("main")).not.toHaveTextContent(/50[–-]100|RECORDED OUTCOMES \/|BENCHMARK|Direct.*\/goal|schedule operations/i);
     expect(await axe(container)).toHaveNoViolations();
@@ -81,17 +81,24 @@ describe("Possible", () => {
     expect(writeText).toHaveBeenCalledWith("npx @fraylabs/possible@0.1.10 init");
   });
 
-  it("exposes only the four featured Outcome Packs", async () => {
+  it("paginates every reviewed public Outcome Pack in one catalog", async () => {
     const { container } = renderRoute("/packs");
-    const catalog = screen.getByRole("region", { name: "Featured Outcome Packs" });
-    expect(within(catalog).getAllByRole("link")).toHaveLength(4);
-    for (const pack of featuredPacks) expect(within(catalog).getByRole("heading", { name: pack.name })).toBeInTheDocument();
+    const firstPage = screen.getByRole("region", { name: "Outcome Packs page 1 of 2" });
+    expect(within(firstPage).getAllByRole("link")).toHaveLength(4);
+    for (const pack of publishedPacks.slice(0, 4)) expect(within(firstPage).getByRole("heading", { name: pack.name })).toBeInTheDocument();
+
+    await userEvent.click(screen.getByRole("link", { name: "02" }));
+    const secondPage = screen.getByRole("region", { name: "Outcome Packs page 2 of 2" });
+    expect(within(secondPage).getAllByRole("link")).toHaveLength(2);
+    for (const pack of publishedPacks.slice(4)) expect(within(secondPage).getByRole("heading", { name: pack.name })).toBeInTheDocument();
+    expect(window.location.search).toBe("?page=2");
+    expect(screen.queryByText(/EXPERIMENTAL OUTCOME PACK/i)).not.toBeInTheDocument();
     expect(container).not.toHaveTextContent(/Software Launch|Open-Source Release|Marketing Operations|Billion-Dollar SaaS/i);
     expect(await axe(container)).toHaveNoViolations();
   });
 
-  it("renders each featured pack from its typed manifest", async () => {
-    for (const pack of featuredPacks) {
+  it("renders each reviewed public pack from its typed manifest", async () => {
+    for (const pack of publishedPacks) {
       const { container, unmount } = renderRoute(`/packs/${pack.slug}`);
       const compiled = compilePack(pack);
       expect(screen.getByRole("heading", { name: pack.name, level: 1 })).toBeInTheDocument();
@@ -103,13 +110,13 @@ describe("Possible", () => {
     }
   });
 
-  it("publishes experimental Outcome Packs as direct previews", async () => {
+  it("publishes discovery and developer launch as reviewed Outcome Packs", async () => {
     for (const slug of ["software-opportunity-discovery", "developer-project-launch"]) {
       const pack = getPublishedPack(slug);
       expect(pack).toBeDefined();
       const { container, unmount } = renderRoute(`/packs/${slug}`);
       expect(screen.getByRole("heading", { name: pack!.name, level: 1 })).toBeInTheDocument();
-      expect(container.querySelector(".pack-experimental-notice")).toHaveTextContent(/Experimental Outcome Pack.*Preserved end-to-end evidence is still in progress/i);
+      expect(container.querySelector(".pack-experimental-notice")).not.toBeInTheDocument();
       expect(container.querySelector(".pack-prompt-disclosure code")?.textContent).toBe(compilePack(pack!).runPrompt);
       expect(await axe(container)).toHaveNoViolations();
       unmount();

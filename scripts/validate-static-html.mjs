@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
-import { getPack, stableOutcomePacks } from "../packages/packs/dist/index.js";
+import { stableOutcomePacks } from "../packages/packs/dist/index.js";
 
 const output = new URL("../apps/web/out/", import.meta.url);
 const html = (relativePath) => readFile(new URL(relativePath, output), "utf8");
@@ -78,20 +78,6 @@ for (const pack of featuredPacks) {
   assert.match(home, new RegExp(`href="/packs/${pack.slug}"`));
 }
 
-const developerProjectLaunch = getPack("developer-project-launch");
-assert.ok(developerProjectLaunch);
-const developerPreview = visibleText(await html("packs/developer-project-launch/index.html"));
-assert.match(developerPreview, /EXPERIMENTAL OUTCOME PACK/i);
-assert.match(developerPreview, /Preserved end-to-end evidence is still in progress/i);
-assert.match(developerPreview, new RegExp(escape(developerProjectLaunch.promise)));
-
-const softwareOpportunityDiscovery = getPack("software-opportunity-discovery");
-assert.ok(softwareOpportunityDiscovery);
-const opportunityPreview = visibleText(await html("packs/software-opportunity-discovery/index.html"));
-assert.match(opportunityPreview, /EXPERIMENTAL OUTCOME PACK/i);
-assert.match(opportunityPreview, /Preserved end-to-end evidence is still in progress/i);
-assert.match(opportunityPreview, new RegExp(escape(softwareOpportunityDiscovery.promise)));
-
 for (const forbidden of [
   /50[–-]100 coordinated tasks/i,
   /RECORDED OUTCOMES \/ \d+/i,
@@ -118,11 +104,11 @@ for (const pack of featuredPacks) {
   const detail = visibleText(await html(`packs/${pack.slug}/index.html`));
   assert.match(detail, new RegExp(escape(pack.promise)));
   assert.doesNotMatch(detail, /SCHEDULABLE|OPTIONAL SCHEDULE|Schedule the operating loop/i);
+  assert.doesNotMatch(detail, /EXPERIMENTAL OUTCOME PACK|Preserved end-to-end evidence is still in progress/i);
 }
-for (const pack of [softwareOpportunityDiscovery, developerProjectLaunch]) {
-  assert.match(catalog, new RegExp(escape(pack.name)));
-  assert.match(catalog, new RegExp(`href="/packs/${pack.slug}"`));
-}
+assert.match(catalog, /Outcome Packs page 1 of 2/);
+assert.match(catalog, /Outcome Packs page 2 of 2/);
+assert.match(catalog, /aria-label="Outcome Pack pages"/);
 for (const slug of ["software-launch", "open-source-release", "marketing-operations", "billion-dollar-saas"]) {
   await assert.rejects(html(`packs/${slug}/index.html`), { code: "ENOENT" }, `${slug} must not be exported`);
 }

@@ -23,6 +23,8 @@ export const stablePackSlugs = [
   "robot-prototype",
   "playable-web-game",
   "web-presentation",
+  "software-opportunity-discovery",
+  "developer-project-launch",
 ] as const;
 
 export const outcomePacks = [
