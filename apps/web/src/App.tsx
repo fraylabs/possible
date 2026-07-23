@@ -354,12 +354,12 @@ function PackArtwork({ slug }: { slug: string }) {
       </div>
     );
   }
-  if (slug === "software-opportunity-validation") {
+  if (slug === "first-customer-sprint") {
     return (
       <div className="pack-art pack-art--discovery" aria-hidden="true">
         <i className="discovery-radar" /><i className="discovery-signal" />
-        <strong>ASSUMPTION → EVIDENCE</strong>
-        <span>TEST</span><span>WAIT</span><span>DECIDE</span>
+        <strong>OFFER → CUSTOMER</strong>
+        <span>REACH</span><span>SELL</span><span>LEARN</span>
       </div>
     );
   }
@@ -535,9 +535,9 @@ function PackDetailPage({ pack }: { pack: OutcomePack }) {
                 </tbody>
               </table>
             </div>
-            {pack.opportunityDiscovery ? <div className="pack-review-callout"><span>OPPORTUNITY DISCOVERY</span><div><code>{pack.opportunityDiscovery.candidateRange.join("–")} candidates</code><code>{pack.opportunityDiscovery.decisionReceiptPath}</code></div><p>Possible infers a conservative operator baseline, compares traceable opportunities, and selects one thesis to validate next. Selection is not validation or permission to build.</p></div> : null}
-            {pack.adaptiveValidation ? <div className="pack-review-callout"><span>ADAPTIVE VALIDATION</span><div>{pack.adaptiveValidation.dimensions.map((dimension) => <code key={dimension}>{dimension}</code>)}</div><p>Possible assesses every dimension, ranks the assumptions, then runs only the smallest experiments needed for the riskiest present decision. The receipt ends with pursue, revise, or stop.</p></div> : null}
-            {pack.validationLifecycle ? <div className="pack-review-callout"><span>RESUMABLE EVIDENCE CYCLE</span><div>{pack.validationLifecycle.waitingStates.map((state) => <code key={state}>{state}</code>)}</div><p>Approved validation can pause for participants or observation, then resume from durable state. Scheduling coordinates a follow-up; it never counts as evidence.</p></div> : null}
+            {pack.opportunityDiscovery ? <div className="pack-review-callout"><span>OPPORTUNITY DISCOVERY</span><div><code>{pack.opportunityDiscovery.candidateRange.join("–")} candidates</code><code>{pack.opportunityDiscovery.decisionReceiptPath}</code></div><p>Possible infers a conservative operator baseline, compares traceable opportunities, and selects one thesis for a first-customer attempt. Selection is not demand or permission to build.</p></div> : null}
+            {pack.firstCustomerSprint ? <div className="pack-review-callout"><span>COMMERCIAL EVIDENCE LADDER</span><div>{pack.firstCustomerSprint.evidenceLadder.map((stage) => <code key={stage}>{stage}</code>)}</div><p>Possible pursues the strongest honest commitment available, preserves the complete funnel, and lets customer behavior determine what should happen next.</p></div> : null}
+            {pack.firstCustomerSprint ? <div className="pack-review-callout"><span>RESUMABLE SALES CYCLE</span><div>{pack.firstCustomerSprint.waitingStates.map((state) => <code key={state}>{state}</code>)}</div><p>Approved sales activity can pause for replies, conversations, payment, or use, then resume from durable state. Scheduling coordinates a follow-up; it never counts as commercial evidence.</p></div> : null}
             {pack.remix ? <div className="pack-review-callout"><span>REMIX</span><div><code>{pack.remix.candidateCount} directions</code><code>{pack.remix.decisionPath}</code></div><p>Possible derives project-specific directions after product truth is known, then records one decision before dependent implementation begins. The outcome contract does not change.</p></div> : null}
             <div className="pack-review-callout"><span>INDEPENDENT REVIEW</span><div>{pack.reviewSkills.map((skill) => <code key={skill}>${skill}</code>)}</div><p>A verifier checks the integrated outcome. It reports evidence, failures, skipped checks, and unsupported claims.</p></div>
           </section>

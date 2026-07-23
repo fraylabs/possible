@@ -55,15 +55,6 @@ export interface OutcomePrerequisite {
   requiredEvidence: string[];
 }
 
-export interface AdaptiveValidationContract {
-  kind: "riskiest-assumption-first";
-  dimensions: string[];
-  assumptionMapPath: string;
-  experimentRoot: string;
-  decisionReceiptPath: string;
-  decisions: ["pursue", "revise", "stop"];
-}
-
 export interface OpportunityDiscoveryContract {
   kind: "opportunity-discovery";
   candidateRange: [3, 5];
@@ -72,12 +63,15 @@ export interface OpportunityDiscoveryContract {
   decisions: ["select", "broaden", "stop"];
 }
 
-export interface ValidationLifecycleContract {
-  kind: "resumable-evidence-cycle";
+export interface FirstCustomerSprintContract {
+  kind: "resumable-commercial-evidence";
+  evidenceLadder: ["reply", "conversation", "qualified problem", "demo requested", "pilot agreed", "payment attempted", "payment received", "repeat use"];
   statePath: string;
   cycleRoot: string;
+  decisionReceiptPath: string;
   resumeCommand: "$possible resume";
   waitingStates: ["awaiting-approval", "awaiting-participants", "awaiting-observation"];
+  decisions: ["continue", "revise", "stop"];
 }
 
 export type PackLane = "create" | "launch" | "release" | "operate";
@@ -105,9 +99,8 @@ export interface OutcomePack {
   verification: string[];
   remix?: RemixContract;
   prerequisites?: OutcomePrerequisite[];
-  adaptiveValidation?: AdaptiveValidationContract;
+  firstCustomerSprint?: FirstCustomerSprintContract;
   opportunityDiscovery?: OpportunityDiscoveryContract;
-  validationLifecycle?: ValidationLifecycleContract;
 }
 
 export interface CompiledPack {

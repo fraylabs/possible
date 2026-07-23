@@ -107,8 +107,8 @@ describe("Possible", () => {
     }
   });
 
-  it("publishes opportunity discovery, validation, and developer launch as reviewed Outcome Packs", async () => {
-    for (const slug of ["software-opportunity-discovery", "software-opportunity-validation", "developer-project-launch"]) {
+  it("publishes opportunity discovery, first customer, and developer launch as reviewed Outcome Packs", async () => {
+    for (const slug of ["software-opportunity-discovery", "first-customer-sprint", "developer-project-launch"]) {
       const pack = getPublishedPack(slug);
       expect(pack).toBeDefined();
       const { container, unmount } = renderRoute(`/packs/${slug}`);
@@ -120,26 +120,26 @@ describe("Possible", () => {
     }
   });
 
-  it("separates opportunity discovery from adaptive resumable validation", async () => {
+  it("separates opportunity discovery from the resumable first-customer sprint", async () => {
     const discoveryRoute = renderRoute("/packs/software-opportunity-discovery");
     expect(screen.getByRole("heading", { name: "Software Opportunity Discovery", level: 1 })).toBeInTheDocument();
     expect(screen.getByText("OPPORTUNITY DISCOVERY")).toBeInTheDocument();
-    expect(screen.queryByText("ADAPTIVE VALIDATION")).not.toBeInTheDocument();
+    expect(screen.queryByText("COMMERCIAL EVIDENCE LADDER")).not.toBeInTheDocument();
     expect(discoveryRoute.container.querySelector(".pack-prompt-disclosure code")?.textContent).toMatch(/OPPORTUNITY DISCOVERY GATE/);
-    expect(discoveryRoute.container.querySelector(".pack-prompt-disclosure code")?.textContent).not.toMatch(/RESUMABLE VALIDATION LIFECYCLE/);
+    expect(discoveryRoute.container.querySelector(".pack-prompt-disclosure code")?.textContent).not.toMatch(/FIRST CUSTOMER SPRINT/);
     expect(await axe(discoveryRoute.container)).toHaveNoViolations();
     discoveryRoute.unmount();
 
-    const validationRoute = renderRoute("/packs/software-opportunity-validation");
-    expect(screen.getByRole("heading", { name: "Software Opportunity Validation", level: 1 })).toBeInTheDocument();
-    expect(screen.getByText("ADAPTIVE VALIDATION")).toBeInTheDocument();
-    expect(screen.getByText("RESUMABLE EVIDENCE CYCLE")).toBeInTheDocument();
-    expect(screen.getByText("target user and problem")).toBeInTheDocument();
-    expect(screen.getByText("pricing and business model")).toBeInTheDocument();
-    expect(screen.getAllByText(/assumption map selects the proposed solution/i).length).toBeGreaterThan(0);
-    expect(validationRoute.container.querySelector(".pack-prompt-disclosure code")?.textContent).toMatch(/ADAPTIVE VALIDATION GATE/);
-    expect(validationRoute.container.querySelector(".pack-prompt-disclosure code")?.textContent).toMatch(/RESUMABLE VALIDATION LIFECYCLE/);
-    expect(await axe(validationRoute.container)).toHaveNoViolations();
+    const sprintRoute = renderRoute("/packs/first-customer-sprint");
+    expect(screen.getByRole("heading", { name: "First Customer Sprint", level: 1 })).toBeInTheDocument();
+    expect(screen.getByText("COMMERCIAL EVIDENCE LADDER")).toBeInTheDocument();
+    expect(screen.getByText("RESUMABLE SALES CYCLE")).toBeInTheDocument();
+    expect(screen.getByText("qualified problem")).toBeInTheDocument();
+    expect(screen.getByText("payment received")).toBeInTheDocument();
+    expect(screen.getAllByText(/real qualified prospect requests one bounded feasibility proof/i).length).toBeGreaterThan(0);
+    expect(sprintRoute.container.querySelector(".pack-prompt-disclosure code")?.textContent).toMatch(/FIRST CUSTOMER SPRINT/);
+    expect(sprintRoute.container.querySelector(".pack-prompt-disclosure code")?.textContent).toMatch(/Scheduling is coordination, not commercial evidence/i);
+    expect(await axe(sprintRoute.container)).toHaveNoViolations();
   });
 
   it("keeps retired pack routes out of the public product", () => {

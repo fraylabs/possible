@@ -75,7 +75,7 @@ describe("Possible MCP", () => {
       ["web-presentation", "create"],
       ["developer-project-launch", "launch"],
       ["software-opportunity-discovery", "create"],
-      ["software-opportunity-validation", "create"],
+      ["first-customer-sprint", "launch"],
     ]);
     assert.equal(envelope.data.packs.filter(({ status }) => status === "stable").length, 7);
     assert.equal(envelope.data.packs.filter(({ status }) => status === "experimental").length, 9);
@@ -167,23 +167,23 @@ describe("Possible MCP", () => {
     assert.match(envelope.data.runPrompt, /\$competitor-profiling/);
     assert.match(envelope.data.runPrompt, /OPPORTUNITY DISCOVERY GATE/i);
     assert.match(envelope.data.runPrompt, /select, broaden, or stop/i);
-    assert.doesNotMatch(envelope.data.runPrompt, /RESUMABLE VALIDATION LIFECYCLE/i);
+    assert.doesNotMatch(envelope.data.runPrompt, /\nFIRST CUSTOMER SPRINT\n/);
   });
 
-  it("compiles adaptive resumable Software Opportunity Validation", async () => {
-    const result = await client.callTool({ name: "compile_pack", arguments: { slug: "software-opportunity-validation" } });
+  it("compiles the resumable First Customer Sprint", async () => {
+    const result = await client.callTool({ name: "compile_pack", arguments: { slug: "first-customer-sprint" } });
     const envelope = result.structuredContent as { ok: boolean; data: { pack: { catalogNumber: number; lane: string; name: string }; installCommands: string[]; runPrompt: string } };
     assert.equal(envelope.ok, true);
     assert.equal(envelope.data.pack.catalogNumber, 16);
-    assert.equal(envelope.data.pack.lane, "create");
-    assert.equal(envelope.data.pack.name, "Software Opportunity Validation");
+    assert.equal(envelope.data.pack.lane, "launch");
+    assert.equal(envelope.data.pack.name, "First Customer Sprint");
     assert.equal(envelope.data.installCommands.length, 2);
     assert.match(envelope.data.runPrompt, /\$create-technical-spike/);
-    assert.match(envelope.data.runPrompt, /ADAPTIVE VALIDATION GATE/i);
-    assert.match(envelope.data.runPrompt, /RESUMABLE VALIDATION LIFECYCLE/i);
+    assert.match(envelope.data.runPrompt, /FIRST CUSTOMER SPRINT/i);
+    assert.match(envelope.data.runPrompt, /payment received → repeat use/i);
     assert.match(envelope.data.runPrompt, /awaiting-participants/i);
-    assert.match(envelope.data.runPrompt, /pursue, revise, or stop/i);
-    assert.match(envelope.data.runPrompt, /Do not run every possible validation activity equally/i);
+    assert.match(envelope.data.runPrompt, /continue, revise, or stop/i);
+    assert.match(envelope.data.runPrompt, /Do not build the full product merely to avoid asking for commitment/i);
   });
 
   it("compiles Production Web Release with its second approval gate", async () => {

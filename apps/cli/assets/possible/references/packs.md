@@ -213,7 +213,7 @@ npx skills@1.5.19 add anthropics/skills@fa0fa64bdc967915dc8399e803be67759e1e62b8
 npx skills@1.5.19 add github/awesome-copilot@26fe2d126bf79aafb38f43344d450b69632200f8 --skill security-review --agent codex
 ```
 
-When starting from a prior Software Opportunity Validation or historical discovery run, inspect its decision receipt, selected and rejected opportunities, experiment evidence, and unresolved assumptions against the current reality before recommending this pack. On completion, write `outcome-room/product-receipt.json` with `passed`, `repair-required`, or `no-go`. A `passed` receipt is evidence for a later reassessment, not authority to begin a launch outcome.
+When starting from a prior First Customer Sprint or historical discovery run, inspect its receipt, selected and rejected opportunities, commercial evidence, customer objections, requested delivery boundary, and unresolved assumptions against the current reality before recommending this pack. On completion, write `outcome-room/product-receipt.json` with `passed`, `repair-required`, or `no-go`. A `passed` receipt is evidence for a later reassessment, not authority to begin a launch outcome.
 
 Prove clean local setup, one complete user job, one material failure path, every promised state and persistence boundary, a production build, responsive browser behavior, and an exact completion report. Deployment, publishing, analytics, third-party services, and real customer data remain separate gates. Never call a local build secure, scalable, reliable, or production-ready.
 
@@ -531,7 +531,7 @@ Public page: `https://possible.sh/packs/software-opportunity-discovery`
 
 Use when a developer has a rough software ambition but no selected problem, user, or opportunity.
 
-Outputs: demonstrated or conservative operator baseline; execution-gap analysis; dated problem evidence; alternatives and reachable-path landscape; three to five consistently scored opportunities; one provisional thesis or broaden or stop decision; machine-readable validation handoff; independent review.
+Outputs: demonstrated or conservative operator baseline; execution-gap analysis; dated problem evidence; alternatives and reachable-path landscape; three to five consistently scored opportunities; one provisional thesis or broaden or stop decision; machine-readable first-customer handoff; independent review.
 
 Workstreams:
 
@@ -553,33 +553,33 @@ npx skills@1.5.19 add coreyhaines31/marketingskills@67264763cb107d61749f418d081c
 
 When personal operator evidence is absent, disclose a conservative baseline: solo technical builder, Codex available, no privileged data, no established audience, and no assumed budget. Infer the operator requirements for every opportunity, what agents can cover, and the remaining execution gap. Do not block on a generic operator questionnaire or invent an advantage.
 
-Compare exactly three to five traceable opportunities. Write `outcome-room/discovery-receipt.json` with exactly one status: `select`, `broaden`, or `stop`, plus `outcome-room/opportunity-brief.json`. A selected opportunity is ready to validate; it is not validated or approved to build.
+Compare exactly three to five traceable opportunities. Write `outcome-room/discovery-receipt.json` with exactly one status: `select`, `broaden`, or `stop`, plus `outcome-room/opportunity-brief.json`. A selected opportunity is ready for a first-customer attempt; it is not evidence of demand or approval to build.
 
 Never invent operator capabilities, user quotes, demand, market size, willingness to pay, users, revenue, growth, or product-market fit. Discovery performs no outreach, experiment, prototype, or product build.
 
-## Software Opportunity Validation
+## First Customer Sprint
 
-Slug: `software-opportunity-validation`
+Slug: `first-customer-sprint`
 
-Lane: `create`
+Lane: `launch`
 
 Status: `stable`.
 
-Public page: `https://possible.sh/packs/software-opportunity-validation`
+Public page: `https://possible.sh/packs/first-customer-sprint`
 
-Use when one specific software opportunity exists but its problem, solution, delivery, feasibility, demand, pricing, or distribution assumptions still need credible evidence.
+Use when one specific software opportunity and intended customer exist, but nobody has yet made a credible commercial commitment.
 
-Outputs: selected-opportunity baseline; seven-dimension assumption map; evidence-access and authority preflight; adaptive experiment portfolio; approved protocols; durable state and dated cycle records; raw observations and denominators; pursue, revise, or stop receipt; independent review.
+Outputs: customer, offer, price or commitment ask, delivery boundary, channel, timebox, and stop condition; prospect-access and authority preflight; local sales kit; approved prospect ledger; durable state and dated cycles; complete funnel evidence; money requested and collected; continue, revise, or stop receipt; independent review.
 
 Workstreams:
 
-- Validation baseline and assumption map — `customer-research`, `product-marketing`, `analytics`; owns `validation/baseline/` and `validation/assumptions.json`.
-- Evidence and authority preflight — `customer-research`, `analytics`; verifies that required users, cases, artifacts, data, and authorization are obtainable before experiment implementation.
-- Solution and delivery evidence — conditional `customer-research`, `product-marketing`, `analytics`.
-- Feasibility and unit economics evidence — conditional `create-technical-spike`, `analytics`, `product-marketing`.
-- Demand and commitment evidence — conditional approved `customer-research`, `product-marketing`, `analytics`.
-- Pricing and distribution evidence — conditional approved `customer-research`, `product-marketing`, `analytics`.
-- Fresh review — `customer-research`, `analytics`, `create-technical-spike`; audits protocol integrity, evidence, authorization, and the final decision.
+- Customer, offer, and funnel baseline — `customer-research`, `product-marketing`, `analytics`; owns `sales/baseline/` and `sales/funnel.json`.
+- Prospect access and authority preflight — `customer-research`, `competitor-profiling`, `analytics`; verifies real prospects and an allowed route to reach them.
+- Offer and sales assets — conditional `product-marketing`, `customer-research`; creates only what is needed for the next sale.
+- Approved prospecting and conversations — conditional `customer-research`, `product-marketing`, `analytics`; preserves every denominator, reply, refusal, meeting, no-show, problem, and objection.
+- Approved commitment and close — conditional `product-marketing`, `customer-research`, `analytics`; asks for the strongest honest commitment supportable.
+- Decision-critical proof or concierge delivery — conditional `create-technical-spike`, `product-marketing`, `analytics`; answers one objection from a real qualified prospect.
+- Fresh review — `customer-research`, `analytics`, `product-marketing`; audits authorization, funnel integrity, commercial evidence, and the final decision.
 
 Sources:
 
@@ -593,11 +593,11 @@ npx skills@1.5.19 add coreyhaines31/marketingskills@67264763cb107d61749f418d081c
 npx skills@1.5.19 add github/awesome-copilot@26fe2d126bf79aafb38f43344d450b69632200f8 --skill create-technical-spike --agent codex
 ```
 
-Validation assesses the target user and problem, solution and workflow, delivery mechanism, technical feasibility, demand and commitment, pricing and business model, and distribution and reachability. It ranks assumptions and runs only the smallest credible experiments against the highest-risk present decision.
+The sprint follows an explicit evidence ladder: reply → conversation → qualified problem → demo requested → pilot agreed → payment attempted → payment received → repeat use. It pursues the strongest ethical evidence presently available and never upgrades one rung into another.
 
-Validation may span days or weeks. Preserve `validation/state.json` and immutable records under `validation/cycles/`. Outreach, recruitment, interviews, surveys, fake doors, deployments, analytics, authenticated data, payments, spending, and scheduled follow-ups require exact separate approval. A schedule only invokes `$possible resume` for one bounded cycle; waiting, silence, or a prepared protocol is not evidence.
+The sprint may span days or weeks. Preserve `sales/state.json` and immutable records under `sales/cycles/`. Outreach, interviews, calls, fake doors, deployments, analytics, authenticated data, payments, spending, delivery promises, and scheduled follow-ups require exact separate approval. A schedule only invokes `$possible resume` for one bounded cycle; waiting and silence are not commercial evidence.
 
-Write `outcome-room/decision-receipt.json` with exactly one status: `pursue`, `revise`, or `stop`, only after a preregistered threshold, timebox, or stop condition is reached. `pursue` requires credible evidence on the highest-risk assumption and an explicit next-build boundary. None authorizes product implementation or another Outcome Pack.
+Write `outcome-room/first-customer-receipt.json` with exactly one status: `continue`, `revise`, or `stop`. Record the highest evidence rung reached, money requested and collected, what customers actually did, objections, the next product or sales boundary, and unresolved risks. The receipt recommends but does not authorize the next Outcome Pack.
 
 ## Selection rule
 
@@ -617,10 +617,10 @@ Recommend the Outcome Pack whose finished outputs most closely match the user's 
 - Robot hand, gripper, arm, mobile robot, quadruped, or full robot plus coherent CAD, description, controls, and simulation evidence → Robot Prototype.
 - Pitch, talk, lesson, demo, or internal presentation plus a coded browser deck, presenter experience, export, and evidence review → Web Presentation.
 - Working developer tool, library, CLI, API, agent project, or platform plus positioning, a distinctive site, honest demonstration, verified quickstart, and adoption path → Developer Project Launch.
-- Vague software ambition with no selected opportunity plus one traceable provisional thesis and validation handoff → Software Opportunity Discovery.
-- Selected software opportunity plus adaptive, resumable evidence and a pursue, revise, or stop decision → Software Opportunity Validation.
+- Vague software ambition with no selected opportunity plus one traceable provisional thesis and first-customer handoff → Software Opportunity Discovery.
+- Selected software opportunity plus real prospects, one concrete offer, and the strongest available commercial commitment → First Customer Sprint.
 
-Recommend Software Opportunity Discovery when no opportunity is selected. Recommend Software Opportunity Validation when one selected direction still has material unsupported assumptions; recommend Working Web App only when one bounded direction has enough evidence to justify implementation. Use Developer Project Launch when a working developer project needs comprehension, presentation, proof, and a verified adoption path. Use Software Launch for a broader product release candidate, launch story, and film. Use Web Presentation when the primary deliverable is a slide-based browser presentation; a conventional landing page belongs elsewhere. Use Billion-Dollar SaaS when the user explicitly wants the broader company operating system and accepts that operational coverage cannot guarantee economic success. Use Kickstarter Funding when crowdfunding mechanics and payout are part of the outcome; use Kickstarter Fulfillment only after the campaign is funded. Use Robot Prototype for a simulation-backed digital prototype, not a fabrication-ready machine or hardware commissioning. Use Production Web Release when a tested candidate exists and the missing outcome is a gated production promotion with rollback and smoke evidence. Use Web App Operations only after the app is live and the desired outcome is an ongoing reliability and maintenance rhythm. Use Marketing Operations when the product or offer exists and the missing outcome is a recurring marketing system. Repository-only licensing, packaging, CI, versioning, and release engineering belong to Open-Source Release; one isolated bug, incident, or marketing asset with no requested recurring workflow is focused work, not an Outcome Pack run.
+Recommend Software Opportunity Discovery when no opportunity is selected. Recommend First Customer Sprint when one selected direction should face a concrete offer and real prospects; recommend Working Web App only when customer evidence or another explicit delivery requirement makes a bounded application the next useful outcome. Use Developer Project Launch when a working developer project needs comprehension, presentation, proof, and a verified adoption path. Use Software Launch for a broader product release candidate, launch story, and film. Use Web Presentation when the primary deliverable is a slide-based browser presentation; a conventional landing page belongs elsewhere. Use Billion-Dollar SaaS when the user explicitly wants the broader company operating system and accepts that operational coverage cannot guarantee economic success. Use Kickstarter Funding when crowdfunding mechanics and payout are part of the outcome; use Kickstarter Fulfillment only after the campaign is funded. Use Robot Prototype for a simulation-backed digital prototype, not a fabrication-ready machine or hardware commissioning. Use Production Web Release when a tested candidate exists and the missing outcome is a gated production promotion with rollback and smoke evidence. Use Web App Operations only after the app is live and the desired outcome is an ongoing reliability and maintenance rhythm. Use Marketing Operations when the product or offer exists and the missing outcome is a recurring marketing system. Repository-only licensing, packaging, CI, versioning, and release engineering belong to Open-Source Release; one isolated bug, incident, or marketing asset with no requested recurring workflow is focused work, not an Outcome Pack run.
 
 For an ambition spanning several valuable results, recommend only the next independently useful Outcome Pack. Choose it from the current reality and the most important unresolved decision; do not preselect a future sequence. After the outcome passes verification, reassess the new evidence before recommending zero or more candidates and stop for fresh approval. A strong matching working project may qualify for Developer Project Launch directly; a discovery receipt alone does not.
 

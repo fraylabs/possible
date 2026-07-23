@@ -1,5 +1,6 @@
 import { billionDollarSaasPack } from "./billion-dollar-saas.js";
 import { developerProjectLaunchPack } from "./developer-project-launch.js";
+import { firstCustomerSprintPack } from "./first-customer-sprint.js";
 import { hardwareLaunchPack } from "./hardware-launch.js";
 import { kickstarterFulfillmentPack } from "./kickstarter-fulfillment.js";
 import { kickstarterFundingPack } from "./kickstarter-funding.js";
@@ -9,15 +10,14 @@ import { playableWebGamePack } from "./playable-web-game.js";
 import { productionWebReleasePack } from "./production-web-release.js";
 import { robotPrototypePack } from "./robot-prototype.js";
 import { softwareOpportunityDiscoveryPack } from "./software-opportunity-discovery.js";
-import { softwareOpportunityValidationPack } from "./software-opportunity-validation.js";
 import { softwareLaunchPack } from "./software-launch.js";
 import { webAppOperationsPack } from "./web-app-operations.js";
 import { webPresentationPack } from "./web-presentation.js";
 import { workingWebAppPack } from "./working-web-app.js";
 
-export { billionDollarSaasPack, developerProjectLaunchPack, hardwareLaunchPack, kickstarterFulfillmentPack, kickstarterFundingPack, marketingOperationsPack, openSourceReleasePack, playableWebGamePack, productionWebReleasePack, robotPrototypePack, softwareLaunchPack, softwareOpportunityDiscoveryPack, softwareOpportunityValidationPack, webAppOperationsPack, webPresentationPack, workingWebAppPack };
+export { billionDollarSaasPack, developerProjectLaunchPack, firstCustomerSprintPack, hardwareLaunchPack, kickstarterFulfillmentPack, kickstarterFundingPack, marketingOperationsPack, openSourceReleasePack, playableWebGamePack, productionWebReleasePack, robotPrototypePack, softwareLaunchPack, softwareOpportunityDiscoveryPack, webAppOperationsPack, webPresentationPack, workingWebAppPack };
 export { compileInstallCommands, compilePack, compileRunPrompt, compileWorkstreamWaves, recordOutcomeJourney, validateOutcomeCheckpoint } from "./compiler.js";
-export type { AdaptiveValidationContract, CandidateOutcomeRecommendation, CompiledPack, EvidenceBackedFact, OpportunityDiscoveryContract, OutcomeCheckpoint, OutcomeJourneyHistory, OutcomePack, OutcomePrerequisite, PackLane, PluginCapability, RemixContract, ScheduleContract, SkillSource, ValidationLifecycleContract, Workstream } from "./types.js";
+export type { CandidateOutcomeRecommendation, CompiledPack, EvidenceBackedFact, FirstCustomerSprintContract, OpportunityDiscoveryContract, OutcomeCheckpoint, OutcomeJourneyHistory, OutcomePack, OutcomePrerequisite, PackLane, PluginCapability, RemixContract, ScheduleContract, SkillSource, Workstream } from "./types.js";
 
 export const stablePackSlugs = [
   "hardware-launch",
@@ -25,7 +25,7 @@ export const stablePackSlugs = [
   "playable-web-game",
   "web-presentation",
   "software-opportunity-discovery",
-  "software-opportunity-validation",
+  "first-customer-sprint",
   "developer-project-launch",
 ] as const;
 
@@ -45,7 +45,7 @@ export const outcomePacks = [
   webPresentationPack,
   developerProjectLaunchPack,
   softwareOpportunityDiscoveryPack,
-  softwareOpportunityValidationPack,
+  firstCustomerSprintPack,
 ] as const;
 
 const stablePackSlugSet = new Set<string>(stablePackSlugs);

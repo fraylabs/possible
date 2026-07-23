@@ -106,32 +106,6 @@ OUTCOME PREREQUISITES
 ${pack.prerequisites.map((requirement) => `- ${requirement.id}: ${requirement.description} Evidence required: ${requirement.requiredEvidence.join(", ")}.`).join("\n")}
 
 Verify these prerequisites against the current repository before starting. If material evidence is missing, stop this outcome and explain the gap. Do not silently compile or execute another Outcome Pack to fill it; any alternative outcome is only a recommendation requiring fresh approval.` : "";
-  const adaptiveValidation = pack.adaptiveValidation ? (() => {
-    const contract = pack.adaptiveValidation;
-    if (contract.dimensions.length < 2 || new Set(contract.dimensions).size !== contract.dimensions.length || contract.dimensions.some((dimension) => !dimension.trim())) {
-      throw new Error(`${pack.slug} adaptive validation dimensions must be unique and non-empty`);
-    }
-    if (contract.decisions.join(",") !== "pursue,revise,stop") {
-      throw new Error(`${pack.slug} adaptive validation decisions must be pursue, revise, stop`);
-    }
-    if (!pack.workstreams.some((stream) => stream.activation)) {
-      throw new Error(`${pack.slug} adaptive validation requires at least one conditional workstream`);
-    }
-    requireSafeRelativePath(contract.assumptionMapPath, `${pack.slug} adaptive validation assumptionMapPath`);
-    requireSafeRelativePath(contract.experimentRoot, `${pack.slug} adaptive validation experimentRoot`);
-    requireSafeRelativePath(contract.decisionReceiptPath, `${pack.slug} adaptive validation decisionReceiptPath`);
-    return `
-
-ADAPTIVE VALIDATION GATE
-1. Assess these dimensions before choosing experiments: ${contract.dimensions.join(", ")}.
-2. Write ${contract.assumptionMapPath}. Rank assumptions by decision impact, uncertainty, and cost to test. Distinguish direct evidence, indirect evidence, hypotheses, and unknowns.
-3. Choose the smallest credible portfolio of experiments that tests the highest-risk assumptions. Do not run every possible validation activity equally or manufacture filler for a dimension that is not presently decision-critical.
-4. At each dependency wave, evaluate every conditional workstream against its Activation rule using the shared assumption map. Start only active workstreams. Record skipped conditions and preserve their unknowns instead of pretending they were resolved.
-5. Repository inspection, public research, local prototypes, and locally supplied evidence remain within pack authority. Interviews, recruitment, outreach, survey publication, fake-door deployment, analytics collection, account creation, purchases, advertising, payments, and other external actions require separate approval for the exact experiment.
-6. Store experiment plans, inputs, raw observations, analysis, and limitations under ${contract.experimentRoot}. A prepared but unrun experiment is not validation. Opinions are not behavior; clicks are not purchases; technical possibility is not demand.
-7. Stop when the agreed timebox or evidence threshold is reached. Write ${contract.decisionReceiptPath} with exactly one decision: pursue, revise, or stop. State what is supported, contradicted, unknown, and what evidence would reverse the decision. None authorizes product implementation or another Outcome Pack.`;
-  })() : "";
-
   const opportunityDiscovery = pack.opportunityDiscovery ? (() => {
     const contract = pack.opportunityDiscovery;
     if (contract.candidateRange[0] !== 3 || contract.candidateRange[1] !== 5) {
@@ -148,31 +122,44 @@ OPPORTUNITY DISCOVERY GATE
 1. Infer the operator baseline from demonstrated repository assets and confirmed context. When personal evidence is absent, use a disclosed conservative baseline—solo technical builder, Codex available, no privileged data, no established audience, and no assumed budget—instead of blocking or inventing advantages.
 2. For each candidate, infer the capabilities, access, capital, operating burden, and distribution advantage it requires. Record what agents can cover, what the operator demonstrates, and the remaining execution gap.
 3. Compare exactly three to five traceable opportunities using the same disclosed rubric. Public complaints establish occurrence, not prevalence or demand; competitor prices establish category anchors, not willingness to pay.
-4. Write ${contract.opportunityBriefPath} for one selected provisional opportunity, or explain why the search must broaden or stop. Include the intended user, painful job, alternatives, solution hypothesis, delivery options, first boundary, value exchange, business-model hypothesis, distribution path, operator-gap plan, assumptions, non-goals, and the smallest validation gates.
-5. Write ${contract.decisionReceiptPath} with exactly one discovery decision: select, broaden, or stop. A selected opportunity is ready to validate, not validated, approved to build, or approved for external experiments.`;
+4. Write ${contract.opportunityBriefPath} for one selected provisional opportunity, or explain why the search must broaden or stop. Include the intended user, painful job, alternatives, offer hypothesis, delivery options, first boundary, value exchange, business-model hypothesis, distribution path, operator-gap plan, assumptions, non-goals, and the smallest credible first-customer approach.
+5. Write ${contract.decisionReceiptPath} with exactly one discovery decision: select, broaden, or stop. A selected opportunity is ready for a first-customer attempt; it is not evidence of demand, permission to build, or approval for external actions.`;
   })() : "";
 
-  const validationLifecycle = pack.validationLifecycle ? (() => {
-    const contract = pack.validationLifecycle;
-    if (!pack.adaptiveValidation) throw new Error(`${pack.slug} resumable validation requires adaptiveValidation`);
-    requireSafeRelativePath(contract.statePath, `${pack.slug} validation lifecycle statePath`);
-    requireSafeRelativePath(contract.cycleRoot, `${pack.slug} validation lifecycle cycleRoot`);
-    if (contract.resumeCommand !== "$possible resume") throw new Error(`${pack.slug} validation lifecycle resumeCommand must be $possible resume`);
+  const firstCustomerSprint = pack.firstCustomerSprint ? (() => {
+    const contract = pack.firstCustomerSprint;
+    const evidenceLadder = "reply,conversation,qualified problem,demo requested,pilot agreed,payment attempted,payment received,repeat use";
+    if (contract.evidenceLadder.join(",") !== evidenceLadder) {
+      throw new Error(`${pack.slug} first customer evidence ladder is invalid`);
+    }
+    if (contract.decisions.join(",") !== "continue,revise,stop") {
+      throw new Error(`${pack.slug} first customer decisions must be continue, revise, stop`);
+    }
+    if (!pack.workstreams.some((stream) => stream.activation)) {
+      throw new Error(`${pack.slug} first customer sprint requires at least one conditional workstream`);
+    }
+    requireSafeRelativePath(contract.statePath, `${pack.slug} first customer sprint statePath`);
+    requireSafeRelativePath(contract.cycleRoot, `${pack.slug} first customer sprint cycleRoot`);
+    requireSafeRelativePath(contract.decisionReceiptPath, `${pack.slug} first customer sprint decisionReceiptPath`);
+    if (contract.resumeCommand !== "$possible resume") throw new Error(`${pack.slug} first customer sprint resumeCommand must be $possible resume`);
     if (contract.waitingStates.join(",") !== "awaiting-approval,awaiting-participants,awaiting-observation") {
-      throw new Error(`${pack.slug} validation lifecycle waiting states are invalid`);
+      throw new Error(`${pack.slug} first customer sprint waiting states are invalid`);
     }
     return `
 
-RESUMABLE VALIDATION LIFECYCLE
-1. Validation may span days or weeks. Preserve durable state in ${contract.statePath} and one immutable dated record per cycle under ${contract.cycleRoot}. Record the current assumption, protocol version, authority, participant or case denominator, evidence received, exclusions, threshold progress, next observation date, and next permitted action.
-2. Before any outreach, recruitment, interview, survey, fake door, deployment, analytics collection, authenticated data access, purchase, payment, or scheduled follow-up, show the exact experiment, audience or target, channel, message or task, data boundary, cadence, duration, budget, stop conditions, and expected evidence. Request approval for that exact external action.
-3. Scheduling is coordination, not validation. Create or enable a reminder or recurring task only after approval for the exact schedule. Its standalone prompt must invoke ${contract.resumeCommand}, read ${contract.statePath}, perform one bounded follow-up cycle, preserve refusals and missing responses, stop at every new external-action boundary, and write the next dated cycle record. If scheduling is unavailable, provide the same tested resume prompt and next review date without claiming a task exists.
-4. When evidence is not yet due, stop cleanly in exactly one waiting state: ${contract.waitingStates.join(", ")}. Do not fill waiting time with product implementation, broaden the experiment, contact more people than approved, or convert silence into a negative result.
-5. Every resume must re-check consent, authorization, elapsed time, denominators, drop-off, selection bias, protocol drift, and whether the threshold or stop condition is now reached. Never overwrite prior observations.
-6. Write the final pursue, revise, or stop receipt only when a preregistered threshold, timebox, or stop condition has been reached. Interim cycles and waiting states are not completed validation outcomes and do not authorize another Outcome Pack.`;
+FIRST CUSTOMER SPRINT
+1. Try to sell one specific outcome to one reachable customer segment. Use this evidence ladder from weakest to strongest: ${contract.evidenceLadder.join(" → ")}. Pursue the strongest ethical evidence presently available; never upgrade a lower rung into a higher one.
+2. Define the segment, painful job, current alternative, offer, price or commitment ask, credible delivery boundary, reachable channel, funnel threshold, timebox, and stop condition before preparing sales activity. Verify that real prospects and the approved channel are actually accessible; synthetic personas and fixtures may test mechanics but never count as customers or commercial evidence.
+3. Build only the local assets needed for the next sale: a concise offer, proof or demo, objection answers, call guide, and delivery plan. Do not build the full product merely to avoid asking for commitment. Let customer evidence determine whether the next outcome should be a prototype, integration, service, app, launch, revision, or stop.
+4. Before outreach, recruitment, interviews, calls, surveys, fake doors, deployments, analytics collection, authenticated data access, purchases, advertising, payment collection, or scheduled follow-up, show the exact target, channel, message or task, data boundary, cadence, duration, budget, stop conditions, and expected evidence. Request approval for that exact external action.
+5. Preserve durable state in ${contract.statePath} and one immutable dated record per cycle under ${contract.cycleRoot}. Record the prospect denominator, qualifications, replies, refusals, conversations, objections, commitments, payments, repeat use, exclusions, timing, limitations, and next permitted action.
+6. Scheduling is coordination, not commercial evidence. Create or enable a reminder only after approval for the exact schedule. Its standalone prompt must invoke ${contract.resumeCommand}, read ${contract.statePath}, perform one bounded follow-up cycle, preserve refusals and missing responses, stop at every new external-action boundary, and write the next dated cycle record. If scheduling is unavailable, provide the same tested resume prompt and next review date without claiming a task exists.
+7. When evidence is not yet due, stop cleanly in exactly one waiting state: ${contract.waitingStates.join(", ")}. Do not fill waiting time with speculative implementation, contact more people than approved, or convert silence into rejection.
+8. Every resume must re-check consent, authorization, elapsed time, denominators, drop-off, selection bias, message or offer drift, and whether the threshold or stop condition is reached. Never overwrite prior observations.
+9. Write ${contract.decisionReceiptPath} with exactly one decision: continue, revise, or stop. State the highest evidence rung reached, money requested and collected, what customers actually did, the next product or sales boundary, unresolved risks, and what would reverse the decision. This receipt records commercial proof; it does not claim product-market fit or authorize another Outcome Pack.`;
   })() : "";
 
-  const action = pack.opportunityDiscovery ? "Discover" : pack.validationLifecycle ? "Validate" : pack.lane === "operate" ? "Establish and run the first cycle of" : pack.lane === "release" ? "Prepare and verify" : "Build";
+  const action = pack.opportunityDiscovery ? "Discover" : pack.firstCustomerSprint ? "Run" : pack.lane === "operate" ? "Establish and run the first cycle of" : pack.lane === "release" ? "Prepare and verify" : "Build";
   const pluginCheck = pack.plugins?.length
     ? ` Also detect these optional agent plugins: ${pack.plugins.map((plugin) => `${plugin.invocation} (${plugin.skills.map((skill) => `$${skill}`).join(", ")})`).join(", ")}. Do not install or imitate an unavailable plugin; record its absence and use the documented fallback.`
     : "";
@@ -228,7 +215,7 @@ ${pack.guardrails.map((guardrail) => `- ${guardrail}`).join("\n")}
 
 VERIFICATION CONTRACT
 ${pack.verification.map((item) => `- ${item}`).join("\n")}
-${prerequisites}${opportunityDiscovery}${adaptiveValidation}${validationLifecycle}${remixGate}${releaseGate}${launchGate}${sitesPath}${operateLoop}
+${prerequisites}${opportunityDiscovery}${firstCustomerSprint}${remixGate}${releaseGate}${launchGate}${sitesPath}${operateLoop}
 
 NEW-REALITY CHECKPOINT
 Only after this bounded outcome finishes—including a partial or no-go result—write .possible/checkpoints/<run-id>.json with:

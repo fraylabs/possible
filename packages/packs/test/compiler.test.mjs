@@ -20,7 +20,7 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
     "web-presentation",
     "developer-project-launch",
     "software-opportunity-discovery",
-    "software-opportunity-validation",
+    "first-customer-sprint",
   ]);
   assert.deepEqual(outcomePacks.map(({ slug, lane }) => [slug, lane]), [
     ["hardware-launch", "launch"],
@@ -38,7 +38,7 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
     ["web-presentation", "create"],
     ["developer-project-launch", "launch"],
     ["software-opportunity-discovery", "create"],
-    ["software-opportunity-validation", "create"],
+    ["first-customer-sprint", "launch"],
   ]);
   assert.deepEqual(outcomePacks.map((pack) => pack.catalogNumber), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]);
   assert.equal(new Set(outcomePacks.map((pack) => pack.catalogNumber)).size, outcomePacks.length);
@@ -50,7 +50,7 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
     "web-presentation",
     "developer-project-launch",
     "software-opportunity-discovery",
-    "software-opportunity-validation",
+    "first-customer-sprint",
   ]);
   assert.equal(experimentalOutcomePacks.length, 9);
   assert.equal(getPackStatus("hardware-launch"), "stable");
@@ -182,10 +182,10 @@ test("outcomes produce new-reality checkpoints, while journeys preserve only com
     }],
     remainingUnknowns: ["Whether a receipt beats raw logs for real reviewers."],
     riskiestAssumption: "Reviewers will trust and use a compact evidence receipt.",
-    nextDecision: "Which validation method can test reviewer utility before product implementation?",
+    nextDecision: "Which offer can test reviewer willingness to pay before product implementation?",
     candidateNextOutcomes: [{
-      outcome: "Validate whether completion receipts improve real developer review.",
-      rationale: "Test the riskiest user-behavior assumption before choosing a delivery mechanism.",
+      outcome: "Try to sell a completion-receipt pilot to real developer teams.",
+      rationale: "Request meaningful commitment before choosing a delivery mechanism.",
       addressesUnknowns: ["Whether a receipt beats raw logs for real reviewers."],
       testsAssumption: "Reviewers will trust and use a compact evidence receipt.",
       approvalRequired: true,
@@ -193,21 +193,21 @@ test("outcomes produce new-reality checkpoints, while journeys preserve only com
   };
   assert.equal(validateOutcomeCheckpoint(discoveryCheckpoint), discoveryCheckpoint);
 
-  const validationCheckpoint = {
+  const customerCheckpoint = {
     ...structuredClone(discoveryCheckpoint),
-    runId: "validation-002",
-    packSlug: "software-opportunity-validation",
+    runId: "customer-002",
+    packSlug: "first-customer-sprint",
     completedAt: "2026-07-23T12:00:00.000Z",
     becameTrue: [{
-      statement: "Three reviewers completed evidence checks faster with an inline pull-request receipt.",
-      evidence: ["outcome-room/validation/results.json"],
+      statement: "One developer team agreed to a paid inline pull-request receipt pilot.",
+      evidence: ["outcome-room/first-customer-receipt.json"],
     }],
     remainingUnknowns: ["Whether teams will enforce receipt policies in CI."],
     riskiestAssumption: "Teams will accept merge enforcement.",
     nextDecision: "Whether to pilot a GitHub Action or stop.",
     candidateNextOutcomes: [{
       outcome: "Pilot automatic completion receipts inside pull requests.",
-      rationale: "Test enforcement in the delivery surface supported by the validation result.",
+      rationale: "Build only the delivery surface requested by the paying pilot.",
       addressesUnknowns: ["Whether teams will enforce receipt policies in CI."],
       testsAssumption: "Teams will accept merge enforcement.",
       approvalRequired: true,
@@ -215,10 +215,10 @@ test("outcomes produce new-reality checkpoints, while journeys preserve only com
   };
   const journey = recordOutcomeJourney("Help developers trust agent-completed work.", [
     discoveryCheckpoint,
-    validationCheckpoint,
+    customerCheckpoint,
   ]);
   assert.equal(journey.schemaVersion, 1);
-  assert.deepEqual(journey.completedOutcomes.map(({ runId }) => runId), ["discovery-001", "validation-002"]);
+  assert.deepEqual(journey.completedOutcomes.map(({ runId }) => runId), ["discovery-001", "customer-002"]);
   assert.equal("plannedOutcomes" in journey, false);
   assert.equal("pendingOutcome" in journey, false);
   assert.equal("runPrompt" in journey, false);
@@ -459,7 +459,7 @@ test("Developer Project Launch turns a working developer project into an evidenc
   assert.doesNotMatch(developer.outputs.join(" "), /\bLive launch\b/i);
 });
 
-test("Software Opportunity Discovery selects a thesis without claiming validation", () => {
+test("Software Opportunity Discovery selects a thesis without claiming demand", () => {
   const discovery = outcomePacks.find((pack) => pack.slug === "software-opportunity-discovery");
   const working = outcomePacks.find((pack) => pack.slug === "working-web-app");
   const company = outcomePacks.find((pack) => pack.slug === "billion-dollar-saas");
@@ -468,11 +468,11 @@ test("Software Opportunity Discovery selects a thesis without claiming validatio
   assert.equal(discovery.lane, "create");
   assert.equal(discovery.name, "Software Opportunity Discovery");
   assert.match(discovery.eyebrow, /OUTCOME PACK/);
-  assert.match(discovery.promise, /Discover one software opportunity worth validating next/i);
+  assert.match(discovery.promise, /Discover one software opportunity worth taking to a first customer/i);
   assert.match(discovery.useWhen.join(" "), /developer.*does not yet know which problem, user, or opportunity/i);
-  assert.match(discovery.notFor.join(" "), /specific opportunity.*Software Opportunity Validation/i);
-  assert.match(working.notFor.join(" "), /Software Opportunity (?:Discovery|Validation)/i);
-  assert.match(company.notFor.join(" "), /Software Opportunity (?:Discovery|Validation)/i);
+  assert.match(discovery.notFor.join(" "), /specific opportunity.*First Customer Sprint/i);
+  assert.match(working.notFor.join(" "), /Software Opportunity Discovery.*First Customer Sprint/i);
+  assert.match(company.notFor.join(" "), /Software Opportunity Discovery.*First Customer Sprint/i);
 
   const skillIds = new Set(discovery.skills.map(({ id }) => id));
   assert.deepEqual([...skillIds], ["customer-research", "competitor-profiling", "product-marketing", "analytics"]);
@@ -488,7 +488,7 @@ test("Software Opportunity Discovery selects a thesis without claiming validatio
   assert.match(compiled.runPrompt, /what agents can cover.*remaining execution gap/is);
   assert.match(compiled.runPrompt, /exactly three to five traceable opportunities/i);
   assert.match(compiled.runPrompt, /exactly one discovery decision: select, broaden, or stop/i);
-  assert.doesNotMatch(compiled.runPrompt, /RESUMABLE VALIDATION LIFECYCLE/);
+  assert.doesNotMatch(compiled.runPrompt, /FIRST CUSTOMER SPRINT/);
   assert.deepEqual(compileWorkstreamWaves(discovery).map((wave) => wave.map(({ id }) => id)), [
     ["operator-baseline", "problem-evidence", "market-system"],
     ["opportunity-selection"],
@@ -500,17 +500,17 @@ test("Software Opportunity Discovery selects a thesis without claiming validatio
     decisionReceiptPath: "outcome-room/discovery-receipt.json",
     decisions: ["select", "broaden", "stop"],
   });
-  assert.equal(discovery.adaptiveValidation, undefined);
+  assert.equal(discovery.firstCustomerSprint, undefined);
 
   const outputs = discovery.outputs.join(" ");
   assert.match(outputs, /operator baseline.*execution-gap/i);
   assert.match(outputs, /Three to five.*software opportunities/i);
   assert.match(outputs, /provisional opportunity thesis.*broaden.*stop/i);
-  assert.match(outputs, /validation gates.*unrun evidence/i);
+  assert.match(outputs, /first-customer approach.*unrun sales claims/i);
   const verification = discovery.verification.join(" ");
   assert.match(verification, /operator baseline separates demonstrated assets.*agent-covered capabilities/i);
   assert.match(verification, /Scores prioritize discovery.*do not prove demand/i);
-  assert.match(verification, /sufficient input for Software Opportunity Validation/i);
+  assert.match(verification, /sufficient input for First Customer Sprint/i);
 
   const wrongRange = structuredClone(discovery);
   wrongRange.opportunityDiscovery.candidateRange = [2, 5];
@@ -523,87 +523,75 @@ test("Software Opportunity Discovery selects a thesis without claiming validatio
   assert.throws(() => compilePack(invalidDecision), /decisions must be select, broaden, stop/);
 });
 
-test("Software Opportunity Validation is riskiest-assumption-first and resumable", () => {
-  const validation = outcomePacks.find((pack) => pack.slug === "software-opportunity-validation");
-  assert.ok(validation);
-  assert.equal(validation.catalogNumber, 16);
-  assert.equal(validation.lane, "create");
-  assert.equal(validation.name, "Software Opportunity Validation");
-  assert.match(validation.promise, /Test one selected software opportunity.*pursue, revise, or stop/i);
-  assert.match(validation.useWhen.join(" "), /specific software opportunity.*assumptions remain unproven/i);
-  assert.match(validation.notFor.join(" "), /rough ambition.*Software Opportunity Discovery/i);
-  assert.deepEqual(validation.prerequisites, [{
+test("First Customer Sprint pursues commercial commitment and remains resumable", () => {
+  const sprint = outcomePacks.find((pack) => pack.slug === "first-customer-sprint");
+  assert.ok(sprint);
+  assert.equal(sprint.catalogNumber, 16);
+  assert.equal(sprint.lane, "launch");
+  assert.equal(sprint.name, "First Customer Sprint");
+  assert.match(sprint.promise, /real customers.*strongest available commitment/i);
+  assert.match(sprint.useWhen.join(" "), /nobody has yet made a credible commercial commitment/i);
+  assert.match(sprint.notFor.join(" "), /rough ambition.*Software Opportunity Discovery/i);
+  assert.deepEqual(sprint.prerequisites, [{
     id: "selected-opportunity",
-    description: "One specific software opportunity has been selected for validation, either by the user or a completed discovery outcome.",
+    description: "One specific software opportunity and customer segment have been selected for a first-customer attempt.",
     requiredEvidence: [
-      "intended user and painful job",
+      "intended customer and painful job",
       "current alternatives and proposed difference",
-      "solution and delivery hypotheses",
+      "offer and credible delivery hypotheses",
       "known evidence, contradictions, and unresolved assumptions",
     ],
   }]);
-  const skillIds = new Set(validation.skills.map(({ id }) => id));
+  const skillIds = new Set(sprint.skills.map(({ id }) => id));
   assert.deepEqual([...skillIds], ["customer-research", "competitor-profiling", "product-marketing", "analytics", "create-technical-spike"]);
-  const compiled = compilePack(validation);
+  const compiled = compilePack(sprint);
   assert.equal(compiled.installCommands.length, 2);
-  assert.match(compiled.runPrompt, /^Validate the Software Opportunity Validation outcome/);
+  assert.match(compiled.runPrompt, /^Run the First Customer Sprint outcome/);
   assert.match(compiled.runPrompt, /OUTCOME PREREQUISITES/);
-  assert.match(compiled.runPrompt, /ADAPTIVE VALIDATION GATE/);
-  assert.match(compiled.runPrompt, /RESUMABLE VALIDATION LIFECYCLE/);
-  assert.match(compiled.runPrompt, /awaiting-approval, awaiting-participants, awaiting-observation/i);
-  assert.match(compiled.runPrompt, /Scheduling is coordination, not validation/i);
-  assert.match(compiled.runPrompt, /silence into a negative result/i);
+  assert.match(compiled.runPrompt, /FIRST CUSTOMER SPRINT/);
+  assert.match(compiled.runPrompt, /reply → conversation → qualified problem → demo requested → pilot agreed → payment attempted → payment received → repeat use/i);
+  assert.match(compiled.runPrompt, /Scheduling is coordination, not commercial evidence/i);
+  assert.match(compiled.runPrompt, /convert silence into rejection/i);
   assert.match(compiled.runPrompt, /invoke \$possible resume/i);
-  assert.match(compiled.runPrompt, /Interim cycles and waiting states are not completed validation outcomes/i);
-  assert.deepEqual(compileWorkstreamWaves(validation).map((wave) => wave.map(({ id }) => id)), [
-    ["validation-baseline"],
-    ["evidence-access"],
-    ["solution-delivery", "feasibility-economics", "demand-commitment", "pricing-distribution"],
+  assert.match(compiled.runPrompt, /money requested and collected/i);
+  assert.match(compiled.runPrompt, /does not claim product-market fit/i);
+  assert.deepEqual(compileWorkstreamWaves(sprint).map((wave) => wave.map(({ id }) => id)), [
+    ["sales-baseline"],
+    ["prospect-access"],
+    ["offer-system"],
+    ["prospecting-conversations"],
+    ["commitment-close", "objection-proof"],
   ]);
-  assert.equal(validation.workstreams.filter(({ activation }) => activation).length, 4);
-  assert.deepEqual(validation.adaptiveValidation, {
-    kind: "riskiest-assumption-first",
-    dimensions: [
-      "target user and problem",
-      "solution and workflow",
-      "delivery mechanism",
-      "technical feasibility",
-      "demand and commitment",
-      "pricing and business model",
-      "distribution and reachability",
-    ],
-    assumptionMapPath: "validation/assumptions.json",
-    experimentRoot: "validation/experiments/",
-    decisionReceiptPath: "outcome-room/decision-receipt.json",
-    decisions: ["pursue", "revise", "stop"],
-  });
-  assert.deepEqual(validation.validationLifecycle, {
-    kind: "resumable-evidence-cycle",
-    statePath: "validation/state.json",
-    cycleRoot: "validation/cycles/",
+  assert.equal(sprint.workstreams.filter(({ activation }) => activation).length, 4);
+  assert.deepEqual(sprint.firstCustomerSprint, {
+    kind: "resumable-commercial-evidence",
+    evidenceLadder: ["reply", "conversation", "qualified problem", "demo requested", "pilot agreed", "payment attempted", "payment received", "repeat use"],
+    statePath: "sales/state.json",
+    cycleRoot: "sales/cycles/",
+    decisionReceiptPath: "outcome-room/first-customer-receipt.json",
     resumeCommand: "$possible resume",
     waitingStates: ["awaiting-approval", "awaiting-participants", "awaiting-observation"],
+    decisions: ["continue", "revise", "stop"],
   });
 
-  const outputs = validation.outputs.join(" ");
-  assert.match(outputs, /Evidence-access.*preflight/i);
-  assert.match(outputs, /Durable validation state.*dated cycle records/i);
-  assert.match(outputs, /Participant, case, refusal, exclusion, drop-off/i);
-  assert.match(outputs, /pursue, revise, or stop decision receipt/i);
-  const guardrails = validation.guardrails.join(" ");
-  assert.match(guardrails, /Never invent users.*user quotes.*demand.*market size.*willingness to pay/i);
-  assert.match(guardrails, /Do not contact people.*publish surveys.*deploy fake doors.*schedule follow-ups.*spend money/i);
-  assert.match(guardrails, /waiting, revise, stop, or evidence-incomplete state is valid/i);
-  const verification = validation.verification.join(" ");
-  assert.match(verification, /assumption map covers all seven dimensions/i);
-  assert.match(verification, /evidence preflight happened before experiment implementation/i);
-  assert.match(verification, /stated preference, observed task behavior, commitment, payment, repeat use, retention, and channel reach/i);
-  assert.match(verification, /doing nothing.*strongest current alternative.*different delivery mechanism/i);
-  assert.match(verification, /decision-receipt\.json.*pursue.*revise.*stop/i);
-  assert.match(verification, /Permit pursue only when the highest-risk assumption received credible evidence/i);
-  assert.match(verification, /Never claim product-market fit/i);
+  const outputs = sprint.outputs.join(" ");
+  assert.match(outputs, /Prospect-access.*preflight/i);
+  assert.match(outputs, /Durable sprint state.*dated sales-cycle records/i);
+  assert.match(outputs, /replies, refusals, conversations, objections, commitments, payment attempts, payments, repeat use/i);
+  assert.match(outputs, /money requested and collected/i);
+  const guardrails = sprint.guardrails.join(" ");
+  assert.match(guardrails, /Never invent prospects.*replies.*commitments.*revenue.*repeat use/i);
+  assert.match(guardrails, /Do not contact people.*schedule calls.*accept payments.*promise delivery.*spend money/i);
+  assert.match(guardrails, /waiting, revise, stop, no-sale, or evidence-incomplete state is valid/i);
+  const verification = sprint.verification.join(" ");
+  assert.match(verification, /prospect-access preflight occurred before sales activity/i);
+  assert.match(verification, /Recompute the funnel.*qualified.*contacted.*replied.*paid.*returned/i);
+  assert.match(verification, /money requested, attempted, collected, refunded, and retained/i);
+  assert.match(verification, /doing nothing.*strongest current alternative.*different delivery form/i);
+  assert.match(verification, /first-customer-receipt\.json.*continue.*revise.*stop/i);
+  assert.match(verification, /Never claim that every product can be sold.*one customer proves a market/i);
 
-  const owned = validation.workstreams.flatMap((stream) => stream.owns.map((path) => ({ stream: stream.id, path })));
+  const owned = sprint.workstreams.flatMap((stream) => stream.owns.map((path) => ({ stream: stream.id, path })));
   for (const item of owned) {
     assert.doesNotMatch(item.path, /^(?:\/|[A-Za-z]:)|\.\.|[*?]/, `unsafe ownership path: ${item.path}`);
     for (const other of owned) {
@@ -614,26 +602,23 @@ test("Software Opportunity Validation is riskiest-assumption-first and resumable
     }
   }
 
-  const unsafeContract = structuredClone(validation);
-  unsafeContract.adaptiveValidation.assumptionMapPath = "../assumptions.json";
+  const unsafeContract = structuredClone(sprint);
+  unsafeContract.firstCustomerSprint.statePath = "../state.json";
   assert.throws(() => compilePack(unsafeContract), /safe repository-relative path/);
-  const duplicateDimensions = structuredClone(validation);
-  duplicateDimensions.adaptiveValidation.dimensions[1] = duplicateDimensions.adaptiveValidation.dimensions[0];
-  assert.throws(() => compilePack(duplicateDimensions), /dimensions must be unique/);
-  const invalidDecisions = structuredClone(validation);
-  invalidDecisions.adaptiveValidation.decisions = ["pursue", "investigate", "stop"];
-  assert.throws(() => compilePack(invalidDecisions), /decisions must be pursue, revise, stop/);
-  const missingActivation = structuredClone(validation);
+  const invalidLadder = structuredClone(sprint);
+  invalidLadder.firstCustomerSprint.evidenceLadder[1] = "signup";
+  assert.throws(() => compilePack(invalidLadder), /evidence ladder is invalid/);
+  const invalidDecisions = structuredClone(sprint);
+  invalidDecisions.firstCustomerSprint.decisions = ["continue", "investigate", "stop"];
+  assert.throws(() => compilePack(invalidDecisions), /decisions must be continue, revise, stop/);
+  const missingActivation = structuredClone(sprint);
   for (const stream of missingActivation.workstreams) delete stream.activation;
-  assert.throws(() => compilePack(missingActivation), /requires at least one conditional workstream/);
-  const emptyActivation = structuredClone(validation);
-  emptyActivation.workstreams.find(({ id }) => id === "solution-delivery").activation = " ";
+  assert.throws(() => compilePack(missingActivation), /first customer sprint requires at least one conditional workstream/);
+  const emptyActivation = structuredClone(sprint);
+  emptyActivation.workstreams.find(({ id }) => id === "offer-system").activation = " ";
   assert.throws(() => compilePack(emptyActivation), /activation must be non-empty/);
-  const unsafeState = structuredClone(validation);
-  unsafeState.validationLifecycle.statePath = "../state.json";
-  assert.throws(() => compilePack(unsafeState), /safe repository-relative path/);
-  const wrongResume = structuredClone(validation);
-  wrongResume.validationLifecycle.resumeCommand = "$possible";
+  const wrongResume = structuredClone(sprint);
+  wrongResume.firstCustomerSprint.resumeCommand = "$possible";
   assert.throws(() => compilePack(wrongResume), /resumeCommand must be \$possible resume/);
 });
 
