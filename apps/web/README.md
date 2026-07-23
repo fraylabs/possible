@@ -3,10 +3,12 @@
 The public Possible site has one judge journey:
 
 - `/` — proposition, install, workflow, featured outcomes and technical explanation
-- `/demo` — Still, Robot Snake, Fold and Web Presentation
+- `/examples` — one gallery where every example switches between finished outputs and its process record
 - `/docs` — installation, intake, approval, execution and safety
 - `/packs` — the four featured Outcome Pack specifications
 - `/presentation` — the coded visual explainer
+
+`/demo/**` is retained only as the raw artifact namespace for films, CAD, simulations and evidence. Exact retired Demo pages redirect to the corresponding example’s Process view.
 
 Canonical install:
 

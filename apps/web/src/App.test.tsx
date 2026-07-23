@@ -1,4 +1,4 @@
-import { cleanup, render, screen, within } from "@testing-library/react";
+import { cleanup, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { axe } from "vitest-axe";
 import { afterEach, describe, expect, it, vi } from "vitest";
@@ -16,34 +16,12 @@ function renderRoute(path: string) {
   return render(<App />);
 }
 
-function expectBefore(first: Element, second: Element) {
-  expect(first.compareDocumentPosition(second) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
-}
-
 const exampleContracts = [
-  { slug: "still", name: "Still", title: "Still" },
-  { slug: "robot-snake", name: "Robot Snake", title: "Robot Snake" },
-  { slug: "fold", name: "Fold", title: "Fold" },
-  { slug: "web-presentation", name: "Web Presentation", title: "Possible" },
-  { slug: "patchproof", name: "PatchProof", title: "PatchProof" },
-] as const;
-
-const demoContracts = [
-  { slug: "still", name: "Still", aliases: ["hardware"], preserved: true },
-  { slug: "robot-snake", name: "Robot Snake", aliases: [], preserved: true },
-  { slug: "fold", name: "Fold", aliases: ["game"], preserved: false },
-  { slug: "web-presentation", name: "Possible", aliases: ["presentation"], preserved: false },
-  { slug: "patchproof", name: "PatchProof", aliases: [], preserved: true },
-] as const;
-
-const demoSectionNames = [
-  "Original request",
-  "$possible conversation",
-  "Recommended Outcome Pack",
-  "Compiled workstreams",
-  "Outcome artifacts",
-  "Verification, repair, and pass",
-  "Evidence",
+  { slug: "still", name: "Still", title: "Still", preserved: true },
+  { slug: "robot-snake", name: "Robot Snake", title: "Robot Snake", preserved: true },
+  { slug: "fold", name: "Fold", title: "Fold", preserved: false },
+  { slug: "web-presentation", name: "Web Presentation", title: "Possible", preserved: false },
+  { slug: "patchproof", name: "PatchProof", title: "PatchProof", preserved: true },
 ] as const;
 
 describe("Possible", () => {
@@ -144,14 +122,14 @@ describe("Possible", () => {
   it("keeps retired pack routes out of the public product", () => {
     renderRoute("/packs/software-launch");
     expect(screen.getByRole("heading", { name: /This outcome is\s*not here/i })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /Browse the demos/i })).toHaveAttribute("href", "/demo");
+    expect(screen.getByRole("link", { name: /Browse the examples/i })).toHaveAttribute("href", "/examples");
   });
 
   it("keeps the primary documentation focused on first use", async () => {
     const { container } = renderRoute("/docs");
     expect(screen.getByText(installCommand, { selector: ".docs-command code" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Glossary" })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /complete recorded Hardware Launch run/i })).toHaveAttribute("href", "/demo/still");
+    expect(screen.getByRole("link", { name: /complete recorded Hardware Launch run/i })).toHaveAttribute("href", "/examples/still?view=process");
     expect(container.querySelector("main")).not.toHaveTextContent(/schedule operations|recurring outcome|\.possible\/schedule\.json/i);
     expect(await axe(container)).toHaveNoViolations();
   });
@@ -188,7 +166,7 @@ describe("Possible", () => {
       expect(within(criteria).getByRole("rowheader", { name })).toBeInTheDocument();
     }
     expect(within(criteria).getByRole("link", { name: /Compiler source/i })).toHaveAttribute("href", "https://github.com/fraylabs/possible/blob/main/packages/packs/src/compiler.ts");
-    expect(within(criteria).getByRole("link", { name: /Demo gallery/i })).toHaveAttribute("href", "/demo");
+    expect(within(criteria).getByRole("link", { name: /Example gallery/i })).toHaveAttribute("href", "/examples");
     expect(within(criteria).getByRole("link", { name: /Robot Snake report/i })).toHaveAttribute("href", "https://github.com/fraylabs/possible/blob/main/apps/web/public/demo/robot-snake/evidence/outcome-receipt.md");
     expect(container.querySelector("main")).not.toHaveTextContent(/wrapper|Why this is not/i);
     expect(container.querySelector(".nav-links")).not.toHaveTextContent(/JUDGING/i);
@@ -234,17 +212,7 @@ describe("Possible", () => {
     expect(await axe(container)).toHaveNoViolations();
   });
 
-  it("keeps /demo as the process index for the same five outcomes", () => {
-    renderRoute("/demo");
-    const index = screen.getByRole("region", { name: "Possible demo records" });
-    const links = within(index).getAllByRole("link");
-    expect(links).toHaveLength(demoContracts.length);
-    for (const demo of demoContracts) {
-      expect(within(index).getByRole("link", { name: new RegExp(demo.name, "i") })).toHaveAttribute("href", `/demo/${demo.slug}`);
-    }
-  });
-
-  it("keeps every example modal focused on the finished outcome, not the run record", async () => {
+  it("keeps outputs and process in one scalable example modal", async () => {
     const titles = new Set<string>();
 
     for (const example of exampleContracts) {
@@ -254,6 +222,11 @@ describe("Possible", () => {
 
       const title = within(dialog).getByRole("heading", { name: new RegExp(example.title, "i") }).textContent?.trim() ?? "";
       titles.add(title);
+
+      const outputsTab = within(dialog).getByRole("tab", { name: "OUTPUTS" });
+      const processTab = within(dialog).getByRole("tab", { name: "PROCESS" });
+      expect(outputsTab).toHaveAttribute("aria-selected", "true");
+      expect(processTab).toHaveAttribute("aria-selected", "false");
 
       const description = within(dialog).getByRole("region", { name: "Description" });
       const descriptionWords = description.textContent?.trim().split(/\s+/).filter(Boolean).length ?? 0;
@@ -273,20 +246,46 @@ describe("Possible", () => {
       expect(outputs).toHaveTextContent(/02\s*\/\s*0[2-9]/);
       expect(within(outputs).getByRole("link").getAttribute("href")).toMatch(/^\//);
       expect(within(outputs).getByRole("link").getAttribute("href")).not.toBe(initialOutputHref);
+      expect(window.location.search).toBe("?output=2");
 
-      const evidence = within(dialog).getByRole("link", { name: /See how Possible made this/i });
       expect(within(dialog).queryByRole("link", { name: /Open outcome/i })).not.toBeInTheDocument();
-      expect(evidence).toHaveAttribute("href", `/demo/${example.slug}`);
+      expect(within(dialog).queryByRole("link", { name: /See how Possible made this/i })).not.toBeInTheDocument();
       expect(within(dialog).getByRole("link", { name: /Close|Back to examples/i })).toHaveAttribute("href", "/examples");
 
-      for (const name of demoSectionNames) {
-        expect(within(dialog).queryByRole("region", { name })).not.toBeInTheDocument();
+      await userEvent.click(processTab);
+      expect(processTab).toHaveAttribute("aria-selected", "true");
+      expect(outputsTab).toHaveAttribute("aria-selected", "false");
+      expect(window.location.search).toBe("?view=process");
+      expect(within(dialog).queryByRole("region", { name: "Output carousel" })).not.toBeInTheDocument();
+
+      const process = within(dialog).getByRole("tabpanel", { name: "PROCESS" });
+      const processSections = ["You asked", "Possible added", "Verification caught", "Final outcome"];
+      for (const name of processSections) {
+        expect(within(process).getByRole("region", { name })).not.toBeEmptyDOMElement();
       }
-      for (const term of [/conversation/i, /workstreams?/i, /verifiers?/i, /receipts?/i]) {
-        expect(within(dialog).queryByRole("link", { name: term })).not.toBeInTheDocument();
-        expect(within(dialog).queryByRole("heading", { name: term })).not.toBeInTheDocument();
+      expect(process.querySelector('a[href^="/packs/"]')).not.toBeInTheDocument();
+      const verification = within(process).getByRole("region", { name: "Verification caught" });
+      if (example.preserved) {
+        expect(verification).toHaveTextContent(/fail/i);
+        expect(verification).toHaveTextContent(/repair/i);
+        expect(verification).toHaveTextContent(/pass/i);
+      } else {
+        expect(verification).toHaveTextContent(/not preserved|reference/i);
       }
-      expect(container.querySelector(".demo-record-page, .chain-example-page")).not.toBeInTheDocument();
+
+      const evidenceDisclosure = process.querySelector(".example-process-evidence");
+      expect(evidenceDisclosure).not.toHaveAttribute("open");
+      await userEvent.click(within(evidenceDisclosure as HTMLElement).getByText(/Inspect supporting evidence/i));
+      const evidenceLinks = within(evidenceDisclosure as HTMLElement).getAllByRole("link");
+      expect(evidenceLinks.length).toBeGreaterThan(0);
+      expect(evidenceLinks.length).toBeLessThanOrEqual(3);
+      expect(new Set(evidenceLinks.map((link) => link.getAttribute("href"))).size).toBe(evidenceLinks.length);
+
+      await userEvent.click(outputsTab);
+      expect(outputsTab).toHaveAttribute("aria-selected", "true");
+      expect(new URLSearchParams(window.location.search).has("view")).toBe(false);
+      expect(within(dialog).getByRole("region", { name: "Output carousel" })).toBeInTheDocument();
+
       for (const frame of container.querySelectorAll("iframe")) frame.remove();
       expect(await axe(container)).toHaveNoViolations();
       unmount();
@@ -299,7 +298,7 @@ describe("Possible", () => {
     const { container } = renderRoute("/examples/patchproof");
     const dialog = screen.getByRole("dialog", { name: "PatchProof" });
     const close = within(dialog).getByRole("link", { name: "Close example" });
-    const evidence = within(dialog).getByRole("link", { name: /See how Possible made this/i });
+    const next = within(dialog).getByRole("button", { name: "Next output" });
     const background = container.querySelector(".examples-background");
 
     expect(close).toHaveFocus();
@@ -308,7 +307,7 @@ describe("Possible", () => {
     expect(document.body.style.overflow).toBe("hidden");
 
     await userEvent.keyboard("{Shift>}{Tab}{/Shift}");
-    expect(evidence).toHaveFocus();
+    expect(next).toHaveFocus();
     await userEvent.keyboard("{Tab}");
     expect(close).toHaveFocus();
 
@@ -320,55 +319,13 @@ describe("Possible", () => {
     expect(background).not.toHaveAttribute("aria-hidden");
   });
 
-  it("uses one ordered run-record contract for all five canonical demos", async () => {
-    const templateMarkers = new Set<string>();
-
-    for (const demo of demoContracts) {
-      const { container, unmount } = renderRoute(`/demo/${demo.slug}`);
-      const main = container.querySelector("main");
-      expect(main).toHaveAttribute("data-demo-template");
-      templateMarkers.add(main?.getAttribute("data-demo-template") ?? "");
-      expect(container.querySelector(".demo-template-hero img, .demo-template-playable")).not.toBeInTheDocument();
-      expect(main).not.toHaveTextContent(/How .* was made/i);
-      expect(main).not.toHaveTextContent(/Open outcome/i);
-      const sectionIndex = screen.getByRole("complementary", { name: "Process record sections" });
-      expect(within(sectionIndex).getAllByRole("link")).toHaveLength(demoSectionNames.length);
-
-      const sections = demoSectionNames.map((name) => screen.getByRole("region", { name }));
-      for (const section of sections) expect(section).not.toBeEmptyDOMElement();
-      for (let index = 1; index < sections.length; index += 1) expectBefore(sections[index - 1]!, sections[index]!);
-
-      const pack = sections[2]!;
-      const packLinks = within(pack).getAllByRole("link");
-      expect(packLinks.length).toBeGreaterThan(0);
-      for (const link of packLinks) expect(link.getAttribute("href")).toMatch(/^\/packs\/[^/]+$/);
-      expect(within(sections[3]!).getAllByRole("listitem").length).toBeGreaterThan(0);
-      expect(within(sections[5]!).getAllByRole("listitem").length).toBeGreaterThan(0);
-      if (demo.preserved) {
-        expect(sections[5]).toHaveTextContent(/fail/i);
-        expect(sections[5]).toHaveTextContent(/repair/i);
-        expect(sections[5]).toHaveTextContent(/pass/i);
-      } else {
-        expect(sections[5]).toHaveTextContent(/reference|not preserved/i);
-      }
-      expect(within(sections[6]!).getAllByRole("link").length).toBeGreaterThan(0);
-      expect(await axe(main!)).toHaveNoViolations();
-      unmount();
-    }
-
-    expect(templateMarkers.size).toBe(1);
-    expect([...templateMarkers][0]).not.toBe("");
-  });
-
-  it("keeps the legacy demo URLs compatible with their canonical run records", async () => {
-    for (const demo of demoContracts) {
-      for (const alias of demo.aliases) {
-        const { container, unmount } = renderRoute(`/demo/${alias}`);
-        expect(container.querySelector("main")).toHaveAttribute("data-demo-template");
-        expect(screen.getByRole("heading", { name: new RegExp(demo.name, "i"), level: 1 })).toBeInTheDocument();
-        for (const name of demoSectionNames) expect(screen.getByRole("region", { name })).not.toBeEmptyDOMElement();
-        unmount();
-      }
-    }
+  it("opens a shareable process query in the same example modal", async () => {
+    const { container } = renderRoute("/examples/robot-snake?view=process");
+    const dialog = screen.getByRole("dialog", { name: "Robot Snake" });
+    const processTab = within(dialog).getByRole("tab", { name: "PROCESS" });
+    await waitFor(() => expect(processTab).toHaveAttribute("aria-selected", "true"));
+    expect(within(dialog).getByRole("tabpanel", { name: "PROCESS" })).toBeInTheDocument();
+    expect(within(dialog).queryByRole("region", { name: "Output carousel" })).not.toBeInTheDocument();
+    expect(container.querySelector(".demo-template, .demo-index-page")).not.toBeInTheDocument();
   });
 });

@@ -1,12 +1,5 @@
-import PossibleRoute from "../../_components/PossibleRoute";
-import { pageMetadata } from "../../_metadata";
-
-export const metadata = pageMetadata({
-  title: "Fold playable web game demo",
-  description: "Play Fold and inspect the retained brief, review notes, and checks from this reference build.",
-  path: "/demo/fold",
-});
+import { permanentRedirect } from "next/navigation";
 
 export default function GameDemoPage() {
-  return <PossibleRoute path="/demo/fold" />;
+  permanentRedirect("/examples/fold?view=process");
 }

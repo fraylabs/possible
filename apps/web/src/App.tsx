@@ -601,11 +601,76 @@ function ExampleCard({ example }: { example: PossibleExample }) {
   );
 }
 
+type ExampleView = "outputs" | "process";
+
+function ExampleProcess({ example, showOutputs }: { example: PossibleExample; showOutputs: () => void }) {
+  const { demo } = example;
+  const visibleArtifacts = demo.artifacts.filter((artifact) => artifact.showcase !== false);
+  const evidence = [...demo.verification, ...demo.evidence]
+    .filter((item): item is typeof item & { href: string } => Boolean(item.href))
+    .filter((item, index, items) => items.findIndex((candidate) => candidate.href === item.href) === index)
+    .slice(0, 3);
+
+  return (
+    <div className="example-process" role="tabpanel" id={`process-panel-${example.slug}`} aria-labelledby={`process-tab-${example.slug}`}>
+      <header>
+        <p className="eyebrow">{demo.runKind === "preserved-run" ? "PRESERVED POSSIBLE RUN" : "REFERENCE BUILD"}</p>
+        <h2>{example.name}</h2>
+        <p>{demo.summary}</p>
+      </header>
+
+      <section className="example-process-section example-process-request" aria-label="You asked">
+        <span>01 / YOU ASKED</span>
+        <blockquote>“{demo.request}”</blockquote>
+        <details>
+          <summary>{demo.conversation.length ? "Read the short conversation" : "Conversation availability"}</summary>
+          {demo.conversation.length
+            ? <div className="example-process-thread">{demo.conversation.map((message, index) => <p key={`${message.speaker}-${index}`}><strong>{message.speaker}</strong><span>{message.text}</span></p>)}</div>
+            : <p>{demo.conversationNote}</p>}
+        </details>
+      </section>
+
+      <section className="example-process-section example-process-added" aria-label="Possible added">
+        <span>02 / POSSIBLE ADDED</span>
+        <p className="example-process-pack"><small>{demo.packs.length > 1 ? "OUTCOME CHAIN" : "OUTCOME PACK"}</small><strong>{demo.packs.map((pack) => pack.name).join(" → ")}</strong></p>
+        <ol>
+          {demo.workstreams.map((item, index) => <li key={item.title}><small>{String(index + 1).padStart(2, "0")}</small><div><strong>{item.title}</strong><p>{item.description}</p></div></li>)}
+        </ol>
+      </section>
+
+      <section className="example-process-section example-process-verification" aria-label="Verification caught">
+        <span>03 / VERIFICATION CAUGHT</span>
+        <ol>
+          {demo.verification.map((item) => <li className={item.tone ? `is-${item.tone}` : undefined} key={item.title}><strong>{item.title}</strong><p>{item.description}</p></li>)}
+        </ol>
+      </section>
+
+      <section className="example-process-section example-process-result" aria-label="Final outcome">
+        <span>04 / FINAL OUTCOME</span>
+        <div>
+          <p><strong>{visibleArtifacts.length} inspectable outputs</strong><span>{visibleArtifacts.map((artifact) => artifact.title).join(" · ")}</span></p>
+          <button type="button" onClick={showOutputs}>View finished outputs →</button>
+        </div>
+        <aside><strong>SCOPE</strong><p>{demo.boundary}</p></aside>
+      </section>
+
+      <details className="example-process-evidence">
+        <summary>Inspect supporting evidence</summary>
+        <div>
+          {evidence.map((item) => <a href={item.href} key={item.href}><span>{item.title}</span><strong>{item.label ?? "Open evidence"} ↗</strong></a>)}
+        </div>
+      </details>
+    </div>
+  );
+}
+
 function ExampleModal({ example, onDismiss }: { example: PossibleExample; onDismiss: () => void }) {
   const closeRef = useRef<HTMLAnchorElement>(null);
   const modalRef = useRef<HTMLElement>(null);
   const outputs = example.demo.artifacts.filter((output) => output.showcase !== false);
   const [activeOutputIndex, setActiveOutputIndex] = useState(0);
+  const [view, setView] = useState<ExampleView>("outputs");
+  const viewRef = useRef<ExampleView>("outputs");
   const activeOutput = outputs[activeOutputIndex] ?? outputs[0]!;
   const preview = activeOutput.preview ?? {
     src: example.visual.src,
@@ -615,11 +680,37 @@ function ExampleModal({ example, onDismiss }: { example: PossibleExample; onDism
     position: example.visual.position,
   };
 
+  function replaceExampleUrl(nextView: ExampleView, outputIndex = activeOutputIndex) {
+    const url = new URL(window.location.href);
+    url.pathname = `/examples/${example.slug}`;
+    url.search = "";
+    if (nextView === "process") url.searchParams.set("view", "process");
+    if (nextView === "outputs" && outputIndex > 0) url.searchParams.set("output", String(outputIndex + 1));
+    window.history.replaceState({}, "", `${url.pathname}${url.search}`);
+  }
+
+  function selectView(nextView: ExampleView) {
+    viewRef.current = nextView;
+    setView(nextView);
+    replaceExampleUrl(nextView);
+  }
+
   function moveOutput(delta: number) {
-    setActiveOutputIndex((index) => (index + delta + outputs.length) % outputs.length);
+    setActiveOutputIndex((index) => {
+      const nextIndex = (index + delta + outputs.length) % outputs.length;
+      replaceExampleUrl("outputs", nextIndex);
+      return nextIndex;
+    });
   }
 
   useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const requestedView = params.get("view") === "process" ? "process" : "outputs";
+    const requestedOutput = Math.max(0, Math.min(outputs.length - 1, Number(params.get("output") ?? "1") - 1));
+    viewRef.current = requestedView;
+    setView(requestedView);
+    setActiveOutputIndex(Number.isFinite(requestedOutput) ? requestedOutput : 0);
+
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     closeRef.current?.focus();
@@ -631,13 +722,13 @@ function ExampleModal({ example, onDismiss }: { example: PossibleExample; onDism
         return;
       }
 
-      if (event.key === "ArrowLeft") {
+      if (viewRef.current === "outputs" && event.key === "ArrowLeft") {
         event.preventDefault();
         setActiveOutputIndex((index) => (index - 1 + outputs.length) % outputs.length);
         return;
       }
 
-      if (event.key === "ArrowRight") {
+      if (viewRef.current === "outputs" && event.key === "ArrowRight") {
         event.preventDefault();
         setActiveOutputIndex((index) => (index + 1) % outputs.length);
         return;
@@ -645,8 +736,8 @@ function ExampleModal({ example, onDismiss }: { example: PossibleExample; onDism
 
       if (event.key !== "Tab") return;
       const focusable = Array.from(modalRef.current?.querySelectorAll<HTMLElement>(
-        'a[href], button:not([disabled]), iframe, [tabindex]:not([tabindex="-1"])',
-      ) ?? []);
+        'a[href], button:not([disabled]), summary, iframe, [tabindex]:not([tabindex="-1"])',
+      ) ?? []).filter((element) => !element.closest("[hidden]") && !element.closest("details:not([open])"));
       if (!focusable.length) return;
 
       const first = focusable[0]!;
@@ -669,8 +760,15 @@ function ExampleModal({ example, onDismiss }: { example: PossibleExample; onDism
   return (
     <div className="example-modal-backdrop">
       <section ref={modalRef} className="example-modal" role="dialog" aria-modal="true" aria-labelledby="example-modal-title">
-        <header><span>{example.outcomeLabel}</span><a ref={closeRef} href="/examples" aria-label="Close example">CLOSE ×</a></header>
-        <div className="example-modal-layout">
+        <header>
+          <a className="example-modal-close" ref={closeRef} href="/examples" aria-label="Close example">CLOSE ×</a>
+          <span>{example.outcomeLabel}</span>
+          <div className="example-modal-tabs" role="tablist" aria-label="Example view">
+            <button id={`outputs-tab-${example.slug}`} type="button" role="tab" aria-selected={view === "outputs"} aria-controls={`outputs-panel-${example.slug}`} onClick={() => selectView("outputs")}>OUTPUTS</button>
+            <button id={`process-tab-${example.slug}`} type="button" role="tab" aria-selected={view === "process"} aria-controls={`process-panel-${example.slug}`} onClick={() => selectView("process")}>PROCESS</button>
+          </div>
+        </header>
+        <div hidden={view !== "outputs"} className="example-modal-layout" role="tabpanel" id={`outputs-panel-${example.slug}`} aria-labelledby={`outputs-tab-${example.slug}`}>
           <div className="example-modal-preview" role="region" aria-label="Output carousel">
             <div className="example-output-stage">
               {preview.kind === "embed" && preview.src
@@ -702,10 +800,12 @@ function ExampleModal({ example, onDismiss }: { example: PossibleExample; onDism
             <h1 id="example-modal-title">{example.name}</h1>
             <div className="example-modal-details">
               <section aria-label="Description"><span>Description</span><p>{example.description}</p></section>
-              <section aria-label="Outcome Pack"><span>Outcome Pack</span><p><a href={example.demo.packs[0].href}>{example.outcomeLabel} ↗</a></p></section>
+              <section aria-label="Outcome Pack"><span>Outcome Pack</span><p>{example.outcomeLabel}</p></section>
             </div>
-            <footer><a href={example.demoHref}><span>SEE HOW POSSIBLE MADE THIS</span><strong>Open process record ↗</strong></a></footer>
           </article>
+        </div>
+        <div hidden={view !== "process"}>
+          <ExampleProcess example={example} showOutputs={() => selectView("outputs")} />
         </div>
       </section>
     </div>
@@ -723,7 +823,7 @@ function ExamplesPage({ activeSlug }: { activeSlug?: string }) {
         <section className="examples-intro" aria-labelledby="examples-heading">
           <p className="eyebrow">POSSIBLE EXAMPLES</p>
           <h1 id="examples-heading">Rough requests.<br /><em>Real outcomes.</em></h1>
-          <p>Finished things made with Possible. Open one to see the outcome; follow its process link only when you want the full run.</p>
+          <p>Finished things made with Possible. Open one, then switch between its outputs and the process that produced them.</p>
         </section>
         <section className="examples-grid" aria-label="Possible examples">
           {exampleCatalog.map((example) => <ExampleCard key={example.slug} example={example} />)}
@@ -731,126 +831,6 @@ function ExamplesPage({ activeSlug }: { activeSlug?: string }) {
         <SiteFooter />
       </div>
       {visibleExample ? <ExampleModal example={visibleExample} onDismiss={() => setModalDismissed(true)} /> : null}
-    </main>
-  );
-}
-
-function DemoIndexPage() {
-  return (
-    <main className="demo-index-page">
-      <SiteNav label="Demos" />
-      <section className="demo-index-intro" aria-labelledby="demo-index-heading">
-        <p className="eyebrow">HOW THE OUTCOMES WERE MADE</p>
-        <h1 id="demo-index-heading">The process,<br /><em>not another gallery.</em></h1>
-        <p>Examples show the finished things. Demos show the request, conversation, Outcome Pack, compiled work, artifacts, verification, and evidence behind each one.</p>
-      </section>
-      <section className="demo-index-list" aria-label="Possible demo records">
-        {exampleCatalog.map((example, index) => (
-          <a href={example.demoHref} key={example.slug} aria-label={example.name}>
-            <span>{String(index + 1).padStart(2, "0")}</span>
-            <div><small>{example.demo.runKind === "preserved-run" ? "PRESERVED RUN" : "REFERENCE BUILD"}</small><h2>{example.name}</h2><p>{example.demo.summary}</p></div>
-            <strong>VIEW PROCESS ↗</strong>
-          </a>
-        ))}
-      </section>
-      <SiteFooter />
-    </main>
-  );
-}
-
-function DemoPage({ example }: { example: PossibleExample }) {
-  const { demo } = example;
-  return (
-    <main className={`demo-template demo-template--${example.slug}`} id="top" data-demo-template="outcome-process-v1">
-      <SiteNav label={`Demo / ${example.name}`} />
-
-      <section className="demo-template-hero" aria-labelledby="demo-template-heading">
-        <div>
-          <p className="eyebrow">{demo.runKind === "preserved-run" ? "PRESERVED POSSIBLE RUN" : "OUTCOME PACK REFERENCE BUILD"}</p>
-          <h1 id="demo-template-heading">{example.name}</h1>
-          <p>{demo.summary}</p>
-        </div>
-        <dl>
-          <div><dt>Record</dt><dd>{demo.runKind === "preserved-run" ? "Preserved run" : "Reference build"}</dd></div>
-          <div><dt>Outcome</dt><dd><a href={`/examples/${example.slug}`}>View finished example ↗</a></dd></div>
-          <div><dt>{demo.packs.length > 1 ? "Outcome chain" : "Outcome Pack"}</dt><dd>{demo.packs.map((pack) => pack.name).join(" → ")}</dd></div>
-          <div><dt>Completion</dt><dd>{demo.runKind === "preserved-run" ? "Verification evidence preserved" : "Available evidence stated below"}</dd></div>
-        </dl>
-      </section>
-
-      <aside className="demo-template-index" aria-label="Process record sections">
-        {[
-          ["01", "Request", "request"],
-          ["02", "Conversation", "conversation"],
-          ["03", demo.packs.length > 1 ? "Outcome chain" : "Outcome Pack", "pack"],
-          ["04", "Workstreams", "workstreams"],
-          ["05", "Artifacts", "artifacts"],
-          ["06", "Verification", "verification"],
-          ["07", "Evidence", "evidence"],
-        ].map(([number, label, id]) => <a href={`#${id}`} key={id}><span>{number}</span>{label}</a>)}
-      </aside>
-
-      <section id="request" className="demo-template-section demo-template-request" aria-label="Original request">
-        <header><span>01</span><h2>Original request</h2></header>
-        <blockquote>“{demo.request}”</blockquote>
-      </section>
-
-      <section id="conversation" className="demo-template-section demo-template-conversation" aria-label="$possible conversation">
-        <header><span>02</span><h2>$possible conversation</h2><p>{demo.conversationNote}</p></header>
-        {demo.conversation.length ? (
-          <div className="demo-template-thread">
-            {demo.conversation.map((message, index) => <p key={`${message.speaker}-${index}`}><strong>{message.speaker}</strong><span>{message.text}</span></p>)}
-          </div>
-        ) : (
-          <aside className="demo-template-missing"><strong>NOT RECORDED</strong><p>{demo.conversationNote}</p></aside>
-        )}
-      </section>
-
-      <section id="pack" className="demo-template-section demo-template-packs" aria-label="Recommended Outcome Pack">
-        <header><span>03</span><h2>{demo.packs.length > 1 ? "Recommended Outcome Chain" : "Recommended Outcome Pack"}</h2></header>
-        <div className="demo-template-grid">
-          {demo.packs.map((pack, index) => (
-            <a href={pack.href} key={pack.name}><small>{String(index + 1).padStart(2, "0")} / OUTCOME PACK</small><h3>{pack.name}</h3><p>{pack.role}</p><strong>OPEN PACK ↗</strong></a>
-          ))}
-        </div>
-      </section>
-
-      <section id="workstreams" className="demo-template-section demo-template-workstreams" aria-label="Compiled workstreams">
-        <header><span>04</span><h2>Compiled workstreams</h2><p>The pack expands the request into owned, ordered work the user did not need to enumerate.</p></header>
-        <ol className="demo-template-grid">
-          {demo.workstreams.map((item, index) => <li key={item.title}><small>{String(index + 1).padStart(2, "0")}</small><h3>{item.title}</h3><p>{item.description}</p></li>)}
-        </ol>
-      </section>
-
-      <section id="artifacts" className="demo-template-section demo-template-artifacts" aria-label="Outcome artifacts">
-        <header><span>05</span><h2>Outcome artifacts</h2><p>The finished, inspectable outputs from this outcome.</p></header>
-        <div className="demo-template-grid">
-          {demo.artifacts.map((item, index) => (
-            <article key={item.title}><small>{String(index + 1).padStart(2, "0")} / ARTIFACT</small><h3>{item.title}</h3><p>{item.description}</p>{item.href ? <a href={item.href}>{item.label ?? "Open artifact"} ↗</a> : null}</article>
-          ))}
-        </div>
-      </section>
-
-      <section id="verification" className="demo-template-section demo-template-verification" aria-label="Verification, repair, and pass">
-        <header><span>06</span><h2>Verification, repair, and pass</h2><p>{demo.runKind === "preserved-run" ? "Completion remained withheld until the recorded review finished." : "Only preserved review evidence is shown; missing run evidence is stated explicitly."}</p></header>
-        <ol>
-          {demo.verification.map((item, index) => (
-            <li className={item.tone ? `is-${item.tone}` : undefined} key={item.title}><small>{String(index + 1).padStart(2, "0")}</small><div><h3>{item.title}</h3><p>{item.description}</p>{item.href ? <a href={item.href}>{item.label ?? "Open evidence"} ↗</a> : null}</div></li>
-          ))}
-        </ol>
-      </section>
-
-      <section id="evidence" className="demo-template-section demo-template-evidence" aria-label="Evidence">
-        <header><span>07</span><h2>Evidence</h2><p>Open the underlying records instead of taking the page’s claims on trust.</p></header>
-        <div className="demo-template-grid">
-          {demo.evidence.map((item, index) => (
-            <a href={item.href} key={item.title}><small>{String(index + 1).padStart(2, "0")} / EVIDENCE</small><h3>{item.title}</h3><p>{item.description}</p><strong>{item.label ?? "Open evidence"} ↗</strong></a>
-          ))}
-        </div>
-        <aside><strong>SCOPE BOUNDARY</strong><p>{demo.boundary}</p></aside>
-      </section>
-
-      <footer className="demo-template-footer"><a href="/examples">View all outcomes ←</a><a href="/demo">View all process records →</a></footer>
     </main>
   );
 }
@@ -1009,7 +989,7 @@ function DocsPage() {
               <li><strong>Coordinate workstreams</strong><span>Run independent specialist work in parallel where appropriate.</span></li>
               <li><strong>Integrate and verify</strong><span>Combine artifacts, run acceptance checks, and assign a fresh reviewer.</span></li>
             </ol>
-            <a className="docs-text-link" href="/demo/still">See a complete recorded Hardware Launch run →</a>
+            <a className="docs-text-link" href="/examples/still?view=process">See a complete recorded Hardware Launch run →</a>
           </section>
 
           <section id="files">
@@ -1203,7 +1183,7 @@ function NotFoundPage() {
       <section className="not-found">
         <p className="eyebrow">404 / OUTCOME NOT FOUND</p>
         <h1>This outcome is<br /><em>not here.</em></h1>
-        <a className="button-link" href="/demo">Browse the demos <span>→</span></a>
+        <a className="button-link" href="/examples">Browse the examples <span>→</span></a>
       </section>
       <SiteFooter />
     </main>
@@ -1221,11 +1201,11 @@ const judgingCriteria = [
   },
   {
     name: "Design",
-    claim: "Each demo presents the outcome beside its proof.",
-    fact: "The demo gallery exposes five finished outcomes; each links to an honest preserved-run or reference-build record.",
-    significance: "Judges can inspect the work before opening the process and evidence behind it.",
-    href: "/demo",
-    evidence: "Demo gallery",
+    claim: "Each example presents the outcome beside its proof.",
+    fact: "The example gallery exposes five finished outcomes; each switches between outputs and an honest preserved-run or reference-build process.",
+    significance: "Judges can inspect the work and its process without navigating through another page hierarchy.",
+    href: "/examples",
+    evidence: "Example gallery",
   },
   {
     name: "Potential Impact",
@@ -1262,7 +1242,7 @@ function JudgingPage() {
           <p className="eyebrow">OPENAI BUILD WEEK / DEVELOPER TOOLS</p>
           <h1>One rough idea.<br /><em>A verified outcome.</em></h1>
           <p>A robotics novice asked for a robot snake. Possible supplied the missing engineering work, coordinated the run, and verified the result.</p>
-          <div><a href="/demo/robot-snake">Open Robot Snake <span>↗</span></a><a href="https://github.com/fraylabs/possible/blob/main/BUILD-WEEK.md" target="_blank" rel="noreferrer">Build Week record <span>↗</span></a><a href="https://github.com/fraylabs/possible" target="_blank" rel="noreferrer">Inspect GitHub <span>↗</span></a></div>
+          <div><a href="/examples/robot-snake?view=process">Open Robot Snake <span>↗</span></a><a href="https://github.com/fraylabs/possible/blob/main/BUILD-WEEK.md" target="_blank" rel="noreferrer">Build Week record <span>↗</span></a><a href="https://github.com/fraylabs/possible" target="_blank" rel="noreferrer">Inspect GitHub <span>↗</span></a></div>
         </header>
 
         <section className="judging-section judging-comparison" aria-labelledby="judging-comparison-heading">
@@ -1318,19 +1298,11 @@ export function PossibleSite({ path: requestedPath }: { path?: string }) {
   if (path === "/docs/how-to-use") return <HowToUsePage />;
   if (path === "/judging") return <JudgingPage />;
   if (path === "/examples") return <ExamplesPage />;
-  if (path === "/demo") return <DemoIndexPage />;
   if (path.startsWith("/examples/")) {
     const example = getExample(path.slice("/examples/".length));
     return example ? <ExamplesPage activeSlug={example.slug} /> : <NotFoundPage />;
   }
   if (path === "/demo/game/play") return <Suspense fallback={<main className="plane-game-shell plane-game-loading"><span>FOLD / LOADING FLIGHT</span></main>}><PaperPlaneGame /></Suspense>;
-  if (path === "/demo/hardware") return <DemoPage example={getExample("still")!} />;
-  if (path === "/demo/game") return <DemoPage example={getExample("fold")!} />;
-  if (path === "/demo/presentation") return <DemoPage example={getExample("web-presentation")!} />;
-  if (path.startsWith("/demo/")) {
-    const example = getExample(path.slice("/demo/".length));
-    return example ? <DemoPage example={example} /> : <NotFoundPage />;
-  }
   if (path.startsWith("/packs/")) {
     const pack = getPublishedPack(path.slice("/packs/".length));
     return pack ? <PackDetailPage pack={pack} /> : <NotFoundPage />;

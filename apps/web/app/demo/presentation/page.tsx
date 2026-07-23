@@ -1,12 +1,5 @@
-import PossibleRoute from "../../_components/PossibleRoute";
-import { pageMetadata } from "../../_metadata";
-
-export const metadata = pageMetadata({
-  title: "Possible web presentation demo",
-  description: "Open the coded browser presentation that explains agent skills, reusable execution prompts, Outcome Packs, and the $possible guide.",
-  path: "/demo/web-presentation",
-});
+import { permanentRedirect } from "next/navigation";
 
 export default function PresentationDemoPage() {
-  return <PossibleRoute path="/demo/web-presentation" />;
+  permanentRedirect("/examples/web-presentation?view=process");
 }

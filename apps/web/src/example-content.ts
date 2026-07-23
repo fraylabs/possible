@@ -6,11 +6,6 @@ export type ExampleVisual = {
   position?: string;
 };
 
-export type ExampleLink = {
-  href: string;
-  label: string;
-};
-
 export type ExampleMetadata = {
   title: string;
   description: string;
@@ -23,8 +18,6 @@ export type DemoConversationMessage = {
 
 export type DemoPack = {
   name: string;
-  href: string;
-  role: string;
 };
 
 export type DemoItem = {
@@ -66,8 +59,6 @@ export type PossibleExample = {
   description: string;
   highlights: readonly string[];
   visual: ExampleVisual;
-  primaryOutput: ExampleLink;
-  demoHref: string;
   metadata: ExampleMetadata;
   demo: PossibleDemo;
 };
@@ -85,8 +76,6 @@ export const exampleCatalog = [
       alt: "Isometric CAD view of the Still e-ink focus device concept",
       kind: "image",
     },
-    primaryOutput: { href: "/demo/still/site/index.html", label: "Open launch site" },
-    demoHref: "/demo/still",
     metadata: {
       title: "Still hardware launch example",
       description: "A finished hardware-launch outcome with a site, film, CAD, and explicit limitations.",
@@ -105,7 +94,7 @@ export const exampleCatalog = [
         { speaker: "POSSIBLE", text: "I recommend the Hardware Launch Outcome Pack. Proceed with this local-only outcome?" },
         { speaker: "USER", text: "Yes, proceed." },
       ],
-      packs: [{ name: "Hardware Launch", href: "/packs/hardware-launch", role: "Coordinates the product story, launch site, film, prototype CAD, waitlist boundary, and fresh review." }],
+      packs: [{ name: "Hardware Launch" }],
       workstreams: [
         { title: "Product direction", description: "Define the device, intended ritual, audience, claims, and limits." },
         { title: "Launch system", description: "Build the responsive site and local-only waitlist behavior." },
@@ -145,8 +134,6 @@ export const exampleCatalog = [
       alt: "Isometric CAD view of the ten-link Robot Snake digital prototype",
       kind: "image",
     },
-    primaryOutput: { href: "/demo/robot-snake/control/index.html", label: "Open simulation controls" },
-    demoHref: "/demo/robot-snake",
     metadata: {
       title: "Robot Snake prototype example",
       description: "A finished digital robotics outcome with CAD, control, simulation, telemetry, and bounded claims.",
@@ -165,7 +152,7 @@ export const exampleCatalog = [
         { speaker: "POSSIBLE", text: "I recommend the Robot Prototype Outcome Pack. Proceed with this digital prototype?" },
         { speaker: "USER", text: "Yes, proceed." },
       ],
-      packs: [{ name: "Robot Prototype", href: "/packs/robot-prototype", role: "Coordinates mechanical CAD, robot descriptions, control, seeded simulation, telemetry, sim-to-real gaps, and verification." }],
+      packs: [{ name: "Robot Prototype" }],
       workstreams: [
         { title: "Mechanical model", description: "Create reviewable geometry, assembly dimensions, and portable CAD exports." },
         { title: "Robot description", description: "Generate URDF and SRDF with explicit joints, limits, links, and planning groups." },
@@ -217,8 +204,6 @@ export const exampleCatalog = [
       alt: "Playable Fold paper-plane game running in the browser",
       kind: "embed",
     },
-    primaryOutput: { href: "/demo/game/play", label: "Play Fold" },
-    demoHref: "/demo/fold",
     metadata: {
       title: "Fold playable web game example",
       description: "A finished responsive Three.js paper-plane game.",
@@ -229,7 +214,7 @@ export const exampleCatalog = [
       request: "Make a tiny browser game where you pilot a paper plane through a storm.",
       conversationNote: "No preserved $possible conversation exists for this reference build. This page reports only the artifacts and review evidence that remain.",
       conversation: [],
-      packs: [{ name: "Playable Web Game", href: "/packs/playable-web-game", role: "Defines the player contract, core loop, Three.js runtime, responsive controls, game feel, and browser review." }],
+      packs: [{ name: "Playable Web Game" }],
       workstreams: [
         { title: "Player contract", description: "Make the action, objective, and failure state legible within seconds." },
         { title: "Core loop", description: "Steer, score, crash, and restart without leaving the game." },
@@ -265,8 +250,6 @@ export const exampleCatalog = [
       alt: "Illustrations of an agent skill, execution prompt, Outcome Pack, and the Possible guide",
       kind: "image",
     },
-    primaryOutput: { href: "/presentation", label: "Open presentation" },
-    demoHref: "/demo/web-presentation",
     metadata: {
       title: "Possible web presentation example",
       description: "A finished coded presentation with responsive presenter controls.",
@@ -277,7 +260,7 @@ export const exampleCatalog = [
       request: "Help people understand Possible without making them read a wall of text.",
       conversationNote: "No preserved $possible conversation, compiled run, or independent review receipt exists for this reference build.",
       conversation: [],
-      packs: [{ name: "Web Presentation", href: "/packs/web-presentation", role: "Coordinates the narrative, source evidence, visual direction, coded slides, presenter controls, responsive behavior, and review." }],
+      packs: [{ name: "Web Presentation" }],
       workstreams: [
         { title: "Narrative", description: "Turn the product thesis into a short audience-first arc." },
         { title: "Visual direction", description: "Choose a coherent coded presentation system and illustrative metaphor." },
@@ -313,8 +296,6 @@ export const exampleCatalog = [
       fit: "cover",
       position: "top",
     },
-    primaryOutput: { href: "/examples/patchproof-chain/product/index.html", label: "Open product" },
-    demoHref: "/demo/patchproof",
     metadata: {
       title: "PatchProof Outcome Chain example",
       description: "A finished developer tool discovered, built, remixed, and locally launched through three verified outcomes.",
@@ -330,9 +311,9 @@ export const exampleCatalog = [
         { speaker: "USER", text: "Yes, proceed." },
       ],
       packs: [
-        { name: "Software Opportunity Discovery", href: "/packs/software-opportunity-discovery", role: "Compare evidence-backed problems before choosing what to build." },
-        { name: "Working Web App", href: "/packs/working-web-app", role: "Turn the selected opportunity into a bounded working product." },
-        { name: "Developer Project Launch", href: "/packs/developer-project-launch", role: "Remix and package the verified product without changing its factual claims." },
+        { name: "Software Opportunity Discovery" },
+        { name: "Working Web App" },
+        { name: "Developer Project Launch" },
       ],
       workstreams: [
         { title: "Discover", description: "Compare four developer-tool opportunities against 21 dated sources." },

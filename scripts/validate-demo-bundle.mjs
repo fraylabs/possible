@@ -165,12 +165,21 @@ for (const claimBoundary of ["Aggregate propulsion", "Physical locomotion", "act
     failures.push(`Robot Prototype page is missing claim boundary: ${claimBoundary}`);
   }
 }
+for (const contract of [
+  ['role="tablist" aria-label="Example view"', "Examples must expose one Outputs / Process switch"],
+  ['aria-label="You asked"', "Process records must surface the original request"],
+  ['aria-label="Possible added"', "Process records must surface the work Possible supplied"],
+  ['aria-label="Verification caught"', "Process records must surface the verification sequence"],
+  ['aria-label="Final outcome"', "Process records must surface the final outcome"],
+]) {
+  if (!appSource.includes(contract[0])) failures.push(contract[1]);
+}
 if (
-  !stylesSource.includes(".demo-evidence-output a { min-width: 0;")
-  || !stylesSource.includes(".demo-evidence-output > div:not(.demo-verification-story) { grid-template-columns: repeat(2, minmax(0, 1fr)); }")
-  || !stylesSource.includes(".demo-evidence-output > div:not(.demo-verification-story) { grid-template-columns: minmax(0, 1fr); }")
+  !stylesSource.includes(".example-process-evidence > div {")
+  || !stylesSource.includes(".example-process-evidence > div { grid-template-columns: 1fr; }")
+  || !stylesSource.includes(".example-process-section { grid-template-columns: 1fr;")
 ) {
-  failures.push("Demo evidence grids must preserve shrinkable tablet and single-column mobile layouts");
+  failures.push("Inline process records must preserve readable single-column mobile layouts");
 }
 
 const patchProofRoot = path.join(repository, "apps/web/public/examples/patchproof-chain");

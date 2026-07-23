@@ -18,13 +18,6 @@ const canonicalRoutes = [
   ["examples/fold/index.html", "https://possible.sh/examples/fold/"],
   ["examples/web-presentation/index.html", "https://possible.sh/examples/web-presentation/"],
   ["examples/patchproof/index.html", "https://possible.sh/examples/patchproof/"],
-  ["demo/index.html", "https://possible.sh/demo/"],
-  ["demo/still/index.html", "https://possible.sh/demo/still/"],
-  ["demo/fold/index.html", "https://possible.sh/demo/fold/"],
-  ["demo/web-presentation/index.html", "https://possible.sh/demo/web-presentation/"],
-  ["demo/game/play/index.html", "https://possible.sh/demo/game/play/"],
-  ["demo/robot-snake/index.html", "https://possible.sh/demo/robot-snake/"],
-  ["demo/patchproof/index.html", "https://possible.sh/demo/patchproof/"],
   ["presentation/index.html", "https://possible.sh/presentation/"],
   ["packs/hardware-launch/index.html", "https://possible.sh/packs/hardware-launch/"],
   ["packs/robot-prototype/index.html", "https://possible.sh/packs/robot-prototype/"],
@@ -34,18 +27,21 @@ const canonicalRoutes = [
   ["packs/software-opportunity-discovery/index.html", "https://possible.sh/packs/software-opportunity-discovery/"],
 ];
 
-const compatibilityRoutes = [
-  ["demo/hardware/index.html", "https://possible.sh/demo/hardware/", "https://possible.sh/demo/still/"],
-  ["demo/game/index.html", "https://possible.sh/demo/game/", "https://possible.sh/demo/fold/"],
-  ["demo/presentation/index.html", "https://possible.sh/demo/presentation/", "https://possible.sh/demo/web-presentation/"],
+const redirectRoutes = [
+  ["demo/index.html", "/examples"],
+  ["demo/still/index.html", "/examples/still?view=process"],
+  ["demo/hardware/index.html", "/examples/still?view=process"],
+  ["demo/robot-snake/index.html", "/examples/robot-snake?view=process"],
+  ["demo/fold/index.html", "/examples/fold?view=process"],
+  ["demo/game/index.html", "/examples/fold?view=process"],
+  ["demo/web-presentation/index.html", "/examples/web-presentation?view=process"],
+  ["demo/presentation/index.html", "/examples/web-presentation?view=process"],
+  ["demo/patchproof/index.html", "/examples/patchproof?view=process"],
 ];
 
 const descriptions = new Set();
 const titles = new Set();
-const metadataRoutes = [
-  ...canonicalRoutes.map(([file, canonical]) => [file, canonical]),
-  ...compatibilityRoutes.map(([file, , canonical]) => [file, canonical]),
-];
+const metadataRoutes = canonicalRoutes;
 for (const [file, canonical] of metadataRoutes) {
   const markup = await readOutput(file);
   assert.match(markup, new RegExp(`<link rel="canonical" href="${escape(canonical)}"`), `${file} must publish the correct canonical URL`);
@@ -61,12 +57,15 @@ for (const [file, canonical] of metadataRoutes) {
   assert.ok(description, `${file} must publish a description`);
   assert.equal(openGraphDescription, description, `${file} Open Graph description must match its page description`);
   assert.equal(twitterDescription, description, `${file} Twitter description must match its page description`);
-  if (canonicalRoutes.some(([canonicalFile]) => canonicalFile === file)) {
-    assert.ok(!titles.has(title), `${file} must not reuse another canonical page title: ${title}`);
-    assert.ok(!descriptions.has(description), `${file} must not reuse another canonical page description`);
-    titles.add(title);
-    descriptions.add(description);
-  }
+  assert.ok(!titles.has(title), `${file} must not reuse another canonical page title: ${title}`);
+  assert.ok(!descriptions.has(description), `${file} must not reuse another canonical page description`);
+  titles.add(title);
+  descriptions.add(description);
+}
+
+for (const [file, destination] of redirectRoutes) {
+  const markup = await readOutput(file);
+  assert.match(markup, new RegExp(`NEXT_REDIRECT;replace;${escape(destination)};308;`), `${file} must redirect to ${destination}`);
 }
 
 const home = await readOutput("index.html");
@@ -82,9 +81,7 @@ const sitemap = await readOutput("sitemap.xml");
 for (const [, canonical] of canonicalRoutes) {
   assert.match(sitemap, new RegExp(`<loc>${escape(canonical)}</loc>`), `Sitemap must include ${canonical}`);
 }
-for (const [, legacy] of compatibilityRoutes) {
-  assert.doesNotMatch(sitemap, new RegExp(`<loc>${escape(legacy)}</loc>`), `Sitemap must not index compatibility URL ${legacy}`);
-}
+assert.doesNotMatch(sitemap, /<loc>https:\/\/possible\.sh\/demo(?:\/|<)/, "Sitemap must not index Demo compatibility routes or raw output paths");
 assert.equal((sitemap.match(/<lastmod>2026-07-23<\/lastmod>/g) ?? []).length, canonicalRoutes.length, "Every sitemap entry must publish the current indexed revision date");
 
 const robots = await readOutput("robots.txt");
@@ -109,4 +106,4 @@ for (const keyword of ["codex", "ai-agents", "agent-skills", "outcome-packs", "d
   assert.ok(cliPackage.keywords?.includes(keyword), `CLI metadata must include ${keyword}`);
 }
 
-console.log(`Discovery metadata is consistent across ${canonicalRoutes.length} canonical routes and ${compatibilityRoutes.length} compatibility routes.`);
+console.log(`Discovery metadata is consistent across ${canonicalRoutes.length} canonical routes and ${redirectRoutes.length} exact Demo redirects.`);

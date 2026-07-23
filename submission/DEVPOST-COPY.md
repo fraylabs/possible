@@ -97,7 +97,7 @@ $possible
 ## Try it out links
 
 - **Live project:** https://possible.sh
-- **Demo gallery:** https://possible.sh/demo
+- **Example gallery:** https://possible.sh/examples
 - **Install from npm:** https://www.npmjs.com/package/@fraylabs/possible
 - **GitHub source:** https://github.com/fraylabs/possible
 - **Demo video:** https://youtu.be/s35aGhVI2Eo

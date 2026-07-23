@@ -15,21 +15,16 @@ const exampleRoutes = [
   ["web-presentation", "Web Presentation"],
   ["patchproof", "PatchProof"],
 ];
-const demoRoutes = [
-  ["still", "Still", ["hardware"], true],
-  ["robot-snake", "Robot Snake", [], true],
-  ["fold", "Fold", ["game"], false],
-  ["web-presentation", "Possible", ["presentation"], false],
-  ["patchproof", "PatchProof", [], true],
-];
-const demoSectionLabels = [
-  "Original request",
-  "$possible conversation",
-  "Recommended Outcome Pack",
-  "Compiled workstreams",
-  "Outcome artifacts",
-  "Verification, repair, and pass",
-  "Evidence",
+const compatibilityRedirects = [
+  ["demo", "/examples"],
+  ["demo/still", "/examples/still?view=process"],
+  ["demo/hardware", "/examples/still?view=process"],
+  ["demo/robot-snake", "/examples/robot-snake?view=process"],
+  ["demo/fold", "/examples/fold?view=process"],
+  ["demo/game", "/examples/fold?view=process"],
+  ["demo/web-presentation", "/examples/web-presentation?view=process"],
+  ["demo/presentation", "/examples/web-presentation?view=process"],
+  ["demo/patchproof", "/examples/patchproof?view=process"],
 ];
 
 const homeMarkup = await html("index.html");
@@ -137,95 +132,52 @@ for (const [slug, name] of exampleRoutes) {
 }
 assert.doesNotMatch(gallery, /Software Launch|Open-Source Release|Tiny Slug/i);
 
-const demoIndex = visibleText(await html("demo/index.html"));
-const canonicalDemoLinks = demoIndex.match(/href="\/demo\/(?:still|robot-snake|fold|web-presentation|patchproof)"/g) ?? [];
-assert.equal(canonicalDemoLinks.length, demoRoutes.length, "/demo must contain five canonical process records");
-for (const [slug, name] of demoRoutes) {
-  assert.match(demoIndex, new RegExp(`href="/demo/${escape(slug)}"[\\s\\S]*?${escape(name)}`), `/demo must link ${name} to its canonical process record`);
-}
-
 for (const [slug, name] of exampleRoutes) {
   const markup = await html(`examples/${slug}/index.html`);
   const text = plainText(visibleText(markup));
   assert.match(markup, /role="dialog"[^>]*aria-modal="true"|aria-modal="true"[^>]*role="dialog"/, `${name} must render as an accessible modal`);
-  for (const label of ["Description", "Outcome Pack", "Output carousel"]) {
+  for (const label of ["Description", "Outcome Pack", "Output carousel", "You asked", "Possible added", "Verification caught", "Final outcome"]) {
     assert.match(markup, new RegExp(`aria-label="${escape(label)}"`), `${name} must expose its ${label} region`);
   }
+  assert.match(markup, /role="tablist"[^>]*aria-label="Example view"/, `${name} must expose one Outputs / Process switch`);
+  assert.match(markup, /role="tab"[^>]*aria-selected="true"[^>]*>OUTPUTS<\/button>/, `${name} must open on Outputs`);
+  assert.match(markup, /role="tab"[^>]*aria-selected="false"[^>]*>PROCESS<\/button>/, `${name} must expose its inline Process view`);
   assert.match(markup, /aria-label="Previous output"[^>]*>[\s\S]*?&lt;[\s\S]*?<\/button>/, `${name} must expose a previous-output control`);
   assert.match(markup, /aria-label="Next output"[^>]*>[\s\S]*?&gt;[\s\S]*?<\/button>/, `${name} must expose a next-output control`);
   assert.match(text, /01\s*\/\s*0[2-9]/, `${name} must expose at least two finished outputs in its carousel`);
   assert.match(markup, /href="\/examples"[^>]*>[\s\S]*?(?:CLOSE|BACK TO EXAMPLES)/i, `${name} must close back to /examples`);
   assert.doesNotMatch(text, /OPEN OUTCOME/i, `${name} must not repeat the active output as a second modal action`);
-  assert.match(text, /SEE HOW POSSIBLE MADE THIS/i, `${name} must lead to the run record`);
-  assert.match(markup, new RegExp(`href="/demo/${escape(slug)}"`), `${name} must link its canonical Demo`);
-  for (const label of demoSectionLabels) {
-    assert.doesNotMatch(markup, new RegExp(`aria-label="${escape(label)}"`), `${name} must not expose the Demo-only ${label} section`);
-  }
-  for (const term of ["conversation", "workstream", "verifier", "receipt"]) {
-    const processLink = new RegExp(`<a\\b[^>]*>(?:(?!<\\/a>)[\\s\\S])*\\b${term}s?\\b(?:(?!<\\/a>)[\\s\\S])*<\\/a>`, "i");
-    const processHeading = new RegExp(`<h[1-6]\\b[^>]*>(?:(?!<\\/h[1-6]>)[\\s\\S])*\\b${term}s?\\b(?:(?!<\\/h[1-6]>)[\\s\\S])*<\\/h[1-6]>`, "i");
-    assert.doesNotMatch(markup, processLink, `${name} must not link a ${term} from the compact outcome modal`);
-    assert.doesNotMatch(markup, processHeading, `${name} must not promote ${term} process internals`);
-  }
+  assert.doesNotMatch(text, /SEE HOW POSSIBLE MADE THIS/i, `${name} must keep Process inside the example modal`);
+  assert.doesNotMatch(markup, new RegExp(`href="/demo/${escape(slug)}"`), `${name} must not link a second process page`);
+  assert.match(markup, /class="example-process-evidence"/, `${name} must keep raw evidence optional`);
 }
 
 const exampleContentSource = await readFile(new URL("../apps/web/src/example-content.ts", import.meta.url), "utf8");
 const appSource = await readFile(new URL("../apps/web/src/App.tsx", import.meta.url), "utf8");
+const stylesSource = await readFile(new URL("../apps/web/src/styles.css", import.meta.url), "utf8");
 assert.match(exampleContentSource, /export const exampleCatalog\s*=\s*\[/, "Examples must come from one shared catalog");
 assert.equal((exampleContentSource.match(/\n\s+slug:\s*"/g) ?? []).length, exampleRoutes.length, "The shared catalog must contain exactly five examples");
 assert.match(appSource, /exampleCatalog(?:\.slice\([^)]*\))?\.map\(/, "The gallery must render cards from the shared example catalog");
+assert.match(stylesSource, /\.example-modal \[hidden\] \{ display: none !important; \}/, "Inactive example views must remain visually hidden when their layouts define display");
 
 const patchProofExample = visibleText(await html("examples/patchproof/index.html"));
 assert.doesNotMatch(patchProofExample, /class="chain-example-page"|One rough ambition[\s\S]*Three verified outcomes/, "PatchProof must use the shared compact example modal rather than its bespoke long page");
 for (const href of [
   "/examples/patchproof-chain/product/index.html",
-  "/demo/patchproof",
 ]) assert.match(patchProofExample, new RegExp(`href="${escape(href)}"`));
-assert.doesNotMatch(patchProofExample, /href="\/examples\/patchproof-chain\/evidence\/chain\.json"/, "PatchProof example must lead to its readable Demo record instead of raw JSON");
+assert.doesNotMatch(patchProofExample, /href="\/demo\/patchproof"/, "PatchProof must keep its process inside the example modal");
 
 const patchProofAlias = await html("examples/patchproof-chain/index.html");
 assert.doesNotMatch(patchProofAlias, /NEXT_REDIRECT/, "The legacy PatchProof URL must not export a broken redirect shell");
 assert.match(patchProofAlias, /role="dialog"[^>]*aria-modal="true"|aria-modal="true"[^>]*role="dialog"/, "The legacy PatchProof URL must render the canonical shared modal");
 assert.match(patchProofAlias, /rel="canonical" href="https:\/\/possible\.sh\/examples\/patchproof\/?"/, "The legacy PatchProof URL must canonicalize to /examples/patchproof");
 
-const demoTemplateMarkers = new Set();
-async function assertDemoContract(route, name, preserved) {
+for (const [route, destination] of compatibilityRedirects) {
   const markup = await html(`${route}/index.html`);
-  const marker = markup.match(/<main[^>]*data-demo-template="([^"]+)"/)?.[1];
-  assert.ok(marker, `${route} must identify the shared Demo template`);
-  demoTemplateMarkers.add(marker);
-  assert.match(markup, /aria-label="Process record sections"/, `${route} must expose its compact section index`);
-  const processHero = markup.match(/<section class="demo-template-hero"[\s\S]*?<\/section>/)?.[0] ?? "";
-  assert.doesNotMatch(processHero, /<img\b/, `${route} must read as a process record instead of a marketing hero`);
-  assert.doesNotMatch(plainText(visibleText(processHero)), /How .* was made|Open outcome/i, `${route} must avoid landing-page language`);
-
-  const positions = demoSectionLabels.map((label) => {
-    const index = markup.indexOf(`aria-label="${label}"`);
-    assert.ok(index >= 0, `${route} must expose the ${label} section`);
-    return index;
-  });
-  assert.deepEqual([...positions].sort((a, b) => a - b), positions, `${route} must preserve the canonical Demo section order`);
-
-  const recommendedPack = markup.slice(positions[2], positions[3]);
-  assert.match(recommendedPack, /href="\/packs\/[^/"]+"/, `${route} must link its recommended Outcome Pack`);
-  const workstreams = markup.slice(positions[3], positions[4]);
-  assert.match(workstreams, /<li\b/, `${route} must list its compiled workstreams`);
-  const verification = plainText(visibleText(markup.slice(positions[5], positions[6])));
-  assert.match(markup.slice(positions[5], positions[6]), /<li\b/, `${route} must state its verification disposition`);
-  if (preserved) {
-    for (const state of ["fail", "repair", "pass"]) assert.match(verification, new RegExp(state, "i"), `${route} verification must retain the ${state} state`);
-  } else {
-    assert.match(verification, /reference|not preserved/i, `${route} must not imply a preserved verification run`);
-  }
-  assert.match(markup.slice(positions[6]), /<a\b[^>]*href=/, `${route} must link its evidence`);
-  assert.match(plainText(visibleText(markup)), new RegExp(escape(name), "i"), `${route} must identify ${name}`);
+  assert.match(markup, new RegExp(`NEXT_REDIRECT;replace;${escape(destination)};308;`), `${route} must redirect to ${destination}`);
 }
-
-for (const [slug, name, aliases, preserved] of demoRoutes) {
-  await assertDemoContract(`demo/${slug}`, name, preserved);
-  for (const alias of aliases) await assertDemoContract(`demo/${alias}`, name, preserved);
-}
-assert.equal(demoTemplateMarkers.size, 1, "Every canonical and legacy Demo route must use one shared template");
+const playableGame = await html("demo/game/play/index.html");
+assert.doesNotMatch(playableGame, /NEXT_REDIRECT/, "/demo/game/play must remain the playable Fold output");
 
 const docs = visibleText(await html("docs/index.html"));
 assert.match(docs, /npx @fraylabs\/possible@0\.1\.10 init/);

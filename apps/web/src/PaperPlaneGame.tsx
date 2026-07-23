@@ -269,14 +269,14 @@ export default function PaperPlaneGame() {
       <div className="plane-game" onPointerMove={pointPlane} onPointerDown={pointPlane}>
         <div className="plane-game-canvas" ref={mountRef} aria-hidden="true" />
         <header className="plane-game-hud">
-          <a href="/demo/fold"><strong>FOLD / 01</strong><span>EXIT DEMO ↗</span></a>
+          <a href="/examples/fold"><strong>FOLD / 01</strong><span>EXIT GAME ↗</span></a>
           <p><span>GATES</span><strong>{String(score).padStart(2, "0")}</strong></p>
           <p><span>BEST</span><strong>{String(best).padStart(2, "0")}</strong></p>
           <button type="button" onClick={() => setMuted((value) => !value)}>{muted ? "SOUND OFF" : "SOUND ON"}</button>
           <button type="button" onClick={() => setPhase((value) => value === "playing" ? "paused" : "playing")} disabled={phase === "ready" || phase === "gameover"}>{phase === "paused" ? "RESUME" : "PAUSE"}</button>
         </header>
 
-        {renderError ? <section className="plane-game-overlay"><span>WEBGL UNAVAILABLE</span><h1>This flight needs<br />a WebGL browser.</h1><a href="/demo/fold">Return to the process record →</a></section> : null}
+        {renderError ? <section className="plane-game-overlay"><span>WEBGL UNAVAILABLE</span><h1>This flight needs<br />a WebGL browser.</h1><a href="/examples/fold?view=process">Open the process record →</a></section> : null}
         {!renderError && phase === "ready" ? <section className="plane-game-overlay">
           <span>ONE PLANE / ONE STORM / ONE RULE</span>
           <h1>Thread the<br /><em>orange.</em></h1>

@@ -1,12 +1,5 @@
-import PossibleRoute from "../../_components/PossibleRoute";
-import { pageMetadata } from "../../_metadata";
-
-export const metadata = pageMetadata({
-  title: "Robot Snake process record",
-  description: "A recorded Possible Robot Prototype run with CAD, URDF, MuJoCo simulation, deterministic tests, and independent verification.",
-  path: "/demo/robot-snake",
-});
+import { permanentRedirect } from "next/navigation";
 
 export default function RobotSnakeDemoPage() {
-  return <PossibleRoute path="/demo/robot-snake" />;
+  permanentRedirect("/examples/robot-snake?view=process");
 }

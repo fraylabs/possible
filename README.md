@@ -69,7 +69,7 @@ You do not need to choose a pack. `$possible` recommends one after understanding
 - [Fold / Playable Web Game](apps/web/public/demo/fold/verification.md) links the playable build to its review evidence.
 - [Possible / Web Presentation](apps/web/public/presentation/possible.html) is the coded browser deck itself.
 
-The public gallery is available at [possible.sh/demo](https://possible.sh/demo).
+The public gallery is available at [possible.sh/examples](https://possible.sh/examples). Each example contains both its finished outputs and its process record.
 
 ## Preserved Outcome Chain
 

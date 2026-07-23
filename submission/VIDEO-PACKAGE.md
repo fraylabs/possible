@@ -51,7 +51,7 @@ Show the passing rerun and the explicit sim-to-real boundary.
 
 ## 2:00–2:35 — Four outcomes
 
-Move through the public demo gallery:
+Move through the public example gallery:
 
 - Still: site, film, CAD and asset-path repair evidence.
 - Robot Snake: CAD, MuJoCo, Rerun and control repairs.

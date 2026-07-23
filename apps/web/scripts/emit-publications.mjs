@@ -63,12 +63,12 @@ const evidenceManifest = {
     },
     {
       criterion: "Design",
-      claim: "Each demo presents the outcome beside its proof.",
-      implementationFact: "The demo gallery exposes five finished outcomes; each links to an honest preserved-run or reference-build record.",
-      significance: "Judges can inspect the work before opening the process and evidence behind it.",
+      claim: "Each example presents the outcome beside its proof.",
+      implementationFact: "The example gallery exposes five finished outcomes; each switches between outputs and an honest preserved-run or reference-build process.",
+      significance: "Judges can inspect the work and its process without navigating through another page hierarchy.",
       evidence: {
-        label: "Demo gallery",
-        url: "https://possible.sh/demo",
+        label: "Example gallery",
+        url: "https://possible.sh/examples",
       },
     },
     {
@@ -175,8 +175,8 @@ await write("llms.txt", [
   "- Human documentation: /docs/",
   "- Judging evidence: /judging/",
   "- Machine-readable evidence: /evidence.json",
-  "- Outcome demos: /demo/",
-  "- Robot Snake proof: /demo/robot-snake/",
+  "- Outcome examples: /examples/",
+  "- Robot Snake process: /examples/robot-snake/?view=process",
   "- Recorded /goal comparison protocol: https://github.com/fraylabs/possible/blob/main/apps/web/public/demo/robot-snake/CONTROL-RUN.md",
   "- Preserved /goal control artifacts: /demo/robot-snake/control/",
   "- Possible artifact manifest: /demo/robot-snake/manifest.json",

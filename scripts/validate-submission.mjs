@@ -94,7 +94,7 @@ for (const heading of [
 }
 for (const url of [
   "https://possible.sh",
-  "https://possible.sh/demo",
+  "https://possible.sh/examples",
   "https://www.npmjs.com/package/@fraylabs/possible",
   "https://github.com/fraylabs/possible",
   "https://youtu.be/s35aGhVI2Eo",

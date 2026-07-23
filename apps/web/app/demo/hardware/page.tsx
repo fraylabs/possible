@@ -1,12 +1,5 @@
-import PossibleRoute from "../../_components/PossibleRoute";
-import { pageMetadata } from "../../_metadata";
-
-export const metadata = pageMetadata({
-  title: "Still hardware launch demo",
-  description: "A recorded Possible Hardware Launch run with site, film, CAD, evidence, and verification artifacts.",
-  path: "/demo/still",
-});
+import { permanentRedirect } from "next/navigation";
 
 export default function HardwareDemoPage() {
-  return <PossibleRoute path="/demo/still" />;
+  permanentRedirect("/examples/still?view=process");
 }

@@ -1,6 +1,6 @@
 # OpenAI Build Week judging evidence
 
-Possible turns one rough idea into a coordinated, independently verified outcome. A robotics novice asked for a robot snake. Possible supplied the missing engineering work and produced CAD, URDF/SRDF, MuJoCo control, obstacle avoidance, Rerun telemetry, 12 passing tests, and 186 interface checks. Fresh verification also found and repaired three defects. See the [Robot Snake run](https://possible.sh/demo/robot-snake).
+Possible turns one rough idea into a coordinated, independently verified outcome. A robotics novice asked for a robot snake. Possible supplied the missing engineering work and produced CAD, URDF/SRDF, MuJoCo control, obstacle avoidance, Rerun telemetry, 12 passing tests, and 186 interface checks. Fresh verification also found and repaired three defects. See the [Robot Snake example and process](https://possible.sh/examples/robot-snake?view=process).
 
 Possible is a Developer Tools submission built with Codex using GPT-5.6. Its open-source Outcome Packs combine reusable execution prompts, selected agent skills, workstreams, safeguards, and completion checks. The [Build Week record](BUILD-WEEK.md) documents the session, submission period, and demo video.
 
@@ -15,7 +15,7 @@ Inspect the [control protocol](https://github.com/fraylabs/possible/blob/main/ap
 | Criterion | Claim | Evidence | Why it matters |
 | --- | --- | --- | --- |
 | **Technological Implementation** | Typed Outcome Packs coordinate execution and verification. | The [compiler](https://github.com/fraylabs/possible/blob/main/packages/packs/src/compiler.ts) converts manifests into skill installs, owned workstreams, approval gates, and completion requirements. | One contract governs the run from preparation through verification. |
-| **Design** | Each demo presents the outcome beside its proof. | The [demo gallery](https://possible.sh/demo) exposes five finished outcomes; each links to an honest preserved-run or reference-build record. | Judges can inspect the work before opening the process and evidence behind it. |
+| **Design** | Each example presents the outcome beside its proof. | The [example gallery](https://possible.sh/examples) exposes five finished outcomes; each switches between outputs and an honest preserved-run or reference-build process. | Judges can inspect the work and its process without navigating through another page hierarchy. |
 | **Potential Impact** | Possible supplies work a novice did not know to request. | The [Robot Prototype pack](https://github.com/fraylabs/possible/blob/main/packages/packs/src/robot-prototype.ts) covers mechanical design, simulation, control, telemetry, safety, and review. | One rough request can start multidisciplinary work outside existing expertise. |
 | **Quality of the Idea** | Outcome Packs make operational judgment reusable. | The [Robot Snake intake](https://github.com/fraylabs/possible/blob/main/apps/web/public/demo/robot-snake/INTAKE-TRANSCRIPT.md) begins with an ambition, then produces an inspectable [completion report](https://github.com/fraylabs/possible/blob/main/apps/web/public/demo/robot-snake/evidence/outcome-receipt.md). | The system transfers more than a single capability or instruction. |
 

@@ -4,5 +4,16 @@
   "installCommand": "npm ci",
   "outputDirectory": "apps/web/out",
   "cleanUrls": true,
-  "trailingSlash": true
+  "trailingSlash": true,
+  "redirects": [
+    { "source": "/demo", "destination": "/examples", "permanent": true },
+    { "source": "/demo/still", "destination": "/examples/still?view=process", "permanent": true },
+    { "source": "/demo/hardware", "destination": "/examples/still?view=process", "permanent": true },
+    { "source": "/demo/robot-snake", "destination": "/examples/robot-snake?view=process", "permanent": true },
+    { "source": "/demo/fold", "destination": "/examples/fold?view=process", "permanent": true },
+    { "source": "/demo/game", "destination": "/examples/fold?view=process", "permanent": true },
+    { "source": "/demo/web-presentation", "destination": "/examples/web-presentation?view=process", "permanent": true },
+    { "source": "/demo/presentation", "destination": "/examples/web-presentation?view=process", "permanent": true },
+    { "source": "/demo/patchproof", "destination": "/examples/patchproof?view=process", "permanent": true }
+  ]
 }

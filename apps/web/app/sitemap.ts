@@ -12,8 +12,6 @@ const staticPaths = [
   "/docs/how-to-use/",
   "/judging/",
   "/examples/",
-  "/demo/",
-  "/demo/game/play/",
   "/presentation/",
 ];
 
@@ -31,11 +29,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     })),
     ...exampleCatalog.map((example) => ({
       url: `${baseUrl}/examples/${example.slug}/`,
-      lastModified: siteUpdatedAt,
-      changeFrequency: "weekly" as const,
-    })),
-    ...exampleCatalog.map((example) => ({
-      url: `${baseUrl}/demo/${example.slug}/`,
       lastModified: siteUpdatedAt,
       changeFrequency: "weekly" as const,
     })),
