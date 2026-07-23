@@ -172,23 +172,40 @@ if (
 }
 
 const patchProofRoot = path.join(repository, "apps/web/public/examples/patchproof-chain");
+const patchProofSource = path.join(repository, "examples/patchproof-chain");
+const patchProofCopies = {
+  "evidence/request.md": "REQUEST.md",
+  "evidence/chain.json": ".possible/chain.json",
+  "evidence/discovery-receipt.json": "outcome-room/decision-receipt.json",
+  "evidence/discovery-verification.md": ".possible/runs/20260722-software-opportunity-discovery-001/verification.md",
+  "evidence/discovery-to-product-handoff.json": ".possible/handoffs/20260722-software-opportunity-discovery-001--working-web-app.json",
+  "evidence/product-receipt.json": "outcome-room/product-receipt.json",
+  "evidence/product-verification.md": "outcome-room/verification.md",
+  "evidence/product-repair-log.md": "outcome-room/repair-log.md",
+  "evidence/product-desktop.png": "outcome-room/browser-desktop.png",
+  "evidence/product-mobile.png": "outcome-room/browser-mobile.png",
+  "evidence/product-to-launch-handoff.json": ".possible/handoffs/20260722-working-web-app-001--developer-project-launch.json",
+  "evidence/launch-receipt.json": "launch/launch-receipt.json",
+  "evidence/launch-verification.md": "launch/evidence/verification.md",
+  "evidence/launch-repair-log.md": "launch/evidence/repair-log.md",
+  "evidence/remix-decision.json": ".possible/runs/20260722-developer-project-launch-001/remix-decision.json",
+  "evidence/remix/continuous-form.png": "launch/direction/previews/continuous-form/preview.png",
+  "evidence/remix/evidence-stamp.png": "launch/direction/previews/evidence-stamp/preview.png",
+  "evidence/remix/patch-panel.png": "launch/direction/previews/patch-panel/preview.png",
+  "evidence/site-desktop.png": "launch/evidence/site-desktop.png",
+  "evidence/site-mobile.png": "launch/evidence/site-mobile.png",
+  "evidence/transcripts/discovery.json": ".possible/transcripts/discovery.json",
+  "evidence/transcripts/discovery.md": ".possible/transcripts/discovery.md",
+  "evidence/transcripts/product.json": ".possible/transcripts/product.json",
+  "evidence/transcripts/product.md": ".possible/transcripts/product.md",
+  "evidence/transcripts/launch.json": ".possible/transcripts/launch.json",
+  "evidence/transcripts/launch.md": ".possible/transcripts/launch.md",
+};
 const patchProofFiles = [
   "product/index.html",
   "product/launch/site/index.html",
   "product/launch/docs/quickstart.md",
-  "evidence/site-desktop.png",
-  "evidence/site-mobile.png",
-  "evidence/remix/continuous-form.png",
-  "evidence/remix/evidence-stamp.png",
-  "evidence/remix/patch-panel.png",
-  "evidence/discovery-receipt.json",
-  "evidence/product-receipt.json",
-  "evidence/launch-receipt.json",
-  "evidence/product-repair-log.md",
-  "evidence/launch-repair-log.md",
-  "evidence/product-verification.md",
-  "evidence/launch-verification.md",
-  "evidence/chain.json",
+  ...Object.keys(patchProofCopies),
 ];
 for (const relative of patchProofFiles) {
   try {
@@ -196,6 +213,19 @@ for (const relative of patchProofFiles) {
     if (!details.isFile() || details.size === 0) failures.push(`PatchProof published evidence is empty: ${relative}`);
   } catch {
     failures.push(`Missing PatchProof published evidence: ${relative}`);
+  }
+}
+for (const [published, source] of Object.entries(patchProofCopies)) {
+  try {
+    const [publishedContents, sourceContents] = await Promise.all([
+      readFile(path.join(patchProofRoot, published)),
+      readFile(path.join(patchProofSource, source)),
+    ]);
+    if (!publishedContents.equals(sourceContents)) {
+      failures.push(`PatchProof published evidence drifted from its preserved source: ${published}`);
+    }
+  } catch {
+    failures.push(`PatchProof source-to-public comparison failed: ${source} → ${published}`);
   }
 }
 const patchProofProduct = await readFile(path.join(patchProofRoot, "product/index.html"), "utf8");
@@ -217,10 +247,51 @@ if (
   failures.push("PatchProof public launch receipt must preserve Remix coverage and its local-only authority boundary");
 }
 
+const transcriptContracts = [
+  ["discovery", "patchproof-discovery-20260722", 2, 7],
+  ["product", "patchproof-working-web-app-20260722", 4, 28],
+  ["launch", "patchproof-developer-project-launch-20260722", 2, 11],
+];
+let patchProofMessageCount = 0;
+for (const [slug, runId, agentCount, messageCount] of transcriptContracts) {
+  const [jsonSource, markdown] = await Promise.all([
+    readFile(path.join(patchProofRoot, `evidence/transcripts/${slug}.json`), "utf8"),
+    readFile(path.join(patchProofRoot, `evidence/transcripts/${slug}.md`), "utf8"),
+  ]);
+  const transcript = JSON.parse(jsonSource);
+  if (
+    transcript.runId !== runId
+    || transcript.agents?.length !== agentCount
+    || transcript.messages?.length !== messageCount
+    || transcript.messages?.some((message) => !message.message || !["commentary", "final_answer"].includes(message.phase))
+  ) {
+    failures.push(`PatchProof ${slug} transcript does not match its recorded run contract`);
+  }
+  if (!markdown.includes(`Public messages: ${messageCount}`)) {
+    failures.push(`PatchProof ${slug} Markdown transcript has the wrong public message count`);
+  }
+  if (/\/Users\/|\/home\/|\/private\/tmp|\/tmp\/|throwaway\/|\/root(?:\/|`|")|019f[0-9a-f-]{20,}|Goal (?:usage|completed)|::git-commit|VERCEL_TOKEN|CLOUDFLARE|github_pat_|gho_|sk-[A-Za-z0-9]/.test(`${jsonSource}\n${markdown}`)) {
+    failures.push(`PatchProof ${slug} transcript leaks a local path, internal metadata, or credential`);
+  }
+  for (const match of markdown.matchAll(/\]\((\/examples\/patchproof-chain\/[^)]+)\)/g)) {
+    const relative = match[1].slice("/examples/patchproof-chain/".length);
+    try {
+      const details = await stat(path.join(patchProofRoot, relative));
+      if (!details.isFile()) failures.push(`PatchProof ${slug} transcript link is not a file: ${match[1]}`);
+    } catch {
+      failures.push(`PatchProof ${slug} transcript has a broken public link: ${match[1]}`);
+    }
+  }
+  patchProofMessageCount += transcript.messages?.length ?? 0;
+}
+if (patchProofMessageCount !== 46) {
+  failures.push(`PatchProof transcripts must preserve 46 public messages; found ${patchProofMessageCount}`);
+}
+
 const publicTranscript = await readFile(path.join(root, "CODEX-THREAD.md"), "utf8");
-if (/\/Users\/|\/private\/tmp|\/tmp\//.test(publicTranscript)) {
+if (/\/Users\/|\/home\/|\/private\/tmp|\/tmp\//.test(publicTranscript)) {
   failures.push("A public example transcript leaks a local filesystem path");
 }
 
 if (failures.length) throw new Error(`Demo bundle validation failed:\n- ${failures.join("\n- ")}`);
-console.log("Four legacy demo evidence bundles and the PatchProof chain artifacts are complete.");
+console.log(`Four legacy demo evidence bundles and ${Object.keys(patchProofCopies).length} byte-matched PatchProof evidence files are complete.`);

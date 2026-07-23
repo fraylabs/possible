@@ -23,6 +23,7 @@ const routes = [
   ["demo/game/index.html", "https://possible.sh/demo/game/"],
   ["demo/game/play/index.html", "https://possible.sh/demo/game/play/"],
   ["demo/robot-snake/index.html", "https://possible.sh/demo/robot-snake/"],
+  ["demo/patchproof/index.html", "https://possible.sh/demo/patchproof/"],
   ["demo/presentation/index.html", "https://possible.sh/demo/presentation/"],
   ["presentation/index.html", "https://possible.sh/presentation/"],
   ["packs/hardware-launch/index.html", "https://possible.sh/packs/hardware-launch/"],

@@ -279,6 +279,42 @@ describe("Possible", () => {
     expect(background).not.toHaveAttribute("aria-hidden");
   });
 
+  it("keeps PatchProof as the finished example and records how it was made in Demo", async () => {
+    const modalRender = renderRoute("/examples/patchproof");
+    const dialog = screen.getByRole("dialog", { name: "PatchProof" });
+    expect(within(dialog).getByRole("link", { name: /See how it was made/i })).toHaveAttribute("href", "/demo/patchproof");
+    modalRender.unmount();
+
+    const { container } = renderRoute("/demo/patchproof");
+    expect(screen.getByRole("heading", { name: /How PatchProof\s*was made/i, level: 1 })).toBeInTheDocument();
+    expect(screen.getByText(/I want to discover, build, and launch a useful developer tool/i)).toBeInTheDocument();
+    expect(screen.getByText(/isolated-run revisions, not commits available in this repository/i)).toBeInTheDocument();
+
+    const stages = screen.getByRole("region", { name: /Evidence crossed\s*every handoff/i });
+    expect(within(stages).getAllByRole("listitem")).toHaveLength(3);
+    expect(stages).toHaveTextContent(/SOFTWARE OPPORTUNITY DISCOVERY.*WORKING WEB APP.*DEVELOPER PROJECT LAUNCH/i);
+    expect(stages).toHaveTextContent(/COMPLETED · PURSUE.*COMPLETED · PASSED.*COMPLETED · LOCAL ONLY/i);
+    expect(stages).toHaveTextContent(/ISOLATED RUN REV\./i);
+    expect(within(stages).getAllByRole("link", { name: /Recorded thread/i })).toHaveLength(3);
+
+    const evidence = screen.getByRole("region", { name: /Readable first\.\s*Raw when needed/i });
+    for (const href of [
+      "/examples/patchproof-chain/evidence/transcripts/discovery.md",
+      "/examples/patchproof-chain/evidence/transcripts/discovery.json",
+      "/examples/patchproof-chain/evidence/transcripts/product.md",
+      "/examples/patchproof-chain/evidence/transcripts/product.json",
+      "/examples/patchproof-chain/evidence/transcripts/launch.md",
+      "/examples/patchproof-chain/evidence/transcripts/launch.json",
+      "/examples/patchproof-chain/evidence/chain.json",
+      "/examples/patchproof-chain/evidence/discovery-to-product-handoff.json",
+      "/examples/patchproof-chain/evidence/product-to-launch-handoff.json",
+    ]) expect(evidence.querySelector(`a[href="${href}"]`)).toBeInTheDocument();
+
+    expect(screen.getByRole("complementary", { name: "Authority boundary" })).toHaveTextContent(/stopped before external launch/i);
+    expect(container.querySelector(".demo-conversation")).not.toBeInTheDocument();
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
   it("uses the same output-then-conversation structure for every outcome", async () => {
     for (const path of ["/demo/hardware", "/demo/robot-snake", "/demo/game", "/demo/presentation"]) {
       const { container, unmount } = renderRoute(path);

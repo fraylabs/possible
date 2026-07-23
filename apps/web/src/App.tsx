@@ -897,6 +897,166 @@ function ExamplesPage({ activeSlug }: { activeSlug?: string }) {
   );
 }
 
+function PatchProofDemoPage() {
+  const evidenceRoot = "/examples/patchproof-chain/evidence";
+  return (
+    <main className="patchproof-record">
+      <SiteNav label="Demo / PatchProof" />
+
+      <section className="patchproof-record-hero" id="top" aria-labelledby="patchproof-record-heading">
+        <div>
+          <p className="eyebrow">RECORDED RUN / PATCHPROOF</p>
+          <h1 id="patchproof-record-heading">How PatchProof<br />was <em>made.</em></h1>
+          <p>Possible chained three separately verified outcomes: compare developer problems, build the selected browser tool, then create its local launch package through Remix.</p>
+          <div className="patchproof-record-actions">
+            <a className="button-link" href="/examples/patchproof-chain/product/index.html">Open the tool <span>↗</span></a>
+            <a className="text-link" href="/examples/patchproof">View the example ↗</a>
+          </div>
+        </div>
+        <dl aria-label="PatchProof run summary">
+          <div><dt>OUTCOME STAGES</dt><dd>3</dd></div>
+          <div><dt>AGENT MESSAGES</dt><dd>46</dd></div>
+          <div><dt>REMIX DIRECTIONS</dt><dd>3</dd></div>
+          <div><dt>EXTERNAL ACTIONS</dt><dd>0</dd></div>
+        </dl>
+      </section>
+
+      <section className="patchproof-record-request" aria-labelledby="patchproof-request-heading">
+        <header><span>00 / ORIGINAL REQUEST</span><h2 id="patchproof-request-heading">One ambition,<br /><em>without a chosen idea.</em></h2></header>
+        <blockquote>“I want to discover, build, and launch a useful developer tool. I do not already know which problem is worth solving. Keep external actions local-only unless I approve them separately.”</blockquote>
+        <p>This is a record of the real run—not a reconstructed chat. The transcripts retain public captain and specialist messages with UTC order, while excluding private reasoning, system instructions, user metadata, raw tool output, usage telemetry, and machine-specific paths. The hexadecimal IDs below are isolated-run revisions, not commits available in this repository; archived SHA-256 manifests verify the portable evidence.</p>
+      </section>
+
+      <section className="patchproof-record-stages" id="run-stages" aria-labelledby="patchproof-stages-heading">
+        <header><span>01 / OUTCOME CHAIN</span><h2 id="patchproof-stages-heading">Evidence crossed<br /><em>every handoff.</em></h2></header>
+        <ol>
+          <li>
+            <div className="patchproof-stage-index"><span>01</span><i aria-hidden="true">→</i></div>
+            <article>
+              <header><p>SOFTWARE OPPORTUNITY DISCOVERY</p><strong>COMPLETED · PURSUE</strong></header>
+              <h3>Choose the problem before building the product.</h3>
+              <p>Four developer-tool opportunities were compared against 21 dated sources. PatchProof scored 92/100 and advanced only as a narrow build hypothesis—not as proof of demand.</p>
+              <dl><div><dt>CANDIDATES</dt><dd>4</dd></div><div><dt>SOURCES</dt><dd>21</dd></div><div><dt>ISOLATED RUN REV.</dt><dd><code>3cdefb9</code></dd></div></dl>
+              <footer>
+                <a href={`${evidenceRoot}/transcripts/discovery.md`}>Recorded thread ↗</a>
+                <a href={`${evidenceRoot}/discovery-receipt.json`}>Decision receipt ↗</a>
+                <a href={`${evidenceRoot}/discovery-verification.md`}>Independent review ↗</a>
+                <a href={`${evidenceRoot}/discovery-to-product-handoff.json`}>Hashed handoff ↗</a>
+              </footer>
+            </article>
+          </li>
+          <li>
+            <div className="patchproof-stage-index"><span>02</span><i aria-hidden="true">→</i></div>
+            <article>
+              <header><p>WORKING WEB APP</p><strong>COMPLETED · PASSED</strong></header>
+              <h3>Turn supplied patch evidence into an inspectable receipt.</h3>
+              <p>The local browser app derives five explicit claim states and exports deterministic Markdown and JSON. Integration and fresh review found real truth-model, fixture, UI, and chain-resume defects before passing it.</p>
+              <dl><div><dt>ASSERTIONS</dt><dd>34/34</dd></div><div><dt>FIXTURES</dt><dd>12/12</dd></div><div><dt>ISOLATED RUN REV.</dt><dd><code>ae88d46</code></dd></div></dl>
+              <footer>
+                <a href={`${evidenceRoot}/transcripts/product.md`}>Recorded thread ↗</a>
+                <a href={`${evidenceRoot}/product-receipt.json`}>Product receipt ↗</a>
+                <a href={`${evidenceRoot}/product-verification.md`}>Independent review ↗</a>
+                <a href={`${evidenceRoot}/product-to-launch-handoff.json`}>Hashed handoff ↗</a>
+              </footer>
+            </article>
+          </li>
+          <li>
+            <div className="patchproof-stage-index"><span>03</span><i aria-hidden="true">✓</i></div>
+            <article>
+              <header><p>DEVELOPER PROJECT LAUNCH</p><strong>COMPLETED · LOCAL ONLY</strong></header>
+              <h3>Explore the expression without changing product truth.</h3>
+              <p>Three comparable directions used the same factual copy at 1440×900. Continuous Form was selected, implemented, checked in a clean room, and stopped before deployment or publication.</p>
+              <dl><div><dt>DIRECTIONS</dt><dd>3</dd></div><div><dt>CLEAN VERIFY</dt><dd>12s</dd></div><div><dt>ISOLATED RUN REV.</dt><dd><code>29b6e94</code></dd></div></dl>
+              <footer>
+                <a href="/examples/patchproof-chain/product/launch/site/index.html">Open launch site ↗</a>
+                <a href={`${evidenceRoot}/transcripts/launch.md`}>Recorded thread ↗</a>
+                <a href={`${evidenceRoot}/launch-receipt.json`}>Launch receipt ↗</a>
+                <a href={`${evidenceRoot}/launch-verification.md`}>Independent review ↗</a>
+                <a href={`${evidenceRoot}/remix-decision.json`}>Remix decision ↗</a>
+              </footer>
+            </article>
+          </li>
+        </ol>
+      </section>
+
+      <section className="patchproof-record-remix" aria-labelledby="patchproof-remix-heading">
+        <header>
+          <div><span>02 / REMIX</span><h2 id="patchproof-remix-heading">Same facts.<br /><em>Three directions.</em></h2></div>
+          <p>Remix changed typography, color, composition, shape language, and motion. It did not change the confirmed product behavior, claims, quickstart, or verification boundary.</p>
+        </header>
+        <div>
+          <figure className="patchproof-remix-selected">
+            <img src={`${evidenceRoot}/remix/continuous-form.png`} alt="Continuous Form PatchProof launch direction" loading="lazy" />
+            <figcaption><span>01 / SELECTED</span><strong>Continuous Form</strong><p>Highest score across all six declared criteria.</p></figcaption>
+          </figure>
+          <figure>
+            <img src={`${evidenceRoot}/remix/evidence-stamp.png`} alt="Evidence Stamp PatchProof launch direction" loading="lazy" />
+            <figcaption><span>02 / EXPLORED</span><strong>Evidence Stamp</strong><p>Distinctive, with a risk of implying approval.</p></figcaption>
+          </figure>
+          <figure>
+            <img src={`${evidenceRoot}/remix/patch-panel.png`} alt="Patch Panel PatchProof launch direction" loading="lazy" />
+            <figcaption><span>03 / EXPLORED</span><strong>Patch Panel</strong><p>Expressive, with greater responsive complexity.</p></figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section className="patchproof-record-repairs" id="repairs" aria-labelledby="patchproof-repairs-heading">
+        <header><span>03 / REPAIR RECORD</span><h2 id="patchproof-repairs-heading">Passing came<br /><em>after failure.</em></h2></header>
+        <div>
+          <article><span>PRODUCT CONTRACT</span><h3>Claims became derived, not self-declared.</h3><p>An early flat status model let users force a result. Integration realigned the app so missing proof resolves to <code>unsupported</code>.</p></article>
+          <article><span>BROWSER FLOW</span><h3>A real import crash was caught.</h3><p>The dialog trigger lacked the DOM identifier its handler expected. The complete desktop and mobile flow was rerun after repair.</p></article>
+          <article><span>TRUTH MODEL</span><h3>“1 failing” could not pass anymore.</h3><p>A contradictory log with exit code 0 exposed a parser gap. The conflict detector and regression contract were tightened.</p></article>
+          <article><span>PROOF COVERAGE</span><h3>Fixtures had to prove more than results.</h3><p>All 12 fixtures now assert extracted evidence, warnings, and limitations—not only their final claim state.</p></article>
+          <article><span>CHAIN INTEGRITY</span><h3>Handoffs survived a moving workspace.</h3><p>Resume and completed-chain checks were repaired to verify immutable source revisions without weakening recorded hashes.</p></article>
+          <article><span>LAUNCH EVIDENCE</span><h3>Visual proof became deterministic.</h3><p>Screenshot generation, copy comparison, and creative-direction contracts were repaired before the local-only launch record was sealed.</p></article>
+        </div>
+      </section>
+
+      <section className="patchproof-record-evidence" id="evidence" aria-labelledby="patchproof-evidence-heading">
+        <header>
+          <div><span>04 / EVIDENCE INDEX</span><h2 id="patchproof-evidence-heading">Readable first.<br /><em>Raw when needed.</em></h2></div>
+          <p>The demo is the explanation layer. These files are the underlying record, copied byte-for-byte from the preserved run and checked for drift.</p>
+        </header>
+        <div>
+          <article>
+            <h3>Recorded threads</h3>
+            <a href={`${evidenceRoot}/transcripts/discovery.md`}><span>Discovery</span><strong>7 messages ↗</strong></a>
+            <a href={`${evidenceRoot}/transcripts/discovery.json`}><span>Discovery / raw export</span><strong>JSON ↗</strong></a>
+            <a href={`${evidenceRoot}/transcripts/product.md`}><span>Working Web App</span><strong>28 messages ↗</strong></a>
+            <a href={`${evidenceRoot}/transcripts/product.json`}><span>Working Web App / raw export</span><strong>JSON ↗</strong></a>
+            <a href={`${evidenceRoot}/transcripts/launch.md`}><span>Project Launch</span><strong>11 messages ↗</strong></a>
+            <a href={`${evidenceRoot}/transcripts/launch.json`}><span>Project Launch / raw export</span><strong>JSON ↗</strong></a>
+          </article>
+          <article>
+            <h3>State and handoffs</h3>
+            <a href={`${evidenceRoot}/request.md`}><span>Original request</span><strong>MD ↗</strong></a>
+            <a href={`${evidenceRoot}/chain.json`}><span>Completed chain</span><strong>JSON ↗</strong></a>
+            <a href={`${evidenceRoot}/discovery-to-product-handoff.json`}><span>Discovery → Product</span><strong>JSON ↗</strong></a>
+            <a href={`${evidenceRoot}/product-to-launch-handoff.json`}><span>Product → Launch</span><strong>JSON ↗</strong></a>
+          </article>
+          <article>
+            <h3>Receipts and reviews</h3>
+            <a href={`${evidenceRoot}/discovery-receipt.json`}><span>Discovery receipt</span><strong>JSON ↗</strong></a>
+            <a href={`${evidenceRoot}/product-receipt.json`}><span>Product receipt</span><strong>JSON ↗</strong></a>
+            <a href={`${evidenceRoot}/launch-receipt.json`}><span>Launch receipt</span><strong>JSON ↗</strong></a>
+            <a href={`${evidenceRoot}/product-repair-log.md`}><span>Product repair log</span><strong>MD ↗</strong></a>
+            <a href={`${evidenceRoot}/launch-repair-log.md`}><span>Launch repair log</span><strong>MD ↗</strong></a>
+          </article>
+        </div>
+      </section>
+
+      <aside className="patchproof-record-boundary" aria-label="Authority boundary">
+        <span>AUTHORITY BOUNDARY</span>
+        <p><strong>The recorded run stopped before external launch.</strong> It did not deploy, publish, configure DNS, contact users, collect data, or spend money. Possible published this evidence copy later; that does not retroactively change the run’s local-only status.</p>
+        <a href={`${evidenceRoot}/launch-receipt.json`}>Inspect the external gate ↗</a>
+      </aside>
+
+      <DemoOutcomeFooter text="The finished tool belongs in Examples. This page records how Possible made it." href="/examples/patchproof" linkLabel="VIEW PATCHPROOF EXAMPLE ↗" />
+      <SiteFooter />
+    </main>
+  );
+}
+
 function PresentationDemoPage() {
   return (
     <main className="demo-detail-page demo-detail-page--presentation" id="top">
@@ -1713,6 +1873,7 @@ export function PossibleSite({ path: requestedPath }: { path?: string }) {
     const example = getExample(path.slice("/examples/".length));
     return example ? <ExamplesPage activeSlug={example.slug} /> : <NotFoundPage />;
   }
+  if (path === "/demo/patchproof") return <PatchProofDemoPage />;
   if (path === "/demo/presentation") return <PresentationDemoPage />;
   if (path === "/demo/game/play") return <Suspense fallback={<main className="plane-game-shell plane-game-loading"><span>FOLD / LOADING FLIGHT</span></main>}><PaperPlaneGame /></Suspense>;
   if (path === "/demo/game") return <PlayableGameDemoPage />;

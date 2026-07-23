@@ -148,13 +148,36 @@ const patchProofExample = visibleText(await html("examples/patchproof/index.html
 assert.doesNotMatch(patchProofExample, /class="chain-example-page"|One rough ambition[\s\S]*Three verified outcomes/, "PatchProof must use the shared compact example modal rather than its bespoke long page");
 for (const href of [
   "/examples/patchproof-chain/product/index.html",
-  "/examples/patchproof-chain/evidence/chain.json",
+  "/demo/patchproof",
 ]) assert.match(patchProofExample, new RegExp(`href="${escape(href)}"`));
+assert.doesNotMatch(patchProofExample, /href="\/examples\/patchproof-chain\/evidence\/chain\.json"/, "PatchProof example must lead to its readable Demo record instead of raw JSON");
 
 const patchProofAlias = await html("examples/patchproof-chain/index.html");
 assert.doesNotMatch(patchProofAlias, /NEXT_REDIRECT/, "The legacy PatchProof URL must not export a broken redirect shell");
 assert.match(patchProofAlias, /role="dialog"[^>]*aria-modal="true"|aria-modal="true"[^>]*role="dialog"/, "The legacy PatchProof URL must render the canonical shared modal");
 assert.match(patchProofAlias, /rel="canonical" href="https:\/\/possible\.sh\/examples\/patchproof\/?"/, "The legacy PatchProof URL must canonicalize to /examples/patchproof");
+
+const patchProofDemoMarkup = await html("demo/patchproof/index.html");
+const patchProofDemo = plainText(visibleText(patchProofDemoMarkup));
+assert.match(patchProofDemo, /How PatchProof was made/i);
+assert.match(patchProofDemo, /SOFTWARE OPPORTUNITY DISCOVERY[\s\S]*WORKING WEB APP[\s\S]*DEVELOPER PROJECT LAUNCH/);
+assert.match(patchProofDemo, /COMPLETED · PURSUE[\s\S]*COMPLETED · PASSED[\s\S]*COMPLETED · LOCAL ONLY/);
+assert.match(patchProofDemo, /isolated-run revisions, not commits available in this repository/i);
+assert.match(patchProofDemo, /ISOLATED RUN REV\./i);
+assert.match(patchProofDemo, /The recorded run stopped before external launch/i);
+assert.doesNotMatch(patchProofDemoMarkup, /class="demo-conversation"/, "PatchProof must show the real recorded run rather than a reconstructed approval conversation");
+for (const href of [
+  "/examples/patchproof-chain/evidence/transcripts/discovery.md",
+  "/examples/patchproof-chain/evidence/transcripts/discovery.json",
+  "/examples/patchproof-chain/evidence/transcripts/product.md",
+  "/examples/patchproof-chain/evidence/transcripts/product.json",
+  "/examples/patchproof-chain/evidence/transcripts/launch.md",
+  "/examples/patchproof-chain/evidence/transcripts/launch.json",
+  "/examples/patchproof-chain/evidence/discovery-to-product-handoff.json",
+  "/examples/patchproof-chain/evidence/product-to-launch-handoff.json",
+  "/examples/patchproof-chain/evidence/chain.json",
+  "/examples/patchproof-chain/product/launch/site/index.html",
+]) assert.match(patchProofDemoMarkup, new RegExp(`href="${escape(href)}"`), `PatchProof Demo must link ${href}`);
 
 for (const [label, route, hasThread] of [
   ["hardware", "demo/hardware/index.html", true],

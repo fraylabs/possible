@@ -43,6 +43,142 @@ nav { height: 74px; padding: 0 3.5vw; border-bottom: 1px solid #aaa59a; display:
   to { transform: translateX(0); }
 }
 
+/* PatchProof recorded run */
+.patchproof-record { min-height: 100vh; overflow: hidden; background: #f2efe7; color: #18151c; }
+.patchproof-record-hero { min-height: 720px; padding: clamp(72px, 8vw, 132px) 3.5vw 3.5vw; display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(360px, .75fr); gap: 7vw; align-items: end; background: #24164f; color: #f5f0dd; }
+.patchproof-record-hero .eyebrow { color: #cbb9ff; }
+.patchproof-record-hero h1 { max-width: 1050px; margin: 25px 0 34px; font-size: clamp(72px, 9vw, 148px); font-weight: 500; line-height: .79; letter-spacing: -.082em; }
+.patchproof-record-hero h1 em { color: #ff7a45; font-style: normal; }
+.patchproof-record-hero > div > p:not(.eyebrow) { max-width: 720px; margin: 0; color: #d5cfe2; font-size: clamp(15px, 1.35vw, 20px); line-height: 1.55; }
+.patchproof-record-actions { margin-top: 36px; display: flex; align-items: center; gap: 26px; }
+.patchproof-record-actions .button-link { border-color: #f5f0dd; background: #f5f0dd; color: #24164f; }
+.patchproof-record-actions .text-link { color: #f5f0dd; }
+.patchproof-record-hero dl { margin: 0; border: 1px solid #8071aa; display: grid; grid-template-columns: 1fr 1fr; }
+.patchproof-record-hero dl div { min-height: 150px; padding: 18px; border-bottom: 1px solid #8071aa; display: flex; flex-direction: column; justify-content: space-between; }
+.patchproof-record-hero dl div:nth-child(odd) { border-right: 1px solid #8071aa; }
+.patchproof-record-hero dl div:nth-last-child(-n+2) { border-bottom: 0; }
+.patchproof-record-hero dt { color: #cbb9ff; font: 7px "DM Mono", monospace; letter-spacing: .08em; }
+.patchproof-record-hero dd { margin: 0; font-size: clamp(42px, 5vw, 74px); line-height: .8; letter-spacing: -.06em; }
+
+.patchproof-record-request, .patchproof-record-stages, .patchproof-record-remix, .patchproof-record-repairs, .patchproof-record-evidence { padding: clamp(72px, 8vw, 132px) 3.5vw; }
+.patchproof-record-request { border-bottom: 1px solid #18151c; display: grid; grid-template-columns: .6fr 1.15fr .7fr; gap: 5vw; align-items: start; }
+.patchproof-record-request header span, .patchproof-record-stages > header span, .patchproof-record-remix > header span, .patchproof-record-repairs > header span, .patchproof-record-evidence > header span { color: #675e70; font: 8px "DM Mono", monospace; letter-spacing: .09em; }
+.patchproof-record-request h2, .patchproof-record-stages > header h2, .patchproof-record-remix > header h2, .patchproof-record-repairs > header h2, .patchproof-record-evidence > header h2 { margin: 20px 0 0; font-size: clamp(48px, 6vw, 92px); font-weight: 500; line-height: .86; letter-spacing: -.07em; }
+.patchproof-record-request h2 em, .patchproof-record-stages > header h2 em, .patchproof-record-remix > header h2 em, .patchproof-record-repairs > header h2 em, .patchproof-record-evidence > header h2 em { color: #6d42e5; font-style: normal; }
+.patchproof-record-request blockquote { margin: 0; padding-left: 28px; border-left: 7px solid #ff5a25; font-size: clamp(26px, 3.3vw, 52px); font-weight: 500; line-height: 1.08; letter-spacing: -.04em; }
+.patchproof-record-request > p { margin: 0; color: #625c66; font-size: 12px; line-height: 1.7; }
+
+.patchproof-record-stages { border-bottom: 1px solid #18151c; }
+.patchproof-record-stages > header { margin-bottom: 70px; display: grid; grid-template-columns: .35fr 1fr; gap: 5vw; }
+.patchproof-record-stages > header h2 { grid-column: 2; }
+.patchproof-record-stages > ol { margin: 0; padding: 0; border-top: 1px solid #18151c; list-style: none; }
+.patchproof-record-stages > ol > li { display: grid; grid-template-columns: minmax(90px, .18fr) 1fr; border-bottom: 1px solid #18151c; }
+.patchproof-record-stages > ol > li:last-child { border-bottom: 0; }
+.patchproof-stage-index { padding: 24px 20px; border-right: 1px solid #18151c; display: flex; flex-direction: column; justify-content: space-between; color: #6d42e5; font: 10px "DM Mono", monospace; }
+.patchproof-stage-index i { font-size: 30px; font-style: normal; }
+.patchproof-record-stages article { padding: clamp(28px, 4vw, 58px); }
+.patchproof-record-stages article > header { display: flex; justify-content: space-between; gap: 20px; color: #655f69; font: 8px "DM Mono", monospace; letter-spacing: .07em; }
+.patchproof-record-stages article > header p { margin: 0; }
+.patchproof-record-stages article > header strong { color: #3e1ca4; font-weight: 500; }
+.patchproof-record-stages h3 { max-width: 1040px; margin: 42px 0 20px; font-size: clamp(38px, 4.6vw, 72px); font-weight: 500; line-height: .92; letter-spacing: -.06em; }
+.patchproof-record-stages article > p { max-width: 760px; margin: 0; color: #625c66; font-size: 14px; line-height: 1.65; }
+.patchproof-record-stages article dl { max-width: 760px; margin: 40px 0 0; border: 1px solid #a9a2ad; display: grid; grid-template-columns: repeat(3, 1fr); }
+.patchproof-record-stages article dl div { min-height: 90px; padding: 13px; border-right: 1px solid #a9a2ad; display: flex; flex-direction: column; justify-content: space-between; }
+.patchproof-record-stages article dl div:last-child { border-right: 0; }
+.patchproof-record-stages article dt { color: #6b6570; font: 7px "DM Mono", monospace; letter-spacing: .08em; }
+.patchproof-record-stages article dd { margin: 0; font-size: 23px; letter-spacing: -.04em; }
+.patchproof-record-stages article dd code { font: 17px "DM Mono", monospace; }
+.patchproof-record-stages article footer { margin-top: 28px; padding: 0; border: 0; display: flex; flex-wrap: wrap; gap: 8px; background: transparent; color: inherit; }
+.patchproof-record-stages article footer a { padding: 11px 13px; border: 1px solid #18151c; color: #18151c; font: 8px "DM Mono", monospace; }
+.patchproof-record-stages article footer a:hover, .patchproof-record-stages article footer a:focus-visible { background: #18151c; color: #f2efe7; }
+
+.patchproof-record-remix { border-bottom: 1px solid #18151c; background: #18151c; color: #f4efe2; }
+.patchproof-record-remix > header, .patchproof-record-evidence > header { margin-bottom: 62px; display: grid; grid-template-columns: 1fr .48fr; gap: 8vw; align-items: end; }
+.patchproof-record-remix > header span { color: #bcaed9; }
+.patchproof-record-remix > header h2 em { color: #ff7a45; }
+.patchproof-record-remix > header p, .patchproof-record-evidence > header p { margin: 0; color: #aea8b6; font-size: 13px; line-height: 1.7; }
+.patchproof-record-remix > div { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.patchproof-record-remix figure { margin: 0; border: 1px solid #746d7c; background: #241f28; }
+.patchproof-record-remix figure img { width: 100%; aspect-ratio: 16 / 10; border-bottom: 1px solid #746d7c; display: block; object-fit: cover; object-position: top; filter: saturate(.7); transition: filter .2s ease; }
+.patchproof-record-remix figure:hover img { filter: saturate(1); }
+.patchproof-record-remix figure.patchproof-remix-selected { border-color: #ff7a45; }
+.patchproof-record-remix figure.patchproof-remix-selected img { filter: saturate(1); }
+.patchproof-record-remix figcaption { min-height: 165px; padding: 18px; display: flex; flex-direction: column; }
+.patchproof-record-remix figcaption span { color: #bcaed9; font: 7px "DM Mono", monospace; letter-spacing: .08em; }
+.patchproof-record-remix figcaption strong { margin-top: 24px; font-size: clamp(24px, 2.4vw, 38px); font-weight: 500; letter-spacing: -.045em; }
+.patchproof-record-remix figcaption p { margin: auto 0 0; color: #aaa4b0; font-size: 10px; line-height: 1.5; }
+.patchproof-record-remix-selected figcaption span { color: #ff9b70; }
+
+.patchproof-record-repairs { border-bottom: 1px solid #18151c; }
+.patchproof-record-repairs > header { margin-bottom: 70px; display: grid; grid-template-columns: .35fr 1fr; gap: 5vw; }
+.patchproof-record-repairs > header h2 { grid-column: 2; }
+.patchproof-record-repairs > div { border-top: 1px solid #18151c; border-left: 1px solid #18151c; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.patchproof-record-repairs article { min-height: 310px; padding: 22px; border-right: 1px solid #18151c; border-bottom: 1px solid #18151c; display: flex; flex-direction: column; }
+.patchproof-record-repairs article > span { color: #6d42e5; font: 7px "DM Mono", monospace; letter-spacing: .08em; }
+.patchproof-record-repairs h3 { margin: 38px 0 16px; font-size: clamp(27px, 2.7vw, 42px); font-weight: 500; line-height: .95; letter-spacing: -.052em; }
+.patchproof-record-repairs article p { margin: auto 0 0; color: #625c66; font-size: 11px; line-height: 1.6; }
+.patchproof-record-repairs article code { color: #3e1ca4; font: inherit; }
+
+.patchproof-record-evidence { background: #dfd9e8; }
+.patchproof-record-evidence > header p { color: #625c66; }
+.patchproof-record-evidence > div { border: 1px solid #18151c; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); background: #f2efe7; }
+.patchproof-record-evidence article { min-width: 0; padding-bottom: 12px; border-right: 1px solid #18151c; }
+.patchproof-record-evidence article:last-child { border-right: 0; }
+.patchproof-record-evidence h3 { margin: 0; padding: 18px; border-bottom: 1px solid #18151c; color: #675e70; font: 8px "DM Mono", monospace; letter-spacing: .08em; text-transform: uppercase; }
+.patchproof-record-evidence article a { min-height: 54px; margin: 0 12px; padding: 0 6px; border-bottom: 1px solid #b9b2bd; display: flex; align-items: center; justify-content: space-between; gap: 16px; color: #18151c; font-size: 10px; }
+.patchproof-record-evidence article a:last-child { border-bottom: 0; }
+.patchproof-record-evidence article a strong { color: #5e36d0; font: 7px "DM Mono", monospace; white-space: nowrap; }
+.patchproof-record-evidence article a:hover span, .patchproof-record-evidence article a:focus-visible span { text-decoration: underline; }
+
+.patchproof-record-boundary { padding: clamp(48px, 6vw, 90px) 3.5vw; border-top: 1px solid #f4efe2; display: grid; grid-template-columns: .28fr 1fr auto; gap: 4vw; align-items: start; background: #ff5a25; color: #18151c; }
+.patchproof-record-boundary > span { font: 8px "DM Mono", monospace; letter-spacing: .08em; }
+.patchproof-record-boundary p { max-width: 960px; margin: 0; font-size: clamp(20px, 2.3vw, 34px); line-height: 1.25; letter-spacing: -.025em; }
+.patchproof-record-boundary p strong { font-weight: 600; }
+.patchproof-record-boundary a { padding: 12px 14px; border: 1px solid #18151c; color: #18151c; font: 8px "DM Mono", monospace; white-space: nowrap; }
+
+@media (max-width: 1000px) {
+  .patchproof-record-hero { min-height: 0; grid-template-columns: 1fr; }
+  .patchproof-record-hero dl { max-width: 720px; }
+  .patchproof-record-request { grid-template-columns: 1fr 1.25fr; }
+  .patchproof-record-request > p { grid-column: 2; }
+  .patchproof-record-remix > div { grid-template-columns: 1fr 1fr; }
+  .patchproof-record-remix figure:last-child { grid-column: 1 / -1; }
+  .patchproof-record-repairs > div { grid-template-columns: 1fr 1fr; }
+  .patchproof-record-evidence > div { grid-template-columns: 1fr; }
+  .patchproof-record-evidence article { border-right: 0; border-bottom: 1px solid #18151c; }
+  .patchproof-record-evidence article:last-child { border-bottom: 0; }
+  .patchproof-record-boundary { grid-template-columns: .28fr 1fr; }
+  .patchproof-record-boundary a { grid-column: 2; justify-self: start; }
+}
+
+@media (max-width: 620px) {
+  .patchproof-record-hero, .patchproof-record-request, .patchproof-record-stages, .patchproof-record-remix, .patchproof-record-repairs, .patchproof-record-evidence { padding-inline: 18px; }
+  .patchproof-record-hero { padding-block: 65px 24px; gap: 55px; }
+  .patchproof-record-hero h1 { font-size: 19vw; }
+  .patchproof-record-actions { align-items: flex-start; flex-direction: column; }
+  .patchproof-record-hero dl div { min-height: 105px; padding: 12px; }
+  .patchproof-record-request { grid-template-columns: 1fr; gap: 45px; }
+  .patchproof-record-request > p { grid-column: auto; }
+  .patchproof-record-request blockquote { padding-left: 18px; border-left-width: 5px; }
+  .patchproof-record-stages > header, .patchproof-record-repairs > header { display: block; }
+  .patchproof-record-stages > ol > li { grid-template-columns: 50px 1fr; }
+  .patchproof-stage-index { padding: 18px 10px; }
+  .patchproof-record-stages article { padding: 24px 18px 36px; }
+  .patchproof-record-stages article > header { align-items: flex-start; flex-direction: column; gap: 8px; }
+  .patchproof-record-stages article dl { grid-template-columns: 1fr; }
+  .patchproof-record-stages article dl div { min-height: 70px; border-right: 0; border-bottom: 1px solid #a9a2ad; }
+  .patchproof-record-stages article dl div:last-child { border-bottom: 0; }
+  .patchproof-record-stages article footer { flex-direction: column; }
+  .patchproof-record-stages article footer a { width: 100%; }
+  .patchproof-record-remix > header, .patchproof-record-evidence > header { grid-template-columns: 1fr; gap: 35px; }
+  .patchproof-record-remix > div { grid-template-columns: 1fr; }
+  .patchproof-record-remix figure:last-child { grid-column: auto; }
+  .patchproof-record-repairs > div { grid-template-columns: 1fr; }
+  .patchproof-record-repairs article { min-height: 270px; }
+  .patchproof-record-boundary { padding: 50px 18px; grid-template-columns: 1fr; gap: 30px; }
+  .patchproof-record-boundary a { grid-column: auto; }
+}
+
 @media (min-width: 901px) {
   .nav-menu-trigger { display: none; }
 }

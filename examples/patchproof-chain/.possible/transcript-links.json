@@ -1,0 +1,10 @@
+{
+  "outcome-room/product-receipt.json": "/examples/patchproof-chain/evidence/product-receipt.json",
+  "outcome-room/verification.md": "/examples/patchproof-chain/evidence/product-verification.md",
+  "outcome-room/repair-log.md": "/examples/patchproof-chain/evidence/product-repair-log.md",
+  "outcome-room/browser-desktop.png": "/examples/patchproof-chain/evidence/product-desktop.png",
+  "outcome-room/browser-mobile.png": "/examples/patchproof-chain/evidence/product-mobile.png",
+  "launch/launch-receipt.json": "/examples/patchproof-chain/evidence/launch-receipt.json",
+  "launch/evidence/verification.md": "/examples/patchproof-chain/evidence/launch-verification.md",
+  "launch/evidence/repair-log.md": "/examples/patchproof-chain/evidence/launch-repair-log.md"
+}

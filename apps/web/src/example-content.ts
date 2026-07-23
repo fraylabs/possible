@@ -154,8 +154,8 @@ export const exampleCatalog = [
       label: "Open product",
     },
     evidence: {
-      href: "/examples/patchproof-chain/evidence/chain.json",
-      label: "Inspect chain evidence",
+      href: "/demo/patchproof",
+      label: "See how it was made",
     },
     metadata: {
       title: "PatchProof Outcome Chain example",
