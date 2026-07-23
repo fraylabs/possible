@@ -519,7 +519,7 @@ Entry requires a matching working project with an immutable revision, documented
 
 The underlying product must already work. Never invent adoption, benchmarks, compatibility, performance, security, or capabilities. Deployment, publishing, pushing, tagging, release creation, DNS, analytics, data collection, and provider mutations require separate explicit approval. A local site is prepared, not launched. `launch/launch-receipt.json` may use verified only with approval evidence, public URLs, immutable identifiers, a passing clean-room quickstart, fresh public checks, and rollback evidence.
 
-## Software Opportunity Validation
+## Software Opportunity Discovery
 
 Slug: `software-opportunity-discovery`
 
@@ -529,20 +529,57 @@ Status: `stable`.
 
 Public page: `https://possible.sh/packs/software-opportunity-discovery`
 
-Use when a developer does not yet know which software problem or audience is worth pursuing, or when an idea still depends on material assumptions about its user, problem, solution, delivery mechanism, feasibility, demand, pricing, or distribution.
+Use when a developer has a rough software ambition but no selected problem, user, or opportunity.
 
-Outputs: builder constraints and advantages; dated source ledger and problem-evidence map; alternatives, pricing, and reachable-distribution landscape; three to five traceable opportunities; one provisional thesis; a seven-dimension assumption map; an adaptive portfolio of decision-relevant experiments; solution and delivery evidence; technical-feasibility and economic evidence; demand, commitment, pricing, and distribution evidence; pursue, revise, or stop receipt; independent review.
+Outputs: demonstrated or conservative operator baseline; execution-gap analysis; dated problem evidence; alternatives and reachable-path landscape; three to five consistently scored opportunities; one provisional thesis or broaden or stop decision; machine-readable validation handoff; independent review.
 
 Workstreams:
 
-- Builder constraints and unfair advantages — `product-marketing`; owns `validation/operator/`.
-- User problems and observed behavior — `customer-research`; owns `validation/research/`.
-- Alternatives, pricing, and reachable distribution — `competitor-profiling`, `product-marketing`; owns `validation/market/`.
-- Opportunity thesis and assumption map — `product-marketing`, `analytics`; runs after the first three workstreams and owns `validation/thesis/` plus `validation/assumptions.json`.
-- Solution and delivery validation — conditionally invokes `customer-research`, `product-marketing`, and `analytics` when the assumption map selects those risks.
-- Technical feasibility and product economics — conditionally invokes `create-technical-spike`, `analytics`, and `product-marketing`.
-- Demand, commitment, and distribution validation — conditionally invokes `customer-research`, `product-marketing`, and `analytics`.
-- Fresh review — `customer-research`, `analytics`, `create-technical-spike`; audits evidence, experiment integrity, skipped dimensions, and the final decision.
+- Operator baseline and execution fit — `product-marketing`, `analytics`; owns `discovery/operator/`.
+- Problems and observed workarounds — `customer-research`; owns `discovery/research/`.
+- Alternatives and reachable paths — `competitor-profiling`, `product-marketing`; owns `discovery/market/`.
+- Opportunity comparison and selection — `product-marketing`, `analytics`; runs after the first three workstreams and writes the opportunity brief and discovery receipt.
+- Fresh review — `customer-research`, `competitor-profiling`, `analytics`; audits source reachability, scoring, operator assumptions, and the selection.
+
+Sources:
+
+- `coreyhaines31/marketingskills`: `customer-research`, `competitor-profiling`, `product-marketing`, `analytics`; reviewed `67264763cb107d61749f418d081c56e5bcbc0209`.
+
+Install:
+
+```bash
+npx skills@1.5.19 add coreyhaines31/marketingskills@67264763cb107d61749f418d081c56e5bcbc0209 --skill customer-research --skill competitor-profiling --skill product-marketing --skill analytics --agent codex
+```
+
+When personal operator evidence is absent, disclose a conservative baseline: solo technical builder, Codex available, no privileged data, no established audience, and no assumed budget. Infer the operator requirements for every opportunity, what agents can cover, and the remaining execution gap. Do not block on a generic operator questionnaire or invent an advantage.
+
+Compare exactly three to five traceable opportunities. Write `outcome-room/discovery-receipt.json` with exactly one status: `select`, `broaden`, or `stop`, plus `outcome-room/opportunity-brief.json`. A selected opportunity is ready to validate; it is not validated or approved to build.
+
+Never invent operator capabilities, user quotes, demand, market size, willingness to pay, users, revenue, growth, or product-market fit. Discovery performs no outreach, experiment, prototype, or product build.
+
+## Software Opportunity Validation
+
+Slug: `software-opportunity-validation`
+
+Lane: `create`
+
+Status: `stable`.
+
+Public page: `https://possible.sh/packs/software-opportunity-validation`
+
+Use when one specific software opportunity exists but its problem, solution, delivery, feasibility, demand, pricing, or distribution assumptions still need credible evidence.
+
+Outputs: selected-opportunity baseline; seven-dimension assumption map; evidence-access and authority preflight; adaptive experiment portfolio; approved protocols; durable state and dated cycle records; raw observations and denominators; pursue, revise, or stop receipt; independent review.
+
+Workstreams:
+
+- Validation baseline and assumption map — `customer-research`, `product-marketing`, `analytics`; owns `validation/baseline/` and `validation/assumptions.json`.
+- Evidence and authority preflight — `customer-research`, `analytics`; verifies that required users, cases, artifacts, data, and authorization are obtainable before experiment implementation.
+- Solution and delivery evidence — conditional `customer-research`, `product-marketing`, `analytics`.
+- Feasibility and unit economics evidence — conditional `create-technical-spike`, `analytics`, `product-marketing`.
+- Demand and commitment evidence — conditional approved `customer-research`, `product-marketing`, `analytics`.
+- Pricing and distribution evidence — conditional approved `customer-research`, `product-marketing`, `analytics`.
+- Fresh review — `customer-research`, `analytics`, `create-technical-spike`; audits protocol integrity, evidence, authorization, and the final decision.
 
 Sources:
 
@@ -556,11 +593,11 @@ npx skills@1.5.19 add coreyhaines31/marketingskills@67264763cb107d61749f418d081c
 npx skills@1.5.19 add github/awesome-copilot@26fe2d126bf79aafb38f43344d450b69632200f8 --skill create-technical-spike --agent codex
 ```
 
-First assess the target user and problem, solution and workflow, delivery mechanism, technical feasibility, demand and commitment, pricing and business model, and distribution and reachability. Rank the assumptions by decision impact, uncertainty, and test cost. Run only the smallest credible experiments against the highest-risk assumptions; record why other workstreams were not selected and leave their claims unknown.
+Validation assesses the target user and problem, solution and workflow, delivery mechanism, technical feasibility, demand and commitment, pricing and business model, and distribution and reachability. It ranks assumptions and runs only the smallest credible experiments against the highest-risk present decision.
 
-Write `outcome-room/decision-receipt.json` with exactly one decision: `pursue`, `revise`, or `stop`. `pursue` requires credible evidence against the highest-risk assumption and an explicit first-build boundary. None authorizes product implementation or another Outcome Pack.
+Validation may span days or weeks. Preserve `validation/state.json` and immutable records under `validation/cycles/`. Outreach, recruitment, interviews, surveys, fake doors, deployments, analytics, authenticated data, payments, spending, and scheduled follow-ups require exact separate approval. A schedule only invokes `$possible resume` for one bounded cycle; waiting, silence, or a prepared protocol is not evidence.
 
-Never invent user quotes, demand, market size, willingness to pay, pricing acceptance, competitors, users, revenue, funding, growth, or product-market fit. Preserve source dates, denominators, and bias, and leave weak evidence at low confidence. Contacting people, recruitment, survey or fake-door publication, analytics collection, account creation, purchases, advertising, payments, spending, and other external actions require separate explicit approval. A prepared experiment is not validation.
+Write `outcome-room/decision-receipt.json` with exactly one status: `pursue`, `revise`, or `stop`, only after a preregistered threshold, timebox, or stop condition is reached. `pursue` requires credible evidence on the highest-risk assumption and an explicit next-build boundary. None authorizes product implementation or another Outcome Pack.
 
 ## Selection rule
 
@@ -580,9 +617,10 @@ Recommend the Outcome Pack whose finished outputs most closely match the user's 
 - Robot hand, gripper, arm, mobile robot, quadruped, or full robot plus coherent CAD, description, controls, and simulation evidence → Robot Prototype.
 - Pitch, talk, lesson, demo, or internal presentation plus a coded browser deck, presenter experience, export, and evidence review → Web Presentation.
 - Working developer tool, library, CLI, API, agent project, or platform plus positioning, a distinctive site, honest demonstration, verified quickstart, and adoption path → Developer Project Launch.
-- Vague software ambition or materially untested product idea plus an adaptive, evidence-backed pursue, revise, or stop decision → Software Opportunity Validation.
+- Vague software ambition with no selected opportunity plus one traceable provisional thesis and validation handoff → Software Opportunity Discovery.
+- Selected software opportunity plus adaptive, resumable evidence and a pursue, revise, or stop decision → Software Opportunity Validation.
 
-Recommend Software Opportunity Validation when the product direction or its highest-risk assumptions are not yet supported; recommend Working Web App only when one bounded direction has enough evidence to justify implementation. Use Developer Project Launch when a working developer project needs comprehension, presentation, proof, and a verified adoption path. Use Software Launch for a broader product release candidate, launch story, and film. Use Web Presentation when the primary deliverable is a slide-based browser presentation; a conventional landing page belongs elsewhere. Use Billion-Dollar SaaS when the user explicitly wants the broader company operating system and accepts that operational coverage cannot guarantee economic success. Use Kickstarter Funding when crowdfunding mechanics and payout are part of the outcome; use Kickstarter Fulfillment only after the campaign is funded. Use Robot Prototype for a simulation-backed digital prototype, not a fabrication-ready machine or hardware commissioning. Use Production Web Release when a tested candidate exists and the missing outcome is a gated production promotion with rollback and smoke evidence. Use Web App Operations only after the app is live and the desired outcome is an ongoing reliability and maintenance rhythm. Use Marketing Operations when the product or offer exists and the missing outcome is a recurring marketing system. Repository-only licensing, packaging, CI, versioning, and release engineering belong to Open-Source Release; one isolated bug, incident, or marketing asset with no requested recurring workflow is focused work, not an Outcome Pack run.
+Recommend Software Opportunity Discovery when no opportunity is selected. Recommend Software Opportunity Validation when one selected direction still has material unsupported assumptions; recommend Working Web App only when one bounded direction has enough evidence to justify implementation. Use Developer Project Launch when a working developer project needs comprehension, presentation, proof, and a verified adoption path. Use Software Launch for a broader product release candidate, launch story, and film. Use Web Presentation when the primary deliverable is a slide-based browser presentation; a conventional landing page belongs elsewhere. Use Billion-Dollar SaaS when the user explicitly wants the broader company operating system and accepts that operational coverage cannot guarantee economic success. Use Kickstarter Funding when crowdfunding mechanics and payout are part of the outcome; use Kickstarter Fulfillment only after the campaign is funded. Use Robot Prototype for a simulation-backed digital prototype, not a fabrication-ready machine or hardware commissioning. Use Production Web Release when a tested candidate exists and the missing outcome is a gated production promotion with rollback and smoke evidence. Use Web App Operations only after the app is live and the desired outcome is an ongoing reliability and maintenance rhythm. Use Marketing Operations when the product or offer exists and the missing outcome is a recurring marketing system. Repository-only licensing, packaging, CI, versioning, and release engineering belong to Open-Source Release; one isolated bug, incident, or marketing asset with no requested recurring workflow is focused work, not an Outcome Pack run.
 
 For an ambition spanning several valuable results, recommend only the next independently useful Outcome Pack. Choose it from the current reality and the most important unresolved decision; do not preselect a future sequence. After the outcome passes verification, reassess the new evidence before recommending zero or more candidates and stop for fresh approval. A strong matching working project may qualify for Developer Project Launch directly; a discovery receipt alone does not.
 

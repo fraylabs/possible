@@ -162,9 +162,9 @@ function CreatePage() {
           <header><span>HOW IT WORKS</span><h2 id="home-workflow-heading">Bring the ambition.<br /><em>Possible supplies the missing work.</em></h2></header>
           <ol>
             <li><span>DESCRIBE</span><strong>Tell <code>$possible</code> what you want.</strong><p>A rough idea is enough.</p></li>
-            <li><span>APPROVE</span><strong>Review the proposed outcome.</strong><p>Possible recommends the Outcome Pack and names the boundaries.</p></li>
-            <li><span>EXECUTE</span><strong>Codex runs the workstreams.</strong><p>Selected agent skills create and integrate the artifacts.</p></li>
-            <li><span>VERIFY</span><strong>Evidence decides what is done.</strong><p>The verified new reality informs the next recommendation.</p></li>
+            <li><span>APPROVE</span><strong>Review the proposed outcome.</strong><p>Possible names the outcome and boundaries.</p></li>
+            <li><span>EXECUTE</span><strong>Codex runs the workstreams.</strong><p>Skills create the artifacts.</p></li>
+            <li><span>VERIFY</span><strong>Evidence decides what is done.</strong><p>Evidence informs what comes next.</p></li>
           </ol>
         </section>
 
@@ -186,7 +186,7 @@ function CreatePage() {
               <span>THE TECHNICAL IDEA</span>
               <h2 id="home-packs-heading">Skills perform tasks.<br /><em>Outcome Packs coordinate the outcome.</em></h2>
             </div>
-            <p>Each manifest compiles skills, safeguards and completion checks.</p>
+            <p>Skills, safeguards and checks.</p>
           </header>
 
           <div className="home-pack-columns" aria-hidden="true">
@@ -349,8 +349,17 @@ function PackArtwork({ slug }: { slug: string }) {
     return (
       <div className="pack-art pack-art--discovery" aria-hidden="true">
         <i className="discovery-radar" /><i className="discovery-signal" />
-        <strong>EVIDENCE → DECISION</strong>
-        <span>PROBLEM</span><span>PROOF</span><span>GO / NO-GO</span>
+        <strong>PROBLEM → OPPORTUNITY</strong>
+        <span>FIT</span><span>ALTERNATIVES</span><span>SELECT</span>
+      </div>
+    );
+  }
+  if (slug === "software-opportunity-validation") {
+    return (
+      <div className="pack-art pack-art--discovery" aria-hidden="true">
+        <i className="discovery-radar" /><i className="discovery-signal" />
+        <strong>ASSUMPTION → EVIDENCE</strong>
+        <span>TEST</span><span>WAIT</span><span>DECIDE</span>
       </div>
     );
   }
@@ -526,7 +535,9 @@ function PackDetailPage({ pack }: { pack: OutcomePack }) {
                 </tbody>
               </table>
             </div>
+            {pack.opportunityDiscovery ? <div className="pack-review-callout"><span>OPPORTUNITY DISCOVERY</span><div><code>{pack.opportunityDiscovery.candidateRange.join("–")} candidates</code><code>{pack.opportunityDiscovery.decisionReceiptPath}</code></div><p>Possible infers a conservative operator baseline, compares traceable opportunities, and selects one thesis to validate next. Selection is not validation or permission to build.</p></div> : null}
             {pack.adaptiveValidation ? <div className="pack-review-callout"><span>ADAPTIVE VALIDATION</span><div>{pack.adaptiveValidation.dimensions.map((dimension) => <code key={dimension}>{dimension}</code>)}</div><p>Possible assesses every dimension, ranks the assumptions, then runs only the smallest experiments needed for the riskiest present decision. The receipt ends with pursue, revise, or stop.</p></div> : null}
+            {pack.validationLifecycle ? <div className="pack-review-callout"><span>RESUMABLE EVIDENCE CYCLE</span><div>{pack.validationLifecycle.waitingStates.map((state) => <code key={state}>{state}</code>)}</div><p>Approved validation can pause for participants or observation, then resume from durable state. Scheduling coordinates a follow-up; it never counts as evidence.</p></div> : null}
             {pack.remix ? <div className="pack-review-callout"><span>REMIX</span><div><code>{pack.remix.candidateCount} directions</code><code>{pack.remix.decisionPath}</code></div><p>Possible derives project-specific directions after product truth is known, then records one decision before dependent implementation begins. The outcome contract does not change.</p></div> : null}
             <div className="pack-review-callout"><span>INDEPENDENT REVIEW</span><div>{pack.reviewSkills.map((skill) => <code key={skill}>${skill}</code>)}</div><p>A verifier checks the integrated outcome. It reports evidence, failures, skipped checks, and unsupported claims.</p></div>
           </section>

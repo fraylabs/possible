@@ -49,13 +49,14 @@ The installer is idempotent and refuses to overwrite conflicting skill files. Ou
 
 ## Public Outcome Packs
 
-Possible publishes six reviewed public packs. The remaining registry packs stay experimental until they have equivalent preserved evidence.
+Possible publishes seven reviewed public packs. The remaining registry packs stay experimental until they have equivalent preserved evidence.
 
 - [Hardware Launch](packages/packs/src/hardware-launch.ts) — product story, site, film, prototype CAD and independent review.
 - [Robot Prototype](packages/packs/src/robot-prototype.ts) — mechanical model, robot descriptions, control, simulation and sim-to-real boundaries.
 - [Playable Web Game](packages/packs/src/playable-web-game.ts) — a polished browser game with responsive controls and playability review.
 - [Web Presentation](packages/packs/src/web-presentation.ts) — an evidence-backed coded deck with responsive presenter behavior.
-- [Software Opportunity Validation](packages/packs/src/software-opportunity-discovery.ts) — one adaptive, evidence-backed decision about what to build, for whom, how to deliver it, and whether to pursue, revise, or stop.
+- [Software Opportunity Discovery](packages/packs/src/software-opportunity-discovery.ts) — turns a rough software ambition into one provisional opportunity and a falsifiable validation handoff.
+- [Software Opportunity Validation](packages/packs/src/software-opportunity-validation.ts) — tests one selected opportunity across resumable technical, behavioral, commercial, and distribution evidence cycles, then returns pursue, revise, or stop.
 - [Developer Project Launch](packages/packs/src/developer-project-launch.ts) — a credible adoption path for a working developer project.
 
 The preserved PatchProof journey verifies Software Opportunity Discovery and Developer Project Launch as separate outcomes—and records why Possible no longer chooses their sequence in advance.

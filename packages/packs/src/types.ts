@@ -64,6 +64,22 @@ export interface AdaptiveValidationContract {
   decisions: ["pursue", "revise", "stop"];
 }
 
+export interface OpportunityDiscoveryContract {
+  kind: "opportunity-discovery";
+  candidateRange: [3, 5];
+  opportunityBriefPath: string;
+  decisionReceiptPath: string;
+  decisions: ["select", "broaden", "stop"];
+}
+
+export interface ValidationLifecycleContract {
+  kind: "resumable-evidence-cycle";
+  statePath: string;
+  cycleRoot: string;
+  resumeCommand: "$possible resume";
+  waitingStates: ["awaiting-approval", "awaiting-participants", "awaiting-observation"];
+}
+
 export type PackLane = "create" | "launch" | "release" | "operate";
 
 export interface OutcomePack {
@@ -90,6 +106,8 @@ export interface OutcomePack {
   remix?: RemixContract;
   prerequisites?: OutcomePrerequisite[];
   adaptiveValidation?: AdaptiveValidationContract;
+  opportunityDiscovery?: OpportunityDiscoveryContract;
+  validationLifecycle?: ValidationLifecycleContract;
 }
 
 export interface CompiledPack {

@@ -55,7 +55,7 @@ describe("Possible MCP", () => {
     assert.doesNotMatch(client.getInstructions() ?? "", /chain/i);
   });
 
-  it("lists six stable and nine experimental outcome packs", async () => {
+  it("lists seven stable and nine experimental outcome packs", async () => {
     const result = await client.callTool({ name: "list_packs", arguments: {} });
     const envelope = result.structuredContent as { ok: boolean; data: { packs: Array<{ slug: string; lane: string; status: string }> } };
     assert.equal(envelope.ok, true);
@@ -75,8 +75,9 @@ describe("Possible MCP", () => {
       ["web-presentation", "create"],
       ["developer-project-launch", "launch"],
       ["software-opportunity-discovery", "create"],
+      ["software-opportunity-validation", "create"],
     ]);
-    assert.equal(envelope.data.packs.filter(({ status }) => status === "stable").length, 6);
+    assert.equal(envelope.data.packs.filter(({ status }) => status === "stable").length, 7);
     assert.equal(envelope.data.packs.filter(({ status }) => status === "experimental").length, 9);
   });
 
@@ -154,18 +155,33 @@ describe("Possible MCP", () => {
     assert.match(envelope.data.runPrompt, /^Build the Working Web App outcome/);
   });
 
-  it("compiles adaptive Software Opportunity Validation", async () => {
+  it("compiles Software Opportunity Discovery without claiming validation", async () => {
     const result = await client.callTool({ name: "compile_pack", arguments: { slug: "software-opportunity-discovery" } });
     const envelope = result.structuredContent as { ok: boolean; data: { pack: { catalogNumber: number; lane: string; name: string }; installCommands: string[]; runPrompt: string } };
     assert.equal(envelope.ok, true);
     assert.equal(envelope.data.pack.catalogNumber, 15);
     assert.equal(envelope.data.pack.lane, "create");
-    assert.equal(envelope.data.pack.name, "Software Opportunity Validation");
-    assert.equal(envelope.data.installCommands.length, 2);
+    assert.equal(envelope.data.pack.name, "Software Opportunity Discovery");
+    assert.equal(envelope.data.installCommands.length, 1);
     assert.match(envelope.data.runPrompt, /\$customer-research/);
     assert.match(envelope.data.runPrompt, /\$competitor-profiling/);
+    assert.match(envelope.data.runPrompt, /OPPORTUNITY DISCOVERY GATE/i);
+    assert.match(envelope.data.runPrompt, /select, broaden, or stop/i);
+    assert.doesNotMatch(envelope.data.runPrompt, /RESUMABLE VALIDATION LIFECYCLE/i);
+  });
+
+  it("compiles adaptive resumable Software Opportunity Validation", async () => {
+    const result = await client.callTool({ name: "compile_pack", arguments: { slug: "software-opportunity-validation" } });
+    const envelope = result.structuredContent as { ok: boolean; data: { pack: { catalogNumber: number; lane: string; name: string }; installCommands: string[]; runPrompt: string } };
+    assert.equal(envelope.ok, true);
+    assert.equal(envelope.data.pack.catalogNumber, 16);
+    assert.equal(envelope.data.pack.lane, "create");
+    assert.equal(envelope.data.pack.name, "Software Opportunity Validation");
+    assert.equal(envelope.data.installCommands.length, 2);
     assert.match(envelope.data.runPrompt, /\$create-technical-spike/);
     assert.match(envelope.data.runPrompt, /ADAPTIVE VALIDATION GATE/i);
+    assert.match(envelope.data.runPrompt, /RESUMABLE VALIDATION LIFECYCLE/i);
+    assert.match(envelope.data.runPrompt, /awaiting-participants/i);
     assert.match(envelope.data.runPrompt, /pursue, revise, or stop/i);
     assert.match(envelope.data.runPrompt, /Do not run every possible validation activity equally/i);
   });

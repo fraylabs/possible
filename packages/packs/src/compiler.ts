@@ -132,7 +132,47 @@ ADAPTIVE VALIDATION GATE
 7. Stop when the agreed timebox or evidence threshold is reached. Write ${contract.decisionReceiptPath} with exactly one decision: pursue, revise, or stop. State what is supported, contradicted, unknown, and what evidence would reverse the decision. None authorizes product implementation or another Outcome Pack.`;
   })() : "";
 
-  const action = pack.lane === "operate" ? "Establish and run the first cycle of" : pack.lane === "release" ? "Prepare and verify" : "Build";
+  const opportunityDiscovery = pack.opportunityDiscovery ? (() => {
+    const contract = pack.opportunityDiscovery;
+    if (contract.candidateRange[0] !== 3 || contract.candidateRange[1] !== 5) {
+      throw new Error(`${pack.slug} opportunity discovery must compare three to five candidates`);
+    }
+    if (contract.decisions.join(",") !== "select,broaden,stop") {
+      throw new Error(`${pack.slug} opportunity discovery decisions must be select, broaden, stop`);
+    }
+    requireSafeRelativePath(contract.opportunityBriefPath, `${pack.slug} opportunity discovery opportunityBriefPath`);
+    requireSafeRelativePath(contract.decisionReceiptPath, `${pack.slug} opportunity discovery decisionReceiptPath`);
+    return `
+
+OPPORTUNITY DISCOVERY GATE
+1. Infer the operator baseline from demonstrated repository assets and confirmed context. When personal evidence is absent, use a disclosed conservative baseline—solo technical builder, Codex available, no privileged data, no established audience, and no assumed budget—instead of blocking or inventing advantages.
+2. For each candidate, infer the capabilities, access, capital, operating burden, and distribution advantage it requires. Record what agents can cover, what the operator demonstrates, and the remaining execution gap.
+3. Compare exactly three to five traceable opportunities using the same disclosed rubric. Public complaints establish occurrence, not prevalence or demand; competitor prices establish category anchors, not willingness to pay.
+4. Write ${contract.opportunityBriefPath} for one selected provisional opportunity, or explain why the search must broaden or stop. Include the intended user, painful job, alternatives, solution hypothesis, delivery options, first boundary, value exchange, business-model hypothesis, distribution path, operator-gap plan, assumptions, non-goals, and the smallest validation gates.
+5. Write ${contract.decisionReceiptPath} with exactly one discovery decision: select, broaden, or stop. A selected opportunity is ready to validate, not validated, approved to build, or approved for external experiments.`;
+  })() : "";
+
+  const validationLifecycle = pack.validationLifecycle ? (() => {
+    const contract = pack.validationLifecycle;
+    if (!pack.adaptiveValidation) throw new Error(`${pack.slug} resumable validation requires adaptiveValidation`);
+    requireSafeRelativePath(contract.statePath, `${pack.slug} validation lifecycle statePath`);
+    requireSafeRelativePath(contract.cycleRoot, `${pack.slug} validation lifecycle cycleRoot`);
+    if (contract.resumeCommand !== "$possible resume") throw new Error(`${pack.slug} validation lifecycle resumeCommand must be $possible resume`);
+    if (contract.waitingStates.join(",") !== "awaiting-approval,awaiting-participants,awaiting-observation") {
+      throw new Error(`${pack.slug} validation lifecycle waiting states are invalid`);
+    }
+    return `
+
+RESUMABLE VALIDATION LIFECYCLE
+1. Validation may span days or weeks. Preserve durable state in ${contract.statePath} and one immutable dated record per cycle under ${contract.cycleRoot}. Record the current assumption, protocol version, authority, participant or case denominator, evidence received, exclusions, threshold progress, next observation date, and next permitted action.
+2. Before any outreach, recruitment, interview, survey, fake door, deployment, analytics collection, authenticated data access, purchase, payment, or scheduled follow-up, show the exact experiment, audience or target, channel, message or task, data boundary, cadence, duration, budget, stop conditions, and expected evidence. Request approval for that exact external action.
+3. Scheduling is coordination, not validation. Create or enable a reminder or recurring task only after approval for the exact schedule. Its standalone prompt must invoke ${contract.resumeCommand}, read ${contract.statePath}, perform one bounded follow-up cycle, preserve refusals and missing responses, stop at every new external-action boundary, and write the next dated cycle record. If scheduling is unavailable, provide the same tested resume prompt and next review date without claiming a task exists.
+4. When evidence is not yet due, stop cleanly in exactly one waiting state: ${contract.waitingStates.join(", ")}. Do not fill waiting time with product implementation, broaden the experiment, contact more people than approved, or convert silence into a negative result.
+5. Every resume must re-check consent, authorization, elapsed time, denominators, drop-off, selection bias, protocol drift, and whether the threshold or stop condition is now reached. Never overwrite prior observations.
+6. Write the final pursue, revise, or stop receipt only when a preregistered threshold, timebox, or stop condition has been reached. Interim cycles and waiting states are not completed validation outcomes and do not authorize another Outcome Pack.`;
+  })() : "";
+
+  const action = pack.opportunityDiscovery ? "Discover" : pack.validationLifecycle ? "Validate" : pack.lane === "operate" ? "Establish and run the first cycle of" : pack.lane === "release" ? "Prepare and verify" : "Build";
   const pluginCheck = pack.plugins?.length
     ? ` Also detect these optional agent plugins: ${pack.plugins.map((plugin) => `${plugin.invocation} (${plugin.skills.map((skill) => `$${skill}`).join(", ")})`).join(", ")}. Do not install or imitate an unavailable plugin; record its absence and use the documented fallback.`
     : "";
@@ -188,7 +228,7 @@ ${pack.guardrails.map((guardrail) => `- ${guardrail}`).join("\n")}
 
 VERIFICATION CONTRACT
 ${pack.verification.map((item) => `- ${item}`).join("\n")}
-${prerequisites}${adaptiveValidation}${remixGate}${releaseGate}${launchGate}${sitesPath}${operateLoop}
+${prerequisites}${opportunityDiscovery}${adaptiveValidation}${validationLifecycle}${remixGate}${releaseGate}${launchGate}${sitesPath}${operateLoop}
 
 NEW-REALITY CHECKPOINT
 Only after this bounded outcome finishes—including a partial or no-go result—write .possible/checkpoints/<run-id>.json with:

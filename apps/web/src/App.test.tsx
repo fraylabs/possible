@@ -39,7 +39,7 @@ describe("Possible", () => {
     const workflow = screen.getByRole("region", { name: /Bring the ambition.*Possible supplies the missing work/i });
     expect(within(workflow).getAllByRole("listitem")).toHaveLength(4);
     expect(workflow).toHaveTextContent(/DESCRIBE.*APPROVE.*EXECUTE.*VERIFY/i);
-    expect(workflow).toHaveTextContent(/verified new reality.*next recommendation/i);
+    expect(workflow).toHaveTextContent(/Evidence decides what is done.*Evidence informs what comes next/i);
 
     const demos = screen.getByRole("region", { name: /Finished outcomes.*Open one/i });
     expect(within(demos).getAllByRole("listitem")).toHaveLength(4);
@@ -86,7 +86,7 @@ describe("Possible", () => {
 
     await userEvent.click(screen.getByRole("link", { name: "02" }));
     const secondPage = screen.getByRole("region", { name: "Outcome Packs page 2 of 2" });
-    expect(within(secondPage).getAllByRole("link")).toHaveLength(2);
+    expect(within(secondPage).getAllByRole("link")).toHaveLength(publishedPacks.slice(4).length);
     for (const pack of publishedPacks.slice(4)) expect(within(secondPage).getByRole("heading", { name: pack.name })).toBeInTheDocument();
     expect(window.location.search).toBe("?page=2");
     expect(screen.queryByText(/EXPERIMENTAL OUTCOME PACK/i)).not.toBeInTheDocument();
@@ -107,8 +107,8 @@ describe("Possible", () => {
     }
   });
 
-  it("publishes adaptive opportunity validation and developer launch as reviewed Outcome Packs", async () => {
-    for (const slug of ["software-opportunity-discovery", "developer-project-launch"]) {
+  it("publishes opportunity discovery, validation, and developer launch as reviewed Outcome Packs", async () => {
+    for (const slug of ["software-opportunity-discovery", "software-opportunity-validation", "developer-project-launch"]) {
       const pack = getPublishedPack(slug);
       expect(pack).toBeDefined();
       const { container, unmount } = renderRoute(`/packs/${slug}`);
@@ -120,15 +120,26 @@ describe("Possible", () => {
     }
   });
 
-  it("shows the adaptive validation dimensions and conditional workstreams", async () => {
-    const { container } = renderRoute("/packs/software-opportunity-discovery");
+  it("separates opportunity discovery from adaptive resumable validation", async () => {
+    const discoveryRoute = renderRoute("/packs/software-opportunity-discovery");
+    expect(screen.getByRole("heading", { name: "Software Opportunity Discovery", level: 1 })).toBeInTheDocument();
+    expect(screen.getByText("OPPORTUNITY DISCOVERY")).toBeInTheDocument();
+    expect(screen.queryByText("ADAPTIVE VALIDATION")).not.toBeInTheDocument();
+    expect(discoveryRoute.container.querySelector(".pack-prompt-disclosure code")?.textContent).toMatch(/OPPORTUNITY DISCOVERY GATE/);
+    expect(discoveryRoute.container.querySelector(".pack-prompt-disclosure code")?.textContent).not.toMatch(/RESUMABLE VALIDATION LIFECYCLE/);
+    expect(await axe(discoveryRoute.container)).toHaveNoViolations();
+    discoveryRoute.unmount();
+
+    const validationRoute = renderRoute("/packs/software-opportunity-validation");
     expect(screen.getByRole("heading", { name: "Software Opportunity Validation", level: 1 })).toBeInTheDocument();
     expect(screen.getByText("ADAPTIVE VALIDATION")).toBeInTheDocument();
+    expect(screen.getByText("RESUMABLE EVIDENCE CYCLE")).toBeInTheDocument();
     expect(screen.getByText("target user and problem")).toBeInTheDocument();
     expect(screen.getByText("pricing and business model")).toBeInTheDocument();
     expect(screen.getAllByText(/assumption map selects the proposed solution/i).length).toBeGreaterThan(0);
-    expect(container.querySelector(".pack-prompt-disclosure code")?.textContent).toMatch(/ADAPTIVE VALIDATION GATE/);
-    expect(await axe(container)).toHaveNoViolations();
+    expect(validationRoute.container.querySelector(".pack-prompt-disclosure code")?.textContent).toMatch(/ADAPTIVE VALIDATION GATE/);
+    expect(validationRoute.container.querySelector(".pack-prompt-disclosure code")?.textContent).toMatch(/RESUMABLE VALIDATION LIFECYCLE/);
+    expect(await axe(validationRoute.container)).toHaveNoViolations();
   });
 
   it("keeps retired pack routes out of the public product", () => {
