@@ -213,7 +213,7 @@ npx skills@1.5.19 add anthropics/skills@fa0fa64bdc967915dc8399e803be67759e1e62b8
 npx skills@1.5.19 add github/awesome-copilot@26fe2d126bf79aafb38f43344d450b69632200f8 --skill security-review --agent codex
 ```
 
-When starting from a prior Software Opportunity Discovery run, inspect its `pursue` receipt, selected and rejected opportunities, source evidence, and unresolved assumptions against the current reality before recommending this pack. On completion, write `outcome-room/product-receipt.json` with `passed`, `repair-required`, or `no-go`. A `passed` receipt is evidence for a later reassessment, not authority to begin a launch outcome.
+When starting from a prior Software Opportunity Validation or historical discovery run, inspect its decision receipt, selected and rejected opportunities, experiment evidence, and unresolved assumptions against the current reality before recommending this pack. On completion, write `outcome-room/product-receipt.json` with `passed`, `repair-required`, or `no-go`. A `passed` receipt is evidence for a later reassessment, not authority to begin a launch outcome.
 
 Prove clean local setup, one complete user job, one material failure path, every promised state and persistence boundary, a production build, responsive browser behavior, and an exact completion report. Deployment, publishing, analytics, third-party services, and real customer data remain separate gates. Never call a local build secure, scalable, reliable, or production-ready.
 
@@ -519,40 +519,48 @@ Entry requires a matching working project with an immutable revision, documented
 
 The underlying product must already work. Never invent adoption, benchmarks, compatibility, performance, security, or capabilities. Deployment, publishing, pushing, tagging, release creation, DNS, analytics, data collection, and provider mutations require separate explicit approval. A local site is prepared, not launched. `launch/launch-receipt.json` may use verified only with approval evidence, public URLs, immutable identifiers, a passing clean-room quickstart, fresh public checks, and rollback evidence.
 
-## Software Opportunity Discovery
+## Software Opportunity Validation
 
 Slug: `software-opportunity-discovery`
 
 Lane: `create`
 
-Status: `experimental` — available to test; promote only after a preserved end-to-end run and independent verification.
+Status: `stable`.
 
 Public page: `https://possible.sh/packs/software-opportunity-discovery`
 
-Use when a developer wants to build software but does not yet know which problem or audience is worth pursuing, or when several ideas need an evidence-backed decision rather than another generic brainstorm.
+Use when a developer does not yet know which software problem or audience is worth pursuing, or when an idea still depends on material assumptions about its user, problem, solution, delivery mechanism, feasibility, demand, pricing, or distribution.
 
-Outputs: developer constraints and advantages; dated source ledger and problem-evidence map; alternatives and underserved-gap landscape; three to five traceable opportunities; comparable scorecard; one recommendation with rejected alternatives; smallest falsifiable validation experiment; pursue, investigate, or no-go receipt; independent review.
+Outputs: builder constraints and advantages; dated source ledger and problem-evidence map; alternatives, pricing, and reachable-distribution landscape; three to five traceable opportunities; one provisional thesis; a seven-dimension assumption map; an adaptive portfolio of decision-relevant experiments; solution and delivery evidence; technical-feasibility and economic evidence; demand, commitment, pricing, and distribution evidence; pursue, revise, or stop receipt; independent review.
 
 Workstreams:
 
-- Builder constraints and unfair advantages — `product-marketing`; owns `opportunity/operator/`.
-- Customer problems and demand signals — `customer-research`; owns `opportunity/research/`.
-- Alternatives and underserved gaps — `competitor-profiling`; owns `opportunity/landscape/`.
-- Lead integration and fresh review — `product-marketing`, `analytics`, then fresh `customer-research` and `analytics`; produces the candidate scorecard, recommendation, validation plan, decision receipt, and independent audit in `outcome-room/`.
+- Builder constraints and unfair advantages — `product-marketing`; owns `validation/operator/`.
+- User problems and observed behavior — `customer-research`; owns `validation/research/`.
+- Alternatives, pricing, and reachable distribution — `competitor-profiling`, `product-marketing`; owns `validation/market/`.
+- Opportunity thesis and assumption map — `product-marketing`, `analytics`; runs after the first three workstreams and owns `validation/thesis/` plus `validation/assumptions.json`.
+- Solution and delivery validation — conditionally invokes `customer-research`, `product-marketing`, and `analytics` when the assumption map selects those risks.
+- Technical feasibility and product economics — conditionally invokes `create-technical-spike`, `analytics`, and `product-marketing`.
+- Demand, commitment, and distribution validation — conditionally invokes `customer-research`, `product-marketing`, and `analytics`.
+- Fresh review — `customer-research`, `analytics`, `create-technical-spike`; audits evidence, experiment integrity, skipped dimensions, and the final decision.
 
 Sources:
 
 - `coreyhaines31/marketingskills`: `customer-research`, `competitor-profiling`, `product-marketing`, `analytics`; reviewed `67264763cb107d61749f418d081c56e5bcbc0209`.
+- `github/awesome-copilot`: `create-technical-spike`; reviewed `26fe2d126bf79aafb38f43344d450b69632200f8`.
 
 Install:
 
 ```bash
 npx skills@1.5.19 add coreyhaines31/marketingskills@67264763cb107d61749f418d081c56e5bcbc0209 --skill customer-research --skill competitor-profiling --skill product-marketing --skill analytics --agent codex
+npx skills@1.5.19 add github/awesome-copilot@26fe2d126bf79aafb38f43344d450b69632200f8 --skill create-technical-spike --agent codex
 ```
 
-Write `outcome-room/decision-receipt.json` with `pursue`, `investigate`, or `no-go`. Use it during the post-outcome reassessment: `pursue` supports considering a new outcome, `investigate` identifies missing evidence, and `no-go` ends this direction honestly. None authorizes another Outcome Pack.
+First assess the target user and problem, solution and workflow, delivery mechanism, technical feasibility, demand and commitment, pricing and business model, and distribution and reachability. Rank the assumptions by decision impact, uncertainty, and test cost. Run only the smallest credible experiments against the highest-risk assumptions; record why other workstreams were not selected and leave their claims unknown.
 
-Never invent customer quotes, demand, market size, willingness to pay, pricing, competitors, users, revenue, funding, growth, or product-market fit. Preserve source dates and bias, and leave weak evidence at low confidence. Research uses only authorized artifacts and accessible public sources. Contacting people, publishing surveys, purchasing data, creating accounts, spending, and other external actions require separate explicit approval. A no-go is a valid result; a proposed experiment is not proof that the opportunity is validated.
+Write `outcome-room/decision-receipt.json` with exactly one decision: `pursue`, `revise`, or `stop`. `pursue` requires credible evidence against the highest-risk assumption and an explicit first-build boundary. None authorizes product implementation or another Outcome Pack.
+
+Never invent user quotes, demand, market size, willingness to pay, pricing acceptance, competitors, users, revenue, funding, growth, or product-market fit. Preserve source dates, denominators, and bias, and leave weak evidence at low confidence. Contacting people, recruitment, survey or fake-door publication, analytics collection, account creation, purchases, advertising, payments, spending, and other external actions require separate explicit approval. A prepared experiment is not validation.
 
 ## Selection rule
 
@@ -572,9 +580,9 @@ Recommend the Outcome Pack whose finished outputs most closely match the user's 
 - Robot hand, gripper, arm, mobile robot, quadruped, or full robot plus coherent CAD, description, controls, and simulation evidence → Robot Prototype.
 - Pitch, talk, lesson, demo, or internal presentation plus a coded browser deck, presenter experience, export, and evidence review → Web Presentation.
 - Working developer tool, library, CLI, API, agent project, or platform plus positioning, a distinctive site, honest demonstration, verified quickstart, and adoption path → Developer Project Launch.
-- Vague desire to build software plus customer-problem evidence, alternative research, ranked opportunities, and one falsifiable next bet → Software Opportunity Discovery.
+- Vague software ambition or materially untested product idea plus an adaptive, evidence-backed pursue, revise, or stop decision → Software Opportunity Validation.
 
-Use Software Opportunity Discovery before Working Web App when the problem and audience are still undecided; use Working Web App once one product direction has been chosen. Use Developer Project Launch when a working developer project needs comprehension, presentation, proof, and a verified adoption path. Use Software Launch for a broader product release candidate, launch story, and film. Use Web Presentation when the primary deliverable is a slide-based browser presentation; a conventional landing page belongs elsewhere. Use Billion-Dollar SaaS when the user explicitly wants the broader company operating system and accepts that operational coverage cannot guarantee economic success. Use Kickstarter Funding when crowdfunding mechanics and payout are part of the outcome; use Kickstarter Fulfillment only after the campaign is funded. Use Robot Prototype for a simulation-backed digital prototype, not a fabrication-ready machine or hardware commissioning. Use Production Web Release when a tested candidate exists and the missing outcome is a gated production promotion with rollback and smoke evidence. Use Web App Operations only after the app is live and the desired outcome is an ongoing reliability and maintenance rhythm. Use Marketing Operations when the product or offer exists and the missing outcome is a recurring marketing system. Repository-only licensing, packaging, CI, versioning, and release engineering belong to Open-Source Release; one isolated bug, incident, or marketing asset with no requested recurring workflow is focused work, not an Outcome Pack run.
+Recommend Software Opportunity Validation when the product direction or its highest-risk assumptions are not yet supported; recommend Working Web App only when one bounded direction has enough evidence to justify implementation. Use Developer Project Launch when a working developer project needs comprehension, presentation, proof, and a verified adoption path. Use Software Launch for a broader product release candidate, launch story, and film. Use Web Presentation when the primary deliverable is a slide-based browser presentation; a conventional landing page belongs elsewhere. Use Billion-Dollar SaaS when the user explicitly wants the broader company operating system and accepts that operational coverage cannot guarantee economic success. Use Kickstarter Funding when crowdfunding mechanics and payout are part of the outcome; use Kickstarter Fulfillment only after the campaign is funded. Use Robot Prototype for a simulation-backed digital prototype, not a fabrication-ready machine or hardware commissioning. Use Production Web Release when a tested candidate exists and the missing outcome is a gated production promotion with rollback and smoke evidence. Use Web App Operations only after the app is live and the desired outcome is an ongoing reliability and maintenance rhythm. Use Marketing Operations when the product or offer exists and the missing outcome is a recurring marketing system. Repository-only licensing, packaging, CI, versioning, and release engineering belong to Open-Source Release; one isolated bug, incident, or marketing asset with no requested recurring workflow is focused work, not an Outcome Pack run.
 
 For an ambition spanning several valuable results, recommend only the next independently useful Outcome Pack. Choose it from the current reality and the most important unresolved decision; do not preselect a future sequence. After the outcome passes verification, reassess the new evidence before recommending zero or more candidates and stop for fresh approval. A strong matching working project may qualify for Developer Project Launch directly; a discovery receipt alone does not.
 

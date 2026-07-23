@@ -154,17 +154,20 @@ describe("Possible MCP", () => {
     assert.match(envelope.data.runPrompt, /^Build the Working Web App outcome/);
   });
 
-  it("compiles Software Opportunity Discovery", async () => {
+  it("compiles adaptive Software Opportunity Validation", async () => {
     const result = await client.callTool({ name: "compile_pack", arguments: { slug: "software-opportunity-discovery" } });
-    const envelope = result.structuredContent as { ok: boolean; data: { pack: { catalogNumber: number; lane: string }; installCommands: string[]; runPrompt: string } };
+    const envelope = result.structuredContent as { ok: boolean; data: { pack: { catalogNumber: number; lane: string; name: string }; installCommands: string[]; runPrompt: string } };
     assert.equal(envelope.ok, true);
     assert.equal(envelope.data.pack.catalogNumber, 15);
     assert.equal(envelope.data.pack.lane, "create");
-    assert.equal(envelope.data.installCommands.length, 1);
+    assert.equal(envelope.data.pack.name, "Software Opportunity Validation");
+    assert.equal(envelope.data.installCommands.length, 2);
     assert.match(envelope.data.runPrompt, /\$customer-research/);
     assert.match(envelope.data.runPrompt, /\$competitor-profiling/);
-    assert.match(envelope.data.runPrompt, /pursue, investigate, or no-go/i);
-    assert.match(envelope.data.runPrompt, /Do not claim the opportunity is validated/i);
+    assert.match(envelope.data.runPrompt, /\$create-technical-spike/);
+    assert.match(envelope.data.runPrompt, /ADAPTIVE VALIDATION GATE/i);
+    assert.match(envelope.data.runPrompt, /pursue, revise, or stop/i);
+    assert.match(envelope.data.runPrompt, /Do not run every possible validation activity equally/i);
   });
 
   it("compiles Production Web Release with its second approval gate", async () => {

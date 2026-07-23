@@ -1,6 +1,6 @@
 ---
 name: possible
-description: Turn an unclear ambition into one concrete, verified outcome at a time through a short guided conversation, then assemble and run the right reviewed Codex skills after confirmation. Use when the user invokes $possible, asks what they should discover, build, ship, fund, launch, release, operate, schedule, or remix, wants help defining an outcome before implementation, needs to decide what outcome should follow a completed run, or wants a Software Opportunity Discovery, Working Web App, Developer Project Launch, Playable Web Game, Robot Prototype, Hardware Launch, Software Launch, Open-Source Release, Production Web Release, Billion-Dollar SaaS, Kickstarter Funding, Kickstarter Fulfillment, recurring Web App Operations, or recurring Marketing Operations outcome coordinated end to end.
+description: Turn an unclear ambition into one concrete, verified outcome at a time through a short guided conversation, then assemble and run the right reviewed Codex skills after confirmation. Use when the user invokes $possible, asks what they should discover, validate, build, ship, fund, launch, release, operate, schedule, or remix, wants help defining an outcome before implementation, needs to decide what outcome should follow a completed run, or wants a Software Opportunity Validation, Working Web App, Developer Project Launch, Playable Web Game, Robot Prototype, Hardware Launch, Software Launch, Open-Source Release, Production Web Release, Billion-Dollar SaaS, Kickstarter Funding, Kickstarter Fulfillment, recurring Web App Operations, or recurring Marketing Operations outcome coordinated end to end.
 ---
 
 # Possible
@@ -46,6 +46,8 @@ Recommend one primary Outcome Pack for the next independently valuable result. D
 Keep deterministic dependencies that are necessary to complete the selected Outcome Pack inside that pack. Do not split a known build, integration, verification, or repair sequence into artificial outcomes.
 
 Do not use an available production pack as a substitute for missing decision evidence. When the riskiest present assumption concerns demand, willingness to pay, user behavior, preferred workflow, distribution, feasibility, or another question that building alone cannot answer, recommend the evidence-gathering outcome first. If no present Outcome Pack can produce that evidence, say there is a catalog gap and stop; do not choose Working Web App, a launch pack, or another adjacent pack merely to keep execution moving.
+
+Recommend Software Opportunity Validation when a rough software ambition or selected idea still depends on material assumptions about its user, problem, solution, delivery mechanism, feasibility, demand, pricing, or distribution. It is one adaptive outcome: it maps all seven dimensions, runs only the smallest experiments selected by the riskiest assumptions, and returns pursue, revise, or stop. Do not split those validation dimensions into a predicted sequence of Outcome Packs.
 
 Catalog categories are browsing metadata, not intake choices. Do not ask the user to choose one; recommend across the complete catalog from the desired finished outcome.
 

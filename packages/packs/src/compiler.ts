@@ -10,6 +10,9 @@ export function compileWorkstreamWaves(pack: OutcomePack): Workstream[][] {
   const byId = new Map(pack.workstreams.map((stream) => [stream.id, stream]));
   if (byId.size !== pack.workstreams.length) throw new Error(`${pack.slug} contains duplicate workstream ids`);
   for (const stream of pack.workstreams) {
+    if (stream.activation !== undefined && !stream.activation.trim()) {
+      throw new Error(`${pack.slug}/${stream.id} activation must be non-empty`);
+    }
     for (const dependency of stream.dependsOn ?? []) {
       if (!byId.has(dependency)) throw new Error(`${pack.slug}/${stream.id} depends on missing workstream ${dependency}`);
       if (dependency === stream.id) throw new Error(`${pack.slug}/${stream.id} cannot depend on itself`);
@@ -57,6 +60,7 @@ export function compileRunPrompt(pack: OutcomePack): string {
     `  Invoke: ${stream.skills.map((skill) => `$${skill}`).join(", ")}`,
     `  Own: ${stream.owns.join(", ")}`,
     `  Depends on: ${stream.dependsOn?.join(", ") || "none"}`,
+    `  Activation: ${stream.activation ?? "always"}`,
     `  Brief: ${stream.brief}`,
   ].join("\n")).join("\n");
   const workstreamSequence = waves.map((wave, index) => `- Wave ${index + 1}: ${wave.map((stream) => stream.id).join(", ")}`).join("\n");
@@ -102,6 +106,31 @@ OUTCOME PREREQUISITES
 ${pack.prerequisites.map((requirement) => `- ${requirement.id}: ${requirement.description} Evidence required: ${requirement.requiredEvidence.join(", ")}.`).join("\n")}
 
 Verify these prerequisites against the current repository before starting. If material evidence is missing, stop this outcome and explain the gap. Do not silently compile or execute another Outcome Pack to fill it; any alternative outcome is only a recommendation requiring fresh approval.` : "";
+  const adaptiveValidation = pack.adaptiveValidation ? (() => {
+    const contract = pack.adaptiveValidation;
+    if (contract.dimensions.length < 2 || new Set(contract.dimensions).size !== contract.dimensions.length || contract.dimensions.some((dimension) => !dimension.trim())) {
+      throw new Error(`${pack.slug} adaptive validation dimensions must be unique and non-empty`);
+    }
+    if (contract.decisions.join(",") !== "pursue,revise,stop") {
+      throw new Error(`${pack.slug} adaptive validation decisions must be pursue, revise, stop`);
+    }
+    if (!pack.workstreams.some((stream) => stream.activation)) {
+      throw new Error(`${pack.slug} adaptive validation requires at least one conditional workstream`);
+    }
+    requireSafeRelativePath(contract.assumptionMapPath, `${pack.slug} adaptive validation assumptionMapPath`);
+    requireSafeRelativePath(contract.experimentRoot, `${pack.slug} adaptive validation experimentRoot`);
+    requireSafeRelativePath(contract.decisionReceiptPath, `${pack.slug} adaptive validation decisionReceiptPath`);
+    return `
+
+ADAPTIVE VALIDATION GATE
+1. Assess these dimensions before choosing experiments: ${contract.dimensions.join(", ")}.
+2. Write ${contract.assumptionMapPath}. Rank assumptions by decision impact, uncertainty, and cost to test. Distinguish direct evidence, indirect evidence, hypotheses, and unknowns.
+3. Choose the smallest credible portfolio of experiments that tests the highest-risk assumptions. Do not run every possible validation activity equally or manufacture filler for a dimension that is not presently decision-critical.
+4. At each dependency wave, evaluate every conditional workstream against its Activation rule using the shared assumption map. Start only active workstreams. Record skipped conditions and preserve their unknowns instead of pretending they were resolved.
+5. Repository inspection, public research, local prototypes, and locally supplied evidence remain within pack authority. Interviews, recruitment, outreach, survey publication, fake-door deployment, analytics collection, account creation, purchases, advertising, payments, and other external actions require separate approval for the exact experiment.
+6. Store experiment plans, inputs, raw observations, analysis, and limitations under ${contract.experimentRoot}. A prepared but unrun experiment is not validation. Opinions are not behavior; clicks are not purchases; technical possibility is not demand.
+7. Stop when the agreed timebox or evidence threshold is reached. Write ${contract.decisionReceiptPath} with exactly one decision: pursue, revise, or stop. State what is supported, contradicted, unknown, and what evidence would reverse the decision. None authorizes product implementation or another Outcome Pack.`;
+  })() : "";
 
   const action = pack.lane === "operate" ? "Establish and run the first cycle of" : pack.lane === "release" ? "Prepare and verify" : "Build";
   const pluginCheck = pack.plugins?.length
@@ -146,7 +175,7 @@ Deliver: ${pack.outputs.join(", ")}.
 LEAD AGENT WORKFLOW
 1. Inspect the workspace and this brief. Do not start production until you write a shared outcome-brief.md containing only confirmed facts, audience, promise, constraints, interfaces, and acceptance checks.
 2. Confirm these installed skills are visible: ${pack.skills.map((source) => `$${source.skill}`).join(", ")}. If any are missing, stop and identify them; do not silently imitate them.${pluginCheck}
-3. Follow the dependency waves below. Do not create one subagent per skill. Create one subagent for each currently unblocked workstream. Give every subagent outcome-brief.md, explicit ownership, its named skills, and its own completion verifier. Do not start a dependent workstream until every named dependency passes its handoff checks.
+3. Follow the dependency waves below. Do not create one subagent per skill. At each wave, evaluate any Activation rule against shared evidence, record the result, and create one subagent for each currently unblocked active workstream. Give every subagent outcome-brief.md, explicit ownership, its named skills, and its own completion verifier. Do not start a dependent workstream until every named dependency passes its handoff checks. Do not execute inactive work merely to fill a checklist.
 WORKSTREAM SEQUENCE
 ${workstreamSequence}
 ${workstreams}
@@ -159,7 +188,7 @@ ${pack.guardrails.map((guardrail) => `- ${guardrail}`).join("\n")}
 
 VERIFICATION CONTRACT
 ${pack.verification.map((item) => `- ${item}`).join("\n")}
-${prerequisites}${remixGate}${releaseGate}${launchGate}${sitesPath}${operateLoop}
+${prerequisites}${adaptiveValidation}${remixGate}${releaseGate}${launchGate}${sitesPath}${operateLoop}
 
 NEW-REALITY CHECKPOINT
 Only after this bounded outcome finishes—including a partial or no-go result—write .possible/checkpoints/<run-id>.json with:

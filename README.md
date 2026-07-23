@@ -55,7 +55,7 @@ Possible publishes six reviewed public packs. The remaining registry packs stay 
 - [Robot Prototype](packages/packs/src/robot-prototype.ts) — mechanical model, robot descriptions, control, simulation and sim-to-real boundaries.
 - [Playable Web Game](packages/packs/src/playable-web-game.ts) — a polished browser game with responsive controls and playability review.
 - [Web Presentation](packages/packs/src/web-presentation.ts) — an evidence-backed coded deck with responsive presenter behavior.
-- [Software Opportunity Discovery](packages/packs/src/software-opportunity-discovery.ts) — one evidence-backed software opportunity with explicit unknowns and a validation plan.
+- [Software Opportunity Validation](packages/packs/src/software-opportunity-discovery.ts) — one adaptive, evidence-backed decision about what to build, for whom, how to deliver it, and whether to pursue, revise, or stop.
 - [Developer Project Launch](packages/packs/src/developer-project-launch.ts) — a credible adoption path for a working developer project.
 
 The preserved PatchProof journey verifies Software Opportunity Discovery and Developer Project Launch as separate outcomes—and records why Possible no longer chooses their sequence in advance.

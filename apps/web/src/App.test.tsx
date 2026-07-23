@@ -107,7 +107,7 @@ describe("Possible", () => {
     }
   });
 
-  it("publishes discovery and developer launch as reviewed Outcome Packs", async () => {
+  it("publishes adaptive opportunity validation and developer launch as reviewed Outcome Packs", async () => {
     for (const slug of ["software-opportunity-discovery", "developer-project-launch"]) {
       const pack = getPublishedPack(slug);
       expect(pack).toBeDefined();
@@ -118,6 +118,17 @@ describe("Possible", () => {
       expect(await axe(container)).toHaveNoViolations();
       unmount();
     }
+  });
+
+  it("shows the adaptive validation dimensions and conditional workstreams", async () => {
+    const { container } = renderRoute("/packs/software-opportunity-discovery");
+    expect(screen.getByRole("heading", { name: "Software Opportunity Validation", level: 1 })).toBeInTheDocument();
+    expect(screen.getByText("ADAPTIVE VALIDATION")).toBeInTheDocument();
+    expect(screen.getByText("target user and problem")).toBeInTheDocument();
+    expect(screen.getByText("pricing and business model")).toBeInTheDocument();
+    expect(screen.getAllByText(/assumption map selects the proposed solution/i).length).toBeGreaterThan(0);
+    expect(container.querySelector(".pack-prompt-disclosure code")?.textContent).toMatch(/ADAPTIVE VALIDATION GATE/);
+    expect(await axe(container)).toHaveNoViolations();
   });
 
   it("keeps retired pack routes out of the public product", () => {

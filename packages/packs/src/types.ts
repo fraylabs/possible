@@ -36,6 +36,7 @@ export interface Workstream {
   owns: string[];
   brief: string;
   dependsOn?: string[];
+  activation?: string;
 }
 
 export interface RemixContract {
@@ -52,6 +53,15 @@ export interface OutcomePrerequisite {
   id: string;
   description: string;
   requiredEvidence: string[];
+}
+
+export interface AdaptiveValidationContract {
+  kind: "riskiest-assumption-first";
+  dimensions: string[];
+  assumptionMapPath: string;
+  experimentRoot: string;
+  decisionReceiptPath: string;
+  decisions: ["pursue", "revise", "stop"];
 }
 
 export type PackLane = "create" | "launch" | "release" | "operate";
@@ -79,6 +89,7 @@ export interface OutcomePack {
   verification: string[];
   remix?: RemixContract;
   prerequisites?: OutcomePrerequisite[];
+  adaptiveValidation?: AdaptiveValidationContract;
 }
 
 export interface CompiledPack {

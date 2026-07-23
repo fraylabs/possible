@@ -519,13 +519,14 @@ function PackDetailPage({ pack }: { pack: OutcomePack }) {
             <header><span>03</span><h2 id="workstreams-heading">Execution plan</h2><p>Each workstream owns separate files.</p></header>
             <div className="pack-table-scroll">
               <table className="pack-reference-table pack-workstream-table" aria-labelledby="workstreams-heading">
-                <caption className="sr-only">Workstreams, dependencies, invoked skills, owned files, and execution briefs for {pack.name}</caption>
-                <thead><tr><th>Workstream</th><th>Depends on</th><th>Invokes</th><th>Owns</th><th>Brief</th></tr></thead>
+                <caption className="sr-only">Workstreams, activation rules, dependencies, invoked skills, owned files, and execution briefs for {pack.name}</caption>
+                <thead><tr><th>Workstream</th><th>Activation</th><th>Depends on</th><th>Invokes</th><th>Owns</th><th>Brief</th></tr></thead>
                 <tbody>
-                  {pack.workstreams.map((stream) => <tr key={stream.id}><th scope="row"><strong>{stream.name}</strong></th><td>{stream.dependsOn?.length ? stream.dependsOn.map((dependency) => <code key={dependency}>{dependency}</code>) : <span>None</span>}</td><td>{stream.skills.map((skill) => <code key={skill}>${skill}</code>)}</td><td>{stream.owns.map((item) => <code key={item}>{item}</code>)}</td><td>{stream.brief}</td></tr>)}
+                  {pack.workstreams.map((stream) => <tr key={stream.id}><th scope="row"><strong>{stream.name}</strong></th><td>{stream.activation ?? <span>Always</span>}</td><td>{stream.dependsOn?.length ? stream.dependsOn.map((dependency) => <code key={dependency}>{dependency}</code>) : <span>None</span>}</td><td>{stream.skills.map((skill) => <code key={skill}>${skill}</code>)}</td><td>{stream.owns.map((item) => <code key={item}>{item}</code>)}</td><td>{stream.brief}</td></tr>)}
                 </tbody>
               </table>
             </div>
+            {pack.adaptiveValidation ? <div className="pack-review-callout"><span>ADAPTIVE VALIDATION</span><div>{pack.adaptiveValidation.dimensions.map((dimension) => <code key={dimension}>{dimension}</code>)}</div><p>Possible assesses every dimension, ranks the assumptions, then runs only the smallest experiments needed for the riskiest present decision. The receipt ends with pursue, revise, or stop.</p></div> : null}
             {pack.remix ? <div className="pack-review-callout"><span>REMIX</span><div><code>{pack.remix.candidateCount} directions</code><code>{pack.remix.decisionPath}</code></div><p>Possible derives project-specific directions after product truth is known, then records one decision before dependent implementation begins. The outcome contract does not change.</p></div> : null}
             <div className="pack-review-callout"><span>INDEPENDENT REVIEW</span><div>{pack.reviewSkills.map((skill) => <code key={skill}>${skill}</code>)}</div><p>A verifier checks the integrated outcome. It reports evidence, failures, skipped checks, and unsupported claims.</p></div>
           </section>

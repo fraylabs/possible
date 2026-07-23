@@ -456,44 +456,77 @@ test("Developer Project Launch turns a working developer project into an evidenc
   assert.doesNotMatch(developer.outputs.join(" "), /\bLive launch\b/i);
 });
 
-test("Software Opportunity Discovery produces one traceable decision instead of a generic idea list", () => {
+test("Software Opportunity Validation adapts one complete validation outcome to the riskiest assumptions", () => {
   const discovery = outcomePacks.find((pack) => pack.slug === "software-opportunity-discovery");
   const working = outcomePacks.find((pack) => pack.slug === "working-web-app");
   const company = outcomePacks.find((pack) => pack.slug === "billion-dollar-saas");
   assert.ok(discovery);
   assert.equal(discovery.catalogNumber, 15);
   assert.equal(discovery.lane, "create");
-  assert.match(discovery.eyebrow, /EXPERIMENTAL/);
-  assert.match(discovery.promise, /vague desire.*evidence-backed opportunity worth testing/i);
+  assert.equal(discovery.name, "Software Opportunity Validation");
+  assert.match(discovery.eyebrow, /OUTCOME PACK/);
+  assert.match(discovery.promise, /Validate a software opportunity.*audience.*delivery.*feasibility.*demand.*whether to proceed/i);
   assert.match(discovery.useWhen.join(" "), /developer.*does not yet know which problem or audience/i);
   assert.match(discovery.notFor.join(" "), /generic brainstorm/i);
-  assert.match(working.notFor.join(" "), /Software Opportunity Discovery/i);
-  assert.match(company.notFor.join(" "), /Software Opportunity Discovery/i);
+  assert.match(working.notFor.join(" "), /Software Opportunity (?:Discovery|Validation)/i);
+  assert.match(company.notFor.join(" "), /Software Opportunity (?:Discovery|Validation)/i);
 
   const skillIds = new Set(discovery.skills.map(({ id }) => id));
-  assert.deepEqual([...skillIds], ["customer-research", "competitor-profiling", "product-marketing", "analytics"]);
+  assert.deepEqual([...skillIds], ["customer-research", "competitor-profiling", "product-marketing", "analytics", "create-technical-spike"]);
   const compiled = compilePack(discovery);
-  assert.equal(compiled.installCommands.length, 1);
+  assert.equal(compiled.installCommands.length, 2);
   assert.match(compiled.installCommands[0], /coreyhaines31\/marketingskills@67264763cb107d61749f418d081c56e5bcbc0209/);
-  for (const id of skillIds) assert.match(compiled.installCommands[0], new RegExp(`--skill ${id}`));
+  for (const id of ["customer-research", "competitor-profiling", "product-marketing", "analytics"]) {
+    assert.match(compiled.installCommands[0], new RegExp(`--skill ${id}`));
+  }
+  assert.match(compiled.installCommands[1], /github\/awesome-copilot@26fe2d126bf79aafb38f43344d450b69632200f8.*--skill create-technical-spike/);
+  assert.match(compiled.runPrompt, /ADAPTIVE VALIDATION GATE/);
+  assert.match(compiled.runPrompt, /Do not run every possible validation activity equally/i);
+  assert.match(compiled.runPrompt, /evaluate every conditional workstream against its Activation rule/i);
+  assert.match(compiled.runPrompt, /Opinions are not behavior; clicks are not purchases; technical possibility is not demand/i);
+  assert.match(compiled.runPrompt, /exactly one decision: pursue, revise, or stop/i);
+  assert.deepEqual(compileWorkstreamWaves(discovery).map((wave) => wave.map(({ id }) => id)), [
+    ["operator-fit", "problem-evidence", "market-system"],
+    ["opportunity-thesis"],
+    ["solution-delivery", "feasibility-economics", "demand-distribution"],
+  ]);
+  assert.equal(discovery.workstreams.filter(({ activation }) => activation).length, 3);
+  assert.deepEqual(discovery.adaptiveValidation, {
+    kind: "riskiest-assumption-first",
+    dimensions: [
+      "target user and problem",
+      "solution and workflow",
+      "delivery mechanism",
+      "technical feasibility",
+      "demand and commitment",
+      "pricing and business model",
+      "distribution and reachability",
+    ],
+    assumptionMapPath: "validation/assumptions.json",
+    experimentRoot: "validation/experiments/",
+    decisionReceiptPath: "outcome-room/decision-receipt.json",
+    decisions: ["pursue", "revise", "stop"],
+  });
 
   const outputs = discovery.outputs.join(" ");
-  assert.match(outputs, /source ledger.*customer-problem evidence/i);
-  assert.match(outputs, /Three to five.*opportunity candidates/i);
-  assert.match(outputs, /scorecard.*evidence and unknowns/i);
-  assert.match(outputs, /recommended opportunity.*rejected alternatives/i);
-  assert.match(outputs, /falsifiable validation experiment/i);
-  assert.match(outputs, /pursue, investigate, or no-go decision receipt/i);
+  assert.match(outputs, /source ledger.*user-problem evidence/i);
+  assert.match(outputs, /Three to five.*software opportunities.*provisional thesis/i);
+  assert.match(outputs, /problem, solution, delivery, feasibility, demand, pricing, and distribution/i);
+  assert.match(outputs, /Adaptive portfolio.*validation experiments/i);
+  assert.match(outputs, /pursue, revise, or stop decision receipt/i);
 
   const guardrails = discovery.guardrails.join(" ");
-  assert.match(guardrails, /Never invent customer quotes.*demand.*market size.*willingness to pay/i);
-  assert.match(guardrails, /Do not contact people.*publish surveys.*spend money/i);
-  assert.match(guardrails, /no-go or research-incomplete result is valid/i);
+  assert.match(guardrails, /Never invent user quotes.*demand.*market size.*willingness to pay/i);
+  assert.match(guardrails, /Do not contact people.*publish surveys.*deploy fake doors.*spend money/i);
+  assert.match(guardrails, /revise, stop, or evidence-incomplete result is valid/i);
   const verification = discovery.verification.join(" ");
-  assert.match(verification, /multiple independent sources or mark its confidence low/i);
-  assert.match(verification, /doing nothing.*strongest current alternative.*best rejected candidate/i);
-  assert.match(verification, /decision-receipt\.json.*pursue.*investigate.*no-go/i);
-  assert.match(verification, /Do not claim the opportunity is validated/i);
+  assert.match(verification, /assumption map covers all seven/i);
+  assert.match(verification, /highest-risk assumptions instead of distributing effort evenly/i);
+  assert.match(verification, /stated preference, observed behavior, commitment, payment, retention, and channel reach/i);
+  assert.match(verification, /doing nothing.*strongest current alternative.*different delivery mechanism.*best rejected opportunity/i);
+  assert.match(verification, /decision-receipt\.json.*pursue.*revise.*stop/i);
+  assert.match(verification, /Permit pursue only when the highest-risk assumption received credible evidence/i);
+  assert.match(verification, /Never claim product-market fit/i);
 
   const owned = discovery.workstreams.flatMap((stream) => stream.owns.map((path) => ({ stream: stream.id, path })));
   for (const item of owned) {
@@ -505,6 +538,22 @@ test("Software Opportunity Discovery produces one traceable decision instead of 
       assert.equal(left === right || left.startsWith(`${right}/`) || right.startsWith(`${left}/`), false, `${item.path} overlaps ${other.path}`);
     }
   }
+
+  const unsafeContract = structuredClone(discovery);
+  unsafeContract.adaptiveValidation.assumptionMapPath = "../assumptions.json";
+  assert.throws(() => compilePack(unsafeContract), /safe repository-relative path/);
+  const duplicateDimensions = structuredClone(discovery);
+  duplicateDimensions.adaptiveValidation.dimensions[1] = duplicateDimensions.adaptiveValidation.dimensions[0];
+  assert.throws(() => compilePack(duplicateDimensions), /dimensions must be unique/);
+  const invalidDecisions = structuredClone(discovery);
+  invalidDecisions.adaptiveValidation.decisions = ["pursue", "investigate", "stop"];
+  assert.throws(() => compilePack(invalidDecisions), /decisions must be pursue, revise, stop/);
+  const missingActivation = structuredClone(discovery);
+  for (const stream of missingActivation.workstreams) delete stream.activation;
+  assert.throws(() => compilePack(missingActivation), /requires at least one conditional workstream/);
+  const emptyActivation = structuredClone(discovery);
+  emptyActivation.workstreams.find(({ id }) => id === "solution-delivery").activation = " ";
+  assert.throws(() => compilePack(emptyActivation), /activation must be non-empty/);
 });
 
 test("Marketing Operations compiles a manual-first, truthfully gated recurring schedule", () => {
