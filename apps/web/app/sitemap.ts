@@ -11,6 +11,7 @@ const staticPaths = [
   "/docs/",
   "/docs/how-to-use/",
   "/judging/",
+  "/comparisons/robot-snake/",
   "/examples/",
   "/presentation/",
 ];

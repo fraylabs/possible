@@ -654,6 +654,15 @@ function ExampleProcess({ example, showOutputs }: { example: PossibleExample; sh
         <aside><strong>SCOPE</strong><p>{demo.boundary}</p></aside>
       </section>
 
+      {demo.comparison
+        ? <a className="example-process-comparison" href={demo.comparison.href}>
+            <small>RECORDED COMPARISON</small>
+            <strong>{demo.comparison.title}</strong>
+            <span>{demo.comparison.description}</span>
+            <b>{demo.comparison.label} →</b>
+          </a>
+        : null}
+
       {evidence.length
         ? <details className="example-process-evidence">
             <summary>Inspect supporting evidence</summary>
@@ -1269,6 +1278,97 @@ const judgingTrail = [
   { step: "PASS", detail: "The outcome receipt records the post-repair browser pass, 58/58 audit, and remaining limits.", href: "/demo/still/OUTCOME-RECEIPT.md", evidence: "Completion receipt" },
 ] as const;
 
+const robotSnakeComparisonRows = [
+  { requirement: "Inspectable mechanical CAD", goal: "Not produced", possible: "STEP and GLB" },
+  { requirement: "Standard robot description", goal: "Not produced", possible: "URDF and SRDF" },
+  { requirement: "Rigid-body simulation", goal: "Empirical browser model", possible: "MuJoCo scenarios" },
+  { requirement: "Autonomous obstacle avoidance proof", goal: "Not produced", possible: "Seeded avoidance; 2.94 m; zero contact steps" },
+  { requirement: "Inspectable engineering telemetry", goal: "Browser CSV export", possible: "3,801-frame Rerun recording" },
+  { requirement: "Deterministic checks", goal: "18 tests", possible: "12 tests and 186 interface checks" },
+  { requirement: "Fresh independent verification", goal: "Not recorded", possible: "Three defects found, repaired, and rerun" },
+  { requirement: "Sim-to-real boundaries", goal: "Hardware planning and bench guide", possible: "Evidence boundary and gap register" },
+] as const;
+
+function RobotSnakeComparisonPage() {
+  return (
+    <main className="comparison-page">
+      <SiteNav label="Comparison / Robot Snake" />
+      <article className="comparison-document">
+        <header className="comparison-hero">
+          <p className="eyebrow">RECORDED COMPARISON / ROBOT SNAKE</p>
+          <h1>Same rough request.<br /><em>Different starting knowledge.</em></h1>
+          <p>This is one preserved comparison—not a universal score. It asks what operational knowledge a non-expert&apos;s rough request caused each system to include.</p>
+          <a href="/examples/robot-snake?view=process">Back to Robot Snake process →</a>
+        </header>
+
+        <section className="comparison-section comparison-input" aria-labelledby="comparison-input-heading">
+          <header><span>01 / HUMAN INPUT</span><h2 id="comparison-input-heading">No robotics vocabulary.<br /><em>No acceptance checklist.</em></h2></header>
+          <div>
+            <blockquote><code>/goal I want to make a robot snake</code></blockquote>
+            <p>Codex asked one question. The only reply was:</p>
+            <blockquote><code>Simulation first. I do not have a fixed budget or access to a 3D printer.</code></blockquote>
+          </div>
+          <dl>
+            <div><dt>MODEL</dt><dd>GPT-5.6-sol</dd></div>
+            <div><dt>ENVIRONMENT</dt><dd>Empty Git repository and fresh Codex home</dd></div>
+            <div><dt>POSSIBLE KNOWLEDGE</dt><dd>None installed</dd></div>
+            <div><dt>RECORDED SNAPSHOT</dt><dd>21 minutes 26 seconds</dd></div>
+          </dl>
+        </section>
+
+        <section className="comparison-section" aria-labelledby="comparison-result-heading">
+          <header><span>02 / OBSERVED RESULTS</span><h2 id="comparison-result-heading">Both produced useful work.<br /><em>They pursued different contracts.</em></h2></header>
+          <div className="comparison-result-grid">
+            <article>
+              <span>/GOAL</span>
+              <strong>Dynamic pursuit</strong>
+              <p>A browser simulator, manual and procedural controls, collision handling, telemetry export, a hardware plan, compiled firmware, and 18 passing tests.</p>
+            </article>
+            <article>
+              <span>$POSSIBLE</span>
+              <strong>Reviewed outcome contract</strong>
+              <p>CAD, URDF/SRDF, MuJoCo scenarios, autonomous obstacle-avoidance evidence, Rerun telemetry, 186 interface checks, and fresh verification.</p>
+            </article>
+          </div>
+        </section>
+
+        <section className="comparison-section" aria-labelledby="comparison-coverage-heading">
+          <header><span>03 / CONTRACT COVERAGE</span><h2 id="comparison-coverage-heading">What the rough request<br /><em>caused each run to include.</em></h2></header>
+          <div className="comparison-table-scroll">
+            <table>
+              <caption>Observed outputs evaluated against the pre-existing Robot Prototype Outcome Pack contract</caption>
+              <thead><tr><th>Requirement</th><th>/goal control</th><th>$possible run</th></tr></thead>
+              <tbody>{robotSnakeComparisonRows.map((row) => (
+                <tr key={row.requirement}><th scope="row">{row.requirement}</th><td>{row.goal}</td><td>{row.possible}</td></tr>
+              ))}</tbody>
+            </table>
+          </div>
+        </section>
+
+        <section className="comparison-section comparison-together" aria-labelledby="comparison-together-heading">
+          <header><span>04 / TOGETHER</span><h2 id="comparison-together-heading">Controlled outcome.<br /><em>Dynamic pursuit.</em></h2></header>
+          <div>
+            <p><strong>Possible defines what complete means.</strong> It begins with reviewed workstreams, safeguards, interfaces, evidence, and completion conditions.</p>
+            <p><strong><code>/goal</code> sustains the pursuit.</strong> It keeps Codex working and adapting as the repository and evidence change.</p>
+            <p>Possible can shape a stronger initial goal. <code>/goal</code> can sustain its execution and expose discoveries that strengthen the next Outcome Pack revision.</p>
+          </div>
+        </section>
+
+        <section className="comparison-section comparison-evidence" aria-labelledby="comparison-evidence-heading">
+          <header><span>05 / PRESERVED EVIDENCE</span><h2 id="comparison-evidence-heading">Inspect both runs.</h2></header>
+          <div>
+            <a href="/demo/robot-snake/CONTROL-RUN.md"><span>Protocol and complete human input</span><strong>READ CONTROL →</strong></a>
+            <a href="/demo/robot-snake/control/"><span>Browser simulator and control artifacts</span><strong>OPEN /GOAL OUTPUT →</strong></a>
+            <a href="/demo/robot-snake/manifest.json"><span>Possible artifact manifest</span><strong>INSPECT MANIFEST →</strong></a>
+            <a href="/demo/robot-snake/evidence/outcome-receipt.md"><span>Possible verification and completion report</span><strong>READ RECEIPT →</strong></a>
+          </div>
+        </section>
+      </article>
+      <SiteFooter />
+    </main>
+  );
+}
+
 function JudgingPage() {
   return (
     <main className="judging-page">
@@ -1333,6 +1433,7 @@ export function PossibleSite({ path: requestedPath }: { path?: string }) {
   if (path === "/docs") return <DocsPage />;
   if (path === "/docs/how-to-use") return <HowToUsePage />;
   if (path === "/judging") return <JudgingPage />;
+  if (path === "/comparisons/robot-snake") return <RobotSnakeComparisonPage />;
   if (path === "/examples") return <ExamplesPage />;
   if (path.startsWith("/examples/")) {
     const example = getExample(path.slice("/examples/".length));

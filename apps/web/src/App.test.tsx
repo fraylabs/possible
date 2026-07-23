@@ -188,6 +188,18 @@ describe("Possible", () => {
     ]) expect(main?.querySelector(`a[href="${href}"]`)).toBeInTheDocument();
   });
 
+  it("publishes the Robot Snake control as a comparison rather than a Possible output", async () => {
+    const { container } = renderRoute("/comparisons/robot-snake");
+    expect(screen.getByRole("heading", { name: /Same rough request\.\s*Different starting knowledge\./i, level: 1 })).toBeInTheDocument();
+    expect(container.querySelector("main")).toHaveTextContent("/goal I want to make a robot snake");
+    expect(screen.getByRole("table", { name: /pre-existing Robot Prototype Outcome Pack contract/i })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /OPEN \/GOAL OUTPUT/i })).toHaveAttribute("href", "/demo/robot-snake/control/");
+    expect(screen.getByRole("link", { name: /INSPECT MANIFEST/i })).toHaveAttribute("href", "/demo/robot-snake/manifest.json");
+    expect(screen.getByText(/Possible defines what complete means/i)).toBeInTheDocument();
+    expect(screen.getByRole("region", { name: /Controlled outcome\.\s*Dynamic pursuit\./i })).toHaveTextContent(/\/goal sustains the pursuit/i);
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
   it("shows Still progressing from intake through a passing fresh rerun", () => {
     renderRoute("/judging");
     const trail = screen.getByRole("region", { name: /One outcome,\s*end to end/i });
@@ -349,6 +361,7 @@ describe("Possible", () => {
     await waitFor(() => expect(processTab).toHaveAttribute("aria-selected", "true"));
     expect(within(dialog).getByRole("tabpanel", { name: "PROCESS" })).toBeInTheDocument();
     expect(within(dialog).queryByRole("region", { name: "Output carousel" })).not.toBeInTheDocument();
+    expect(within(dialog).getByRole("link", { name: /Compare with \/goal/i })).toHaveAttribute("href", "/comparisons/robot-snake");
     expect(container.querySelector(".demo-template, .demo-index-page")).not.toBeInTheDocument();
   });
 

@@ -52,6 +52,12 @@ export type PossibleDemo = {
   outputs: readonly DemoOutput[];
   verification: readonly DemoItem[];
   evidence: readonly DemoItem[];
+  comparison?: {
+    href: string;
+    title: string;
+    description: string;
+    label: string;
+  };
   boundary: string;
 };
 
@@ -210,6 +216,12 @@ export const exampleCatalog = [
         { title: "Simulation contract", description: "Exactly what the deterministic scenarios prove.", href: "/demo/robot-snake/evidence/simulation-contract.md", label: "Read contract" },
         { title: "Sim-to-real gaps", description: "What the digital prototype does not prove.", href: "/demo/robot-snake/evidence/sim-to-real-gaps.md", label: "Read boundaries" },
       ],
+      comparison: {
+        href: "/comparisons/robot-snake",
+        title: "Same rough request. Different starting knowledge.",
+        description: "Inspect the preserved /goal control beside the Possible run.",
+        label: "Compare with /goal",
+      },
       boundary: "Digital prototype only. Aggregate propulsion and steering remain simulated surrogates. Physical locomotion, actuator suitability, fabrication readiness, manufacturability, and functional safety remain unproven.",
     },
   },

@@ -67,6 +67,16 @@ for (const [label, targets] of [
 assert.match(judgingMarkup, /href="https:\/\/github\.com\/fraylabs\/possible\/blob\/main\/apps\/web\/public\/demo\/still\/CODEX-THREAD\.md#run-prompt"/, "/judging must link the preserved Still run prompt, not the current generic pack output");
 assert.doesNotMatch(judgingMarkup, /href="\/packs\/hardware-launch\/run\.txt"/, "/judging must not substitute a mutable generic prompt for preserved run evidence");
 
+const comparisonMarkup = await html("comparisons/robot-snake/index.html");
+const comparisonText = plainText(visibleText(comparisonMarkup));
+assert.match(comparisonText, /Same rough request\.\s*Different starting knowledge\./i);
+assert.match(comparisonText, /\/goal I want to make a robot snake/i);
+assert.match(comparisonText, /No robotics vocabulary\.\s*No acceptance checklist\./i);
+assert.match(comparisonMarkup, /href="\/demo\/robot-snake\/control\/"/, "The comparison must link the preserved /goal output");
+assert.match(comparisonMarkup, /href="\/demo\/robot-snake\/manifest\.json"/, "The comparison must link the Possible manifest");
+assert.match(comparisonText, /Possible defines what complete means/i);
+assert.match(comparisonText, /\/goal sustains the pursuit/i);
+
 const headerLinks = home.match(/<div class="nav-links">([\s\S]*?)<\/div>/)?.[1];
 assert.ok(headerLinks, "The shared header must render desktop navigation");
 assert.equal((headerLinks.match(/<a\b/g) ?? []).length, 3, "The header must contain Examples, Docs, and GitHub only");
@@ -152,6 +162,9 @@ for (const [slug, name] of exampleRoutes) {
   assert.doesNotMatch(text, /SEE HOW POSSIBLE MADE THIS/i, `${name} must keep Process inside the example modal`);
   assert.doesNotMatch(markup, new RegExp(`href="/demo/${escape(slug)}"`), `${name} must not link a second process page`);
   if (slug !== "web-presentation") assert.match(markup, /class="example-process-evidence"/, `${name} must keep preserved raw evidence optional`);
+  if (slug === "robot-snake") {
+    assert.match(markup, /class="example-process-comparison"[^>]*href="\/comparisons\/robot-snake"/, "Robot Snake Process must link its recorded comparison");
+  }
 }
 
 const exampleContentSource = await readFile(new URL("../apps/web/src/example-content.ts", import.meta.url), "utf8");
