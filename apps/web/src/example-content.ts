@@ -32,6 +32,14 @@ export type DemoItem = {
   description: string;
   href?: string;
   label?: string;
+  preview?: {
+    src?: string;
+    alt?: string;
+    kind: "image" | "embed" | "video" | "document";
+    poster?: string;
+    fit?: "contain" | "cover";
+    position?: string;
+  };
   tone?: "neutral" | "failure" | "repair" | "pass";
   showcase?: boolean;
 };
@@ -105,9 +113,9 @@ export const exampleCatalog = [
         { title: "Independent verification", description: "Review every artifact against the shared completion contract." },
       ],
       artifacts: [
-        { title: "Launch website", description: "Responsive product story with a deliberately local-only waitlist.", href: "/demo/still/site/index.html", label: "Open site" },
-        { title: "Product film", description: "A 24-second, 1080p launch film with preserved review frames.", href: "/demo/still/film/still-launch.mp4", label: "Play film" },
-        { title: "Prototype CAD", description: "Measured concept geometry in STEP, GLB, and STL review formats.", href: "/demo/still/hardware/still.step", label: "Download STEP" },
+        { title: "Launch website", description: "Responsive product story with a deliberately local-only waitlist.", href: "/demo/still/site/index.html", label: "Open site", preview: { src: "/demo/still/site/index.html", kind: "embed" } },
+        { title: "Product film", description: "A 24-second, 1080p launch film with preserved review frames.", href: "/demo/still/film/still-launch.mp4", label: "Play film", preview: { src: "/demo/still/film/still-launch.mp4", kind: "video", poster: "/demo/still/film/still-launch-preview.png" } },
+        { title: "Prototype CAD", description: "Measured concept geometry in STEP, GLB, and STL review formats.", href: "/demo/still/hardware/still.step", label: "Download STEP", preview: { src: "/demo/still/hardware/still-iso.png", alt: "Isometric CAD view of the Still focus device", kind: "image" } },
         { title: "Artifact manifest", description: "The complete local output inventory and recorded status.", href: "/demo/still/manifest.json", label: "Inspect manifest", showcase: false },
       ],
       verification: [
@@ -165,10 +173,10 @@ export const exampleCatalog = [
         { title: "Telemetry and verification", description: "Record the run, expose sim-to-real gaps, and assign fresh review." },
       ],
       artifacts: [
-        { title: "Inspectable CAD", description: "Ten links and nine joints in STEP and GLB.", href: "/demo/robot-snake/cad/robot-snake.step", label: "Download STEP" },
-        { title: "Simulation controls", description: "Browser controls for the preserved digital prototype.", href: "/demo/robot-snake/control/index.html", label: "Open controls" },
-        { title: "MuJoCo replay", description: "Seeded autonomous avoidance with zero obstacle contact steps.", href: "/demo/robot-snake/simulation/obstacle-course/preview.gif", label: "Watch replay" },
-        { title: "Rerun telemetry", description: "A 3,801-frame engineering timeline of geometry, state, and measurements.", href: "/demo/robot-snake/viewer/robot-snake.rrd", label: "Download RRD" },
+        { title: "Inspectable CAD", description: "Ten links and nine joints in STEP and GLB.", href: "/demo/robot-snake/cad/robot-snake.step", label: "Download STEP", preview: { src: "/demo/robot-snake/cad/iso.png", alt: "Isometric CAD view of the Robot Snake assembly", kind: "image" } },
+        { title: "Simulation controls", description: "Browser controls for the preserved digital prototype.", href: "/demo/robot-snake/control/index.html", label: "Open controls", preview: { src: "/demo/robot-snake/control/index.html", kind: "embed" } },
+        { title: "MuJoCo replay", description: "Seeded autonomous avoidance with zero obstacle contact steps.", href: "/demo/robot-snake/simulation/obstacle-course/preview.gif", label: "Watch replay", preview: { src: "/demo/robot-snake/simulation/obstacle-course/preview.gif", alt: "Robot Snake autonomous obstacle avoidance replay", kind: "image" } },
+        { title: "Rerun telemetry", description: "A 3,801-frame engineering timeline of geometry, state, and measurements.", href: "/demo/robot-snake/viewer/robot-snake.rrd", label: "Download RRD", preview: { src: "/demo/robot-snake/viewer/preview.png", alt: "Rerun telemetry viewer showing the Robot Snake engineering timeline", kind: "image" } },
       ],
       verification: [
         { title: "Produced", description: "CAD, robot descriptions, control, and seeded simulation passed the lead agent’s suite." },
@@ -229,8 +237,8 @@ export const exampleCatalog = [
         { title: "Review", description: "Test the full loop across responsive browser sizes." },
       ],
       artifacts: [
-        { title: "Playable game", description: "The finished Fold browser game.", href: "/demo/game/play", label: "Play Fold" },
-        { title: "Game brief", description: "The product and interaction contract used by the reference build.", href: "/demo/fold/game-brief.md", label: "Read brief" },
+        { title: "Playable game", description: "The finished Fold browser game.", href: "/demo/game/play", label: "Play Fold", preview: { src: "/demo/game/play", kind: "embed" } },
+        { title: "Game brief", description: "The product and interaction contract used by the reference build.", href: "/demo/fold/game-brief.md", label: "Read brief", preview: { kind: "document" } },
       ],
       verification: [
         { title: "Reviewed", description: "The reference build received an implementation review and one repair." },
@@ -277,8 +285,8 @@ export const exampleCatalog = [
         { title: "Responsive review", description: "Check the deck with keyboard, touch, and compact viewports." },
       ],
       artifacts: [
-        { title: "Coded presentation", description: "The complete ten-slide browser deck.", href: "/presentation", label: "Open presentation" },
-        { title: "Visual atlas", description: "Custom illustrations used to explain the Possible system.", href: "/presentation/possible-visual-atlas.webp", label: "Open atlas" },
+        { title: "Coded presentation", description: "The complete ten-slide browser deck.", href: "/presentation", label: "Open presentation", preview: { src: "/presentation", kind: "embed" } },
+        { title: "Visual atlas", description: "Custom illustrations used to explain the Possible system.", href: "/presentation/possible-visual-atlas.webp", label: "Open atlas", preview: { src: "/presentation/possible-visual-atlas.webp", alt: "Visual atlas used throughout the Possible presentation", kind: "image" } },
       ],
       verification: [
         { title: "Browser checks", description: "The retained site suite exercises route, controls, and responsive behavior.", tone: "pass" },
@@ -333,9 +341,9 @@ export const exampleCatalog = [
         { title: "Verify every handoff", description: "Require independent review and hashed evidence before advancing the chain." },
       ],
       artifacts: [
-        { title: "PatchProof product", description: "A local browser tool for converting supplied patch evidence into inspectable claim results.", href: "/examples/patchproof-chain/product/index.html", label: "Open product" },
-        { title: "Launch site", description: "The selected Continuous Form launch direction.", href: "/examples/patchproof-chain/product/launch/site/index.html", label: "Open launch site" },
-        { title: "Remix directions", description: "Three comparable visual directions using identical factual copy.", href: "/examples/patchproof-chain/evidence/remix/continuous-form.png", label: "Open selected direction" },
+        { title: "PatchProof product", description: "A local browser tool for converting supplied patch evidence into inspectable claim results.", href: "/examples/patchproof-chain/product/index.html", label: "Open product", preview: { src: "/examples/patchproof-chain/product/index.html", kind: "embed" } },
+        { title: "Launch site", description: "The selected Continuous Form launch direction.", href: "/examples/patchproof-chain/product/launch/site/index.html", label: "Open launch site", preview: { src: "/examples/patchproof-chain/product/launch/site/index.html", kind: "embed" } },
+        { title: "Remix directions", description: "Three comparable visual directions using identical factual copy.", href: "/examples/patchproof-chain/evidence/remix/continuous-form.png", label: "Open selected direction", preview: { src: "/examples/patchproof-chain/evidence/remix/continuous-form.png", alt: "Continuous Form visual direction selected for PatchProof", kind: "image", fit: "cover", position: "top" } },
         { title: "Chain state", description: "The machine-readable record connecting all three stages.", href: "/examples/patchproof-chain/evidence/chain.json", label: "Inspect chain", showcase: false },
       ],
       verification: [

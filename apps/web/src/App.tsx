@@ -604,6 +604,20 @@ function ExampleCard({ example }: { example: PossibleExample }) {
 function ExampleModal({ example, onDismiss }: { example: PossibleExample; onDismiss: () => void }) {
   const closeRef = useRef<HTMLAnchorElement>(null);
   const modalRef = useRef<HTMLElement>(null);
+  const outputs = example.demo.artifacts.filter((output) => output.showcase !== false);
+  const [activeOutputIndex, setActiveOutputIndex] = useState(0);
+  const activeOutput = outputs[activeOutputIndex] ?? outputs[0]!;
+  const preview = activeOutput.preview ?? {
+    src: example.visual.src,
+    alt: example.visual.alt,
+    kind: example.visual.kind,
+    fit: example.visual.fit,
+    position: example.visual.position,
+  };
+
+  function moveOutput(delta: number) {
+    setActiveOutputIndex((index) => (index + delta + outputs.length) % outputs.length);
+  }
 
   useEffect(() => {
     const previousOverflow = document.body.style.overflow;
@@ -614,6 +628,18 @@ function ExampleModal({ example, onDismiss }: { example: PossibleExample; onDism
         document.body.style.overflow = previousOverflow;
         window.history.replaceState({}, "", "/examples");
         onDismiss();
+        return;
+      }
+
+      if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        setActiveOutputIndex((index) => (index - 1 + outputs.length) % outputs.length);
+        return;
+      }
+
+      if (event.key === "ArrowRight") {
+        event.preventDefault();
+        setActiveOutputIndex((index) => (index + 1) % outputs.length);
         return;
       }
 
@@ -638,17 +664,38 @@ function ExampleModal({ example, onDismiss }: { example: PossibleExample; onDism
       document.body.style.overflow = previousOverflow;
       window.removeEventListener("keydown", handleKeyboard);
     };
-  }, [onDismiss]);
+  }, [onDismiss, outputs.length]);
 
   return (
     <div className="example-modal-backdrop">
       <section ref={modalRef} className="example-modal" role="dialog" aria-modal="true" aria-labelledby="example-modal-title">
         <header><span>{example.outcomeLabel}</span><a ref={closeRef} href="/examples" aria-label="Close example">CLOSE ×</a></header>
         <div className="example-modal-layout">
-          <div className="example-modal-preview" role="region" aria-label="Preview">
-            {example.visual.kind === "embed"
-              ? <iframe src={example.visual.src} title={`${example.name} interactive preview`} />
-              : <img src={example.visual.src} alt={example.visual.alt} style={{ objectFit: example.visual.fit, objectPosition: example.visual.position }} />}
+          <div className="example-modal-preview" role="region" aria-label="Output carousel">
+            <div className="example-output-stage">
+              {preview.kind === "embed" && preview.src
+                ? <iframe src={preview.src} title={`${example.name}: ${activeOutput.title}`} />
+                : null}
+              {preview.kind === "image" && preview.src
+                ? <img src={preview.src} alt={preview.alt ?? activeOutput.title} style={{ objectFit: preview.fit, objectPosition: preview.position }} />
+                : null}
+              {preview.kind === "video" && preview.src
+                ? <video src={preview.src} poster={preview.poster} controls playsInline preload="metadata" aria-label={`${example.name}: ${activeOutput.title}`} />
+                : null}
+              {preview.kind === "document"
+                ? <div className="example-output-document"><span>DOCUMENT OUTPUT</span><strong>{activeOutput.title}</strong><p>{activeOutput.description}</p></div>
+                : null}
+            </div>
+            <div className="example-output-controls">
+              <button type="button" onClick={() => moveOutput(-1)} aria-label="Previous output">{"<"}</button>
+              <div>
+                <small>{String(activeOutputIndex + 1).padStart(2, "0")} / {String(outputs.length).padStart(2, "0")}</small>
+                <strong>{activeOutput.title}</strong>
+                <p>{activeOutput.description}</p>
+                {activeOutput.href ? <a href={activeOutput.href}>{activeOutput.label ?? "Open output"} ↗</a> : null}
+              </div>
+              <button type="button" onClick={() => moveOutput(1)} aria-label="Next output">{">"}</button>
+            </div>
           </div>
           <article>
             <p className="eyebrow">{example.projectLabel}</p>
@@ -657,19 +704,6 @@ function ExampleModal({ example, onDismiss }: { example: PossibleExample; onDism
               <section aria-label="Description"><span>Description</span><p>{example.description}</p></section>
               <section aria-label="Outcome Pack"><span>Outcome Pack</span><p><a href={example.demo.packs[0].href}>{example.outcomeLabel} ↗</a></p></section>
             </div>
-            <section className="example-modal-outputs" aria-label="Outputs produced">
-              <span>OUTPUTS PRODUCED</span>
-              <div>
-                {example.demo.artifacts.filter((output) => output.showcase !== false).slice(0, 3).map((output, index) => (
-                  <a className="example-modal-output" href={output.href} key={output.title}>
-                    <small>{String(index + 1).padStart(2, "0")}</small>
-                    <strong>{output.title}</strong>
-                    <p>{output.description}</p>
-                    <i>{output.label ?? "Open output"} ↗</i>
-                  </a>
-                ))}
-              </div>
-            </section>
             <footer><a href={example.primaryOutput.href}><span>OPEN OUTCOME</span><strong>{example.primaryOutput.label} ↗</strong></a><a href={example.demoHref}><span>SEE HOW POSSIBLE MADE THIS</span><strong>Open process record ↗</strong></a></footer>
           </article>
         </div>

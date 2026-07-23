@@ -261,11 +261,18 @@ describe("Possible", () => {
       expect(descriptionWords).toBeLessThanOrEqual(60);
 
       expect(within(dialog).getByRole("region", { name: "Outcome Pack" })).not.toBeEmptyDOMElement();
-      const outputs = within(dialog).getByRole("region", { name: "Outputs produced" });
-      const outputLinks = within(outputs).getAllByRole("link");
-      expect(outputLinks.length).toBeGreaterThanOrEqual(2);
-      expect(new Set(outputLinks.map((link) => link.getAttribute("href"))).size).toBe(outputLinks.length);
-      for (const link of outputLinks) expect(link.getAttribute("href")).toMatch(/^\//);
+      const outputs = within(dialog).getByRole("region", { name: "Output carousel" });
+      const previous = within(outputs).getByRole("button", { name: "Previous output" });
+      const next = within(outputs).getByRole("button", { name: "Next output" });
+      expect(previous).toHaveTextContent("<");
+      expect(next).toHaveTextContent(">");
+      expect(outputs).toHaveTextContent(/01\s*\/\s*0[2-9]/);
+      const initialOutputHref = within(outputs).getByRole("link").getAttribute("href");
+      expect(initialOutputHref).toMatch(/^\//);
+      await userEvent.click(next);
+      expect(outputs).toHaveTextContent(/02\s*\/\s*0[2-9]/);
+      expect(within(outputs).getByRole("link").getAttribute("href")).toMatch(/^\//);
+      expect(within(outputs).getByRole("link").getAttribute("href")).not.toBe(initialOutputHref);
 
       const output = within(dialog).getByRole("link", { name: /Open outcome/i });
       const evidence = within(dialog).getByRole("link", { name: /See how Possible made this/i });
