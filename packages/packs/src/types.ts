@@ -134,6 +134,76 @@ export interface EvidenceBackedFact {
   evidence: string[];
 }
 
+export type OutcomeProofStatus = "passed" | "failed" | "skipped" | "unproven";
+
+export interface OutcomeProofRecord {
+  claim: string;
+  status: OutcomeProofStatus;
+  evidence: string[];
+}
+
+export interface OutcomeArtifactRecord {
+  path: string;
+  description: string;
+  workstreamId: string;
+  sha256: string;
+}
+
+export interface OutcomeDecisionRecord {
+  question: string;
+  selection: string;
+  evidence: string[];
+  tradeoffs: string[];
+  uncertainty: string[];
+  reversalEvidence: string[];
+}
+
+export interface OutcomeRepairRecord {
+  finding: string;
+  failureEvidence: string[];
+  change: string;
+  repairEvidence: string[];
+  status: "repaired" | "unresolved";
+}
+
+export interface OutcomeApprovalRecord {
+  action: string;
+  status: "not-requested" | "requested" | "approved" | "denied";
+  evidence: string[];
+}
+
+export interface OutcomeExternalActionRecord {
+  action: string;
+  status: "taken" | "not-taken";
+  evidence: string[];
+}
+
+export interface OutcomeRecord {
+  schemaVersion: 1;
+  runId: string;
+  packSlug: string;
+  status: "passed" | "partial" | "failed";
+  completedAt: string;
+  outcomeBriefPath: string;
+  packSnapshotPath: string;
+  skillLockPath: string;
+  workspaceRevision: string;
+  artifacts: OutcomeArtifactRecord[];
+  proofs: OutcomeProofRecord[];
+  decisions: OutcomeDecisionRecord[];
+  repairs: OutcomeRepairRecord[];
+  approvals: OutcomeApprovalRecord[];
+  externalActions: OutcomeExternalActionRecord[];
+  limitations: string[];
+  verification: {
+    reviewer: string;
+    independentFromImplementation: true;
+    reportPath: string;
+    status: "passed" | "partial" | "failed";
+  };
+  checkpointPath: string;
+}
+
 export interface CandidateOutcomeRecommendation {
   outcome: string;
   matchingPackSlug?: string;

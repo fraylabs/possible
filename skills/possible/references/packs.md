@@ -340,7 +340,7 @@ Outputs: feasibility and fixed funding-goal model, audience/offer/rewards/risks,
 Workstreams:
 
 - Product feasibility, cost, and funding model — `product-marketing`, `analytics`; owns campaign feasibility, economics, and risk evidence.
-- Audience, promise, rewards, and offer — `product-marketing`, `copywriting`, `humanizer`; owns the offer, rewards, decision rationale, and claims register.
+- Audience, promise, rewards, and offer — `product-marketing`, `copywriting`, `humanizer`; owns the offer, rewards, decision records, and claims register.
 - Kickstarter story and campaign page — `frontend-design`, `copywriting`, `humanizer`; owns the responsive local proof page and story.
 - Proof-led campaign film — `remotion-best-practices`, `humanizer`; owns rendered media and its report.
 - Prelaunch audience and distribution — `content-strategy`, `social`, `copywriting`, `humanizer`; owns audience research, calendar, and review-required drafts.

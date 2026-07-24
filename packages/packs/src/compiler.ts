@@ -1,9 +1,13 @@
-import type { CompiledPack, OutcomeCheckpoint, OutcomeJourneyHistory, OutcomePack, Workstream } from "./types.js";
+import type { CompiledPack, OutcomeCheckpoint, OutcomeJourneyHistory, OutcomePack, OutcomeRecord, Workstream } from "./types.js";
 
 const safeRelativePath = (value: string) => !/^(?:\/|[A-Za-z]:)|(?:^|\/)\.\.(?:\/|$)|[*?]/.test(value);
 
 function requireSafeRelativePath(value: string, label: string): void {
   if (!value || !safeRelativePath(value)) throw new Error(`${label} must be a safe repository-relative path`);
+}
+
+function requireEvidencePaths(paths: string[], label: string): void {
+  for (const path of paths) requireSafeRelativePath(path, label);
 }
 
 export function compileWorkstreamWaves(pack: OutcomePack): Workstream[][] {
@@ -163,13 +167,13 @@ FIRST CUSTOMER SPRINT
     const contract = pack.decisionRationale;
     const requiredFields = "question,options,evidence,selection,rationale,tradeoffs,uncertainty,reversal evidence,public explanation";
     if (contract.requiredFields.join(",") !== requiredFields) {
-      throw new Error(`${pack.slug} decision rationale fields are invalid`);
+      throw new Error(`${pack.slug} decision record fields are invalid`);
     }
-    requireSafeRelativePath(contract.rootPath, `${pack.slug} decision rationale rootPath`);
-    requireSafeRelativePath(contract.publicNarrativePath, `${pack.slug} decision rationale publicNarrativePath`);
+    requireSafeRelativePath(contract.rootPath, `${pack.slug} decision record rootPath`);
+    requireSafeRelativePath(contract.publicNarrativePath, `${pack.slug} decision record publicNarrativePath`);
     return `
 
-PRODUCT DECISION RATIONALE
+PRODUCT DECISION RECORD
 1. Before presenting a material product choice as intentional, write one evidence-backed record under ${contract.rootPath}. Every record must contain: ${contract.requiredFields.join(", ")}.
 2. Compare credible alternatives using the constraints that actually matter. For physical products include function, human contact, safety, cleaning, durability, sourcing, fabrication, repair, cost, environmental burden, and sensory character where applicable. For digital products include user behavior, accessibility, privacy, reliability, maintenance, compatibility, and operating cost where applicable.
 3. Explain why the selected option won, what it makes worse, what remains unknown, and what new evidence would reverse it. A preference, trend, generated rationale, or retrospective story is not product evidence.
@@ -273,6 +277,20 @@ VERIFICATION CONTRACT
 ${pack.verification.map((item) => `- ${item}`).join("\n")}
 ${prerequisites}${opportunityDiscovery}${firstCustomerSprint}${decisionRationale}${hardwarePrototype}${remixGate}${releaseGate}${launchGate}${sitesPath}${operateLoop}
 
+OUTCOME RECORD
+Every run—including a partial, blocked, or no-go result—must write one machine-readable proof index at .possible/runs/<run-id>/outcome-record.json.
+Use schemaVersion 1 and record:
+- runId, packSlug, status, completedAt, workspaceRevision;
+- outcomeBriefPath, packSnapshotPath, skillLockPath, and checkpointPath;
+- artifacts with repository-relative path, description, owning workstream id, and SHA-256;
+- proofs with the exact claim, passed/failed/skipped/unproven status, and direct evidence paths;
+- material decisions with selection, evidence, tradeoffs, uncertainty, and reversal evidence;
+- verification findings that caused repairs, with both failure and repair evidence;
+- external-action approvals and actions actually taken or not taken;
+- limitations; and
+- the fresh reviewer's identity, report path, independence from implementation, and passed/partial/failed status.
+This record is an index of preserved proof, not the proof itself. Never paste secrets, personal data, unverifiable claims, or fabricated evidence into it. Use empty arrays when a category did not occur; never omit a field. A passing record requires at least one passed proof and may not hide failed, skipped, unproven, unresolved, denied, or not-taken items.
+
 NEW-REALITY CHECKPOINT
 Only after this bounded outcome finishes—including a partial or no-go result—write .possible/checkpoints/<run-id>.json with:
 - what became true, with direct evidence for every fact;
@@ -284,6 +302,107 @@ Use schemaVersion 1, this pack slug, the completed run id and timestamp, the com
 Append only this completed checkpoint to retrospective journey history. Do not add planned, pending, approved, or future stages to that history. Do not install, compile, start, or imply approval for a candidate next outcome. Present the changed reality to the user first; selecting any candidate requires fresh intake, one present-pack recommendation, and separate approval.
 
 Do not ask me to choose implementation details that can be safely inferred from the brief and repository. Ask only when a missing decision would materially change the product or authorize an external action.`;
+}
+
+export function validateOutcomeRecord(record: OutcomeRecord): OutcomeRecord {
+  if (record.schemaVersion !== 1) throw new Error("Outcome record schemaVersion must be 1");
+  if (!/^[a-z0-9][a-z0-9-]*$/.test(record.runId)) throw new Error("Outcome record runId must be a safe identifier");
+  if (!/^[a-z0-9][a-z0-9-]*$/.test(record.packSlug)) throw new Error("Outcome record packSlug must be a safe identifier");
+  if (!["passed", "partial", "failed"].includes(record.status)) {
+    throw new Error("Outcome record status must be passed, partial, or failed");
+  }
+  if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3})?Z$/.test(record.completedAt) || Number.isNaN(Date.parse(record.completedAt))) {
+    throw new Error("Outcome record completedAt must be an ISO timestamp");
+  }
+  for (const [label, value] of [
+    ["outcomeBriefPath", record.outcomeBriefPath],
+    ["packSnapshotPath", record.packSnapshotPath],
+    ["skillLockPath", record.skillLockPath],
+    ["checkpointPath", record.checkpointPath],
+    ["verification reportPath", record.verification.reportPath],
+  ] as const) {
+    requireSafeRelativePath(value, `Outcome record ${label}`);
+  }
+  if (!record.workspaceRevision.trim()) throw new Error("Outcome record workspaceRevision must be non-empty");
+  const artifactPaths = new Set<string>();
+  for (const artifact of record.artifacts) {
+    requireSafeRelativePath(artifact.path, "Outcome record artifact path");
+    if (artifactPaths.has(artifact.path)) throw new Error(`Outcome record artifact ${artifact.path} is duplicated`);
+    artifactPaths.add(artifact.path);
+    if (!artifact.description.trim() || !artifact.workstreamId.trim()) {
+      throw new Error(`Outcome record artifact ${artifact.path} requires a description and workstream id`);
+    }
+    if (!/^[a-f0-9]{64}$/.test(artifact.sha256)) throw new Error(`Outcome record artifact ${artifact.path} requires a SHA-256`);
+  }
+  if (record.proofs.length === 0) throw new Error("Outcome record must include at least one proof");
+  for (const proof of record.proofs) {
+    if (!proof.claim.trim()) throw new Error("Outcome record proof claim must be non-empty");
+    if (!["passed", "failed", "skipped", "unproven"].includes(proof.status)) {
+      throw new Error(`Outcome record proof ${proof.claim} has an invalid status`);
+    }
+    requireEvidencePaths(proof.evidence, `Outcome record proof ${proof.claim} evidence`);
+    if (proof.status === "passed" && proof.evidence.length === 0) {
+      throw new Error(`Outcome record passed proof ${proof.claim} requires direct evidence`);
+    }
+  }
+  for (const decision of record.decisions) {
+    if (!decision.question.trim() || !decision.selection.trim()) {
+      throw new Error("Outcome record decisions require a question and selection");
+    }
+    if (decision.evidence.length === 0 || decision.evidence.some((item) => !item.trim())) {
+      throw new Error(`Outcome record decision ${decision.question} requires evidence`);
+    }
+    if (
+      decision.tradeoffs.length === 0 ||
+      decision.uncertainty.length === 0 ||
+      decision.reversalEvidence.length === 0 ||
+      [...decision.tradeoffs, ...decision.uncertainty, ...decision.reversalEvidence].some((item) => !item.trim())
+    ) {
+      throw new Error(`Outcome record decision ${decision.question} requires tradeoffs, uncertainty, and reversal evidence`);
+    }
+    requireEvidencePaths(decision.evidence, `Outcome record decision ${decision.question} evidence`);
+  }
+  for (const repair of record.repairs) {
+    if (!repair.finding.trim() || !repair.change.trim() || !["repaired", "unresolved"].includes(repair.status)) {
+      throw new Error("Outcome record repairs require a finding, change, and valid status");
+    }
+    if (repair.failureEvidence.length === 0) throw new Error(`Outcome record repair ${repair.finding} requires failure evidence`);
+    requireEvidencePaths(repair.failureEvidence, `Outcome record repair ${repair.finding} failure evidence`);
+    requireEvidencePaths(repair.repairEvidence, `Outcome record repair ${repair.finding} repair evidence`);
+    if (repair.status === "repaired" && repair.repairEvidence.length === 0) {
+      throw new Error(`Outcome record repaired finding ${repair.finding} requires repair evidence`);
+    }
+  }
+  for (const approval of record.approvals) {
+    if (!approval.action.trim() || !["not-requested", "requested", "approved", "denied"].includes(approval.status)) {
+      throw new Error("Outcome record approvals require an action and valid status");
+    }
+    requireEvidencePaths(approval.evidence, `Outcome record approval ${approval.action} evidence`);
+  }
+  for (const externalAction of record.externalActions) {
+    if (!externalAction.action.trim() || !["taken", "not-taken"].includes(externalAction.status)) {
+      throw new Error("Outcome record external actions require an action and valid status");
+    }
+    requireEvidencePaths(externalAction.evidence, `Outcome record external action ${externalAction.action} evidence`);
+    if (externalAction.status === "taken" && externalAction.evidence.length === 0) {
+      throw new Error(`Outcome record external action ${externalAction.action} requires direct evidence`);
+    }
+  }
+  if (!record.verification.reviewer.trim() || record.verification.independentFromImplementation !== true) {
+    throw new Error("Outcome record verification requires an independent reviewer");
+  }
+  if (!["passed", "partial", "failed"].includes(record.verification.status)) {
+    throw new Error("Outcome record verification status must be passed, partial, or failed");
+  }
+  if (record.status === "passed") {
+    if (record.verification.status !== "passed" || !record.proofs.some((proof) => proof.status === "passed")) {
+      throw new Error("A passed outcome record requires passed independent verification and at least one passed proof");
+    }
+    if (record.repairs.some((repair) => repair.status === "unresolved")) {
+      throw new Error("A passed outcome record cannot contain unresolved repairs");
+    }
+  }
+  return record;
 }
 
 export function validateOutcomeCheckpoint(checkpoint: OutcomeCheckpoint): OutcomeCheckpoint {

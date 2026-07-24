@@ -121,7 +121,7 @@ Treat completion as a new decision point, not permission to continue a predicted
 
 After verification:
 
-1. Archive the brief, pack snapshot, skill lock, receipt, completion report, verification, workspace revision, and hashes under `.possible/runs/<run-id>/`.
+1. Archive the brief, pack snapshot, skill lock, receipt, completion report, verification, workspace revision, and hashes under `.possible/runs/<run-id>/`. Write the compiled pack's complete `outcome-record.json` there as the canonical machine-readable index of artifacts, proofs, decisions, failures, repairs, approvals, limitations, and fresh verification. The linked files remain the proof; the record must never invent or replace them.
 2. Inspect the completed artifacts, direct evidence, verifier findings, user constraints, and changes to the project or environment.
 3. Report four short fields: **What became true**, **What remains unknown**, **Riskiest assumption**, and **Next decision**. Keep facts, hypotheses, and unproven claims distinct.
 4. Recommend zero or more candidate next outcomes only when the evidence supports them. Every candidate must directly test or reduce the named riskiest assumption; building an artifact does not test demand or user behavior unless the completed evidence says it does. Explain the tradeoff and evidence each candidate would seek or create. Name a matching present Outcome Pack only when one can produce that evidence; otherwise disclose a catalog gap instead of inventing, imitating, or substituting an adjacent pack. Do not select one merely because it appeared likely before the completed run.

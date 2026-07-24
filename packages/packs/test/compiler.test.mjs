@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import * as packApi from "../dist/index.js";
-import { compilePack, compileWorkstreamWaves, experimentalOutcomePacks, getPackStatus, outcomePacks, recordOutcomeJourney, stableOutcomePacks, validateOutcomeCheckpoint } from "../dist/index.js";
+import { compilePack, compileWorkstreamWaves, experimentalOutcomePacks, getPackStatus, outcomePacks, recordOutcomeJourney, stableOutcomePacks, validateOutcomeCheckpoint, validateOutcomeRecord } from "../dist/index.js";
 
 test("every outcome pack compiles to inspectable installs and a complete prompt", () => {
   assert.deepEqual(outcomePacks.map((pack) => pack.slug), [
@@ -97,6 +97,10 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
     assert.match(compiled.runPrompt, /fresh verification subagent/);
     assert.match(compiled.runPrompt, /explicit approval|explicitly tested|direct evidence/i);
     assert.match(compiled.runPrompt, /passed\/failed\/skipped/);
+    assert.match(compiled.runPrompt, /OUTCOME RECORD/);
+    assert.match(compiled.runPrompt, /\.possible\/runs\/<run-id>\/outcome-record\.json/);
+    assert.match(compiled.runPrompt, /index of preserved proof, not the proof itself/i);
+    assert.match(compiled.runPrompt, /artifacts with repository-relative path, description, owning workstream id, and SHA-256/i);
     assert.match(compiled.runPrompt, /NEW-REALITY CHECKPOINT/);
     assert.match(compiled.runPrompt, /what became true, with direct evidence/i);
     assert.match(compiled.runPrompt, /remaining unknowns/i);
@@ -108,6 +112,77 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
     assert.match(compiled.runPrompt, /Do not add planned, pending, approved, or future stages to that history/i);
     assert.doesNotMatch(compiled.runPrompt, /choose a lane|\nLANE\n/i);
   }
+});
+
+test("every run exposes one extractable outcome record", () => {
+  const record = {
+    schemaVersion: 1,
+    runId: "robot-snake-001",
+    packSlug: "robot-prototype",
+    status: "passed",
+    completedAt: "2026-07-24T04:00:00.000Z",
+    outcomeBriefPath: ".possible/runs/robot-snake-001/outcome-brief.md",
+    packSnapshotPath: ".possible/runs/robot-snake-001/pack.json",
+    skillLockPath: ".possible/runs/robot-snake-001/skills-lock.json",
+    workspaceRevision: "0123456789abcdef",
+    artifacts: [{
+      path: "robot/cad/body.step",
+      description: "Robot body CAD",
+      workstreamId: "mechanical",
+      sha256: "a".repeat(64),
+    }],
+    proofs: [{
+      claim: "The robot model passes its interface checks.",
+      status: "passed",
+      evidence: ["verification/interface-checks.json"],
+    }],
+    decisions: [{
+      question: "Which locomotion geometry should the prototype use?",
+      selection: "Modular serpentine chain",
+      evidence: ["robot/decisions/locomotion.json"],
+      tradeoffs: ["More joints increase control complexity."],
+      uncertainty: ["Durability is not established by simulation."],
+      reversalEvidence: ["Bench testing shows joint loads exceed the actuator limit."],
+    }],
+    repairs: [{
+      finding: "The initial joint limit exceeded the actuator envelope.",
+      failureEvidence: ["verification/reviews/001-failed.json"],
+      change: "Reduced the joint limit and regenerated the controller.",
+      repairEvidence: ["verification/reviews/002-passed.json"],
+      status: "repaired",
+    }],
+    approvals: [],
+    externalActions: [{
+      action: "Deploy or publish the prototype",
+      status: "not-taken",
+      evidence: [],
+    }],
+    limitations: ["Simulation does not establish physical reliability."],
+    verification: {
+      reviewer: "verification-agent",
+      independentFromImplementation: true,
+      reportPath: "verification/reviews/002-passed.json",
+      status: "passed",
+    },
+    checkpointPath: ".possible/checkpoints/robot-snake-001.json",
+  };
+  assert.equal(validateOutcomeRecord(record), record);
+
+  const missingProof = structuredClone(record);
+  missingProof.proofs = [];
+  assert.throws(() => validateOutcomeRecord(missingProof), /at least one proof/);
+
+  const unsafeEvidence = structuredClone(record);
+  unsafeEvidence.proofs[0].evidence = ["../outside.json"];
+  assert.throws(() => validateOutcomeRecord(unsafeEvidence), /safe repository-relative path/);
+
+  const incompletePass = structuredClone(record);
+  incompletePass.verification.status = "partial";
+  assert.throws(() => validateOutcomeRecord(incompletePass), /requires passed independent verification/);
+
+  const visibleUnknown = structuredClone(record);
+  visibleUnknown.proofs.push({ claim: "Physical reliability is established.", status: "unproven", evidence: [] });
+  assert.equal(validateOutcomeRecord(visibleUnknown), visibleUnknown);
 });
 
 test("custom install sources cannot drift from the reviewed revision", () => {
@@ -675,7 +750,7 @@ test("Working Hardware Prototype requires a measured physical artifact and fresh
   assert.equal(compiled.installCommands.length, 4);
   assert.match(compiled.runPrompt, /^Build and measure the Working Hardware Prototype outcome/);
   assert.match(compiled.runPrompt, /MEASURED HARDWARE PROTOTYPE GATE/);
-  assert.match(compiled.runPrompt, /PRODUCT DECISION RATIONALE/);
+  assert.match(compiled.runPrompt, /PRODUCT DECISION RECORD/);
   assert.match(compiled.runPrompt, /PHYSICAL REMIX GATE/);
   assert.match(compiled.runPrompt, /calibrate the measurement path/i);
   assert.match(compiled.runPrompt, /frequency, waveform, acceleration at the contact surface, coupling, duration, and position/i);
@@ -700,7 +775,7 @@ test("Working Hardware Prototype requires a measured physical artifact and fresh
   assert.throws(() => compilePack(unsafeDecisions), /safe repository-relative path/);
   const invalidDecisionFields = structuredClone(prototype);
   invalidDecisionFields.decisionRationale.requiredFields[1] = "alternatives";
-  assert.throws(() => compilePack(invalidDecisionFields), /decision rationale fields are invalid/);
+  assert.throws(() => compilePack(invalidDecisionFields), /decision record fields are invalid/);
 });
 
 test("Launch Content Campaign produces post-ready media without publishing it", () => {
@@ -724,7 +799,7 @@ test("Launch Content Campaign produces post-ready media without publishing it", 
   assert.equal(compiled.installCommands.length, 3);
   assert.match(compiled.runPrompt, /^Build the Launch Content Campaign outcome/);
   assert.match(compiled.runPrompt, /\$humanizer/);
-  assert.match(compiled.runPrompt, /PRODUCT DECISION RATIONALE/);
+  assert.match(compiled.runPrompt, /PRODUCT DECISION RECORD/);
   assert.match(compiled.runPrompt, /REMIX GATE/);
   assert.match(campaign.outputs.join(" "), /Instagram carousel/i);
   assert.match(campaign.outputs.join(" "), /YouTube Short/i);
@@ -821,7 +896,7 @@ test("benchmark outcome packs compile operational knowledge without upgrading co
   const fundingPrompt = compilePack(funding).runPrompt;
   assert.match(fundingPrompt, /^Build the Kickstarter Funding outcome/);
   assert.match(fundingPrompt, /\$humanizer/);
-  assert.match(fundingPrompt, /PRODUCT DECISION RATIONALE/);
+  assert.match(fundingPrompt, /PRODUCT DECISION RECORD/);
 
   assert.ok(fulfillment);
   assert.equal(fulfillment.catalogNumber, 11);

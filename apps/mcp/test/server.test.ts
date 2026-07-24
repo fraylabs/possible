@@ -210,7 +210,7 @@ describe("Possible MCP", () => {
     assert.equal(envelope.data.pack.name, "Launch Content Campaign");
     assert.equal(envelope.data.installCommands.length, 3);
     assert.match(envelope.data.runPrompt, /\$humanizer/);
-    assert.match(envelope.data.runPrompt, /PRODUCT DECISION RATIONALE/);
+    assert.match(envelope.data.runPrompt, /PRODUCT DECISION RECORD/);
     assert.match(envelope.data.runPrompt, /REMIX GATE/);
   });
 

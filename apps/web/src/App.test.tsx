@@ -143,7 +143,7 @@ describe("Possible", () => {
     expect(screen.getByText("PRODUCT DECISIONS")).toBeInTheDocument();
     expect(screen.getByText("REMIX")).toBeInTheDocument();
     expect(route.container.querySelector(".pack-prompt-disclosure code")?.textContent).toMatch(/\$humanizer/);
-    expect(route.container.querySelector(".pack-prompt-disclosure code")?.textContent).toMatch(/PRODUCT DECISION RATIONALE/);
+    expect(route.container.querySelector(".pack-prompt-disclosure code")?.textContent).toMatch(/PRODUCT DECISION RECORD/);
     expect(await axe(route.container)).toHaveNoViolations();
   });
 

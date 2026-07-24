@@ -594,7 +594,7 @@ function PackDetailPage({ pack }: { pack: OutcomePack }) {
           </section>
 
           <section className="pack-reference-section" id="verification">
-            <header><span>08</span><h2>Verification</h2><p>Completion requires evidence. Missing or skipped proof stays visible.</p></header>
+            <header><span>08</span><h2>Verification</h2><p>Completion requires evidence. Every run indexes its artifacts, checks, decisions, repairs, approvals and limitations in one Outcome Record.</p></header>
             <ol className="pack-verification-list">{pack.verification.map((item, index) => <li key={item}><span>{String(index + 1).padStart(2, "0")}</span><p>{item}</p></li>)}</ol>
           </section>
 
@@ -1016,6 +1016,7 @@ function DocsPage() {
               <div><dt>Run</dt><dd>One approved Outcome Pack applied to one project.</dd></div>
               <div><dt>Workstream</dt><dd>A bounded part of the outcome with named inputs, outputs, ownership, and checks. Independent workstreams may run in parallel.</dd></div>
               <div><dt>Outcome brief</dt><dd>The durable record of the confirmed intent, audience, current reality, constraints, acceptance checks, gates, and unknowns.</dd></div>
+              <div><dt>Outcome Record</dt><dd>The machine-readable index every run produces. It links artifacts, hashes, proofs, decisions, failures, repairs, approvals, limitations, and fresh verification without replacing the underlying evidence.</dd></div>
               <div><dt>Acceptance check</dt><dd>A concrete condition the finished work must satisfy. It turns “done” into something inspectable.</dd></div>
               <div><dt>Verification</dt><dd>The tests, review, measurements, or inspected evidence used to determine whether the promised end state is true.</dd></div>
               <div><dt>Completion report</dt><dd>The final evidence and status: artifacts created, checks passed or failed, limitations, unproven claims, and external actions not taken.</dd></div>

@@ -18,8 +18,8 @@ import { workingWebAppPack } from "./working-web-app.js";
 import { workingHardwarePrototypePack } from "./working-hardware-prototype.js";
 
 export { billionDollarSaasPack, developerProjectLaunchPack, firstCustomerSprintPack, hardwareLaunchPack, kickstarterFulfillmentPack, kickstarterFundingPack, launchContentCampaignPack, marketingOperationsPack, openSourceReleasePack, playableWebGamePack, productionWebReleasePack, robotPrototypePack, softwareLaunchPack, softwareOpportunityDiscoveryPack, webAppOperationsPack, webPresentationPack, workingHardwarePrototypePack, workingWebAppPack };
-export { compileInstallCommands, compilePack, compileRunPrompt, compileWorkstreamWaves, recordOutcomeJourney, validateOutcomeCheckpoint } from "./compiler.js";
-export type { CandidateOutcomeRecommendation, CompiledPack, DecisionRationaleContract, EvidenceBackedFact, FirstCustomerSprintContract, HardwarePrototypeContract, OpportunityDiscoveryContract, OutcomeCheckpoint, OutcomeJourneyHistory, OutcomePack, OutcomePrerequisite, PackLane, PluginCapability, RemixContract, ScheduleContract, SkillSource, Workstream } from "./types.js";
+export { compileInstallCommands, compilePack, compileRunPrompt, compileWorkstreamWaves, recordOutcomeJourney, validateOutcomeCheckpoint, validateOutcomeRecord } from "./compiler.js";
+export type { CandidateOutcomeRecommendation, CompiledPack, DecisionRationaleContract, EvidenceBackedFact, FirstCustomerSprintContract, HardwarePrototypeContract, OpportunityDiscoveryContract, OutcomeApprovalRecord, OutcomeArtifactRecord, OutcomeCheckpoint, OutcomeDecisionRecord, OutcomeExternalActionRecord, OutcomeJourneyHistory, OutcomePack, OutcomePrerequisite, OutcomeProofRecord, OutcomeProofStatus, OutcomeRecord, OutcomeRepairRecord, PackLane, PluginCapability, RemixContract, ScheduleContract, SkillSource, Workstream } from "./types.js";
 
 export const stablePackSlugs = [
   "hardware-launch",
