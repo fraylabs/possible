@@ -30,6 +30,7 @@ const validateSkillStructure = async (name, allowedEntries) => {
 
 await validateSkillStructure("possible", ["SKILL.md", "agents", "references"]);
 await validateSkillStructure("mujoco-robotics", ["SKILL.md", "agents", "assets", "scripts"]);
+await validateSkillStructure("humanizer", ["SKILL.md", "agents"]);
 const frontmatter = skill.match(/^---\n([\s\S]*?)\n---\n/);
 check(Boolean(frontmatter), "SKILL.md must start with frontmatter");
 if (frontmatter) {
