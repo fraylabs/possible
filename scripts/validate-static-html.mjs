@@ -131,7 +131,7 @@ assert.match(catalog, /Outcome Packs page 1 of 3/);
 assert.match(catalog, /Outcome Packs page 2 of 3/);
 assert.match(catalog, /Outcome Packs page 3 of 3/);
 assert.match(catalog, /aria-label="Outcome Pack pages"/);
-for (const slug of ["software-launch", "open-source-release", "marketing-operations", "billion-dollar-saas"]) {
+for (const slug of ["open-source-release", "marketing-operations"]) {
   await assert.rejects(html(`packs/${slug}/index.html`), { code: "ENOENT" }, `${slug} must not be exported`);
 }
 
@@ -141,7 +141,7 @@ assert.equal(canonicalCardLinks.length, exampleRoutes.length, "/examples must co
 for (const [slug, name] of exampleRoutes) {
   assert.match(gallery, new RegExp(`href="/examples/${escape(slug)}"[\\s\\S]*?${escape(name)}`), `/examples must link ${name} to its canonical example route`);
 }
-assert.doesNotMatch(gallery, /Software Launch|Open-Source Release|Tiny Slug/i);
+assert.doesNotMatch(gallery, /Open-Source Release|Tiny Slug/i);
 
 for (const [slug, name] of exampleRoutes) {
   const markup = await html(`examples/${slug}/index.html`);

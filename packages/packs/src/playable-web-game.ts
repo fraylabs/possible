@@ -2,11 +2,11 @@ import type { OutcomePack } from "./types.js";
 
 export const playableWebGamePack: OutcomePack = {
   schemaVersion: 1,
-  catalogNumber: 4,
+  catalogNumber: 3,
   lane: "create",
   slug: "playable-web-game",
   name: "Playable Web Game",
-  eyebrow: "04 / OUTCOME PACK",
+  eyebrow: "03 / OUTCOME PACK",
   promise: "Turn one strange game idea into a polished browser game people can play.",
   summary: "A focused core loop, Three.js runtime, responsive controls, intentional game feel, playable build, and evidence report—made together and tested as one experience.",
   useWhen: [

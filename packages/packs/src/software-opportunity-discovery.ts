@@ -16,11 +16,11 @@ const marketingSource = (skill: string, name: string, role: string): SkillSource
 
 export const softwareOpportunityDiscoveryPack: OutcomePack = {
   schemaVersion: 1,
-  catalogNumber: 15,
+  catalogNumber: 13,
   lane: "create",
   slug: "software-opportunity-discovery",
   name: "Software Opportunity Discovery",
-  eyebrow: "15 / OUTCOME PACK",
+  eyebrow: "13 / OUTCOME PACK",
   promise: "Discover one software opportunity worth taking to a first customer.",
   summary: "Turn a rough software ambition into a traceable opportunity thesis matched to a conservative operator baseline, current problems, alternatives, and a credible first-customer approach.",
   useWhen: [

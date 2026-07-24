@@ -1,6 +1,6 @@
 import type { OutcomePack, SkillSource } from "./types.js";
+import { hardwareLaunchPack } from "./hardware-launch.js";
 import { marketingOperationsPack } from "./marketing-operations.js";
-import { softwareLaunchPack } from "./software-launch.js";
 
 const humanizerRevision = "e081be4df826b7bd545e6b80406622f52d0bb49b";
 
@@ -12,11 +12,11 @@ function skill(pack: OutcomePack, id: string): SkillSource {
 
 export const kickstarterFundingPack: OutcomePack = {
   schemaVersion: 1,
-  catalogNumber: 10,
+  catalogNumber: 8,
   lane: "launch",
   slug: "kickstarter-funding",
   name: "Kickstarter Funding",
-  eyebrow: "10 / OUTCOME PACK",
+  eyebrow: "08 / OUTCOME PACK",
   promise: "Turn a product idea into an evidence-backed Kickstarter campaign system.",
   summary: "Feasibility and unit economics, a truthful offer and reward structure, campaign page, proof-led film, prelaunch audience system, launch calendar, measurement and risk controls, and a verified funding completion report that counts deposited money rather than campaign theater.",
   useWhen: [
@@ -38,9 +38,9 @@ export const kickstarterFundingPack: OutcomePack = {
     skill(marketingOperationsPack, "social"),
     skill(marketingOperationsPack, "analytics"),
     skill(marketingOperationsPack, "marketing-loops"),
-    skill(softwareLaunchPack, "frontend-design"),
-    skill(softwareLaunchPack, "webapp-testing"),
-    skill(softwareLaunchPack, "remotion-best-practices"),
+    skill(hardwareLaunchPack, "frontend-design"),
+    skill(hardwareLaunchPack, "webapp-testing"),
+    skill(hardwareLaunchPack, "remotion-best-practices"),
     {
       id: "humanizer",
       name: "Humanizer",

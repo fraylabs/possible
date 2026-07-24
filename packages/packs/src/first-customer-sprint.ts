@@ -28,11 +28,11 @@ const awesomeSource = (skill: string, name: string, role: string): SkillSource =
 
 export const firstCustomerSprintPack: OutcomePack = {
   schemaVersion: 1,
-  catalogNumber: 16,
+  catalogNumber: 14,
   lane: "launch",
   slug: "first-customer-sprint",
   name: "First Customer Sprint",
-  eyebrow: "16 / OUTCOME PACK",
+  eyebrow: "14 / OUTCOME PACK",
   promise: "Take one product opportunity to real customers and the strongest available commitment.",
   summary: "Sell one outcome to one reachable segment, preserve the funnel, and let conversations, commitments, payments, and repeat use determine what happens next.",
   useWhen: [

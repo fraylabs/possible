@@ -15,11 +15,11 @@ const marketingSource = (skill: string, name: string, role: string): SkillSource
 
 export const marketingOperationsPack: OutcomePack = {
   schemaVersion: 1,
-  catalogNumber: 8,
+  catalogNumber: 7,
   lane: "operate",
   slug: "marketing-operations",
   name: "Marketing Operations",
-  eyebrow: "08 / OUTCOME PACK",
+  eyebrow: "07 / OUTCOME PACK",
   promise: "Turn one product and audience into a repeatable, optionally scheduled marketing loop.",
   summary: "A versioned source of truth, prioritized campaign calendar, review-required channel drafts, decision-led measurement plan, durable loop state, first dated completion report, and scheduling-ready task—without posting, sending, spending, or changing live accounts unattended.",
   useWhen: [

@@ -43,44 +43,6 @@ npx skills@1.5.19 add earthtojake/text-to-cad@fdbb4b4fb62d95ae298cfe9a46fdc7092b
 
 Never imply manufacturing readiness, physical validation, certification, or customer demand. Deployment, fabrication, purchasing, outreach, and real waitlist collection remain separate gates.
 
-## Software Launch
-
-Slug: `software-launch`
-
-Lane: `launch`
-
-Public page: `https://possible.sh/packs/software-launch`
-
-Use for an existing working software product whose primary flow already exists but needs a coherent release and launch presentation.
-
-Outputs: stabilized product release candidate, launch site, demo film, approved MVP deployment or a completion report explaining why deployment could not proceed, evidence report.
-
-Optional lead-agent capability: OpenAI `@sites` plugin (`$sites-building`, `$sites-hosting`), reviewed at plugin version `0.1.30`. Prefer it for a new MVP deployment when it is available and no provider is already selected; retain `deploy-to-vercel` as the reviewed fallback for an existing authorized Vercel target. The plugin is not installed by the Skills CLI commands below. Either external path requires separate explicit approval.
-
-Workstreams:
-
-- Product release candidate — `vercel-react-best-practices`; stabilizes the existing release candidate and owns `product/` and its test report.
-- Launch site — `frontend-design`; owns `site/` and the launch narrative.
-- Demo film — `remotion-best-practices`; owns `film/` and the rendered preview.
-- Release readiness — `web-design-guidelines`; owns `release/` and the deployment plan. The lead agent retains `sites-hosting` or `deploy-to-vercel` until separate deployment approval.
-- Fresh review — `webapp-testing`, `web-design-guidelines`; verifies the integrated outcome.
-
-Sources:
-
-- `anthropics/skills`: `frontend-design`, `webapp-testing`; reviewed `fa0fa64bdc967915dc8399e803be67759e1e62b8`.
-- `vercel-labs/agent-skills`: `vercel-react-best-practices`, `web-design-guidelines`, `deploy-to-vercel`; reviewed `f8a72b9603728bb92a217a879b7e62e43ad76c81`.
-- `remotion-dev/skills`: `remotion-best-practices`; reviewed `ab22f5fa89962ec943eaa18797cbf38c9d727743`.
-
-Install:
-
-```bash
-npx skills@1.5.19 add anthropics/skills@fa0fa64bdc967915dc8399e803be67759e1e62b8 --skill frontend-design --skill webapp-testing --agent codex
-npx skills@1.5.19 add vercel-labs/agent-skills@f8a72b9603728bb92a217a879b7e62e43ad76c81 --skill vercel-react-best-practices --skill web-design-guidelines --skill deploy-to-vercel --agent codex
-npx skills@1.5.19 add remotion-dev/skills@ab22f5fa89962ec943eaa18797cbf38c9d727743 --skill remotion-best-practices --agent codex
-```
-
-Never imply demand, uptime, security, performance, or production readiness. Deployment, DNS, analytics, outreach, and real data collection remain separate gates.
-
 ## Open-Source Release
 
 Slug: `open-source-release`
@@ -284,46 +246,6 @@ npx skills@1.5.19 add coreyhaines31/marketingskills@67264763cb107d61749f418d081c
 ```
 
 Establish the source of truth and execute the first dated cycle manually before offering a schedule. Scheduled cycles remain permanently repo-local and read-only toward external systems: they may inspect explicitly authorized evidence, maintain plans, and prepare reviewable drafts, but they never post, send, spend, perform outreach, change tracking or accounts, use write-capable connectors, or use credentials. Perform any such action later in a separate interactive task after separate explicit approval. Preserve one canonical durable state location, an atomic no-overlap lock, and a kill switch across runs. Never fabricate customer language, testimonials, metrics, baselines, attribution, rankings, competitor facts, demand, or results. Preserve honest no-signal and empty-calendar states.
-
-## Billion-Dollar SaaS
-
-Slug: `billion-dollar-saas`
-
-Lane: `create`
-
-Public page: `https://possible.sh/packs/billion-dollar-saas`
-
-Use when the user asks for a successful, category-defining, Atlassian-scale, or billion-dollar software company without knowing every product, growth, revenue, trust, and operating system required. This Outcome Pack supplies the operational map; it never guarantees valuation, customers, product-market fit, or revenue.
-
-Outputs: company and market thesis, working product and activation path, positioning and distribution system, pricing/revenue/sales/customer-success system, trust and reliability baseline, company operating cadence, system-coverage matrix, separate customer and revenue ledger beginning at zero, independent completion report.
-
-Workstreams:
-
-- Market, category, and company thesis — `product-marketing`, `analytics`; owns `company/market/`, `company/thesis.md`, and the evidence register.
-- Product, onboarding, and activation — `frontend-design`, `vercel-react-best-practices`, `webapp-testing`; owns `company/product/`, `company/onboarding/`, and its report.
-- Positioning, acquisition, and distribution — `product-marketing`, `content-strategy`, `copywriting`, `social`; owns `company/brand/`, `company/acquisition/`, and `company/distribution/`.
-- Pricing, revenue, sales, and customer success — `product-marketing`, `analytics`; owns `company/revenue/`, `company/sales/`, and `company/customer-success/`.
-- Security, reliability, compliance, and release trust — `security-review`, `devops-rollout-plan`, `webapp-testing`; owns `company/trust/`, `company/reliability/`, and `company/release/`.
-- Measurement and company operations — `analytics`, `marketing-loops`; owns `company/operations/`, `company/metrics/`, and `company/receipts/`.
-- Fresh review — `webapp-testing`, `analytics`, `security-review`; scores company-system maturity and verifies economic evidence separately.
-
-Sources:
-
-- `coreyhaines31/marketingskills`: `product-marketing`, `content-strategy`, `copywriting`, `social`, `analytics`, `marketing-loops`; reviewed `67264763cb107d61749f418d081c56e5bcbc0209`.
-- `anthropics/skills`: `frontend-design`, `webapp-testing`; reviewed `fa0fa64bdc967915dc8399e803be67759e1e62b8`.
-- `vercel-labs/agent-skills`: `vercel-react-best-practices`; reviewed `f8a72b9603728bb92a217a879b7e62e43ad76c81`.
-- `github/awesome-copilot`: `security-review`, `devops-rollout-plan`; reviewed `26fe2d126bf79aafb38f43344d450b69632200f8`.
-
-Install:
-
-```bash
-npx skills@1.5.19 add coreyhaines31/marketingskills@67264763cb107d61749f418d081c56e5bcbc0209 --skill product-marketing --skill content-strategy --skill copywriting --skill social --skill analytics --skill marketing-loops --agent codex
-npx skills@1.5.19 add anthropics/skills@fa0fa64bdc967915dc8399e803be67759e1e62b8 --skill frontend-design --skill webapp-testing --agent codex
-npx skills@1.5.19 add vercel-labs/agent-skills@f8a72b9603728bb92a217a879b7e62e43ad76c81 --skill vercel-react-best-practices --agent codex
-npx skills@1.5.19 add github/awesome-copilot@26fe2d126bf79aafb38f43344d450b69632200f8 --skill security-review --skill devops-rollout-plan --agent codex
-```
-
-Do not copy a reference company's identity, code, private data, or copyrighted content. Public companies are system references, not cloning targets. Keep described, produced, executable, used, and economically validated systems distinct. Deployment, publishing, outreach, payments, contracts, spending, data collection, and provider mutations remain separate gates.
 
 ## Kickstarter Funding
 
@@ -706,12 +628,10 @@ Recommend the Outcome Pack whose finished outputs most closely match the user's 
 - Web-app idea or rough repository plus its first complete locally verified user flow → Working Web App.
 - Browser-game idea plus one polished playable build → Playable Web Game.
 - Physical product plus launch presentation → Hardware Launch.
-- Software product plus release and launch presentation → Software Launch.
 - Existing repository plus trustworthy public release materials → Open-Source Release.
 - Existing tested web app plus a reversible approved production deployment and smoke report → Production Web Release.
 - Live web app plus a repeatable reliability, issue-triage, maintenance, incident-response, and safe-change cadence → Web App Operations.
 - Existing product or offer plus a repeatable positioning, campaign-planning, draft-production, measurement, and review cadence → Marketing Operations.
-- Rough ambition for an Atlassian-scale or billion-dollar SaaS company plus the complete product, growth, revenue, trust, and operating system → Billion-Dollar SaaS.
 - Rough product idea plus feasibility, offer, campaign assets, audience system, and a real Kickstarter funding path → Kickstarter Funding.
 - Funded Kickstarter campaign plus production, backer, logistics, communication, and 95%-shipped operations → Kickstarter Fulfillment.
 - Robot hand, gripper, arm, mobile robot, quadruped, or full robot plus coherent CAD, description, controls, and simulation evidence → Robot Prototype.
@@ -722,7 +642,7 @@ Recommend the Outcome Pack whose finished outputs most closely match the user's 
 - Selected product, service, or software opportunity plus real prospects, one concrete offer, and the strongest available commercial commitment → First Customer Sprint.
 - Real product, prototype, offer, or campaign plus finished Instagram, video, YouTube, X, product-decision, provenance, and posting-calendar assets → Launch Content Campaign.
 
-Recommend Software Opportunity Discovery when no opportunity is selected. Recommend Working Hardware Prototype when a selected consumer-hardware concept must become a measured physical artifact; Hardware Launch presents a product and Robot Prototype proves a simulated robot, so neither substitutes. Recommend First Customer Sprint when one selected direction should face a concrete offer and real prospects; require truthful prototype, safety, claims, manufacturing, delivery, and refund boundaries before physical-product payment or delivery promises. Recommend Launch Content Campaign when the product truth exists and the missing result is one finite set of post-ready cross-platform assets; use Marketing Operations for a recurring learning and production system. Recommend Working Web App only when customer evidence or another explicit delivery requirement makes a bounded application the next useful outcome. Use Developer Project Launch when a working developer project needs comprehension, presentation, proof, and a verified adoption path. Use Software Launch for a broader product release candidate, launch story, and film. Use Web Presentation when the primary deliverable is a slide-based browser presentation; a conventional landing page belongs elsewhere. Use Billion-Dollar SaaS when the user explicitly wants the broader company operating system and accepts that operational coverage cannot guarantee economic success. Use Kickstarter Funding when crowdfunding mechanics and payout are part of the outcome; use Kickstarter Fulfillment only after the campaign is funded. Use Robot Prototype for a simulation-backed digital prototype, not a fabrication-ready machine or hardware commissioning. Use Production Web Release when a tested candidate exists and the missing outcome is a gated production promotion with rollback and smoke evidence. Use Web App Operations only after the app is live and the desired outcome is an ongoing reliability and maintenance rhythm. Repository-only licensing, packaging, CI, versioning, and release engineering belong to Open-Source Release; one isolated bug, incident, or marketing asset with no requested recurring workflow is focused work, not an Outcome Pack run.
+Recommend Software Opportunity Discovery when no opportunity is selected. Recommend Working Hardware Prototype when a selected consumer-hardware concept must become a measured physical artifact; Hardware Launch presents a product and Robot Prototype proves a simulated robot, so neither substitutes. Recommend First Customer Sprint when one selected direction should face a concrete offer and real prospects; require truthful prototype, safety, claims, manufacturing, delivery, and refund boundaries before physical-product payment or delivery promises. Recommend Launch Content Campaign when the product truth exists and the missing result is one finite set of post-ready cross-platform assets; use Marketing Operations for a recurring learning and production system. Recommend Working Web App only when customer evidence or another explicit delivery requirement makes a bounded application the next useful outcome. Use Developer Project Launch when a working developer project needs comprehension, presentation, proof, and a verified adoption path. Use Web Presentation when the primary deliverable is a slide-based browser presentation; a conventional landing page belongs elsewhere. Use Kickstarter Funding when crowdfunding mechanics and payout are part of the outcome; use Kickstarter Fulfillment only after the campaign is funded. Use Robot Prototype for a simulation-backed digital prototype, not a fabrication-ready machine or hardware commissioning. Use Production Web Release when a tested candidate exists and the missing outcome is a gated production promotion with rollback and smoke evidence. Use Web App Operations only after the app is live and the desired outcome is an ongoing reliability and maintenance rhythm. Repository-only licensing, packaging, CI, versioning, and release engineering belong to Open-Source Release; one isolated bug, incident, or marketing asset with no requested recurring workflow is focused work, not an Outcome Pack run.
 
 For an ambition spanning several valuable results, recommend only the next independently useful Outcome Pack. Choose it from the current reality and the most important unresolved decision; do not preselect a future sequence. After the outcome passes verification, reassess the new evidence before recommending zero or more candidates and stop for fresh approval. A strong matching working project may qualify for Developer Project Launch directly; a discovery receipt alone does not.
 

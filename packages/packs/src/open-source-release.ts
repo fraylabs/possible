@@ -14,11 +14,11 @@ const source = (skill: string, name: string, role: string): SkillSource => ({
 
 export const openSourceReleasePack: OutcomePack = {
   schemaVersion: 1,
-  catalogNumber: 3,
+  catalogNumber: 2,
   lane: "release",
   slug: "open-source-release",
   name: "Open-Source Release",
-  eyebrow: "03 / OUTCOME PACK",
+  eyebrow: "02 / OUTCOME PACK",
   promise: "Turn one repository into a release people can trust and use.",
   summary: "A release-ready package, documentation, examples, hardened CI, changelog, and evidence report—prepared together without silently publishing anything.",
   useWhen: [

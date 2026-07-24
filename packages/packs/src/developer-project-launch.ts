@@ -28,11 +28,11 @@ const source = (
 
 export const developerProjectLaunchPack: OutcomePack = {
   schemaVersion: 1,
-  catalogNumber: 14,
+  catalogNumber: 12,
   lane: "launch",
   slug: "developer-project-launch",
   name: "Developer Project Launch",
-  eyebrow: "14 / EXPERIMENTAL PACK",
+  eyebrow: "12 / EXPERIMENTAL PACK",
   promise: "Turn one working developer project into a launch people can understand, try, trust, and share.",
   summary: "Evidence-backed positioning, a distinctive project site, an honest demonstration, a five-minute quickstart, coherent documentation, an optional approved deployment, and independent verification—built from what the project actually does.",
   useWhen: [
@@ -43,7 +43,7 @@ export const developerProjectLaunchPack: OutcomePack = {
   ],
   notFor: [
     "An idea or repository whose primary product flow does not work yet; use Working Web App or another creation outcome first.",
-    "Stabilizing the core product, producing a cinematic release film, or launching consumer software; use Software Launch.",
+    "Stabilizing the core product or producing a consumer campaign; use Working Web App or Launch Content Campaign as appropriate.",
     "Licensing, CI hardening, packaging, versioning, changelog preparation, or repository release engineering without an adoption-facing launch; use Open-Source Release.",
     "Promoting an immutable candidate to production; use Production Web Release.",
     "Recurring content, distribution, or growth operations after launch; use Marketing Operations.",

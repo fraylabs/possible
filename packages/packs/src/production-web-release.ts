@@ -15,11 +15,11 @@ const awesomeSource = (skill: string, name: string, role: string): SkillSource =
 
 export const productionWebReleasePack: OutcomePack = {
   schemaVersion: 1,
-  catalogNumber: 7,
+  catalogNumber: 6,
   lane: "release",
   slug: "production-web-release",
   name: "Production Web Release",
-  eyebrow: "07 / OUTCOME PACK",
+  eyebrow: "06 / OUTCOME PACK",
   promise: "Take one tested web app through a gated, reversible production release.",
   summary: "A pinned release candidate, provider and pipeline preflight, verified preview, rollback plan, explicitly approved production promotion, smoke evidence, and final completion report—or an honest no-go.",
   useWhen: [
@@ -28,7 +28,7 @@ export const productionWebReleasePack: OutcomePack = {
     "The application can use an authorized OpenAI Sites or Vercel project, or planning-only output is acceptable for another provider.",
   ],
   notFor: [
-    "Building the product or producing its launch campaign; use Working Web App or Software Launch.",
+    "Building the product or producing launch content; use Working Web App, Developer Project Launch, or Launch Content Campaign as appropriate.",
     "Tagging or publishing a reusable repository or package; use Open-Source Release.",
     "Establishing recurring monitoring and maintenance after release; use Web App Operations.",
     "Executing production changes outside the reviewed OpenAI Sites and Vercel adapters.",

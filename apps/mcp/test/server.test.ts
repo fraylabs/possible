@@ -55,20 +55,18 @@ describe("Possible MCP", () => {
     assert.doesNotMatch(client.getInstructions() ?? "", /chain/i);
   });
 
-  it("lists nine stable and nine experimental outcome packs", async () => {
+  it("lists nine stable and seven experimental outcome packs", async () => {
     const result = await client.callTool({ name: "list_packs", arguments: {} });
     const envelope = result.structuredContent as { ok: boolean; data: { packs: Array<{ slug: string; lane: string; status: string }> } };
     assert.equal(envelope.ok, true);
     assert.deepEqual(envelope.data.packs.map(({ slug, lane }) => [slug, lane]), [
       ["hardware-launch", "launch"],
-      ["software-launch", "launch"],
       ["open-source-release", "release"],
       ["playable-web-game", "create"],
       ["web-app-operations", "operate"],
       ["working-web-app", "create"],
       ["production-web-release", "release"],
       ["marketing-operations", "operate"],
-      ["billion-dollar-saas", "create"],
       ["kickstarter-funding", "launch"],
       ["kickstarter-fulfillment", "operate"],
       ["robot-prototype", "create"],
@@ -80,14 +78,14 @@ describe("Possible MCP", () => {
       ["launch-content-campaign", "launch"],
     ]);
     assert.equal(envelope.data.packs.filter(({ status }) => status === "stable").length, 9);
-    assert.equal(envelope.data.packs.filter(({ status }) => status === "experimental").length, 9);
+    assert.equal(envelope.data.packs.filter(({ status }) => status === "experimental").length, 7);
   });
 
   it("compiles Web Presentation as a coded browser-deck outcome", async () => {
     const result = await client.callTool({ name: "compile_pack", arguments: { slug: "web-presentation" } });
     const envelope = result.structuredContent as { ok: boolean; data: { pack: { catalogNumber: number; lane: string; plugins: Array<{ invocation: string }> }; installCommands: string[]; runPrompt: string } };
     assert.equal(envelope.ok, true);
-    assert.equal(envelope.data.pack.catalogNumber, 13);
+    assert.equal(envelope.data.pack.catalogNumber, 11);
     assert.equal(envelope.data.pack.lane, "create");
     assert.equal(envelope.data.installCommands.length, 4);
     assert.equal(envelope.data.pack.plugins.at(0)?.invocation, "@sites");
@@ -151,7 +149,7 @@ describe("Possible MCP", () => {
     const result = await client.callTool({ name: "compile_pack", arguments: { slug: "working-web-app" } });
     const envelope = result.structuredContent as { ok: boolean; data: { pack: { catalogNumber: number; lane: string }; installCommands: string[]; runPrompt: string } };
     assert.equal(envelope.ok, true);
-    assert.equal(envelope.data.pack.catalogNumber, 6);
+    assert.equal(envelope.data.pack.catalogNumber, 5);
     assert.equal(envelope.data.pack.lane, "create");
     assert.equal(envelope.data.installCommands.length, 2);
     assert.match(envelope.data.runPrompt, /^Build the Working Web App outcome/);
@@ -161,7 +159,7 @@ describe("Possible MCP", () => {
     const result = await client.callTool({ name: "compile_pack", arguments: { slug: "software-opportunity-discovery" } });
     const envelope = result.structuredContent as { ok: boolean; data: { pack: { catalogNumber: number; lane: string; name: string }; installCommands: string[]; runPrompt: string } };
     assert.equal(envelope.ok, true);
-    assert.equal(envelope.data.pack.catalogNumber, 15);
+    assert.equal(envelope.data.pack.catalogNumber, 13);
     assert.equal(envelope.data.pack.lane, "create");
     assert.equal(envelope.data.pack.name, "Software Opportunity Discovery");
     assert.equal(envelope.data.installCommands.length, 1);
@@ -176,7 +174,7 @@ describe("Possible MCP", () => {
     const result = await client.callTool({ name: "compile_pack", arguments: { slug: "first-customer-sprint" } });
     const envelope = result.structuredContent as { ok: boolean; data: { pack: { catalogNumber: number; lane: string; name: string }; installCommands: string[]; runPrompt: string } };
     assert.equal(envelope.ok, true);
-    assert.equal(envelope.data.pack.catalogNumber, 16);
+    assert.equal(envelope.data.pack.catalogNumber, 14);
     assert.equal(envelope.data.pack.lane, "launch");
     assert.equal(envelope.data.pack.name, "First Customer Sprint");
     assert.equal(envelope.data.installCommands.length, 2);
@@ -192,7 +190,7 @@ describe("Possible MCP", () => {
     const result = await client.callTool({ name: "compile_pack", arguments: { slug: "working-hardware-prototype" } });
     const envelope = result.structuredContent as { ok: boolean; data: { pack: { catalogNumber: number; lane: string; name: string }; installCommands: string[]; runPrompt: string } };
     assert.equal(envelope.ok, true);
-    assert.equal(envelope.data.pack.catalogNumber, 17);
+    assert.equal(envelope.data.pack.catalogNumber, 15);
     assert.equal(envelope.data.pack.lane, "create");
     assert.equal(envelope.data.pack.name, "Working Hardware Prototype");
     assert.equal(envelope.data.installCommands.length, 4);
@@ -205,7 +203,7 @@ describe("Possible MCP", () => {
     const result = await client.callTool({ name: "compile_pack", arguments: { slug: "launch-content-campaign" } });
     const envelope = result.structuredContent as { ok: boolean; data: { pack: { catalogNumber: number; lane: string; name: string }; installCommands: string[]; runPrompt: string } };
     assert.equal(envelope.ok, true);
-    assert.equal(envelope.data.pack.catalogNumber, 18);
+    assert.equal(envelope.data.pack.catalogNumber, 16);
     assert.equal(envelope.data.pack.lane, "launch");
     assert.equal(envelope.data.pack.name, "Launch Content Campaign");
     assert.equal(envelope.data.installCommands.length, 3);
@@ -218,7 +216,7 @@ describe("Possible MCP", () => {
     const result = await client.callTool({ name: "compile_pack", arguments: { slug: "production-web-release" } });
     const envelope = result.structuredContent as { ok: boolean; data: { pack: { catalogNumber: number; lane: string }; installCommands: string[]; runPrompt: string } };
     assert.equal(envelope.ok, true);
-    assert.equal(envelope.data.pack.catalogNumber, 7);
+    assert.equal(envelope.data.pack.catalogNumber, 6);
     assert.equal(envelope.data.pack.lane, "release");
     assert.equal(envelope.data.installCommands.length, 3);
     assert.match(envelope.data.runPrompt, /^Prepare and verify the Production Web Release outcome/);
@@ -229,7 +227,7 @@ describe("Possible MCP", () => {
     const result = await client.callTool({ name: "compile_pack", arguments: { slug: "marketing-operations" } });
     const envelope = result.structuredContent as { ok: boolean; data: { pack: { catalogNumber: number; lane: string; artifactRoot: string }; installCommands: string[]; runPrompt: string } };
     assert.equal(envelope.ok, true);
-    assert.equal(envelope.data.pack.catalogNumber, 8);
+    assert.equal(envelope.data.pack.catalogNumber, 7);
     assert.equal(envelope.data.pack.lane, "operate");
     assert.equal(envelope.data.pack.artifactRoot, "marketing");
     assert.equal(envelope.data.installCommands.length, 1);

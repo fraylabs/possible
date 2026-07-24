@@ -10,11 +10,11 @@ function skill(pack: OutcomePack, id: string): SkillSource {
 
 export const kickstarterFulfillmentPack: OutcomePack = {
   schemaVersion: 1,
-  catalogNumber: 11,
+  catalogNumber: 9,
   lane: "operate",
   slug: "kickstarter-fulfillment",
   name: "Kickstarter Fulfillment",
-  eyebrow: "11 / OUTCOME PACK",
+  eyebrow: "09 / OUTCOME PACK",
   promise: "Turn a funded Kickstarter into an evidence-backed operation that reaches 95% shipped.",
   summary: "A campaign and obligation baseline, production and quality plan, privacy-safe order ledger, logistics and exception system, review-required backer communications, recurring fulfillment control loop, shipment milestones, and independently verified 95%-shipped completion report.",
   useWhen: [

@@ -96,7 +96,7 @@ describe("Possible", () => {
     for (const pack of publishedPacks.slice(8)) expect(within(thirdPage).getByRole("heading", { name: pack.name })).toBeInTheDocument();
     expect(window.location.search).toBe("?page=3");
     expect(screen.queryByText(/EXPERIMENTAL OUTCOME PACK/i)).not.toBeInTheDocument();
-    expect(container).not.toHaveTextContent(/Software Launch|Open-Source Release|Marketing Operations|Billion-Dollar SaaS/i);
+    expect(container).not.toHaveTextContent(/Open-Source Release|Marketing Operations/i);
     expect(await axe(container)).toHaveNoViolations();
   });
 
@@ -167,12 +167,6 @@ describe("Possible", () => {
     expect(sprintRoute.container.querySelector(".pack-prompt-disclosure code")?.textContent).toMatch(/FIRST CUSTOMER SPRINT/);
     expect(sprintRoute.container.querySelector(".pack-prompt-disclosure code")?.textContent).toMatch(/Scheduling is coordination, not commercial evidence/i);
     expect(await axe(sprintRoute.container)).toHaveNoViolations();
-  });
-
-  it("keeps retired pack routes out of the public product", () => {
-    renderRoute("/packs/software-launch");
-    expect(screen.getByRole("heading", { name: /This outcome is\s*not here/i })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /Browse the examples/i })).toHaveAttribute("href", "/examples");
   });
 
   it("keeps the primary documentation focused on first use", async () => {
@@ -272,7 +266,7 @@ describe("Possible", () => {
       expect(within(gallery).getByRole("link", { name: new RegExp(example.name, "i") })).toHaveAttribute("href", `/examples/${example.slug}`);
     }
 
-    expect(container).not.toHaveTextContent(/Tiny Slug|Software Launch|Open-Source Release/i);
+    expect(container).not.toHaveTextContent(/Tiny Slug|Open-Source Release/i);
     expect(await axe(container)).toHaveNoViolations();
   });
 

@@ -28,11 +28,11 @@ const source = (
 
 export const webPresentationPack: OutcomePack = {
   schemaVersion: 1,
-  catalogNumber: 13,
+  catalogNumber: 11,
   lane: "create",
   slug: "web-presentation",
   name: "Web Presentation",
-  eyebrow: "13 / OUTCOME PACK",
+  eyebrow: "11 / OUTCOME PACK",
   promise: "Turn rough material into a distinctive, evidence-backed presentation that runs in the browser.",
   summary: "A clear narrative, visual direction, coded 16:9 deck, presenter controls, responsive fallback, PDF export, contact sheet, and completion report—designed, tested, and reviewed as one presentation.",
   useWhen: [

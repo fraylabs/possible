@@ -6,11 +6,11 @@ const mujocoSkillRevision = "9adb697c211d2cebc07164554d7a9f859e7f763d";
 
 export const robotPrototypePack: OutcomePack = {
   schemaVersion: 1,
-  catalogNumber: 12,
+  catalogNumber: 10,
   lane: "create",
   slug: "robot-prototype",
   name: "Robot Prototype",
-  eyebrow: "12 / OUTCOME PACK",
+  eyebrow: "10 / OUTCOME PACK",
   promise: "Turn a robot idea into a coherent mechanical, kinematic, control, and simulation prototype.",
   summary: "CAD, robot descriptions, MuJoCo simulation, controls, tests, and a sim-to-real gap report.",
   useWhen: [

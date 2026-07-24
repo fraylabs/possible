@@ -2,11 +2,11 @@ import type { OutcomePack } from "./types.js";
 
 export const workingWebAppPack: OutcomePack = {
   schemaVersion: 1,
-  catalogNumber: 6,
+  catalogNumber: 5,
   lane: "create",
   slug: "working-web-app",
   name: "Working Web App",
-  eyebrow: "06 / OUTCOME PACK",
+  eyebrow: "05 / OUTCOME PACK",
   promise: "Turn one web-app idea or rough repository into a small product that actually works.",
   summary: "A locally runnable application with one complete user flow, deliberate states, reproducible data, automated checks, a production build, and an evidence report—not a polished shell pretending to be a product.",
   useWhen: [
@@ -16,7 +16,7 @@ export const workingWebAppPack: OutcomePack = {
   ],
   notFor: [
     "Choosing which software opportunity to pursue; use Software Opportunity Discovery. Attempting the first sale for a selected opportunity belongs to First Customer Sprint.",
-    "A working product that mainly needs a launch site, demo film, and public story; use Software Launch.",
+    "A working developer product that mainly needs positioning, a site, a demonstration, and an adoption path; use Developer Project Launch.",
     "A browser game whose core outcome is a polished replayable loop; use Playable Web Game.",
     "Deploying an existing tested candidate or operating an already-live service.",
     "Claiming production security, scale, reliability, or readiness from a local implementation.",

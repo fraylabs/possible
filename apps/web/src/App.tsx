@@ -251,14 +251,6 @@ function PackArtwork({ slug }: { slug: string }) {
       </div>
     );
   }
-  if (slug === "software-launch") {
-    return (
-      <div className="pack-art pack-art--software" aria-hidden="true">
-        <div className="software-window"><i /><i /><i /><b /><b /><b /></div>
-        <span>BUILD</span><span>TEST</span><span>SHIP</span>
-      </div>
-    );
-  }
   if (slug === "working-web-app") {
     return (
       <div className="pack-art pack-art--working" aria-hidden="true">
@@ -298,15 +290,6 @@ function PackArtwork({ slug }: { slug: string }) {
       <div className="pack-art pack-art--production-release" aria-hidden="true">
         <div className="release-track"><i /><i /><i /><b>APPROVAL</b></div>
         <span>CANDIDATE / PINNED</span><span>ROLLBACK / READY</span><span>PRODUCTION / VERIFIED</span>
-      </div>
-    );
-  }
-  if (slug === "billion-dollar-saas") {
-    return (
-      <div className="pack-art pack-art--company" aria-hidden="true">
-        <div>{Array.from({ length: 12 }, (_, index) => <i key={index} />)}</div>
-        <strong>COMPANY / OPERATING SYSTEM</strong>
-        <span>PRODUCT</span><span>GROWTH</span><span>REVENUE</span><span>TRUST</span>
       </div>
     );
   }

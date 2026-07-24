@@ -14,11 +14,11 @@ const awesomeSource = (skill: string, name: string, role: string): SkillSource =
 
 export const webAppOperationsPack: OutcomePack = {
   schemaVersion: 1,
-  catalogNumber: 5,
+  catalogNumber: 4,
   lane: "operate",
   slug: "web-app-operations",
   name: "Web App Operations",
-  eyebrow: "05 / OUTCOME PACK",
+  eyebrow: "04 / OUTCOME PACK",
   promise: "Turn one live web app into a repeatable, optionally scheduled, evidence-backed operating loop.",
   summary: "An executable health check, issue queue, maintenance cadence, incident and rollback runbooks, recovery drill, first dated completion report, and scheduling-ready recurring task—assembled once, then ready to repeat.",
   useWhen: [

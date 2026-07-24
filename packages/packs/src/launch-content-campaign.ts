@@ -1,6 +1,6 @@
 import type { OutcomePack, SkillSource } from "./types.js";
+import { hardwareLaunchPack } from "./hardware-launch.js";
 import { marketingOperationsPack } from "./marketing-operations.js";
-import { softwareLaunchPack } from "./software-launch.js";
 
 const humanizerRevision = "e081be4df826b7bd545e6b80406622f52d0bb49b";
 
@@ -23,11 +23,11 @@ const humanizer: SkillSource = {
 
 export const launchContentCampaignPack: OutcomePack = {
   schemaVersion: 1,
-  catalogNumber: 18,
+  catalogNumber: 16,
   lane: "launch",
   slug: "launch-content-campaign",
   name: "Launch Content Campaign",
-  eyebrow: "18 / OUTCOME PACK",
+  eyebrow: "16 / OUTCOME PACK",
   promise: "Create one post-ready cross-platform launch campaign.",
   summary: "Evidence-backed product rationale, one visual system, image and video masters, Instagram carousels and reels, YouTube and Shorts packages, X threads, captions, accessibility text, posting calendar, provenance, and independent claims review—without silently publishing anything.",
   useWhen: [
@@ -48,7 +48,7 @@ export const launchContentCampaignPack: OutcomePack = {
     skill(marketingOperationsPack, "copywriting"),
     skill(marketingOperationsPack, "social"),
     skill(marketingOperationsPack, "analytics"),
-    skill(softwareLaunchPack, "remotion-best-practices"),
+    skill(hardwareLaunchPack, "remotion-best-practices"),
     humanizer,
   ],
   workstreams: [

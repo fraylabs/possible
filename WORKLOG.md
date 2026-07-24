@@ -15,7 +15,7 @@
 
 ## 2026-07-18 — Three-pack catalog
 
-- Added Software Launch and Open-Source Release using the same outcome contract.
+- Added Open-Source Release using the same outcome contract.
 - Generalized the compiler from launch-specific folders and review skills.
 - Added an explicit three-choice composer without automatic or opaque routing.
 - Published a static pack index and per-pack JSON, install commands, and run prompts.

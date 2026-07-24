@@ -6,14 +6,12 @@ import { compilePack, compileWorkstreamWaves, experimentalOutcomePacks, getPackS
 test("every outcome pack compiles to inspectable installs and a complete prompt", () => {
   assert.deepEqual(outcomePacks.map((pack) => pack.slug), [
     "hardware-launch",
-    "software-launch",
     "open-source-release",
     "playable-web-game",
     "web-app-operations",
     "working-web-app",
     "production-web-release",
     "marketing-operations",
-    "billion-dollar-saas",
     "kickstarter-funding",
     "kickstarter-fulfillment",
     "robot-prototype",
@@ -26,14 +24,12 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
   ]);
   assert.deepEqual(outcomePacks.map(({ slug, lane }) => [slug, lane]), [
     ["hardware-launch", "launch"],
-    ["software-launch", "launch"],
     ["open-source-release", "release"],
     ["playable-web-game", "create"],
     ["web-app-operations", "operate"],
     ["working-web-app", "create"],
     ["production-web-release", "release"],
     ["marketing-operations", "operate"],
-    ["billion-dollar-saas", "create"],
     ["kickstarter-funding", "launch"],
     ["kickstarter-fulfillment", "operate"],
     ["robot-prototype", "create"],
@@ -44,7 +40,7 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
     ["working-hardware-prototype", "create"],
     ["launch-content-campaign", "launch"],
   ]);
-  assert.deepEqual(outcomePacks.map((pack) => pack.catalogNumber), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]);
+  assert.deepEqual(outcomePacks.map((pack) => pack.catalogNumber), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]);
   assert.equal(new Set(outcomePacks.map((pack) => pack.catalogNumber)).size, outcomePacks.length);
   assert.equal(new Set(outcomePacks.map((pack) => pack.slug)).size, outcomePacks.length);
   assert.deepEqual(stableOutcomePacks.map((pack) => pack.slug), [
@@ -58,9 +54,8 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
     "working-hardware-prototype",
     "launch-content-campaign",
   ]);
-  assert.equal(experimentalOutcomePacks.length, 9);
+  assert.equal(experimentalOutcomePacks.length, 7);
   assert.equal(getPackStatus("hardware-launch"), "stable");
-  assert.equal(getPackStatus("software-launch"), "experimental");
   assert.equal(getPackStatus("missing"), undefined);
 
   for (const pack of outcomePacks) {
@@ -366,16 +361,6 @@ test("deterministic stages remain inside one separately approved outcome", () =>
 
 test("install commands group skills by upstream repository", () => {
   const bySlug = (slug) => compilePack(outcomePacks.find((pack) => pack.slug === slug));
-  const software = bySlug("software-launch");
-  assert.equal(software.installCommands.length, 3);
-  assert.match(software.installCommands[0], /anthropics\/skills.+frontend-design.+webapp-testing.+--agent codex/);
-  assert.match(software.installCommands[1], /vercel-labs\/agent-skills.+vercel-react-best-practices.+web-design-guidelines.+deploy-to-vercel/);
-  assert.equal(software.pack.plugins[0].invocation, "@sites");
-  assert.deepEqual(software.pack.plugins[0].skills, ["sites-building", "sites-hosting"]);
-  assert.match(software.runPrompt, /prefer it for the MVP deployment path so the user does not need a separate Vercel registration/i);
-  assert.match(software.runPrompt, /Keep \$sites-hosting with the lead agent/);
-  assert.deepEqual(software.pack.workstreams.find((stream) => stream.id === "release").skills, ["web-design-guidelines"]);
-
   const openSource = bySlug("open-source-release");
   assert.equal(openSource.installCommands.length, 1);
   assert.match(openSource.installCommands[0], /github\/awesome-copilot.+github-release.+create-readme.+documentation-writer.+github-actions-hardening.+security-review/);
@@ -440,7 +425,7 @@ test("install commands group skills by upstream repository", () => {
 test("Web Presentation produces a coded, evidence-backed deck instead of a PowerPoint file", () => {
   const presentation = outcomePacks.find((pack) => pack.slug === "web-presentation");
   assert.ok(presentation);
-  assert.equal(presentation.catalogNumber, 13);
+  assert.equal(presentation.catalogNumber, 11);
   assert.equal(presentation.lane, "create");
   assert.match(presentation.promise, /runs in the browser/i);
   assert.match(presentation.useWhen.join(" "), /HTML, CSS, and JavaScript instead of PowerPoint/i);
@@ -458,7 +443,7 @@ test("Web Presentation produces a coded, evidence-backed deck instead of a Power
 test("Robot Prototype generalizes one verified digital-prototype contract across robot forms", () => {
   const robot = outcomePacks.find((pack) => pack.slug === "robot-prototype");
   assert.ok(robot);
-  assert.equal(robot.catalogNumber, 12);
+  assert.equal(robot.catalogNumber, 10);
   assert.equal(robot.lane, "create");
   assert.match(robot.useWhen.join(" "), /robot hand.*gripper.*arm.*mobile robot.*quadruped.*full robot/i);
   assert.match(robot.outputs.join(" "), /STEP assembly.*robot-description.*MuJoCo.*controller.*simulation tests.*sim-to-real gap/i);
@@ -480,7 +465,7 @@ test("Robot Prototype generalizes one verified digital-prototype contract across
 
 test("Sites is exposed only on web deployment outcomes and never as a fake Skills CLI install", () => {
   const sitesPacks = outcomePacks.filter((pack) => pack.plugins?.some((plugin) => plugin.id === "sites"));
-  assert.deepEqual(sitesPacks.map((pack) => pack.slug), ["hardware-launch", "software-launch", "production-web-release", "web-presentation", "developer-project-launch"]);
+  assert.deepEqual(sitesPacks.map((pack) => pack.slug), ["hardware-launch", "production-web-release", "web-presentation", "developer-project-launch"]);
   for (const pack of sitesPacks) {
     const compiled = compilePack(pack);
     assert.doesNotMatch(compiled.installCommands.join("\n"), /sites|openai-bundled/i);
@@ -491,16 +476,14 @@ test("Sites is exposed only on web deployment outcomes and never as a fake Skill
 
 test("Developer Project Launch turns a working developer project into an evidence-backed adoption path", () => {
   const developer = outcomePacks.find((pack) => pack.slug === "developer-project-launch");
-  const software = outcomePacks.find((pack) => pack.slug === "software-launch");
   const openSource = outcomePacks.find((pack) => pack.slug === "open-source-release");
   assert.ok(developer);
-  assert.equal(developer.catalogNumber, 14);
+  assert.equal(developer.catalogNumber, 12);
   assert.equal(developer.lane, "launch");
   assert.match(developer.eyebrow, /EXPERIMENTAL/);
   assert.match(developer.useWhen.join(" "), /working CLI.*library.*API.*developer platform/i);
-  assert.match(developer.notFor.join(" "), /core product.*Software Launch/i);
+  assert.match(developer.notFor.join(" "), /core product.*Working Web App.*Launch Content Campaign/i);
   assert.match(developer.notFor.join(" "), /repository release engineering.*Open-Source Release/i);
-  assert.match(software.notFor.join(" "), /Developer Project Launch/i);
   assert.match(openSource.notFor.join(" "), /Developer Project Launch/i);
 
   const outputs = developer.outputs.join(" ");
@@ -515,8 +498,6 @@ test("Developer Project Launch turns a working developer project into an evidenc
   for (const required of ["copywriting", "frontend-design", "impeccable", "create-readme", "documentation-writer", "webapp-testing", "web-design-guidelines"]) {
     assert.equal(skillIds.has(required), true, `missing ${required}`);
   }
-  assert.notDeepEqual([...skillIds].sort(), software.skills.map(({ id }) => id).sort());
-
   const owned = developer.workstreams.flatMap((stream) => stream.owns.map((path) => ({ stream: stream.id, path })));
   for (const item of owned) {
     assert.doesNotMatch(item.path, /^(?:\/|[A-Za-z]:)|\.\.|[*?]/, `unsafe ownership path: ${item.path}`);
@@ -543,9 +524,8 @@ test("Developer Project Launch turns a working developer project into an evidenc
 test("Software Opportunity Discovery selects a thesis without claiming demand", () => {
   const discovery = outcomePacks.find((pack) => pack.slug === "software-opportunity-discovery");
   const working = outcomePacks.find((pack) => pack.slug === "working-web-app");
-  const company = outcomePacks.find((pack) => pack.slug === "billion-dollar-saas");
   assert.ok(discovery);
-  assert.equal(discovery.catalogNumber, 15);
+  assert.equal(discovery.catalogNumber, 13);
   assert.equal(discovery.lane, "create");
   assert.equal(discovery.name, "Software Opportunity Discovery");
   assert.match(discovery.eyebrow, /OUTCOME PACK/);
@@ -553,7 +533,6 @@ test("Software Opportunity Discovery selects a thesis without claiming demand", 
   assert.match(discovery.useWhen.join(" "), /developer.*does not yet know which problem, user, or opportunity/i);
   assert.match(discovery.notFor.join(" "), /specific opportunity.*First Customer Sprint/i);
   assert.match(working.notFor.join(" "), /Software Opportunity Discovery.*First Customer Sprint/i);
-  assert.match(company.notFor.join(" "), /Software Opportunity Discovery.*First Customer Sprint/i);
 
   const skillIds = new Set(discovery.skills.map(({ id }) => id));
   assert.deepEqual([...skillIds], ["customer-research", "competitor-profiling", "product-marketing", "analytics"]);
@@ -607,7 +586,7 @@ test("Software Opportunity Discovery selects a thesis without claiming demand", 
 test("First Customer Sprint pursues commercial commitment and remains resumable", () => {
   const sprint = outcomePacks.find((pack) => pack.slug === "first-customer-sprint");
   assert.ok(sprint);
-  assert.equal(sprint.catalogNumber, 16);
+  assert.equal(sprint.catalogNumber, 14);
   assert.equal(sprint.lane, "launch");
   assert.equal(sprint.name, "First Customer Sprint");
   assert.match(sprint.promise, /real customers.*strongest available commitment/i);
@@ -707,7 +686,7 @@ test("First Customer Sprint pursues commercial commitment and remains resumable"
 test("Working Hardware Prototype requires a measured physical artifact and fresh review", () => {
   const prototype = outcomePacks.find((pack) => pack.slug === "working-hardware-prototype");
   assert.ok(prototype);
-  assert.equal(prototype.catalogNumber, 17);
+  assert.equal(prototype.catalogNumber, 15);
   assert.equal(prototype.lane, "create");
   assert.equal(prototype.name, "Working Hardware Prototype");
   assert.match(prototype.promise, /functional, measured, independently reviewed hardware prototype/i);
@@ -781,7 +760,7 @@ test("Working Hardware Prototype requires a measured physical artifact and fresh
 test("Launch Content Campaign produces post-ready media without publishing it", () => {
   const campaign = outcomePacks.find((pack) => pack.slug === "launch-content-campaign");
   assert.ok(campaign);
-  assert.equal(campaign.catalogNumber, 18);
+  assert.equal(campaign.catalogNumber, 16);
   assert.equal(campaign.lane, "launch");
   assert.equal(campaign.name, "Launch Content Campaign");
   assert.match(campaign.promise, /post-ready.*campaign/i);
@@ -815,9 +794,9 @@ test("Launch Content Campaign produces post-ready media without publishing it", 
 test("Marketing Operations compiles a manual-first, truthfully gated recurring schedule", () => {
   const marketing = outcomePacks.find((pack) => pack.slug === "marketing-operations");
   assert.ok(marketing, "Marketing Operations is present in the catalog");
-  assert.equal(marketing.catalogNumber, 8);
+  assert.equal(marketing.catalogNumber, 7);
   assert.equal(marketing.lane, "operate");
-  assert.match(marketing.eyebrow, /^08 \/ /);
+  assert.match(marketing.eyebrow, /^07 \/ /);
   assert.match(marketing.useWhen.join(" "), /schedule (?:recurring )?marketing operations/i);
   assert.match(marketing.promise, /repeatable|recurring/i);
 
@@ -864,30 +843,17 @@ test("Marketing Operations compiles a manual-first, truthfully gated recurring s
 test("the web-app lifecycle packs have non-overlapping entry conditions", () => {
   const pack = (slug) => outcomePacks.find((candidate) => candidate.slug === slug);
   assert.match(pack("working-web-app").useWhen.join(" "), /first coherent|first complete|first.*usable/i);
-  assert.match(pack("software-launch").useWhen.join(" "), /existing working software product/i);
-  assert.match(pack("software-launch").notFor.join(" "), /first complete usable application/i);
   assert.match(pack("production-web-release").useWhen.join(" "), /existing tested web app/i);
   assert.match(pack("web-app-operations").useWhen.join(" "), /already live/i);
 });
 
-test("benchmark outcome packs compile operational knowledge without upgrading coverage into success", () => {
+test("Kickstarter outcomes preserve funding and fulfillment evidence", () => {
   const pack = (slug) => outcomePacks.find((candidate) => candidate.slug === slug);
-  const company = pack("billion-dollar-saas");
   const funding = pack("kickstarter-funding");
   const fulfillment = pack("kickstarter-fulfillment");
 
-  assert.ok(company);
-  assert.equal(company.catalogNumber, 9);
-  assert.equal(company.lane, "create");
-  assert.match(company.promise, /Atlassian-scale SaaS/i);
-  assert.match(company.outputs.join(" "), /company-system coverage matrix/i);
-  assert.match(company.outputs.join(" "), /revenue ledger beginning at zero/i);
-  assert.match(company.guardrails.join(" "), /operational coverage and economic outcomes remain separate/i);
-  assert.match(company.notFor.join(" "), /copying another company.*trademark/i);
-  assert.match(compilePack(company).runPrompt, /^Build the Billion-Dollar SaaS outcome/);
-
   assert.ok(funding);
-  assert.equal(funding.catalogNumber, 10);
+  assert.equal(funding.catalogNumber, 8);
   assert.equal(funding.lane, "launch");
   assert.match(funding.promise, /Kickstarter campaign system/i);
   assert.match(funding.outputs.join(" "), /deposited net payout/i);
@@ -899,7 +865,7 @@ test("benchmark outcome packs compile operational knowledge without upgrading co
   assert.match(fundingPrompt, /PRODUCT DECISION RECORD/);
 
   assert.ok(fulfillment);
-  assert.equal(fulfillment.catalogNumber, 11);
+  assert.equal(fulfillment.catalogNumber, 9);
   assert.equal(fulfillment.lane, "operate");
   assert.match(fulfillment.promise, /95% shipped/i);
   assert.match(fulfillment.guardrails.join(" "), /personal names.*addresses.*version control/i);
@@ -910,7 +876,7 @@ test("benchmark outcome packs compile operational knowledge without upgrading co
   assert.match(fulfillmentPrompt, /SCHEDULE GATE/);
   assert.match(fulfillmentPrompt, /fulfillment\/receipts\/YYYY-MM-DDTHHMMSSZ\.md/);
 
-  for (const candidate of [company, funding, fulfillment]) {
+  for (const candidate of [funding, fulfillment]) {
     const owned = candidate.workstreams.flatMap((stream) => stream.owns.map((path) => ({ stream: stream.id, path })));
     for (const left of owned) {
       for (const right of owned) {

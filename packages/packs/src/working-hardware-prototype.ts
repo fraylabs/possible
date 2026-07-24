@@ -26,11 +26,11 @@ const source = (
 
 export const workingHardwarePrototypePack: OutcomePack = {
   schemaVersion: 1,
-  catalogNumber: 17,
+  catalogNumber: 15,
   lane: "create",
   slug: "working-hardware-prototype",
   name: "Working Hardware Prototype",
-  eyebrow: "17 / OUTCOME PACK",
+  eyebrow: "15 / OUTCOME PACK",
   promise: "Build a functional, measured, independently reviewed hardware prototype.",
   summary: "A physical prototype with locked intent, three product-specific design directions, CAD, components, controls, calibrated measurements, hazard and claims boundaries, and an honest working, repair-required, or no-go receipt.",
   useWhen: [
