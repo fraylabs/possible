@@ -31,7 +31,7 @@ const homeMarkup = await html("index.html");
 const home = visibleText(homeMarkup);
 assert.match(home, /Complete a possible[\s\S]*outcome\./);
 assert.match(home, /Possible\.sh is an open-source library of Outcome Packs\.[\s\S]*dozens of coordinated tasks\./);
-assert.match(home, /npx @fraylabs\/possible@0\.1\.10 init/);
+assert.match(home, /npx @fraylabs\/possible@0\.1\.11 init/);
 assert.match(home, /DESCRIBE[\s\S]*APPROVE[\s\S]*EXECUTE[\s\S]*VERIFY/);
 assert.match(home, /FEATURED OUTCOMES/);
 
@@ -201,7 +201,7 @@ const playableGame = await html("demo/game/play/index.html");
 assert.doesNotMatch(playableGame, /NEXT_REDIRECT/, "/demo/game/play must remain the playable Fold output");
 
 const docs = visibleText(await html("docs/index.html"));
-assert.match(docs, /npx @fraylabs\/possible@0\.1\.10 init/);
+assert.match(docs, /npx @fraylabs\/possible@0\.1\.11 init/);
 assert.doesNotMatch(docs, /schedule operations|recurring outcome|\.possible\/schedule\.json/i);
 
 const howToUseMarkup = await html("docs/how-to-use/index.html");
@@ -217,7 +217,7 @@ assert.doesNotMatch(howToUse, /Outcome Chain|NOW \/ IF THIS PASSES \/ LATER/i, "
 
 const presentation = await html("presentation/possible.html");
 assert.equal((presentation.match(/class="slide(?: [^"]*)?"/g) ?? []).length, 10, "The visual explainer must contain ten coded slides");
-for (const phrase of ["Agent skill", "Execution prompt", "Outcome Pack", "$possible", "dozens of coordinated tasks", "npx @fraylabs/possible@0.1.10 init"]) {
+for (const phrase of ["Agent skill", "Execution prompt", "Outcome Pack", "$possible", "dozens of coordinated tasks", "npx @fraylabs/possible@0.1.11 init"]) {
   assert.match(presentation, new RegExp(escape(phrase)), `The visual explainer must teach '${phrase}'`);
 }
 

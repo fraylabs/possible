@@ -21,6 +21,8 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
     "first-customer-sprint",
     "working-hardware-prototype",
     "launch-content-campaign",
+    "manufacturing-readiness",
+    "study-readiness",
   ]);
   assert.deepEqual(outcomePacks.map(({ slug, lane }) => [slug, lane]), [
     ["hardware-launch", "launch"],
@@ -39,8 +41,10 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
     ["first-customer-sprint", "launch"],
     ["working-hardware-prototype", "create"],
     ["launch-content-campaign", "launch"],
+    ["manufacturing-readiness", "release"],
+    ["study-readiness", "create"],
   ]);
-  assert.deepEqual(outcomePacks.map((pack) => pack.catalogNumber), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]);
+  assert.deepEqual(outcomePacks.map((pack) => pack.catalogNumber), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]);
   assert.equal(new Set(outcomePacks.map((pack) => pack.catalogNumber)).size, outcomePacks.length);
   assert.equal(new Set(outcomePacks.map((pack) => pack.slug)).size, outcomePacks.length);
   assert.deepEqual(stableOutcomePacks.map((pack) => pack.slug), [
@@ -54,7 +58,7 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
     "working-hardware-prototype",
     "launch-content-campaign",
   ]);
-  assert.equal(experimentalOutcomePacks.length, 7);
+  assert.equal(experimentalOutcomePacks.length, 9);
   assert.equal(getPackStatus("hardware-launch"), "stable");
   assert.equal(getPackStatus("missing"), undefined);
 
@@ -755,6 +759,104 @@ test("Working Hardware Prototype requires a measured physical artifact and fresh
   const invalidDecisionFields = structuredClone(prototype);
   invalidDecisionFields.decisionRationale.requiredFields[1] = "alternatives";
   assert.throws(() => compilePack(invalidDecisionFields), /decision record fields are invalid/);
+});
+
+test("Manufacturing Readiness requires production evidence before a production commitment", () => {
+  const manufacturing = outcomePacks.find((pack) => pack.slug === "manufacturing-readiness");
+  assert.ok(manufacturing);
+  assert.equal(manufacturing.catalogNumber, 17);
+  assert.equal(manufacturing.lane, "release");
+  assert.equal(manufacturing.name, "Manufacturing Readiness");
+  assert.match(manufacturing.promise, /measured hardware prototype.*production decision/i);
+  assert.match(manufacturing.useWhen.join(" "), /quoted, piloted, manufactured, or promised/i);
+  assert.match(manufacturing.notFor.join(" "), /first functional physical artifact.*Working Hardware Prototype/i);
+  assert.deepEqual(manufacturing.prerequisites, [{
+    id: "measured-prototype",
+    description: "One immutable physical prototype revision has direct functional and safety-boundary evidence suitable for manufacturing review.",
+    requiredEvidence: [
+      "prototype revision, intended use, product configuration, and claims boundary",
+      "mechanical, electrical, firmware, component, and assembly sources",
+      "calibrated nominal, boundary, and failure measurements",
+      "hazard analysis, known defects, unproven assumptions, and human-use boundary",
+    ],
+  }]);
+  assert.deepEqual(compileWorkstreamWaves(manufacturing).map((wave) => wave.map(({ id }) => id)), [
+    ["release-baseline"],
+    ["dfm", "sourcing-economics", "compliance-quality"],
+    ["pilot-build"],
+    ["production-release"],
+  ]);
+  assert.deepEqual(manufacturing.manufacturingReadiness, {
+    kind: "manufacturing-readiness",
+    baselinePath: "manufacturing/baseline/product-configuration.json",
+    rfqPath: "manufacturing/sourcing/rfq-package/",
+    compliancePath: "manufacturing/compliance/readiness-plan.json",
+    pilotPath: "manufacturing/pilot/report.json",
+    decisionReceiptPath: "outcome-room/manufacturing-readiness-receipt.json",
+    decisions: ["ready", "repair-required", "no-go"],
+  });
+  const compiled = compilePack(manufacturing);
+  assert.equal(compiled.installCommands.length, 4);
+  assert.match(compiled.runPrompt, /^Prepare and verify the Manufacturing Readiness outcome/);
+  assert.match(compiled.runPrompt, /OUTCOME PREREQUISITES/);
+  assert.match(compiled.runPrompt, /MANUFACTURING READINESS GATE/);
+  assert.match(compiled.runPrompt, /supplier statements, written quotations, estimates, and agent assumptions/i);
+  assert.match(compiled.runPrompt, /minimum, expected, and overfunded volume scenarios/i);
+  assert.match(compiled.runPrompt, /ready, repair-required, or no-go/i);
+  assert.match(compiled.runPrompt, /does not mean certified, clinically effective, risk-free, profitable, funded, purchased/i);
+  assert.match(manufacturing.guardrails.join(" "), /Overfunding increases production and fulfillment obligations/i);
+  assert.match(manufacturing.verification.join(" "), /first-pass yield.*final yield.*defect.*rework/i);
+
+  const unsafeRfq = structuredClone(manufacturing);
+  unsafeRfq.manufacturingReadiness.rfqPath = "../rfq";
+  assert.throws(() => compilePack(unsafeRfq), /safe repository-relative path/);
+  const invalidDecision = structuredClone(manufacturing);
+  invalidDecision.manufacturingReadiness.decisions = ["ready", "maybe", "no-go"];
+  assert.throws(() => compilePack(invalidDecision), /decisions must be ready, repair-required, no-go/);
+});
+
+test("Study Readiness stops at a protocol package for qualified review", () => {
+  const study = outcomePacks.find((pack) => pack.slug === "study-readiness");
+  assert.ok(study);
+  assert.equal(study.catalogNumber, 18);
+  assert.equal(study.lane, "create");
+  assert.equal(study.name, "Study Readiness");
+  assert.match(study.promise, /research hypothesis.*protocol package ready for qualified review/i);
+  assert.match(study.useWhen.join(" "), /before recruitment or data collection/i);
+  assert.match(study.notFor.join(" "), /Replacing a qualified investigator.*ethics.*regulator/i);
+  assert.deepEqual(compileWorkstreamWaves(study).map((wave) => wave.map(({ id }) => id)), [
+    ["evidence-question"],
+    ["protocol", "ethics-governance", "analysis-reproducibility"],
+    ["study-operations"],
+    ["qualified-review-package"],
+  ]);
+  assert.deepEqual(study.studyReadiness, {
+    kind: "study-readiness",
+    researchQuestionPath: "study/question/research-question.json",
+    protocolPath: "study/protocol/protocol.md",
+    ethicsPath: "study/ethics/readiness-matrix.json",
+    analysisPath: "study/analysis/statistical-analysis-plan.md",
+    decisionReceiptPath: "outcome-room/study-readiness-receipt.json",
+    decisions: ["ready-for-qualified-review", "repair-required", "no-go"],
+  });
+  const compiled = compilePack(study);
+  assert.equal(compiled.installCommands.length, 2);
+  assert.match(compiled.runPrompt, /^Prepare and verify the Study Readiness outcome/);
+  assert.match(compiled.runPrompt, /STUDY READINESS GATE/);
+  assert.match(compiled.runPrompt, /Do not optimize the protocol to produce a favorable result/i);
+  assert.match(compiled.runPrompt, /An agent cannot act as investigator, clinician, ethics board, regulator, or legal adviser/i);
+  assert.match(compiled.runPrompt, /before data collection/i);
+  assert.match(compiled.runPrompt, /ready-for-qualified-review, repair-required, or no-go/i);
+  assert.match(compiled.runPrompt, /never means approved, registered, recruited, safe, effective, clinically validated/i);
+  assert.match(study.guardrails.join(" "), /Never fabricate citations.*participants.*data.*results/i);
+  assert.match(study.verification.join(" "), /negative or inconclusive reporting/i);
+
+  const unsafeProtocol = structuredClone(study);
+  unsafeProtocol.studyReadiness.protocolPath = "../protocol.md";
+  assert.throws(() => compilePack(unsafeProtocol), /safe repository-relative path/);
+  const invalidDecision = structuredClone(study);
+  invalidDecision.studyReadiness.decisions = ["ready", "repair-required", "no-go"];
+  assert.throws(() => compilePack(invalidDecision), /decisions must be ready-for-qualified-review, repair-required, no-go/);
 });
 
 test("Launch Content Campaign produces post-ready media without publishing it", () => {

@@ -255,7 +255,7 @@ Lane: `launch`
 
 Public page: `https://possible.sh/packs/kickstarter-funding`
 
-Use when a rough product idea or prototype needs the complete Kickstarter path: feasibility, economics, offer, rewards, story, proof film, prelaunch audience, campaign operations, and payout evidence. Use Hardware Launch for a presentation without crowdfunding mechanics.
+Use when a measured product prototype and manufacturing-readiness baseline need the complete Kickstarter path: economics, offer, rewards, story, proof film, prelaunch audience, campaign operations, and payout evidence. Use Working Hardware Prototype or Manufacturing Readiness first when physical or production evidence is missing. Use Study Readiness first when the campaign promises a research program whose protocol, accountable roles, ethics pathway, budget, and claims boundary are undefined.
 
 Outputs: feasibility and fixed funding-goal model, audience/offer/rewards/risks, responsive campaign story, proof-led film, prelaunch and campaign distribution system, measurement and payout controls, approved live execution or publication-ready blocked status, verified funding report.
 
@@ -621,6 +621,94 @@ Keep authentic prototype footage, renders, simulations, generated atmosphere, an
 
 Write `outcome-room/launch-content-receipt.json` with exactly one status: `ready`, `repair-required`, or `no-go`.
 
+## Manufacturing Readiness
+
+Slug: `manufacturing-readiness`
+
+Lane: `release`
+
+Status: `experimental`.
+
+Source specification: `https://github.com/fraylabs/possible/blob/dev/packages/packs/src/manufacturing-readiness.ts`
+
+Use when one measured physical prototype exists and the next decision is whether its frozen configuration can responsibly be quoted, piloted, manufactured, or promised to customers.
+
+Outputs: frozen product and evidence baseline; DFM, assembly, test, service, fixture, drawing, and supplier release package; comparable RFQ and supplier evidence; landed economics and cash timing; compliance, reliability, quality, and traceability plan; authentic pilot, packaging, transport, and fulfillment evidence or no-go; independent production-release receipt.
+
+Workstreams:
+
+- Frozen product and production baseline — `product-marketing`, `analytics`, `robotics-design-patterns`; owns product configuration and change control.
+- Design for manufacture, assembly, test, and service — `cad`, `step-parts`, `cad-viewer`, `robotics-design-patterns`; owns revisioned release files and fixtures.
+- Supplier evidence, landed economics, and capacity — `analytics`, `product-marketing`, `step-parts`; owns RFQs, written responses, economics, and volume scenarios.
+- Compliance, reliability, and quality release system — `robotics-testing`, `robotics-design-patterns`, `analytics`; owns classification questions, qualified-review dependencies, test coverage, inspection, traceability, rework, and stop-ship controls.
+- Pilot production and fulfillment proof — `create-technical-spike`, `robotics-testing`, `analytics`, `cad-viewer`; preserves produced quantity, yield, defects, rework, assembly time, packaging, transport, deviations, and unresolved failures.
+- Integrated production-release decision — `analytics`, `robotics-testing`, `cad-viewer`, `product-marketing`; returns ready, repair-required, or no-go without placing an order.
+- Fresh review — `cad-viewer`, `robotics-testing`, `analytics`; independently audits the released configuration and evidence.
+
+Sources:
+
+- `coreyhaines31/marketingskills`: `product-marketing`, `analytics`; reviewed `67264763cb107d61749f418d081c56e5bcbc0209`.
+- `earthtojake/text-to-cad`: `cad`, `step-parts`, `cad-viewer`; reviewed `fdbb4b4fb62d95ae298cfe9a46fdc7092bdaf423`.
+- `arpitg1304/robotics-agent-skills`: `robotics-design-patterns`, `robotics-testing`; reviewed `54f7b578f3dc269d29c0beb623b3f2611fd3a430`.
+- `github/awesome-copilot`: `create-technical-spike`; reviewed `26fe2d126bf79aafb38f43344d450b69632200f8`.
+
+Install:
+
+```bash
+npx skills@1.5.19 add coreyhaines31/marketingskills@67264763cb107d61749f418d081c56e5bcbc0209 --skill product-marketing --skill analytics --agent codex
+npx skills@1.5.19 add earthtojake/text-to-cad@fdbb4b4fb62d95ae298cfe9a46fdc7092bdaf423 --skill cad --skill step-parts --skill cad-viewer --agent codex
+npx skills@1.5.19 add arpitg1304/robotics-agent-skills@54f7b578f3dc269d29c0beb623b3f2611fd3a430 --skill robotics-design-patterns --skill robotics-testing --agent codex
+npx skills@1.5.19 add github/awesome-copilot@26fe2d126bf79aafb38f43344d450b69632200f8 --skill create-technical-spike --agent codex
+```
+
+The prerequisite is one immutable measured physical prototype with direct functional, failure, hazard, claims, mechanical, electrical, firmware, component, and assembly evidence. A hand-built prototype is the input, not proof of repeatable production.
+
+Supplier contact, file sharing, quotations, samples, purchases, deposits, tooling, fabrication, laboratory work, freight, contracts, and production commitments require separate exact approval. Keep written supplier evidence, measured evidence, estimates, and agent assumptions distinct.
+
+Write `outcome-room/manufacturing-readiness-receipt.json` with exactly one status: `ready`, `repair-required`, or `no-go`. Ready applies only to the named configuration, production commitment, volume, and target markets. It does not mean certified, clinically effective, funded, purchased, profitable, or risk-free.
+
+## Study Readiness
+
+Slug: `study-readiness`
+
+Lane: `create`
+
+Status: `experimental`.
+
+Source specification: `https://github.com/fraylabs/possible/blob/dev/packages/packs/src/study-readiness.ts`
+
+Use when a defined product, intervention, exposure, or workflow has one research hypothesis that must become a protocol package for qualified review before recruitment or data collection.
+
+Outputs: evidence and claims map; locked research question and intervention; protocol; ethics, regulatory, consent, privacy, and vulnerable-population matrix; predefined analysis and data plan; qualified roles, sites, budget, timeline, registration, publication, and archive plan; independent readiness receipt.
+
+Workstreams:
+
+- Evidence map, research question, and claims boundary — `analytics`, `product-marketing`, `documentation-writer`; locks one answerable question and separates prior evidence from product claims.
+- Protocol, intervention, outcomes, and safety monitoring — `documentation-writer`, `analytics`, `customer-research`; owns the protocol, intervention revision, procedures, endpoints, monitoring, stop rules, deviations, withdrawals, and follow-up.
+- Ethics, consent, regulation, and data governance — `security-review`, `customer-research`, `documentation-writer`; owns qualified-accountability questions, consent, privacy, vulnerable-group, and approval pathways.
+- Analysis, data specification, and reproducibility — `analytics`, `security-review`, `documentation-writer`; predefines calculations, sample-size rationale, exclusions, missing data, audit, and negative-result reporting.
+- Qualified partners, sites, budget, timeline, and publication — `documentation-writer`, `analytics`, `customer-research`; preserves missing people, institutions, quotes, authority, and feasibility as blockers.
+- Integrated qualified-review package — `documentation-writer`, `analytics`, `security-review`; returns ready-for-qualified-review, repair-required, or no-go without an external submission.
+- Fresh review — `analytics`, `security-review`, `documentation-writer`; independently audits scientific, ethical, operational, privacy, and claims coherence.
+
+Sources:
+
+- `coreyhaines31/marketingskills`: `customer-research`, `analytics`, `product-marketing`; reviewed `67264763cb107d61749f418d081c56e5bcbc0209`.
+- `github/awesome-copilot`: `documentation-writer`, `security-review`; reviewed `26fe2d126bf79aafb38f43344d450b69632200f8`.
+
+Install:
+
+```bash
+npx skills@1.5.19 add coreyhaines31/marketingskills@67264763cb107d61749f418d081c56e5bcbc0209 --skill customer-research --skill analytics --skill product-marketing --agent codex
+npx skills@1.5.19 add github/awesome-copilot@26fe2d126bf79aafb38f43344d450b69632200f8 --skill documentation-writer --skill security-review --agent codex
+```
+
+An agent cannot act as sponsor, investigator, clinician, statistician of record, ethics body, regulator, lawyer, privacy officer, or institutional signatory. The pack prepares evidence for those people; it never imitates their approval.
+
+Recruitment, screening, consent, human exposure, health-data access, compensation, registration, ethics submission, and public health claims require separate exact approval plus appropriate qualified and institutional authority.
+
+Write `outcome-room/study-readiness-receipt.json` with exactly one status: `ready-for-qualified-review`, `repair-required`, or `no-go`. Ready-for-qualified-review never means approved, registered, recruited, safe, effective, clinically validated, or authorized to begin.
+
 ## Selection rule
 
 Recommend the Outcome Pack whose finished outputs most closely match the user's desired end state:
@@ -636,13 +724,15 @@ Recommend the Outcome Pack whose finished outputs most closely match the user's 
 - Funded Kickstarter campaign plus production, backer, logistics, communication, and 95%-shipped operations → Kickstarter Fulfillment.
 - Robot hand, gripper, arm, mobile robot, quadruped, or full robot plus coherent CAD, description, controls, and simulation evidence → Robot Prototype.
 - Consumer device, wearable, home object, wellness product, or connected physical product plus one functional measured physical artifact → Working Hardware Prototype.
+- Measured physical prototype plus DFM, suppliers, landed economics, compliance, quality, pilot-build evidence, and one production-release decision → Manufacturing Readiness.
+- Defined research hypothesis plus protocol, ethics, analysis, qualified-accountability, budget, and publication package → Study Readiness.
 - Pitch, talk, lesson, demo, or internal presentation plus a coded browser deck, presenter experience, export, and evidence review → Web Presentation.
 - Working developer tool, library, CLI, API, agent project, or platform plus positioning, a distinctive site, honest demonstration, verified quickstart, and adoption path → Developer Project Launch.
 - Vague software ambition with no selected opportunity plus one traceable provisional thesis and first-customer handoff → Software Opportunity Discovery.
 - Selected product, service, or software opportunity plus real prospects, one concrete offer, and the strongest available commercial commitment → First Customer Sprint.
 - Real product, prototype, offer, or campaign plus finished Instagram, video, YouTube, X, product-decision, provenance, and posting-calendar assets → Launch Content Campaign.
 
-Recommend Software Opportunity Discovery when no opportunity is selected. Recommend Working Hardware Prototype when a selected consumer-hardware concept must become a measured physical artifact; Hardware Launch presents a product and Robot Prototype proves a simulated robot, so neither substitutes. Recommend First Customer Sprint when one selected direction should face a concrete offer and real prospects; require truthful prototype, safety, claims, manufacturing, delivery, and refund boundaries before physical-product payment or delivery promises. Recommend Launch Content Campaign when the product truth exists and the missing result is one finite set of post-ready cross-platform assets; use Marketing Operations for a recurring learning and production system. Recommend Working Web App only when customer evidence or another explicit delivery requirement makes a bounded application the next useful outcome. Use Developer Project Launch when a working developer project needs comprehension, presentation, proof, and a verified adoption path. Use Web Presentation when the primary deliverable is a slide-based browser presentation; a conventional landing page belongs elsewhere. Use Kickstarter Funding when crowdfunding mechanics and payout are part of the outcome; use Kickstarter Fulfillment only after the campaign is funded. Use Robot Prototype for a simulation-backed digital prototype, not a fabrication-ready machine or hardware commissioning. Use Production Web Release when a tested candidate exists and the missing outcome is a gated production promotion with rollback and smoke evidence. Use Web App Operations only after the app is live and the desired outcome is an ongoing reliability and maintenance rhythm. Repository-only licensing, packaging, CI, versioning, and release engineering belong to Open-Source Release; one isolated bug, incident, or marketing asset with no requested recurring workflow is focused work, not an Outcome Pack run.
+Recommend Software Opportunity Discovery when no opportunity is selected. Recommend Working Hardware Prototype when a selected consumer-hardware concept must become a measured physical artifact; Hardware Launch presents a product and Robot Prototype proves a simulated robot, so neither substitutes. Recommend Manufacturing Readiness after the measured prototype passes and before a production promise whose feasibility depends on DFM, supplier, cost, compliance, quality, or pilot evidence. Recommend Study Readiness when a defined research hypothesis needs a protocol package for qualified review; it does not approve or execute a study. Recommend First Customer Sprint when one selected direction should face a concrete offer and real prospects; require truthful prototype, safety, claims, manufacturing, delivery, and refund boundaries before physical-product payment or delivery promises. Recommend Launch Content Campaign when the product truth exists and the missing result is one finite set of post-ready cross-platform assets; use Marketing Operations for a recurring learning and production system. Recommend Working Web App only when customer evidence or another explicit delivery requirement makes a bounded application the next useful outcome. Use Developer Project Launch when a working developer project needs comprehension, presentation, proof, and a verified adoption path. Use Web Presentation when the primary deliverable is a slide-based browser presentation; a conventional landing page belongs elsewhere. Use Kickstarter Funding only when crowdfunding mechanics and payout are part of the outcome and its physical and research prerequisites pass; use Kickstarter Fulfillment only after the campaign is funded. Use Robot Prototype for a simulation-backed digital prototype, not a fabrication-ready machine or hardware commissioning. Use Production Web Release when a tested candidate exists and the missing outcome is a gated production promotion with rollback and smoke evidence. Use Web App Operations only after the app is live and the desired outcome is an ongoing reliability and maintenance rhythm. Repository-only licensing, packaging, CI, versioning, and release engineering belong to Open-Source Release; one isolated bug, incident, or marketing asset with no requested recurring workflow is focused work, not an Outcome Pack run.
 
 For an ambition spanning several valuable results, recommend only the next independently useful Outcome Pack. Choose it from the current reality and the most important unresolved decision; do not preselect a future sequence. After the outcome passes verification, reassess the new evidence before recommending zero or more candidates and stop for fresh approval. A strong matching working project may qualify for Developer Project Launch directly; a discovery receipt alone does not.
 

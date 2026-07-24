@@ -17,20 +17,34 @@ export const kickstarterFundingPack: OutcomePack = {
   slug: "kickstarter-funding",
   name: "Kickstarter Funding",
   eyebrow: "08 / OUTCOME PACK",
-  promise: "Turn a product idea into an evidence-backed Kickstarter campaign system.",
+  promise: "Turn a campaign-ready product into an evidence-backed Kickstarter campaign system.",
   summary: "Feasibility and unit economics, a truthful offer and reward structure, campaign page, proof-led film, prelaunch audience system, launch calendar, measurement and risk controls, and a verified funding completion report that counts deposited money rather than campaign theater.",
   useWhen: [
-    "A product idea or prototype needs a complete Kickstarter funding path rather than only a launch page or video.",
+    "A measured product prototype and manufacturing-readiness baseline need a complete Kickstarter funding path rather than only a launch page or video.",
     "The creator needs Possible to infer feasibility, offer, rewards, story, proof, audience, campaign operations, and payout evidence from rough intent.",
     "The outcome may include a separately approved live campaign, while an evidence-backed launch package or honest no-go remains acceptable when publication is not authorized.",
   ],
   notFor: [
     "Shipping rewards after a campaign has already reached its goal; use Kickstarter Fulfillment.",
+    "A physical product still lacks a measured prototype or manufacturing-readiness evidence; use Working Hardware Prototype or Manufacturing Readiness.",
+    "Promising a research study whose protocol, accountable roles, ethics pathway, budget, and claims boundary are still undefined; use Study Readiness.",
     "Guaranteeing pledges, payout, demand, press, virality, manufacturing feasibility, or delivery dates.",
     "Collecting money through an invented local campaign page or representing pledges as deposited funds.",
     "A conventional software or hardware presentation with no crowdfunding mechanics.",
   ],
   reviewedAt: "2026-07-21",
+  prerequisites: [
+    {
+      id: "campaign-ready-product",
+      description: "The product evidence and production commitment are strong enough to price rewards and state delivery risks without inventing feasibility.",
+      requiredEvidence: [
+        "measured product or prototype revision and claims boundary",
+        "manufacturing-readiness receipt or equivalent DFM, supplier, cost, compliance, quality, pilot, and fulfillment evidence",
+        "current unit economics, volume limits, cash timing, delivery assumptions, and unresolved risks",
+        "for any promised research program, a Study Readiness receipt or equivalent qualified-review package",
+      ],
+    },
+  ],
   skills: [
     skill(marketingOperationsPack, "product-marketing"),
     skill(marketingOperationsPack, "content-strategy"),

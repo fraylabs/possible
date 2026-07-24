@@ -13,7 +13,7 @@ The public Possible site has one judge journey:
 Canonical install:
 
 ```bash
-npx @fraylabs/possible@0.1.10 init
+npx @fraylabs/possible@0.1.11 init
 ```
 
 The site imports typed manifests and the compiler from `@possible/packs`. Production builds export only the featured pack pages and their JSON and text contracts.

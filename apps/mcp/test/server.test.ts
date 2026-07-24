@@ -55,7 +55,7 @@ describe("Possible MCP", () => {
     assert.doesNotMatch(client.getInstructions() ?? "", /chain/i);
   });
 
-  it("lists nine stable and seven experimental outcome packs", async () => {
+  it("lists nine stable and nine experimental outcome packs", async () => {
     const result = await client.callTool({ name: "list_packs", arguments: {} });
     const envelope = result.structuredContent as { ok: boolean; data: { packs: Array<{ slug: string; lane: string; status: string }> } };
     assert.equal(envelope.ok, true);
@@ -76,9 +76,11 @@ describe("Possible MCP", () => {
       ["first-customer-sprint", "launch"],
       ["working-hardware-prototype", "create"],
       ["launch-content-campaign", "launch"],
+      ["manufacturing-readiness", "release"],
+      ["study-readiness", "create"],
     ]);
     assert.equal(envelope.data.packs.filter(({ status }) => status === "stable").length, 9);
-    assert.equal(envelope.data.packs.filter(({ status }) => status === "experimental").length, 7);
+    assert.equal(envelope.data.packs.filter(({ status }) => status === "experimental").length, 9);
   });
 
   it("compiles Web Presentation as a coded browser-deck outcome", async () => {
@@ -210,6 +212,32 @@ describe("Possible MCP", () => {
     assert.match(envelope.data.runPrompt, /\$humanizer/);
     assert.match(envelope.data.runPrompt, /PRODUCT DECISION RECORD/);
     assert.match(envelope.data.runPrompt, /REMIX GATE/);
+  });
+
+  it("compiles Manufacturing Readiness with production-release evidence gates", async () => {
+    const result = await client.callTool({ name: "compile_pack", arguments: { slug: "manufacturing-readiness" } });
+    const envelope = result.structuredContent as { ok: boolean; data: { pack: { catalogNumber: number; lane: string; name: string }; installCommands: string[]; runPrompt: string } };
+    assert.equal(envelope.ok, true);
+    assert.equal(envelope.data.pack.catalogNumber, 17);
+    assert.equal(envelope.data.pack.lane, "release");
+    assert.equal(envelope.data.pack.name, "Manufacturing Readiness");
+    assert.equal(envelope.data.installCommands.length, 4);
+    assert.match(envelope.data.runPrompt, /MANUFACTURING READINESS GATE/);
+    assert.match(envelope.data.runPrompt, /overfunded volume scenarios/i);
+    assert.match(envelope.data.runPrompt, /ready, repair-required, or no-go/i);
+  });
+
+  it("compiles Study Readiness without claiming study approval", async () => {
+    const result = await client.callTool({ name: "compile_pack", arguments: { slug: "study-readiness" } });
+    const envelope = result.structuredContent as { ok: boolean; data: { pack: { catalogNumber: number; lane: string; name: string }; installCommands: string[]; runPrompt: string } };
+    assert.equal(envelope.ok, true);
+    assert.equal(envelope.data.pack.catalogNumber, 18);
+    assert.equal(envelope.data.pack.lane, "create");
+    assert.equal(envelope.data.pack.name, "Study Readiness");
+    assert.equal(envelope.data.installCommands.length, 2);
+    assert.match(envelope.data.runPrompt, /STUDY READINESS GATE/);
+    assert.match(envelope.data.runPrompt, /qualified human and institutional authority/i);
+    assert.match(envelope.data.runPrompt, /ready-for-qualified-review/i);
   });
 
   it("compiles Production Web Release with its second approval gate", async () => {

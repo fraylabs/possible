@@ -41,7 +41,7 @@ export const workingHardwarePrototypePack: OutcomePack = {
   notFor: [
     "A launch presentation around an unbuilt concept; use Hardware Launch only when presentation is the desired outcome.",
     "A robot whose primary evidence is kinematics, control, and simulation; use Robot Prototype.",
-    "Production certification, regulatory clearance, tooling, volume sourcing, or a manufacturing release.",
+    "Production certification, regulatory clearance, tooling, volume sourcing, or a manufacturing release; use Manufacturing Readiness after the prototype passes.",
     "Human research, clinical efficacy, diagnosis, treatment, prevention, or any promise that a prototype is safe for sale.",
   ],
   reviewedAt: "2026-07-24",

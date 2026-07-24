@@ -4,6 +4,12 @@ All notable changes to Possible are documented here. The project follows semanti
 
 ## Unreleased
 
+## 0.1.11 — 2026-07-24
+
+- Add Manufacturing Readiness and Study Readiness Outcome Packs.
+- Route hardware crowdfunding through measured prototype, production, and qualified research-review evidence.
+- Package both new compiled contracts in the Possible skill snapshot.
+
 ## 0.1.10 — 2026-07-22
 
 - Add the experimental Software Opportunity Discovery pack for evidence-backed problem selection, alternative research, opportunity scoring, and falsifiable validation plans.

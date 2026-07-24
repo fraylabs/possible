@@ -60,6 +60,26 @@ export interface HardwarePrototypeContract {
   decisions: ["working", "repair-required", "no-go"];
 }
 
+export interface ManufacturingReadinessContract {
+  kind: "manufacturing-readiness";
+  baselinePath: string;
+  rfqPath: string;
+  compliancePath: string;
+  pilotPath: string;
+  decisionReceiptPath: string;
+  decisions: ["ready", "repair-required", "no-go"];
+}
+
+export interface StudyReadinessContract {
+  kind: "study-readiness";
+  researchQuestionPath: string;
+  protocolPath: string;
+  ethicsPath: string;
+  analysisPath: string;
+  decisionReceiptPath: string;
+  decisions: ["ready-for-qualified-review", "repair-required", "no-go"];
+}
+
 export interface DecisionRationaleContract {
   kind: "evidence-backed-product-decisions";
   rootPath: string;
@@ -117,6 +137,8 @@ export interface OutcomePack {
   verification: string[];
   decisionRationale?: DecisionRationaleContract;
   hardwarePrototype?: HardwarePrototypeContract;
+  manufacturingReadiness?: ManufacturingReadinessContract;
+  studyReadiness?: StudyReadinessContract;
   remix?: RemixContract;
   prerequisites?: OutcomePrerequisite[];
   firstCustomerSprint?: FirstCustomerSprintContract;

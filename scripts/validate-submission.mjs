@@ -22,7 +22,7 @@ for (const [label, source] of [["Devpost", devpost], ["video", video]]) {
   assert.match(source, /Possible\.sh is an open-source library of Outcome Packs\./, `${label} must define Possible`);
   assert.match(source, /reusable execution prompt and selected agent skills for dozens of coordinated tasks/, `${label} must explain an Outcome Pack`);
 }
-assert.match(readme, /npx @fraylabs\/possible@0\.1\.10 init/, "README must use the current install");
+assert.match(readme, /npx @fraylabs\/possible@0\.1\.11 init/, "README must use the current install");
 for (const [label, source] of [["Devpost", devpost], ["video", video]]) {
   assert.match(source, /npx @fraylabs\/possible@0\.1\.9 init/, `${label} must preserve the frozen submission install`);
   assert.doesNotMatch(source, /@fraylabs\/possible@0\.1\.[0-8]\b|unpublished|candidate/i, `${label} must not discuss historical package versions`);

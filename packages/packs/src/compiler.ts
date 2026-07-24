@@ -207,7 +207,51 @@ MEASURED HARDWARE PROTOTYPE GATE
 7. Write ${contract.decisionReceiptPath} with exactly one status: working, repair-required, or no-go. Name the immutable prototype revision, intended-use boundary, tests run, thresholds, passed and failed measurements, hazards and mitigations, claims allowed and prohibited, human use performed or not performed, external actions, unresolved risks, and independent review. Working means only that the stated prototype contract passed; it does not mean safe for sale, clinically effective, certified, manufacturable, or production-ready.`;
   })() : "";
 
-  const action = pack.opportunityDiscovery ? "Discover" : pack.firstCustomerSprint ? "Run" : pack.hardwarePrototype ? "Build and measure" : pack.lane === "operate" ? "Establish and run the first cycle of" : pack.lane === "release" ? "Prepare and verify" : "Build";
+  const manufacturingReadiness = pack.manufacturingReadiness ? (() => {
+    const contract = pack.manufacturingReadiness;
+    if (contract.decisions.join(",") !== "ready,repair-required,no-go") {
+      throw new Error(`${pack.slug} manufacturing readiness decisions must be ready, repair-required, no-go`);
+    }
+    requireSafeRelativePath(contract.baselinePath, `${pack.slug} manufacturing readiness baselinePath`);
+    requireSafeRelativePath(contract.rfqPath, `${pack.slug} manufacturing readiness rfqPath`);
+    requireSafeRelativePath(contract.compliancePath, `${pack.slug} manufacturing readiness compliancePath`);
+    requireSafeRelativePath(contract.pilotPath, `${pack.slug} manufacturing readiness pilotPath`);
+    requireSafeRelativePath(contract.decisionReceiptPath, `${pack.slug} manufacturing readiness decisionReceiptPath`);
+    return `
+
+MANUFACTURING READINESS GATE
+1. Freeze one product configuration in ${contract.baselinePath}. Link its prototype revision, intended use, claims boundary, drawings, firmware, bill of materials, measured results, known defects, target markets, volume scenarios, and unresolved assumptions. A later design change invalidates only the affected evidence but must trigger an explicit change review.
+2. Create a comparable request-for-quotation package at ${contract.rfqPath}. Separate supplier statements, written quotations, estimates, and agent assumptions. Record minimum order quantities, tooling ownership, non-recurring engineering, unit cost, lead time, payment terms, capacity, substitutions, logistics, taxes and duties to review, and quote validity.
+3. Write ${contract.compliancePath} as a market-specific compliance and quality plan. It must identify applicable product classification questions, required qualified advice, laboratory or certification dependencies, material and electrical evidence, reliability tests, golden-sample controls, inspection criteria, traceability, rework, and release authority. A plan is not certification.
+4. Supplier contact, file sharing, quotations, samples, purchases, deposits, tooling, fabrication, laboratory work, freight, contracts, and production commitments each require separate approval for the exact counterparty, artifact revision, scope, price, data boundary, and stop condition.
+5. Record pilot evidence at ${contract.pilotPath}. Readiness requires authentic evidence from the frozen revision appropriate to the proposed scale: produced quantity, yield, defects, rework, assembly time, inspection results, packaging and transport checks, supplier deviations, and unresolved failures. CAD, synthetic fixtures, unaccepted quotes, or a single hand-built prototype cannot prove repeatable production.
+6. Recompute landed unit economics, cash requirement, working-capital timing, capacity, schedule, contingency, warranty and return assumptions, and fulfillment exposure from cited inputs. Test at least the minimum, expected, and overfunded volume scenarios without treating overfunding as free surplus.
+7. Write ${contract.decisionReceiptPath} with exactly one status: ready, repair-required, or no-go. Ready means only that the named configuration has enough direct evidence for the stated production commitment and target markets. It does not mean certified, clinically effective, risk-free, profitable, funded, purchased, or approved for an external production order.`;
+  })() : "";
+
+  const studyReadiness = pack.studyReadiness ? (() => {
+    const contract = pack.studyReadiness;
+    if (contract.decisions.join(",") !== "ready-for-qualified-review,repair-required,no-go") {
+      throw new Error(`${pack.slug} study readiness decisions must be ready-for-qualified-review, repair-required, no-go`);
+    }
+    requireSafeRelativePath(contract.researchQuestionPath, `${pack.slug} study readiness researchQuestionPath`);
+    requireSafeRelativePath(contract.protocolPath, `${pack.slug} study readiness protocolPath`);
+    requireSafeRelativePath(contract.ethicsPath, `${pack.slug} study readiness ethicsPath`);
+    requireSafeRelativePath(contract.analysisPath, `${pack.slug} study readiness analysisPath`);
+    requireSafeRelativePath(contract.decisionReceiptPath, `${pack.slug} study readiness decisionReceiptPath`);
+    return `
+
+STUDY READINESS GATE
+1. Write ${contract.researchQuestionPath}. Lock the research question, rationale, exact intervention or exposure, comparator, population, outcomes, timing, setting, and device or software revision. Separate prior evidence, mechanistic hypothesis, product facts, proposed measurements, and unsupported clinical or commercial claims.
+2. Write ${contract.protocolPath} as a protocol draft for qualified review. Predefine eligibility, recruitment boundary, assignment or allocation where applicable, procedures, dose or exposure, monitoring, stop rules, adverse-event handling, endpoints, schedule, deviations, withdrawals, missing data, and the smallest design capable of answering the question. Do not optimize the protocol to produce a favorable result.
+3. Write ${contract.ethicsPath}. Identify the sponsor, accountable investigator, study site or remote boundary, jurisdiction, ethics or IRB pathway, regulatory classification questions, consent and comprehension process, privacy and retention controls, compensation, conflicts, vulnerable-population exclusions, insurance or indemnity questions, and every approval still required. An agent cannot act as investigator, clinician, ethics board, regulator, or legal adviser.
+4. Write ${contract.analysisPath} before data collection. Define estimands or decision measures, sample-size rationale, exclusions, multiplicity, transformations, stopping rules, missing-data treatment, subgroup boundaries, reproducible code and environment, data dictionary, provenance, access, audit trail, and publication of negative or inconclusive results.
+5. Recruitment, screening, consent, human exposure, health-data access, randomization, data collection, compensation, clinical communication, registration, ethics submission, or public claims each require separate approval plus the qualified human and institutional authority appropriate to the jurisdiction. Missing authority produces no-go, not simulated enrollment or synthetic evidence.
+6. Reconcile protocol operations, qualified people, sites, equipment, intervention supply, safety monitoring, data systems, budget, timeline, registration, analysis, publication, and participant follow-up. Preserve missing partners, quotes, approvals, feasibility evidence, and conflicts as blockers.
+7. Write ${contract.decisionReceiptPath} with exactly one status: ready-for-qualified-review, repair-required, or no-go. Ready-for-qualified-review means the evidence package is coherent enough to place before qualified investigators, ethics bodies, regulators, statisticians, and legal or privacy advisers. It never means approved, registered, recruited, safe, effective, clinically validated, or authorized to begin.`;
+  })() : "";
+
+  const action = pack.opportunityDiscovery ? "Discover" : pack.firstCustomerSprint ? "Run" : pack.hardwarePrototype ? "Build and measure" : pack.manufacturingReadiness || pack.studyReadiness ? "Prepare and verify" : pack.lane === "operate" ? "Establish and run the first cycle of" : pack.lane === "release" ? "Prepare and verify" : "Build";
   const pluginCheck = pack.plugins?.length
     ? ` Also detect these optional agent plugins: ${pack.plugins.map((plugin) => `${plugin.invocation} (${plugin.skills.map((skill) => `$${skill}`).join(", ")})`).join(", ")}. Do not install or imitate an unavailable plugin; record its absence and use the documented fallback.`
     : "";
@@ -275,7 +319,7 @@ ${pack.guardrails.map((guardrail) => `- ${guardrail}`).join("\n")}
 
 VERIFICATION CONTRACT
 ${pack.verification.map((item) => `- ${item}`).join("\n")}
-${prerequisites}${opportunityDiscovery}${firstCustomerSprint}${decisionRationale}${hardwarePrototype}${remixGate}${releaseGate}${launchGate}${sitesPath}${operateLoop}
+${prerequisites}${opportunityDiscovery}${firstCustomerSprint}${decisionRationale}${hardwarePrototype}${manufacturingReadiness}${studyReadiness}${remixGate}${releaseGate}${launchGate}${sitesPath}${operateLoop}
 
 OUTCOME RECORD
 Every run—including a partial, blocked, or no-go result—must write one machine-readable proof index at .possible/runs/<run-id>/outcome-record.json.
