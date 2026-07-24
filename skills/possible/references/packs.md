@@ -567,7 +567,7 @@ Status: `stable`.
 
 Public page: `https://possible.sh/packs/first-customer-sprint`
 
-Use when one specific software opportunity and intended customer exist, but nobody has yet made a credible commercial commitment.
+Use when one specific product, service, or software opportunity and intended customer exist, but nobody has yet made a credible commercial commitment.
 
 Outputs: customer, offer, price or commitment ask, delivery boundary, channel, timebox, and stop condition; prospect-access and authority preflight; local sales kit; approved prospect ledger; durable state and dated cycles; complete funnel evidence; money requested and collected; continue, revise, or stop receipt; independent review.
 
@@ -597,7 +597,56 @@ The sprint follows an explicit evidence ladder: reply → conversation → quali
 
 The sprint may span days or weeks. Preserve `sales/state.json` and immutable records under `sales/cycles/`. Outreach, interviews, calls, fake doors, deployments, analytics, authenticated data, payments, spending, delivery promises, and scheduled follow-ups require exact separate approval. A schedule only invokes `$possible resume` for one bounded cycle; waiting and silence are not commercial evidence.
 
+For physical products, the offer must disclose verified prototype state, inventory or production status, safety and claims boundaries, quantities, estimated timing, manufacturing dependencies, shipping scope, and cancellation and refund terms. A render, CAD model, preorder, or planned run is not finished inventory or evidence of safety, certification, manufacturability, delivery, or efficacy.
+
 Write `outcome-room/first-customer-receipt.json` with exactly one status: `continue`, `revise`, or `stop`. Record the highest evidence rung reached, money requested and collected, what customers actually did, objections, the next product or sales boundary, and unresolved risks. The receipt recommends but does not authorize the next Outcome Pack.
+
+## Working Hardware Prototype
+
+Slug: `working-hardware-prototype`
+
+Lane: `create`
+
+Status: `stable`.
+
+Public page: `https://possible.sh/packs/working-hardware-prototype`
+
+Use when a consumer device, wearable, home object, wellness product, or connected physical product must become one functional, measured prototype before launch or sales.
+
+Outputs: intended-use, functional, interface, and measurement specification; evidence and claims register; hazard and safe-state architecture; three physical directions and one decision; STEP assembly, drawings, components, BOM, and assembly instructions; electronics, controls, firmware, and bench harness; calibrated raw measurements; one instrumented physical prototype or explicit no-go; independent completion receipt.
+
+Workstreams:
+
+- Intended use, evidence, and claims boundary — `customer-research`, `product-marketing`; owns the specification, evidence ledger, and claims register.
+- System architecture and hazard controls — `robotics-design-patterns`, `robotics-software-principles`; owns architecture, hazard analysis, safe defaults, limits, watchdog, timer, stop, reset, and human-use gates.
+- Industrial form and interaction direction — `cad`, `product-marketing`; produces three comparable physical directions after intended use and safety pass.
+- Mechanical system, CAD, and component ledger — `cad`, `step-parts`; owns STEP, drawings, tolerances, contact geometry, fixtures, BOM, and assembly sequence.
+- Electronics, power, controls, and firmware — `create-technical-spike`, `robotics-software-principles`; owns schematics, components, protection, configuration, source, logging, and failure handling.
+- Calibration and measurement system — `create-technical-spike`, `step-parts`; defines instruments, fixtures, units, sampling, uncertainty, thresholds, and nominal, boundary, and failing cases.
+- Instrumented physical prototype and receipt — `cad`, `cad-viewer`, `create-technical-spike`; integrates only after exact physical-action approval and stops with no-go if authentic physical evidence is unavailable.
+- Fresh review — `cad-viewer`, `create-technical-spike`, `robotics-design-patterns`; independently audits the artifact, measurements, hazards, claims, and status.
+
+Sources:
+
+- `coreyhaines31/marketingskills`: `customer-research`, `product-marketing`; reviewed `67264763cb107d61749f418d081c56e5bcbc0209`.
+- `earthtojake/text-to-cad`: `cad`, `step-parts`, `cad-viewer`; reviewed `fdbb4b4fb62d95ae298cfe9a46fdc7092bdaf423`.
+- `arpitg1304/robotics-agent-skills`: `robotics-design-patterns`, `robotics-software-principles`; reviewed `54f7b578f3dc269d29c0beb623b3f2611fd3a430`.
+- `github/awesome-copilot`: `create-technical-spike`; reviewed `26fe2d126bf79aafb38f43344d450b69632200f8`.
+
+Install:
+
+```bash
+npx skills@1.5.19 add coreyhaines31/marketingskills@67264763cb107d61749f418d081c56e5bcbc0209 --skill customer-research --skill product-marketing --agent codex
+npx skills@1.5.19 add earthtojake/text-to-cad@fdbb4b4fb62d95ae298cfe9a46fdc7092bdaf423 --skill cad --skill step-parts --skill cad-viewer --agent codex
+npx skills@1.5.19 add arpitg1304/robotics-agent-skills@54f7b578f3dc269d29c0beb623b3f2611fd3a430 --skill robotics-design-patterns --skill robotics-software-principles --agent codex
+npx skills@1.5.19 add github/awesome-copilot@26fe2d126bf79aafb38f43344d450b69632200f8 --skill create-technical-spike --agent codex
+```
+
+This pack supports physical **Remix**. It holds intended use, function, components, safety, interfaces, claims, and measurement access constant while comparing three materially different form, ergonomic, material, component-layout, control, assembly, service, portability, or sensory directions. Styling cannot hide components or override hazards.
+
+Purchasing, fabrication, external assembly, energized bench work, battery charging, hardware connection, and human testing each require separate exact approval. Health-adjacent products require qualified professional input for preliminary human-use exclusions and test boundaries. Missing parts, tools, authority, review, or physical evidence produces no-go; CAD, firmware, and synthetic traces cannot substitute.
+
+Write `outcome-room/hardware-prototype-receipt.json` with exactly one status: `working`, `repair-required`, or `no-go`. Working means only that the locked prototype contract passed. It never means safe for sale, clinically effective, certified, manufacturable, or production-ready.
 
 ## Selection rule
 
@@ -615,12 +664,13 @@ Recommend the Outcome Pack whose finished outputs most closely match the user's 
 - Rough product idea plus feasibility, offer, campaign assets, audience system, and a real Kickstarter funding path → Kickstarter Funding.
 - Funded Kickstarter campaign plus production, backer, logistics, communication, and 95%-shipped operations → Kickstarter Fulfillment.
 - Robot hand, gripper, arm, mobile robot, quadruped, or full robot plus coherent CAD, description, controls, and simulation evidence → Robot Prototype.
+- Consumer device, wearable, home object, wellness product, or connected physical product plus one functional measured physical artifact → Working Hardware Prototype.
 - Pitch, talk, lesson, demo, or internal presentation plus a coded browser deck, presenter experience, export, and evidence review → Web Presentation.
 - Working developer tool, library, CLI, API, agent project, or platform plus positioning, a distinctive site, honest demonstration, verified quickstart, and adoption path → Developer Project Launch.
 - Vague software ambition with no selected opportunity plus one traceable provisional thesis and first-customer handoff → Software Opportunity Discovery.
-- Selected software opportunity plus real prospects, one concrete offer, and the strongest available commercial commitment → First Customer Sprint.
+- Selected product, service, or software opportunity plus real prospects, one concrete offer, and the strongest available commercial commitment → First Customer Sprint.
 
-Recommend Software Opportunity Discovery when no opportunity is selected. Recommend First Customer Sprint when one selected direction should face a concrete offer and real prospects; recommend Working Web App only when customer evidence or another explicit delivery requirement makes a bounded application the next useful outcome. Use Developer Project Launch when a working developer project needs comprehension, presentation, proof, and a verified adoption path. Use Software Launch for a broader product release candidate, launch story, and film. Use Web Presentation when the primary deliverable is a slide-based browser presentation; a conventional landing page belongs elsewhere. Use Billion-Dollar SaaS when the user explicitly wants the broader company operating system and accepts that operational coverage cannot guarantee economic success. Use Kickstarter Funding when crowdfunding mechanics and payout are part of the outcome; use Kickstarter Fulfillment only after the campaign is funded. Use Robot Prototype for a simulation-backed digital prototype, not a fabrication-ready machine or hardware commissioning. Use Production Web Release when a tested candidate exists and the missing outcome is a gated production promotion with rollback and smoke evidence. Use Web App Operations only after the app is live and the desired outcome is an ongoing reliability and maintenance rhythm. Use Marketing Operations when the product or offer exists and the missing outcome is a recurring marketing system. Repository-only licensing, packaging, CI, versioning, and release engineering belong to Open-Source Release; one isolated bug, incident, or marketing asset with no requested recurring workflow is focused work, not an Outcome Pack run.
+Recommend Software Opportunity Discovery when no opportunity is selected. Recommend Working Hardware Prototype when a selected consumer-hardware concept must become a measured physical artifact; Hardware Launch presents a product and Robot Prototype proves a simulated robot, so neither substitutes. Recommend First Customer Sprint when one selected direction should face a concrete offer and real prospects; require truthful prototype, safety, claims, manufacturing, delivery, and refund boundaries before physical-product payment or delivery promises. Recommend Working Web App only when customer evidence or another explicit delivery requirement makes a bounded application the next useful outcome. Use Developer Project Launch when a working developer project needs comprehension, presentation, proof, and a verified adoption path. Use Software Launch for a broader product release candidate, launch story, and film. Use Web Presentation when the primary deliverable is a slide-based browser presentation; a conventional landing page belongs elsewhere. Use Billion-Dollar SaaS when the user explicitly wants the broader company operating system and accepts that operational coverage cannot guarantee economic success. Use Kickstarter Funding when crowdfunding mechanics and payout are part of the outcome; use Kickstarter Fulfillment only after the campaign is funded. Use Robot Prototype for a simulation-backed digital prototype, not a fabrication-ready machine or hardware commissioning. Use Production Web Release when a tested candidate exists and the missing outcome is a gated production promotion with rollback and smoke evidence. Use Web App Operations only after the app is live and the desired outcome is an ongoing reliability and maintenance rhythm. Use Marketing Operations when the product or offer exists and the missing outcome is a recurring marketing system. Repository-only licensing, packaging, CI, versioning, and release engineering belong to Open-Source Release; one isolated bug, incident, or marketing asset with no requested recurring workflow is focused work, not an Outcome Pack run.
 
 For an ambition spanning several valuable results, recommend only the next independently useful Outcome Pack. Choose it from the current reality and the most important unresolved decision; do not preselect a future sequence. After the outcome passes verification, reassess the new evidence before recommending zero or more candidates and stop for fresh approval. A strong matching working project may qualify for Developer Project Launch directly; a discovery receipt alone does not.
 

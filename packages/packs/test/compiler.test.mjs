@@ -21,6 +21,7 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
     "developer-project-launch",
     "software-opportunity-discovery",
     "first-customer-sprint",
+    "working-hardware-prototype",
   ]);
   assert.deepEqual(outcomePacks.map(({ slug, lane }) => [slug, lane]), [
     ["hardware-launch", "launch"],
@@ -39,8 +40,9 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
     ["developer-project-launch", "launch"],
     ["software-opportunity-discovery", "create"],
     ["first-customer-sprint", "launch"],
+    ["working-hardware-prototype", "create"],
   ]);
-  assert.deepEqual(outcomePacks.map((pack) => pack.catalogNumber), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]);
+  assert.deepEqual(outcomePacks.map((pack) => pack.catalogNumber), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]);
   assert.equal(new Set(outcomePacks.map((pack) => pack.catalogNumber)).size, outcomePacks.length);
   assert.equal(new Set(outcomePacks.map((pack) => pack.slug)).size, outcomePacks.length);
   assert.deepEqual(stableOutcomePacks.map((pack) => pack.slug), [
@@ -51,6 +53,7 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
     "developer-project-launch",
     "software-opportunity-discovery",
     "first-customer-sprint",
+    "working-hardware-prototype",
   ]);
   assert.equal(experimentalOutcomePacks.length, 9);
   assert.equal(getPackStatus("hardware-launch"), "stable");
@@ -534,12 +537,13 @@ test("First Customer Sprint pursues commercial commitment and remains resumable"
   assert.match(sprint.notFor.join(" "), /rough ambition.*Software Opportunity Discovery/i);
   assert.deepEqual(sprint.prerequisites, [{
     id: "selected-opportunity",
-    description: "One specific software opportunity and customer segment have been selected for a first-customer attempt.",
+    description: "One specific product, service, or software opportunity and customer segment have been selected for a first-customer attempt.",
     requiredEvidence: [
       "intended customer and painful job",
       "current alternatives and proposed difference",
       "offer and credible delivery hypotheses",
       "known evidence, contradictions, and unresolved assumptions",
+      "for physical products, verified prototype status plus safety, claims, manufacturing, delivery, and refund boundaries",
     ],
   }]);
   const skillIds = new Set(sprint.skills.map(({ id }) => id));
@@ -620,6 +624,67 @@ test("First Customer Sprint pursues commercial commitment and remains resumable"
   const wrongResume = structuredClone(sprint);
   wrongResume.firstCustomerSprint.resumeCommand = "$possible";
   assert.throws(() => compilePack(wrongResume), /resumeCommand must be \$possible resume/);
+});
+
+test("Working Hardware Prototype requires a measured physical artifact and fresh review", () => {
+  const prototype = outcomePacks.find((pack) => pack.slug === "working-hardware-prototype");
+  assert.ok(prototype);
+  assert.equal(prototype.catalogNumber, 17);
+  assert.equal(prototype.lane, "create");
+  assert.equal(prototype.name, "Working Hardware Prototype");
+  assert.match(prototype.promise, /functional, measured, independently reviewed hardware prototype/i);
+  assert.match(prototype.useWhen.join(" "), /consumer device.*real world/i);
+  assert.match(prototype.notFor.join(" "), /safe for sale/i);
+  assert.deepEqual(compileWorkstreamWaves(prototype).map((wave) => wave.map(({ id }) => id)), [
+    ["product-truth"],
+    ["system-safety"],
+    ["physical-direction", "measurement-system"],
+    ["mechanical", "electronics-control"],
+    ["integration"],
+  ]);
+  assert.deepEqual(prototype.hardwarePrototype, {
+    kind: "measured-functional-prototype",
+    specificationPath: "prototype/specification.json",
+    hazardPath: "prototype/safety/hazard-analysis.json",
+    claimsPath: "prototype/claims/claims-register.json",
+    measurementPath: "prototype/measurement/report.json",
+    decisionReceiptPath: "outcome-room/hardware-prototype-receipt.json",
+    measurementClasses: ["functional output", "control input", "power", "temperature", "noise", "duty cycle", "failure controls", "measurement uncertainty"],
+    decisions: ["working", "repair-required", "no-go"],
+  });
+  assert.deepEqual(prototype.remix, {
+    kind: "physical-direction",
+    workstreamId: "physical-direction",
+    candidateCount: 3,
+    previewRoot: "prototype/direction/previews/",
+    decisionPath: "prototype/direction/decision.json",
+    onNoChoice: "agent-select",
+    preserves: ["intended use", "functional requirements", "confirmed components", "safety limits", "hardware interfaces", "claims boundary", "measurement contract"],
+  });
+
+  const compiled = compilePack(prototype);
+  assert.equal(compiled.installCommands.length, 4);
+  assert.match(compiled.runPrompt, /^Build and measure the Working Hardware Prototype outcome/);
+  assert.match(compiled.runPrompt, /MEASURED HARDWARE PROTOTYPE GATE/);
+  assert.match(compiled.runPrompt, /PHYSICAL REMIX GATE/);
+  assert.match(compiled.runPrompt, /calibrate the measurement path/i);
+  assert.match(compiled.runPrompt, /frequency, waveform, acceleration at the contact surface, coupling, duration, and position/i);
+  assert.match(compiled.runPrompt, /CAD, firmware, a render.*working physical prototype/i);
+  assert.match(compiled.runPrompt, /working, repair-required, or no-go/i);
+  assert.match(compiled.runPrompt, /does not mean safe for sale, clinically effective, certified, manufacturable, or production-ready/i);
+
+  const unsafeMeasurement = structuredClone(prototype);
+  unsafeMeasurement.hardwarePrototype.measurementPath = "../measurement.json";
+  assert.throws(() => compilePack(unsafeMeasurement), /safe repository-relative path/);
+  const invalidMeasurements = structuredClone(prototype);
+  invalidMeasurements.hardwarePrototype.measurementClasses[0] = "appearance";
+  assert.throws(() => compilePack(invalidMeasurements), /measurement classes are invalid/);
+  const invalidDecisions = structuredClone(prototype);
+  invalidDecisions.hardwarePrototype.decisions = ["working", "maybe", "no-go"];
+  assert.throws(() => compilePack(invalidDecisions), /decisions must be working, repair-required, no-go/);
+  const invalidRemix = structuredClone(prototype);
+  invalidRemix.remix.candidateCount = 2;
+  assert.throws(() => compilePack(invalidRemix), /exactly three directions/);
 });
 
 test("Marketing Operations compiles a manual-first, truthfully gated recurring schedule", () => {

@@ -159,7 +159,33 @@ FIRST CUSTOMER SPRINT
 9. Write ${contract.decisionReceiptPath} with exactly one decision: continue, revise, or stop. State the highest evidence rung reached, money requested and collected, what customers actually did, the next product or sales boundary, unresolved risks, and what would reverse the decision. This receipt records commercial proof; it does not claim product-market fit or authorize another Outcome Pack.`;
   })() : "";
 
-  const action = pack.opportunityDiscovery ? "Discover" : pack.firstCustomerSprint ? "Run" : pack.lane === "operate" ? "Establish and run the first cycle of" : pack.lane === "release" ? "Prepare and verify" : "Build";
+  const hardwarePrototype = pack.hardwarePrototype ? (() => {
+    const contract = pack.hardwarePrototype;
+    const requiredMeasurements = "functional output,control input,power,temperature,noise,duty cycle,failure controls,measurement uncertainty";
+    if (contract.measurementClasses.join(",") !== requiredMeasurements) {
+      throw new Error(`${pack.slug} hardware prototype measurement classes are invalid`);
+    }
+    if (contract.decisions.join(",") !== "working,repair-required,no-go") {
+      throw new Error(`${pack.slug} hardware prototype decisions must be working, repair-required, no-go`);
+    }
+    requireSafeRelativePath(contract.specificationPath, `${pack.slug} hardware prototype specificationPath`);
+    requireSafeRelativePath(contract.hazardPath, `${pack.slug} hardware prototype hazardPath`);
+    requireSafeRelativePath(contract.claimsPath, `${pack.slug} hardware prototype claimsPath`);
+    requireSafeRelativePath(contract.measurementPath, `${pack.slug} hardware prototype measurementPath`);
+    requireSafeRelativePath(contract.decisionReceiptPath, `${pack.slug} hardware prototype decisionReceiptPath`);
+    return `
+
+MEASURED HARDWARE PROTOTYPE GATE
+1. Before detailed design, write ${contract.specificationPath}. Lock the intended user, intended use, contact surfaces, operating environment, functional output, controls, power architecture, session or duty cycle, service boundary, and measurable acceptance thresholds. Separate demonstrated facts, engineering assumptions, research hypotheses, product claims, and prohibited claims.
+2. Write ${contract.claimsPath}. A study on another modality, frequency, dose, population, or device is background—not evidence that this product provides the same effect. Do not use a disclaimer to preserve an otherwise unsupported express or implied claim.
+3. Write ${contract.hazardPath} before fabrication or human use. Cover mechanical, electrical, battery, thermal, acoustic, vibration, pinch, sharp-edge, material, hygiene, misuse, single-fault, emergency-stop, vulnerable-user, and foreseeable-environment hazards as applicable. Health-adjacent products require an independent qualified professional to define preliminary human-use exclusions and test boundaries; an agent cannot supply clinical clearance.
+4. Purchasing, fabrication, assembly by an external party, energized bench work, battery charging, connection to physical hardware, and human testing each require separate approval for the exact design revision, procedure, operator, environment, limits, stop conditions, and cost. Missing tools, parts, authority, professional review, or physical evidence must produce an explicit no-go—not simulated proof.
+5. Calibrate the measurement path before judging the prototype. Preserve instruments, calibration status, fixture, raw samples, units, uncertainty, settings, software revision, environment, and failures in ${contract.measurementPath}. Measure these classes where applicable: ${contract.measurementClasses.join(", ")}. For vibroacoustic products, frequency, waveform, acceleration at the contact surface, coupling, duration, and position are separate variables.
+6. Never call CAD, firmware, a render, an unassembled bill of materials, or a synthetic trace a working physical prototype. Completion requires direct evidence from the integrated artifact under nominal, boundary, and intentionally failing conditions.
+7. Write ${contract.decisionReceiptPath} with exactly one status: working, repair-required, or no-go. Name the immutable prototype revision, intended-use boundary, tests run, thresholds, passed and failed measurements, hazards and mitigations, claims allowed and prohibited, human use performed or not performed, external actions, unresolved risks, and independent review. Working means only that the stated prototype contract passed; it does not mean safe for sale, clinically effective, certified, manufacturable, or production-ready.`;
+  })() : "";
+
+  const action = pack.opportunityDiscovery ? "Discover" : pack.firstCustomerSprint ? "Run" : pack.hardwarePrototype ? "Build and measure" : pack.lane === "operate" ? "Establish and run the first cycle of" : pack.lane === "release" ? "Prepare and verify" : "Build";
   const pluginCheck = pack.plugins?.length
     ? ` Also detect these optional agent plugins: ${pack.plugins.map((plugin) => `${plugin.invocation} (${plugin.skills.map((skill) => `$${skill}`).join(", ")})`).join(", ")}. Do not install or imitate an unavailable plugin; record its absence and use the documented fallback.`
     : "";
@@ -178,6 +204,18 @@ OPENAI SITES MVP PATH
     if (contract.candidateCount !== 3) throw new Error(`${pack.slug} remix must compare exactly three directions`);
     requireSafeRelativePath(contract.previewRoot, `${pack.slug} remix previewRoot`);
     requireSafeRelativePath(contract.decisionPath, `${pack.slug} remix decisionPath`);
+    if (contract.kind === "physical-direction") {
+      return `
+
+PHYSICAL REMIX GATE
+1. Remix changes physical direction, never the Outcome Pack's intended use, functional requirements, safety limits, interfaces, claims boundary, measurement contract, or completion checks. Preserve: ${contract.preserves.join(", ")}.
+2. After the ${contract.workstreamId} workstream's dependencies pass, create exactly ${contract.candidateCount} project-specific physical directions under ${contract.previewRoot}. Show the same functional envelope and confirmed components in comparable orthographic, section, contact-surface, control, and service views.
+3. Give each direction a plain-language name and intended user effect. Every pair must differ materially in at least three of form, ergonomics, material or craft, component layout, control interaction, assembly, serviceability, portability, or sensory character. Cosmetic recolors fail.
+4. Infer from intended use, user, cultural references, existing identity, confirmed components, manufacturing constraints, hazards, and evidence. Do not copy a protected product, flatten a cultural reference into decoration, hide difficult components, or let styling override safety and measurement access.
+5. If physical taste is material or the user asked to choose, show the three directions and ask one plain-language question. Otherwise select using intended-use fit, ergonomics, safety, manufacturability, serviceability, distinctiveness, and lower unverified complexity.
+6. Record evidence, candidates, preview hashes, provenance, decision mode, selected traits, rejected risks, rationale, and timestamp in ${contract.decisionPath}. Never call an agent selection user-approved.
+7. Do not begin dependent mechanical or electronics implementation until the decision exists. A later Remix reruns only the direction and affected physical surfaces after reporting scope; it does not silently change requirements, safety limits, claims, interfaces, measurements, or prior evidence.`;
+    }
     return `
 
 REMIX GATE
@@ -215,7 +253,7 @@ ${pack.guardrails.map((guardrail) => `- ${guardrail}`).join("\n")}
 
 VERIFICATION CONTRACT
 ${pack.verification.map((item) => `- ${item}`).join("\n")}
-${prerequisites}${opportunityDiscovery}${firstCustomerSprint}${remixGate}${releaseGate}${launchGate}${sitesPath}${operateLoop}
+${prerequisites}${opportunityDiscovery}${firstCustomerSprint}${hardwarePrototype}${remixGate}${releaseGate}${launchGate}${sitesPath}${operateLoop}
 
 NEW-REALITY CHECKPOINT
 Only after this bounded outcome finishes—including a partial or no-go result—write .possible/checkpoints/<run-id>.json with:

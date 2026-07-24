@@ -49,14 +49,15 @@ The installer is idempotent and refuses to overwrite conflicting skill files. Ou
 
 ## Public Outcome Packs
 
-Possible publishes seven reviewed public packs. The remaining registry packs stay experimental until they have equivalent preserved evidence.
+Possible publishes eight reviewed public packs. The remaining registry packs stay experimental until they have equivalent preserved evidence.
 
 - [Hardware Launch](packages/packs/src/hardware-launch.ts) — product story, site, film, prototype CAD and independent review.
 - [Robot Prototype](packages/packs/src/robot-prototype.ts) — mechanical model, robot descriptions, control, simulation and sim-to-real boundaries.
 - [Playable Web Game](packages/packs/src/playable-web-game.ts) — a polished browser game with responsive controls and playability review.
 - [Web Presentation](packages/packs/src/web-presentation.ts) — an evidence-backed coded deck with responsive presenter behavior.
 - [Software Opportunity Discovery](packages/packs/src/software-opportunity-discovery.ts) — turns a rough software ambition into one provisional opportunity and a credible first-customer approach.
-- [First Customer Sprint](packages/packs/src/first-customer-sprint.ts) — takes one selected opportunity to real prospects and pursues the strongest available commercial commitment, from conversation through payment and repeat use.
+- [Working Hardware Prototype](packages/packs/src/working-hardware-prototype.ts) — turns a consumer-hardware idea into one functional physical prototype with calibrated measurements, safety and claims boundaries, and an honest completion receipt.
+- [First Customer Sprint](packages/packs/src/first-customer-sprint.ts) — takes one selected product, service, or software opportunity to real prospects and pursues the strongest available commercial commitment.
 - [Developer Project Launch](packages/packs/src/developer-project-launch.ts) — a credible adoption path for a working developer project.
 
 The preserved PatchProof journey verifies Software Opportunity Discovery and Developer Project Launch as separate outcomes—and records why Possible no longer chooses their sequence in advance.

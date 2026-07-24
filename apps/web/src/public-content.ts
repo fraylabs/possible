@@ -16,7 +16,7 @@ export const featuredPacks = featuredPackSlugs.map((slug) => {
   return pack;
 });
 
-export const publishedPackSlugs = [...featuredPackSlugs, "software-opportunity-discovery", "first-customer-sprint", "developer-project-launch"] as const;
+export const publishedPackSlugs = [...featuredPackSlugs, "software-opportunity-discovery", "working-hardware-prototype", "first-customer-sprint", "developer-project-launch"] as const;
 export const publishedPacks = publishedPackSlugs.map((slug) => {
   const pack = outcomePacks.find((candidate) => candidate.slug === slug);
   if (!pack) throw new Error(`Missing published Outcome Pack: ${slug}`);

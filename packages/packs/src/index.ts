@@ -14,10 +14,11 @@ import { softwareLaunchPack } from "./software-launch.js";
 import { webAppOperationsPack } from "./web-app-operations.js";
 import { webPresentationPack } from "./web-presentation.js";
 import { workingWebAppPack } from "./working-web-app.js";
+import { workingHardwarePrototypePack } from "./working-hardware-prototype.js";
 
-export { billionDollarSaasPack, developerProjectLaunchPack, firstCustomerSprintPack, hardwareLaunchPack, kickstarterFulfillmentPack, kickstarterFundingPack, marketingOperationsPack, openSourceReleasePack, playableWebGamePack, productionWebReleasePack, robotPrototypePack, softwareLaunchPack, softwareOpportunityDiscoveryPack, webAppOperationsPack, webPresentationPack, workingWebAppPack };
+export { billionDollarSaasPack, developerProjectLaunchPack, firstCustomerSprintPack, hardwareLaunchPack, kickstarterFulfillmentPack, kickstarterFundingPack, marketingOperationsPack, openSourceReleasePack, playableWebGamePack, productionWebReleasePack, robotPrototypePack, softwareLaunchPack, softwareOpportunityDiscoveryPack, webAppOperationsPack, webPresentationPack, workingHardwarePrototypePack, workingWebAppPack };
 export { compileInstallCommands, compilePack, compileRunPrompt, compileWorkstreamWaves, recordOutcomeJourney, validateOutcomeCheckpoint } from "./compiler.js";
-export type { CandidateOutcomeRecommendation, CompiledPack, EvidenceBackedFact, FirstCustomerSprintContract, OpportunityDiscoveryContract, OutcomeCheckpoint, OutcomeJourneyHistory, OutcomePack, OutcomePrerequisite, PackLane, PluginCapability, RemixContract, ScheduleContract, SkillSource, Workstream } from "./types.js";
+export type { CandidateOutcomeRecommendation, CompiledPack, EvidenceBackedFact, FirstCustomerSprintContract, HardwarePrototypeContract, OpportunityDiscoveryContract, OutcomeCheckpoint, OutcomeJourneyHistory, OutcomePack, OutcomePrerequisite, PackLane, PluginCapability, RemixContract, ScheduleContract, SkillSource, Workstream } from "./types.js";
 
 export const stablePackSlugs = [
   "hardware-launch",
@@ -26,6 +27,7 @@ export const stablePackSlugs = [
   "web-presentation",
   "software-opportunity-discovery",
   "first-customer-sprint",
+  "working-hardware-prototype",
   "developer-project-launch",
 ] as const;
 
@@ -46,6 +48,7 @@ export const outcomePacks = [
   developerProjectLaunchPack,
   softwareOpportunityDiscoveryPack,
   firstCustomerSprintPack,
+  workingHardwarePrototypePack,
 ] as const;
 
 const stablePackSlugSet = new Set<string>(stablePackSlugs);

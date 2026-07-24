@@ -107,8 +107,8 @@ describe("Possible", () => {
     }
   });
 
-  it("publishes opportunity discovery, first customer, and developer launch as reviewed Outcome Packs", async () => {
-    for (const slug of ["software-opportunity-discovery", "first-customer-sprint", "developer-project-launch"]) {
+  it("publishes discovery, prototype, first-customer, and developer outcomes as reviewed Packs", async () => {
+    for (const slug of ["software-opportunity-discovery", "working-hardware-prototype", "first-customer-sprint", "developer-project-launch"]) {
       const pack = getPublishedPack(slug);
       expect(pack).toBeDefined();
       const { container, unmount } = renderRoute(`/packs/${slug}`);
@@ -118,6 +118,16 @@ describe("Possible", () => {
       expect(await axe(container)).toHaveNoViolations();
       unmount();
     }
+  });
+
+  it("shows the measured hardware contract and physical Remix on Working Hardware Prototype", async () => {
+    const route = renderRoute("/packs/working-hardware-prototype");
+    expect(screen.getByRole("heading", { name: "Working Hardware Prototype", level: 1 })).toBeInTheDocument();
+    expect(screen.getByText("MEASURED PHYSICAL PROTOTYPE")).toBeInTheDocument();
+    expect(screen.getByText("PHYSICAL REMIX")).toBeInTheDocument();
+    expect(route.container.querySelector(".pack-prompt-disclosure code")?.textContent).toMatch(/MEASURED HARDWARE PROTOTYPE GATE/);
+    expect(route.container.querySelector(".pack-prompt-disclosure code")?.textContent).toMatch(/PHYSICAL REMIX GATE/);
+    expect(await axe(route.container)).toHaveNoViolations();
   });
 
   it("separates opportunity discovery from the resumable first-customer sprint", async () => {

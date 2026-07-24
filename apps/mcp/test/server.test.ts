@@ -55,7 +55,7 @@ describe("Possible MCP", () => {
     assert.doesNotMatch(client.getInstructions() ?? "", /chain/i);
   });
 
-  it("lists seven stable and nine experimental outcome packs", async () => {
+  it("lists eight stable and nine experimental outcome packs", async () => {
     const result = await client.callTool({ name: "list_packs", arguments: {} });
     const envelope = result.structuredContent as { ok: boolean; data: { packs: Array<{ slug: string; lane: string; status: string }> } };
     assert.equal(envelope.ok, true);
@@ -76,8 +76,9 @@ describe("Possible MCP", () => {
       ["developer-project-launch", "launch"],
       ["software-opportunity-discovery", "create"],
       ["first-customer-sprint", "launch"],
+      ["working-hardware-prototype", "create"],
     ]);
-    assert.equal(envelope.data.packs.filter(({ status }) => status === "stable").length, 7);
+    assert.equal(envelope.data.packs.filter(({ status }) => status === "stable").length, 8);
     assert.equal(envelope.data.packs.filter(({ status }) => status === "experimental").length, 9);
   });
 
@@ -184,6 +185,19 @@ describe("Possible MCP", () => {
     assert.match(envelope.data.runPrompt, /awaiting-participants/i);
     assert.match(envelope.data.runPrompt, /continue, revise, or stop/i);
     assert.match(envelope.data.runPrompt, /Do not build the full product merely to avoid asking for commitment/i);
+  });
+
+  it("compiles Working Hardware Prototype with measured completion gates", async () => {
+    const result = await client.callTool({ name: "compile_pack", arguments: { slug: "working-hardware-prototype" } });
+    const envelope = result.structuredContent as { ok: boolean; data: { pack: { catalogNumber: number; lane: string; name: string }; installCommands: string[]; runPrompt: string } };
+    assert.equal(envelope.ok, true);
+    assert.equal(envelope.data.pack.catalogNumber, 17);
+    assert.equal(envelope.data.pack.lane, "create");
+    assert.equal(envelope.data.pack.name, "Working Hardware Prototype");
+    assert.equal(envelope.data.installCommands.length, 4);
+    assert.match(envelope.data.runPrompt, /MEASURED HARDWARE PROTOTYPE GATE/);
+    assert.match(envelope.data.runPrompt, /PHYSICAL REMIX GATE/);
+    assert.match(envelope.data.runPrompt, /working, repair-required, or no-go/i);
   });
 
   it("compiles Production Web Release with its second approval gate", async () => {

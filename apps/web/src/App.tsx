@@ -162,7 +162,7 @@ function CreatePage() {
           <header><span>HOW IT WORKS</span><h2 id="home-workflow-heading">Bring the ambition.<br /><em>Possible supplies the missing work.</em></h2></header>
           <ol>
             <li><span>DESCRIBE</span><strong>Tell <code>$possible</code> what you want.</strong><p>A rough idea is enough.</p></li>
-            <li><span>APPROVE</span><strong>Review the proposed outcome.</strong><p>Possible names the outcome and boundaries.</p></li>
+            <li><span>APPROVE</span><strong>Review the outcome.</strong><p>Possible sets its boundaries.</p></li>
             <li><span>EXECUTE</span><strong>Codex runs the workstreams.</strong><p>Skills create the artifacts.</p></li>
             <li><span>VERIFY</span><strong>Evidence decides what is done.</strong><p>Evidence informs what comes next.</p></li>
           </ol>
@@ -186,7 +186,6 @@ function CreatePage() {
               <span>THE TECHNICAL IDEA</span>
               <h2 id="home-packs-heading">Skills perform tasks.<br /><em>Outcome Packs coordinate the outcome.</em></h2>
             </div>
-            <p>Skills, safeguards and checks.</p>
           </header>
 
           <div className="home-pack-columns" aria-hidden="true">
@@ -208,7 +207,7 @@ function CreatePage() {
       </section>
 
       <section className="home-source" aria-labelledby="home-source-heading">
-        <header><div><span>OPEN SOURCE</span><h2 id="home-source-heading">Inspect the compiler.<br /><em>Run the tests.</em></h2></div><p>The manifests, generated prompts, safety gates, verifier contracts and preserved demo evidence are public.</p></header>
+        <header><div><span>OPEN SOURCE</span><h2 id="home-source-heading">Inspect the compiler.<br /><em>Run the tests.</em></h2></div><p>Public manifests, prompts, gates, verifier contracts and evidence.</p></header>
         <div className="home-source-links">
           <a href={githubUrl} target="_blank" rel="noreferrer"><strong>GitHub</strong><span>Read the source ↗</span></a>
           <a href={`${githubUrl}#judge-quickstart`} target="_blank" rel="noreferrer"><strong>Judge quickstart</strong><span>Install and test ↗</span></a>
@@ -360,6 +359,15 @@ function PackArtwork({ slug }: { slug: string }) {
         <i className="discovery-radar" /><i className="discovery-signal" />
         <strong>OFFER → CUSTOMER</strong>
         <span>REACH</span><span>SELL</span><span>LEARN</span>
+      </div>
+    );
+  }
+  if (slug === "working-hardware-prototype") {
+    return (
+      <div className="pack-art pack-art--robot" aria-hidden="true">
+        <div className="robot-kinematic"><b />{Array.from({ length: 8 }, (_, index) => <i key={index} />)}</div>
+        <strong>BUILD → MEASURE → REVIEW</strong>
+        <span>FORM</span><span>CONTROL</span><span>PROOF</span>
       </div>
     );
   }
@@ -538,7 +546,8 @@ function PackDetailPage({ pack }: { pack: OutcomePack }) {
             {pack.opportunityDiscovery ? <div className="pack-review-callout"><span>OPPORTUNITY DISCOVERY</span><div><code>{pack.opportunityDiscovery.candidateRange.join("–")} candidates</code><code>{pack.opportunityDiscovery.decisionReceiptPath}</code></div><p>Possible infers a conservative operator baseline, compares traceable opportunities, and selects one thesis for a first-customer attempt. Selection is not demand or permission to build.</p></div> : null}
             {pack.firstCustomerSprint ? <div className="pack-review-callout"><span>COMMERCIAL EVIDENCE LADDER</span><div>{pack.firstCustomerSprint.evidenceLadder.map((stage) => <code key={stage}>{stage}</code>)}</div><p>Possible pursues the strongest honest commitment available, preserves the complete funnel, and lets customer behavior determine what should happen next.</p></div> : null}
             {pack.firstCustomerSprint ? <div className="pack-review-callout"><span>RESUMABLE SALES CYCLE</span><div>{pack.firstCustomerSprint.waitingStates.map((state) => <code key={state}>{state}</code>)}</div><p>Approved sales activity can pause for replies, conversations, payment, or use, then resume from durable state. Scheduling coordinates a follow-up; it never counts as commercial evidence.</p></div> : null}
-            {pack.remix ? <div className="pack-review-callout"><span>REMIX</span><div><code>{pack.remix.candidateCount} directions</code><code>{pack.remix.decisionPath}</code></div><p>Possible derives project-specific directions after product truth is known, then records one decision before dependent implementation begins. The outcome contract does not change.</p></div> : null}
+            {pack.hardwarePrototype ? <div className="pack-review-callout"><span>MEASURED PHYSICAL PROTOTYPE</span><div>{pack.hardwarePrototype.measurementClasses.map((measurement) => <code key={measurement}>{measurement}</code>)}</div><p>CAD and firmware are inputs. Working status requires calibrated evidence from the integrated physical artifact; otherwise the receipt records repair-required or no-go.</p></div> : null}
+            {pack.remix ? <div className="pack-review-callout"><span>{pack.remix.kind === "physical-direction" ? "PHYSICAL REMIX" : "REMIX"}</span><div><code>{pack.remix.candidateCount} directions</code><code>{pack.remix.decisionPath}</code></div><p>{pack.remix.kind === "physical-direction" ? "Possible compares form, ergonomics, materials, layout, controls, assembly, service and sensory character while preserving function, safety, interfaces, claims and measurement access." : "Possible derives project-specific directions after product truth is known, then records one decision before dependent implementation begins. The outcome contract does not change."}</p></div> : null}
             <div className="pack-review-callout"><span>INDEPENDENT REVIEW</span><div>{pack.reviewSkills.map((skill) => <code key={skill}>${skill}</code>)}</div><p>A verifier checks the integrated outcome. It reports evidence, failures, skipped checks, and unsupported claims.</p></div>
           </section>
 

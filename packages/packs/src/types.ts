@@ -40,13 +40,24 @@ export interface Workstream {
 }
 
 export interface RemixContract {
-  kind: "visual-direction";
+  kind: "visual-direction" | "physical-direction";
   workstreamId: string;
   candidateCount: 3;
   previewRoot: string;
   decisionPath: string;
   onNoChoice: "agent-select";
   preserves: string[];
+}
+
+export interface HardwarePrototypeContract {
+  kind: "measured-functional-prototype";
+  specificationPath: string;
+  hazardPath: string;
+  claimsPath: string;
+  measurementPath: string;
+  decisionReceiptPath: string;
+  measurementClasses: ["functional output", "control input", "power", "temperature", "noise", "duty cycle", "failure controls", "measurement uncertainty"];
+  decisions: ["working", "repair-required", "no-go"];
 }
 
 export interface OutcomePrerequisite {
@@ -97,6 +108,7 @@ export interface OutcomePack {
   outputs: string[];
   guardrails: string[];
   verification: string[];
+  hardwarePrototype?: HardwarePrototypeContract;
   remix?: RemixContract;
   prerequisites?: OutcomePrerequisite[];
   firstCustomerSprint?: FirstCustomerSprintContract;
