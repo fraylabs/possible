@@ -22,6 +22,7 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
     "software-opportunity-discovery",
     "first-customer-sprint",
     "working-hardware-prototype",
+    "launch-content-campaign",
   ]);
   assert.deepEqual(outcomePacks.map(({ slug, lane }) => [slug, lane]), [
     ["hardware-launch", "launch"],
@@ -41,8 +42,9 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
     ["software-opportunity-discovery", "create"],
     ["first-customer-sprint", "launch"],
     ["working-hardware-prototype", "create"],
+    ["launch-content-campaign", "launch"],
   ]);
-  assert.deepEqual(outcomePacks.map((pack) => pack.catalogNumber), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]);
+  assert.deepEqual(outcomePacks.map((pack) => pack.catalogNumber), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]);
   assert.equal(new Set(outcomePacks.map((pack) => pack.catalogNumber)).size, outcomePacks.length);
   assert.equal(new Set(outcomePacks.map((pack) => pack.slug)).size, outcomePacks.length);
   assert.deepEqual(stableOutcomePacks.map((pack) => pack.slug), [
@@ -54,6 +56,7 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
     "software-opportunity-discovery",
     "first-customer-sprint",
     "working-hardware-prototype",
+    "launch-content-campaign",
   ]);
   assert.equal(experimentalOutcomePacks.length, 9);
   assert.equal(getPackStatus("hardware-launch"), "stable");
@@ -652,6 +655,12 @@ test("Working Hardware Prototype requires a measured physical artifact and fresh
     measurementClasses: ["functional output", "control input", "power", "temperature", "noise", "duty cycle", "failure controls", "measurement uncertainty"],
     decisions: ["working", "repair-required", "no-go"],
   });
+  assert.deepEqual(prototype.decisionRationale, {
+    kind: "evidence-backed-product-decisions",
+    rootPath: "prototype/decisions/",
+    publicNarrativePath: "prototype/decisions/public-rationale.md",
+    requiredFields: ["question", "options", "evidence", "selection", "rationale", "tradeoffs", "uncertainty", "reversal evidence", "public explanation"],
+  });
   assert.deepEqual(prototype.remix, {
     kind: "physical-direction",
     workstreamId: "physical-direction",
@@ -666,6 +675,7 @@ test("Working Hardware Prototype requires a measured physical artifact and fresh
   assert.equal(compiled.installCommands.length, 4);
   assert.match(compiled.runPrompt, /^Build and measure the Working Hardware Prototype outcome/);
   assert.match(compiled.runPrompt, /MEASURED HARDWARE PROTOTYPE GATE/);
+  assert.match(compiled.runPrompt, /PRODUCT DECISION RATIONALE/);
   assert.match(compiled.runPrompt, /PHYSICAL REMIX GATE/);
   assert.match(compiled.runPrompt, /calibrate the measurement path/i);
   assert.match(compiled.runPrompt, /frequency, waveform, acceleration at the contact surface, coupling, duration, and position/i);
@@ -685,6 +695,46 @@ test("Working Hardware Prototype requires a measured physical artifact and fresh
   const invalidRemix = structuredClone(prototype);
   invalidRemix.remix.candidateCount = 2;
   assert.throws(() => compilePack(invalidRemix), /exactly three directions/);
+  const unsafeDecisions = structuredClone(prototype);
+  unsafeDecisions.decisionRationale.rootPath = "../decisions";
+  assert.throws(() => compilePack(unsafeDecisions), /safe repository-relative path/);
+  const invalidDecisionFields = structuredClone(prototype);
+  invalidDecisionFields.decisionRationale.requiredFields[1] = "alternatives";
+  assert.throws(() => compilePack(invalidDecisionFields), /decision rationale fields are invalid/);
+});
+
+test("Launch Content Campaign produces post-ready media without publishing it", () => {
+  const campaign = outcomePacks.find((pack) => pack.slug === "launch-content-campaign");
+  assert.ok(campaign);
+  assert.equal(campaign.catalogNumber, 18);
+  assert.equal(campaign.lane, "launch");
+  assert.equal(campaign.name, "Launch Content Campaign");
+  assert.match(campaign.promise, /post-ready.*campaign/i);
+  assert.deepEqual(compileWorkstreamWaves(campaign).map((wave) => wave.map(({ id }) => id)), [
+    ["campaign-truth"],
+    ["creative-direction"],
+    ["copy-production", "media-production"],
+    ["campaign-package"],
+  ]);
+  assert.equal(campaign.remix?.kind, "visual-direction");
+  assert.equal(campaign.decisionRationale?.rootPath, "launch-content/decisions/");
+  assert.ok(campaign.skills.some(({ id, reviewedRevision }) => id === "humanizer" && reviewedRevision === "e081be4df826b7bd545e6b80406622f52d0bb49b"));
+
+  const compiled = compilePack(campaign);
+  assert.equal(compiled.installCommands.length, 3);
+  assert.match(compiled.runPrompt, /^Build the Launch Content Campaign outcome/);
+  assert.match(compiled.runPrompt, /\$humanizer/);
+  assert.match(compiled.runPrompt, /PRODUCT DECISION RATIONALE/);
+  assert.match(compiled.runPrompt, /REMIX GATE/);
+  assert.match(campaign.outputs.join(" "), /Instagram carousel/i);
+  assert.match(campaign.outputs.join(" "), /YouTube Short/i);
+  assert.match(campaign.outputs.join(" "), /X announcement/i);
+  assert.match(campaign.outputs.join(" "), /asset manifest/i);
+  assert.match(campaign.guardrails.join(" "), /AI-detector evasion/i);
+  assert.match(campaign.guardrails.join(" "), /authentic prototype footage.*generated atmosphere/i);
+  assert.match(campaign.guardrails.join(" "), /separate exact approval/i);
+  assert.match(campaign.verification.join(" "), /provider, model and version.*content hash/i);
+  assert.match(campaign.verification.join(" "), /ready, repair-required, or no-go/i);
 });
 
 test("Marketing Operations compiles a manual-first, truthfully gated recurring schedule", () => {
@@ -768,7 +818,10 @@ test("benchmark outcome packs compile operational knowledge without upgrading co
   assert.match(funding.outputs.join(" "), /deposited net payout/i);
   assert.match(funding.guardrails.join(" "), /Only privacy-safe evidence of the deposited platform payout/i);
   assert.match(funding.verification.join(" "), /unfunded and cancelled outcomes/i);
-  assert.match(compilePack(funding).runPrompt, /^Build the Kickstarter Funding outcome/);
+  const fundingPrompt = compilePack(funding).runPrompt;
+  assert.match(fundingPrompt, /^Build the Kickstarter Funding outcome/);
+  assert.match(fundingPrompt, /\$humanizer/);
+  assert.match(fundingPrompt, /PRODUCT DECISION RATIONALE/);
 
   assert.ok(fulfillment);
   assert.equal(fulfillment.catalogNumber, 11);

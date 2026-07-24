@@ -60,6 +60,13 @@ export interface HardwarePrototypeContract {
   decisions: ["working", "repair-required", "no-go"];
 }
 
+export interface DecisionRationaleContract {
+  kind: "evidence-backed-product-decisions";
+  rootPath: string;
+  publicNarrativePath: string;
+  requiredFields: ["question", "options", "evidence", "selection", "rationale", "tradeoffs", "uncertainty", "reversal evidence", "public explanation"];
+}
+
 export interface OutcomePrerequisite {
   id: string;
   description: string;
@@ -108,6 +115,7 @@ export interface OutcomePack {
   outputs: string[];
   guardrails: string[];
   verification: string[];
+  decisionRationale?: DecisionRationaleContract;
   hardwarePrototype?: HardwarePrototypeContract;
   remix?: RemixContract;
   prerequisites?: OutcomePrerequisite[];

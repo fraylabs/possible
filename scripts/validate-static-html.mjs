@@ -127,8 +127,9 @@ for (const pack of featuredPacks) {
   assert.doesNotMatch(detail, /SCHEDULABLE|OPTIONAL SCHEDULE|Schedule the operating loop/i);
   assert.doesNotMatch(detail, /EXPERIMENTAL OUTCOME PACK|Preserved end-to-end evidence is still in progress/i);
 }
-assert.match(catalog, /Outcome Packs page 1 of 2/);
-assert.match(catalog, /Outcome Packs page 2 of 2/);
+assert.match(catalog, /Outcome Packs page 1 of 3/);
+assert.match(catalog, /Outcome Packs page 2 of 3/);
+assert.match(catalog, /Outcome Packs page 3 of 3/);
 assert.match(catalog, /aria-label="Outcome Pack pages"/);
 for (const slug of ["software-launch", "open-source-release", "marketing-operations", "billion-dollar-saas"]) {
   await assert.rejects(html(`packs/${slug}/index.html`), { code: "ENOENT" }, `${slug} must not be exported`);

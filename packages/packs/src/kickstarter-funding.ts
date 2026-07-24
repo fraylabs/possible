@@ -2,6 +2,8 @@ import type { OutcomePack, SkillSource } from "./types.js";
 import { marketingOperationsPack } from "./marketing-operations.js";
 import { softwareLaunchPack } from "./software-launch.js";
 
+const humanizerRevision = "e081be4df826b7bd545e6b80406622f52d0bb49b";
+
 function skill(pack: OutcomePack, id: string): SkillSource {
   const source = pack.skills.find((candidate) => candidate.id === id);
   if (!source) throw new Error(`Missing reviewed skill ${id}`);
@@ -39,6 +41,16 @@ export const kickstarterFundingPack: OutcomePack = {
     skill(softwareLaunchPack, "frontend-design"),
     skill(softwareLaunchPack, "webapp-testing"),
     skill(softwareLaunchPack, "remotion-best-practices"),
+    {
+      id: "humanizer",
+      name: "Humanizer",
+      role: "Specific founder, campaign, social, and product language grounded in real decisions and evidence",
+      repository: "fraylabs/possible",
+      skill: "humanizer",
+      catalogUrl: "https://github.com/fraylabs/possible/tree/dev/skills/humanizer",
+      reviewedRevision: humanizerRevision,
+      reviewUrl: `https://github.com/fraylabs/possible/tree/${humanizerRevision}/skills/humanizer`,
+    },
   ],
   workstreams: [
     {
@@ -51,28 +63,28 @@ export const kickstarterFundingPack: OutcomePack = {
     {
       id: "offer",
       name: "Audience, promise, rewards, and campaign offer",
-      skills: ["product-marketing", "copywriting"],
-      owns: ["campaign/offer/", "campaign/rewards/", "campaign/claims-register.md"],
-      brief: "Define the backer audience, problem, product promise, proof, reward tiers, quantities, shipping assumptions, risks, FAQ, and claims register. Keep estimated delivery, prototype state, stretch goals, and unproven performance explicit.",
+      skills: ["product-marketing", "copywriting", "humanizer"],
+      owns: ["campaign/offer/", "campaign/rewards/", "campaign/decisions/", "campaign/claims-register.md"],
+      brief: "Define the backer audience, problem, product promise, proof, reward tiers, quantities, shipping assumptions, risks, FAQ, claims register, and public product rationale. Explain important material, form, interaction, manufacturing, repair, and research choices from preserved evidence and trade-offs—not retrospective marketing invention. Keep estimated delivery, prototype state, stretch goals, and unproven performance explicit.",
     },
     {
       id: "campaign-page",
       name: "Kickstarter story and campaign page",
-      skills: ["frontend-design", "copywriting"],
+      skills: ["frontend-design", "copywriting", "humanizer"],
       owns: ["campaign/page/", "campaign/storyboard.md"],
       brief: "Create a complete reviewable campaign story and responsive local proof page that communicate the confirmed product, offer, rewards, feasibility, risks, timeline, and call to action. It must not collect payments, impersonate Kickstarter, or claim a live campaign.",
     },
     {
       id: "campaign-film",
       name: "Proof-led campaign film",
-      skills: ["remotion-best-practices"],
+      skills: ["remotion-best-practices", "humanizer"],
       owns: ["campaign/media/", "campaign/film-receipt.md"],
       brief: "Produce the shortest credible campaign film from real product evidence, clearly separating demonstrated behavior, renders, simulations, and future intent. Include a reproducible render and media report.",
     },
     {
       id: "audience",
       name: "Prelaunch audience and distribution system",
-      skills: ["content-strategy", "social", "copywriting"],
+      skills: ["content-strategy", "social", "copywriting", "humanizer"],
       owns: ["campaign/audience/", "campaign/calendar/", "campaign/drafts/"],
       brief: "Design the prelaunch, launch-day, mid-campaign, and final-window distribution system; prepare channel-specific review-required drafts, audience hypotheses, partner and press research, and approval packets. Never contact, post, send, buy media, or fabricate an audience.",
     },
@@ -84,6 +96,12 @@ export const kickstarterFundingPack: OutcomePack = {
       brief: "Define milestone, traffic, conversion, pledge, cancellation, fee, payout, and risk evidence; create a bounded campaign review loop with decision thresholds and truthful empty states. Verify the local package now and prepare separate approval gates for live publication and every external action.",
     },
   ],
+  decisionRationale: {
+    kind: "evidence-backed-product-decisions",
+    rootPath: "campaign/decisions/",
+    publicNarrativePath: "campaign/decisions/public-rationale.md",
+    requiredFields: ["question", "options", "evidence", "selection", "rationale", "tradeoffs", "uncertainty", "reversal evidence", "public explanation"],
+  },
   reviewSkills: ["product-marketing", "analytics", "webapp-testing"],
   outputs: [
     "Product feasibility, cost, contingency, and fixed funding-goal model",

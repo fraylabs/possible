@@ -28,6 +28,7 @@ const canonicalRoutes = [
   ["packs/software-opportunity-discovery/index.html", "https://possible.sh/packs/software-opportunity-discovery/"],
   ["packs/first-customer-sprint/index.html", "https://possible.sh/packs/first-customer-sprint/"],
   ["packs/working-hardware-prototype/index.html", "https://possible.sh/packs/working-hardware-prototype/"],
+  ["packs/launch-content-campaign/index.html", "https://possible.sh/packs/launch-content-campaign/"],
 ];
 
 const redirectRoutes = [

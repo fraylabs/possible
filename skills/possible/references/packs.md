@@ -340,10 +340,10 @@ Outputs: feasibility and fixed funding-goal model, audience/offer/rewards/risks,
 Workstreams:
 
 - Product feasibility, cost, and funding model — `product-marketing`, `analytics`; owns campaign feasibility, economics, and risk evidence.
-- Audience, promise, rewards, and offer — `product-marketing`, `copywriting`; owns the offer, rewards, and claims register.
-- Kickstarter story and campaign page — `frontend-design`, `copywriting`; owns the responsive local proof page and story.
-- Proof-led campaign film — `remotion-best-practices`; owns rendered media and its report.
-- Prelaunch audience and distribution — `content-strategy`, `social`, `copywriting`; owns audience research, calendar, and review-required drafts.
+- Audience, promise, rewards, and offer — `product-marketing`, `copywriting`, `humanizer`; owns the offer, rewards, decision rationale, and claims register.
+- Kickstarter story and campaign page — `frontend-design`, `copywriting`, `humanizer`; owns the responsive local proof page and story.
+- Proof-led campaign film — `remotion-best-practices`, `humanizer`; owns rendered media and its report.
+- Prelaunch audience and distribution — `content-strategy`, `social`, `copywriting`, `humanizer`; owns audience research, calendar, and review-required drafts.
 - Campaign decisions and payout evidence — `analytics`, `marketing-loops`, `webapp-testing`; owns measurement, operations, fixtures, and reports.
 - Fresh review — `product-marketing`, `analytics`, `webapp-testing`; verifies economics, claims, media, local campaign behavior, and money evidence.
 
@@ -352,6 +352,7 @@ Sources:
 - `coreyhaines31/marketingskills`: `product-marketing`, `content-strategy`, `copywriting`, `social`, `analytics`, `marketing-loops`; reviewed `67264763cb107d61749f418d081c56e5bcbc0209`.
 - `anthropics/skills`: `frontend-design`, `webapp-testing`; reviewed `fa0fa64bdc967915dc8399e803be67759e1e62b8`.
 - `remotion-dev/skills`: `remotion-best-practices`; reviewed `ab22f5fa89962ec943eaa18797cbf38c9d727743`.
+- `fraylabs/possible`: `humanizer`; reviewed `e081be4df826b7bd545e6b80406622f52d0bb49b`.
 
 Install:
 
@@ -359,7 +360,10 @@ Install:
 npx skills@1.5.19 add coreyhaines31/marketingskills@67264763cb107d61749f418d081c56e5bcbc0209 --skill product-marketing --skill content-strategy --skill copywriting --skill social --skill analytics --skill marketing-loops --agent codex
 npx skills@1.5.19 add anthropics/skills@fa0fa64bdc967915dc8399e803be67759e1e62b8 --skill frontend-design --skill webapp-testing --agent codex
 npx skills@1.5.19 add remotion-dev/skills@ab22f5fa89962ec943eaa18797cbf38c9d727743 --skill remotion-best-practices --agent codex
+npx skills@1.5.19 add fraylabs/possible@e081be4df826b7bd545e6b80406622f52d0bb49b --skill humanizer --agent codex
 ```
+
+Preserve evidence-backed product decisions under `campaign/decisions/`; every public rationale must retain alternatives, evidence, trade-offs, uncertainty, and what would reverse the decision. `$humanizer` may improve clarity and voice but cannot invent founder history, customer language, or product intent.
 
 Never imply funding, demand, manufacturing feasibility, delivery, or payout. A local page must not impersonate Kickstarter or accept payment. Publishing, outreach, posting, email, advertising, account changes, and live campaign actions require separate approval. Count money only after privacy-safe evidence proves the platform payout was deposited.
 
@@ -644,9 +648,56 @@ npx skills@1.5.19 add github/awesome-copilot@26fe2d126bf79aafb38f43344d450b69632
 
 This pack supports physical **Remix**. It holds intended use, function, components, safety, interfaces, claims, and measurement access constant while comparing three materially different form, ergonomic, material, component-layout, control, assembly, service, portability, or sensory directions. Styling cannot hide components or override hazards.
 
+Preserve material product decisions under `prototype/decisions/`: the question, alternatives, evidence, selection, rationale, accepted trade-offs, uncertainty, reversal evidence, and a plain-language public explanation. Do not backfill a sophisticated story after an arbitrary choice.
+
 Purchasing, fabrication, external assembly, energized bench work, battery charging, hardware connection, and human testing each require separate exact approval. Health-adjacent products require qualified professional input for preliminary human-use exclusions and test boundaries. Missing parts, tools, authority, review, or physical evidence produces no-go; CAD, firmware, and synthetic traces cannot substitute.
 
 Write `outcome-room/hardware-prototype-receipt.json` with exactly one status: `working`, `repair-required`, or `no-go`. Working means only that the locked prototype contract passed. It never means safe for sale, clinically effective, certified, manufacturable, or production-ready.
+
+## Launch Content Campaign
+
+Slug: `launch-content-campaign`
+
+Lane: `launch`
+
+Status: `stable`.
+
+Public page: `https://possible.sh/packs/launch-content-campaign`
+
+Use when a real product, prototype, offer, or campaign has enough evidence and the user wants one finite set of finished, post-ready assets rather than an ongoing marketing loop.
+
+Outputs: locked campaign truth and claims; evidence-backed public product rationale; three campaign directions and one decision; editable Instagram carousels, captions, and alt text; vertical Reel, TikTok, and YouTube Short masters; horizontal launch-film or YouTube master; X announcement, founder, and product-decision threads; manual posting calendar; complete provenance manifest; independent ready, repair-required, or no-go receipt.
+
+Workstreams:
+
+- Product truth, decisions, audience, and claims — `product-marketing`, `content-strategy`, `humanizer`; owns the campaign source, decision records, claims, and brief.
+- Campaign concept and visual direction — `content-strategy`, `product-marketing`, `humanizer`; compares three directions while preserving product truth.
+- Platform-native copy — `copywriting`, `social`, `humanizer`; creates carousel text, captions, scripts, threads, YouTube packages, accessibility text, disclosures, and variants.
+- Image, carousel, video, audio, and thumbnail masters — `remotion-best-practices`, `content-strategy`; uses available approved media tools by capability and preserves generation provenance.
+- Post-ready package, calendar, and receipt — `social`, `analytics`, `humanizer`, `remotion-best-practices`; pairs every asset with specifications, evidence, approval state, intended window, and metric.
+- Fresh review — `product-marketing`, `humanizer`, `social`, `remotion-best-practices`; audits actual exports, claims, voice, accessibility, provenance, rights, and technical output.
+
+Sources:
+
+- `coreyhaines31/marketingskills`: `product-marketing`, `content-strategy`, `copywriting`, `social`, `analytics`; reviewed `67264763cb107d61749f418d081c56e5bcbc0209`.
+- `remotion-dev/skills`: `remotion-best-practices`; reviewed `ab22f5fa89962ec943eaa18797cbf38c9d727743`.
+- `fraylabs/possible`: `humanizer`; reviewed `e081be4df826b7bd545e6b80406622f52d0bb49b`.
+
+Install:
+
+```bash
+npx skills@1.5.19 add coreyhaines31/marketingskills@67264763cb107d61749f418d081c56e5bcbc0209 --skill product-marketing --skill content-strategy --skill copywriting --skill social --skill analytics --agent codex
+npx skills@1.5.19 add remotion-dev/skills@ab22f5fa89962ec943eaa18797cbf38c9d727743 --skill remotion-best-practices --agent codex
+npx skills@1.5.19 add fraylabs/possible@e081be4df826b7bd545e6b80406622f52d0bb49b --skill humanizer --agent codex
+```
+
+The pack supports **Remix** and an evidence-backed product-decision contract. Every public “why” must retain the actual alternatives, evidence, selected option, accepted trade-offs, uncertainty, and reversal condition. `$humanizer` removes generic generated phrasing without inventing a founder personality, customer language, or product rationale.
+
+Select image, video, and audio providers from capabilities actually available during the run. Record the provider, model version, inputs, prompt, settings, edits, cost, rights, disclosure, and output hash. Missing access produces a production-ready brief and an honest no-go for that media output; the pack never silently imitates a provider.
+
+Keep authentic prototype footage, renders, simulations, generated atmosphere, and future intent distinct. Generated media cannot demonstrate product behavior, human response, research results, health effects, manufacturing capability, or delivered inventory. Posting, scheduling on a platform, outreach, account changes, private audience access, and spending require separate exact approval.
+
+Write `outcome-room/launch-content-receipt.json` with exactly one status: `ready`, `repair-required`, or `no-go`.
 
 ## Selection rule
 
@@ -669,8 +720,9 @@ Recommend the Outcome Pack whose finished outputs most closely match the user's 
 - Working developer tool, library, CLI, API, agent project, or platform plus positioning, a distinctive site, honest demonstration, verified quickstart, and adoption path → Developer Project Launch.
 - Vague software ambition with no selected opportunity plus one traceable provisional thesis and first-customer handoff → Software Opportunity Discovery.
 - Selected product, service, or software opportunity plus real prospects, one concrete offer, and the strongest available commercial commitment → First Customer Sprint.
+- Real product, prototype, offer, or campaign plus finished Instagram, video, YouTube, X, product-decision, provenance, and posting-calendar assets → Launch Content Campaign.
 
-Recommend Software Opportunity Discovery when no opportunity is selected. Recommend Working Hardware Prototype when a selected consumer-hardware concept must become a measured physical artifact; Hardware Launch presents a product and Robot Prototype proves a simulated robot, so neither substitutes. Recommend First Customer Sprint when one selected direction should face a concrete offer and real prospects; require truthful prototype, safety, claims, manufacturing, delivery, and refund boundaries before physical-product payment or delivery promises. Recommend Working Web App only when customer evidence or another explicit delivery requirement makes a bounded application the next useful outcome. Use Developer Project Launch when a working developer project needs comprehension, presentation, proof, and a verified adoption path. Use Software Launch for a broader product release candidate, launch story, and film. Use Web Presentation when the primary deliverable is a slide-based browser presentation; a conventional landing page belongs elsewhere. Use Billion-Dollar SaaS when the user explicitly wants the broader company operating system and accepts that operational coverage cannot guarantee economic success. Use Kickstarter Funding when crowdfunding mechanics and payout are part of the outcome; use Kickstarter Fulfillment only after the campaign is funded. Use Robot Prototype for a simulation-backed digital prototype, not a fabrication-ready machine or hardware commissioning. Use Production Web Release when a tested candidate exists and the missing outcome is a gated production promotion with rollback and smoke evidence. Use Web App Operations only after the app is live and the desired outcome is an ongoing reliability and maintenance rhythm. Use Marketing Operations when the product or offer exists and the missing outcome is a recurring marketing system. Repository-only licensing, packaging, CI, versioning, and release engineering belong to Open-Source Release; one isolated bug, incident, or marketing asset with no requested recurring workflow is focused work, not an Outcome Pack run.
+Recommend Software Opportunity Discovery when no opportunity is selected. Recommend Working Hardware Prototype when a selected consumer-hardware concept must become a measured physical artifact; Hardware Launch presents a product and Robot Prototype proves a simulated robot, so neither substitutes. Recommend First Customer Sprint when one selected direction should face a concrete offer and real prospects; require truthful prototype, safety, claims, manufacturing, delivery, and refund boundaries before physical-product payment or delivery promises. Recommend Launch Content Campaign when the product truth exists and the missing result is one finite set of post-ready cross-platform assets; use Marketing Operations for a recurring learning and production system. Recommend Working Web App only when customer evidence or another explicit delivery requirement makes a bounded application the next useful outcome. Use Developer Project Launch when a working developer project needs comprehension, presentation, proof, and a verified adoption path. Use Software Launch for a broader product release candidate, launch story, and film. Use Web Presentation when the primary deliverable is a slide-based browser presentation; a conventional landing page belongs elsewhere. Use Billion-Dollar SaaS when the user explicitly wants the broader company operating system and accepts that operational coverage cannot guarantee economic success. Use Kickstarter Funding when crowdfunding mechanics and payout are part of the outcome; use Kickstarter Fulfillment only after the campaign is funded. Use Robot Prototype for a simulation-backed digital prototype, not a fabrication-ready machine or hardware commissioning. Use Production Web Release when a tested candidate exists and the missing outcome is a gated production promotion with rollback and smoke evidence. Use Web App Operations only after the app is live and the desired outcome is an ongoing reliability and maintenance rhythm. Repository-only licensing, packaging, CI, versioning, and release engineering belong to Open-Source Release; one isolated bug, incident, or marketing asset with no requested recurring workflow is focused work, not an Outcome Pack run.
 
 For an ambition spanning several valuable results, recommend only the next independently useful Outcome Pack. Choose it from the current reality and the most important unresolved decision; do not preselect a future sequence. After the outcome passes verification, reassess the new evidence before recommending zero or more candidates and stop for fresh approval. A strong matching working project may qualify for Developer Project Launch directly; a discovery receipt alone does not.
 

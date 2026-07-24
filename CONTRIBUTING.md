@@ -1,6 +1,6 @@
 # Contributing to Possible
 
-Possible publishes eight stable Outcome Packs: Hardware Launch, Robot Prototype, Playable Web Game, Web Presentation, Software Opportunity Discovery, Working Hardware Prototype, First Customer Sprint and Developer Project Launch. Additional packs remain experimental in the registry and are not part of the primary catalog. Contributions may improve either group, but a pack becomes stable only after a preserved end-to-end run and independent verification.
+Possible publishes nine stable Outcome Packs: Hardware Launch, Robot Prototype, Playable Web Game, Web Presentation, Software Opportunity Discovery, Working Hardware Prototype, First Customer Sprint, Launch Content Campaign and Developer Project Launch. Additional packs remain experimental in the registry and are not part of the primary catalog. Contributions may improve either group, but a pack becomes stable only after a preserved end-to-end run and independent verification.
 
 A pack contribution must:
 

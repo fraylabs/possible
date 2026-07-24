@@ -49,7 +49,7 @@ The installer is idempotent and refuses to overwrite conflicting skill files. Ou
 
 ## Public Outcome Packs
 
-Possible publishes eight reviewed public packs. The remaining registry packs stay experimental until they have equivalent preserved evidence.
+Possible publishes nine reviewed public packs. The remaining registry packs stay experimental until they have equivalent preserved evidence.
 
 - [Hardware Launch](packages/packs/src/hardware-launch.ts) — product story, site, film, prototype CAD and independent review.
 - [Robot Prototype](packages/packs/src/robot-prototype.ts) — mechanical model, robot descriptions, control, simulation and sim-to-real boundaries.
@@ -58,6 +58,7 @@ Possible publishes eight reviewed public packs. The remaining registry packs sta
 - [Software Opportunity Discovery](packages/packs/src/software-opportunity-discovery.ts) — turns a rough software ambition into one provisional opportunity and a credible first-customer approach.
 - [Working Hardware Prototype](packages/packs/src/working-hardware-prototype.ts) — turns a consumer-hardware idea into one functional physical prototype with calibrated measurements, safety and claims boundaries, and an honest completion receipt.
 - [First Customer Sprint](packages/packs/src/first-customer-sprint.ts) — takes one selected product, service, or software opportunity to real prospects and pursues the strongest available commercial commitment.
+- [Launch Content Campaign](packages/packs/src/launch-content-campaign.ts) — turns verified product decisions and proof into post-ready image, video, carousel, thread and platform packages.
 - [Developer Project Launch](packages/packs/src/developer-project-launch.ts) — a credible adoption path for a working developer project.
 
 The preserved PatchProof journey verifies Software Opportunity Discovery and Developer Project Launch as separate outcomes—and records why Possible no longer chooses their sequence in advance.

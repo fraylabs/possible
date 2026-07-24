@@ -159,6 +159,24 @@ FIRST CUSTOMER SPRINT
 9. Write ${contract.decisionReceiptPath} with exactly one decision: continue, revise, or stop. State the highest evidence rung reached, money requested and collected, what customers actually did, the next product or sales boundary, unresolved risks, and what would reverse the decision. This receipt records commercial proof; it does not claim product-market fit or authorize another Outcome Pack.`;
   })() : "";
 
+  const decisionRationale = pack.decisionRationale ? (() => {
+    const contract = pack.decisionRationale;
+    const requiredFields = "question,options,evidence,selection,rationale,tradeoffs,uncertainty,reversal evidence,public explanation";
+    if (contract.requiredFields.join(",") !== requiredFields) {
+      throw new Error(`${pack.slug} decision rationale fields are invalid`);
+    }
+    requireSafeRelativePath(contract.rootPath, `${pack.slug} decision rationale rootPath`);
+    requireSafeRelativePath(contract.publicNarrativePath, `${pack.slug} decision rationale publicNarrativePath`);
+    return `
+
+PRODUCT DECISION RATIONALE
+1. Before presenting a material product choice as intentional, write one evidence-backed record under ${contract.rootPath}. Every record must contain: ${contract.requiredFields.join(", ")}.
+2. Compare credible alternatives using the constraints that actually matter. For physical products include function, human contact, safety, cleaning, durability, sourcing, fabrication, repair, cost, environmental burden, and sensory character where applicable. For digital products include user behavior, accessibility, privacy, reliability, maintenance, compatibility, and operating cost where applicable.
+3. Explain why the selected option won, what it makes worse, what remains unknown, and what new evidence would reverse it. A preference, trend, generated rationale, or retrospective story is not product evidence.
+4. Write ${contract.publicNarrativePath} from the verified decision records. Use plain language suitable for customers, preserve uncertainty, and link every public explanation to its source record. Never invent a sophisticated reason after the decision was made or turn a research hypothesis into a product claim.
+5. When evidence is insufficient, record the decision as provisional or unresolved. Do not hide an arbitrary choice behind confident copy.`;
+  })() : "";
+
   const hardwarePrototype = pack.hardwarePrototype ? (() => {
     const contract = pack.hardwarePrototype;
     const requiredMeasurements = "functional output,control input,power,temperature,noise,duty cycle,failure controls,measurement uncertainty";
@@ -253,7 +271,7 @@ ${pack.guardrails.map((guardrail) => `- ${guardrail}`).join("\n")}
 
 VERIFICATION CONTRACT
 ${pack.verification.map((item) => `- ${item}`).join("\n")}
-${prerequisites}${opportunityDiscovery}${firstCustomerSprint}${hardwarePrototype}${remixGate}${releaseGate}${launchGate}${sitesPath}${operateLoop}
+${prerequisites}${opportunityDiscovery}${firstCustomerSprint}${decisionRationale}${hardwarePrototype}${remixGate}${releaseGate}${launchGate}${sitesPath}${operateLoop}
 
 NEW-REALITY CHECKPOINT
 Only after this bounded outcome finishes—including a partial or no-go result—write .possible/checkpoints/<run-id>.json with:

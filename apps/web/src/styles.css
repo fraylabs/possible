@@ -645,6 +645,7 @@ footer .wordmark span { color: #151411; }
 .pack-card--software-opportunity-discovery .pack-cover,
 .pack-card--first-customer-sprint .pack-cover { background: #b7d9ff; }
 .pack-card--working-hardware-prototype .pack-cover { background: #d9c6ff; }
+.pack-card--launch-content-campaign .pack-cover { background: #ffcf70; }
 .pack-card--developer-project-launch .pack-cover { background: #ffb783; }
 .pack-cover header { z-index: 2; display: grid; grid-template-columns: 1fr auto auto; gap: 20px; align-items: center; font: 9px "DM Mono", monospace; letter-spacing: .07em; }
 .pack-cover header small { opacity: .7; }

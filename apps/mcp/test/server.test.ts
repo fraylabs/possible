@@ -55,7 +55,7 @@ describe("Possible MCP", () => {
     assert.doesNotMatch(client.getInstructions() ?? "", /chain/i);
   });
 
-  it("lists eight stable and nine experimental outcome packs", async () => {
+  it("lists nine stable and nine experimental outcome packs", async () => {
     const result = await client.callTool({ name: "list_packs", arguments: {} });
     const envelope = result.structuredContent as { ok: boolean; data: { packs: Array<{ slug: string; lane: string; status: string }> } };
     assert.equal(envelope.ok, true);
@@ -77,8 +77,9 @@ describe("Possible MCP", () => {
       ["software-opportunity-discovery", "create"],
       ["first-customer-sprint", "launch"],
       ["working-hardware-prototype", "create"],
+      ["launch-content-campaign", "launch"],
     ]);
-    assert.equal(envelope.data.packs.filter(({ status }) => status === "stable").length, 8);
+    assert.equal(envelope.data.packs.filter(({ status }) => status === "stable").length, 9);
     assert.equal(envelope.data.packs.filter(({ status }) => status === "experimental").length, 9);
   });
 
@@ -198,6 +199,19 @@ describe("Possible MCP", () => {
     assert.match(envelope.data.runPrompt, /MEASURED HARDWARE PROTOTYPE GATE/);
     assert.match(envelope.data.runPrompt, /PHYSICAL REMIX GATE/);
     assert.match(envelope.data.runPrompt, /working, repair-required, or no-go/i);
+  });
+
+  it("compiles Launch Content Campaign with rationale and humanized copy", async () => {
+    const result = await client.callTool({ name: "compile_pack", arguments: { slug: "launch-content-campaign" } });
+    const envelope = result.structuredContent as { ok: boolean; data: { pack: { catalogNumber: number; lane: string; name: string }; installCommands: string[]; runPrompt: string } };
+    assert.equal(envelope.ok, true);
+    assert.equal(envelope.data.pack.catalogNumber, 18);
+    assert.equal(envelope.data.pack.lane, "launch");
+    assert.equal(envelope.data.pack.name, "Launch Content Campaign");
+    assert.equal(envelope.data.installCommands.length, 3);
+    assert.match(envelope.data.runPrompt, /\$humanizer/);
+    assert.match(envelope.data.runPrompt, /PRODUCT DECISION RATIONALE/);
+    assert.match(envelope.data.runPrompt, /REMIX GATE/);
   });
 
   it("compiles Production Web Release with its second approval gate", async () => {

@@ -60,7 +60,7 @@ export const workingHardwarePrototypePack: OutcomePack = {
       id: "product-truth",
       name: "Intended use, evidence, and claims boundary",
       skills: ["customer-research", "product-marketing"],
-      owns: ["prototype/specification.json", "prototype/evidence/", "prototype/claims/"],
+      owns: ["prototype/specification.json", "prototype/evidence/", "prototype/claims/", "prototype/decisions/"],
       brief: "Define the user, use context, contact surfaces, operating environment, desired experience, measurable function, non-goals, and evidence boundary. Trace every scientific or performance statement to the exact modality, dose, population, and device studied. Separate product facts, engineering assumptions, research hypotheses, allowed claims, prohibited claims, and questions requiring qualified professional review.",
     },
     {
@@ -112,6 +112,12 @@ export const workingHardwarePrototypePack: OutcomePack = {
       brief: "After exact approval for every physical action, assemble or coordinate fabrication of the immutable prototype revision, run the calibrated nominal, boundary, and failure tests, preserve raw evidence, inspect the actual assembly, and integrate the result. If parts, tools, authority, qualified review, or physical evidence are missing, stop with a fabrication or test no-go instead of substituting CAD or simulation.",
     },
   ],
+  decisionRationale: {
+    kind: "evidence-backed-product-decisions",
+    rootPath: "prototype/decisions/",
+    publicNarrativePath: "prototype/decisions/public-rationale.md",
+    requiredFields: ["question", "options", "evidence", "selection", "rationale", "tradeoffs", "uncertainty", "reversal evidence", "public explanation"],
+  },
   hardwarePrototype: {
     kind: "measured-functional-prototype",
     specificationPath: "prototype/specification.json",
