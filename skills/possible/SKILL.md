@@ -1,6 +1,6 @@
 ---
 name: possible
-description: Turn an unclear ambition into one concrete, verified outcome at a time through a short guided conversation, then assemble and run the right reviewed agent skills after confirmation. Use when the user invokes $possible, asks what they should discover, sell, prototype, manufacture, study, build, ship, fund, launch, market, release, operate, schedule, or remix, wants help defining an outcome before implementation, needs to decide what outcome should follow a completed run, or wants a Software Opportunity Discovery, First Customer Sprint, Working Hardware Prototype, Manufacturing Readiness, Study Readiness, Launch Content Campaign, Working Web App, Developer Project Launch, Playable Web Game, Robot Prototype, Hardware Launch, Open-Source Release, Production Web Release, Kickstarter Funding, Kickstarter Fulfillment, recurring Web App Operations, or recurring Marketing Operations outcome coordinated end to end.
+description: Turn an unclear ambition into one concrete, verified outcome at a time through a short guided conversation, then assemble and run the right reviewed agent skills after confirmation. Use when the user invokes $possible, asks what they should discover, sell, prototype, manufacture, study, build, ship, fund, launch, market, release, operate, schedule, or remix, wants help defining an outcome before implementation, needs to decide what outcome should follow a completed run, or wants a Software Opportunity Discovery, First Customer Sprint, Mechanical CAD Review, Working Hardware Prototype, Manufacturing Readiness, Study Readiness, Launch Content Campaign, Working Web App, Developer Project Launch, Playable Web Game, Robot Prototype, Hardware Launch, Open-Source Release, Production Web Release, Kickstarter Funding, Kickstarter Fulfillment, recurring Web App Operations, or recurring Marketing Operations outcome coordinated end to end.
 ---
 
 # Possible
@@ -49,6 +49,8 @@ Do not use an available production pack as a substitute for missing decision evi
 
 Recommend Software Opportunity Discovery when the user has a rough software ambition but no selected opportunity. Discovery infers a conservative operator baseline, compares traceable opportunities, and produces one provisional thesis or a broaden or stop decision; it does not contact prospects or claim demand.
 
+Recommend Mechanical CAD Review when the desired result is a focused CAD package for a passive object, enclosure, fixture, furniture part, simple mechanism, 3D-printing vendor, or fabrication critique and no physical build or measurement has been authorized. It uses the fewest credible parts, requires six-direction restraint proof for the actual assembly and every interface, challenges assembly and failure paths, produces fit coupons, and stops at review-ready, repair-required, or no-go. Never recommend Hardware Launch merely because a request mentions hardware or CAD: that pack is only for a requested site, film, waitlist, and launch presentation.
+
 Recommend Working Hardware Prototype when a consumer device, wearable, home object, wellness product, or connected physical product must become one functional, measured prototype before launch or sales. It coordinates intended use, physical Remix, CAD, components, electronics, firmware, calibrated measurements, hazard controls, claims boundaries, physical integration, and fresh review. Do not substitute Hardware Launch, Robot Prototype, CAD, or simulation for direct evidence from the integrated physical artifact.
 
 Recommend Manufacturing Readiness when a measured physical prototype exists but repeatable production is still an assumption. It freezes one configuration, creates DFM and supplier release files, normalizes real quotations, models landed economics and cash timing, defines compliance and quality work, gathers approved pilot evidence, and returns ready, repair-required, or no-go. Do not substitute a hand-built prototype, supplier plan, or Kickstarter budget for pilot and production evidence.
@@ -95,12 +97,12 @@ If a required agent skill is unavailable after installation, stop and identify i
 
 ## Run the outcome
 
-1. Create one subagent per independent workstream, not one per agent skill.
-2. Give every subagent the shared brief, explicit ownership, named agent skills, completion verifier, and prohibition against unrelated edits or external actions.
-3. Continue as the lead agent while workstreams run: protect shared facts, resolve interfaces, and prepare integration.
-4. Wait for workstream artifacts and evidence before integration. Preserve that evidence.
+1. Treat workstreams as ownership and dependency boundaries, not a requirement to create agents. Execute small, sequential, tightly coupled, or single-surface work directly.
+2. Delegate only genuinely independent work that benefits from parallel execution. Never create one subagent per agent skill. Give each delegated workstream the shared brief, explicit ownership, named agent skills, completion verifier, and prohibition against unrelated edits or external actions.
+3. Continue as the lead agent: protect shared facts, resolve interfaces, and prepare integration while delegated work runs.
+4. Preserve workstream artifacts and evidence before integration.
 5. Integrate into the Outcome Pack's outcome surface without erasing unrelated user work.
-6. Create a fresh verification subagent after integration. Give it review skills and acceptance checks, but no implementation ownership.
+6. After integration, run fresh verification with no implementation ownership. Use a separate reviewer or subagent when available; otherwise reset context to the acceptance checks and perform an explicitly adversarial review.
 7. Repair material failures, rerun the affected checks, and preserve evidence of meaningful failed reviews.
 8. Finish with a completion report listing artifacts, verifier commands, passed, failed, skipped, and unproven checks, limitations, and every external action not taken.
 9. Reassess the new reality and stop before beginning another Outcome Pack.

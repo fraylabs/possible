@@ -1,7 +1,8 @@
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
 import test from "node:test";
 import * as packApi from "../dist/index.js";
-import { compilePack, compileWorkstreamWaves, experimentalOutcomePacks, getPackStatus, outcomePacks, recordOutcomeJourney, stableOutcomePacks, validateOutcomeCheckpoint, validateOutcomeRecord } from "../dist/index.js";
+import { compilePack, compileWorkstreamWaves, evaluateCriticalProofResults, experimentalOutcomePacks, getPackStatus, outcomePacks, recordOutcomeJourney, stableOutcomePacks, validateOutcomeCheckpoint, validateOutcomeRecord } from "../dist/index.js";
 
 test("every outcome pack compiles to inspectable installs and a complete prompt", () => {
   assert.deepEqual(outcomePacks.map((pack) => pack.slug), [
@@ -23,6 +24,7 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
     "launch-content-campaign",
     "manufacturing-readiness",
     "study-readiness",
+    "mechanical-cad-review",
   ]);
   assert.deepEqual(outcomePacks.map(({ slug, lane }) => [slug, lane]), [
     ["hardware-launch", "launch"],
@@ -43,8 +45,9 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
     ["launch-content-campaign", "launch"],
     ["manufacturing-readiness", "release"],
     ["study-readiness", "create"],
+    ["mechanical-cad-review", "create"],
   ]);
-  assert.deepEqual(outcomePacks.map((pack) => pack.catalogNumber), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]);
+  assert.deepEqual(outcomePacks.map((pack) => pack.catalogNumber), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]);
   assert.equal(new Set(outcomePacks.map((pack) => pack.catalogNumber)).size, outcomePacks.length);
   assert.equal(new Set(outcomePacks.map((pack) => pack.slug)).size, outcomePacks.length);
   assert.deepEqual(stableOutcomePacks.map((pack) => pack.slug), [
@@ -58,7 +61,7 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
     "working-hardware-prototype",
     "launch-content-campaign",
   ]);
-  assert.equal(experimentalOutcomePacks.length, 9);
+  assert.equal(experimentalOutcomePacks.length, 10);
   assert.equal(getPackStatus("hardware-launch"), "stable");
   assert.equal(getPackStatus("missing"), undefined);
 
@@ -70,8 +73,8 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
     assert.equal(compiled.pack.lane, pack.lane);
     assert.ok(compiled.installCommands.length >= 1);
     assert.ok(pack.skills.length >= 3);
-    assert.ok(pack.workstreams.length >= 3);
-    assert.ok(pack.outputs.length >= 5);
+    assert.ok(pack.workstreams.length >= 2);
+    assert.ok(pack.outputs.length >= 4);
     assert.ok(pack.useWhen.length >= 2);
     assert.ok(pack.notFor.length >= 2);
     assert.equal(new Set(pack.useWhen).size, pack.useWhen.length);
@@ -92,8 +95,8 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
       for (const skill of plugin.skills) assert.match(compiled.runPrompt, new RegExp("\\$" + skill));
     }
     for (const reviewer of pack.reviewSkills) assert.match(compiled.runPrompt, new RegExp("\\$" + reviewer));
-    assert.match(compiled.runPrompt, /Do not create one subagent per skill/);
-    assert.match(compiled.runPrompt, /fresh verification subagent/);
+    assert.match(compiled.runPrompt, /never create one subagent per skill/i);
+    assert.match(compiled.runPrompt, /fresh reviewer/i);
     assert.match(compiled.runPrompt, /explicit approval|explicitly tested|direct evidence/i);
     assert.match(compiled.runPrompt, /passed\/failed\/skipped/);
     assert.match(compiled.runPrompt, /OUTCOME RECORD/);
@@ -111,6 +114,78 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
     assert.match(compiled.runPrompt, /Do not add planned, pending, approved, or future stages to that history/i);
     assert.doesNotMatch(compiled.runPrompt, /choose a lane|\nLANE\n/i);
   }
+});
+
+test("Mechanical CAD Review rejects the unrestrained cat-house roof", async () => {
+  const pack = outcomePacks.find((candidate) => candidate.slug === "mechanical-cad-review");
+  assert.ok(pack);
+  assert.equal(pack.catalogNumber, 19);
+  assert.equal(pack.lane, "create");
+  assert.equal(pack.workstreams.length, 2);
+  assert.equal(pack.skills.length, 3);
+  assert.deepEqual(compileWorkstreamWaves(pack).map((wave) => wave.map(({ id }) => id)), [
+    ["mechanical-design"],
+    ["mechanical-review"],
+  ]);
+  assert.match(pack.notFor.join(" "), /launch site.*film.*campaign.*waitlist/i);
+  assert.match(pack.guardrails.join(" "), /watertight mesh.*interference-free assembly.*stay assembled/i);
+
+  const compiled = compilePack(pack);
+  assert.equal(compiled.installCommands.length, 2);
+  assert.match(compiled.runPrompt, /CRITICAL PROOF CONTRACT/);
+  assert.match(compiled.runPrompt, /MECHANICAL CAD REVIEW GATE/);
+  assert.match(compiled.runPrompt, /all six movement directions/i);
+  assert.match(compiled.runPrompt, /lift, spread, slide, rack, flex, and pull-out/i);
+  assert.match(compiled.runPrompt, /review-ready means ready for a fabricator to quote and critique/i);
+  assert.match(compiled.runPrompt, /cannot by themselves prove mechanical function, physical fit, durability, safety, or fabrication readiness/i);
+  assert.doesNotMatch(compiled.runPrompt, /REMIX GATE|OPENAI SITES MVP PATH|MEASURED HARDWARE PROTOTYPE GATE/);
+
+  const fixture = JSON.parse(await readFile(new URL("./fixtures/cat-house-unrestrained-roof.json", import.meta.url), "utf8"));
+  assert.equal(evaluateCriticalProofResults(pack.criticalProofs, fixture.results), "failed");
+  const allPassing = fixture.results.map((result) => ({
+    ...result,
+    status: "passed",
+  }));
+  assert.equal(evaluateCriticalProofResults(pack.criticalProofs, allPassing), "passed");
+  assert.equal(evaluateCriticalProofResults(pack.criticalProofs, allPassing.slice(0, -1)), "unproven");
+
+  const record = {
+    schemaVersion: 1,
+    runId: fixture.name,
+    packSlug: pack.slug,
+    status: fixture.requestedStatus,
+    completedAt: "2026-07-26T04:00:00.000Z",
+    outcomeBriefPath: ".possible/runs/cat-house-unrestrained-roof/outcome-brief.md",
+    packSnapshotPath: ".possible/runs/cat-house-unrestrained-roof/pack.json",
+    skillLockPath: ".possible/runs/cat-house-unrestrained-roof/skills-lock.json",
+    workspaceRevision: "cat-house-cad-revision",
+    artifacts: [{
+      path: "mechanical/cad/cat-house.step",
+      description: "Cat house assembly",
+      workstreamId: "mechanical-design",
+      sha256: "b".repeat(64),
+    }],
+    proofs: fixture.results.map((result) => ({
+      ...result,
+      claim: pack.criticalProofs.find(({ id }) => id === result.obligationId).claim,
+    })),
+    decisions: [],
+    repairs: [],
+    approvals: [],
+    externalActions: [],
+    limitations: ["No physical fit coupon or full print has been tested."],
+    verification: {
+      reviewer: "fresh-mechanical-reviewer",
+      independentFromImplementation: true,
+      reportPath: "mechanical/review/cat-house-failed.json",
+      status: "passed",
+    },
+    checkpointPath: ".possible/checkpoints/cat-house-unrestrained-roof.json",
+  };
+  assert.throws(
+    () => validateOutcomeRecord(record, pack.criticalProofs),
+    /requires every critical proof to pass; current result is failed/,
+  );
 });
 
 test("every run exposes one extractable outcome record", () => {

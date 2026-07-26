@@ -61,6 +61,8 @@ Possible publishes nine reviewed public packs. The remaining registry packs stay
 - [Launch Content Campaign](packages/packs/src/launch-content-campaign.ts) — turns verified product decisions and proof into post-ready image, video, carousel, thread and platform packages.
 - [Developer Project Launch](packages/packs/src/developer-project-launch.ts) — a credible adoption path for a working developer project.
 
+The experimental [Mechanical CAD Review](packages/packs/src/mechanical-cad-review.ts) pack is the focused option for passive objects and simple mechanisms: editable CAD, explicit restraint and assembly proof, fit coupons, a vendor package, and an honest review boundary without launch-site or film work.
+
 The preserved PatchProof journey verifies Software Opportunity Discovery and Developer Project Launch as separate outcomes—and records why Possible no longer chooses their sequence in advance.
 
 You do not need to choose a pack. `$possible` recommends one after understanding your outcome.

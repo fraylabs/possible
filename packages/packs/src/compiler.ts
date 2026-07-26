@@ -1,4 +1,14 @@
-import type { CompiledPack, OutcomeCheckpoint, OutcomeJourneyHistory, OutcomePack, OutcomeRecord, Workstream } from "./types.js";
+import type {
+  CompiledPack,
+  CriticalProofEvaluation,
+  CriticalProofObligation,
+  CriticalProofResult,
+  OutcomeCheckpoint,
+  OutcomeJourneyHistory,
+  OutcomePack,
+  OutcomeRecord,
+  Workstream,
+} from "./types.js";
 
 const safeRelativePath = (value: string) => !/^(?:\/|[A-Za-z]:)|(?:^|\/)\.\.(?:\/|$)|[*?]/.test(value);
 
@@ -8,6 +18,34 @@ function requireSafeRelativePath(value: string, label: string): void {
 
 function requireEvidencePaths(paths: string[], label: string): void {
   for (const path of paths) requireSafeRelativePath(path, label);
+}
+
+export function evaluateCriticalProofResults(
+  obligations: CriticalProofObligation[],
+  results: CriticalProofResult[],
+): CriticalProofEvaluation {
+  const obligationIds = new Set(obligations.map(({ id }) => id));
+  if (obligationIds.size !== obligations.length) throw new Error("Critical proof obligations require unique ids");
+  const resultsById = new Map<string, CriticalProofResult>();
+  for (const result of results) {
+    if (!obligationIds.has(result.obligationId)) {
+      throw new Error(`Unknown critical proof obligation ${result.obligationId}`);
+    }
+    if (resultsById.has(result.obligationId)) {
+      throw new Error(`Duplicate critical proof result ${result.obligationId}`);
+    }
+    if (!["passed", "failed", "skipped", "unproven"].includes(result.status)) {
+      throw new Error(`Critical proof ${result.obligationId} has an invalid status`);
+    }
+    requireEvidencePaths(result.evidence, `Critical proof ${result.obligationId} evidence`);
+    if (result.status === "passed" && result.evidence.length === 0) {
+      throw new Error(`Critical proof ${result.obligationId} cannot pass without direct evidence`);
+    }
+    resultsById.set(result.obligationId, result);
+  }
+  if (obligations.some(({ id }) => resultsById.get(id)?.status === "failed")) return "failed";
+  if (obligations.some(({ id }) => resultsById.get(id)?.status !== "passed")) return "unproven";
+  return "passed";
 }
 
 export function compileWorkstreamWaves(pack: OutcomePack): Workstream[][] {
@@ -163,6 +201,58 @@ FIRST CUSTOMER SPRINT
 9. Write ${contract.decisionReceiptPath} with exactly one decision: continue, revise, or stop. State the highest evidence rung reached, money requested and collected, what customers actually did, the next product or sales boundary, unresolved risks, and what would reverse the decision. This receipt records commercial proof; it does not claim product-market fit or authorize another Outcome Pack.`;
   })() : "";
 
+  const criticalProofs = pack.criticalProofs?.length ? (() => {
+    const ids = new Set<string>();
+    for (const proof of pack.criticalProofs ?? []) {
+      if (!/^[a-z0-9][a-z0-9-]*$/.test(proof.id)) {
+        throw new Error(`${pack.slug} critical proof id ${proof.id} must be a safe identifier`);
+      }
+      if (ids.has(proof.id)) throw new Error(`${pack.slug} contains duplicate critical proof id ${proof.id}`);
+      ids.add(proof.id);
+      if (!proof.claim.trim()) throw new Error(`${pack.slug}/${proof.id} critical proof claim must be non-empty`);
+      if (proof.failureModes.length === 0 || proof.failureModes.some((item) => !item.trim())) {
+        throw new Error(`${pack.slug}/${proof.id} requires named failure modes`);
+      }
+      if (proof.requiredEvidence.length === 0 || proof.requiredEvidence.some((item) => !item.trim())) {
+        throw new Error(`${pack.slug}/${proof.id} requires direct evidence types`);
+      }
+    }
+    return `
+
+CRITICAL PROOF CONTRACT
+These claims decide completion. Record each id in the outcome record's proofs as obligationId, use the exact claim, and preserve direct evidence.
+${(pack.criticalProofs ?? []).map((proof) => [
+  `- ${proof.id}: ${proof.claim}`,
+  `  Challenge: ${proof.failureModes.join(", ")}`,
+  `  Evidence: ${proof.requiredEvidence.join(", ")}`,
+].join("\n")).join("\n")}
+
+A passed outcome requires every critical proof to pass. One failed proof makes the outcome failed or repair-required; one skipped, missing, or unproven proof prevents a passing status. Artifact existence, hashes, renders, watertight meshes, and collision-free CAD are supporting evidence only and cannot by themselves prove mechanical function, physical fit, durability, safety, or fabrication readiness. The reviewer must try to falsify each claim rather than restate the implementation.`;
+  })() : "";
+
+  const mechanicalCadReview = pack.mechanicalCadReview ? (() => {
+    const contract = pack.mechanicalCadReview;
+    if (contract.decisions.join(",") !== "review-ready,repair-required,no-go") {
+      throw new Error(`${pack.slug} mechanical CAD decisions must be review-ready, repair-required, no-go`);
+    }
+    requireSafeRelativePath(contract.requirementsPath, `${pack.slug} mechanical CAD requirementsPath`);
+    requireSafeRelativePath(contract.interfaceProofPath, `${pack.slug} mechanical CAD interfaceProofPath`);
+    requireSafeRelativePath(contract.vendorPackagePath, `${pack.slug} mechanical CAD vendorPackagePath`);
+    requireSafeRelativePath(contract.fitCouponPath, `${pack.slug} mechanical CAD fitCouponPath`);
+    requireSafeRelativePath(contract.decisionReceiptPath, `${pack.slug} mechanical CAD decisionReceiptPath`);
+    if (!pack.criticalProofs?.length) throw new Error(`${pack.slug} mechanical CAD review requires critical proofs`);
+    return `
+
+MECHANICAL CAD REVIEW GATE
+1. Keep ${contract.requirementsPath} to one concise design contract: intended object and user, operating environment, dimensions and fit, materials and fabrication process, cost and machine envelope, assembly and intentional disassembly, loads and misuse, simplicity constraints, and claims that remain physically unproven.
+2. Prefer the fewest parts and interfaces that satisfy the contract. Do not create variants, marketing assets, product narratives, electronics, or extra documentation unless they are necessary to resolve a named requirement.
+3. Write ${contract.interfaceProofPath} from the actual assembly. For every manufactured part, state how all six movement directions are restrained, what intentional release action exists, and what feature carries lift, spread, slide, rack, flex, and pull-out loads as applicable. Include section/detail views of every non-obvious joint.
+4. Run adversarial assembly review before export: prove a feasible assembly order, feasible intentional disassembly, no trapped impossible step, no reliance on unexplained friction or gravity, and no single latch presented as restraining motion it does not geometrically block.
+5. Put editable CAD, print or fabrication files, quantities, orientations, maximum part envelope, material and solid-volume estimates, tolerance assumptions, and vendor questions in ${contract.vendorPackagePath}. Create a representative fit coupon at ${contract.fitCouponPath} for every tolerance-critical interface.
+6. A digital review can return review-ready only when every critical proof passes. Review-ready means ready for a fabricator to quote and critique; it never means print-ready, physically fitted, load-tested, durable, animal-safe, certified, or production-ready. Without a successful physical coupon or prototype, physical fit and performance remain explicitly unproven.
+7. Write ${contract.decisionReceiptPath} with exactly one status: review-ready, repair-required, or no-go. Include the immutable CAD revision, critical proof results, failed alternatives, print envelope, mass and cost assumptions, physical tests performed or not performed, limitations, and fresh review.`;
+  })() : "";
+
   const decisionRationale = pack.decisionRationale ? (() => {
     const contract = pack.decisionRationale;
     const requiredFields = "question,options,evidence,selection,rationale,tradeoffs,uncertainty,reversal evidence,public explanation";
@@ -251,7 +341,7 @@ STUDY READINESS GATE
 7. Write ${contract.decisionReceiptPath} with exactly one status: ready-for-qualified-review, repair-required, or no-go. Ready-for-qualified-review means the evidence package is coherent enough to place before qualified investigators, ethics bodies, regulators, statisticians, and legal or privacy advisers. It never means approved, registered, recruited, safe, effective, clinically validated, or authorized to begin.`;
   })() : "";
 
-  const action = pack.opportunityDiscovery ? "Discover" : pack.firstCustomerSprint ? "Run" : pack.hardwarePrototype ? "Build and measure" : pack.manufacturingReadiness || pack.studyReadiness ? "Prepare and verify" : pack.lane === "operate" ? "Establish and run the first cycle of" : pack.lane === "release" ? "Prepare and verify" : "Build";
+  const action = pack.opportunityDiscovery ? "Discover" : pack.firstCustomerSprint ? "Run" : pack.hardwarePrototype ? "Build and measure" : pack.mechanicalCadReview ? "Design and challenge" : pack.manufacturingReadiness || pack.studyReadiness ? "Prepare and verify" : pack.lane === "operate" ? "Establish and run the first cycle of" : pack.lane === "release" ? "Prepare and verify" : "Build";
   const pluginCheck = pack.plugins?.length
     ? ` Also detect these optional agent plugins: ${pack.plugins.map((plugin) => `${plugin.invocation} (${plugin.skills.map((skill) => `$${skill}`).join(", ")})`).join(", ")}. Do not install or imitate an unavailable plugin; record its absence and use the documented fallback.`
     : "";
@@ -306,12 +396,12 @@ Deliver: ${pack.outputs.join(", ")}.
 LEAD AGENT WORKFLOW
 1. Inspect the workspace and this brief. Do not start production until you write a shared outcome-brief.md containing only confirmed facts, audience, promise, constraints, interfaces, and acceptance checks.
 2. Confirm these installed skills are visible: ${pack.skills.map((source) => `$${source.skill}`).join(", ")}. If any are missing, stop and identify them; do not silently imitate them.${pluginCheck}
-3. Follow the dependency waves below. Do not create one subagent per skill. At each wave, evaluate any Activation rule against shared evidence, record the result, and create one subagent for each currently unblocked active workstream. Give every subagent outcome-brief.md, explicit ownership, its named skills, and its own completion verifier. Do not start a dependent workstream until every named dependency passes its handoff checks. Do not execute inactive work merely to fill a checklist.
+3. Treat the dependency waves as ownership and ordering, not mandatory agent ceremony. Evaluate Activation rules and use the minimum active workstreams. Do not start a dependent workstream until every named dependency passes. The lead agent may execute small, sequential, or tightly coupled implementation work directly; delegate only genuinely independent work that benefits from parallel ownership. Never create one subagent per skill. Keep the fresh reviewer independent from implementation. Do not execute inactive work merely to fill a checklist.
 WORKSTREAM SEQUENCE
 ${workstreamSequence}
 ${workstreams}
-4. Continue as the lead agent while the workstreams run: protect the shared facts, resolve interface decisions, and prepare the integration shell. Wait for all workstreams, review their evidence, then ${integrationTarget} without erasing unrelated user work.
-5. After integration, create a fresh verification subagent. It must invoke ${pack.reviewSkills.map((skill) => `$${skill}`).join(", ")}, inspect the actual integrated outcome, check every promised artifact, and return evidence—not implementation work.
+4. Continue as the lead agent: protect the shared facts, resolve interface decisions, and prepare the integration shell. Review the evidence from every active workstream, then ${integrationTarget} without erasing unrelated user work.
+5. After integration, use a fresh reviewer with no implementation ownership. It must invoke ${pack.reviewSkills.map((skill) => `$${skill}`).join(", ")}, inspect the actual integrated outcome, challenge the acceptance claims and failure modes, and return evidence—not implementation work.
 6. Fix material integration failures, rerun the relevant checks, and finish with a concise completion report: created artifacts, verifier commands, passed/failed/skipped checks, known limitations, and every unproven claim.
 
 GUARDRAILS
@@ -319,7 +409,7 @@ ${pack.guardrails.map((guardrail) => `- ${guardrail}`).join("\n")}
 
 VERIFICATION CONTRACT
 ${pack.verification.map((item) => `- ${item}`).join("\n")}
-${prerequisites}${opportunityDiscovery}${firstCustomerSprint}${decisionRationale}${hardwarePrototype}${manufacturingReadiness}${studyReadiness}${remixGate}${releaseGate}${launchGate}${sitesPath}${operateLoop}
+${prerequisites}${opportunityDiscovery}${firstCustomerSprint}${decisionRationale}${criticalProofs}${mechanicalCadReview}${hardwarePrototype}${manufacturingReadiness}${studyReadiness}${remixGate}${releaseGate}${launchGate}${sitesPath}${operateLoop}
 
 OUTCOME RECORD
 Every run—including a partial, blocked, or no-go result—must write one machine-readable proof index at .possible/runs/<run-id>/outcome-record.json.
@@ -348,7 +438,10 @@ Append only this completed checkpoint to retrospective journey history. Do not a
 Do not ask me to choose implementation details that can be safely inferred from the brief and repository. Ask only when a missing decision would materially change the product or authorize an external action.`;
 }
 
-export function validateOutcomeRecord(record: OutcomeRecord): OutcomeRecord {
+export function validateOutcomeRecord(
+  record: OutcomeRecord,
+  criticalProofs: CriticalProofObligation[] = [],
+): OutcomeRecord {
   if (record.schemaVersion !== 1) throw new Error("Outcome record schemaVersion must be 1");
   if (!/^[a-z0-9][a-z0-9-]*$/.test(record.runId)) throw new Error("Outcome record runId must be a safe identifier");
   if (!/^[a-z0-9][a-z0-9-]*$/.test(record.packSlug)) throw new Error("Outcome record packSlug must be a safe identifier");
@@ -444,6 +537,21 @@ export function validateOutcomeRecord(record: OutcomeRecord): OutcomeRecord {
     }
     if (record.repairs.some((repair) => repair.status === "unresolved")) {
       throw new Error("A passed outcome record cannot contain unresolved repairs");
+    }
+    if (criticalProofs.length > 0) {
+      const evaluation = evaluateCriticalProofResults(
+        criticalProofs,
+        record.proofs
+          .filter((proof): proof is typeof proof & { obligationId: string } => Boolean(proof.obligationId))
+          .map((proof) => ({
+            obligationId: proof.obligationId,
+            status: proof.status,
+            evidence: proof.evidence,
+          })),
+      );
+      if (evaluation !== "passed") {
+        throw new Error(`A passed outcome record requires every critical proof to pass; current result is ${evaluation}`);
+      }
     }
   }
   return record;

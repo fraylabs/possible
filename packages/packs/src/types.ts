@@ -80,6 +80,23 @@ export interface StudyReadinessContract {
   decisions: ["ready-for-qualified-review", "repair-required", "no-go"];
 }
 
+export interface MechanicalCadReviewContract {
+  kind: "mechanical-cad-review";
+  requirementsPath: string;
+  interfaceProofPath: string;
+  vendorPackagePath: string;
+  fitCouponPath: string;
+  decisionReceiptPath: string;
+  decisions: ["review-ready", "repair-required", "no-go"];
+}
+
+export interface CriticalProofObligation {
+  id: string;
+  claim: string;
+  failureModes: string[];
+  requiredEvidence: string[];
+}
+
 export interface DecisionRationaleContract {
   kind: "evidence-backed-product-decisions";
   rootPath: string;
@@ -137,8 +154,10 @@ export interface OutcomePack {
   verification: string[];
   decisionRationale?: DecisionRationaleContract;
   hardwarePrototype?: HardwarePrototypeContract;
+  mechanicalCadReview?: MechanicalCadReviewContract;
   manufacturingReadiness?: ManufacturingReadinessContract;
   studyReadiness?: StudyReadinessContract;
+  criticalProofs?: CriticalProofObligation[];
   remix?: RemixContract;
   prerequisites?: OutcomePrerequisite[];
   firstCustomerSprint?: FirstCustomerSprintContract;
@@ -159,10 +178,19 @@ export interface EvidenceBackedFact {
 export type OutcomeProofStatus = "passed" | "failed" | "skipped" | "unproven";
 
 export interface OutcomeProofRecord {
+  obligationId?: string;
   claim: string;
   status: OutcomeProofStatus;
   evidence: string[];
 }
+
+export interface CriticalProofResult {
+  obligationId: string;
+  status: OutcomeProofStatus;
+  evidence: string[];
+}
+
+export type CriticalProofEvaluation = "passed" | "failed" | "unproven";
 
 export interface OutcomeArtifactRecord {
   path: string;

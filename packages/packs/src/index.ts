@@ -6,6 +6,7 @@ import { kickstarterFundingPack } from "./kickstarter-funding.js";
 import { launchContentCampaignPack } from "./launch-content-campaign.js";
 import { manufacturingReadinessPack } from "./manufacturing-readiness.js";
 import { marketingOperationsPack } from "./marketing-operations.js";
+import { mechanicalCadReviewPack } from "./mechanical-cad-review.js";
 import { openSourceReleasePack } from "./open-source-release.js";
 import { playableWebGamePack } from "./playable-web-game.js";
 import { productionWebReleasePack } from "./production-web-release.js";
@@ -17,9 +18,9 @@ import { webPresentationPack } from "./web-presentation.js";
 import { workingWebAppPack } from "./working-web-app.js";
 import { workingHardwarePrototypePack } from "./working-hardware-prototype.js";
 
-export { developerProjectLaunchPack, firstCustomerSprintPack, hardwareLaunchPack, kickstarterFulfillmentPack, kickstarterFundingPack, launchContentCampaignPack, manufacturingReadinessPack, marketingOperationsPack, openSourceReleasePack, playableWebGamePack, productionWebReleasePack, robotPrototypePack, softwareOpportunityDiscoveryPack, studyReadinessPack, webAppOperationsPack, webPresentationPack, workingHardwarePrototypePack, workingWebAppPack };
-export { compileInstallCommands, compilePack, compileRunPrompt, compileWorkstreamWaves, recordOutcomeJourney, validateOutcomeCheckpoint, validateOutcomeRecord } from "./compiler.js";
-export type { CandidateOutcomeRecommendation, CompiledPack, DecisionRationaleContract, EvidenceBackedFact, FirstCustomerSprintContract, HardwarePrototypeContract, ManufacturingReadinessContract, OpportunityDiscoveryContract, OutcomeApprovalRecord, OutcomeArtifactRecord, OutcomeCheckpoint, OutcomeDecisionRecord, OutcomeExternalActionRecord, OutcomeJourneyHistory, OutcomePack, OutcomePrerequisite, OutcomeProofRecord, OutcomeProofStatus, OutcomeRecord, OutcomeRepairRecord, PackLane, PluginCapability, RemixContract, ScheduleContract, SkillSource, StudyReadinessContract, Workstream } from "./types.js";
+export { developerProjectLaunchPack, firstCustomerSprintPack, hardwareLaunchPack, kickstarterFulfillmentPack, kickstarterFundingPack, launchContentCampaignPack, manufacturingReadinessPack, marketingOperationsPack, mechanicalCadReviewPack, openSourceReleasePack, playableWebGamePack, productionWebReleasePack, robotPrototypePack, softwareOpportunityDiscoveryPack, studyReadinessPack, webAppOperationsPack, webPresentationPack, workingHardwarePrototypePack, workingWebAppPack };
+export { compileInstallCommands, compilePack, compileRunPrompt, compileWorkstreamWaves, evaluateCriticalProofResults, recordOutcomeJourney, validateOutcomeCheckpoint, validateOutcomeRecord } from "./compiler.js";
+export type { CandidateOutcomeRecommendation, CompiledPack, CriticalProofEvaluation, CriticalProofObligation, CriticalProofResult, DecisionRationaleContract, EvidenceBackedFact, FirstCustomerSprintContract, HardwarePrototypeContract, ManufacturingReadinessContract, MechanicalCadReviewContract, OpportunityDiscoveryContract, OutcomeApprovalRecord, OutcomeArtifactRecord, OutcomeCheckpoint, OutcomeDecisionRecord, OutcomeExternalActionRecord, OutcomeJourneyHistory, OutcomePack, OutcomePrerequisite, OutcomeProofRecord, OutcomeProofStatus, OutcomeRecord, OutcomeRepairRecord, PackLane, PluginCapability, RemixContract, ScheduleContract, SkillSource, StudyReadinessContract, Workstream } from "./types.js";
 
 export const stablePackSlugs = [
   "hardware-launch",
@@ -52,6 +53,7 @@ export const outcomePacks = [
   launchContentCampaignPack,
   manufacturingReadinessPack,
   studyReadinessPack,
+  mechanicalCadReviewPack,
 ] as const;
 
 const stablePackSlugSet = new Set<string>(stablePackSlugs);

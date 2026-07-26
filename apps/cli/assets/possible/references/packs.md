@@ -709,6 +709,45 @@ Recruitment, screening, consent, human exposure, health-data access, compensatio
 
 Write `outcome-room/study-readiness-receipt.json` with exactly one status: `ready-for-qualified-review`, `repair-required`, or `no-go`. Ready-for-qualified-review never means approved, registered, recruited, safe, effective, clinically validated, or authorized to begin.
 
+## Mechanical CAD Review
+
+Slug: `mechanical-cad-review`
+
+Lane: `create`
+
+Status: `experimental`.
+
+Source specification: `https://github.com/fraylabs/possible/blob/dev/packages/packs/src/mechanical-cad-review.ts`
+
+Use when a passive object, enclosure, fixture, furniture part, or simple mechanism needs a focused CAD package for a 3D-printing or fabrication vendor to quote and critique, but no physical build or measurement has been authorized.
+
+Outputs: concise requirements contract and dimensioned design; editable CAD assembly, fabrication exports, quantities, and assembly instructions; six-direction interface proof; adversarial assembly and failure review; representative fit coupons; independent review-ready, repair-required, or no-go receipt.
+
+Workstreams:
+
+- Requirements, mechanical design, and vendor package — `cad`, `robotics-design-patterns`; owns the requirements, editable CAD, interface proof, fabrication exports, material and envelope estimates, assembly instructions, and fit coupons.
+- Adversarial CAD review and decision receipt — `cad-viewer`, `robotics-design-patterns`; independently challenges restraint, assembly order, disassembly, lift, spread, slide, rack, flex, pull-out, fabrication envelope, and physical-validation boundaries.
+
+Sources:
+
+- `earthtojake/text-to-cad`: `cad`, `cad-viewer`; reviewed `fdbb4b4fb62d95ae298cfe9a46fdc7092bdaf423`.
+- `arpitg1304/robotics-agent-skills`: `robotics-design-patterns`; reviewed `54f7b578f3dc269d29c0beb623b3f2611fd3a430`.
+
+Install:
+
+```bash
+npx skills@1.5.19 add earthtojake/text-to-cad@fdbb4b4fb62d95ae298cfe9a46fdc7092bdaf423 --skill cad --skill cad-viewer --agent codex
+npx skills@1.5.19 add arpitg1304/robotics-agent-skills@54f7b578f3dc269d29c0beb623b3f2611fd3a430 --skill robotics-design-patterns --agent codex
+```
+
+This is intentionally a lean CAD review, not a launch process or a measured hardware prototype. Workstreams describe ownership and dependency; they do not require one agent per skill or one subagent per workstream.
+
+Every manufactured part must have an explicit six-direction restraint explanation or an intentional release action. A roof, panel, or base that can lift, spread, slide, rack, rotate, or pull out without defeating named geometry fails even when the CAD renders, regenerates, has no reported overlap, and exports a watertight mesh.
+
+Fabrication, vendor contact, quote requests, file sharing, purchases, printing, and physical testing require separate exact approval. A `review-ready` result means ready for a fabricator to quote and critique. It never means print-ready, physically fitted, load-tested, durable, animal-safe, human-safe, certified, or production-ready.
+
+Write `outcome-room/mechanical-cad-review-receipt.json` with exactly one status: `review-ready`, `repair-required`, or `no-go`. A passed completion record requires direct passing evidence for every critical proof obligation; one failed obligation prevents a passing status.
+
 ## Selection rule
 
 Recommend the Outcome Pack whose finished outputs most closely match the user's desired end state:
@@ -716,6 +755,7 @@ Recommend the Outcome Pack whose finished outputs most closely match the user's 
 - Web-app idea or rough repository plus its first complete locally verified user flow → Working Web App.
 - Browser-game idea plus one polished playable build → Playable Web Game.
 - Physical product plus launch presentation → Hardware Launch.
+- Passive object, enclosure, fixture, furniture part, or simple mechanism plus a CAD package for 3D-printing or fabrication critique → Mechanical CAD Review.
 - Existing repository plus trustworthy public release materials → Open-Source Release.
 - Existing tested web app plus a reversible approved production deployment and smoke report → Production Web Release.
 - Live web app plus a repeatable reliability, issue-triage, maintenance, incident-response, and safe-change cadence → Web App Operations.
@@ -732,7 +772,7 @@ Recommend the Outcome Pack whose finished outputs most closely match the user's 
 - Selected product, service, or software opportunity plus real prospects, one concrete offer, and the strongest available commercial commitment → First Customer Sprint.
 - Real product, prototype, offer, or campaign plus finished Instagram, video, YouTube, X, product-decision, provenance, and posting-calendar assets → Launch Content Campaign.
 
-Recommend Software Opportunity Discovery when no opportunity is selected. Recommend Working Hardware Prototype when a selected consumer-hardware concept must become a measured physical artifact; Hardware Launch presents a product and Robot Prototype proves a simulated robot, so neither substitutes. Recommend Manufacturing Readiness after the measured prototype passes and before a production promise whose feasibility depends on DFM, supplier, cost, compliance, quality, or pilot evidence. Recommend Study Readiness when a defined research hypothesis needs a protocol package for qualified review; it does not approve or execute a study. Recommend First Customer Sprint when one selected direction should face a concrete offer and real prospects; require truthful prototype, safety, claims, manufacturing, delivery, and refund boundaries before physical-product payment or delivery promises. Recommend Launch Content Campaign when the product truth exists and the missing result is one finite set of post-ready cross-platform assets; use Marketing Operations for a recurring learning and production system. Recommend Working Web App only when customer evidence or another explicit delivery requirement makes a bounded application the next useful outcome. Use Developer Project Launch when a working developer project needs comprehension, presentation, proof, and a verified adoption path. Use Web Presentation when the primary deliverable is a slide-based browser presentation; a conventional landing page belongs elsewhere. Use Kickstarter Funding only when crowdfunding mechanics and payout are part of the outcome and its physical and research prerequisites pass; use Kickstarter Fulfillment only after the campaign is funded. Use Robot Prototype for a simulation-backed digital prototype, not a fabrication-ready machine or hardware commissioning. Use Production Web Release when a tested candidate exists and the missing outcome is a gated production promotion with rollback and smoke evidence. Use Web App Operations only after the app is live and the desired outcome is an ongoing reliability and maintenance rhythm. Repository-only licensing, packaging, CI, versioning, and release engineering belong to Open-Source Release; one isolated bug, incident, or marketing asset with no requested recurring workflow is focused work, not an Outcome Pack run.
+Recommend Software Opportunity Discovery when no opportunity is selected. Recommend Mechanical CAD Review when a narrow passive-object or mechanism request needs a vendor-reviewable CAD package and physical fabrication is not yet authorized. Never choose Hardware Launch merely because the request mentions hardware or CAD; choose it only when the desired outcome includes the site, film, waitlist, and launch presentation. Recommend Working Hardware Prototype when a selected consumer-hardware concept must become a measured physical artifact; Mechanical CAD Review, Hardware Launch, Robot Prototype, CAD, and simulation do not substitute for direct evidence from the integrated physical artifact. Recommend Manufacturing Readiness after the measured prototype passes and before a production promise whose feasibility depends on DFM, supplier, cost, compliance, quality, or pilot evidence. Recommend Study Readiness when a defined research hypothesis needs a protocol package for qualified review; it does not approve or execute a study. Recommend First Customer Sprint when one selected direction should face a concrete offer and real prospects; require truthful prototype, safety, claims, manufacturing, delivery, and refund boundaries before physical-product payment or delivery promises. Recommend Launch Content Campaign when the product truth exists and the missing result is one finite set of post-ready cross-platform assets; use Marketing Operations for a recurring learning and production system. Recommend Working Web App only when customer evidence or another explicit delivery requirement makes a bounded application the next useful outcome. Use Developer Project Launch when a working developer project needs comprehension, presentation, proof, and a verified adoption path. Use Web Presentation when the primary deliverable is a slide-based browser presentation; a conventional landing page belongs elsewhere. Use Kickstarter Funding only when crowdfunding mechanics and payout are part of the outcome and its physical and research prerequisites pass; use Kickstarter Fulfillment only after the campaign is funded. Use Robot Prototype for a simulation-backed digital prototype, not a fabrication-ready machine or hardware commissioning. Use Production Web Release when a tested candidate exists and the missing outcome is a gated production promotion with rollback and smoke evidence. Use Web App Operations only after the app is live and the desired outcome is an ongoing reliability and maintenance rhythm. Repository-only licensing, packaging, CI, versioning, and release engineering belong to Open-Source Release; one isolated bug, incident, or marketing asset with no requested recurring workflow is focused work, not an Outcome Pack run.
 
 For an ambition spanning several valuable results, recommend only the next independently useful Outcome Pack. Choose it from the current reality and the most important unresolved decision; do not preselect a future sequence. After the outcome passes verification, reassess the new evidence before recommending zero or more candidates and stop for fresh approval. A strong matching working project may qualify for Developer Project Launch directly; a discovery receipt alone does not.
 

@@ -55,7 +55,7 @@ describe("Possible MCP", () => {
     assert.doesNotMatch(client.getInstructions() ?? "", /chain/i);
   });
 
-  it("lists nine stable and nine experimental outcome packs", async () => {
+  it("lists nine stable and ten experimental outcome packs", async () => {
     const result = await client.callTool({ name: "list_packs", arguments: {} });
     const envelope = result.structuredContent as { ok: boolean; data: { packs: Array<{ slug: string; lane: string; status: string }> } };
     assert.equal(envelope.ok, true);
@@ -78,9 +78,10 @@ describe("Possible MCP", () => {
       ["launch-content-campaign", "launch"],
       ["manufacturing-readiness", "release"],
       ["study-readiness", "create"],
+      ["mechanical-cad-review", "create"],
     ]);
     assert.equal(envelope.data.packs.filter(({ status }) => status === "stable").length, 9);
-    assert.equal(envelope.data.packs.filter(({ status }) => status === "experimental").length, 9);
+    assert.equal(envelope.data.packs.filter(({ status }) => status === "experimental").length, 10);
   });
 
   it("compiles Web Presentation as a coded browser-deck outcome", async () => {
@@ -199,6 +200,19 @@ describe("Possible MCP", () => {
     assert.match(envelope.data.runPrompt, /MEASURED HARDWARE PROTOTYPE GATE/);
     assert.match(envelope.data.runPrompt, /PHYSICAL REMIX GATE/);
     assert.match(envelope.data.runPrompt, /working, repair-required, or no-go/i);
+  });
+
+  it("compiles Mechanical CAD Review with interface proof gates", async () => {
+    const result = await client.callTool({ name: "compile_pack", arguments: { slug: "mechanical-cad-review" } });
+    const envelope = result.structuredContent as { ok: boolean; data: { pack: { catalogNumber: number; lane: string; name: string }; installCommands: string[]; runPrompt: string } };
+    assert.equal(envelope.ok, true);
+    assert.equal(envelope.data.pack.catalogNumber, 19);
+    assert.equal(envelope.data.pack.lane, "create");
+    assert.equal(envelope.data.pack.name, "Mechanical CAD Review");
+    assert.equal(envelope.data.installCommands.length, 2);
+    assert.match(envelope.data.runPrompt, /CRITICAL PROOF CONTRACT/);
+    assert.match(envelope.data.runPrompt, /MECHANICAL CAD REVIEW GATE/);
+    assert.match(envelope.data.runPrompt, /review-ready, repair-required, or no-go/i);
   });
 
   it("compiles Launch Content Campaign with rationale and humanized copy", async () => {
