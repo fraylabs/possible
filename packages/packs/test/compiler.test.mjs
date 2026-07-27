@@ -26,6 +26,7 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
     "study-readiness",
     "mechanical-cad-review",
     "functional-hardware-prototype",
+    "launch-content-package",
   ]);
   assert.deepEqual(outcomePacks.map(({ slug, lane }) => [slug, lane]), [
     ["hardware-launch", "launch"],
@@ -48,8 +49,9 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
     ["study-readiness", "create"],
     ["mechanical-cad-review", "create"],
     ["functional-hardware-prototype", "create"],
+    ["launch-content-package", "launch"],
   ]);
-  assert.deepEqual(outcomePacks.map((pack) => pack.catalogNumber), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]);
+  assert.deepEqual(outcomePacks.map((pack) => pack.catalogNumber), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21]);
   assert.equal(new Set(outcomePacks.map((pack) => pack.catalogNumber)).size, outcomePacks.length);
   assert.equal(new Set(outcomePacks.map((pack) => pack.slug)).size, outcomePacks.length);
   assert.deepEqual(stableOutcomePacks.map((pack) => pack.slug), [
@@ -59,11 +61,10 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
     "developer-project-launch",
     "software-opportunity-discovery",
     "first-customer-sprint",
-    "launch-content-campaign",
   ]);
-  assert.equal(experimentalOutcomePacks.length, 11);
+  assert.equal(experimentalOutcomePacks.length, 12);
   assert.equal(activeOutcomePacks.length, 18);
-  assert.deepEqual(archivedOutcomePacks.map((pack) => pack.slug), ["hardware-launch", "working-hardware-prototype"]);
+  assert.deepEqual(archivedOutcomePacks.map((pack) => pack.slug), ["hardware-launch", "working-hardware-prototype", "launch-content-campaign"]);
   assert.equal(getPackStatus("hardware-launch"), "archived");
   assert.equal(getPackStatus("missing"), undefined);
 
@@ -147,7 +148,7 @@ test("Mechanical CAD Review rejects the unrestrained cat-house roof", async () =
   assert.match(compiled.runPrompt, /all six movement directions/i);
   assert.match(compiled.runPrompt, /lift, spread, slide, rack, flex, and pull-out/i);
   assert.match(compiled.runPrompt, /review-ready means ready for a fabricator to quote and critique/i);
-  assert.match(compiled.runPrompt, /cannot by themselves prove mechanical function, physical fit, durability, safety, or fabrication readiness/i);
+  assert.match(compiled.runPrompt, /File existence and hashes.*cannot by themselves prove a critical claim/i);
   assert.doesNotMatch(compiled.runPrompt, /REMIX GATE|OPENAI SITES MVP PATH|MEASURED HARDWARE PROTOTYPE GATE/);
 
   const fixture = JSON.parse(await readFile(new URL("./fixtures/cat-house-unrestrained-roof.json", import.meta.url), "utf8"));
@@ -293,7 +294,7 @@ test("Functional Hardware Prototype activates only the proof modules present in 
 
   const unrelatedConditionalProof = structuredClone(outcomePacks.find((candidate) => candidate.slug === "mechanical-cad-review"));
   unrelatedConditionalProof.criticalProofs[0].moduleId = "battery";
-  assert.throws(() => compilePack(unrelatedConditionalProof), /conditional critical proofs require a functional hardware prototype contract/);
+  assert.throws(() => compilePack(unrelatedConditionalProof), /conditional critical proofs require a conditional module contract/);
 });
 
 test("every run exposes one extractable outcome record", () => {
@@ -669,7 +670,7 @@ test("Developer Project Launch turns a working developer project into an evidenc
   assert.equal(developer.lane, "launch");
   assert.match(developer.eyebrow, /EXPERIMENTAL/);
   assert.match(developer.useWhen.join(" "), /working CLI.*library.*API.*developer platform/i);
-  assert.match(developer.notFor.join(" "), /core product.*Working Web App.*Launch Content Campaign/i);
+  assert.match(developer.notFor.join(" "), /core product.*Working Web App.*Launch Content Package/i);
   assert.match(developer.notFor.join(" "), /repository release engineering.*Open-Source Release/i);
   assert.match(openSource.notFor.join(" "), /Developer Project Launch/i);
 
@@ -1042,9 +1043,10 @@ test("Study Readiness stops at a protocol package for qualified review", () => {
   assert.throws(() => compilePack(invalidDecision), /decisions must be ready-for-qualified-review, repair-required, no-go/);
 });
 
-test("Launch Content Campaign produces post-ready media without publishing it", () => {
+test("archived Launch Content Campaign preserves its original post-ready media contract", () => {
   const campaign = outcomePacks.find((pack) => pack.slug === "launch-content-campaign");
   assert.ok(campaign);
+  assert.ok(campaign.archived);
   assert.equal(campaign.catalogNumber, 16);
   assert.equal(campaign.lane, "launch");
   assert.equal(campaign.name, "Launch Content Campaign");
@@ -1074,6 +1076,72 @@ test("Launch Content Campaign produces post-ready media without publishing it", 
   assert.match(campaign.guardrails.join(" "), /separate exact approval/i);
   assert.match(campaign.verification.join(" "), /provider, model and version.*content hash/i);
   assert.match(campaign.verification.join(" "), /ready, repair-required, or no-go/i);
+});
+
+test("Launch Content Package activates only the requested final-export formats", () => {
+  const content = outcomePacks.find((pack) => pack.slug === "launch-content-package");
+  assert.ok(content);
+  assert.equal(content.catalogNumber, 21);
+  assert.equal(content.lane, "launch");
+  assert.equal(content.name, "Launch Content Package");
+  assert.equal(content.workstreams.length, 3);
+  assert.equal(content.skills.length, 6);
+  assert.equal(content.remix, undefined);
+  assert.equal(content.decisionRationale, undefined);
+  assert.equal(content.launchContentPackage.minimumActiveModules, 1);
+  assert.deepEqual(content.launchContentPackage.modules.map(({ id }) => id), [
+    "text-post",
+    "static-visual",
+    "carousel",
+    "short-video",
+    "long-video",
+    "thread",
+  ]);
+  assert.deepEqual(compileWorkstreamWaves(content).map((wave) => wave.map(({ id }) => id)), [
+    ["content-contract"],
+    ["content-production"],
+    ["content-verification"],
+  ]);
+  assert.doesNotMatch(content.skills.map(({ id }) => id).join(" "), /analytics/);
+  assert.doesNotMatch(content.outputs.join(" "), /Instagram|TikTok|YouTube|X announcement|calendar/i);
+
+  const compiled = compilePack(content);
+  assert.equal(compiled.installCommands.length, 3);
+  assert.match(compiled.runPrompt, /^Create and verify the Launch Content Package outcome/);
+  assert.match(compiled.runPrompt, /LAUNCH CONTENT PACKAGE GATE/);
+  assert.match(compiled.runPrompt, /CONDITIONAL CONTENT MODULES/);
+  assert.match(compiled.runPrompt, /Activate at least one module/i);
+  assert.match(compiled.runPrompt, /produce only active-module assets/i);
+  assert.match(compiled.runPrompt, /inactive modules create no production, placeholder, or simulated-proof work/i);
+  assert.doesNotMatch(compiled.runPrompt, /REMIX GATE|PRODUCT DECISION RECORD|three comparable campaign directions/i);
+
+  const coreResults = content.criticalProofs
+    .filter(({ moduleId }) => moduleId === undefined)
+    .map(({ id }) => ({ obligationId: id, status: "passed", evidence: [`launch-content-package/review/${id}.json`] }));
+  const staticResult = {
+    obligationId: "static-visual-output",
+    status: "passed",
+    evidence: ["launch-content-package/review/static-visual-output.json"],
+  };
+  assert.equal(evaluateCriticalProofResults(content.criticalProofs, coreResults, ["static-visual"]), "unproven");
+  assert.equal(evaluateCriticalProofResults(content.criticalProofs, [...coreResults, staticResult], ["static-visual"]), "passed");
+  assert.equal(evaluateCriticalProofResults(content.criticalProofs, [...coreResults, staticResult], ["short-video"]), "unproven");
+  assert.throws(
+    () => evaluateCriticalProofResults(content.criticalProofs, coreResults, ["podcast"]),
+    /Unknown active critical proof module podcast/,
+  );
+
+  const withRemix = structuredClone(content);
+  withRemix.remix = {
+    kind: "visual-direction",
+    workstreamId: "content-production",
+    candidateCount: 3,
+    previewRoot: "launch-content-package/directions/",
+    decisionPath: "launch-content-package/direction.json",
+    onNoChoice: "agent-select",
+    preserves: ["source truth"],
+  };
+  assert.throws(() => compilePack(withRemix), /must not require three creative directions/);
 });
 
 test("Marketing Operations compiles a manual-first, truthfully gated recurring schedule", () => {

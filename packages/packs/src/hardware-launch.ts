@@ -25,7 +25,7 @@ export const hardwareLaunchPack: OutcomePack = {
   archived: {
     archivedAt: "2026-07-27",
     reason: "This pack combined product engineering, copywriting, a website, a film, and waitlist preparation under one hardware-labelled outcome. Those results now belong to separate outcome contracts.",
-    replacementSlugs: ["mechanical-cad-review", "functional-hardware-prototype", "launch-content-campaign"],
+    replacementSlugs: ["mechanical-cad-review", "functional-hardware-prototype", "launch-content-package"],
   },
   skills: [
     {

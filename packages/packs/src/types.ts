@@ -89,6 +89,34 @@ export interface FunctionalHardwarePrototypeContract {
   decisions: ["working", "repair-required", "no-go"];
 }
 
+export type LaunchContentModuleId =
+  | "text-post"
+  | "static-visual"
+  | "carousel"
+  | "short-video"
+  | "long-video"
+  | "thread";
+
+export interface LaunchContentModule {
+  id: LaunchContentModuleId;
+  activationWhen: string;
+  deliverables: string[];
+  productionChecks: string[];
+  requiredProofIds: string[];
+}
+
+export interface LaunchContentPackageContract {
+  kind: "launch-content-package";
+  minimumActiveModules: 1;
+  briefPath: string;
+  moduleDecisionPath: string;
+  assetRoot: string;
+  manifestPath: string;
+  decisionReceiptPath: string;
+  modules: LaunchContentModule[];
+  decisions: ["ready", "repair-required", "no-go"];
+}
+
 export interface ManufacturingReadinessContract {
   kind: "manufacturing-readiness";
   baselinePath: string;
@@ -194,6 +222,7 @@ export interface OutcomePack {
   decisionRationale?: DecisionRationaleContract;
   functionalHardwarePrototype?: FunctionalHardwarePrototypeContract;
   hardwarePrototype?: HardwarePrototypeContract;
+  launchContentPackage?: LaunchContentPackageContract;
   mechanicalCadReview?: MechanicalCadReviewContract;
   manufacturingReadiness?: ManufacturingReadinessContract;
   studyReadiness?: StudyReadinessContract;

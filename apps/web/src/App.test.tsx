@@ -108,8 +108,8 @@ describe("Possible", () => {
     }
   });
 
-  it("publishes discovery, customer, campaign, and developer outcomes as reviewed Packs", async () => {
-    for (const slug of ["software-opportunity-discovery", "first-customer-sprint", "launch-content-campaign", "developer-project-launch"]) {
+  it("publishes discovery, customer, and developer outcomes as reviewed Packs", async () => {
+    for (const slug of ["software-opportunity-discovery", "first-customer-sprint", "developer-project-launch"]) {
       const pack = getPublishedPack(slug);
       expect(pack).toBeDefined();
       const { container, unmount } = renderRoute(`/packs/${slug}`);
@@ -153,9 +153,17 @@ describe("Possible", () => {
     expect(await axe(route.container)).toHaveNoViolations();
   });
 
-  it("shows post-ready campaign content, Remix, and product decisions", async () => {
+  it("preserves the archived Launch Content Campaign page and its historical contract", async () => {
+    const pack = getRoutablePack("launch-content-campaign");
+    expect(pack?.archived).toBeDefined();
     const route = renderRoute("/packs/launch-content-campaign");
     expect(screen.getByRole("heading", { name: "Launch Content Campaign", level: 1 })).toBeInTheDocument();
+    const notice = screen.getByRole("complementary", { name: "Archived Outcome Pack" });
+    expect(notice).toHaveTextContent(/ARCHIVED.*2026-07-27/i);
+    expect(notice).toHaveTextContent(/five workstreams.*three creative directions/i);
+    expect(within(notice).getByRole("link", { name: "Launch Content Package" })).toHaveAttribute("href", expect.stringContaining("launch-content-package.ts"));
+    expect(within(notice).getByRole("link", { name: "Marketing Operations" })).toHaveAttribute("href", expect.stringContaining("marketing-operations.ts"));
+    expect(screen.queryByRole("link", { name: /Start with \$possible/i })).not.toBeInTheDocument();
     expect(screen.getByText("PRODUCT DECISIONS")).toBeInTheDocument();
     expect(screen.getByText("REMIX")).toBeInTheDocument();
     expect(route.container.querySelector(".pack-prompt-disclosure code")?.textContent).toMatch(/\$humanizer/);

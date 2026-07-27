@@ -55,7 +55,7 @@ describe("Possible MCP", () => {
     assert.doesNotMatch(client.getInstructions() ?? "", /chain/i);
   });
 
-  it("lists seven stable, eleven experimental, and two archived outcome packs", async () => {
+  it("lists six stable, twelve experimental, and three archived outcome packs", async () => {
     const result = await client.callTool({ name: "list_packs", arguments: {} });
     const envelope = result.structuredContent as { ok: boolean; data: { packs: Array<{ slug: string; lane: string; status: string }> } };
     assert.equal(envelope.ok, true);
@@ -80,12 +80,14 @@ describe("Possible MCP", () => {
       ["study-readiness", "create"],
       ["mechanical-cad-review", "create"],
       ["functional-hardware-prototype", "create"],
+      ["launch-content-package", "launch"],
     ]);
-    assert.equal(envelope.data.packs.filter(({ status }) => status === "stable").length, 7);
-    assert.equal(envelope.data.packs.filter(({ status }) => status === "experimental").length, 11);
-    assert.equal(envelope.data.packs.filter(({ status }) => status === "archived").length, 2);
+    assert.equal(envelope.data.packs.filter(({ status }) => status === "stable").length, 6);
+    assert.equal(envelope.data.packs.filter(({ status }) => status === "experimental").length, 12);
+    assert.equal(envelope.data.packs.filter(({ status }) => status === "archived").length, 3);
     assert.equal(envelope.data.packs.find(({ slug }) => slug === "hardware-launch")?.status, "archived");
     assert.equal(envelope.data.packs.find(({ slug }) => slug === "working-hardware-prototype")?.status, "archived");
+    assert.equal(envelope.data.packs.find(({ slug }) => slug === "launch-content-campaign")?.status, "archived");
   });
 
   it("compiles Web Presentation as a coded browser-deck outcome", async () => {
@@ -118,7 +120,7 @@ describe("Possible MCP", () => {
     assert.equal(envelope.ok, false);
     assert.equal(envelope.error.code, "PACK_ARCHIVED");
     assert.match(envelope.error.message, /archived and cannot start a new run/i);
-    assert.deepEqual(envelope.error.details.replacementSlugs, ["mechanical-cad-review", "functional-hardware-prototype", "launch-content-campaign"]);
+    assert.deepEqual(envelope.error.details.replacementSlugs, ["mechanical-cad-review", "functional-hardware-prototype", "launch-content-package"]);
   });
 
   it("compiles Open-Source Release", async () => {
@@ -226,17 +228,27 @@ describe("Possible MCP", () => {
     assert.match(envelope.data.runPrompt, /review-ready, repair-required, or no-go/i);
   });
 
-  it("compiles Launch Content Campaign with rationale and humanized copy", async () => {
+  it("preserves but refuses to compile the archived Launch Content Campaign pack", async () => {
     const result = await client.callTool({ name: "compile_pack", arguments: { slug: "launch-content-campaign" } });
+    assert.equal(result.isError, true);
+    const envelope = result.structuredContent as { ok: boolean; error: { code: string; details: { replacementSlugs: string[] } } };
+    assert.equal(envelope.ok, false);
+    assert.equal(envelope.error.code, "PACK_ARCHIVED");
+    assert.deepEqual(envelope.error.details.replacementSlugs, ["launch-content-package", "marketing-operations"]);
+  });
+
+  it("compiles Launch Content Package with conditional final-export modules", async () => {
+    const result = await client.callTool({ name: "compile_pack", arguments: { slug: "launch-content-package" } });
     const envelope = result.structuredContent as { ok: boolean; data: { pack: { catalogNumber: number; lane: string; name: string }; installCommands: string[]; runPrompt: string } };
     assert.equal(envelope.ok, true);
-    assert.equal(envelope.data.pack.catalogNumber, 16);
+    assert.equal(envelope.data.pack.catalogNumber, 21);
     assert.equal(envelope.data.pack.lane, "launch");
-    assert.equal(envelope.data.pack.name, "Launch Content Campaign");
+    assert.equal(envelope.data.pack.name, "Launch Content Package");
     assert.equal(envelope.data.installCommands.length, 3);
     assert.match(envelope.data.runPrompt, /\$humanizer/);
-    assert.match(envelope.data.runPrompt, /PRODUCT DECISION RECORD/);
-    assert.match(envelope.data.runPrompt, /REMIX GATE/);
+    assert.match(envelope.data.runPrompt, /LAUNCH CONTENT PACKAGE GATE/);
+    assert.match(envelope.data.runPrompt, /CONDITIONAL CONTENT MODULES/);
+    assert.doesNotMatch(envelope.data.runPrompt, /REMIX GATE|PRODUCT DECISION RECORD/);
   });
 
   it("compiles Manufacturing Readiness with production-release evidence gates", async () => {

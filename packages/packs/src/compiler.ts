@@ -20,6 +20,38 @@ function requireEvidencePaths(paths: string[], label: string): void {
   for (const path of paths) requireSafeRelativePath(path, label);
 }
 
+function validateConditionalProofModules(
+  pack: OutcomePack,
+  label: string,
+  modules: Array<{ id: string; activationWhen: string; requiredProofIds: string[] }>,
+): void {
+  if (!pack.criticalProofs?.length) throw new Error(`${pack.slug} ${label} requires critical proofs`);
+  const moduleIds = new Set<string>();
+  const proofById = new Map(pack.criticalProofs.map((proof) => [proof.id, proof]));
+  for (const module of modules) {
+    if (!/^[a-z0-9][a-z0-9-]*$/.test(module.id)) throw new Error(`${pack.slug}/${module.id} module id must be a safe identifier`);
+    if (moduleIds.has(module.id)) throw new Error(`${pack.slug} contains duplicate ${label} module ${module.id}`);
+    moduleIds.add(module.id);
+    if (!module.activationWhen.trim()) throw new Error(`${pack.slug}/${module.id} module activationWhen must be non-empty`);
+    if (module.requiredProofIds.length === 0) throw new Error(`${pack.slug}/${module.id} module requires critical proofs`);
+    for (const proofId of module.requiredProofIds) {
+      const proof = proofById.get(proofId);
+      if (!proof) throw new Error(`${pack.slug}/${module.id} references missing critical proof ${proofId}`);
+      if (proof.moduleId !== module.id) {
+        throw new Error(`${pack.slug}/${module.id} critical proof ${proofId} must declare the same moduleId`);
+      }
+    }
+  }
+  for (const proof of pack.criticalProofs) {
+    if (!proof.moduleId) continue;
+    const module = modules.find(({ id }) => id === proof.moduleId);
+    if (!module) throw new Error(`${pack.slug}/${proof.id} references missing ${label} module ${proof.moduleId}`);
+    if (!module.requiredProofIds.includes(proof.id)) {
+      throw new Error(`${pack.slug}/${module.id} must list conditional critical proof ${proof.id}`);
+    }
+  }
+}
+
 export function evaluateCriticalProofResults(
   obligations: CriticalProofObligation[],
   results: CriticalProofResult[],
@@ -209,6 +241,13 @@ FIRST CUSTOMER SPRINT
 9. Write ${contract.decisionReceiptPath} with exactly one decision: continue, revise, or stop. State the highest evidence rung reached, money requested and collected, what customers actually did, the next product or sales boundary, unresolved risks, and what would reverse the decision. This receipt records commercial proof; it does not claim product-market fit or authorize another Outcome Pack.`;
   })() : "";
 
+  const conditionalModuleContracts = [
+    pack.functionalHardwarePrototype ? { label: "functional hardware", modules: pack.functionalHardwarePrototype.modules } : undefined,
+    pack.launchContentPackage ? { label: "launch content", modules: pack.launchContentPackage.modules } : undefined,
+  ].filter((value): value is NonNullable<typeof value> => Boolean(value));
+  if (conditionalModuleContracts.length > 1) throw new Error(`${pack.slug} cannot define multiple conditional module contracts`);
+  const conditionalModuleContract = conditionalModuleContracts[0];
+
   const criticalProofs = pack.criticalProofs?.length ? (() => {
     const ids = new Set<string>();
     for (const proof of pack.criticalProofs ?? []) {
@@ -218,8 +257,8 @@ FIRST CUSTOMER SPRINT
       if (ids.has(proof.id)) throw new Error(`${pack.slug} contains duplicate critical proof id ${proof.id}`);
       ids.add(proof.id);
       if (!proof.claim.trim()) throw new Error(`${pack.slug}/${proof.id} critical proof claim must be non-empty`);
-      if (proof.moduleId !== undefined && !pack.functionalHardwarePrototype) {
-        throw new Error(`${pack.slug}/${proof.id} conditional critical proofs require a functional hardware prototype contract`);
+      if (proof.moduleId !== undefined && !conditionalModuleContract) {
+        throw new Error(`${pack.slug}/${proof.id} conditional critical proofs require a conditional module contract`);
       }
       if (proof.moduleId !== undefined && !/^[a-z0-9][a-z0-9-]*$/.test(proof.moduleId)) {
         throw new Error(`${pack.slug}/${proof.id} critical proof moduleId must be a safe identifier`);
@@ -242,7 +281,10 @@ ${(pack.criticalProofs ?? []).map((proof) => [
   `  Evidence: ${proof.requiredEvidence.join(", ")}`,
 ].join("\n")).join("\n")}
 
-A passed outcome requires every always-applicable proof and every proof for an active module to pass. Record the active module ids in the outcome record as activeModules. One failed applicable proof makes the outcome failed or repair-required; one skipped, missing, or unproven applicable proof prevents a passing status. An inactive module adds no implementation or proof work beyond recording why it is inactive. Artifact existence, hashes, renders, watertight meshes, and collision-free CAD are supporting evidence only and cannot by themselves prove mechanical function, physical fit, durability, safety, or fabrication readiness. The reviewer must try to falsify each claim rather than restate the implementation.`;
+${conditionalModuleContract
+  ? "A passed outcome requires every always-applicable proof and every proof for an active module to pass. Record the active module ids in the outcome record as activeModules. One failed applicable proof makes the outcome failed or repair-required; one skipped, missing, or unproven applicable proof prevents a passing status. An inactive module adds no implementation or proof work beyond recording why it is inactive."
+  : "A passed outcome requires every critical proof to pass. One failed proof makes the outcome failed or repair-required; one skipped, missing, or unproven proof prevents a passing status."}
+File existence and hashes are supporting evidence only; they cannot by themselves prove a critical claim. The reviewer must try to falsify each claim rather than restate the implementation.`;
   })() : "";
 
   const functionalHardwarePrototype = pack.functionalHardwarePrototype ? (() => {
@@ -258,37 +300,15 @@ A passed outcome requires every always-applicable proof and every proof for an a
       ["safetyRevisionPath", contract.safetyRevisionPath],
       ["decisionReceiptPath", contract.decisionReceiptPath],
     ] as const) requireSafeRelativePath(value, `${pack.slug} functional hardware ${label}`);
-    if (!pack.criticalProofs?.length) throw new Error(`${pack.slug} functional hardware prototype requires critical proofs`);
     const workstreamIds = new Set(pack.workstreams.map(({ id }) => id));
     if (workstreamIds.size > 3) throw new Error(`${pack.slug} functional hardware prototype must use no more than three core workstreams`);
-    const moduleIds = new Set<string>();
-    const proofById = new Map((pack.criticalProofs ?? []).map((proof) => [proof.id, proof]));
+    validateConditionalProofModules(pack, "functional hardware", contract.modules);
     for (const module of contract.modules) {
-      if (moduleIds.has(module.id)) throw new Error(`${pack.slug} contains duplicate functional hardware module ${module.id}`);
-      moduleIds.add(module.id);
-      if (!module.activationWhen.trim()) throw new Error(`${pack.slug}/${module.id} module activationWhen must be non-empty`);
       if (module.earlyHardStops.length === 0 || module.earlyHardStops.some((item) => !item.trim())) {
         throw new Error(`${pack.slug}/${module.id} module requires early hard stops`);
       }
       if (module.revisionChecks.length === 0 || module.revisionChecks.some((item) => !item.trim())) {
         throw new Error(`${pack.slug}/${module.id} module requires revision checks`);
-      }
-      if (module.requiredProofIds.length === 0) throw new Error(`${pack.slug}/${module.id} module requires critical proofs`);
-      for (const proofId of module.requiredProofIds) {
-        const proof = proofById.get(proofId);
-        if (!proof) throw new Error(`${pack.slug}/${module.id} references missing critical proof ${proofId}`);
-        if (proof.moduleId !== module.id) {
-          throw new Error(`${pack.slug}/${module.id} critical proof ${proofId} must declare the same moduleId`);
-        }
-      }
-    }
-    for (const proof of pack.criticalProofs ?? []) {
-      if (proof.moduleId) {
-        const module = contract.modules.find(({ id }) => id === proof.moduleId);
-        if (!module) throw new Error(`${pack.slug}/${proof.id} references missing functional hardware module ${proof.moduleId}`);
-        if (!module.requiredProofIds.includes(proof.id)) {
-          throw new Error(`${pack.slug}/${module.id} must list conditional critical proof ${proof.id}`);
-        }
       }
     }
     return `
@@ -308,6 +328,51 @@ ${contract.modules.map((module) => [
   `  Activate when: ${module.activationWhen}`,
   `  Early hard stops: ${module.earlyHardStops.join("; ")}`,
   `  Revision checks: ${module.revisionChecks.join("; ")}`,
+  `  Required proofs: ${module.requiredProofIds.join(", ")}`,
+].join("\n")).join("\n")}`;
+  })() : "";
+
+  const launchContentPackage = pack.launchContentPackage ? (() => {
+    const contract = pack.launchContentPackage;
+    if (contract.minimumActiveModules !== 1) throw new Error(`${pack.slug} launch content package requires at least one active module`);
+    if (contract.decisions.join(",") !== "ready,repair-required,no-go") {
+      throw new Error(`${pack.slug} launch content decisions must be ready, repair-required, no-go`);
+    }
+    for (const [label, value] of [
+      ["briefPath", contract.briefPath],
+      ["moduleDecisionPath", contract.moduleDecisionPath],
+      ["assetRoot", contract.assetRoot],
+      ["manifestPath", contract.manifestPath],
+      ["decisionReceiptPath", contract.decisionReceiptPath],
+    ] as const) requireSafeRelativePath(value, `${pack.slug} launch content ${label}`);
+    if (pack.workstreams.length > 3) throw new Error(`${pack.slug} launch content package must use no more than three core workstreams`);
+    if (pack.remix) throw new Error(`${pack.slug} launch content package must not require three creative directions`);
+    validateConditionalProofModules(pack, "launch content", contract.modules);
+    for (const module of contract.modules) {
+      if (module.deliverables.length === 0 || module.deliverables.some((item) => !item.trim())) {
+        throw new Error(`${pack.slug}/${module.id} module requires deliverables`);
+      }
+      if (module.productionChecks.length === 0 || module.productionChecks.some((item) => !item.trim())) {
+        throw new Error(`${pack.slug}/${module.id} module requires production checks`);
+      }
+    }
+    return `
+
+LAUNCH CONTENT PACKAGE GATE
+1. Keep ${contract.briefPath} to the verified source truth, audience, offer or announcement, call to action, available source media, requested channels and deliverables, voice references, accessibility needs, rights, external-action gates, and prohibited claims. Do not reopen product strategy, manufacture a founder story, or create a campaign calendar.
+2. Write ${contract.moduleDecisionPath} before production. Infer modules from the deliverables the user actually requested; do not make the user choose internal production categories. Activate at least one module, record every active and inactive reason, and record active ids in the outcome record as activeModules. Do not activate a format merely because a platform could accept it.
+3. Establish one coherent visual and verbal treatment directly from the brief. Do not require three directions, a Remix exercise, or platform variants that do not serve an active deliverable.
+4. Produce only active-module assets under ${contract.assetRoot}. Every active module must finish at least one authentic final export plus its editable source when applicable. A brief, script, storyboard, shot list, prompt, mockup, or placeholder is not a final export.
+5. Write ${contract.manifestPath}. For every asset record the active module, channel and format, dimensions or duration, source truth, claims, caption or copy, accessibility text, authentic versus generated material, provider and model when generated, inputs, edits, rights and consent, approval state, and SHA-256.
+6. Inspect the actual final exports at delivery dimensions and duration. Apply only active modules' production checks, repair material findings, and rerun affected checks. Inactive modules create no production, placeholder, or simulated-proof work.
+7. Write ${contract.decisionReceiptPath} with exactly one status: ready, repair-required, or no-go. Ready means the named package is locally post-ready for the selected channels and claims. It never means published, scheduled, distributed, endorsed, effective, engaging, viral, compliant in every market, or commercially successful.
+
+CONDITIONAL CONTENT MODULES
+${contract.modules.map((module) => [
+  `- ${module.id}`,
+  `  Activate when: ${module.activationWhen}`,
+  `  Deliverables: ${module.deliverables.join("; ")}`,
+  `  Production checks: ${module.productionChecks.join("; ")}`,
   `  Required proofs: ${module.requiredProofIds.join(", ")}`,
 ].join("\n")).join("\n")}`;
   })() : "";
@@ -423,7 +488,7 @@ STUDY READINESS GATE
 7. Write ${contract.decisionReceiptPath} with exactly one status: ready-for-qualified-review, repair-required, or no-go. Ready-for-qualified-review means the evidence package is coherent enough to place before qualified investigators, ethics bodies, regulators, statisticians, and legal or privacy advisers. It never means approved, registered, recruited, safe, effective, clinically validated, or authorized to begin.`;
   })() : "";
 
-  const action = pack.opportunityDiscovery ? "Discover" : pack.firstCustomerSprint ? "Run" : pack.functionalHardwarePrototype ? "Build, test, and revise" : pack.hardwarePrototype ? "Build and measure" : pack.mechanicalCadReview ? "Design and challenge" : pack.manufacturingReadiness || pack.studyReadiness ? "Prepare and verify" : pack.lane === "operate" ? "Establish and run the first cycle of" : pack.lane === "release" ? "Prepare and verify" : "Build";
+  const action = pack.opportunityDiscovery ? "Discover" : pack.firstCustomerSprint ? "Run" : pack.launchContentPackage ? "Create and verify" : pack.functionalHardwarePrototype ? "Build, test, and revise" : pack.hardwarePrototype ? "Build and measure" : pack.mechanicalCadReview ? "Design and challenge" : pack.manufacturingReadiness || pack.studyReadiness ? "Prepare and verify" : pack.lane === "operate" ? "Establish and run the first cycle of" : pack.lane === "release" ? "Prepare and verify" : "Build";
   const pluginCheck = pack.plugins?.length
     ? ` Also detect these optional agent plugins: ${pack.plugins.map((plugin) => `${plugin.invocation} (${plugin.skills.map((skill) => `$${skill}`).join(", ")})`).join(", ")}. Do not install or imitate an unavailable plugin; record its absence and use the documented fallback.`
     : "";
@@ -491,7 +556,7 @@ ${pack.guardrails.map((guardrail) => `- ${guardrail}`).join("\n")}
 
 VERIFICATION CONTRACT
 ${pack.verification.map((item) => `- ${item}`).join("\n")}
-${prerequisites}${opportunityDiscovery}${firstCustomerSprint}${decisionRationale}${criticalProofs}${mechanicalCadReview}${functionalHardwarePrototype}${hardwarePrototype}${manufacturingReadiness}${studyReadiness}${remixGate}${releaseGate}${launchGate}${sitesPath}${operateLoop}
+${prerequisites}${opportunityDiscovery}${firstCustomerSprint}${decisionRationale}${criticalProofs}${mechanicalCadReview}${functionalHardwarePrototype}${launchContentPackage}${hardwarePrototype}${manufacturingReadiness}${studyReadiness}${remixGate}${releaseGate}${launchGate}${sitesPath}${operateLoop}
 
 OUTCOME RECORD
 Every run—including a partial, blocked, or no-go result—must write one machine-readable proof index at .possible/runs/<run-id>/outcome-record.json.

@@ -43,7 +43,7 @@ export const developerProjectLaunchPack: OutcomePack = {
   ],
   notFor: [
     "An idea or repository whose primary product flow does not work yet; use Working Web App or another creation outcome first.",
-    "Stabilizing the core product or producing a consumer campaign; use Working Web App or Launch Content Campaign as appropriate.",
+    "Stabilizing the core product or producing a consumer content package; use Working Web App or Launch Content Package as appropriate.",
     "Licensing, CI hardening, packaging, versioning, changelog preparation, or repository release engineering without an adoption-facing launch; use Open-Source Release.",
     "Promoting an immutable candidate to production; use Production Web Release.",
     "Recurring content, distribution, or growth operations after launch; use Marketing Operations.",

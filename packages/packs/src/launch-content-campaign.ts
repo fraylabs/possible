@@ -42,6 +42,11 @@ export const launchContentCampaignPack: OutcomePack = {
     "Using generated media as evidence of a physical prototype, customer behavior, research result, health effect, manufacturing capability, or delivered product.",
   ],
   reviewedAt: "2026-07-24",
+  archived: {
+    archivedAt: "2026-07-27",
+    reason: "This pack forced five workstreams, three creative directions, every major image and video format, Instagram, YouTube, X, analytics, and a posting calendar even when the requested outcome was one finished asset.",
+    replacementSlugs: ["launch-content-package", "marketing-operations"],
+  },
   skills: [
     skill(marketingOperationsPack, "product-marketing"),
     skill(marketingOperationsPack, "content-strategy"),

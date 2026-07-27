@@ -49,21 +49,22 @@ The installer is idempotent and refuses to overwrite conflicting skill files. Ou
 
 ## Public Outcome Packs
 
-Possible publishes seven active reviewed public packs. Experimental packs remain available for testing, while archived packs preserve their original specifications and links without appearing in new recommendations.
+Possible publishes six active reviewed public packs. Experimental packs remain available for testing, while archived packs preserve their original specifications and links without appearing in new recommendations.
 
 - [Robot Prototype](packages/packs/src/robot-prototype.ts) — mechanical model, robot descriptions, control, simulation and sim-to-real boundaries.
 - [Playable Web Game](packages/packs/src/playable-web-game.ts) — a polished browser game with responsive controls and playability review.
 - [Web Presentation](packages/packs/src/web-presentation.ts) — an evidence-backed coded deck with responsive presenter behavior.
 - [Software Opportunity Discovery](packages/packs/src/software-opportunity-discovery.ts) — turns a rough software ambition into one provisional opportunity and a credible first-customer approach.
 - [First Customer Sprint](packages/packs/src/first-customer-sprint.ts) — takes one selected product, service, or software opportunity to real prospects and pursues the strongest available commercial commitment.
-- [Launch Content Campaign](packages/packs/src/launch-content-campaign.ts) — turns verified product decisions and proof into post-ready image, video, carousel, thread and platform packages.
 - [Developer Project Launch](packages/packs/src/developer-project-launch.ts) — a credible adoption path for a working developer project.
 
 The experimental [Mechanical CAD Review](packages/packs/src/mechanical-cad-review.ts) pack is the focused option for passive objects and simple mechanisms: editable CAD, explicit restraint and assembly proof, fit coupons, a vendor package, and an honest review boundary without launch-site or film work.
 
 The experimental [Functional Hardware Prototype](packages/packs/src/functional-hardware-prototype.ts) pack builds the simplest integrated artifact that proves one physical function. Battery, high-energy, motion, thermal, living-contact, networked, and health-claim work activates only when the actual architecture requires it; concrete safety review follows the first coherent artifact while hazardous actions retain early hard stops.
 
-[Hardware Launch](packages/packs/src/hardware-launch.ts) and [Working Hardware Prototype](packages/packs/src/working-hardware-prototype.ts) are archived. Their original specifications and public links remain available for historical evidence, but Possible no longer recommends their mixed or universally heavyweight contracts.
+The experimental [Launch Content Package](packages/packs/src/launch-content-package.ts) pack produces one truthful, post-ready package for selected channels. Text posts, static visuals, carousels, short videos, long videos, and threads activate independently; it does not add a three-direction exercise, every platform, analytics, or a campaign calendar.
+
+[Hardware Launch](packages/packs/src/hardware-launch.ts), [Working Hardware Prototype](packages/packs/src/working-hardware-prototype.ts), and [Launch Content Campaign](packages/packs/src/launch-content-campaign.ts) are archived. Their original specifications and public links remain available for historical evidence, but Possible no longer recommends their mixed or universally heavyweight contracts.
 
 The preserved PatchProof journey verifies Software Opportunity Discovery and Developer Project Launch as separate outcomes—and records why Possible no longer chooses their sequence in advance.
 

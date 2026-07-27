@@ -14,7 +14,7 @@ Status: `archived` on `2026-07-27`.
 
 Public page: `https://possible.sh/packs/hardware-launch`
 
-Historical specification only. Do not recommend or start this pack for new work. It combined product engineering, copywriting, a website, a film, and waitlist preparation under one hardware-labelled outcome. Use Mechanical CAD Review for vendor-reviewable CAD, Functional Hardware Prototype for an integrated measured artifact, or Launch Content Campaign for post-ready media. If the desired launch-presentation outcome does not fit an active pack, disclose the catalog gap.
+Historical specification only. Do not recommend or start this pack for new work. It combined product engineering, copywriting, a website, a film, and waitlist preparation under one hardware-labelled outcome. Use Mechanical CAD Review for vendor-reviewable CAD, Functional Hardware Prototype for an integrated measured artifact, or Launch Content Package for post-ready media. If the desired launch-presentation outcome does not fit an active pack, disclose the catalog gap.
 
 Use for a physical-product idea or prototype that needs one coherent launch presentation.
 
@@ -493,7 +493,7 @@ Slug: `first-customer-sprint`
 
 Lane: `launch`
 
-Status: `stable`.
+Status: `archived` on `2026-07-27`.
 
 Public page: `https://possible.sh/packs/first-customer-sprint`
 
@@ -637,6 +637,8 @@ Public page: `https://possible.sh/packs/launch-content-campaign`
 
 Use when a real product, prototype, offer, or campaign has enough evidence and the user wants one finite set of finished, post-ready assets rather than an ongoing marketing loop.
 
+Historical specification only. Do not recommend or start this pack for new work. It forced five workstreams, three creative directions, every major image and video format, Instagram, YouTube, X, analytics, and a posting calendar even when the requested outcome was one finished asset. Use Launch Content Package for a finite selected-format package, or Marketing Operations for a recurring calendar, production, and measurement loop.
+
 Outputs: locked campaign truth and claims; evidence-backed public product rationale; three campaign directions and one decision; editable Instagram carousels, captions, and alt text; vertical Reel, TikTok, and YouTube Short masters; horizontal launch-film or YouTube master; X announcement, founder, and product-decision threads; manual posting calendar; complete provenance manifest; independent ready, repair-required, or no-go receipt.
 
 Workstreams:
@@ -669,6 +671,49 @@ Select image, video, and audio providers from capabilities actually available du
 Keep authentic prototype footage, renders, simulations, generated atmosphere, and future intent distinct. Generated media cannot demonstrate product behavior, human response, research results, health effects, manufacturing capability, or delivered inventory. Posting, scheduling on a platform, outreach, account changes, private audience access, and spending require separate exact approval.
 
 Write `outcome-room/launch-content-receipt.json` with exactly one status: `ready`, `repair-required`, or `no-go`.
+
+## Launch Content Package
+
+Slug: `launch-content-package`
+
+Lane: `launch`
+
+Status: `experimental`.
+
+Source specification: `https://github.com/fraylabs/possible/blob/dev/packages/packs/src/launch-content-package.ts`
+
+Use when a real product, prototype, offer, release, event, or announcement already has enough evidence and the missing result is one finite set of finished local content for selected channels.
+
+Outputs: concise source-truth brief and active/inactive deliverable record; one coherent verbal and visual treatment; authentic final exports and editable sources for only the active formats; claims, accessibility, rights, consent, provenance, technical, approval, and hash manifest; independent ready, repair-required, or no-go receipt.
+
+Workstreams:
+
+- Source truth and active deliverables — `product-marketing`, `content-strategy`, `humanizer`; locks only the audience, objective, call to action, source evidence, selected channels, requested deliverables, rights, accessibility, and claims boundaries.
+- Active-format content production — `content-strategy`, `copywriting`, `social`, `remotion-best-practices`, `humanizer`; establishes one coherent treatment and produces only active-module exports and editable sources.
+- Final-export inspection and receipt — `social`, `remotion-best-practices`, `humanizer`, `product-marketing`; inspects actual exports, repairs material failures, and returns ready, repair-required, or no-go.
+- Fresh review — `product-marketing`, `humanizer`, `social`, `remotion-best-practices`; independently audits source truth, final exports, claims, voice, accessibility, provenance, rights, and completion boundaries.
+
+Sources:
+
+- `coreyhaines31/marketingskills`: `product-marketing`, `content-strategy`, `copywriting`, `social`; reviewed `67264763cb107d61749f418d081c56e5bcbc0209`.
+- `remotion-dev/skills`: `remotion-best-practices`; reviewed `ab22f5fa89962ec943eaa18797cbf38c9d727743`.
+- `fraylabs/possible`: `humanizer`; reviewed `e081be4df826b7bd545e6b80406622f52d0bb49b`.
+
+Install:
+
+```bash
+npx skills@1.5.19 add coreyhaines31/marketingskills@67264763cb107d61749f418d081c56e5bcbc0209 --skill product-marketing --skill content-strategy --skill copywriting --skill social --agent codex
+npx skills@1.5.19 add remotion-dev/skills@ab22f5fa89962ec943eaa18797cbf38c9d727743 --skill remotion-best-practices --agent codex
+npx skills@1.5.19 add fraylabs/possible@e081be4df826b7bd545e6b80406622f52d0bb49b --skill humanizer --agent codex
+```
+
+The six conditional modules are text post, static visual, carousel, short video, long video, and thread. Infer them from the deliverables the user actually requested, activate at least one, and require an authentic final export for every active module. Inactive modules add no variants, placeholders, briefs, scripts, or simulated evidence.
+
+Do not require three creative directions, a product-decision narrative, every platform, analytics, or a posting calendar. Use Marketing Operations when the desired outcome is a recurring calendar, production, distribution, and measurement loop.
+
+Keep authentic product evidence, renders, simulations, generated material, and future intent distinct. Record claims, source inputs, provider and model when generated, edits, rights, consent, disclosure, accessibility, technical specifications, approval state, and hashes. Posting, publishing, scheduling, outreach, account changes, private audience access, spending, and platform mutations require separate exact approval.
+
+Write `outcome-room/launch-content-package-receipt.json` with exactly one status: `ready`, `repair-required`, or `no-go`. Ready means only that the named local package is post-ready for selected channels. It never means published, scheduled, distributed, engaging, demanded, funded, or commercially successful.
 
 ## Manufacturing Readiness
 
@@ -818,9 +863,9 @@ Recommend the Outcome Pack whose finished outputs most closely match the user's 
 - Working developer tool, library, CLI, API, agent project, or platform plus positioning, a distinctive site, honest demonstration, verified quickstart, and adoption path → Developer Project Launch.
 - Vague software ambition with no selected opportunity plus one traceable provisional thesis and first-customer handoff → Software Opportunity Discovery.
 - Selected product, service, or software opportunity plus real prospects, one concrete offer, and the strongest available commercial commitment → First Customer Sprint.
-- Real product, prototype, offer, or campaign plus finished Instagram, video, YouTube, X, product-decision, provenance, and posting-calendar assets → Launch Content Campaign.
+- Real product, prototype, offer, release, event, or announcement plus one truthful post-ready package containing only selected text, static, carousel, short-video, long-video, or thread exports → Launch Content Package.
 
-Recommend Software Opportunity Discovery when no opportunity is selected. Recommend Mechanical CAD Review when a narrow passive-object or mechanism request needs a vendor-reviewable CAD package and physical fabrication is not yet authorized. Hardware Launch and Working Hardware Prototype are archived: never recommend or execute them. Use an active replacement only when that replacement's finished outcome matches; disclose a catalog gap for a conventional product launch site or another uncovered presentation outcome. Recommend Functional Hardware Prototype when a selected physical-product concept must become a measured physical artifact; activate battery, high energy, motion, thermal, living contact, networking, and health-claims work only from the actual architecture. Mechanical CAD Review, an archived pack, Robot Prototype, CAD, and simulation do not substitute for direct evidence from the integrated physical artifact. Recommend Manufacturing Readiness after the measured prototype passes and before a production promise whose feasibility depends on DFM, supplier, cost, compliance, quality, or pilot evidence. Recommend Study Readiness when a defined research hypothesis needs a protocol package for qualified review; it does not approve or execute a study. Recommend First Customer Sprint when one selected direction should face a concrete offer and real prospects; require truthful prototype, safety, claims, manufacturing, delivery, and refund boundaries before physical-product payment or delivery promises. Recommend Launch Content Campaign when the product truth exists and the missing result is one finite set of post-ready cross-platform assets; use Marketing Operations for a recurring learning and production system. Recommend Working Web App only when customer evidence or another explicit delivery requirement makes a bounded application the next useful outcome. Use Developer Project Launch when a working developer project needs comprehension, presentation, proof, and a verified adoption path. Use Web Presentation when the primary deliverable is a slide-based browser presentation; a conventional landing page belongs elsewhere. Use Kickstarter Funding only when crowdfunding mechanics and payout are part of the outcome and its physical and research prerequisites pass; use Kickstarter Fulfillment only after the campaign is funded. Use Robot Prototype for a simulation-backed digital prototype, not a fabrication-ready machine or hardware commissioning. Use Production Web Release when a tested candidate exists and the missing outcome is a gated production promotion with rollback and smoke evidence. Use Web App Operations only after the app is live and the desired outcome is an ongoing reliability and maintenance rhythm. Repository-only licensing, packaging, CI, versioning, and release engineering belong to Open-Source Release; one isolated bug, incident, or marketing asset with no requested recurring workflow is focused work, not an Outcome Pack run.
+Recommend Software Opportunity Discovery when no opportunity is selected. Recommend Mechanical CAD Review when a narrow passive-object or mechanism request needs a vendor-reviewable CAD package and physical fabrication is not yet authorized. Hardware Launch, Working Hardware Prototype, and Launch Content Campaign are archived: never recommend or execute them. Use an active replacement only when that replacement's finished outcome matches; disclose a catalog gap for a conventional product launch site or another uncovered presentation outcome. Recommend Functional Hardware Prototype when a selected physical-product concept must become a measured physical artifact; activate battery, high energy, motion, thermal, living contact, networking, and health-claims work only from the actual architecture. Mechanical CAD Review, an archived pack, Robot Prototype, CAD, and simulation do not substitute for direct evidence from the integrated physical artifact. Recommend Manufacturing Readiness after the measured prototype passes and before a production promise whose feasibility depends on DFM, supplier, cost, compliance, quality, or pilot evidence. Recommend Study Readiness when a defined research hypothesis needs a protocol package for qualified review; it does not approve or execute a study. Recommend First Customer Sprint when one selected direction should face a concrete offer and real prospects; require truthful prototype, safety, claims, manufacturing, delivery, and refund boundaries before physical-product payment or delivery promises. Recommend Launch Content Package when the product truth exists and the missing result is one finite set of post-ready selected-format assets; activate only requested formats and use Marketing Operations for a recurring calendar, learning, production, and measurement system. Recommend Working Web App only when customer evidence or another explicit delivery requirement makes a bounded application the next useful outcome. Use Developer Project Launch when a working developer project needs comprehension, presentation, proof, and a verified adoption path. Use Web Presentation when the primary deliverable is a slide-based browser presentation; a conventional landing page belongs elsewhere. Use Kickstarter Funding only when crowdfunding mechanics and payout are part of the outcome and its physical and research prerequisites pass; use Kickstarter Fulfillment only after the campaign is funded. Use Robot Prototype for a simulation-backed digital prototype, not a fabrication-ready machine or hardware commissioning. Use Production Web Release when a tested candidate exists and the missing outcome is a gated production promotion with rollback and smoke evidence. Use Web App Operations only after the app is live and the desired outcome is an ongoing reliability and maintenance rhythm. Repository-only licensing, packaging, CI, versioning, and release engineering belong to Open-Source Release; one isolated bug, incident, or marketing asset with no requested recurring workflow is focused work, not an Outcome Pack run.
 
 For an ambition spanning several valuable results, recommend only the next independently useful Outcome Pack. Choose it from the current reality and the most important unresolved decision; do not preselect a future sequence. After the outcome passes verification, reassess the new evidence before recommending zero or more candidates and stop for fresh approval. A strong matching working project may qualify for Developer Project Launch directly; a discovery receipt alone does not.
 
