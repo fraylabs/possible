@@ -60,6 +60,35 @@ export interface HardwarePrototypeContract {
   decisions: ["working", "repair-required", "no-go"];
 }
 
+export type FunctionalHardwareModuleId =
+  | "battery"
+  | "mains-high-energy"
+  | "motion"
+  | "thermal"
+  | "living-contact"
+  | "wireless-networked"
+  | "health-claims";
+
+export interface FunctionalHardwareModule {
+  id: FunctionalHardwareModuleId;
+  activationWhen: string;
+  earlyHardStops: string[];
+  revisionChecks: string[];
+  requiredProofIds: string[];
+}
+
+export interface FunctionalHardwarePrototypeContract {
+  kind: "functional-hardware-prototype";
+  contractPath: string;
+  moduleDecisionPath: string;
+  buildRoot: string;
+  measurementPath: string;
+  safetyRevisionPath: string;
+  decisionReceiptPath: string;
+  modules: FunctionalHardwareModule[];
+  decisions: ["working", "repair-required", "no-go"];
+}
+
 export interface ManufacturingReadinessContract {
   kind: "manufacturing-readiness";
   baselinePath: string;
@@ -92,6 +121,7 @@ export interface MechanicalCadReviewContract {
 
 export interface CriticalProofObligation {
   id: string;
+  moduleId?: string;
   claim: string;
   failureModes: string[];
   requiredEvidence: string[];
@@ -162,6 +192,7 @@ export interface OutcomePack {
   verification: string[];
   archived?: ArchivedPackMetadata;
   decisionRationale?: DecisionRationaleContract;
+  functionalHardwarePrototype?: FunctionalHardwarePrototypeContract;
   hardwarePrototype?: HardwarePrototypeContract;
   mechanicalCadReview?: MechanicalCadReviewContract;
   manufacturingReadiness?: ManufacturingReadinessContract;
@@ -247,6 +278,7 @@ export interface OutcomeRecord {
   packSnapshotPath: string;
   skillLockPath: string;
   workspaceRevision: string;
+  activeModules?: string[];
   artifacts: OutcomeArtifactRecord[];
   proofs: OutcomeProofRecord[];
   decisions: OutcomeDecisionRecord[];

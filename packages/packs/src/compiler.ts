@@ -23,9 +23,16 @@ function requireEvidencePaths(paths: string[], label: string): void {
 export function evaluateCriticalProofResults(
   obligations: CriticalProofObligation[],
   results: CriticalProofResult[],
+  activeModuleIds: string[] = [],
 ): CriticalProofEvaluation {
   const obligationIds = new Set(obligations.map(({ id }) => id));
   if (obligationIds.size !== obligations.length) throw new Error("Critical proof obligations require unique ids");
+  const knownModuleIds = new Set(obligations.flatMap(({ moduleId }) => moduleId ? [moduleId] : []));
+  const activeModules = new Set(activeModuleIds);
+  if (activeModules.size !== activeModuleIds.length) throw new Error("Active critical proof modules require unique ids");
+  for (const moduleId of activeModules) {
+    if (!knownModuleIds.has(moduleId)) throw new Error(`Unknown active critical proof module ${moduleId}`);
+  }
   const resultsById = new Map<string, CriticalProofResult>();
   for (const result of results) {
     if (!obligationIds.has(result.obligationId)) {
@@ -43,8 +50,9 @@ export function evaluateCriticalProofResults(
     }
     resultsById.set(result.obligationId, result);
   }
-  if (obligations.some(({ id }) => resultsById.get(id)?.status === "failed")) return "failed";
-  if (obligations.some(({ id }) => resultsById.get(id)?.status !== "passed")) return "unproven";
+  const requiredObligations = obligations.filter(({ moduleId }) => moduleId === undefined || activeModules.has(moduleId));
+  if (requiredObligations.some(({ id }) => resultsById.get(id)?.status === "failed")) return "failed";
+  if (requiredObligations.some(({ id }) => resultsById.get(id)?.status !== "passed")) return "unproven";
   return "passed";
 }
 
@@ -210,6 +218,12 @@ FIRST CUSTOMER SPRINT
       if (ids.has(proof.id)) throw new Error(`${pack.slug} contains duplicate critical proof id ${proof.id}`);
       ids.add(proof.id);
       if (!proof.claim.trim()) throw new Error(`${pack.slug}/${proof.id} critical proof claim must be non-empty`);
+      if (proof.moduleId !== undefined && !pack.functionalHardwarePrototype) {
+        throw new Error(`${pack.slug}/${proof.id} conditional critical proofs require a functional hardware prototype contract`);
+      }
+      if (proof.moduleId !== undefined && !/^[a-z0-9][a-z0-9-]*$/.test(proof.moduleId)) {
+        throw new Error(`${pack.slug}/${proof.id} critical proof moduleId must be a safe identifier`);
+      }
       if (proof.failureModes.length === 0 || proof.failureModes.some((item) => !item.trim())) {
         throw new Error(`${pack.slug}/${proof.id} requires named failure modes`);
       }
@@ -223,11 +237,79 @@ CRITICAL PROOF CONTRACT
 These claims decide completion. Record each id in the outcome record's proofs as obligationId, use the exact claim, and preserve direct evidence.
 ${(pack.criticalProofs ?? []).map((proof) => [
   `- ${proof.id}: ${proof.claim}`,
+  proof.moduleId ? `  Applies when module: ${proof.moduleId}` : "  Applies: always",
   `  Challenge: ${proof.failureModes.join(", ")}`,
   `  Evidence: ${proof.requiredEvidence.join(", ")}`,
 ].join("\n")).join("\n")}
 
-A passed outcome requires every critical proof to pass. One failed proof makes the outcome failed or repair-required; one skipped, missing, or unproven proof prevents a passing status. Artifact existence, hashes, renders, watertight meshes, and collision-free CAD are supporting evidence only and cannot by themselves prove mechanical function, physical fit, durability, safety, or fabrication readiness. The reviewer must try to falsify each claim rather than restate the implementation.`;
+A passed outcome requires every always-applicable proof and every proof for an active module to pass. Record the active module ids in the outcome record as activeModules. One failed applicable proof makes the outcome failed or repair-required; one skipped, missing, or unproven applicable proof prevents a passing status. An inactive module adds no implementation or proof work beyond recording why it is inactive. Artifact existence, hashes, renders, watertight meshes, and collision-free CAD are supporting evidence only and cannot by themselves prove mechanical function, physical fit, durability, safety, or fabrication readiness. The reviewer must try to falsify each claim rather than restate the implementation.`;
+  })() : "";
+
+  const functionalHardwarePrototype = pack.functionalHardwarePrototype ? (() => {
+    const contract = pack.functionalHardwarePrototype;
+    if (contract.decisions.join(",") !== "working,repair-required,no-go") {
+      throw new Error(`${pack.slug} functional hardware decisions must be working, repair-required, no-go`);
+    }
+    for (const [label, value] of [
+      ["contractPath", contract.contractPath],
+      ["moduleDecisionPath", contract.moduleDecisionPath],
+      ["buildRoot", contract.buildRoot],
+      ["measurementPath", contract.measurementPath],
+      ["safetyRevisionPath", contract.safetyRevisionPath],
+      ["decisionReceiptPath", contract.decisionReceiptPath],
+    ] as const) requireSafeRelativePath(value, `${pack.slug} functional hardware ${label}`);
+    if (!pack.criticalProofs?.length) throw new Error(`${pack.slug} functional hardware prototype requires critical proofs`);
+    const workstreamIds = new Set(pack.workstreams.map(({ id }) => id));
+    if (workstreamIds.size > 3) throw new Error(`${pack.slug} functional hardware prototype must use no more than three core workstreams`);
+    const moduleIds = new Set<string>();
+    const proofById = new Map((pack.criticalProofs ?? []).map((proof) => [proof.id, proof]));
+    for (const module of contract.modules) {
+      if (moduleIds.has(module.id)) throw new Error(`${pack.slug} contains duplicate functional hardware module ${module.id}`);
+      moduleIds.add(module.id);
+      if (!module.activationWhen.trim()) throw new Error(`${pack.slug}/${module.id} module activationWhen must be non-empty`);
+      if (module.earlyHardStops.length === 0 || module.earlyHardStops.some((item) => !item.trim())) {
+        throw new Error(`${pack.slug}/${module.id} module requires early hard stops`);
+      }
+      if (module.revisionChecks.length === 0 || module.revisionChecks.some((item) => !item.trim())) {
+        throw new Error(`${pack.slug}/${module.id} module requires revision checks`);
+      }
+      if (module.requiredProofIds.length === 0) throw new Error(`${pack.slug}/${module.id} module requires critical proofs`);
+      for (const proofId of module.requiredProofIds) {
+        const proof = proofById.get(proofId);
+        if (!proof) throw new Error(`${pack.slug}/${module.id} references missing critical proof ${proofId}`);
+        if (proof.moduleId !== module.id) {
+          throw new Error(`${pack.slug}/${module.id} critical proof ${proofId} must declare the same moduleId`);
+        }
+      }
+    }
+    for (const proof of pack.criticalProofs ?? []) {
+      if (proof.moduleId) {
+        const module = contract.modules.find(({ id }) => id === proof.moduleId);
+        if (!module) throw new Error(`${pack.slug}/${proof.id} references missing functional hardware module ${proof.moduleId}`);
+        if (!module.requiredProofIds.includes(proof.id)) {
+          throw new Error(`${pack.slug}/${module.id} must list conditional critical proof ${proof.id}`);
+        }
+      }
+    }
+    return `
+
+FUNCTIONAL HARDWARE PROTOTYPE GATE
+1. Keep ${contract.contractPath} short: name one primary physical function, the authentic integrated artifact, operating boundary, inputs and outputs, measurable passing threshold, intentionally failing condition, available tools and parts, external-action gates, and claims that completion will not establish. Do not add positioning, copywriting, launch assets, style directions, customer research, or production planning.
+2. Write ${contract.moduleDecisionPath} before implementation. Infer every module from the actual architecture and intended exposure; do not ask the user to choose engineering categories. Record each module as active or inactive with direct design evidence. Activate only what is present—not what might appear in a future version—and record active ids in the outcome record as activeModules.
+3. Build the simplest credible integrated artifact under ${contract.buildRoot}. Use only the mechanics, electronics, firmware, controls, fixtures, and instrumentation required by the contract and active modules. A passive artifact activates no electronics work. Prefer a current-limited bench supply before adding a battery when stored energy is not part of the function.
+4. Purchasing, external fabrication or assembly, energized work, battery charging, actuator connection, mains or high-energy work, and human or animal exposure each require separate approval for the exact revision, procedure, operator, environment, limits, stop conditions, and cost. Apply each active module's early hard stops before its hazardous action; missing authority, parts, tools, or qualified supervision produces no-go rather than simulated proof.
+5. Preserve instruments, fixtures, calibration or reference checks, raw samples, units, uncertainty, environment, revisions, failures, and thresholds in ${contract.measurementPath}. Test the authentic integrated artifact under nominal, boundary, and intentionally failing conditions. Measure only what decides the primary function and active-module proofs.
+6. After the first coherent artifact exists, perform a concrete safety and misuse revision at ${contract.safetyRevisionPath}. Apply only the active modules' revision checks, repair material findings, and rerun affected functional and failure tests. Safety is a design revision around real geometry and behavior, not a universal pre-design dossier; early hard stops still precede hazardous exposure.
+7. Write ${contract.decisionReceiptPath} with exactly one status: working, repair-required, or no-go. Working means only that the named immutable artifact passed its primary-function contract and all applicable critical proofs. It never means safe for sale, suitable for unsupervised use, clinically effective, certified, manufacturable, demanded, or production-ready.
+
+CONDITIONAL MODULES
+${contract.modules.map((module) => [
+  `- ${module.id}`,
+  `  Activate when: ${module.activationWhen}`,
+  `  Early hard stops: ${module.earlyHardStops.join("; ")}`,
+  `  Revision checks: ${module.revisionChecks.join("; ")}`,
+  `  Required proofs: ${module.requiredProofIds.join(", ")}`,
+].join("\n")).join("\n")}`;
   })() : "";
 
   const mechanicalCadReview = pack.mechanicalCadReview ? (() => {
@@ -341,7 +423,7 @@ STUDY READINESS GATE
 7. Write ${contract.decisionReceiptPath} with exactly one status: ready-for-qualified-review, repair-required, or no-go. Ready-for-qualified-review means the evidence package is coherent enough to place before qualified investigators, ethics bodies, regulators, statisticians, and legal or privacy advisers. It never means approved, registered, recruited, safe, effective, clinically validated, or authorized to begin.`;
   })() : "";
 
-  const action = pack.opportunityDiscovery ? "Discover" : pack.firstCustomerSprint ? "Run" : pack.hardwarePrototype ? "Build and measure" : pack.mechanicalCadReview ? "Design and challenge" : pack.manufacturingReadiness || pack.studyReadiness ? "Prepare and verify" : pack.lane === "operate" ? "Establish and run the first cycle of" : pack.lane === "release" ? "Prepare and verify" : "Build";
+  const action = pack.opportunityDiscovery ? "Discover" : pack.firstCustomerSprint ? "Run" : pack.functionalHardwarePrototype ? "Build, test, and revise" : pack.hardwarePrototype ? "Build and measure" : pack.mechanicalCadReview ? "Design and challenge" : pack.manufacturingReadiness || pack.studyReadiness ? "Prepare and verify" : pack.lane === "operate" ? "Establish and run the first cycle of" : pack.lane === "release" ? "Prepare and verify" : "Build";
   const pluginCheck = pack.plugins?.length
     ? ` Also detect these optional agent plugins: ${pack.plugins.map((plugin) => `${plugin.invocation} (${plugin.skills.map((skill) => `$${skill}`).join(", ")})`).join(", ")}. Do not install or imitate an unavailable plugin; record its absence and use the documented fallback.`
     : "";
@@ -409,12 +491,12 @@ ${pack.guardrails.map((guardrail) => `- ${guardrail}`).join("\n")}
 
 VERIFICATION CONTRACT
 ${pack.verification.map((item) => `- ${item}`).join("\n")}
-${prerequisites}${opportunityDiscovery}${firstCustomerSprint}${decisionRationale}${criticalProofs}${mechanicalCadReview}${hardwarePrototype}${manufacturingReadiness}${studyReadiness}${remixGate}${releaseGate}${launchGate}${sitesPath}${operateLoop}
+${prerequisites}${opportunityDiscovery}${firstCustomerSprint}${decisionRationale}${criticalProofs}${mechanicalCadReview}${functionalHardwarePrototype}${hardwarePrototype}${manufacturingReadiness}${studyReadiness}${remixGate}${releaseGate}${launchGate}${sitesPath}${operateLoop}
 
 OUTCOME RECORD
 Every run—including a partial, blocked, or no-go result—must write one machine-readable proof index at .possible/runs/<run-id>/outcome-record.json.
 Use schemaVersion 1 and record:
-- runId, packSlug, status, completedAt, workspaceRevision;
+- runId, packSlug, status, completedAt, workspaceRevision, and activeModules when the pack has conditional proof modules;
 - outcomeBriefPath, packSnapshotPath, skillLockPath, and checkpointPath;
 - artifacts with repository-relative path, description, owning workstream id, and SHA-256;
 - proofs with the exact claim, passed/failed/skipped/unproven status, and direct evidence paths;
@@ -548,6 +630,7 @@ export function validateOutcomeRecord(
             status: proof.status,
             evidence: proof.evidence,
           })),
+        record.activeModules ?? [],
       );
       if (evaluation !== "passed") {
         throw new Error(`A passed outcome record requires every critical proof to pass; current result is ${evaluation}`);

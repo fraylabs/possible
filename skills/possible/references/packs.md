@@ -14,7 +14,7 @@ Status: `archived` on `2026-07-27`.
 
 Public page: `https://possible.sh/packs/hardware-launch`
 
-Historical specification only. Do not recommend or start this pack for new work. It combined product engineering, copywriting, a website, a film, and waitlist preparation under one hardware-labelled outcome. Use Mechanical CAD Review for vendor-reviewable CAD, Working Hardware Prototype for an integrated measured artifact, or Launch Content Campaign for post-ready media. If the desired launch-presentation outcome does not fit an active pack, disclose the catalog gap.
+Historical specification only. Do not recommend or start this pack for new work. It combined product engineering, copywriting, a website, a film, and waitlist preparation under one hardware-labelled outcome. Use Mechanical CAD Review for vendor-reviewable CAD, Functional Hardware Prototype for an integrated measured artifact, or Launch Content Campaign for post-ready media. If the desired launch-presentation outcome does not fit an active pack, disclose the catalog gap.
 
 Use for a physical-product idea or prototype that needs one coherent launch presentation.
 
@@ -259,7 +259,7 @@ Lane: `launch`
 
 Public page: `https://possible.sh/packs/kickstarter-funding`
 
-Use when a measured product prototype and manufacturing-readiness baseline need the complete Kickstarter path: economics, offer, rewards, story, proof film, prelaunch audience, campaign operations, and payout evidence. Use Working Hardware Prototype or Manufacturing Readiness first when physical or production evidence is missing. Use Study Readiness first when the campaign promises a research program whose protocol, accountable roles, ethics pathway, budget, and claims boundary are undefined.
+Use when a measured product prototype and manufacturing-readiness baseline need the complete Kickstarter path: economics, offer, rewards, story, proof film, prelaunch audience, campaign operations, and payout evidence. Use Functional Hardware Prototype or Manufacturing Readiness first when physical or production evidence is missing. Use Study Readiness first when the campaign promises a research program whose protocol, accountable roles, ethics pathway, budget, and claims boundary are undefined.
 
 Outputs: feasibility and fixed funding-goal model, audience/offer/rewards/risks, responsive campaign story, proof-led film, prelaunch and campaign distribution system, measurement and payout controls, approved live execution or publication-ready blocked status, verified funding report.
 
@@ -455,7 +455,7 @@ Slug: `software-opportunity-discovery`
 
 Lane: `create`
 
-Status: `stable`.
+Status: `archived` on `2026-07-27`.
 
 Public page: `https://possible.sh/packs/software-opportunity-discovery`
 
@@ -543,6 +543,8 @@ Public page: `https://possible.sh/packs/working-hardware-prototype`
 
 Use when a consumer device, wearable, home object, wellness product, or connected physical product must become one functional, measured prototype before launch or sales.
 
+Historical specification only. Do not recommend or start this pack for new work. It imposed seven fixed workstreams, product-marketing and customer-research work, three physical directions, electronics, firmware, and a universal safety dossier before the actual architecture established which work was necessary. Use Functional Hardware Prototype for an integrated measured artifact, or Mechanical CAD Review when the outcome stops at vendor-reviewable CAD.
+
 Outputs: intended-use, functional, interface, and measurement specification; evidence and claims register; hazard and safe-state architecture; three physical directions and one decision; STEP assembly, drawings, components, BOM, and assembly instructions; electronics, controls, firmware, and bench harness; calibrated raw measurements; one instrumented physical prototype or explicit no-go; independent completion receipt.
 
 Workstreams:
@@ -579,6 +581,49 @@ Preserve material product decisions under `prototype/decisions/`: the question, 
 Purchasing, fabrication, external assembly, energized bench work, battery charging, hardware connection, and human testing each require separate exact approval. Health-adjacent products require qualified professional input for preliminary human-use exclusions and test boundaries. Missing parts, tools, authority, review, or physical evidence produces no-go; CAD, firmware, and synthetic traces cannot substitute.
 
 Write `outcome-room/hardware-prototype-receipt.json` with exactly one status: `working`, `repair-required`, or `no-go`. Working means only that the locked prototype contract passed. It never means safe for sale, clinically effective, certified, manufacturable, or production-ready.
+
+## Functional Hardware Prototype
+
+Slug: `functional-hardware-prototype`
+
+Lane: `create`
+
+Status: `experimental`.
+
+Source specification: `https://github.com/fraylabs/possible/blob/dev/packages/packs/src/functional-hardware-prototype.ts`
+
+Use when a selected physical-product concept must become one authentic integrated artifact whose single primary function can be directly measured.
+
+Outputs: one-function prototype contract and evidence-backed module record; the simplest authentic integrated physical artifact or an explicit build no-go; immutable design, components, source, configuration, assembly, and physical-action evidence; raw nominal, boundary, intentional-failure, repair, and regression measurements; concrete safety revision and independent working, repair-required, or no-go receipt.
+
+Workstreams:
+
+- Primary function and module decisions — `robotics-design-patterns`; defines one measurable primary function and classifies the actual immutable architecture against the seven conditional modules.
+- Simplest integrated physical artifact — `cad`, `step-parts`, `robotics-design-patterns`, `create-technical-spike`; builds only the mechanics, electronics, firmware, controls, fixtures, and instrumentation required by the function and active modules.
+- Functional test, safety revision, repair, and receipt — `robotics-testing`, `cad-viewer`, `create-technical-spike`; measures nominal, boundary, and failing behavior, revises concrete findings after the artifact exists, and returns working, repair-required, or no-go.
+- Fresh review — `robotics-testing`, `cad-viewer`, `robotics-design-patterns`; independently audits the immutable artifact, module decisions, measurements, failures, repairs, and completion boundary.
+
+Sources:
+
+- `earthtojake/text-to-cad`: `cad`, `step-parts`, `cad-viewer`; reviewed `fdbb4b4fb62d95ae298cfe9a46fdc7092bdaf423`.
+- `arpitg1304/robotics-agent-skills`: `robotics-design-patterns`, `robotics-testing`; reviewed `54f7b578f3dc269d29c0beb623b3f2611fd3a430`.
+- `github/awesome-copilot`: `create-technical-spike`; reviewed `26fe2d126bf79aafb38f43344d450b69632200f8`.
+
+Install:
+
+```bash
+npx skills@1.5.19 add earthtojake/text-to-cad@fdbb4b4fb62d95ae298cfe9a46fdc7092bdaf423 --skill cad --skill step-parts --skill cad-viewer --agent codex
+npx skills@1.5.19 add arpitg1304/robotics-agent-skills@54f7b578f3dc269d29c0beb623b3f2611fd3a430 --skill robotics-design-patterns --skill robotics-testing --agent codex
+npx skills@1.5.19 add github/awesome-copilot@26fe2d126bf79aafb38f43344d450b69632200f8 --skill create-technical-spike --agent codex
+```
+
+The seven conditional modules are battery, mains or high energy, motion, thermal, living contact, wireless or networked behavior, and health claims. The agent infers them from the artifact's actual architecture and intended exposure. An active module adds its hard stops, revision checks, and mandatory proof; an inactive module adds no implementation or simulated evidence beyond an evidence-backed reason.
+
+Minimal hard stops occur before hazardous physical actions. Broader safety work is a revision of a coherent artifact: inspect the concrete build, record the actual failure path, change the design, and rerun the affected tests. Do not front-load speculative electronics, marketing, three directions, a universal hazard dossier, or production planning.
+
+Fabrication, purchasing, external assembly, energizing, charging, actuator connection, network or account connection, and living exposure require separate exact approval. Missing parts, authority, authentic physical evidence, or an active-module proof produces repair-required or no-go.
+
+Write `outcome-room/functional-hardware-prototype-receipt.json` with exactly one status: `working`, `repair-required`, or `no-go`. Working applies only to the immutable artifact, one primary function, stated tests, and active modules. It never means safe for sale, unsupervised, clinically effective, certified, manufacturable, demanded, or production-ready.
 
 ## Launch Content Campaign
 
@@ -766,7 +811,7 @@ Recommend the Outcome Pack whose finished outputs most closely match the user's 
 - Rough product idea plus feasibility, offer, campaign assets, audience system, and a real Kickstarter funding path → Kickstarter Funding.
 - Funded Kickstarter campaign plus production, backer, logistics, communication, and 95%-shipped operations → Kickstarter Fulfillment.
 - Robot hand, gripper, arm, mobile robot, quadruped, or full robot plus coherent CAD, description, controls, and simulation evidence → Robot Prototype.
-- Consumer device, wearable, home object, wellness product, or connected physical product plus one functional measured physical artifact → Working Hardware Prototype.
+- Selected physical-product concept plus the simplest integrated physical artifact that directly passes one measurable primary function and only its architecture-activated engineering modules → Functional Hardware Prototype.
 - Measured physical prototype plus DFM, suppliers, landed economics, compliance, quality, pilot-build evidence, and one production-release decision → Manufacturing Readiness.
 - Defined research hypothesis plus protocol, ethics, analysis, qualified-accountability, budget, and publication package → Study Readiness.
 - Pitch, talk, lesson, demo, or internal presentation plus a coded browser deck, presenter experience, export, and evidence review → Web Presentation.
@@ -775,7 +820,7 @@ Recommend the Outcome Pack whose finished outputs most closely match the user's 
 - Selected product, service, or software opportunity plus real prospects, one concrete offer, and the strongest available commercial commitment → First Customer Sprint.
 - Real product, prototype, offer, or campaign plus finished Instagram, video, YouTube, X, product-decision, provenance, and posting-calendar assets → Launch Content Campaign.
 
-Recommend Software Opportunity Discovery when no opportunity is selected. Recommend Mechanical CAD Review when a narrow passive-object or mechanism request needs a vendor-reviewable CAD package and physical fabrication is not yet authorized. Hardware Launch is archived: never recommend or execute it. Use an active replacement only when that replacement's finished outcome matches; disclose a catalog gap for a conventional product launch site or another uncovered presentation outcome. Recommend Working Hardware Prototype when a selected consumer-hardware concept must become a measured physical artifact; Mechanical CAD Review, an archived pack, Robot Prototype, CAD, and simulation do not substitute for direct evidence from the integrated physical artifact. Recommend Manufacturing Readiness after the measured prototype passes and before a production promise whose feasibility depends on DFM, supplier, cost, compliance, quality, or pilot evidence. Recommend Study Readiness when a defined research hypothesis needs a protocol package for qualified review; it does not approve or execute a study. Recommend First Customer Sprint when one selected direction should face a concrete offer and real prospects; require truthful prototype, safety, claims, manufacturing, delivery, and refund boundaries before physical-product payment or delivery promises. Recommend Launch Content Campaign when the product truth exists and the missing result is one finite set of post-ready cross-platform assets; use Marketing Operations for a recurring learning and production system. Recommend Working Web App only when customer evidence or another explicit delivery requirement makes a bounded application the next useful outcome. Use Developer Project Launch when a working developer project needs comprehension, presentation, proof, and a verified adoption path. Use Web Presentation when the primary deliverable is a slide-based browser presentation; a conventional landing page belongs elsewhere. Use Kickstarter Funding only when crowdfunding mechanics and payout are part of the outcome and its physical and research prerequisites pass; use Kickstarter Fulfillment only after the campaign is funded. Use Robot Prototype for a simulation-backed digital prototype, not a fabrication-ready machine or hardware commissioning. Use Production Web Release when a tested candidate exists and the missing outcome is a gated production promotion with rollback and smoke evidence. Use Web App Operations only after the app is live and the desired outcome is an ongoing reliability and maintenance rhythm. Repository-only licensing, packaging, CI, versioning, and release engineering belong to Open-Source Release; one isolated bug, incident, or marketing asset with no requested recurring workflow is focused work, not an Outcome Pack run.
+Recommend Software Opportunity Discovery when no opportunity is selected. Recommend Mechanical CAD Review when a narrow passive-object or mechanism request needs a vendor-reviewable CAD package and physical fabrication is not yet authorized. Hardware Launch and Working Hardware Prototype are archived: never recommend or execute them. Use an active replacement only when that replacement's finished outcome matches; disclose a catalog gap for a conventional product launch site or another uncovered presentation outcome. Recommend Functional Hardware Prototype when a selected physical-product concept must become a measured physical artifact; activate battery, high energy, motion, thermal, living contact, networking, and health-claims work only from the actual architecture. Mechanical CAD Review, an archived pack, Robot Prototype, CAD, and simulation do not substitute for direct evidence from the integrated physical artifact. Recommend Manufacturing Readiness after the measured prototype passes and before a production promise whose feasibility depends on DFM, supplier, cost, compliance, quality, or pilot evidence. Recommend Study Readiness when a defined research hypothesis needs a protocol package for qualified review; it does not approve or execute a study. Recommend First Customer Sprint when one selected direction should face a concrete offer and real prospects; require truthful prototype, safety, claims, manufacturing, delivery, and refund boundaries before physical-product payment or delivery promises. Recommend Launch Content Campaign when the product truth exists and the missing result is one finite set of post-ready cross-platform assets; use Marketing Operations for a recurring learning and production system. Recommend Working Web App only when customer evidence or another explicit delivery requirement makes a bounded application the next useful outcome. Use Developer Project Launch when a working developer project needs comprehension, presentation, proof, and a verified adoption path. Use Web Presentation when the primary deliverable is a slide-based browser presentation; a conventional landing page belongs elsewhere. Use Kickstarter Funding only when crowdfunding mechanics and payout are part of the outcome and its physical and research prerequisites pass; use Kickstarter Fulfillment only after the campaign is funded. Use Robot Prototype for a simulation-backed digital prototype, not a fabrication-ready machine or hardware commissioning. Use Production Web Release when a tested candidate exists and the missing outcome is a gated production promotion with rollback and smoke evidence. Use Web App Operations only after the app is live and the desired outcome is an ongoing reliability and maintenance rhythm. Repository-only licensing, packaging, CI, versioning, and release engineering belong to Open-Source Release; one isolated bug, incident, or marketing asset with no requested recurring workflow is focused work, not an Outcome Pack run.
 
 For an ambition spanning several valuable results, recommend only the next independently useful Outcome Pack. Choose it from the current reality and the most important unresolved decision; do not preselect a future sequence. After the outcome passes verification, reassess the new evidence before recommending zero or more candidates and stop for fresh approval. A strong matching working project may qualify for Developer Project Launch directly; a discovery receipt alone does not.
 

@@ -16,14 +16,14 @@ export const featuredPacks = featuredPackSlugs.map((slug) => {
   return pack;
 });
 
-export const publishedPackSlugs = [...featuredPackSlugs, "working-hardware-prototype", "first-customer-sprint", "launch-content-campaign", "developer-project-launch"] as const;
+export const publishedPackSlugs = [...featuredPackSlugs, "first-customer-sprint", "launch-content-campaign", "developer-project-launch"] as const;
 export const publishedPacks = publishedPackSlugs.map((slug) => {
   const pack = outcomePacks.find((candidate) => candidate.slug === slug);
   if (!pack) throw new Error(`Missing published Outcome Pack: ${slug}`);
   return pack;
 });
 
-export const archivedPublishedPackSlugs = ["hardware-launch"] as const;
+export const archivedPublishedPackSlugs = ["hardware-launch", "working-hardware-prototype"] as const;
 export const archivedPublishedPacks = archivedPublishedPackSlugs.map((slug) => {
   const pack = outcomePacks.find((candidate) => candidate.slug === slug);
   if (!pack?.archived) throw new Error(`Missing archived published Outcome Pack: ${slug}`);

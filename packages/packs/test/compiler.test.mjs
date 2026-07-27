@@ -25,6 +25,7 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
     "manufacturing-readiness",
     "study-readiness",
     "mechanical-cad-review",
+    "functional-hardware-prototype",
   ]);
   assert.deepEqual(outcomePacks.map(({ slug, lane }) => [slug, lane]), [
     ["hardware-launch", "launch"],
@@ -46,8 +47,9 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
     ["manufacturing-readiness", "release"],
     ["study-readiness", "create"],
     ["mechanical-cad-review", "create"],
+    ["functional-hardware-prototype", "create"],
   ]);
-  assert.deepEqual(outcomePacks.map((pack) => pack.catalogNumber), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]);
+  assert.deepEqual(outcomePacks.map((pack) => pack.catalogNumber), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]);
   assert.equal(new Set(outcomePacks.map((pack) => pack.catalogNumber)).size, outcomePacks.length);
   assert.equal(new Set(outcomePacks.map((pack) => pack.slug)).size, outcomePacks.length);
   assert.deepEqual(stableOutcomePacks.map((pack) => pack.slug), [
@@ -57,12 +59,11 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
     "developer-project-launch",
     "software-opportunity-discovery",
     "first-customer-sprint",
-    "working-hardware-prototype",
     "launch-content-campaign",
   ]);
-  assert.equal(experimentalOutcomePacks.length, 10);
+  assert.equal(experimentalOutcomePacks.length, 11);
   assert.equal(activeOutcomePacks.length, 18);
-  assert.deepEqual(archivedOutcomePacks.map((pack) => pack.slug), ["hardware-launch"]);
+  assert.deepEqual(archivedOutcomePacks.map((pack) => pack.slug), ["hardware-launch", "working-hardware-prototype"]);
   assert.equal(getPackStatus("hardware-launch"), "archived");
   assert.equal(getPackStatus("missing"), undefined);
 
@@ -195,6 +196,104 @@ test("Mechanical CAD Review rejects the unrestrained cat-house roof", async () =
     () => validateOutcomeRecord(record, pack.criticalProofs),
     /requires every critical proof to pass; current result is failed/,
   );
+});
+
+test("Functional Hardware Prototype activates only the proof modules present in the artifact", async () => {
+  const pack = outcomePacks.find((candidate) => candidate.slug === "functional-hardware-prototype");
+  assert.ok(pack);
+  assert.equal(pack.catalogNumber, 20);
+  assert.equal(pack.lane, "create");
+  assert.equal(pack.workstreams.length, 3);
+  assert.equal(pack.skills.length, 6);
+  assert.deepEqual(pack.functionalHardwarePrototype.modules.map(({ id }) => id), [
+    "battery",
+    "mains-high-energy",
+    "motion",
+    "thermal",
+    "living-contact",
+    "wireless-networked",
+    "health-claims",
+  ]);
+  assert.deepEqual(compileWorkstreamWaves(pack).map((wave) => wave.map(({ id }) => id)), [
+    ["prototype-contract"],
+    ["prototype-build"],
+    ["prototype-test-revision"],
+  ]);
+  assert.doesNotMatch(pack.skills.map(({ id }) => id).join(" "), /customer-research|product-marketing|copywriting/);
+  assert.doesNotMatch(pack.outputs.join(" "), /three.*direction|launch site|film|waitlist/i);
+
+  const compiled = compilePack(pack);
+  assert.equal(compiled.installCommands.length, 3);
+  assert.match(compiled.runPrompt, /^Build, test, and revise the Functional Hardware Prototype outcome/);
+  assert.match(compiled.runPrompt, /FUNCTIONAL HARDWARE PROTOTYPE GATE/);
+  assert.match(compiled.runPrompt, /CONDITIONAL MODULES/);
+  assert.match(compiled.runPrompt, /Safety is a design revision around real geometry and behavior, not a universal pre-design dossier/i);
+  assert.match(compiled.runPrompt, /A passive artifact activates no electronics work/i);
+  assert.match(compiled.runPrompt, /An inactive module adds no implementation or proof work/i);
+  assert.doesNotMatch(compiled.runPrompt, /PHYSICAL REMIX GATE|MEASURED HARDWARE PROTOTYPE GATE|PRODUCT DECISION RECORD/);
+
+  const fixture = JSON.parse(await readFile(new URL("./fixtures/functional-hardware-core-only.json", import.meta.url), "utf8"));
+  assert.equal(evaluateCriticalProofResults(pack.criticalProofs, fixture.results, []), "passed");
+  assert.equal(evaluateCriticalProofResults(pack.criticalProofs, fixture.results, ["battery"]), "unproven");
+  assert.equal(evaluateCriticalProofResults(pack.criticalProofs, [...fixture.results, fixture.batteryResult], ["battery"]), "passed");
+  assert.throws(
+    () => evaluateCriticalProofResults(pack.criticalProofs, fixture.results, ["future-module"]),
+    /Unknown active critical proof module future-module/,
+  );
+
+  const passedRecord = {
+    schemaVersion: 1,
+    runId: fixture.name,
+    packSlug: pack.slug,
+    status: "passed",
+    completedAt: "2026-07-27T05:00:00.000Z",
+    outcomeBriefPath: ".possible/runs/bench-powered-core-prototype/outcome-brief.md",
+    packSnapshotPath: ".possible/runs/bench-powered-core-prototype/pack.json",
+    skillLockPath: ".possible/runs/bench-powered-core-prototype/skills-lock.json",
+    workspaceRevision: "functional-prototype-revision",
+    activeModules: ["battery"],
+    artifacts: [{
+      path: "prototype/build/integrated-artifact.md",
+      description: "Integrated artifact inspection",
+      workstreamId: "prototype-build",
+      sha256: "c".repeat(64),
+    }],
+    proofs: fixture.results.map((result) => ({
+      ...result,
+      claim: pack.criticalProofs.find(({ id }) => id === result.obligationId).claim,
+    })),
+    decisions: [],
+    repairs: [],
+    approvals: [],
+    externalActions: [],
+    limitations: ["Battery module evidence is absent."],
+    verification: {
+      reviewer: "fresh-functional-reviewer",
+      independentFromImplementation: true,
+      reportPath: "prototype/revisions/final-review.json",
+      status: "passed",
+    },
+    checkpointPath: ".possible/checkpoints/bench-powered-core-prototype.json",
+  };
+  assert.throws(
+    () => validateOutcomeRecord(passedRecord, pack.criticalProofs),
+    /requires every critical proof to pass; current result is unproven/,
+  );
+
+  const wrongModuleProof = structuredClone(pack);
+  wrongModuleProof.functionalHardwarePrototype.modules[0].requiredProofIds = ["motion-system"];
+  assert.throws(() => compilePack(wrongModuleProof), /critical proof motion-system must declare the same moduleId/);
+
+  const unlistedModuleProof = structuredClone(pack);
+  unlistedModuleProof.criticalProofs.push({
+    ...structuredClone(pack.criticalProofs.find(({ id }) => id === "battery-system")),
+    id: "battery-secondary-proof",
+  });
+  assert.throws(() => compilePack(unlistedModuleProof), /battery must list conditional critical proof battery-secondary-proof/);
+
+  const unrelatedConditionalProof = structuredClone(outcomePacks.find((candidate) => candidate.slug === "mechanical-cad-review"));
+  unrelatedConditionalProof.criticalProofs[0].moduleId = "battery";
+  assert.throws(() => compilePack(unrelatedConditionalProof), /conditional critical proofs require a functional hardware prototype contract/);
 });
 
 test("every run exposes one extractable outcome record", () => {

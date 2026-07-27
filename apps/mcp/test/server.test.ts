@@ -55,7 +55,7 @@ describe("Possible MCP", () => {
     assert.doesNotMatch(client.getInstructions() ?? "", /chain/i);
   });
 
-  it("lists eight stable, ten experimental, and one archived outcome pack", async () => {
+  it("lists seven stable, eleven experimental, and two archived outcome packs", async () => {
     const result = await client.callTool({ name: "list_packs", arguments: {} });
     const envelope = result.structuredContent as { ok: boolean; data: { packs: Array<{ slug: string; lane: string; status: string }> } };
     assert.equal(envelope.ok, true);
@@ -79,11 +79,13 @@ describe("Possible MCP", () => {
       ["manufacturing-readiness", "release"],
       ["study-readiness", "create"],
       ["mechanical-cad-review", "create"],
+      ["functional-hardware-prototype", "create"],
     ]);
-    assert.equal(envelope.data.packs.filter(({ status }) => status === "stable").length, 8);
-    assert.equal(envelope.data.packs.filter(({ status }) => status === "experimental").length, 10);
-    assert.equal(envelope.data.packs.filter(({ status }) => status === "archived").length, 1);
+    assert.equal(envelope.data.packs.filter(({ status }) => status === "stable").length, 7);
+    assert.equal(envelope.data.packs.filter(({ status }) => status === "experimental").length, 11);
+    assert.equal(envelope.data.packs.filter(({ status }) => status === "archived").length, 2);
     assert.equal(envelope.data.packs.find(({ slug }) => slug === "hardware-launch")?.status, "archived");
+    assert.equal(envelope.data.packs.find(({ slug }) => slug === "working-hardware-prototype")?.status, "archived");
   });
 
   it("compiles Web Presentation as a coded browser-deck outcome", async () => {
@@ -116,7 +118,7 @@ describe("Possible MCP", () => {
     assert.equal(envelope.ok, false);
     assert.equal(envelope.error.code, "PACK_ARCHIVED");
     assert.match(envelope.error.message, /archived and cannot start a new run/i);
-    assert.deepEqual(envelope.error.details.replacementSlugs, ["mechanical-cad-review", "working-hardware-prototype", "launch-content-campaign"]);
+    assert.deepEqual(envelope.error.details.replacementSlugs, ["mechanical-cad-review", "functional-hardware-prototype", "launch-content-campaign"]);
   });
 
   it("compiles Open-Source Release", async () => {
@@ -189,17 +191,26 @@ describe("Possible MCP", () => {
     assert.match(envelope.data.runPrompt, /Do not build the full product merely to avoid asking for commitment/i);
   });
 
-  it("compiles Working Hardware Prototype with measured completion gates", async () => {
+  it("preserves but refuses to compile the archived Working Hardware Prototype pack", async () => {
     const result = await client.callTool({ name: "compile_pack", arguments: { slug: "working-hardware-prototype" } });
+    assert.equal(result.isError, true);
+    const envelope = result.structuredContent as { ok: boolean; error: { code: string; details: { replacementSlugs: string[] } } };
+    assert.equal(envelope.ok, false);
+    assert.equal(envelope.error.code, "PACK_ARCHIVED");
+    assert.deepEqual(envelope.error.details.replacementSlugs, ["functional-hardware-prototype", "mechanical-cad-review"]);
+  });
+
+  it("compiles Functional Hardware Prototype with conditional proof modules", async () => {
+    const result = await client.callTool({ name: "compile_pack", arguments: { slug: "functional-hardware-prototype" } });
     const envelope = result.structuredContent as { ok: boolean; data: { pack: { catalogNumber: number; lane: string; name: string }; installCommands: string[]; runPrompt: string } };
     assert.equal(envelope.ok, true);
-    assert.equal(envelope.data.pack.catalogNumber, 15);
+    assert.equal(envelope.data.pack.catalogNumber, 20);
     assert.equal(envelope.data.pack.lane, "create");
-    assert.equal(envelope.data.pack.name, "Working Hardware Prototype");
-    assert.equal(envelope.data.installCommands.length, 4);
-    assert.match(envelope.data.runPrompt, /MEASURED HARDWARE PROTOTYPE GATE/);
-    assert.match(envelope.data.runPrompt, /PHYSICAL REMIX GATE/);
-    assert.match(envelope.data.runPrompt, /working, repair-required, or no-go/i);
+    assert.equal(envelope.data.pack.name, "Functional Hardware Prototype");
+    assert.equal(envelope.data.installCommands.length, 3);
+    assert.match(envelope.data.runPrompt, /FUNCTIONAL HARDWARE PROTOTYPE GATE/);
+    assert.match(envelope.data.runPrompt, /CONDITIONAL MODULES/);
+    assert.match(envelope.data.runPrompt, /inactive module adds no implementation or proof work/i);
   });
 
   it("compiles Mechanical CAD Review with interface proof gates", async () => {

@@ -131,11 +131,18 @@ assert.match(catalog, /Outcome Packs page 1 of 2/);
 assert.match(catalog, /Outcome Packs page 2 of 2/);
 assert.match(catalog, /aria-label="Outcome Pack pages"/);
 assert.doesNotMatch(catalog, /Hardware Launch/);
+assert.doesNotMatch(catalog, /Working Hardware Prototype/);
 const archivedHardwareLaunch = visibleText(await html("packs/hardware-launch/index.html"));
 assert.match(archivedHardwareLaunch, /ARCHIVED[\s\S]*2026-07-27/i);
 assert.match(archivedHardwareLaunch, /will not recommend or compile it for new work/i);
 assert.match(archivedHardwareLaunch, /View active packs/i);
 assert.doesNotMatch(archivedHardwareLaunch, /Start with \$possible/i);
+const archivedWorkingHardware = visibleText(await html("packs/working-hardware-prototype/index.html"));
+assert.match(archivedWorkingHardware, /ARCHIVED[\s\S]*2026-07-27/i);
+assert.match(archivedWorkingHardware, /seven fixed workstreams/i);
+assert.match(archivedWorkingHardware, /Functional Hardware Prototype/i);
+assert.match(archivedWorkingHardware, /View active packs/i);
+assert.doesNotMatch(archivedWorkingHardware, /Start with \$possible/i);
 for (const slug of ["open-source-release", "marketing-operations"]) {
   await assert.rejects(html(`packs/${slug}/index.html`), { code: "ENOENT" }, `${slug} must not be exported`);
 }

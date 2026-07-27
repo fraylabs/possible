@@ -46,6 +46,11 @@ export const workingHardwarePrototypePack: OutcomePack = {
     "Human research, clinical efficacy, diagnosis, treatment, prevention, or any promise that a prototype is safe for sale.",
   ],
   reviewedAt: "2026-07-24",
+  archived: {
+    archivedAt: "2026-07-27",
+    reason: "This pack imposed seven fixed workstreams, product-marketing and customer-research work, three design directions, electronics, firmware, and a universal safety dossier before the actual prototype architecture established which work was necessary.",
+    replacementSlugs: ["functional-hardware-prototype", "mechanical-cad-review"],
+  },
   skills: [
     source("customer-research", "Customer Research", "Intended use, ergonomics, contact assumptions, user language, exclusions, and honest evidence limits", "coreyhaines31/marketingskills", marketingRevision, "customer-research", "https://skills.sh/coreyhaines31/marketingskills/customer-research"),
     source("product-marketing", "Product Marketing", "Product truth, intended-use boundary, research-hypothesis separation, and claims register", "coreyhaines31/marketingskills", marketingRevision, "product-marketing", "https://skills.sh/coreyhaines31/marketingskills/product-marketing"),

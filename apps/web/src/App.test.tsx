@@ -86,8 +86,8 @@ describe("Possible", () => {
 
     await userEvent.click(screen.getByRole("link", { name: "02" }));
     const secondPage = screen.getByRole("region", { name: "Outcome Packs page 2 of 2" });
-    expect(within(secondPage).getAllByRole("link")).toHaveLength(4);
-    for (const pack of publishedPacks.slice(4, 8)) expect(within(secondPage).getByRole("heading", { name: pack.name })).toBeInTheDocument();
+    expect(within(secondPage).getAllByRole("link")).toHaveLength(publishedPacks.slice(4).length);
+    for (const pack of publishedPacks.slice(4)) expect(within(secondPage).getByRole("heading", { name: pack.name })).toBeInTheDocument();
     expect(window.location.search).toBe("?page=2");
 
     expect(screen.queryByText(/EXPERIMENTAL OUTCOME PACK/i)).not.toBeInTheDocument();
@@ -108,8 +108,8 @@ describe("Possible", () => {
     }
   });
 
-  it("publishes discovery, prototype, customer, campaign, and developer outcomes as reviewed Packs", async () => {
-    for (const slug of ["software-opportunity-discovery", "working-hardware-prototype", "first-customer-sprint", "launch-content-campaign", "developer-project-launch"]) {
+  it("publishes discovery, customer, campaign, and developer outcomes as reviewed Packs", async () => {
+    for (const slug of ["software-opportunity-discovery", "first-customer-sprint", "launch-content-campaign", "developer-project-launch"]) {
       const pack = getPublishedPack(slug);
       expect(pack).toBeDefined();
       const { container, unmount } = renderRoute(`/packs/${slug}`);
@@ -135,9 +135,16 @@ describe("Possible", () => {
     expect(await axe(container)).toHaveNoViolations();
   });
 
-  it("shows the measured hardware contract and physical Remix on Working Hardware Prototype", async () => {
+  it("preserves the archived Working Hardware Prototype page and its historical contract", async () => {
+    const pack = getRoutablePack("working-hardware-prototype");
+    expect(pack?.archived).toBeDefined();
     const route = renderRoute("/packs/working-hardware-prototype");
     expect(screen.getByRole("heading", { name: "Working Hardware Prototype", level: 1 })).toBeInTheDocument();
+    const notice = screen.getByRole("complementary", { name: "Archived Outcome Pack" });
+    expect(notice).toHaveTextContent(/ARCHIVED.*2026-07-27/i);
+    expect(notice).toHaveTextContent(/seven fixed workstreams/i);
+    expect(within(notice).getByRole("link", { name: "Functional Hardware Prototype" })).toHaveAttribute("href", expect.stringContaining("functional-hardware-prototype.ts"));
+    expect(screen.queryByRole("link", { name: /Start with \$possible/i })).not.toBeInTheDocument();
     expect(screen.getByText("MEASURED PHYSICAL PROTOTYPE")).toBeInTheDocument();
     expect(screen.getByText("PRODUCT DECISIONS")).toBeInTheDocument();
     expect(screen.getByText("PHYSICAL REMIX")).toBeInTheDocument();
