@@ -4,7 +4,7 @@ import { axe } from "vitest-axe";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { compilePack } from "@possible/packs";
 import App from "./App";
-import { getPublishedPack, installCommand, publishedPacks } from "./public-content";
+import { getPublishedPack, getRoutablePack, installCommand, publishedPacks } from "./public-content";
 
 afterEach(() => {
   cleanup();
@@ -80,23 +80,18 @@ describe("Possible", () => {
 
   it("paginates every reviewed public Outcome Pack in one catalog", async () => {
     const { container } = renderRoute("/packs");
-    const firstPage = screen.getByRole("region", { name: "Outcome Packs page 1 of 3" });
+    const firstPage = screen.getByRole("region", { name: "Outcome Packs page 1 of 2" });
     expect(within(firstPage).getAllByRole("link")).toHaveLength(4);
     for (const pack of publishedPacks.slice(0, 4)) expect(within(firstPage).getByRole("heading", { name: pack.name })).toBeInTheDocument();
 
     await userEvent.click(screen.getByRole("link", { name: "02" }));
-    const secondPage = screen.getByRole("region", { name: "Outcome Packs page 2 of 3" });
+    const secondPage = screen.getByRole("region", { name: "Outcome Packs page 2 of 2" });
     expect(within(secondPage).getAllByRole("link")).toHaveLength(4);
     for (const pack of publishedPacks.slice(4, 8)) expect(within(secondPage).getByRole("heading", { name: pack.name })).toBeInTheDocument();
     expect(window.location.search).toBe("?page=2");
 
-    await userEvent.click(screen.getByRole("link", { name: "03" }));
-    const thirdPage = screen.getByRole("region", { name: "Outcome Packs page 3 of 3" });
-    expect(within(thirdPage).getAllByRole("link")).toHaveLength(publishedPacks.slice(8).length);
-    for (const pack of publishedPacks.slice(8)) expect(within(thirdPage).getByRole("heading", { name: pack.name })).toBeInTheDocument();
-    expect(window.location.search).toBe("?page=3");
     expect(screen.queryByText(/EXPERIMENTAL OUTCOME PACK/i)).not.toBeInTheDocument();
-    expect(container).not.toHaveTextContent(/Open-Source Release|Marketing Operations/i);
+    expect(container).not.toHaveTextContent(/Hardware Launch|Open-Source Release|Marketing Operations/i);
     expect(await axe(container)).toHaveNoViolations();
   });
 
@@ -124,6 +119,20 @@ describe("Possible", () => {
       expect(await axe(container)).toHaveNoViolations();
       unmount();
     }
+  });
+
+  it("preserves the archived Hardware Launch page without offering a new run", async () => {
+    const pack = getRoutablePack("hardware-launch");
+    expect(pack?.archived).toBeDefined();
+    const { container } = renderRoute("/packs/hardware-launch");
+    const notice = screen.getByRole("complementary", { name: "Archived Outcome Pack" });
+    expect(notice).toHaveTextContent(/ARCHIVED.*2026-07-27/i);
+    expect(notice).toHaveTextContent(/will not recommend or compile it for new work/i);
+    expect(within(notice).getByRole("link", { name: "Mechanical CAD Review" })).toHaveAttribute("href", expect.stringContaining("mechanical-cad-review.ts"));
+    expect(screen.queryByRole("link", { name: /Start with \$possible/i })).not.toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /View active packs/i })).toHaveAttribute("href", "/packs");
+    expect(container.querySelector(".pack-prompt-disclosure code")?.textContent).toBe(compilePack(pack!).runPrompt);
+    expect(await axe(container)).toHaveNoViolations();
   });
 
   it("shows the measured hardware contract and physical Remix on Working Hardware Prototype", async () => {

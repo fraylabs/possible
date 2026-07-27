@@ -1,7 +1,7 @@
 import { mkdir, writeFile } from "node:fs/promises";
-import { compilePack, getPackStatus, stableOutcomePacks } from "@possible/packs";
+import { archivedOutcomePacks, compilePack, getPackStatus, stableOutcomePacks } from "@possible/packs";
 
-const publishedPacks = stableOutcomePacks;
+const publishedPacks = [...stableOutcomePacks, ...archivedOutcomePacks];
 
 const evidenceManifest = {
   schemaVersion: 1,

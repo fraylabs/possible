@@ -1,9 +1,9 @@
-import { publishedPacks } from "../src/public-content";
+import { routablePacks } from "../src/public-content";
 import { exampleCatalog } from "../src/example-content";
 import type { MetadataRoute } from "next";
 
 const baseUrl = "https://possible.sh";
-const siteUpdatedAt = "2026-07-23";
+const siteUpdatedAt = "2026-07-27";
 export const dynamic = "force-static";
 const staticPaths = [
   "/",
@@ -23,7 +23,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: siteUpdatedAt,
       changeFrequency: "weekly" as const,
     })),
-    ...publishedPacks.map((pack) => ({
+    ...routablePacks.map((pack) => ({
       url: `${baseUrl}/packs/${pack.slug}/`,
       lastModified: siteUpdatedAt,
       changeFrequency: "weekly" as const,

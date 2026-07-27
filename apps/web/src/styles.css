@@ -766,6 +766,11 @@ footer .wordmark span { color: #151411; }
 .pack-reference-actions { margin-top: 30px; display: flex; flex-wrap: wrap; gap: 10px; }
 .pack-reference-actions a { min-height: 44px; padding: 0 14px; border: 1px solid #151411; display: flex; align-items: center; justify-content: space-between; gap: 35px; font: 9px "DM Mono", monospace; text-transform: uppercase; }
 .pack-reference-actions a:first-child { background: #151411; color: #f8f7f2; }
+.pack-archive-notice { margin: 0 0 32px; padding: 20px; border: 2px solid #151411; background: #f0c94d; color: #151411; }
+.pack-archive-notice strong { font: 10px "DM Mono", monospace; letter-spacing: .08em; }
+.pack-archive-notice p { max-width: 690px; margin: 10px 0 0; font-size: 13px; line-height: 1.6; }
+.pack-archive-notice ul { margin: 15px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; list-style: none; }
+.pack-archive-notice a { padding: 7px 9px; border: 1px solid #151411; display: inline-block; color: #151411; font: 8px "DM Mono", monospace; text-transform: uppercase; }
 .pack-reference-mobile-nav { display: none; }
 
 .pack-reference-section { padding: 58px 0; border-bottom: 1px solid #d7d3ca; scroll-margin-top: 24px; }

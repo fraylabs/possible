@@ -2,11 +2,11 @@
 
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import type { KeyboardEvent as ReactKeyboardEvent, MouseEvent } from "react";
-import { compilePack } from "@possible/packs";
+import { compilePack, getPack, getPackStatus } from "@possible/packs";
 import type { OutcomePack } from "@possible/packs";
 import { exampleCatalog, getExample } from "./example-content";
 import type { PossibleExample } from "./example-content";
-import { getPublishedPack, githubUrl, installCommand, publishedPacks } from "./public-content";
+import { getPublishedPack, getRoutablePack, githubUrl, installCommand, publishedPacks } from "./public-content";
 
 const PaperPlaneGame = lazy(() => import("./PaperPlaneGame"));
 type CopyState = "idle" | "copied" | "failed";
@@ -454,6 +454,7 @@ function PacksPage() {
 
 function PackDetailPage({ pack }: { pack: OutcomePack }) {
   const compiled = compilePack(pack);
+  const status = getPackStatus(pack.slug);
   const reviewedLabel = new Date(`${pack.reviewedAt}T00:00:00Z`).toLocaleDateString("en-US", {
     month: "short",
     day: "numeric",
@@ -495,13 +496,36 @@ function PackDetailPage({ pack }: { pack: OutcomePack }) {
             <div className="pack-reference-breadcrumb"><a href="/packs">OUTCOME PACKS</a><span>/</span><strong>{pack.lane.toUpperCase()}</strong></div>
             <dl className="pack-reference-meta">
               <div><dt>CATEGORY</dt><dd>{pack.lane}</dd></div>
+              <div><dt>STATUS</dt><dd>{status}</dd></div>
               <div><dt>SCHEMA</dt><dd>v{pack.schemaVersion}</dd></div>
               <div><dt>LAST REVIEWED</dt><dd><time dateTime={pack.reviewedAt}>{reviewedLabel}</time></dd></div>
             </dl>
+            {pack.archived ? (
+              <aside className="pack-archive-notice" aria-label="Archived Outcome Pack">
+                <strong>ARCHIVED · {pack.archived.archivedAt}</strong>
+                <p>{pack.archived.reason}</p>
+                <p>This specification and its downloads remain available for historical runs. Possible will not recommend or compile it for new work.</p>
+                <ul>
+                  {pack.archived.replacementSlugs.map((slug) => {
+                    const replacement = getPack(slug);
+                    const publishedReplacement = getPublishedPack(slug);
+                    return (
+                      <li key={slug}>
+                        {publishedReplacement
+                          ? <a href={`/packs/${slug}`}>{replacement?.name ?? slug}</a>
+                          : <a href={`${githubUrl}/blob/dev/packages/packs/src/${slug}.ts`}>{replacement?.name ?? slug}</a>}
+                      </li>
+                    );
+                  })}
+                </ul>
+              </aside>
+            ) : null}
             <h1>{pack.name}</h1>
             <p className="pack-reference-promise">{pack.promise}</p>
             <div className="pack-reference-actions">
-              <a href="/#start">Start with $possible <span>→</span></a>
+              {pack.archived
+                ? <a href="/packs">View active packs <span>→</span></a>
+                : <a href="/#start">Start with $possible <span>→</span></a>}
               <a href={`/packs/${pack.slug}.json`}>Outcome Pack JSON ↗</a>
             </div>
           </header>
@@ -1457,7 +1481,7 @@ export function PossibleSite({ path: requestedPath }: { path?: string }) {
   }
   if (path === "/demo/game/play") return <Suspense fallback={<main className="plane-game-shell plane-game-loading"><span>FOLD / LOADING FLIGHT</span></main>}><PaperPlaneGame /></Suspense>;
   if (path.startsWith("/packs/")) {
-    const pack = getPublishedPack(path.slice("/packs/".length));
+    const pack = getRoutablePack(path.slice("/packs/".length));
     return pack ? <PackDetailPage pack={pack} /> : <NotFoundPage />;
   }
   return <NotFoundPage />;

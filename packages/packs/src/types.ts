@@ -97,6 +97,14 @@ export interface CriticalProofObligation {
   requiredEvidence: string[];
 }
 
+export interface ArchivedPackMetadata {
+  archivedAt: string;
+  reason: string;
+  replacementSlugs: string[];
+}
+
+export type PackStatus = "stable" | "experimental" | "archived";
+
 export interface DecisionRationaleContract {
   kind: "evidence-backed-product-decisions";
   rootPath: string;
@@ -152,6 +160,7 @@ export interface OutcomePack {
   outputs: string[];
   guardrails: string[];
   verification: string[];
+  archived?: ArchivedPackMetadata;
   decisionRationale?: DecisionRationaleContract;
   hardwarePrototype?: HardwarePrototypeContract;
   mechanicalCadReview?: MechanicalCadReviewContract;

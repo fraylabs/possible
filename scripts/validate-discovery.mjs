@@ -86,7 +86,7 @@ for (const [, canonical] of canonicalRoutes) {
   assert.match(sitemap, new RegExp(`<loc>${escape(canonical)}</loc>`), `Sitemap must include ${canonical}`);
 }
 assert.doesNotMatch(sitemap, /<loc>https:\/\/possible\.sh\/demo(?:\/|<)/, "Sitemap must not index Demo compatibility routes or raw output paths");
-assert.equal((sitemap.match(/<lastmod>2026-07-23<\/lastmod>/g) ?? []).length, canonicalRoutes.length, "Every sitemap entry must publish the current indexed revision date");
+assert.equal((sitemap.match(/<lastmod>2026-07-27<\/lastmod>/g) ?? []).length, canonicalRoutes.length, "Every sitemap entry must publish the current indexed revision date");
 
 const robots = await readOutput("robots.txt");
 assert.match(robots, /^User-agent: \*\nAllow: \/\nSitemap: https:\/\/possible\.sh\/sitemap\.xml\n$/);

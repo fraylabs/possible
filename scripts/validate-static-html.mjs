@@ -127,10 +127,15 @@ for (const pack of featuredPacks) {
   assert.doesNotMatch(detail, /SCHEDULABLE|OPTIONAL SCHEDULE|Schedule the operating loop/i);
   assert.doesNotMatch(detail, /EXPERIMENTAL OUTCOME PACK|Preserved end-to-end evidence is still in progress/i);
 }
-assert.match(catalog, /Outcome Packs page 1 of 3/);
-assert.match(catalog, /Outcome Packs page 2 of 3/);
-assert.match(catalog, /Outcome Packs page 3 of 3/);
+assert.match(catalog, /Outcome Packs page 1 of 2/);
+assert.match(catalog, /Outcome Packs page 2 of 2/);
 assert.match(catalog, /aria-label="Outcome Pack pages"/);
+assert.doesNotMatch(catalog, /Hardware Launch/);
+const archivedHardwareLaunch = visibleText(await html("packs/hardware-launch/index.html"));
+assert.match(archivedHardwareLaunch, /ARCHIVED[\s\S]*2026-07-27/i);
+assert.match(archivedHardwareLaunch, /will not recommend or compile it for new work/i);
+assert.match(archivedHardwareLaunch, /View active packs/i);
+assert.doesNotMatch(archivedHardwareLaunch, /Start with \$possible/i);
 for (const slug of ["open-source-release", "marketing-operations"]) {
   await assert.rejects(html(`packs/${slug}/index.html`), { code: "ENOENT" }, `${slug} must not be exported`);
 }

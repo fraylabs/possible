@@ -4,7 +4,7 @@ import { z } from "zod/v4";
 import { errorResult, successResult } from "./result.js";
 
 export const POSSIBLE_TOOL_NAMES = ["list_packs", "compile_pack", "validate_checkpoint"] as const;
-export const POSSIBLE_SERVER_INSTRUCTIONS = "Possible publishes inspectable outcome packs: selected external skills, workstream ownership, integration order, guardrails, and verification. Compile only one present Outcome Pack after fresh user approval. After it finishes, validate its new-reality checkpoint and recommend—but never preselect or execute—the next outcome. Review external sources before installation; pack approval does not authorize external actions.";
+export const POSSIBLE_SERVER_INSTRUCTIONS = "Possible publishes inspectable outcome packs: selected external skills, workstream ownership, integration order, guardrails, and verification. Recommend and compile only active Outcome Packs after fresh user approval; archived packs remain readable historical specifications and must not start new runs. After an outcome finishes, validate its new-reality checkpoint and recommend—but never preselect or execute—the next outcome. Review external sources before installation; pack approval does not authorize external actions.";
 const READ_ONLY = { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false } as const;
 const candidateOutcomeSchema = z.object({
   outcome: z.string().trim().min(1),
@@ -35,7 +35,7 @@ export async function createPossibleServer(): Promise<McpServer> {
   const server = new McpServer({ name: "possible", version: "0.1.0" }, { instructions: POSSIBLE_SERVER_INSTRUCTIONS });
   server.registerTool("list_packs", {
     title: "List Possible outcome packs",
-    description: "List Possible outcome packs and whether each is stable or experimental.",
+    description: "List Possible outcome packs and whether each is stable, experimental, or archived.",
     annotations: READ_ONLY,
   }, async () => successResult({
     packs: outcomePacks.map(({ catalogNumber, slug, lane, name, promise, reviewedAt }) => ({ catalogNumber, slug, lane, name, promise, reviewedAt, status: getPackStatus(slug) })),
@@ -48,6 +48,14 @@ export async function createPossibleServer(): Promise<McpServer> {
   }, async ({ slug }) => {
     const pack = getPack(slug);
     if (pack === undefined) return errorResult("PACK_NOT_FOUND", `Outcome pack '${slug}' does not exist.`, { slug });
+    if (pack.archived) {
+      return errorResult("PACK_ARCHIVED", `Outcome pack '${slug}' is archived and cannot start a new run.`, {
+        slug,
+        archivedAt: pack.archived.archivedAt,
+        reason: pack.archived.reason,
+        replacementSlugs: pack.archived.replacementSlugs,
+      });
+    }
     return successResult(compilePack(pack));
   });
   server.registerTool("validate_checkpoint", {

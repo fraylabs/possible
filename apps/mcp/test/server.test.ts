@@ -55,7 +55,7 @@ describe("Possible MCP", () => {
     assert.doesNotMatch(client.getInstructions() ?? "", /chain/i);
   });
 
-  it("lists nine stable and ten experimental outcome packs", async () => {
+  it("lists eight stable, ten experimental, and one archived outcome pack", async () => {
     const result = await client.callTool({ name: "list_packs", arguments: {} });
     const envelope = result.structuredContent as { ok: boolean; data: { packs: Array<{ slug: string; lane: string; status: string }> } };
     assert.equal(envelope.ok, true);
@@ -80,8 +80,10 @@ describe("Possible MCP", () => {
       ["study-readiness", "create"],
       ["mechanical-cad-review", "create"],
     ]);
-    assert.equal(envelope.data.packs.filter(({ status }) => status === "stable").length, 9);
+    assert.equal(envelope.data.packs.filter(({ status }) => status === "stable").length, 8);
     assert.equal(envelope.data.packs.filter(({ status }) => status === "experimental").length, 10);
+    assert.equal(envelope.data.packs.filter(({ status }) => status === "archived").length, 1);
+    assert.equal(envelope.data.packs.find(({ slug }) => slug === "hardware-launch")?.status, "archived");
   });
 
   it("compiles Web Presentation as a coded browser-deck outcome", async () => {
@@ -107,16 +109,14 @@ describe("Possible MCP", () => {
     assert.match(envelope.data.runPrompt, /sim-to-real gap completion report/);
   });
 
-  it("compiles Hardware Launch", async () => {
+  it("preserves but refuses to compile the archived Hardware Launch pack", async () => {
     const result = await client.callTool({ name: "compile_pack", arguments: { slug: "hardware-launch" } });
-    assert.equal(result.isError, undefined);
-    const envelope = result.structuredContent as { ok: boolean; data: { pack: { lane: string; plugins: Array<{ invocation: string }> }; installCommands: string[]; runPrompt: string } };
-    assert.equal(envelope.ok, true);
-    assert.equal(envelope.data.pack.lane, "launch");
-    assert.equal(envelope.data.installCommands.length, 4);
-    assert.equal(envelope.data.pack.plugins.at(0)?.invocation, "@sites");
-    assert.match(envelope.data.runPrompt, /LEAD AGENT WORKFLOW/);
-    assert.match(envelope.data.runPrompt, /OPENAI SITES MVP PATH/);
+    assert.equal(result.isError, true);
+    const envelope = result.structuredContent as { ok: boolean; error: { code: string; message: string; details: { replacementSlugs: string[] } } };
+    assert.equal(envelope.ok, false);
+    assert.equal(envelope.error.code, "PACK_ARCHIVED");
+    assert.match(envelope.error.message, /archived and cannot start a new run/i);
+    assert.deepEqual(envelope.error.details.replacementSlugs, ["mechanical-cad-review", "working-hardware-prototype", "launch-content-campaign"]);
   });
 
   it("compiles Open-Source Release", async () => {

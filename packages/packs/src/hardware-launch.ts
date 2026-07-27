@@ -22,6 +22,11 @@ export const hardwareLaunchPack: OutcomePack = {
     "Testing customer demand or collecting a real waitlist without separate approval.",
   ],
   reviewedAt: "2026-07-19",
+  archived: {
+    archivedAt: "2026-07-27",
+    reason: "This pack combined product engineering, copywriting, a website, a film, and waitlist preparation under one hardware-labelled outcome. Those results now belong to separate outcome contracts.",
+    replacementSlugs: ["mechanical-cad-review", "working-hardware-prototype", "launch-content-campaign"],
+  },
   skills: [
     {
       id: "frontend-design",

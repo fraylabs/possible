@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import * as packApi from "../dist/index.js";
-import { compilePack, compileWorkstreamWaves, evaluateCriticalProofResults, experimentalOutcomePacks, getPackStatus, outcomePacks, recordOutcomeJourney, stableOutcomePacks, validateOutcomeCheckpoint, validateOutcomeRecord } from "../dist/index.js";
+import { activeOutcomePacks, archivedOutcomePacks, compilePack, compileWorkstreamWaves, evaluateCriticalProofResults, experimentalOutcomePacks, getPackStatus, outcomePacks, recordOutcomeJourney, stableOutcomePacks, validateOutcomeCheckpoint, validateOutcomeRecord } from "../dist/index.js";
 
 test("every outcome pack compiles to inspectable installs and a complete prompt", () => {
   assert.deepEqual(outcomePacks.map((pack) => pack.slug), [
@@ -51,7 +51,6 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
   assert.equal(new Set(outcomePacks.map((pack) => pack.catalogNumber)).size, outcomePacks.length);
   assert.equal(new Set(outcomePacks.map((pack) => pack.slug)).size, outcomePacks.length);
   assert.deepEqual(stableOutcomePacks.map((pack) => pack.slug), [
-    "hardware-launch",
     "playable-web-game",
     "robot-prototype",
     "web-presentation",
@@ -62,7 +61,9 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
     "launch-content-campaign",
   ]);
   assert.equal(experimentalOutcomePacks.length, 10);
-  assert.equal(getPackStatus("hardware-launch"), "stable");
+  assert.equal(activeOutcomePacks.length, 18);
+  assert.deepEqual(archivedOutcomePacks.map((pack) => pack.slug), ["hardware-launch"]);
+  assert.equal(getPackStatus("hardware-launch"), "archived");
   assert.equal(getPackStatus("missing"), undefined);
 
   for (const pack of outcomePacks) {
@@ -113,6 +114,14 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
     assert.match(compiled.runPrompt, /retrospective journey history/i);
     assert.match(compiled.runPrompt, /Do not add planned, pending, approved, or future stages to that history/i);
     assert.doesNotMatch(compiled.runPrompt, /choose a lane|\nLANE\n/i);
+    if (pack.archived) {
+      assert.match(pack.archived.archivedAt, /^\d{4}-\d{2}-\d{2}$/);
+      assert.ok(pack.archived.reason.trim());
+      assert.ok(pack.archived.replacementSlugs.length >= 1);
+      for (const replacementSlug of pack.archived.replacementSlugs) {
+        assert.ok(activeOutcomePacks.some(({ slug }) => slug === replacementSlug), `${pack.slug} replacement ${replacementSlug} must be active`);
+      }
+    }
   }
 });
 
