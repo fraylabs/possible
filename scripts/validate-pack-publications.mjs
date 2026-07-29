@@ -5,7 +5,16 @@ import { archivedOutcomePacks, compilePack, getPackStatus, stableOutcomePacks } 
 const webDist = new URL("../apps/web/out/", import.meta.url);
 const text = (relative) => readFile(new URL(relative, webDist), "utf8");
 const index = JSON.parse(await text("packs/index.json"));
-const publishedPacks = [...stableOutcomePacks, ...archivedOutcomePacks];
+const publicArchiveSlugs = new Set([
+  "hardware-launch",
+  "kickstarter-funding",
+  "kickstarter-fulfillment",
+  "robot-prototype",
+  "developer-project-launch",
+  "working-hardware-prototype",
+  "launch-content-campaign",
+]);
+const publishedPacks = [...stableOutcomePacks, ...archivedOutcomePacks.filter(({ slug }) => publicArchiveSlugs.has(slug))];
 const evidence = JSON.parse(await text("evidence.json"));
 const judgingDocument = await readFile(new URL("../JUDGING.md", import.meta.url), "utf8");
 const nonEmptyString = (value, label) => {

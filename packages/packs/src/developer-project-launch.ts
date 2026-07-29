@@ -49,6 +49,11 @@ export const developerProjectLaunchPack: OutcomePack = {
     "Recurring content, distribution, or growth operations after launch; use Marketing Operations.",
   ],
   reviewedAt: "2026-07-22",
+  archived: {
+    archivedAt: "2026-07-29",
+    reason: "This pack forced positioning, three visual directions, a launch site, demonstration, README, examples, installation path, and deployment handling for every developer project even when one verified adoption path was enough.",
+    replacementSlugs: ["developer-adoption-readiness", "open-source-release", "production-web-release"],
+  },
   plugins: [openAISitesPlugin],
   skills: [
     source("copywriting", "Copywriting", "Developer-facing positioning, message hierarchy, and evidence-aware claims", "coreyhaines31/marketingskills", marketingRevision, "skills/copywriting", "https://skills.sh/coreyhaines31/marketingskills/copywriting"),

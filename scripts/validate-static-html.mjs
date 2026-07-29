@@ -127,18 +127,28 @@ for (const pack of featuredPacks) {
   assert.doesNotMatch(detail, /SCHEDULABLE|OPTIONAL SCHEDULE|Schedule the operating loop/i);
   assert.doesNotMatch(detail, /EXPERIMENTAL OUTCOME PACK|Preserved end-to-end evidence is still in progress/i);
 }
-assert.match(catalog, /Outcome Packs page 1 of 2/);
-assert.match(catalog, /Outcome Packs page 2 of 2/);
+assert.match(catalog, /Outcome Packs page 1 of 1/);
 assert.match(catalog, /aria-label="Outcome Pack pages"/);
 assert.doesNotMatch(catalog, /Hardware Launch/);
 assert.doesNotMatch(catalog, /Working Hardware Prototype/);
 assert.doesNotMatch(catalog, /Launch Content Campaign/);
 assert.doesNotMatch(catalog, /Kickstarter Funding/);
+assert.doesNotMatch(catalog, /Kickstarter Fulfillment|Robot Prototype|Developer Project Launch/);
 const archivedHardwareLaunch = visibleText(await html("packs/hardware-launch/index.html"));
 assert.match(archivedHardwareLaunch, /ARCHIVED[\s\S]*2026-07-27/i);
 assert.match(archivedHardwareLaunch, /will not recommend or compile it for new work/i);
 assert.match(archivedHardwareLaunch, /View active packs/i);
 assert.doesNotMatch(archivedHardwareLaunch, /Start with \$possible/i);
+for (const [slug, name] of [
+  ["kickstarter-fulfillment", "Kickstarter Fulfillment"],
+  ["robot-prototype", "Robot Prototype"],
+  ["developer-project-launch", "Developer Project Launch"],
+]) {
+  const archived = visibleText(await html(`packs/${slug}/index.html`));
+  assert.match(archived, /ARCHIVED[\s\S]*2026-07-29/i);
+  assert.match(archived, new RegExp(escape(name), "i"));
+  assert.doesNotMatch(archived, /Start with \$possible/i);
+}
 const archivedWorkingHardware = visibleText(await html("packs/working-hardware-prototype/index.html"));
 assert.match(archivedWorkingHardware, /ARCHIVED[\s\S]*2026-07-27/i);
 assert.match(archivedWorkingHardware, /seven fixed workstreams/i);

@@ -35,11 +35,11 @@ export const crowdfundingCampaignReadinessPack: OutcomePack = {
     "Platform publication, audience activation, pledges, and payout are explicitly outside the current outcome.",
   ],
   notFor: [
-    "A product that lacks measured prototype or manufacturing evidence; use Functional Hardware Prototype or Manufacturing Readiness.",
+    "A product that lacks measured prototype or production evidence; use Functional Hardware Prototype or Production Readiness Decision.",
     "Producing missing images, video, carousel, thread, or other launch media; use Launch Content Package.",
     "Testing demand or asking customers for commitment; use First Customer Sprint.",
     "Creating a live crowdfunding campaign, publishing, audience activation, paid media, campaign operation, pledge collection, or payout verification; no active live-funding pack currently covers that outcome.",
-    "Shipping rewards after a funded campaign; use Kickstarter Fulfillment only when its prerequisites are satisfied.",
+    "Running or fulfilling a campaign; use Crowdfunding Funding Run after readiness, then Crowdfunding Fulfillment Operations only from funded-settled evidence.",
   ],
   reviewedAt: "2026-07-29",
   prerequisites: [
@@ -48,8 +48,8 @@ export const crowdfundingCampaignReadinessPack: OutcomePack = {
       description: "The named physical product and proposed production commitment have direct evidence strong enough to support campaign claims, quantities, costs, and delivery risks.",
       requiredEvidence: [
         "immutable measured prototype revision and claims boundary",
-        "Manufacturing Readiness receipt or equivalent DFM, supplier, cost, compliance, quality, pilot, packaging, and fulfillment evidence",
-        "Study Readiness receipt when research or health claims are present, or an explicit record that no such claim is in scope",
+        "Production Readiness Decision receipt or equivalent commitment-specific DFM, supplier, cost, compliance, quality, pilot, packaging, and fulfillment evidence",
+        "Research Protocol Readiness receipt when research or health claims are present, or an explicit record that no such claim is in scope",
       ],
     },
     {
@@ -142,7 +142,7 @@ export const crowdfundingCampaignReadinessPack: OutcomePack = {
       id: "readiness-boundary",
       claim: "The completion receipt stops at local pre-publication review and does not claim platform acceptance, publication, outreach, pledges, demand, funding, payout, or authorization for live campaign action.",
       failureModes: ["ready called launched", "preview URL invented", "pledges simulated", "funding likelihood claimed", "future live action silently authorized"],
-      requiredEvidence: ["decision receipt with external actions not taken", "explicit live-funding catalog gap and fresh-approval boundary"],
+      requiredEvidence: ["decision receipt with external actions not taken", "explicit Crowdfunding Funding Run handoff and fresh-approval boundary"],
     },
   ],
   reviewSkills: ["analytics", "product-marketing", "humanizer"],

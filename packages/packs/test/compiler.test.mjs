@@ -28,6 +28,12 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
     "functional-hardware-prototype",
     "launch-content-package",
     "crowdfunding-campaign-readiness",
+    "developer-adoption-readiness",
+    "robot-digital-prototype",
+    "production-readiness-decision",
+    "research-protocol-readiness",
+    "crowdfunding-funding-run",
+    "crowdfunding-fulfillment-operations",
   ]);
   assert.deepEqual(outcomePacks.map(({ slug, lane }) => [slug, lane]), [
     ["hardware-launch", "launch"],
@@ -52,21 +58,25 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
     ["functional-hardware-prototype", "create"],
     ["launch-content-package", "launch"],
     ["crowdfunding-campaign-readiness", "launch"],
+    ["developer-adoption-readiness", "launch"],
+    ["robot-digital-prototype", "create"],
+    ["production-readiness-decision", "release"],
+    ["research-protocol-readiness", "create"],
+    ["crowdfunding-funding-run", "operate"],
+    ["crowdfunding-fulfillment-operations", "operate"],
   ]);
-  assert.deepEqual(outcomePacks.map((pack) => pack.catalogNumber), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22]);
+  assert.deepEqual(outcomePacks.map((pack) => pack.catalogNumber), Array.from({ length: 28 }, (_, index) => index + 1));
   assert.equal(new Set(outcomePacks.map((pack) => pack.catalogNumber)).size, outcomePacks.length);
   assert.equal(new Set(outcomePacks.map((pack) => pack.slug)).size, outcomePacks.length);
   assert.deepEqual(stableOutcomePacks.map((pack) => pack.slug), [
     "playable-web-game",
-    "robot-prototype",
     "web-presentation",
-    "developer-project-launch",
     "software-opportunity-discovery",
     "first-customer-sprint",
   ]);
-  assert.equal(experimentalOutcomePacks.length, 12);
-  assert.equal(activeOutcomePacks.length, 18);
-  assert.deepEqual(archivedOutcomePacks.map((pack) => pack.slug), ["hardware-launch", "kickstarter-funding", "working-hardware-prototype", "launch-content-campaign"]);
+  assert.equal(experimentalOutcomePacks.length, 15);
+  assert.equal(activeOutcomePacks.length, 19);
+  assert.deepEqual(archivedOutcomePacks.map((pack) => pack.slug), ["hardware-launch", "kickstarter-funding", "kickstarter-fulfillment", "robot-prototype", "developer-project-launch", "working-hardware-prototype", "launch-content-campaign", "manufacturing-readiness", "study-readiness"]);
   assert.equal(getPackStatus("hardware-launch"), "archived");
   assert.equal(getPackStatus("missing"), undefined);
 
@@ -674,7 +684,7 @@ test("Developer Project Launch turns a working developer project into an evidenc
   assert.match(developer.useWhen.join(" "), /working CLI.*library.*API.*developer platform/i);
   assert.match(developer.notFor.join(" "), /core product.*Working Web App.*Launch Content Package/i);
   assert.match(developer.notFor.join(" "), /repository release engineering.*Open-Source Release/i);
-  assert.match(openSource.notFor.join(" "), /Developer Project Launch/i);
+  assert.match(openSource.notFor.join(" "), /Developer Adoption Readiness/i);
 
   const outputs = developer.outputs.join(" ");
   assert.match(outputs, /positioning.*claims register/i);
@@ -1241,7 +1251,7 @@ test("Crowdfunding Campaign Readiness stops before platform or funding action", 
   assert.match(prompt, /^Prepare and challenge the Crowdfunding Campaign Readiness outcome/);
   assert.match(prompt, /CROWDFUNDING CAMPAIGN READINESS GATE/);
   assert.match(prompt, /This outcome ends before platform entry or publication/i);
-  assert.match(prompt, /later live funding run requires a separate Outcome Pack/i);
+  assert.match(prompt, /Crowdfunding Funding Run is a separate Outcome Pack/i);
   assert.match(prompt, /ready-for-platform-review, repair-required, or no-go/i);
   assert.doesNotMatch(prompt, /LAUNCH GATE|PRODUCT DECISION RECORD|REMIX GATE|SCHEDULE GATE/);
 

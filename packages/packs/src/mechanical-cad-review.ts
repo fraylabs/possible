@@ -39,7 +39,7 @@ export const mechanicalCadReviewPack: OutcomePack = {
   notFor: [
     "A working integrated device that includes electronics, firmware, power, controls, or calibrated physical measurements; use Working Hardware Prototype.",
     "A launch site, film, campaign, waitlist, or public product story; use a launch pack only when those are requested outcomes.",
-    "Production certification, tooling, supplier qualification, or a volume manufacturing commitment; use Manufacturing Readiness after physical evidence exists.",
+    "Production certification, tooling, supplier qualification, or a volume manufacturing commitment; use Production Readiness Decision after physical evidence exists.",
     "A claim that the design is physically fitted, load-tested, durable, safe for animals or people, certified, or ready for production.",
   ],
   reviewedAt: "2026-07-26",

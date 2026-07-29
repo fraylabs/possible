@@ -80,15 +80,9 @@ describe("Possible", () => {
 
   it("paginates every reviewed public Outcome Pack in one catalog", async () => {
     const { container } = renderRoute("/packs");
-    const firstPage = screen.getByRole("region", { name: "Outcome Packs page 1 of 2" });
+    const firstPage = screen.getByRole("region", { name: "Outcome Packs page 1 of 1" });
     expect(within(firstPage).getAllByRole("link")).toHaveLength(4);
     for (const pack of publishedPacks.slice(0, 4)) expect(within(firstPage).getByRole("heading", { name: pack.name })).toBeInTheDocument();
-
-    await userEvent.click(screen.getByRole("link", { name: "02" }));
-    const secondPage = screen.getByRole("region", { name: "Outcome Packs page 2 of 2" });
-    expect(within(secondPage).getAllByRole("link")).toHaveLength(publishedPacks.slice(4).length);
-    for (const pack of publishedPacks.slice(4)) expect(within(secondPage).getByRole("heading", { name: pack.name })).toBeInTheDocument();
-    expect(window.location.search).toBe("?page=2");
 
     expect(screen.queryByText(/EXPERIMENTAL OUTCOME PACK/i)).not.toBeInTheDocument();
     expect(container).not.toHaveTextContent(/Hardware Launch|Open-Source Release|Marketing Operations/i);
@@ -108,8 +102,8 @@ describe("Possible", () => {
     }
   });
 
-  it("publishes discovery, customer, and developer outcomes as reviewed Packs", async () => {
-    for (const slug of ["software-opportunity-discovery", "first-customer-sprint", "developer-project-launch"]) {
+  it("publishes discovery and customer outcomes as reviewed Packs", async () => {
+    for (const slug of ["software-opportunity-discovery", "first-customer-sprint"]) {
       const pack = getPublishedPack(slug);
       expect(pack).toBeDefined();
       const { container, unmount } = renderRoute(`/packs/${slug}`);
@@ -118,6 +112,20 @@ describe("Possible", () => {
       expect(container.querySelector(".pack-prompt-disclosure code")?.textContent).toBe(compilePack(pack!).runPrompt);
       expect(await axe(container)).toHaveNoViolations();
       unmount();
+    }
+  });
+
+  it("preserves the archived developer, robot, and fulfillment pages without offering obsolete runs", async () => {
+    for (const slug of ["developer-project-launch", "robot-prototype", "kickstarter-fulfillment"]) {
+      const pack = getRoutablePack(slug);
+      expect(pack?.archived).toBeDefined();
+      const route = renderRoute(`/packs/${slug}`);
+      expect(screen.getByRole("heading", { name: pack!.name, level: 1 })).toBeInTheDocument();
+      expect(screen.getByRole("complementary", { name: "Archived Outcome Pack" })).toHaveTextContent(/ARCHIVED.*2026-07-29/i);
+      expect(screen.queryByRole("link", { name: /Start with \$possible/i })).not.toBeInTheDocument();
+      expect(route.container.querySelector(".pack-prompt-disclosure code")?.textContent).toBe(compilePack(pack!).runPrompt);
+      expect(await axe(route.container)).toHaveNoViolations();
+      route.unmount();
     }
   });
 

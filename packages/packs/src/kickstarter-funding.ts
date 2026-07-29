@@ -36,7 +36,7 @@ export const kickstarterFundingPack: OutcomePack = {
   archived: {
     archivedAt: "2026-07-29",
     reason: "This pack combined prototype and manufacturing feasibility, campaign economics, rewards, page and film production, audience building, live campaign operations, pledge tracking, and deposited payout under one funding outcome.",
-    replacementSlugs: ["crowdfunding-campaign-readiness", "launch-content-package", "marketing-operations"],
+    replacementSlugs: ["crowdfunding-campaign-readiness", "crowdfunding-funding-run", "launch-content-package", "marketing-operations"],
   },
   prerequisites: [
     {

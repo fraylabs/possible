@@ -146,6 +146,29 @@ export interface StudyReadinessContract {
   decisions: ["ready-for-qualified-review", "repair-required", "no-go"];
 }
 
+export interface ModularOutcomeModule {
+  id: string;
+  activationWhen: string;
+  work: string[];
+  checks: string[];
+  requiredProofIds: string[];
+}
+
+export interface ModularOutcomeContract {
+  kind: "modular-outcome";
+  gateName: string;
+  action: string;
+  contractPath: string;
+  moduleDecisionPath: string;
+  artifactRoot: string;
+  decisionReceiptPath: string;
+  minimumActiveModules: number;
+  modules: ModularOutcomeModule[];
+  decisions: string[];
+  steps: string[];
+  completionBoundary: string;
+}
+
 export interface MechanicalCadReviewContract {
   kind: "mechanical-cad-review";
   requirementsPath: string;
@@ -235,6 +258,7 @@ export interface OutcomePack {
   launchContentPackage?: LaunchContentPackageContract;
   mechanicalCadReview?: MechanicalCadReviewContract;
   manufacturingReadiness?: ManufacturingReadinessContract;
+  modularOutcome?: ModularOutcomeContract;
   studyReadiness?: StudyReadinessContract;
   criticalProofs?: CriticalProofObligation[];
   remix?: RemixContract;

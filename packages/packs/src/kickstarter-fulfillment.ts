@@ -29,6 +29,11 @@ export const kickstarterFulfillmentPack: OutcomePack = {
     "A campaign whose obligations, funds, backer counts, reward tiers, or product configuration cannot be established.",
   ],
   reviewedAt: "2026-07-21",
+  archived: {
+    archivedAt: "2026-07-29",
+    reason: "This pack assumed a Kickstarter-specific physical shipment operation and universal 95%-shipped finish, which did not fit digital, mixed, refunded, or still-operating obligations.",
+    replacementSlugs: ["crowdfunding-fulfillment-operations"],
+  },
   artifactRoot: "fulfillment",
   schedule: {
     request: "I want to schedule Kickstarter fulfillment operations.",

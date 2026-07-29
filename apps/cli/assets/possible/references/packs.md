@@ -344,6 +344,8 @@ Slug: `kickstarter-fulfillment`
 
 Lane: `operate`
 
+Status: `archived` — historical specification only; use Crowdfunding Fulfillment Operations for new work.
+
 Public page: `https://possible.sh/packs/kickstarter-fulfillment`
 
 Use after a real Kickstarter campaign reaches its funding goal and needs a durable production-to-shipment operation. This Outcome Pack manages obligations, suppliers, quality, privacy-safe orders, logistics, exceptions, communications, milestones, and a recurring control loop until 95% shipped or an honest blocked outcome.
@@ -378,6 +380,8 @@ Run the first control cycle manually before offering a schedule. Scheduled cycle
 Slug: `robot-prototype`
 
 Lane: `create`
+
+Status: `archived` — historical specification only; use Robot Digital Prototype for new work.
 
 Public page: `https://possible.sh/packs/robot-prototype`
 
@@ -453,7 +457,7 @@ Slug: `developer-project-launch`
 
 Lane: `launch`
 
-Status: `experimental` — available to test; promote only after a preserved end-to-end run and independent verification.
+Status: `archived` — historical specification only; use Developer Adoption Readiness for new work.
 
 Public page: `https://possible.sh/packs/developer-project-launch`
 
@@ -766,7 +770,7 @@ Slug: `manufacturing-readiness`
 
 Lane: `release`
 
-Status: `experimental`.
+Status: `archived` — historical specification only; use Production Readiness Decision for new work.
 
 Source specification: `https://github.com/fraylabs/possible/blob/dev/packages/packs/src/manufacturing-readiness.ts`
 
@@ -812,7 +816,7 @@ Slug: `study-readiness`
 
 Lane: `create`
 
-Status: `experimental`.
+Status: `archived` — historical specification only; use Research Protocol Readiness for new work.
 
 Source specification: `https://github.com/fraylabs/possible/blob/dev/packages/packs/src/study-readiness.ts`
 
@@ -887,6 +891,127 @@ Fabrication, vendor contact, quote requests, file sharing, purchases, printing, 
 
 Write `outcome-room/mechanical-cad-review-receipt.json` with exactly one status: `review-ready`, `repair-required`, or `no-go`. A passed completion record requires direct passing evidence for every critical proof obligation; one failed obligation prevents a passing status.
 
+## Developer Adoption Readiness
+
+Slug: `developer-adoption-readiness`
+
+Lane: `launch`
+
+Status: `experimental`.
+
+Use when a working developer project needs one truthful, clean-room-verified first-use path. Launch site, interactive demo, expanded documentation, examples, and public deployment are conditional modules, not universal deliverables.
+
+Install:
+
+```bash
+npx skills@1.5.19 add coreyhaines31/marketingskills@67264763cb107d61749f418d081c56e5bcbc0209 --skill copywriting --agent codex
+npx skills@1.5.19 add anthropics/skills@fa0fa64bdc967915dc8399e803be67759e1e62b8 --skill frontend-design --skill webapp-testing --agent codex
+npx skills@1.5.19 add github/awesome-copilot@26fe2d126bf79aafb38f43344d450b69632200f8 --skill create-readme --skill documentation-writer --agent codex
+npx skills@1.5.19 add vercel-labs/agent-skills@f8a72b9603728bb92a217a879b7e62e43ad76c81 --skill deploy-to-vercel --agent codex
+```
+
+Completion is `ready`, `repair-required`, or `no-go`. Ready proves outsider comprehension and one meaningful first result; it does not prove demand or imply public deployment.
+
+## Robot Digital Prototype
+
+Slug: `robot-digital-prototype`
+
+Lane: `create`
+
+Status: `experimental`.
+
+Use when one robot behavior should be proved deterministically in simulation before fabrication. Mechanical CAD, locomotion, manipulation, planning, ROS 2, perception, and learned control activate only when the behavior needs them.
+
+Install:
+
+```bash
+npx skills@1.5.19 add fraylabs/possible@9adb697c211d2cebc07164554d7a9f859e7f763d --skill mujoco-robotics --agent codex
+npx skills@1.5.19 add earthtojake/text-to-cad@fdbb4b4fb62d95ae298cfe9a46fdc7092bdaf423 --skill cad --skill cad-viewer --agent codex
+npx skills@1.5.19 add arpitg1304/robotics-agent-skills@54f7b578f3dc269d29c0beb623b3f2611fd3a430 --skill robotics-design-patterns --skill robotics-testing --agent codex
+```
+
+Completion is `digitally-proven`, `repair-required`, or `no-go`. Digital proof never establishes physical safety, durability, manufacturability, or commissioning.
+
+## Production Readiness Decision
+
+Slug: `production-readiness-decision`
+
+Lane: `release`
+
+Status: `experimental`.
+
+Use when one frozen physical-product configuration faces one named quantity, quality, cost, schedule, and delivery commitment. Supplier, electrical test, firmware, compliance, reliability, logistics, and service work activate only when applicable.
+
+Install:
+
+```bash
+npx skills@1.5.19 add coreyhaines31/marketingskills@67264763cb107d61749f418d081c56e5bcbc0209 --skill analytics --agent codex
+npx skills@1.5.19 add earthtojake/text-to-cad@fdbb4b4fb62d95ae298cfe9a46fdc7092bdaf423 --skill cad --skill cad-viewer --agent codex
+npx skills@1.5.19 add arpitg1304/robotics-agent-skills@54f7b578f3dc269d29c0beb623b3f2611fd3a430 --skill robotics-testing --agent codex
+npx skills@1.5.19 add github/awesome-copilot@26fe2d126bf79aafb38f43344d450b69632200f8 --skill create-technical-spike --agent codex
+```
+
+Completion is `ready`, `repair-required`, or `no-go` for the named configuration and commitment only. It is not purchasing or production authority.
+
+## Research Protocol Readiness
+
+Slug: `research-protocol-readiness`
+
+Lane: `create`
+
+Status: `experimental`.
+
+Use when one falsifiable research question needs a reproducible protocol and prespecified analysis plan. Human-participant, health-data, vulnerable-population, regulated-product, multisite, remote, and specimen modules activate from the actual design.
+
+Install:
+
+```bash
+npx skills@1.5.19 add coreyhaines31/marketingskills@67264763cb107d61749f418d081c56e5bcbc0209 --skill customer-research --skill analytics --skill product-marketing --agent codex
+npx skills@1.5.19 add github/awesome-copilot@26fe2d126bf79aafb38f43344d450b69632200f8 --skill documentation-writer --skill security-review --agent codex
+```
+
+Completion is `ready-for-qualified-review`, `repair-required`, or `no-go`. It never approves or executes a study.
+
+## Crowdfunding Funding Run
+
+Slug: `crowdfunding-funding-run`
+
+Lane: `operate`
+
+Status: `experimental`.
+
+Use only after Crowdfunding Campaign Readiness passes for the exact candidate. Publication, audience actions, spending, campaign changes, and payout handling each retain exact approval boundaries.
+
+Install:
+
+```bash
+npx skills@1.5.19 add coreyhaines31/marketingskills@67264763cb107d61749f418d081c56e5bcbc0209 --skill product-marketing --skill content-strategy --skill copywriting --skill social --skill analytics --skill marketing-loops --agent codex
+npx skills@1.5.19 add anthropics/skills@fa0fa64bdc967915dc8399e803be67759e1e62b8 --skill frontend-design --skill webapp-testing --agent codex
+npx skills@1.5.19 add remotion-dev/skills@ab22f5fa89962ec943eaa18797cbf38c9d727743 --skill remotion-best-practices --agent codex
+npx skills@1.5.19 add fraylabs/possible@e081be4df826b7bd545e6b80406622f52d0bb49b --skill humanizer --agent codex
+```
+
+Completion distinguishes `funded-settled`, `funded-unsettled`, `unfunded`, `cancelled`, `repair-required`, and `no-go`. Only funded-settled can become eligible for a separate fulfillment outcome.
+
+## Crowdfunding Fulfillment Operations
+
+Slug: `crowdfunding-fulfillment-operations`
+
+Lane: `operate`
+
+Status: `experimental`.
+
+Use only after a funded-settled Crowdfunding Funding Run. Physical rewards, digital rewards, regional freight, address data, replacements and refunds, and recurring communications activate from real obligations.
+
+Install:
+
+```bash
+npx skills@1.5.19 add coreyhaines31/marketingskills@67264763cb107d61749f418d081c56e5bcbc0209 --skill product-marketing --skill copywriting --skill analytics --skill marketing-loops --agent codex
+npx skills@1.5.19 add github/awesome-copilot@26fe2d126bf79aafb38f43344d450b69632200f8 --skill impediment-prioritization --skill security-review --skill incident-postmortem --agent codex
+```
+
+Completion is `complete`, `operating`, `blocked`, `repair-required`, or `no-go`. Complete requires direct terminal evidence for every in-scope obligation, not a universal shipment percentage.
+
 ## Selection rule
 
 Recommend the Outcome Pack whose finished outputs most closely match the user's desired end state:
@@ -899,19 +1024,20 @@ Recommend the Outcome Pack whose finished outputs most closely match the user's 
 - Live web app plus a repeatable reliability, issue-triage, maintenance, incident-response, and safe-change cadence → Web App Operations.
 - Existing product or offer plus a repeatable positioning, campaign-planning, draft-production, measurement, and review cadence → Marketing Operations.
 - Measured and manufacturing-ready physical product plus verified final content, recomputable economics, rewards, risks, fulfillment disclosures, and one pre-publication platform-review decision → Crowdfunding Campaign Readiness.
-- Funded Kickstarter campaign plus production, backer, logistics, communication, and 95%-shipped operations → Kickstarter Fulfillment.
-- Robot hand, gripper, arm, mobile robot, quadruped, or full robot plus coherent CAD, description, controls, and simulation evidence → Robot Prototype.
+- Passing crowdfunding-readiness candidate plus an approved live campaign, bounded audience actions, campaign evidence, and payout reconciliation → Crowdfunding Funding Run.
+- Funded-settled crowdfunding campaign plus obligation-level physical, digital, regional, exception, and communication operations → Crowdfunding Fulfillment Operations.
+- Robot concept plus one deterministic simulated behavior and explicit sim-to-real gap → Robot Digital Prototype.
 - Selected physical-product concept plus the simplest integrated physical artifact that directly passes one measurable primary function and only its architecture-activated engineering modules → Functional Hardware Prototype.
-- Measured physical prototype plus DFM, suppliers, landed economics, compliance, quality, pilot-build evidence, and one production-release decision → Manufacturing Readiness.
-- Defined research hypothesis plus protocol, ethics, analysis, qualified-accountability, budget, and publication package → Study Readiness.
+- Measured physical prototype plus one frozen configuration, named production commitment, representative pilot, and applicable production modules → Production Readiness Decision.
+- Defined research question plus a reproducible protocol, analysis plan, and only the ethics, privacy, regulatory, or operating modules its design requires → Research Protocol Readiness.
 - Pitch, talk, lesson, demo, or internal presentation plus a coded browser deck, presenter experience, export, and evidence review → Web Presentation.
-- Working developer tool, library, CLI, API, agent project, or platform plus positioning, a distinctive site, honest demonstration, verified quickstart, and adoption path → Developer Project Launch.
+- Working developer tool, library, CLI, API, agent project, or platform plus one truthful clean-room-verified first-use path and only needed presentation modules → Developer Adoption Readiness.
 - Vague software ambition with no selected opportunity plus one traceable provisional thesis and first-customer handoff → Software Opportunity Discovery.
 - Selected product, service, or software opportunity plus real prospects, one concrete offer, and the strongest available commercial commitment → First Customer Sprint.
 - Real product, prototype, offer, release, event, or announcement plus one truthful post-ready package containing only selected text, static, carousel, short-video, long-video, or thread exports → Launch Content Package.
 
-Recommend Software Opportunity Discovery when no opportunity is selected. Recommend Mechanical CAD Review when a narrow passive-object or mechanism request needs a vendor-reviewable CAD package and physical fabrication is not yet authorized. Hardware Launch, Working Hardware Prototype, Launch Content Campaign, and Kickstarter Funding are archived: never recommend or execute them. Use an active replacement only when that replacement's finished outcome matches; disclose a catalog gap for a conventional product launch site or another uncovered presentation outcome. Recommend Functional Hardware Prototype when a selected physical-product concept must become a measured physical artifact; activate battery, high energy, motion, thermal, living contact, networking, and health-claims work only from the actual architecture. Mechanical CAD Review, an archived pack, Robot Prototype, CAD, and simulation do not substitute for direct evidence from the integrated physical artifact. Recommend Manufacturing Readiness after the measured prototype passes and before a production promise whose feasibility depends on DFM, supplier, cost, compliance, quality, or pilot evidence. Recommend Study Readiness when a defined research hypothesis needs a protocol package for qualified review; it does not approve or execute a study. Recommend First Customer Sprint when one selected direction should face a concrete offer and real prospects; require truthful prototype, safety, claims, manufacturing, delivery, and refund boundaries before physical-product payment or delivery promises. Recommend Launch Content Package when the product truth exists and the missing result is one finite set of post-ready selected-format assets; activate only requested formats and use Marketing Operations for a recurring calendar, learning, production, and measurement system. Recommend Crowdfunding Campaign Readiness only when measured prototype, manufacturing, applicable study-boundary, and final-content evidence already exist and the desired outcome stops before platform entry. A live funding run remains a catalog gap; do not substitute readiness. Use Kickstarter Fulfillment only after a real campaign is funded. Recommend Working Web App only when customer evidence or another explicit delivery requirement makes a bounded application the next useful outcome. Use Developer Project Launch when a working developer project needs comprehension, presentation, proof, and a verified adoption path. Use Web Presentation when the primary deliverable is a slide-based browser presentation; a conventional landing page belongs elsewhere. Use Robot Prototype for a simulation-backed digital prototype, not a fabrication-ready machine or hardware commissioning. Use Production Web Release when a tested candidate exists and the missing outcome is a gated production promotion with rollback and smoke evidence. Use Web App Operations only after the app is live and the desired outcome is an ongoing reliability and maintenance rhythm. Repository-only licensing, packaging, CI, versioning, and release engineering belong to Open-Source Release; one isolated bug, incident, or marketing asset with no requested recurring workflow is focused work, not an Outcome Pack run.
+Recommend Software Opportunity Discovery when no opportunity is selected. Hardware Launch, Kickstarter Funding, Kickstarter Fulfillment, Robot Prototype, Developer Project Launch, Working Hardware Prototype, Launch Content Campaign, Manufacturing Readiness, and Study Readiness are archived: never recommend or execute them. Use the focused active replacement only when its finished outcome matches. Conditional modules activate from direct architecture, obligation, market, or study-design evidence; inactive modules add no work or proof. Crowdfunding Campaign Readiness stops before platform entry, Crowdfunding Funding Run controls the live campaign and settlement, and Crowdfunding Fulfillment Operations starts only from funded-settled evidence. Repository-only licensing, packaging, CI, versioning, and release engineering belong to Open-Source Release. A focused one-off task with no matching finished outcome is a catalog gap, not permission to force a pack.
 
-For an ambition spanning several valuable results, recommend only the next independently useful Outcome Pack. Choose it from the current reality and the most important unresolved decision; do not preselect a future sequence. After the outcome passes verification, reassess the new evidence before recommending zero or more candidates and stop for fresh approval. A strong matching working project may qualify for Developer Project Launch directly; a discovery receipt alone does not.
+For an ambition spanning several valuable results, recommend only the next independently useful Outcome Pack. Choose it from the current reality and the most important unresolved decision; do not preselect a future sequence. After verification, reassess the new evidence and stop for fresh approval. A strong working project may qualify for Developer Adoption Readiness directly; a discovery receipt alone does not.
 
 If none fits, say so. Do not force an Outcome Pack or invent a new one during intake.

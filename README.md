@@ -49,14 +49,12 @@ The installer is idempotent and refuses to overwrite conflicting skill files. Ou
 
 ## Public Outcome Packs
 
-Possible publishes six active reviewed public packs. Experimental packs remain available for testing, while archived packs preserve their original specifications and links without appearing in new recommendations.
+Possible publishes four active reviewed public packs. Experimental packs remain available for testing, while archived packs preserve their original specifications and links without appearing in new recommendations.
 
-- [Robot Prototype](packages/packs/src/robot-prototype.ts) — mechanical model, robot descriptions, control, simulation and sim-to-real boundaries.
 - [Playable Web Game](packages/packs/src/playable-web-game.ts) — a polished browser game with responsive controls and playability review.
 - [Web Presentation](packages/packs/src/web-presentation.ts) — an evidence-backed coded deck with responsive presenter behavior.
 - [Software Opportunity Discovery](packages/packs/src/software-opportunity-discovery.ts) — turns a rough software ambition into one provisional opportunity and a credible first-customer approach.
 - [First Customer Sprint](packages/packs/src/first-customer-sprint.ts) — takes one selected product, service, or software opportunity to real prospects and pursues the strongest available commercial commitment.
-- [Developer Project Launch](packages/packs/src/developer-project-launch.ts) — a credible adoption path for a working developer project.
 
 The experimental [Mechanical CAD Review](packages/packs/src/mechanical-cad-review.ts) pack is the focused option for passive objects and simple mechanisms: editable CAD, explicit restraint and assembly proof, fit coupons, a vendor package, and an honest review boundary without launch-site or film work.
 
@@ -66,7 +64,11 @@ The experimental [Launch Content Package](packages/packs/src/launch-content-pack
 
 The experimental [Crowdfunding Campaign Readiness](packages/packs/src/crowdfunding-campaign-readiness.ts) pack verifies one physical-product campaign package before platform entry. It consumes existing prototype, manufacturing, study-boundary, and final-content evidence, recomputes economics and rewards, then stops before publication, audience activation, pledges, or payout.
 
-[Hardware Launch](packages/packs/src/hardware-launch.ts), [Working Hardware Prototype](packages/packs/src/working-hardware-prototype.ts), [Launch Content Campaign](packages/packs/src/launch-content-campaign.ts), and [Kickstarter Funding](packages/packs/src/kickstarter-funding.ts) are archived. Their original specifications and public links remain available for historical evidence, but Possible no longer recommends their mixed or universally heavyweight contracts.
+The experimental [Developer Adoption Readiness](packages/packs/src/developer-adoption-readiness.ts), [Robot Digital Prototype](packages/packs/src/robot-digital-prototype.ts), [Production Readiness Decision](packages/packs/src/production-readiness-decision.ts), and [Research Protocol Readiness](packages/packs/src/research-protocol-readiness.ts) packs prove one bounded core outcome and activate presentation, subsystem, production, ethics, privacy, and regulatory modules only from the actual project.
+
+The experimental [Crowdfunding Funding Run](packages/packs/src/crowdfunding-funding-run.ts) consumes a passing readiness receipt and controls exact publication, audience, campaign, and payout evidence. [Crowdfunding Fulfillment Operations](packages/packs/src/crowdfunding-fulfillment-operations.ts) begins only from a funded-settled run and reconciles physical, digital, regional, address, exception, and communication obligations without imposing a universal shipment percentage.
+
+[Hardware Launch](packages/packs/src/hardware-launch.ts), [Kickstarter Funding](packages/packs/src/kickstarter-funding.ts), [Kickstarter Fulfillment](packages/packs/src/kickstarter-fulfillment.ts), [Robot Prototype](packages/packs/src/robot-prototype.ts), [Developer Project Launch](packages/packs/src/developer-project-launch.ts), [Working Hardware Prototype](packages/packs/src/working-hardware-prototype.ts), [Launch Content Campaign](packages/packs/src/launch-content-campaign.ts), [Manufacturing Readiness](packages/packs/src/manufacturing-readiness.ts), and [Study Readiness](packages/packs/src/study-readiness.ts) are archived. Their original specifications and existing public links remain available for historical evidence, but Possible no longer recommends their mixed or universally heavyweight contracts.
 
 The preserved PatchProof journey verifies Software Opportunity Discovery and Developer Project Launch as separate outcomes—and records why Possible no longer chooses their sequence in advance.
 

@@ -1,7 +1,16 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import { archivedOutcomePacks, compilePack, getPackStatus, stableOutcomePacks } from "@possible/packs";
 
-const publishedPacks = [...stableOutcomePacks, ...archivedOutcomePacks];
+const publicArchiveSlugs = new Set([
+  "hardware-launch",
+  "kickstarter-funding",
+  "kickstarter-fulfillment",
+  "robot-prototype",
+  "developer-project-launch",
+  "working-hardware-prototype",
+  "launch-content-campaign",
+]);
+const publishedPacks = [...stableOutcomePacks, ...archivedOutcomePacks.filter(({ slug }) => publicArchiveSlugs.has(slug))];
 
 const evidenceManifest = {
   schemaVersion: 1,

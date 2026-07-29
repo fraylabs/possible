@@ -24,6 +24,11 @@ export const robotPrototypePack: OutcomePack = {
     "Training a large learned policy or purchasing components without separate approval.",
   ],
   reviewedAt: "2026-07-21",
+  archived: {
+    archivedAt: "2026-07-29",
+    reason: "This pack required a broad mechanical, description, control, and simulation stack for every robot concept instead of proving one behavior with only the subsystems it needs.",
+    replacementSlugs: ["robot-digital-prototype", "mechanical-cad-review", "functional-hardware-prototype"],
+  },
   skills: [
     {
       id: "mujoco-robotics",

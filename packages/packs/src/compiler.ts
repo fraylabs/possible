@@ -244,6 +244,7 @@ FIRST CUSTOMER SPRINT
   const conditionalModuleContracts = [
     pack.functionalHardwarePrototype ? { label: "functional hardware", modules: pack.functionalHardwarePrototype.modules } : undefined,
     pack.launchContentPackage ? { label: "launch content", modules: pack.launchContentPackage.modules } : undefined,
+    pack.modularOutcome ? { label: pack.modularOutcome.gateName.toLowerCase(), modules: pack.modularOutcome.modules } : undefined,
   ].filter((value): value is NonNullable<typeof value> => Boolean(value));
   if (conditionalModuleContracts.length > 1) throw new Error(`${pack.slug} cannot define multiple conditional module contracts`);
   const conditionalModuleContract = conditionalModuleContracts[0];
@@ -332,6 +333,49 @@ ${contract.modules.map((module) => [
 ].join("\n")).join("\n")}`;
   })() : "";
 
+  const modularOutcome = pack.modularOutcome ? (() => {
+    const contract = pack.modularOutcome;
+    if (!contract.gateName.trim() || !contract.action.trim() || !contract.completionBoundary.trim()) {
+      throw new Error(`${pack.slug} modular outcome requires a gate name, action, and completion boundary`);
+    }
+    for (const [label, value] of [
+      ["contractPath", contract.contractPath],
+      ["moduleDecisionPath", contract.moduleDecisionPath],
+      ["artifactRoot", contract.artifactRoot],
+      ["decisionReceiptPath", contract.decisionReceiptPath],
+    ] as const) requireSafeRelativePath(value, `${pack.slug} modular outcome ${label}`);
+    if (pack.workstreams.length > 3) throw new Error(`${pack.slug} modular outcome must use no more than three core workstreams`);
+    if (pack.remix) throw new Error(`${pack.slug} modular outcome cannot require Remix`);
+    if (!Number.isInteger(contract.minimumActiveModules) || contract.minimumActiveModules < 0 || contract.minimumActiveModules > contract.modules.length) {
+      throw new Error(`${pack.slug} modular outcome minimumActiveModules is invalid`);
+    }
+    if (contract.steps.length === 0 || contract.steps.some((step) => !step.trim())) {
+      throw new Error(`${pack.slug} modular outcome requires executable steps`);
+    }
+    if (contract.decisions.length < 2 || contract.decisions.some((decision) => !decision.trim())) {
+      throw new Error(`${pack.slug} modular outcome requires at least two decisions`);
+    }
+    validateConditionalProofModules(pack, contract.gateName.toLowerCase(), contract.modules);
+    for (const module of contract.modules) {
+      if (module.work.length === 0 || module.checks.length === 0 || [...module.work, ...module.checks].some((item) => !item.trim())) {
+        throw new Error(`${pack.slug}/${module.id} modular outcome module requires work and checks`);
+      }
+    }
+    return `
+
+${contract.gateName.toUpperCase()} GATE
+1. Write the bounded contract at ${contract.contractPath}. Then write ${contract.moduleDecisionPath}, marking every module active or inactive from direct evidence. Activate at least ${contract.minimumActiveModules}; inactive modules create no implementation or proof work.
+${contract.steps.map((step, index) => `${index + 2}. ${step}`).join("\n")}
+${contract.modules.map((module) => `
+MODULE ${module.id}
+Activate when: ${module.activationWhen}
+Work: ${module.work.join("; ")}
+Checks: ${module.checks.join("; ")}
+Required proofs: ${module.requiredProofIds.join(", ")}`).join("\n")}
+
+Keep artifacts under ${contract.artifactRoot}. Write ${contract.decisionReceiptPath} with exactly one decision: ${contract.decisions.join(", ")}. Completion boundary: ${contract.completionBoundary}`;
+  })() : "";
+
   const launchContentPackage = pack.launchContentPackage ? (() => {
     const contract = pack.launchContentPackage;
     if (contract.minimumActiveModules !== 1) throw new Error(`${pack.slug} launch content package requires at least one active module`);
@@ -401,7 +445,7 @@ CROWDFUNDING CAMPAIGN READINESS GATE
 3. Write ${contract.economicsPath}. Recompute the fixed funding goal, reward margins, minimum viable quantity, platform and payment fees, taxes to review, packaging, freight, fulfillment, contingency, failed-payment exposure, refunds, working-capital timing, and expected versus stressed volume cases from cited evidence. Unknown costs remain blockers or explicit repair items.
 4. Write ${contract.campaignPackagePath} as structured platform-entry material: campaign story, reward table, timeline, risks, FAQ, creator and product evidence, fulfillment disclosures, and a mapping to existing verified content assets. Do not build a website, film, campaign calendar, audience system, ad plan, analytics loop, or inactive content variants.
 5. Adversarially challenge prototype truth, manufacturing feasibility, reward quantities, economics, shipping, timeline, claims, asset completeness, and worst credible overfunding. Repair material inconsistencies and rerun affected checks against the immutable package.
-6. This outcome ends before platform entry or publication. Do not create or change an account, submit platform fields, publish a preview, launch a campaign, contact an audience, post, email, buy ads, accept pledges, access backer data, or claim funding. A later live funding run requires a separate Outcome Pack and fresh approval; until that pack exists, disclose the catalog gap.
+6. This outcome ends before platform entry or publication. Do not create or change an account, submit platform fields, publish a preview, launch a campaign, contact an audience, post, email, buy ads, accept pledges, access backer data, or claim funding. Crowdfunding Funding Run is a separate Outcome Pack requiring this passing receipt and fresh approval.
 7. Write ${contract.decisionReceiptPath} with exactly one status: ready-for-platform-review, repair-required, or no-go. Ready-for-platform-review means only that the named local package is coherent enough for its owner and qualified advisers to review before platform entry. It never means accepted by a platform, published, funded, demanded, profitable, safe, certified, manufacturable at every volume, deliverable on time, or authorized for live campaign action.`;
   })() : "";
 
@@ -516,7 +560,7 @@ STUDY READINESS GATE
 7. Write ${contract.decisionReceiptPath} with exactly one status: ready-for-qualified-review, repair-required, or no-go. Ready-for-qualified-review means the evidence package is coherent enough to place before qualified investigators, ethics bodies, regulators, statisticians, and legal or privacy advisers. It never means approved, registered, recruited, safe, effective, clinically validated, or authorized to begin.`;
   })() : "";
 
-  const action = pack.opportunityDiscovery ? "Discover" : pack.firstCustomerSprint ? "Run" : pack.crowdfundingCampaignReadiness ? "Prepare and challenge" : pack.launchContentPackage ? "Create and verify" : pack.functionalHardwarePrototype ? "Build, test, and revise" : pack.hardwarePrototype ? "Build and measure" : pack.mechanicalCadReview ? "Design and challenge" : pack.manufacturingReadiness || pack.studyReadiness ? "Prepare and verify" : pack.lane === "operate" ? "Establish and run the first cycle of" : pack.lane === "release" ? "Prepare and verify" : "Build";
+  const action = pack.modularOutcome?.action ?? (pack.opportunityDiscovery ? "Discover" : pack.firstCustomerSprint ? "Run" : pack.crowdfundingCampaignReadiness ? "Prepare and challenge" : pack.launchContentPackage ? "Create and verify" : pack.functionalHardwarePrototype ? "Build, test, and revise" : pack.hardwarePrototype ? "Build and measure" : pack.mechanicalCadReview ? "Design and challenge" : pack.manufacturingReadiness || pack.studyReadiness ? "Prepare and verify" : pack.lane === "operate" ? "Establish and run the first cycle of" : pack.lane === "release" ? "Prepare and verify" : "Build");
   const pluginCheck = pack.plugins?.length
     ? ` Also detect these optional agent plugins: ${pack.plugins.map((plugin) => `${plugin.invocation} (${plugin.skills.map((skill) => `$${skill}`).join(", ")})`).join(", ")}. Do not install or imitate an unavailable plugin; record its absence and use the documented fallback.`
     : "";
@@ -584,7 +628,7 @@ ${pack.guardrails.map((guardrail) => `- ${guardrail}`).join("\n")}
 
 VERIFICATION CONTRACT
 ${pack.verification.map((item) => `- ${item}`).join("\n")}
-${prerequisites}${opportunityDiscovery}${firstCustomerSprint}${decisionRationale}${criticalProofs}${mechanicalCadReview}${functionalHardwarePrototype}${launchContentPackage}${crowdfundingCampaignReadiness}${hardwarePrototype}${manufacturingReadiness}${studyReadiness}${remixGate}${releaseGate}${launchGate}${sitesPath}${operateLoop}
+${prerequisites}${opportunityDiscovery}${firstCustomerSprint}${decisionRationale}${criticalProofs}${mechanicalCadReview}${functionalHardwarePrototype}${launchContentPackage}${crowdfundingCampaignReadiness}${hardwarePrototype}${manufacturingReadiness}${studyReadiness}${modularOutcome}${remixGate}${releaseGate}${launchGate}${sitesPath}${operateLoop}
 
 OUTCOME RECORD
 Every run—including a partial, blocked, or no-go result—must write one machine-readable proof index at .possible/runs/<run-id>/outcome-record.json.

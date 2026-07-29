@@ -28,7 +28,7 @@ export const openSourceReleasePack: OutcomePack = {
   ],
   notFor: [
     "Building the underlying product or designing its public launch campaign.",
-    "Creating the adoption-facing website, demonstration, positioning, and five-minute developer quickstart for a working project; use Developer Project Launch.",
+    "Creating a truthful, clean-room-verified first-use path and only the needed adoption modules for a working project; use Developer Adoption Readiness.",
     "Publishing, tagging, or changing repository settings without separate approval.",
     "General repository cleanup with no concrete release outcome.",
   ],

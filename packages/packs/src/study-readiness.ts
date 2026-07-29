@@ -43,6 +43,11 @@ export const studyReadinessPack: OutcomePack = {
     "Retrofitting a protocol or analysis plan after observing results, or using synthetic participants as human evidence.",
   ],
   reviewedAt: "2026-07-24",
+  archived: {
+    archivedAt: "2026-07-29",
+    reason: "This pack treated every research protocol like a broad human or regulated study package instead of activating ethics, privacy, and regulatory work from the actual design.",
+    replacementSlugs: ["research-protocol-readiness"],
+  },
   prerequisites: [
     {
       id: "defined-research-hypothesis",

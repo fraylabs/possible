@@ -45,6 +45,11 @@ export const manufacturingReadinessPack: OutcomePack = {
     "Running ongoing production and shipment operations after a campaign funds; use Kickstarter Fulfillment.",
   ],
   reviewedAt: "2026-07-24",
+  archived: {
+    archivedAt: "2026-07-29",
+    reason: "This pack required supplier, compliance, quality, logistics, service, and pilot ceremony for every hardware product before tying the work to one concrete production commitment.",
+    replacementSlugs: ["production-readiness-decision"],
+  },
   prerequisites: [
     {
       id: "measured-prototype",

@@ -1,4 +1,7 @@
 import { crowdfundingCampaignReadinessPack } from "./crowdfunding-campaign-readiness.js";
+import { crowdfundingFundingRunPack } from "./crowdfunding-funding-run.js";
+import { crowdfundingFulfillmentOperationsPack } from "./crowdfunding-fulfillment-operations.js";
+import { developerAdoptionReadinessPack } from "./developer-adoption-readiness.js";
 import { developerProjectLaunchPack } from "./developer-project-launch.js";
 import { firstCustomerSprintPack } from "./first-customer-sprint.js";
 import { functionalHardwarePrototypePack } from "./functional-hardware-prototype.js";
@@ -12,7 +15,10 @@ import { marketingOperationsPack } from "./marketing-operations.js";
 import { mechanicalCadReviewPack } from "./mechanical-cad-review.js";
 import { openSourceReleasePack } from "./open-source-release.js";
 import { playableWebGamePack } from "./playable-web-game.js";
+import { productionReadinessDecisionPack } from "./production-readiness-decision.js";
 import { productionWebReleasePack } from "./production-web-release.js";
+import { researchProtocolReadinessPack } from "./research-protocol-readiness.js";
+import { robotDigitalPrototypePack } from "./robot-digital-prototype.js";
 import { robotPrototypePack } from "./robot-prototype.js";
 import { softwareOpportunityDiscoveryPack } from "./software-opportunity-discovery.js";
 import { studyReadinessPack } from "./study-readiness.js";
@@ -22,17 +28,15 @@ import { workingWebAppPack } from "./working-web-app.js";
 import { workingHardwarePrototypePack } from "./working-hardware-prototype.js";
 import type { PackStatus } from "./types.js";
 
-export { crowdfundingCampaignReadinessPack, developerProjectLaunchPack, firstCustomerSprintPack, functionalHardwarePrototypePack, hardwareLaunchPack, kickstarterFulfillmentPack, kickstarterFundingPack, launchContentCampaignPack, launchContentPackagePack, manufacturingReadinessPack, marketingOperationsPack, mechanicalCadReviewPack, openSourceReleasePack, playableWebGamePack, productionWebReleasePack, robotPrototypePack, softwareOpportunityDiscoveryPack, studyReadinessPack, webAppOperationsPack, webPresentationPack, workingHardwarePrototypePack, workingWebAppPack };
+export { crowdfundingCampaignReadinessPack, crowdfundingFundingRunPack, crowdfundingFulfillmentOperationsPack, developerAdoptionReadinessPack, developerProjectLaunchPack, firstCustomerSprintPack, functionalHardwarePrototypePack, hardwareLaunchPack, kickstarterFulfillmentPack, kickstarterFundingPack, launchContentCampaignPack, launchContentPackagePack, manufacturingReadinessPack, marketingOperationsPack, mechanicalCadReviewPack, openSourceReleasePack, playableWebGamePack, productionReadinessDecisionPack, productionWebReleasePack, researchProtocolReadinessPack, robotDigitalPrototypePack, robotPrototypePack, softwareOpportunityDiscoveryPack, studyReadinessPack, webAppOperationsPack, webPresentationPack, workingHardwarePrototypePack, workingWebAppPack };
 export { compileInstallCommands, compilePack, compileRunPrompt, compileWorkstreamWaves, evaluateCriticalProofResults, recordOutcomeJourney, validateOutcomeCheckpoint, validateOutcomeRecord } from "./compiler.js";
-export type { ArchivedPackMetadata, CandidateOutcomeRecommendation, CompiledPack, CriticalProofEvaluation, CriticalProofObligation, CriticalProofResult, CrowdfundingCampaignReadinessContract, DecisionRationaleContract, EvidenceBackedFact, FirstCustomerSprintContract, FunctionalHardwareModule, FunctionalHardwareModuleId, FunctionalHardwarePrototypeContract, HardwarePrototypeContract, LaunchContentModule, LaunchContentModuleId, LaunchContentPackageContract, ManufacturingReadinessContract, MechanicalCadReviewContract, OpportunityDiscoveryContract, OutcomeApprovalRecord, OutcomeArtifactRecord, OutcomeCheckpoint, OutcomeDecisionRecord, OutcomeExternalActionRecord, OutcomeJourneyHistory, OutcomePack, OutcomePrerequisite, OutcomeProofRecord, OutcomeProofStatus, OutcomeRecord, OutcomeRepairRecord, PackLane, PackStatus, PluginCapability, RemixContract, ScheduleContract, SkillSource, StudyReadinessContract, Workstream } from "./types.js";
+export type { ArchivedPackMetadata, CandidateOutcomeRecommendation, CompiledPack, CriticalProofEvaluation, CriticalProofObligation, CriticalProofResult, CrowdfundingCampaignReadinessContract, DecisionRationaleContract, EvidenceBackedFact, FirstCustomerSprintContract, FunctionalHardwareModule, FunctionalHardwareModuleId, FunctionalHardwarePrototypeContract, HardwarePrototypeContract, LaunchContentModule, LaunchContentModuleId, LaunchContentPackageContract, ManufacturingReadinessContract, MechanicalCadReviewContract, ModularOutcomeContract, ModularOutcomeModule, OpportunityDiscoveryContract, OutcomeApprovalRecord, OutcomeArtifactRecord, OutcomeCheckpoint, OutcomeDecisionRecord, OutcomeExternalActionRecord, OutcomeJourneyHistory, OutcomePack, OutcomePrerequisite, OutcomeProofRecord, OutcomeProofStatus, OutcomeRecord, OutcomeRepairRecord, PackLane, PackStatus, PluginCapability, RemixContract, ScheduleContract, SkillSource, StudyReadinessContract, Workstream } from "./types.js";
 
 export const stablePackSlugs = [
-  "robot-prototype",
   "playable-web-game",
   "web-presentation",
   "software-opportunity-discovery",
   "first-customer-sprint",
-  "developer-project-launch",
 ] as const;
 
 export const outcomePacks = [
@@ -58,6 +62,12 @@ export const outcomePacks = [
   functionalHardwarePrototypePack,
   launchContentPackagePack,
   crowdfundingCampaignReadinessPack,
+  developerAdoptionReadinessPack,
+  robotDigitalPrototypePack,
+  productionReadinessDecisionPack,
+  researchProtocolReadinessPack,
+  crowdfundingFundingRunPack,
+  crowdfundingFulfillmentOperationsPack,
 ] as const;
 
 const stablePackSlugSet = new Set<string>(stablePackSlugs);

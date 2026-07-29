@@ -40,8 +40,8 @@ export const functionalHardwarePrototypePack: OutcomePack = {
   notFor: [
     "CAD for vendor quotation without an authorized physical build; use Mechanical CAD Review.",
     "A website, launch narrative, film, campaign, waitlist, customer research, or commercial validation.",
-    "A robot whose present outcome is description, control, and simulation rather than an integrated physical artifact; use Robot Prototype.",
-    "Certification, supplier qualification, tooling, pilot production, or volume manufacturing; use Manufacturing Readiness after the prototype passes.",
+    "A robot whose present outcome is one simulated behavior rather than an integrated physical artifact; use Robot Digital Prototype.",
+    "Certification, supplier qualification, tooling, pilot production, or volume manufacturing; use Production Readiness Decision after the prototype passes.",
     "Human research, clinical validation, unsupervised human or animal use, or a claim that the prototype is safe for sale.",
   ],
   reviewedAt: "2026-07-27",
