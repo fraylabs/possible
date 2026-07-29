@@ -173,7 +173,7 @@ RELEASE GATE
 2. Workstreams prepare evidence in parallel; the lead agent sequences any release action only after integrating their preflight, verification, and rollback findings.
 3. Record a go or no-go decision. Before any external deploy, tag, publish, push, provider mutation, or production change, request explicit approval for the exact candidate, target, method, and known risks.
 4. Execute only the approved action, then run fresh verification against the named result.${approvedReleaseAdapter} If approval, provider support, evidence, or rollback readiness is missing, finish with a completion report that clearly records the no-go status.` : "";
-  const launchGate = pack.lane === "launch" ? `
+  const launchGate = pack.lane === "launch" && !pack.crowdfundingCampaignReadiness ? `
 
 LAUNCH GATE
 1. Pack confirmation authorizes local preparation only. Treat deployment, publishing, pushing, tagging, release creation, DNS or domain changes, analytics, outreach, data collection, spending, and provider mutations as separate external actions.
@@ -377,6 +377,34 @@ ${contract.modules.map((module) => [
 ].join("\n")).join("\n")}`;
   })() : "";
 
+  const crowdfundingCampaignReadiness = pack.crowdfundingCampaignReadiness ? (() => {
+    const contract = pack.crowdfundingCampaignReadiness;
+    if (contract.decisions.join(",") !== "ready-for-platform-review,repair-required,no-go") {
+      throw new Error(`${pack.slug} crowdfunding readiness decisions must be ready-for-platform-review, repair-required, no-go`);
+    }
+    for (const [label, value] of [
+      ["baselinePath", contract.baselinePath],
+      ["economicsPath", contract.economicsPath],
+      ["campaignPackagePath", contract.campaignPackagePath],
+      ["decisionReceiptPath", contract.decisionReceiptPath],
+    ] as const) requireSafeRelativePath(value, `${pack.slug} crowdfunding readiness ${label}`);
+    if (!pack.prerequisites?.length) throw new Error(`${pack.slug} crowdfunding readiness requires evidence prerequisites`);
+    if (!pack.criticalProofs?.length) throw new Error(`${pack.slug} crowdfunding readiness requires critical proofs`);
+    if (pack.workstreams.length > 3) throw new Error(`${pack.slug} crowdfunding readiness must use no more than three core workstreams`);
+    if (pack.remix) throw new Error(`${pack.slug} crowdfunding readiness must not require creative directions`);
+    if (pack.schedule) throw new Error(`${pack.slug} crowdfunding readiness must not define live campaign operations`);
+    return `
+
+CROWDFUNDING CAMPAIGN READINESS GATE
+1. Freeze the physical product, prototype, production commitment, target markets, claims, and content revisions in ${contract.baselinePath}. Verify the prerequisite evidence directly. Missing measured-product, manufacturing, content, or applicable study evidence stops this outcome; do not recreate another Outcome Pack inside this one.
+2. Lock one campaign scope: platform target, campaign owner, audience, currency, funding mechanism, funding window assumptions, offer, reward architecture, quantities, shipping regions, taxes and duties to review, cancellation and refund boundary, call to action, and claims that readiness will not establish.
+3. Write ${contract.economicsPath}. Recompute the fixed funding goal, reward margins, minimum viable quantity, platform and payment fees, taxes to review, packaging, freight, fulfillment, contingency, failed-payment exposure, refunds, working-capital timing, and expected versus stressed volume cases from cited evidence. Unknown costs remain blockers or explicit repair items.
+4. Write ${contract.campaignPackagePath} as structured platform-entry material: campaign story, reward table, timeline, risks, FAQ, creator and product evidence, fulfillment disclosures, and a mapping to existing verified content assets. Do not build a website, film, campaign calendar, audience system, ad plan, analytics loop, or inactive content variants.
+5. Adversarially challenge prototype truth, manufacturing feasibility, reward quantities, economics, shipping, timeline, claims, asset completeness, and worst credible overfunding. Repair material inconsistencies and rerun affected checks against the immutable package.
+6. This outcome ends before platform entry or publication. Do not create or change an account, submit platform fields, publish a preview, launch a campaign, contact an audience, post, email, buy ads, accept pledges, access backer data, or claim funding. A later live funding run requires a separate Outcome Pack and fresh approval; until that pack exists, disclose the catalog gap.
+7. Write ${contract.decisionReceiptPath} with exactly one status: ready-for-platform-review, repair-required, or no-go. Ready-for-platform-review means only that the named local package is coherent enough for its owner and qualified advisers to review before platform entry. It never means accepted by a platform, published, funded, demanded, profitable, safe, certified, manufacturable at every volume, deliverable on time, or authorized for live campaign action.`;
+  })() : "";
+
   const mechanicalCadReview = pack.mechanicalCadReview ? (() => {
     const contract = pack.mechanicalCadReview;
     if (contract.decisions.join(",") !== "review-ready,repair-required,no-go") {
@@ -488,7 +516,7 @@ STUDY READINESS GATE
 7. Write ${contract.decisionReceiptPath} with exactly one status: ready-for-qualified-review, repair-required, or no-go. Ready-for-qualified-review means the evidence package is coherent enough to place before qualified investigators, ethics bodies, regulators, statisticians, and legal or privacy advisers. It never means approved, registered, recruited, safe, effective, clinically validated, or authorized to begin.`;
   })() : "";
 
-  const action = pack.opportunityDiscovery ? "Discover" : pack.firstCustomerSprint ? "Run" : pack.launchContentPackage ? "Create and verify" : pack.functionalHardwarePrototype ? "Build, test, and revise" : pack.hardwarePrototype ? "Build and measure" : pack.mechanicalCadReview ? "Design and challenge" : pack.manufacturingReadiness || pack.studyReadiness ? "Prepare and verify" : pack.lane === "operate" ? "Establish and run the first cycle of" : pack.lane === "release" ? "Prepare and verify" : "Build";
+  const action = pack.opportunityDiscovery ? "Discover" : pack.firstCustomerSprint ? "Run" : pack.crowdfundingCampaignReadiness ? "Prepare and challenge" : pack.launchContentPackage ? "Create and verify" : pack.functionalHardwarePrototype ? "Build, test, and revise" : pack.hardwarePrototype ? "Build and measure" : pack.mechanicalCadReview ? "Design and challenge" : pack.manufacturingReadiness || pack.studyReadiness ? "Prepare and verify" : pack.lane === "operate" ? "Establish and run the first cycle of" : pack.lane === "release" ? "Prepare and verify" : "Build";
   const pluginCheck = pack.plugins?.length
     ? ` Also detect these optional agent plugins: ${pack.plugins.map((plugin) => `${plugin.invocation} (${plugin.skills.map((skill) => `$${skill}`).join(", ")})`).join(", ")}. Do not install or imitate an unavailable plugin; record its absence and use the documented fallback.`
     : "";
@@ -556,7 +584,7 @@ ${pack.guardrails.map((guardrail) => `- ${guardrail}`).join("\n")}
 
 VERIFICATION CONTRACT
 ${pack.verification.map((item) => `- ${item}`).join("\n")}
-${prerequisites}${opportunityDiscovery}${firstCustomerSprint}${decisionRationale}${criticalProofs}${mechanicalCadReview}${functionalHardwarePrototype}${launchContentPackage}${hardwarePrototype}${manufacturingReadiness}${studyReadiness}${remixGate}${releaseGate}${launchGate}${sitesPath}${operateLoop}
+${prerequisites}${opportunityDiscovery}${firstCustomerSprint}${decisionRationale}${criticalProofs}${mechanicalCadReview}${functionalHardwarePrototype}${launchContentPackage}${crowdfundingCampaignReadiness}${hardwarePrototype}${manufacturingReadiness}${studyReadiness}${remixGate}${releaseGate}${launchGate}${sitesPath}${operateLoop}
 
 OUTCOME RECORD
 Every run—including a partial, blocked, or no-go result—must write one machine-readable proof index at .possible/runs/<run-id>/outcome-record.json.

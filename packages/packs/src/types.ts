@@ -117,6 +117,15 @@ export interface LaunchContentPackageContract {
   decisions: ["ready", "repair-required", "no-go"];
 }
 
+export interface CrowdfundingCampaignReadinessContract {
+  kind: "crowdfunding-campaign-readiness";
+  baselinePath: string;
+  economicsPath: string;
+  campaignPackagePath: string;
+  decisionReceiptPath: string;
+  decisions: ["ready-for-platform-review", "repair-required", "no-go"];
+}
+
 export interface ManufacturingReadinessContract {
   kind: "manufacturing-readiness";
   baselinePath: string;
@@ -219,6 +228,7 @@ export interface OutcomePack {
   guardrails: string[];
   verification: string[];
   archived?: ArchivedPackMetadata;
+  crowdfundingCampaignReadiness?: CrowdfundingCampaignReadinessContract;
   decisionRationale?: DecisionRationaleContract;
   functionalHardwarePrototype?: FunctionalHardwarePrototypeContract;
   hardwarePrototype?: HardwarePrototypeContract;

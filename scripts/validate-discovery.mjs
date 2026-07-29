@@ -29,6 +29,7 @@ const canonicalRoutes = [
   ["packs/first-customer-sprint/index.html", "https://possible.sh/packs/first-customer-sprint/"],
   ["packs/working-hardware-prototype/index.html", "https://possible.sh/packs/working-hardware-prototype/"],
   ["packs/launch-content-campaign/index.html", "https://possible.sh/packs/launch-content-campaign/"],
+  ["packs/kickstarter-funding/index.html", "https://possible.sh/packs/kickstarter-funding/"],
 ];
 
 const redirectRoutes = [
@@ -86,7 +87,7 @@ for (const [, canonical] of canonicalRoutes) {
   assert.match(sitemap, new RegExp(`<loc>${escape(canonical)}</loc>`), `Sitemap must include ${canonical}`);
 }
 assert.doesNotMatch(sitemap, /<loc>https:\/\/possible\.sh\/demo(?:\/|<)/, "Sitemap must not index Demo compatibility routes or raw output paths");
-assert.equal((sitemap.match(/<lastmod>2026-07-27<\/lastmod>/g) ?? []).length, canonicalRoutes.length, "Every sitemap entry must publish the current indexed revision date");
+assert.equal((sitemap.match(/<lastmod>2026-07-29<\/lastmod>/g) ?? []).length, canonicalRoutes.length, "Every sitemap entry must publish the current indexed revision date");
 
 const robots = await readOutput("robots.txt");
 assert.match(robots, /^User-agent: \*\nAllow: \/\nSitemap: https:\/\/possible\.sh\/sitemap\.xml\n$/);

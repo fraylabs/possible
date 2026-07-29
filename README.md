@@ -64,7 +64,9 @@ The experimental [Functional Hardware Prototype](packages/packs/src/functional-h
 
 The experimental [Launch Content Package](packages/packs/src/launch-content-package.ts) pack produces one truthful, post-ready package for selected channels. Text posts, static visuals, carousels, short videos, long videos, and threads activate independently; it does not add a three-direction exercise, every platform, analytics, or a campaign calendar.
 
-[Hardware Launch](packages/packs/src/hardware-launch.ts), [Working Hardware Prototype](packages/packs/src/working-hardware-prototype.ts), and [Launch Content Campaign](packages/packs/src/launch-content-campaign.ts) are archived. Their original specifications and public links remain available for historical evidence, but Possible no longer recommends their mixed or universally heavyweight contracts.
+The experimental [Crowdfunding Campaign Readiness](packages/packs/src/crowdfunding-campaign-readiness.ts) pack verifies one physical-product campaign package before platform entry. It consumes existing prototype, manufacturing, study-boundary, and final-content evidence, recomputes economics and rewards, then stops before publication, audience activation, pledges, or payout.
+
+[Hardware Launch](packages/packs/src/hardware-launch.ts), [Working Hardware Prototype](packages/packs/src/working-hardware-prototype.ts), [Launch Content Campaign](packages/packs/src/launch-content-campaign.ts), and [Kickstarter Funding](packages/packs/src/kickstarter-funding.ts) are archived. Their original specifications and public links remain available for historical evidence, but Possible no longer recommends their mixed or universally heavyweight contracts.
 
 The preserved PatchProof journey verifies Software Opportunity Discovery and Developer Project Launch as separate outcomes—and records why Possible no longer chooses their sequence in advance.
 

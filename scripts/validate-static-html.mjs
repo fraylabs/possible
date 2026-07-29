@@ -133,6 +133,7 @@ assert.match(catalog, /aria-label="Outcome Pack pages"/);
 assert.doesNotMatch(catalog, /Hardware Launch/);
 assert.doesNotMatch(catalog, /Working Hardware Prototype/);
 assert.doesNotMatch(catalog, /Launch Content Campaign/);
+assert.doesNotMatch(catalog, /Kickstarter Funding/);
 const archivedHardwareLaunch = visibleText(await html("packs/hardware-launch/index.html"));
 assert.match(archivedHardwareLaunch, /ARCHIVED[\s\S]*2026-07-27/i);
 assert.match(archivedHardwareLaunch, /will not recommend or compile it for new work/i);
@@ -151,6 +152,13 @@ assert.match(archivedLaunchContent, /Launch Content Package/i);
 assert.match(archivedLaunchContent, /Marketing Operations/i);
 assert.match(archivedLaunchContent, /View active packs/i);
 assert.doesNotMatch(archivedLaunchContent, /Start with \$possible/i);
+const archivedKickstarterFunding = visibleText(await html("packs/kickstarter-funding/index.html"));
+assert.match(archivedKickstarterFunding, /ARCHIVED[\s\S]*2026-07-29/i);
+assert.match(archivedKickstarterFunding, /prototype and manufacturing feasibility[\s\S]*deposited payout/i);
+assert.match(archivedKickstarterFunding, /Crowdfunding Campaign Readiness/i);
+assert.match(archivedKickstarterFunding, /Launch Content Package/i);
+assert.match(archivedKickstarterFunding, /View active packs/i);
+assert.doesNotMatch(archivedKickstarterFunding, /Start with \$possible/i);
 for (const slug of ["open-source-release", "marketing-operations"]) {
   await assert.rejects(html(`packs/${slug}/index.html`), { code: "ENOENT" }, `${slug} must not be exported`);
 }

@@ -27,6 +27,7 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
     "mechanical-cad-review",
     "functional-hardware-prototype",
     "launch-content-package",
+    "crowdfunding-campaign-readiness",
   ]);
   assert.deepEqual(outcomePacks.map(({ slug, lane }) => [slug, lane]), [
     ["hardware-launch", "launch"],
@@ -50,8 +51,9 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
     ["mechanical-cad-review", "create"],
     ["functional-hardware-prototype", "create"],
     ["launch-content-package", "launch"],
+    ["crowdfunding-campaign-readiness", "launch"],
   ]);
-  assert.deepEqual(outcomePacks.map((pack) => pack.catalogNumber), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21]);
+  assert.deepEqual(outcomePacks.map((pack) => pack.catalogNumber), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22]);
   assert.equal(new Set(outcomePacks.map((pack) => pack.catalogNumber)).size, outcomePacks.length);
   assert.equal(new Set(outcomePacks.map((pack) => pack.slug)).size, outcomePacks.length);
   assert.deepEqual(stableOutcomePacks.map((pack) => pack.slug), [
@@ -64,7 +66,7 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
   ]);
   assert.equal(experimentalOutcomePacks.length, 12);
   assert.equal(activeOutcomePacks.length, 18);
-  assert.deepEqual(archivedOutcomePacks.map((pack) => pack.slug), ["hardware-launch", "working-hardware-prototype", "launch-content-campaign"]);
+  assert.deepEqual(archivedOutcomePacks.map((pack) => pack.slug), ["hardware-launch", "kickstarter-funding", "working-hardware-prototype", "launch-content-campaign"]);
   assert.equal(getPackStatus("hardware-launch"), "archived");
   assert.equal(getPackStatus("missing"), undefined);
 
@@ -1200,12 +1202,12 @@ test("the web-app lifecycle packs have non-overlapping entry conditions", () => 
   assert.match(pack("web-app-operations").useWhen.join(" "), /already live/i);
 });
 
-test("Kickstarter outcomes preserve funding and fulfillment evidence", () => {
+test("archived Kickstarter Funding preserves its original funding and payout contract", () => {
   const pack = (slug) => outcomePacks.find((candidate) => candidate.slug === slug);
   const funding = pack("kickstarter-funding");
-  const fulfillment = pack("kickstarter-fulfillment");
 
   assert.ok(funding);
+  assert.ok(funding.archived);
   assert.equal(funding.catalogNumber, 8);
   assert.equal(funding.lane, "launch");
   assert.match(funding.promise, /Kickstarter campaign system/i);
@@ -1216,6 +1218,56 @@ test("Kickstarter outcomes preserve funding and fulfillment evidence", () => {
   assert.match(fundingPrompt, /^Build the Kickstarter Funding outcome/);
   assert.match(fundingPrompt, /\$humanizer/);
   assert.match(fundingPrompt, /PRODUCT DECISION RECORD/);
+});
+
+test("Crowdfunding Campaign Readiness stops before platform or funding action", () => {
+  const readiness = outcomePacks.find((candidate) => candidate.slug === "crowdfunding-campaign-readiness");
+  assert.ok(readiness);
+  assert.equal(readiness.catalogNumber, 22);
+  assert.equal(readiness.lane, "launch");
+  assert.equal(readiness.workstreams.length, 3);
+  assert.equal(readiness.skills.length, 5);
+  assert.equal(readiness.prerequisites.length, 2);
+  assert.equal(readiness.crowdfundingCampaignReadiness.decisionReceiptPath, "outcome-room/crowdfunding-campaign-readiness-receipt.json");
+  assert.deepEqual(compileWorkstreamWaves(readiness).map((wave) => wave.map(({ id }) => id)), [
+    ["campaign-baseline"],
+    ["campaign-package"],
+    ["readiness-review"],
+  ]);
+  assert.doesNotMatch(readiness.skills.map(({ id }) => id).join(" "), /frontend-design|webapp-testing|remotion-best-practices|social|marketing-loops/);
+  assert.doesNotMatch(readiness.outputs.join(" "), /film|calendar|audience system|deposited|payout/i);
+
+  const prompt = compilePack(readiness).runPrompt;
+  assert.match(prompt, /^Prepare and challenge the Crowdfunding Campaign Readiness outcome/);
+  assert.match(prompt, /CROWDFUNDING CAMPAIGN READINESS GATE/);
+  assert.match(prompt, /This outcome ends before platform entry or publication/i);
+  assert.match(prompt, /later live funding run requires a separate Outcome Pack/i);
+  assert.match(prompt, /ready-for-platform-review, repair-required, or no-go/i);
+  assert.doesNotMatch(prompt, /LAUNCH GATE|PRODUCT DECISION RECORD|REMIX GATE|SCHEDULE GATE/);
+
+  const results = readiness.criticalProofs.map(({ id }) => ({
+    obligationId: id,
+    status: "passed",
+    evidence: [`crowdfunding-readiness/review/${id}.json`],
+  }));
+  assert.equal(evaluateCriticalProofResults(readiness.criticalProofs, results), "passed");
+  assert.equal(evaluateCriticalProofResults(readiness.criticalProofs, results.slice(1)), "unproven");
+
+  const unsafePath = structuredClone(readiness);
+  unsafePath.crowdfundingCampaignReadiness.economicsPath = "../economics.json";
+  assert.throws(() => compilePack(unsafePath), /safe repository-relative path/);
+  const liveSchedule = structuredClone(readiness);
+  liveSchedule.schedule = {
+    request: "schedule live campaign",
+    title: "Live funding",
+    description: "Operate the campaign",
+    safeDefault: "report only",
+  };
+  assert.throws(() => compilePack(liveSchedule), /must not define live campaign operations/);
+});
+
+test("Kickstarter Fulfillment begins only after funding and preserves shipment evidence", () => {
+  const fulfillment = outcomePacks.find((candidate) => candidate.slug === "kickstarter-fulfillment");
 
   assert.ok(fulfillment);
   assert.equal(fulfillment.catalogNumber, 9);
@@ -1228,8 +1280,9 @@ test("Kickstarter outcomes preserve funding and fulfillment evidence", () => {
   assert.match(fulfillmentPrompt, /^Establish and run the first cycle of the Kickstarter Fulfillment outcome/);
   assert.match(fulfillmentPrompt, /SCHEDULE GATE/);
   assert.match(fulfillmentPrompt, /fulfillment\/receipts\/YYYY-MM-DDTHHMMSSZ\.md/);
+  assert.match(fulfillment.notFor.join(" "), /Crowdfunding Campaign Readiness.*catalog gap for a live funding run/i);
 
-  for (const candidate of [funding, fulfillment]) {
+  for (const candidate of [fulfillment]) {
     const owned = candidate.workstreams.flatMap((stream) => stream.owns.map((path) => ({ stream: stream.id, path })));
     for (const left of owned) {
       for (const right of owned) {

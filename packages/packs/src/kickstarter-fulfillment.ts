@@ -23,7 +23,7 @@ export const kickstarterFulfillmentPack: OutcomePack = {
     "The user asks to schedule recurring fulfillment reviews while keeping purchasing, supplier, carrier, and backer actions separately approved.",
   ],
   notFor: [
-    "Creating or funding the campaign; use Kickstarter Funding.",
+    "Preparing or funding the campaign; use Crowdfunding Campaign Readiness for the pre-publication package, and disclose the current catalog gap for a live funding run.",
     "Claiming fulfillment from plans, labels, tracking numbers, or percentages without privacy-safe carrier and campaign evidence.",
     "Unapproved supplier commitments, purchasing, manufacturing orders, address exports, carrier bookings, refunds, or backer messages.",
     "A campaign whose obligations, funds, backer counts, reward tiers, or product configuration cannot be established.",

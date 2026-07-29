@@ -257,9 +257,13 @@ Slug: `kickstarter-funding`
 
 Lane: `launch`
 
+Status: `archived` on `2026-07-29`.
+
 Public page: `https://possible.sh/packs/kickstarter-funding`
 
 Use when a measured product prototype and manufacturing-readiness baseline need the complete Kickstarter path: economics, offer, rewards, story, proof film, prelaunch audience, campaign operations, and payout evidence. Use Functional Hardware Prototype or Manufacturing Readiness first when physical or production evidence is missing. Use Study Readiness first when the campaign promises a research program whose protocol, accountable roles, ethics pathway, budget, and claims boundary are undefined.
+
+Historical specification only. Do not recommend or start this pack for new work. It combined prototype and manufacturing feasibility, campaign economics, rewards, page and film production, audience building, live campaign operations, pledge tracking, and deposited payout. Use Crowdfunding Campaign Readiness for a pre-publication package, Launch Content Package for missing final media, or Marketing Operations for a recurring local calendar and draft-production loop. A live crowdfunding funding run remains a disclosed catalog gap.
 
 Outputs: feasibility and fixed funding-goal model, audience/offer/rewards/risks, responsive campaign story, proof-led film, prelaunch and campaign distribution system, measurement and payout controls, approved live execution or publication-ready blocked status, verified funding report.
 
@@ -292,6 +296,47 @@ npx skills@1.5.19 add fraylabs/possible@e081be4df826b7bd545e6b80406622f52d0bb49b
 Preserve evidence-backed product decisions under `campaign/decisions/`; every public rationale must retain alternatives, evidence, trade-offs, uncertainty, and what would reverse the decision. `$humanizer` may improve clarity and voice but cannot invent founder history, customer language, or product intent.
 
 Never imply funding, demand, manufacturing feasibility, delivery, or payout. A local page must not impersonate Kickstarter or accept payment. Publishing, outreach, posting, email, advertising, account changes, and live campaign actions require separate approval. Count money only after privacy-safe evidence proves the platform payout was deposited.
+
+## Crowdfunding Campaign Readiness
+
+Slug: `crowdfunding-campaign-readiness`
+
+Lane: `launch`
+
+Status: `experimental`.
+
+Source specification: `https://github.com/fraylabs/possible/blob/dev/packages/packs/src/crowdfunding-campaign-readiness.ts`
+
+Use when a physical product already has measured prototype, manufacturing-readiness, applicable study-boundary, and final-content evidence, and the next decision is whether one crowdfunding package is coherent enough for pre-publication platform review.
+
+Outputs: immutable product, production, claims, study, content, audience, platform, and scope baseline; recomputable funding goal and reward economics; structured campaign story, rewards, timeline, risks, FAQ, fulfillment disclosures, and verified-asset mapping; adversarial underfunding and overfunding review; independent ready-for-platform-review, repair-required, or no-go receipt.
+
+Workstreams:
+
+- Immutable evidence baseline and campaign scope — `product-marketing`, `analytics`; verifies and freezes the exact product, production, study, content, audience, platform, offer, and campaign boundary.
+- Economics, rewards, and platform-entry package — `analytics`, `product-marketing`, `content-strategy`, `copywriting`, `humanizer`; recomputes the goal, margins, quantities, fees, freight, fulfillment, contingency, refunds, and cash timing, then assembles structured platform fields from existing evidence.
+- Adversarial pre-publication review and receipt — `analytics`, `product-marketing`, `humanizer`; challenges product truth, reward coherence, overfunding, capacity, shipping, timeline, claims, assets, and failure paths.
+- Fresh review — `analytics`, `product-marketing`, `humanizer`; independently determines ready-for-platform-review, repair-required, or no-go.
+
+Sources:
+
+- `coreyhaines31/marketingskills`: `product-marketing`, `content-strategy`, `copywriting`, `analytics`; reviewed `67264763cb107d61749f418d081c56e5bcbc0209`.
+- `fraylabs/possible`: `humanizer`; reviewed `e081be4df826b7bd545e6b80406622f52d0bb49b`.
+
+Install:
+
+```bash
+npx skills@1.5.19 add coreyhaines31/marketingskills@67264763cb107d61749f418d081c56e5bcbc0209 --skill product-marketing --skill content-strategy --skill copywriting --skill analytics --agent codex
+npx skills@1.5.19 add fraylabs/possible@e081be4df826b7bd545e6b80406622f52d0bb49b --skill humanizer --agent codex
+```
+
+Measured product, manufacturing, applicable study-boundary, and final-content evidence are prerequisites. Missing evidence stops the outcome; do not rebuild another Outcome Pack inside it. The package uses existing verified content assets and never creates a site, film, calendar, audience system, ad plan, analytics loop, account, preview, or extra media.
+
+Recompute the fixed funding goal and reward margins from cited costs, platform and payment fees, taxes to review, packaging, freight, fulfillment, contingency, failed payments, refunds, working-capital timing, and minimum, expected, and stressed volume cases. Challenge reward quantities, capacity cliffs, substitutions, regions, delivery assumptions, and worst credible overfunding.
+
+This outcome ends before platform entry. It never creates or changes an account, submits fields, publishes a preview, launches, contacts an audience, posts, emails, advertises, accepts pledges, accesses backer data, or verifies payout. A live funding run remains a catalog gap requiring a future dedicated Outcome Pack and fresh approval.
+
+Write `outcome-room/crowdfunding-campaign-readiness-receipt.json` with exactly one status: `ready-for-platform-review`, `repair-required`, or `no-go`. Ready-for-platform-review never means accepted, published, funded, demanded, profitable, safe, certified, deliverable on time, or authorized for live action.
 
 ## Kickstarter Fulfillment
 
@@ -853,7 +898,7 @@ Recommend the Outcome Pack whose finished outputs most closely match the user's 
 - Existing tested web app plus a reversible approved production deployment and smoke report → Production Web Release.
 - Live web app plus a repeatable reliability, issue-triage, maintenance, incident-response, and safe-change cadence → Web App Operations.
 - Existing product or offer plus a repeatable positioning, campaign-planning, draft-production, measurement, and review cadence → Marketing Operations.
-- Rough product idea plus feasibility, offer, campaign assets, audience system, and a real Kickstarter funding path → Kickstarter Funding.
+- Measured and manufacturing-ready physical product plus verified final content, recomputable economics, rewards, risks, fulfillment disclosures, and one pre-publication platform-review decision → Crowdfunding Campaign Readiness.
 - Funded Kickstarter campaign plus production, backer, logistics, communication, and 95%-shipped operations → Kickstarter Fulfillment.
 - Robot hand, gripper, arm, mobile robot, quadruped, or full robot plus coherent CAD, description, controls, and simulation evidence → Robot Prototype.
 - Selected physical-product concept plus the simplest integrated physical artifact that directly passes one measurable primary function and only its architecture-activated engineering modules → Functional Hardware Prototype.
@@ -865,7 +910,7 @@ Recommend the Outcome Pack whose finished outputs most closely match the user's 
 - Selected product, service, or software opportunity plus real prospects, one concrete offer, and the strongest available commercial commitment → First Customer Sprint.
 - Real product, prototype, offer, release, event, or announcement plus one truthful post-ready package containing only selected text, static, carousel, short-video, long-video, or thread exports → Launch Content Package.
 
-Recommend Software Opportunity Discovery when no opportunity is selected. Recommend Mechanical CAD Review when a narrow passive-object or mechanism request needs a vendor-reviewable CAD package and physical fabrication is not yet authorized. Hardware Launch, Working Hardware Prototype, and Launch Content Campaign are archived: never recommend or execute them. Use an active replacement only when that replacement's finished outcome matches; disclose a catalog gap for a conventional product launch site or another uncovered presentation outcome. Recommend Functional Hardware Prototype when a selected physical-product concept must become a measured physical artifact; activate battery, high energy, motion, thermal, living contact, networking, and health-claims work only from the actual architecture. Mechanical CAD Review, an archived pack, Robot Prototype, CAD, and simulation do not substitute for direct evidence from the integrated physical artifact. Recommend Manufacturing Readiness after the measured prototype passes and before a production promise whose feasibility depends on DFM, supplier, cost, compliance, quality, or pilot evidence. Recommend Study Readiness when a defined research hypothesis needs a protocol package for qualified review; it does not approve or execute a study. Recommend First Customer Sprint when one selected direction should face a concrete offer and real prospects; require truthful prototype, safety, claims, manufacturing, delivery, and refund boundaries before physical-product payment or delivery promises. Recommend Launch Content Package when the product truth exists and the missing result is one finite set of post-ready selected-format assets; activate only requested formats and use Marketing Operations for a recurring calendar, learning, production, and measurement system. Recommend Working Web App only when customer evidence or another explicit delivery requirement makes a bounded application the next useful outcome. Use Developer Project Launch when a working developer project needs comprehension, presentation, proof, and a verified adoption path. Use Web Presentation when the primary deliverable is a slide-based browser presentation; a conventional landing page belongs elsewhere. Use Kickstarter Funding only when crowdfunding mechanics and payout are part of the outcome and its physical and research prerequisites pass; use Kickstarter Fulfillment only after the campaign is funded. Use Robot Prototype for a simulation-backed digital prototype, not a fabrication-ready machine or hardware commissioning. Use Production Web Release when a tested candidate exists and the missing outcome is a gated production promotion with rollback and smoke evidence. Use Web App Operations only after the app is live and the desired outcome is an ongoing reliability and maintenance rhythm. Repository-only licensing, packaging, CI, versioning, and release engineering belong to Open-Source Release; one isolated bug, incident, or marketing asset with no requested recurring workflow is focused work, not an Outcome Pack run.
+Recommend Software Opportunity Discovery when no opportunity is selected. Recommend Mechanical CAD Review when a narrow passive-object or mechanism request needs a vendor-reviewable CAD package and physical fabrication is not yet authorized. Hardware Launch, Working Hardware Prototype, Launch Content Campaign, and Kickstarter Funding are archived: never recommend or execute them. Use an active replacement only when that replacement's finished outcome matches; disclose a catalog gap for a conventional product launch site or another uncovered presentation outcome. Recommend Functional Hardware Prototype when a selected physical-product concept must become a measured physical artifact; activate battery, high energy, motion, thermal, living contact, networking, and health-claims work only from the actual architecture. Mechanical CAD Review, an archived pack, Robot Prototype, CAD, and simulation do not substitute for direct evidence from the integrated physical artifact. Recommend Manufacturing Readiness after the measured prototype passes and before a production promise whose feasibility depends on DFM, supplier, cost, compliance, quality, or pilot evidence. Recommend Study Readiness when a defined research hypothesis needs a protocol package for qualified review; it does not approve or execute a study. Recommend First Customer Sprint when one selected direction should face a concrete offer and real prospects; require truthful prototype, safety, claims, manufacturing, delivery, and refund boundaries before physical-product payment or delivery promises. Recommend Launch Content Package when the product truth exists and the missing result is one finite set of post-ready selected-format assets; activate only requested formats and use Marketing Operations for a recurring calendar, learning, production, and measurement system. Recommend Crowdfunding Campaign Readiness only when measured prototype, manufacturing, applicable study-boundary, and final-content evidence already exist and the desired outcome stops before platform entry. A live funding run remains a catalog gap; do not substitute readiness. Use Kickstarter Fulfillment only after a real campaign is funded. Recommend Working Web App only when customer evidence or another explicit delivery requirement makes a bounded application the next useful outcome. Use Developer Project Launch when a working developer project needs comprehension, presentation, proof, and a verified adoption path. Use Web Presentation when the primary deliverable is a slide-based browser presentation; a conventional landing page belongs elsewhere. Use Robot Prototype for a simulation-backed digital prototype, not a fabrication-ready machine or hardware commissioning. Use Production Web Release when a tested candidate exists and the missing outcome is a gated production promotion with rollback and smoke evidence. Use Web App Operations only after the app is live and the desired outcome is an ongoing reliability and maintenance rhythm. Repository-only licensing, packaging, CI, versioning, and release engineering belong to Open-Source Release; one isolated bug, incident, or marketing asset with no requested recurring workflow is focused work, not an Outcome Pack run.
 
 For an ambition spanning several valuable results, recommend only the next independently useful Outcome Pack. Choose it from the current reality and the most important unresolved decision; do not preselect a future sequence. After the outcome passes verification, reassess the new evidence before recommending zero or more candidates and stop for fresh approval. A strong matching working project may qualify for Developer Project Launch directly; a discovery receipt alone does not.
 

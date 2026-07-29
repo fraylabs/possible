@@ -55,7 +55,7 @@ describe("Possible MCP", () => {
     assert.doesNotMatch(client.getInstructions() ?? "", /chain/i);
   });
 
-  it("lists six stable, twelve experimental, and three archived outcome packs", async () => {
+  it("lists six stable, twelve experimental, and four archived outcome packs", async () => {
     const result = await client.callTool({ name: "list_packs", arguments: {} });
     const envelope = result.structuredContent as { ok: boolean; data: { packs: Array<{ slug: string; lane: string; status: string }> } };
     assert.equal(envelope.ok, true);
@@ -81,13 +81,15 @@ describe("Possible MCP", () => {
       ["mechanical-cad-review", "create"],
       ["functional-hardware-prototype", "create"],
       ["launch-content-package", "launch"],
+      ["crowdfunding-campaign-readiness", "launch"],
     ]);
     assert.equal(envelope.data.packs.filter(({ status }) => status === "stable").length, 6);
     assert.equal(envelope.data.packs.filter(({ status }) => status === "experimental").length, 12);
-    assert.equal(envelope.data.packs.filter(({ status }) => status === "archived").length, 3);
+    assert.equal(envelope.data.packs.filter(({ status }) => status === "archived").length, 4);
     assert.equal(envelope.data.packs.find(({ slug }) => slug === "hardware-launch")?.status, "archived");
     assert.equal(envelope.data.packs.find(({ slug }) => slug === "working-hardware-prototype")?.status, "archived");
     assert.equal(envelope.data.packs.find(({ slug }) => slug === "launch-content-campaign")?.status, "archived");
+    assert.equal(envelope.data.packs.find(({ slug }) => slug === "kickstarter-funding")?.status, "archived");
   });
 
   it("compiles Web Presentation as a coded browser-deck outcome", async () => {
@@ -249,6 +251,28 @@ describe("Possible MCP", () => {
     assert.match(envelope.data.runPrompt, /LAUNCH CONTENT PACKAGE GATE/);
     assert.match(envelope.data.runPrompt, /CONDITIONAL CONTENT MODULES/);
     assert.doesNotMatch(envelope.data.runPrompt, /REMIX GATE|PRODUCT DECISION RECORD/);
+  });
+
+  it("preserves but refuses to compile the archived Kickstarter Funding pack", async () => {
+    const result = await client.callTool({ name: "compile_pack", arguments: { slug: "kickstarter-funding" } });
+    assert.equal(result.isError, true);
+    const envelope = result.structuredContent as { ok: boolean; error: { code: string; details: { replacementSlugs: string[] } } };
+    assert.equal(envelope.ok, false);
+    assert.equal(envelope.error.code, "PACK_ARCHIVED");
+    assert.deepEqual(envelope.error.details.replacementSlugs, ["crowdfunding-campaign-readiness", "launch-content-package", "marketing-operations"]);
+  });
+
+  it("compiles Crowdfunding Campaign Readiness without live funding actions", async () => {
+    const result = await client.callTool({ name: "compile_pack", arguments: { slug: "crowdfunding-campaign-readiness" } });
+    const envelope = result.structuredContent as { ok: boolean; data: { pack: { catalogNumber: number; lane: string; name: string }; installCommands: string[]; runPrompt: string } };
+    assert.equal(envelope.ok, true);
+    assert.equal(envelope.data.pack.catalogNumber, 22);
+    assert.equal(envelope.data.pack.lane, "launch");
+    assert.equal(envelope.data.pack.name, "Crowdfunding Campaign Readiness");
+    assert.equal(envelope.data.installCommands.length, 2);
+    assert.match(envelope.data.runPrompt, /CROWDFUNDING CAMPAIGN READINESS GATE/);
+    assert.match(envelope.data.runPrompt, /ends before platform entry or publication/i);
+    assert.doesNotMatch(envelope.data.runPrompt, /LAUNCH GATE|SCHEDULE GATE|PRODUCT DECISION RECORD/);
   });
 
   it("compiles Manufacturing Readiness with production-release evidence gates", async () => {

@@ -33,6 +33,11 @@ export const kickstarterFundingPack: OutcomePack = {
     "A conventional software or hardware presentation with no crowdfunding mechanics.",
   ],
   reviewedAt: "2026-07-21",
+  archived: {
+    archivedAt: "2026-07-29",
+    reason: "This pack combined prototype and manufacturing feasibility, campaign economics, rewards, page and film production, audience building, live campaign operations, pledge tracking, and deposited payout under one funding outcome.",
+    replacementSlugs: ["crowdfunding-campaign-readiness", "launch-content-package", "marketing-operations"],
+  },
   prerequisites: [
     {
       id: "campaign-ready-product",

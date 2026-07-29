@@ -3,7 +3,7 @@ import { exampleCatalog } from "../src/example-content";
 import type { MetadataRoute } from "next";
 
 const baseUrl = "https://possible.sh";
-const siteUpdatedAt = "2026-07-27";
+const siteUpdatedAt = "2026-07-29";
 export const dynamic = "force-static";
 const staticPaths = [
   "/",

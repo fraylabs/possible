@@ -171,6 +171,21 @@ describe("Possible", () => {
     expect(await axe(route.container)).toHaveNoViolations();
   });
 
+  it("preserves the archived Kickstarter Funding page without offering a live run", async () => {
+    const pack = getRoutablePack("kickstarter-funding");
+    expect(pack?.archived).toBeDefined();
+    const route = renderRoute("/packs/kickstarter-funding");
+    expect(screen.getByRole("heading", { name: "Kickstarter Funding", level: 1 })).toBeInTheDocument();
+    const notice = screen.getByRole("complementary", { name: "Archived Outcome Pack" });
+    expect(notice).toHaveTextContent(/ARCHIVED.*2026-07-29/i);
+    expect(notice).toHaveTextContent(/prototype and manufacturing feasibility.*deposited payout/i);
+    expect(within(notice).getByRole("link", { name: "Crowdfunding Campaign Readiness" })).toHaveAttribute("href", expect.stringContaining("crowdfunding-campaign-readiness.ts"));
+    expect(within(notice).getByRole("link", { name: "Launch Content Package" })).toHaveAttribute("href", expect.stringContaining("launch-content-package.ts"));
+    expect(screen.queryByRole("link", { name: /Start with \$possible/i })).not.toBeInTheDocument();
+    expect(route.container.querySelector(".pack-prompt-disclosure code")?.textContent).toMatch(/deposited platform payout/i);
+    expect(await axe(route.container)).toHaveNoViolations();
+  });
+
   it("separates opportunity discovery from the resumable first-customer sprint", async () => {
     const discoveryRoute = renderRoute("/packs/software-opportunity-discovery");
     expect(screen.getByRole("heading", { name: "Software Opportunity Discovery", level: 1 })).toBeInTheDocument();

@@ -23,7 +23,7 @@ export const publishedPacks = publishedPackSlugs.map((slug) => {
   return pack;
 });
 
-export const archivedPublishedPackSlugs = ["hardware-launch", "working-hardware-prototype", "launch-content-campaign"] as const;
+export const archivedPublishedPackSlugs = ["hardware-launch", "working-hardware-prototype", "launch-content-campaign", "kickstarter-funding"] as const;
 export const archivedPublishedPacks = archivedPublishedPackSlugs.map((slug) => {
   const pack = outcomePacks.find((candidate) => candidate.slug === slug);
   if (!pack?.archived) throw new Error(`Missing archived published Outcome Pack: ${slug}`);
