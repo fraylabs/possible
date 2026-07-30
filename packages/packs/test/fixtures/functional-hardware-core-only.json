@@ -2,43 +2,43 @@
   "name": "bench-powered-core-prototype",
   "results": [
     {
-      "obligationId": "module-scope",
+      "expectationId": "module-scope",
       "status": "passed",
       "evidence": ["fixtures/functional-hardware/module-decisions.json"]
     },
     {
-      "obligationId": "integrated-artifact",
+      "expectationId": "integrated-artifact",
       "status": "passed",
       "evidence": ["fixtures/functional-hardware/artifact-inspection.md"]
     },
     {
-      "obligationId": "primary-function",
+      "expectationId": "primary-function",
       "status": "passed",
       "evidence": ["fixtures/functional-hardware/primary-function.csv"]
     },
     {
-      "obligationId": "mechanical-integrity",
+      "expectationId": "mechanical-integrity",
       "status": "passed",
       "evidence": ["fixtures/functional-hardware/mechanical-boundary.md"]
     },
     {
-      "obligationId": "boundary-failure",
+      "expectationId": "boundary-failure",
       "status": "passed",
       "evidence": ["fixtures/functional-hardware/failure-tests.json"]
     },
     {
-      "obligationId": "revision-closure",
+      "expectationId": "revision-closure",
       "status": "passed",
       "evidence": ["fixtures/functional-hardware/revision-review.md"]
     },
     {
-      "obligationId": "completion-boundary",
+      "expectationId": "completion-boundary",
       "status": "passed",
       "evidence": ["fixtures/functional-hardware/decision-receipt.json"]
     }
   ],
   "batteryResult": {
-    "obligationId": "battery-system",
+    "expectationId": "battery-system",
     "status": "passed",
     "evidence": ["fixtures/functional-hardware/battery-tests.json"]
   }

@@ -212,7 +212,7 @@ describe("Possible MCP", () => {
     assert.deepEqual(envelope.error.details.replacementSlugs, ["functional-hardware-prototype", "mechanical-cad-review"]);
   });
 
-  it("compiles Functional Hardware Prototype with conditional proof modules", async () => {
+  it("compiles Functional Hardware Prototype with conditional expectation modules", async () => {
     const result = await client.callTool({ name: "compile_pack", arguments: { slug: "functional-hardware-prototype" } });
     const envelope = result.structuredContent as { ok: boolean; data: { pack: { catalogNumber: number; lane: string; name: string }; installCommands: string[]; runPrompt: string } };
     assert.equal(envelope.ok, true);
@@ -222,10 +222,10 @@ describe("Possible MCP", () => {
     assert.equal(envelope.data.installCommands.length, 3);
     assert.match(envelope.data.runPrompt, /FUNCTIONAL HARDWARE PROTOTYPE GATE/);
     assert.match(envelope.data.runPrompt, /CONDITIONAL MODULES/);
-    assert.match(envelope.data.runPrompt, /inactive module adds no implementation or proof work/i);
+    assert.match(envelope.data.runPrompt, /inactive expectations and modules create no implementation work/i);
   });
 
-  it("compiles Mechanical CAD Review with interface proof gates", async () => {
+  it("compiles Mechanical CAD Review with interface expectation gates", async () => {
     const result = await client.callTool({ name: "compile_pack", arguments: { slug: "mechanical-cad-review" } });
     const envelope = result.structuredContent as { ok: boolean; data: { pack: { catalogNumber: number; lane: string; name: string }; installCommands: string[]; runPrompt: string } };
     assert.equal(envelope.ok, true);
@@ -233,7 +233,7 @@ describe("Possible MCP", () => {
     assert.equal(envelope.data.pack.lane, "create");
     assert.equal(envelope.data.pack.name, "Mechanical CAD Review");
     assert.equal(envelope.data.installCommands.length, 2);
-    assert.match(envelope.data.runPrompt, /CRITICAL PROOF CONTRACT/);
+    assert.match(envelope.data.runPrompt, /PACK EXPECTATION TEMPLATES/);
     assert.match(envelope.data.runPrompt, /MECHANICAL CAD REVIEW GATE/);
     assert.match(envelope.data.runPrompt, /review-ready, repair-required, or no-go/i);
   });

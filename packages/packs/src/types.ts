@@ -151,7 +151,7 @@ export interface ModularOutcomeModule {
   activationWhen: string;
   work: string[];
   checks: string[];
-  requiredProofIds: string[];
+  requiredExpectationIds: string[];
 }
 
 export interface ModularOutcomeContract {
@@ -185,6 +185,33 @@ export interface CriticalProofObligation {
   claim: string;
   failureModes: string[];
   requiredEvidence: string[];
+}
+
+export type ExpectationLevel = "required" | "preferred";
+export type ExpectationSource = "pack" | "user" | "inferred";
+
+export interface PackExpectation {
+  id: string;
+  moduleId?: string;
+  statement: string;
+  level?: ExpectationLevel;
+  failureModes: string[];
+  requiredEvidence: string[];
+}
+
+export interface OutcomeExpectation extends PackExpectation {
+  source: ExpectationSource;
+  level: ExpectationLevel;
+  active: boolean;
+  activationEvidence: string[];
+}
+
+export interface OutcomeExpectationContract {
+  schemaVersion: 1;
+  runId: string;
+  packSlug: string;
+  frozenAt: string;
+  expectations: OutcomeExpectation[];
 }
 
 export interface ArchivedPackMetadata {
@@ -260,6 +287,8 @@ export interface OutcomePack {
   manufacturingReadiness?: ManufacturingReadinessContract;
   modularOutcome?: ModularOutcomeContract;
   studyReadiness?: StudyReadinessContract;
+  expectations?: PackExpectation[];
+  /** Historical compatibility for archived and pre-expectation pack specifications. */
   criticalProofs?: CriticalProofObligation[];
   remix?: RemixContract;
   prerequisites?: OutcomePrerequisite[];
@@ -282,10 +311,20 @@ export type OutcomeProofStatus = "passed" | "failed" | "skipped" | "unproven";
 
 export interface OutcomeProofRecord {
   obligationId?: string;
+  expectationId?: string;
   claim: string;
   status: OutcomeProofStatus;
   evidence: string[];
 }
+
+export interface ExpectationResult {
+  expectationId: string;
+  status: OutcomeProofStatus;
+  evidence: string[];
+  finding?: string;
+}
+
+export type ExpectationEvaluation = "passed" | "failed" | "unproven";
 
 export interface CriticalProofResult {
   obligationId: string;
@@ -299,6 +338,7 @@ export interface OutcomeArtifactRecord {
   path: string;
   description: string;
   workstreamId: string;
+  expectationIds?: string[];
   sha256: string;
 }
 
@@ -342,8 +382,11 @@ export interface OutcomeRecord {
   skillLockPath: string;
   workspaceRevision: string;
   activeModules?: string[];
+  expectationContractPath?: string;
+  expectationResults?: ExpectationResult[];
   artifacts: OutcomeArtifactRecord[];
-  proofs: OutcomeProofRecord[];
+  /** Historical proof records; new runs use expectationResults. */
+  proofs?: OutcomeProofRecord[];
   decisions: OutcomeDecisionRecord[];
   repairs: OutcomeRepairRecord[];
   approvals: OutcomeApprovalRecord[];

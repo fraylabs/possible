@@ -1022,7 +1022,8 @@ function DocsPage() {
               <div><dt>Agent skill</dt><dd>A reusable capability that performs focused work during a run.</dd></div>
               <div><dt>Run</dt><dd>One approved Outcome Pack applied to one project.</dd></div>
               <div><dt>Workstream</dt><dd>A bounded part of the outcome with named inputs, outputs, ownership, and checks. Independent workstreams may run in parallel.</dd></div>
-              <div><dt>Outcome brief</dt><dd>The durable record of the confirmed intent, audience, current reality, constraints, acceptance checks, gates, and unknowns.</dd></div>
+              <div><dt>Outcome brief</dt><dd>The durable record of confirmed intent, audience, current reality, constraints, gates, and unknowns.</dd></div>
+              <div><dt>Expectation contract</dt><dd>The observable required and preferred outcomes that connect user intent to work, evidence, and completion.</dd></div>
               <div><dt>Outcome Record</dt><dd>The machine-readable index every run produces. It links artifacts, hashes, proofs, decisions, failures, repairs, approvals, limitations, and fresh verification without replacing the underlying evidence.</dd></div>
               <div><dt>Acceptance check</dt><dd>A concrete condition the finished work must satisfy. It turns “done” into something inspectable.</dd></div>
               <div><dt>Verification</dt><dd>The tests, review, measurements, or inspected evidence used to determine whether the promised end state is true.</dd></div>
@@ -1046,7 +1047,7 @@ function DocsPage() {
             <ol>
               <li><strong>What does Possible think you want to make?</strong><span>A concise outcome statement and any material assumptions.</span></li>
               <li><strong>Why does this Outcome Pack fit?</strong><span>A link to its specification and a short explanation.</span></li>
-              <li><strong>What will exist afterward?</strong><span>Concrete outputs and the most important acceptance checks.</span></li>
+              <li><strong>What will exist afterward?</strong><span>Concrete outputs and the expectations that decide whether the outcome is real.</span></li>
               <li><strong>What remains unauthorized?</strong><span>External actions and claims that still require separate approval.</span></li>
             </ol>
             <a className="docs-reference-link" href="/packs/hardware-launch"><span>EXAMPLE OUTCOME PACK</span><strong>Hardware Launch</strong><i>View specification →</i></a>
@@ -1069,7 +1070,7 @@ function DocsPage() {
               <li><strong>Inspect and install</strong><span>Resolve the Outcome Pack&apos;s agent skills and detect optional agent plugins without pretending to install them.</span></li>
               <li><strong>Write shared state</strong><span>Record the confirmed brief, exact Outcome Pack snapshot, and resolved skill versions.</span></li>
               <li><strong>Coordinate workstreams</strong><span>Run independent specialist work in parallel where appropriate.</span></li>
-              <li><strong>Integrate and verify</strong><span>Combine artifacts, run acceptance checks, and assign a fresh reviewer.</span></li>
+              <li><strong>Integrate and verify</strong><span>Combine artifacts, challenge every active expectation, and assign a fresh reviewer.</span></li>
               <li><strong>Reassess what comes next</strong><span>Inspect the verified result and changed reality before recommending one next outcome for fresh approval.</span></li>
             </ol>
             <a className="docs-text-link" href="/examples/still?view=process">See a complete recorded Hardware Launch run →</a>
@@ -1080,7 +1081,8 @@ function DocsPage() {
             <p>Possible creates outcome state only after confirmation.</p>
             <div className="docs-table" role="table" aria-label="Possible project files">
               <div role="row"><strong role="columnheader">Path</strong><strong role="columnheader">Purpose</strong></div>
-              <div role="row"><code role="cell">.possible/outcome-brief.md</code><span role="cell">Confirmed intent, constraints, interfaces, acceptance checks, gates, and unknowns.</span></div>
+              <div role="row"><code role="cell">.possible/outcome-brief.md</code><span role="cell">Confirmed intent, constraints, interfaces, gates, and unknowns.</span></div>
+              <div role="row"><code role="cell">.possible/runs/&lt;run-id&gt;/expectations.json</code><span role="cell">Frozen required and preferred expectations with evidence requirements and activation state.</span></div>
               <div role="row"><code role="cell">.possible/pack.json</code><span role="cell">The exact Outcome Pack snapshot approved for this run.</span></div>
               <div role="row"><code role="cell">.possible/skills-lock.json</code><span role="cell">Resolved sources, revisions, paths, and content hashes.</span></div>
             </div>
@@ -1166,7 +1168,7 @@ function HowToUsePage() {
               <li><strong>Start the conversation</strong><span>Type <code>$possible</code>. No form, Outcome Pack name, or special prompt format is required.</span></li>
               <li><strong>Describe the ambition</strong><span>Say what you want to make, launch, or release in your own words. A rough idea is enough.</span></li>
               <li><strong>Supply essential context</strong><span>Answer the questions that materially change the result. Correct assumptions instead of accepting a polished misunderstanding.</span></li>
-              <li><strong>Review the recommendation</strong><span>Check the stated outcome, proposed Outcome Pack, expected outputs, acceptance checks, assumptions, and actions that remain gated.</span></li>
+              <li><strong>Review the recommendation</strong><span>Check the stated outcome, proposed Outcome Pack, expected outputs, expectations, assumptions, and actions that remain gated.</span></li>
               <li><strong>Confirm—or revise</strong><span>Say “yes, proceed” only when the recommendation is right. Otherwise, correct it and continue the conversation.</span></li>
               <li><strong>Review the evidence</strong><span>Inspect the artifacts, verification results, limitations, and completion report. Approve any external action separately.</span></li>
               <li><strong>Decide what comes next</strong><span>Use the verified new reality—not an old roadmap—to review, revise, or reject Possible&apos;s next recommendation.</span></li>
@@ -1179,12 +1181,12 @@ function HowToUsePage() {
             <ol className="docs-responsibility-list">
               <li><strong>Listen before selecting</strong><span><code>$possible</code> reflects the ambition and clarifies material unknowns before mentioning an Outcome Pack or beginning work.</span></li>
               <li><strong>Inspect what already exists</strong><span>When useful, it performs a read-only project check so the recommendation reflects the actual starting point.</span></li>
-              <li><strong>Define the outcome</strong><span>It states the observable end condition, intended audience, constraints, acceptance checks, assumptions, and unknowns.</span></li>
+              <li><strong>Define the outcome</strong><span>It states the observable end condition, intended audience, constraints, expectations, assumptions, and unknowns.</span></li>
               <li><strong>Recommend one Outcome Pack</strong><span>It explains why the Outcome Pack fits, what it should produce, how success will be checked, and what remains unauthorized.</span></li>
               <li><strong>Wait for explicit confirmation</strong><span>A question, correction, reaction, or silence does not authorize execution.</span></li>
               <li><strong>Assemble the capabilities</strong><span>After approval, it installs reviewed agent skills, records the approved Outcome Pack and versions, and creates shared outcome state.</span></li>
               <li><strong>Coordinate the work</strong><span>It assigns bounded workstreams, keeps them aligned to the same brief, and integrates their outputs.</span></li>
-              <li><strong>Verify before declaring success</strong><span>It runs acceptance checks, uses fresh review where appropriate, and returns a completion report with failures, limitations, and unproven claims.</span></li>
+              <li><strong>Verify before declaring success</strong><span>It challenges active expectations, uses fresh review where appropriate, and returns evidence-backed results with failures, limitations, and unproven claims.</span></li>
               <li><strong>Recommend from the new reality</strong><span>Only after the outcome closes does it inspect what changed, recommend one next outcome, and wait for fresh approval.</span></li>
             </ol>
           </section>
@@ -1311,7 +1313,7 @@ const judgingCriteria = [
 ] as const;
 
 const judgingTrail = [
-  { step: "INTAKE", detail: "The confirmed brief records facts, constraints, required outputs, and acceptance checks.", href: "/demo/still/PRODUCT-BRIEF.md", evidence: "Confirmed brief" },
+  { step: "INTAKE", detail: "The confirmed brief records facts, constraints, and required outputs; the frozen expectation contract defines success.", href: "/demo/still/PRODUCT-BRIEF.md", evidence: "Confirmed brief" },
   { step: "COMPILE", detail: "The generated prompt assigns site, film, and CAD ownership before execution.", href: "https://github.com/fraylabs/possible/blob/main/apps/web/public/demo/still/CODEX-THREAD.md#run-prompt", evidence: "Compiled workstreams" },
   { step: "FAIL", detail: "The first browser trace preserves the integrated site's asset-path 404s.", href: "/demo/still/verification/browser-results-initial-failure.json", evidence: "Failed trace" },
   { step: "REPAIR", detail: "The fresh-review receipt records the relative-base fix and mandatory rerun.", href: "/demo/still/evidence/final-receipt.md", evidence: "Repair receipt" },

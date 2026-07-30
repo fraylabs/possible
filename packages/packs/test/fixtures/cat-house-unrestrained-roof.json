@@ -3,32 +3,32 @@
   "requestedStatus": "passed",
   "results": [
     {
-      "obligationId": "requirements-fit",
+      "expectationId": "requirements-fit",
       "status": "passed",
       "evidence": ["fixtures/cat-house/requirements-trace.md"]
     },
     {
-      "obligationId": "assembly-restraint",
+      "expectationId": "assembly-restraint",
       "status": "failed",
       "evidence": ["fixtures/cat-house/roof-uplift-failure.md"]
     },
     {
-      "obligationId": "assembly-path",
+      "expectationId": "assembly-path",
       "status": "passed",
       "evidence": ["fixtures/cat-house/assembly-sequence.md"]
     },
     {
-      "obligationId": "failure-paths",
+      "expectationId": "failure-paths",
       "status": "failed",
       "evidence": ["fixtures/cat-house/roof-spread-failure.md"]
     },
     {
-      "obligationId": "fabrication-envelope",
+      "expectationId": "fabrication-envelope",
       "status": "passed",
       "evidence": ["fixtures/cat-house/vendor-package-audit.md"]
     },
     {
-      "obligationId": "physical-validation-boundary",
+      "expectationId": "physical-validation-boundary",
       "status": "passed",
       "evidence": ["fixtures/cat-house/unproven-physical-tests.md"]
     }

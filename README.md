@@ -107,7 +107,9 @@ Each Outcome Pack has a [typed manifest](packages/packs/src/types.ts). The [comp
 - approval gates;
 - verification and the definition of done.
 
-Each run writes one predictable `.possible/runs/<run-id>/outcome-record.json`. It indexes the approved brief, exact pack and skill versions, artifacts and hashes, checks, decisions, failures, repairs, approvals, limitations, and fresh verification. The linked files remain the proof; the record makes that proof easy to extract.
+Each run freezes `.possible/runs/<run-id>/expectations.json` before implementation. Pack templates, explicit user expectations, and safe inferred preferences become one observable contract. Required expectations decide completion; preferred expectations guide tradeoffs without becoming hidden blockers. Workstreams, outputs, artifacts, verifier findings, and final results all map back to expectation IDs.
+
+Each run writes one predictable `.possible/runs/<run-id>/outcome-record.json`. It indexes the approved brief, expectation contract, exact pack and skill versions, artifacts and hashes, expectation results, decisions, failures, repairs, approvals, limitations, and fresh verification. The linked files remain the evidence; the record makes it easy to extract.
 
 After a verified run, Possible creates a new-reality checkpoint. It does not automatically begin another Outcome Pack or inherit approval into a future outcome.
 

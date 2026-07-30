@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import * as packApi from "../dist/index.js";
-import { activeOutcomePacks, archivedOutcomePacks, compilePack, compileWorkstreamWaves, evaluateCriticalProofResults, experimentalOutcomePacks, getPackStatus, outcomePacks, recordOutcomeJourney, stableOutcomePacks, validateOutcomeCheckpoint, validateOutcomeRecord } from "../dist/index.js";
+import { activeOutcomePacks, archivedOutcomePacks, compilePack, compileWorkstreamWaves, evaluateExpectationResults, experimentalOutcomePacks, getPackStatus, outcomePacks, recordOutcomeJourney, stableOutcomePacks, validateExpectationContract, validateOutcomeCheckpoint, validateOutcomeRecord } from "../dist/index.js";
 
 test("every outcome pack compiles to inspectable installs and a complete prompt", () => {
   assert.deepEqual(outcomePacks.map((pack) => pack.slug), [
@@ -116,8 +116,10 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
     assert.match(compiled.runPrompt, /passed\/failed\/skipped/);
     assert.match(compiled.runPrompt, /OUTCOME RECORD/);
     assert.match(compiled.runPrompt, /\.possible\/runs\/<run-id>\/outcome-record\.json/);
-    assert.match(compiled.runPrompt, /index of preserved proof, not the proof itself/i);
-    assert.match(compiled.runPrompt, /artifacts with repository-relative path, description, owning workstream id, and SHA-256/i);
+    assert.match(compiled.runPrompt, /index of preserved evidence, not the evidence itself/i);
+    assert.match(compiled.runPrompt, /artifacts with repository-relative path, description, owning workstream id, expectationIds, and SHA-256/i);
+    assert.match(compiled.runPrompt, /EXPECTATION CONTRACT/);
+    assert.match(compiled.runPrompt, /Expectations describe what becomes true—not implementation tasks/i);
     assert.match(compiled.runPrompt, /NEW-REALITY CHECKPOINT/);
     assert.match(compiled.runPrompt, /what became true, with direct evidence/i);
     assert.match(compiled.runPrompt, /remaining unknowns/i);
@@ -155,22 +157,22 @@ test("Mechanical CAD Review rejects the unrestrained cat-house roof", async () =
 
   const compiled = compilePack(pack);
   assert.equal(compiled.installCommands.length, 2);
-  assert.match(compiled.runPrompt, /CRITICAL PROOF CONTRACT/);
+  assert.match(compiled.runPrompt, /PACK EXPECTATION TEMPLATES/);
   assert.match(compiled.runPrompt, /MECHANICAL CAD REVIEW GATE/);
   assert.match(compiled.runPrompt, /all six movement directions/i);
   assert.match(compiled.runPrompt, /lift, spread, slide, rack, flex, and pull-out/i);
   assert.match(compiled.runPrompt, /review-ready means ready for a fabricator to quote and critique/i);
-  assert.match(compiled.runPrompt, /File existence and hashes.*cannot by themselves prove a critical claim/i);
+  assert.match(compiled.runPrompt, /File existence and hashes.*cannot by themselves satisfy an expectation/i);
   assert.doesNotMatch(compiled.runPrompt, /REMIX GATE|OPENAI SITES MVP PATH|MEASURED HARDWARE PROTOTYPE GATE/);
 
   const fixture = JSON.parse(await readFile(new URL("./fixtures/cat-house-unrestrained-roof.json", import.meta.url), "utf8"));
-  assert.equal(evaluateCriticalProofResults(pack.criticalProofs, fixture.results), "failed");
+  assert.equal(evaluateExpectationResults(pack.expectations, fixture.results), "failed");
   const allPassing = fixture.results.map((result) => ({
     ...result,
     status: "passed",
   }));
-  assert.equal(evaluateCriticalProofResults(pack.criticalProofs, allPassing), "passed");
-  assert.equal(evaluateCriticalProofResults(pack.criticalProofs, allPassing.slice(0, -1)), "unproven");
+  assert.equal(evaluateExpectationResults(pack.expectations, allPassing), "passed");
+  assert.equal(evaluateExpectationResults(pack.expectations, allPassing.slice(0, -1)), "unproven");
 
   const record = {
     schemaVersion: 1,
@@ -179,6 +181,7 @@ test("Mechanical CAD Review rejects the unrestrained cat-house roof", async () =
     status: fixture.requestedStatus,
     completedAt: "2026-07-26T04:00:00.000Z",
     outcomeBriefPath: ".possible/runs/cat-house-unrestrained-roof/outcome-brief.md",
+    expectationContractPath: ".possible/runs/cat-house-unrestrained-roof/expectations.json",
     packSnapshotPath: ".possible/runs/cat-house-unrestrained-roof/pack.json",
     skillLockPath: ".possible/runs/cat-house-unrestrained-roof/skills-lock.json",
     workspaceRevision: "cat-house-cad-revision",
@@ -186,12 +189,10 @@ test("Mechanical CAD Review rejects the unrestrained cat-house roof", async () =
       path: "mechanical/cad/cat-house.step",
       description: "Cat house assembly",
       workstreamId: "mechanical-design",
+      expectationIds: ["assembly-restraint"],
       sha256: "b".repeat(64),
     }],
-    proofs: fixture.results.map((result) => ({
-      ...result,
-      claim: pack.criticalProofs.find(({ id }) => id === result.obligationId).claim,
-    })),
+    expectationResults: fixture.results,
     decisions: [],
     repairs: [],
     approvals: [],
@@ -206,12 +207,104 @@ test("Mechanical CAD Review rejects the unrestrained cat-house roof", async () =
     checkpointPath: ".possible/checkpoints/cat-house-unrestrained-roof.json",
   };
   assert.throws(
-    () => validateOutcomeRecord(record, pack.criticalProofs),
-    /requires every critical proof to pass; current result is failed/,
+    () => validateOutcomeRecord(record, pack.expectations),
+    /requires every active required expectation to pass; current result is failed/,
   );
 });
 
-test("Functional Hardware Prototype activates only the proof modules present in the artifact", async () => {
+test("expectations connect user intent to evidence without making preferences completion blockers", () => {
+  const contract = {
+    schemaVersion: 1,
+    runId: "cat-house-001",
+    packSlug: "mechanical-cad-review",
+    frozenAt: "2026-07-30T02:00:00.000Z",
+    expectations: [
+      {
+        id: "roof-remains-attached",
+        statement: "The roof remains mechanically restrained during normal cat use.",
+        source: "user",
+        level: "required",
+        active: true,
+        activationEvidence: [".possible/runs/cat-house-001/outcome-brief.md"],
+        failureModes: ["roof lifts", "walls spread and release the roof"],
+        requiredEvidence: ["six-direction restraint review", "assembled CAD section"],
+      },
+      {
+        id: "warm-color",
+        statement: "The house uses a warm color.",
+        source: "inferred",
+        level: "preferred",
+        active: true,
+        activationEvidence: [".possible/runs/cat-house-001/outcome-brief.md"],
+        failureModes: ["finish conflicts with the selected environment"],
+        requiredEvidence: ["render review"],
+      },
+      {
+        id: "outdoor-weatherproofing",
+        statement: "The house withstands outdoor weather.",
+        source: "inferred",
+        level: "required",
+        active: false,
+        activationEvidence: [".possible/runs/cat-house-001/outcome-brief.md"],
+        failureModes: ["water enters the house"],
+        requiredEvidence: ["weather exposure test"],
+      },
+    ],
+  };
+  assert.equal(validateExpectationContract(contract), contract);
+  assert.equal(evaluateExpectationResults(contract.expectations, [
+    { expectationId: "roof-remains-attached", status: "passed", evidence: ["mechanical/review/restraint.json"] },
+    { expectationId: "warm-color", status: "failed", evidence: ["mechanical/review/finish.json"] },
+  ]), "passed");
+  assert.equal(evaluateExpectationResults(contract.expectations, [
+    { expectationId: "warm-color", status: "passed", evidence: ["mechanical/review/finish.json"] },
+  ]), "unproven");
+  const record = {
+    schemaVersion: 1,
+    runId: contract.runId,
+    packSlug: contract.packSlug,
+    status: "passed",
+    completedAt: "2026-07-30T03:00:00.000Z",
+    outcomeBriefPath: ".possible/runs/cat-house-001/outcome-brief.md",
+    expectationContractPath: ".possible/runs/cat-house-001/expectations.json",
+    packSnapshotPath: ".possible/runs/cat-house-001/pack.json",
+    skillLockPath: ".possible/runs/cat-house-001/skills-lock.json",
+    workspaceRevision: "cat-house-001-revision",
+    artifacts: [{
+      path: "mechanical/cad/cat-house.step",
+      description: "Cat house assembly",
+      workstreamId: "mechanical-design",
+      expectationIds: ["roof-remains-attached"],
+      sha256: "c".repeat(64),
+    }],
+    expectationResults: [
+      { expectationId: "roof-remains-attached", status: "passed", evidence: ["mechanical/review/restraint.json"] },
+      { expectationId: "warm-color", status: "failed", evidence: ["mechanical/review/finish.json"] },
+    ],
+    decisions: [],
+    repairs: [],
+    approvals: [],
+    externalActions: [],
+    limitations: ["The inactive outdoor weatherproofing expectation was not tested."],
+    verification: {
+      reviewer: "fresh-mechanical-reviewer",
+      independentFromImplementation: true,
+      reportPath: "mechanical/review/final.json",
+      status: "passed",
+    },
+    checkpointPath: ".possible/checkpoints/cat-house-001.json",
+  };
+  assert.equal(validateOutcomeRecord(record, contract), record);
+  const wrongRun = structuredClone(record);
+  wrongRun.runId = "another-run";
+  assert.throws(() => validateOutcomeRecord(wrongRun, contract), /must match its frozen expectation contract/);
+
+  const noRequired = structuredClone(contract);
+  noRequired.expectations[0].level = "preferred";
+  assert.throws(() => validateExpectationContract(noRequired), /at least one active required expectation/);
+});
+
+test("Functional Hardware Prototype activates only the expectation modules present in the artifact", async () => {
   const pack = outcomePacks.find((candidate) => candidate.slug === "functional-hardware-prototype");
   assert.ok(pack);
   assert.equal(pack.catalogNumber, 20);
@@ -242,16 +335,16 @@ test("Functional Hardware Prototype activates only the proof modules present in 
   assert.match(compiled.runPrompt, /CONDITIONAL MODULES/);
   assert.match(compiled.runPrompt, /Safety is a design revision around real geometry and behavior, not a universal pre-design dossier/i);
   assert.match(compiled.runPrompt, /A passive artifact activates no electronics work/i);
-  assert.match(compiled.runPrompt, /An inactive module adds no implementation or proof work/i);
+  assert.match(compiled.runPrompt, /Inactive expectations and modules create no implementation work/i);
   assert.doesNotMatch(compiled.runPrompt, /PHYSICAL REMIX GATE|MEASURED HARDWARE PROTOTYPE GATE|PRODUCT DECISION RECORD/);
 
   const fixture = JSON.parse(await readFile(new URL("./fixtures/functional-hardware-core-only.json", import.meta.url), "utf8"));
-  assert.equal(evaluateCriticalProofResults(pack.criticalProofs, fixture.results, []), "passed");
-  assert.equal(evaluateCriticalProofResults(pack.criticalProofs, fixture.results, ["battery"]), "unproven");
-  assert.equal(evaluateCriticalProofResults(pack.criticalProofs, [...fixture.results, fixture.batteryResult], ["battery"]), "passed");
+  assert.equal(evaluateExpectationResults(pack.expectations, fixture.results, []), "passed");
+  assert.equal(evaluateExpectationResults(pack.expectations, fixture.results, ["battery"]), "unproven");
+  assert.equal(evaluateExpectationResults(pack.expectations, [...fixture.results, fixture.batteryResult], ["battery"]), "passed");
   assert.throws(
-    () => evaluateCriticalProofResults(pack.criticalProofs, fixture.results, ["future-module"]),
-    /Unknown active critical proof module future-module/,
+    () => evaluateExpectationResults(pack.expectations, fixture.results, ["future-module"]),
+    /Unknown active expectation module future-module/,
   );
 
   const passedRecord = {
@@ -261,6 +354,7 @@ test("Functional Hardware Prototype activates only the proof modules present in 
     status: "passed",
     completedAt: "2026-07-27T05:00:00.000Z",
     outcomeBriefPath: ".possible/runs/bench-powered-core-prototype/outcome-brief.md",
+    expectationContractPath: ".possible/runs/bench-powered-core-prototype/expectations.json",
     packSnapshotPath: ".possible/runs/bench-powered-core-prototype/pack.json",
     skillLockPath: ".possible/runs/bench-powered-core-prototype/skills-lock.json",
     workspaceRevision: "functional-prototype-revision",
@@ -269,12 +363,10 @@ test("Functional Hardware Prototype activates only the proof modules present in 
       path: "prototype/build/integrated-artifact.md",
       description: "Integrated artifact inspection",
       workstreamId: "prototype-build",
+      expectationIds: ["integrated-artifact"],
       sha256: "c".repeat(64),
     }],
-    proofs: fixture.results.map((result) => ({
-      ...result,
-      claim: pack.criticalProofs.find(({ id }) => id === result.obligationId).claim,
-    })),
+    expectationResults: fixture.results,
     decisions: [],
     repairs: [],
     approvals: [],
@@ -289,24 +381,24 @@ test("Functional Hardware Prototype activates only the proof modules present in 
     checkpointPath: ".possible/checkpoints/bench-powered-core-prototype.json",
   };
   assert.throws(
-    () => validateOutcomeRecord(passedRecord, pack.criticalProofs),
-    /requires every critical proof to pass; current result is unproven/,
+    () => validateOutcomeRecord(passedRecord, pack.expectations),
+    /requires every active required expectation to pass; current result is unproven/,
   );
 
   const wrongModuleProof = structuredClone(pack);
   wrongModuleProof.functionalHardwarePrototype.modules[0].requiredProofIds = ["motion-system"];
-  assert.throws(() => compilePack(wrongModuleProof), /critical proof motion-system must declare the same moduleId/);
+  assert.throws(() => compilePack(wrongModuleProof), /expectation motion-system must declare the same moduleId/);
 
   const unlistedModuleProof = structuredClone(pack);
-  unlistedModuleProof.criticalProofs.push({
-    ...structuredClone(pack.criticalProofs.find(({ id }) => id === "battery-system")),
+  unlistedModuleProof.expectations.push({
+    ...structuredClone(pack.expectations.find(({ id }) => id === "battery-system")),
     id: "battery-secondary-proof",
   });
-  assert.throws(() => compilePack(unlistedModuleProof), /battery must list conditional critical proof battery-secondary-proof/);
+  assert.throws(() => compilePack(unlistedModuleProof), /battery must list conditional expectation battery-secondary-proof/);
 
   const unrelatedConditionalProof = structuredClone(outcomePacks.find((candidate) => candidate.slug === "mechanical-cad-review"));
-  unrelatedConditionalProof.criticalProofs[0].moduleId = "battery";
-  assert.throws(() => compilePack(unrelatedConditionalProof), /conditional critical proofs require a conditional module contract/);
+  unrelatedConditionalProof.expectations[0].moduleId = "battery";
+  assert.throws(() => compilePack(unrelatedConditionalProof), /conditional expectations require a conditional module contract/);
 });
 
 test("every run exposes one extractable outcome record", () => {
@@ -365,7 +457,7 @@ test("every run exposes one extractable outcome record", () => {
 
   const missingProof = structuredClone(record);
   missingProof.proofs = [];
-  assert.throws(() => validateOutcomeRecord(missingProof), /at least one proof/);
+  assert.throws(() => validateOutcomeRecord(missingProof), /expectation results or historical proofs/);
 
   const unsafeEvidence = structuredClone(record);
   unsafeEvidence.proofs[0].evidence = ["../outside.json"];
@@ -1127,20 +1219,20 @@ test("Launch Content Package activates only the requested final-export formats",
   assert.match(compiled.runPrompt, /inactive modules create no production, placeholder, or simulated-proof work/i);
   assert.doesNotMatch(compiled.runPrompt, /REMIX GATE|PRODUCT DECISION RECORD|three comparable campaign directions/i);
 
-  const coreResults = content.criticalProofs
+  const coreResults = content.expectations
     .filter(({ moduleId }) => moduleId === undefined)
-    .map(({ id }) => ({ obligationId: id, status: "passed", evidence: [`launch-content-package/review/${id}.json`] }));
+    .map(({ id }) => ({ expectationId: id, status: "passed", evidence: [`launch-content-package/review/${id}.json`] }));
   const staticResult = {
-    obligationId: "static-visual-output",
+    expectationId: "static-visual-output",
     status: "passed",
     evidence: ["launch-content-package/review/static-visual-output.json"],
   };
-  assert.equal(evaluateCriticalProofResults(content.criticalProofs, coreResults, ["static-visual"]), "unproven");
-  assert.equal(evaluateCriticalProofResults(content.criticalProofs, [...coreResults, staticResult], ["static-visual"]), "passed");
-  assert.equal(evaluateCriticalProofResults(content.criticalProofs, [...coreResults, staticResult], ["short-video"]), "unproven");
+  assert.equal(evaluateExpectationResults(content.expectations, coreResults, ["static-visual"]), "unproven");
+  assert.equal(evaluateExpectationResults(content.expectations, [...coreResults, staticResult], ["static-visual"]), "passed");
+  assert.equal(evaluateExpectationResults(content.expectations, [...coreResults, staticResult], ["short-video"]), "unproven");
   assert.throws(
-    () => evaluateCriticalProofResults(content.criticalProofs, coreResults, ["podcast"]),
-    /Unknown active critical proof module podcast/,
+    () => evaluateExpectationResults(content.expectations, coreResults, ["podcast"]),
+    /Unknown active expectation module podcast/,
   );
 
   const withRemix = structuredClone(content);
@@ -1255,13 +1347,13 @@ test("Crowdfunding Campaign Readiness stops before platform or funding action", 
   assert.match(prompt, /ready-for-platform-review, repair-required, or no-go/i);
   assert.doesNotMatch(prompt, /LAUNCH GATE|PRODUCT DECISION RECORD|REMIX GATE|SCHEDULE GATE/);
 
-  const results = readiness.criticalProofs.map(({ id }) => ({
-    obligationId: id,
+  const results = readiness.expectations.map(({ id }) => ({
+    expectationId: id,
     status: "passed",
     evidence: [`crowdfunding-readiness/review/${id}.json`],
   }));
-  assert.equal(evaluateCriticalProofResults(readiness.criticalProofs, results), "passed");
-  assert.equal(evaluateCriticalProofResults(readiness.criticalProofs, results.slice(1)), "unproven");
+  assert.equal(evaluateExpectationResults(readiness.expectations, results), "passed");
+  assert.equal(evaluateExpectationResults(readiness.expectations, results.slice(1)), "unproven");
 
   const unsafePath = structuredClone(readiness);
   unsafePath.crowdfundingCampaignReadiness.economicsPath = "../economics.json";

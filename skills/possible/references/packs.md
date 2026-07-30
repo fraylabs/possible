@@ -4,6 +4,8 @@ Use this bundled snapshot when the Possible MCP tools are unavailable. Link the 
 
 Catalog categories are browsing labels only: Create is a first complete usable thing, Launch is a compelling public presentation, Release is evidence-backed readiness to ship or distribute, and Operate is a repeatable ongoing workflow. Do not ask the user to choose a category; select across the complete catalog from the desired finished outcome.
 
+Every new run freezes one expectation contract before implementation. Pack templates, explicit user expectations, and safe inferred preferences become observable required or preferred expectations. Workstreams, outputs, artifacts, verifier findings, and final results map to those expectation IDs; only active required expectations decide completion.
+
 ## Hardware Launch
 
 Slug: `hardware-launch`
@@ -889,7 +891,7 @@ Every manufactured part must have an explicit six-direction restraint explanatio
 
 Fabrication, vendor contact, quote requests, file sharing, purchases, printing, and physical testing require separate exact approval. A `review-ready` result means ready for a fabricator to quote and critique. It never means print-ready, physically fitted, load-tested, durable, animal-safe, human-safe, certified, or production-ready.
 
-Write `outcome-room/mechanical-cad-review-receipt.json` with exactly one status: `review-ready`, `repair-required`, or `no-go`. A passed completion record requires direct passing evidence for every critical proof obligation; one failed obligation prevents a passing status.
+Write `outcome-room/mechanical-cad-review-receipt.json` with exactly one status: `review-ready`, `repair-required`, or `no-go`. A passed completion record requires direct evidence for every active required expectation; one failed expectation prevents a passing status.
 
 ## Developer Adoption Readiness
 
