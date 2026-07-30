@@ -106,11 +106,13 @@ If a required agent skill is unavailable after installation, stop and identify i
 2. Map every active workstream and promised output to the expectation IDs it serves. Delegate only genuinely independent work that benefits from parallel execution. Never create one subagent per agent skill. Give each delegated workstream the shared brief, expectation IDs, explicit ownership, named agent skills, completion verifier, and prohibition against unrelated edits or external actions.
 3. Continue as the lead agent: protect shared facts, resolve interfaces, and prepare integration while delegated work runs.
 4. Preserve workstream artifacts and evidence before integration.
-5. Integrate into the Outcome Pack's outcome surface without erasing unrelated user work.
-6. After integration, run fresh verification with no implementation ownership. Use a separate reviewer or subagent when available; otherwise reset context to the frozen expectations and perform an explicitly adversarial review. Record one passed, failed, skipped, or unproven result with direct evidence for every active expectation.
-7. Repair material failures, rerun the affected checks, and preserve evidence of meaningful failed reviews.
-8. Finish with a completion report listing artifacts, verifier commands, passed, failed, skipped, and unproven checks, limitations, and every external action not taken.
-9. Reassess the new reality and stop before beginning another Outcome Pack.
+5. Integrate one coherent complete outcome into the Outcome Pack's primary review surface without erasing unrelated user work. The surface may be the running product, assembled CAD, integrated prototype, complete campaign package, release candidate, or completed operating cycle. Workstream checks and isolated previews are inputs, not substitutes for reviewing the actual complete result.
+6. After integration, reset to the frozen expectations and run fresh verification with no implementation ownership. Use a separate reviewer or subagent when available; otherwise perform an explicitly adversarial review. Inspect the complete outcome expectation by expectation and record one passed, failed, skipped, or unproven result with direct evidence for every active expectation.
+7. Treat every failed required expectation as a blocking repair finding. Preserve meaningful failure evidence, repair the actual outcome, and never delete, relabel, or weaken an expectation merely to obtain a pass.
+8. After a repair, rerun the affected verifier and then rerun the complete-outcome review so the fix cannot hide an integration regression. Preserve both failure and repair evidence. Pass only the final integrated revision for which every active required expectation passes.
+9. When the selected pack permits later-stage safety, robustness, validation, or finish work, make it a concrete revision of the coherent artifact. Retain every applicable early hard stop and external-action gate.
+10. Finish with a completion report listing artifacts, verifier commands, passed, failed, skipped, and unproven checks, limitations, and every external action not taken.
+11. Reassess the new reality and stop before beginning another Outcome Pack.
 
 ## Remix a creative direction
 

@@ -565,7 +565,7 @@ function PackDetailPage({ pack }: { pack: OutcomePack }) {
             {pack.decisionRationale ? <div className="pack-review-callout"><span>PRODUCT DECISIONS</span><div><code>{pack.decisionRationale.rootPath}</code><code>{pack.decisionRationale.publicNarrativePath}</code></div><p>Important choices retain their alternatives, evidence, trade-offs, uncertainty, reversal conditions, and a truthful public explanation.</p></div> : null}
             {pack.hardwarePrototype ? <div className="pack-review-callout"><span>MEASURED PHYSICAL PROTOTYPE</span><div>{pack.hardwarePrototype.measurementClasses.map((measurement) => <code key={measurement}>{measurement}</code>)}</div><p>CAD and firmware are inputs. Working status requires calibrated evidence from the integrated physical artifact; otherwise the receipt records repair-required or no-go.</p></div> : null}
             {pack.remix ? <div className="pack-review-callout"><span>{pack.remix.kind === "physical-direction" ? "PHYSICAL REMIX" : "REMIX"}</span><div><code>{pack.remix.candidateCount} directions</code><code>{pack.remix.decisionPath}</code></div><p>{pack.remix.kind === "physical-direction" ? "Possible compares form, ergonomics, materials, layout, controls, assembly, service and sensory character while preserving function, safety, interfaces, claims and measurement access." : "Possible derives project-specific directions after product truth is known, then records one decision before dependent implementation begins. The outcome contract does not change."}</p></div> : null}
-            <div className="pack-review-callout"><span>INDEPENDENT REVIEW</span><div>{pack.reviewSkills.map((skill) => <code key={skill}>${skill}</code>)}</div><p>A verifier checks the integrated outcome. It reports evidence, failures, skipped checks, and unsupported claims.</p></div>
+            <div className="pack-review-callout"><span>INDEPENDENT REVIEW</span><div>{pack.reviewSkills.map((skill) => <code key={skill}>${skill}</code>)}</div><p>A verifier checks the complete integrated outcome expectation by expectation. Failed requirements block passing, remain preserved as evidence, and trigger artifact repair plus a complete-review rerun.</p></div>
           </section>
 
           <section className="pack-reference-section" id="agent-skills">
@@ -1070,7 +1070,7 @@ function DocsPage() {
               <li><strong>Inspect and install</strong><span>Resolve the Outcome Pack&apos;s agent skills and detect optional agent plugins without pretending to install them.</span></li>
               <li><strong>Write shared state</strong><span>Record the confirmed brief, exact Outcome Pack snapshot, and resolved skill versions.</span></li>
               <li><strong>Coordinate workstreams</strong><span>Run independent specialist work in parallel where appropriate.</span></li>
-              <li><strong>Integrate and verify</strong><span>Combine artifacts, challenge every active expectation, and assign a fresh reviewer.</span></li>
+              <li><strong>Review the complete outcome</strong><span>Integrate one coherent result, challenge every active expectation, preserve failures, repair the artifact, and rerun the complete review.</span></li>
               <li><strong>Reassess what comes next</strong><span>Inspect the verified result and changed reality before recommending one next outcome for fresh approval.</span></li>
             </ol>
             <a className="docs-text-link" href="/examples/still?view=process">See a complete recorded Hardware Launch run →</a>
@@ -1186,7 +1186,7 @@ function HowToUsePage() {
               <li><strong>Wait for explicit confirmation</strong><span>A question, correction, reaction, or silence does not authorize execution.</span></li>
               <li><strong>Assemble the capabilities</strong><span>After approval, it installs reviewed agent skills, records the approved Outcome Pack and versions, and creates shared outcome state.</span></li>
               <li><strong>Coordinate the work</strong><span>It assigns bounded workstreams, keeps them aligned to the same brief, and integrates their outputs.</span></li>
-              <li><strong>Verify before declaring success</strong><span>It challenges active expectations, uses fresh review where appropriate, and returns evidence-backed results with failures, limitations, and unproven claims.</span></li>
+              <li><strong>Verify before declaring success</strong><span>It reviews the complete integrated outcome against every active expectation, preserves failures, repairs the artifact, and reruns the review before returning evidence-backed results.</span></li>
               <li><strong>Recommend from the new reality</strong><span>Only after the outcome closes does it inspect what changed, recommend one next outcome, and wait for fresh approval.</span></li>
             </ol>
           </section>

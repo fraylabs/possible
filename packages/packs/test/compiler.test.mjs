@@ -120,6 +120,15 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
     assert.match(compiled.runPrompt, /artifacts with repository-relative path, description, owning workstream id, expectationIds, and SHA-256/i);
     assert.match(compiled.runPrompt, /EXPECTATION CONTRACT/);
     assert.match(compiled.runPrompt, /Expectations describe what becomes true—not implementation tasks/i);
+    assert.match(compiled.runPrompt, /OUTCOME REVIEW LOOP/);
+    assert.match(compiled.runPrompt, /one coherent, integrated outcome before judging completion/i);
+    assert.match(compiled.runPrompt, /isolated component previews are inputs, not substitutes/i);
+    assert.match(compiled.runPrompt, /inspect that complete outcome expectation by expectation/i);
+    assert.match(compiled.runPrompt, /repair the actual outcome.*never delete, relabel, or weaken the expectation/is);
+    assert.match(compiled.runPrompt, /rerun the complete-outcome review/i);
+    assert.match(compiled.runPrompt, /Pass only the final integrated revision/i);
+    assert.ok(compiled.runPrompt.indexOf("EXPECTATION CONTRACT") < compiled.runPrompt.indexOf("OUTCOME REVIEW LOOP"));
+    assert.ok(compiled.runPrompt.indexOf("OUTCOME REVIEW LOOP") < compiled.runPrompt.indexOf("OUTCOME RECORD"));
     assert.match(compiled.runPrompt, /NEW-REALITY CHECKPOINT/);
     assert.match(compiled.runPrompt, /what became true, with direct evidence/i);
     assert.match(compiled.runPrompt, /remaining unknowns/i);

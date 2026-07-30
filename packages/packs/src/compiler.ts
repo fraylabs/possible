@@ -695,7 +695,15 @@ EXPECTATION CONTRACT
 4. Map every active workstream, promised output, artifact, verifier method, and final finding back to one or more expectation ids. Inactive expectations and modules create no implementation work; record why they are inactive.
 5. Required expectations decide completion. Every active required expectation must pass with direct evidence. A failed required expectation makes the outcome failed or repair-required; a skipped, missing, or unproven required expectation prevents passing. Preferred expectations inform tradeoffs but do not block completion.
 6. File existence and hashes are supporting evidence only; they cannot by themselves satisfy an expectation. The fresh reviewer must try to falsify each active expectation rather than restate the implementation.
-7. Changes after freezing require a new contract revision with the reason and affected work recorded. Never silently weaken an expectation to obtain a pass.`;
+7. Changes after freezing require a new contract revision with the reason and affected work recorded. Never silently weaken an expectation to obtain a pass.
+
+OUTCOME REVIEW LOOP
+1. Build one coherent, integrated outcome before judging completion. Workstream checks and isolated component previews are inputs, not substitutes for reviewing the actual complete result.
+2. Create the smallest truthful primary review surface for that outcome: for example the running product, assembled CAD, integrated prototype, complete campaign package, release candidate, or completed operating cycle. It must expose the real interfaces and failure modes named by the active expectations.
+3. Reset to the frozen expectation contract and inspect that complete outcome expectation by expectation. Record passed, failed, skipped, or unproven for every active expectation with direct evidence and the reviewer's finding.
+4. Any failed required expectation blocks passing and becomes a repair finding. Preserve meaningful failure evidence, repair the actual outcome, and never delete, relabel, or weaken the expectation merely to obtain a pass.
+5. After a repair, rerun the affected verifier and then rerun the complete-outcome review so a local fix cannot hide an integration regression. Preserve both failure and repair evidence.
+6. Pass only the final integrated revision for which every active required expectation passes. When the pack permits later-stage safety, robustness, validation, or finish work, make it a concrete revision of the coherent artifact; retain every applicable early hard stop and external-action gate.`;
   const pluginCheck = pack.plugins?.length
     ? ` Also detect these optional agent plugins: ${pack.plugins.map((plugin) => `${plugin.invocation} (${plugin.skills.map((skill) => `$${skill}`).join(", ")})`).join(", ")}. Do not install or imitate an unavailable plugin; record its absence and use the documented fallback.`
     : "";
