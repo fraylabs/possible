@@ -16,7 +16,7 @@ export const workingWebAppPack: OutcomePack = {
   ],
   notFor: [
     "Choosing which software opportunity to pursue; use Software Opportunity Discovery. Attempting the first sale for a selected opportunity belongs to First Customer Sprint.",
-    "A working developer product that mainly needs a truthful first-use path and only the presentation modules it actually requires; use Developer Adoption Readiness.",
+    "A working capability that mainly needs a truthful first-use path and only the developer-product interfaces it actually requires; use Developer Product Readiness.",
     "A browser game whose core outcome is a polished replayable loop; use Playable Web Game.",
     "Deploying an existing tested candidate or operating an already-live service.",
     "Claiming production security, scale, reliability, or readiness from a local implementation.",

@@ -24,6 +24,11 @@ export const developerAdoptionReadinessPack: OutcomePack = {
     "A mandatory launch site or broad content campaign when a verified README and quickstart are enough.",
   ],
   reviewedAt: "2026-07-29",
+  archived: {
+    archivedAt: "2026-08-04",
+    reason: "This pack treated websites, demos, documentation, examples, and deployment as optional presentation modules but could not model agent skills, MCP servers, CLIs or packages, and SDK or API surfaces as first-class developer-product interfaces with one shared capability contract.",
+    replacementSlugs: ["developer-product-readiness"],
+  },
   skills,
   workstreams: [
     { id: "truth", name: "Audience and product truth", skills: ["copywriting"], owns: ["adoption/contract/", "adoption/claims/"], brief: "Define the intended developer, painful job, demonstrated capabilities, unsupported claims, first meaningful result, and minimum adoption surface." },

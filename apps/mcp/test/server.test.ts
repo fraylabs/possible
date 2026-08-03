@@ -55,7 +55,7 @@ describe("Possible MCP", () => {
     assert.doesNotMatch(client.getInstructions() ?? "", /chain/i);
   });
 
-  it("lists four stable, fifteen experimental, and nine archived outcome packs", async () => {
+  it("lists four stable, fifteen experimental, and ten archived outcome packs", async () => {
     const result = await client.callTool({ name: "list_packs", arguments: {} });
     const envelope = result.structuredContent as { ok: boolean; data: { packs: Array<{ slug: string; lane: string; status: string }> } };
     assert.equal(envelope.ok, true);
@@ -88,10 +88,11 @@ describe("Possible MCP", () => {
       ["research-protocol-readiness", "create"],
       ["crowdfunding-funding-run", "operate"],
       ["crowdfunding-fulfillment-operations", "operate"],
+      ["developer-product-readiness", "launch"],
     ]);
     assert.equal(envelope.data.packs.filter(({ status }) => status === "stable").length, 4);
     assert.equal(envelope.data.packs.filter(({ status }) => status === "experimental").length, 15);
-    assert.equal(envelope.data.packs.filter(({ status }) => status === "archived").length, 9);
+    assert.equal(envelope.data.packs.filter(({ status }) => status === "archived").length, 10);
     assert.equal(envelope.data.packs.find(({ slug }) => slug === "hardware-launch")?.status, "archived");
     assert.equal(envelope.data.packs.find(({ slug }) => slug === "working-hardware-prototype")?.status, "archived");
     assert.equal(envelope.data.packs.find(({ slug }) => slug === "launch-content-campaign")?.status, "archived");
@@ -283,9 +284,9 @@ describe("Possible MCP", () => {
     assert.doesNotMatch(envelope.data.runPrompt, /LAUNCH GATE|SCHEDULE GATE|PRODUCT DECISION RECORD/);
   });
 
-  it("compiles the focused adoption, funding, and fulfillment replacements", async () => {
+  it("compiles the focused product, funding, and fulfillment replacements", async () => {
     for (const [slug, gate] of [
-      ["developer-adoption-readiness", "DEVELOPER ADOPTION READINESS GATE"],
+      ["developer-product-readiness", "DEVELOPER PRODUCT READINESS GATE"],
       ["crowdfunding-funding-run", "CROWDFUNDING FUNDING RUN GATE"],
       ["crowdfunding-fulfillment-operations", "CROWDFUNDING FULFILLMENT OPERATIONS GATE"],
     ] as const) {
@@ -295,7 +296,7 @@ describe("Possible MCP", () => {
       assert.match(envelope.data.runPrompt, new RegExp(gate));
       assert.match(envelope.data.runPrompt, /inactive modules create no implementation or proof work/i);
     }
-    for (const slug of ["developer-project-launch", "kickstarter-fulfillment"]) {
+    for (const slug of ["developer-project-launch", "developer-adoption-readiness", "kickstarter-fulfillment"]) {
       const result = await client.callTool({ name: "compile_pack", arguments: { slug } });
       assert.equal(result.isError, true);
     }

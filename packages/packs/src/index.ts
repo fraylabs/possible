@@ -2,6 +2,7 @@ import { crowdfundingCampaignReadinessPack } from "./crowdfunding-campaign-readi
 import { crowdfundingFundingRunPack } from "./crowdfunding-funding-run.js";
 import { crowdfundingFulfillmentOperationsPack } from "./crowdfunding-fulfillment-operations.js";
 import { developerAdoptionReadinessPack } from "./developer-adoption-readiness.js";
+import { developerProductReadinessPack } from "./developer-product-readiness.js";
 import { developerProjectLaunchPack } from "./developer-project-launch.js";
 import { firstCustomerSprintPack } from "./first-customer-sprint.js";
 import { functionalHardwarePrototypePack } from "./functional-hardware-prototype.js";
@@ -28,7 +29,7 @@ import { workingWebAppPack } from "./working-web-app.js";
 import { workingHardwarePrototypePack } from "./working-hardware-prototype.js";
 import type { PackStatus } from "./types.js";
 
-export { crowdfundingCampaignReadinessPack, crowdfundingFundingRunPack, crowdfundingFulfillmentOperationsPack, developerAdoptionReadinessPack, developerProjectLaunchPack, firstCustomerSprintPack, functionalHardwarePrototypePack, hardwareLaunchPack, kickstarterFulfillmentPack, kickstarterFundingPack, launchContentCampaignPack, launchContentPackagePack, manufacturingReadinessPack, marketingOperationsPack, mechanicalCadReviewPack, openSourceReleasePack, playableWebGamePack, productionReadinessDecisionPack, productionWebReleasePack, researchProtocolReadinessPack, robotDigitalPrototypePack, robotPrototypePack, softwareOpportunityDiscoveryPack, studyReadinessPack, webAppOperationsPack, webPresentationPack, workingHardwarePrototypePack, workingWebAppPack };
+export { crowdfundingCampaignReadinessPack, crowdfundingFundingRunPack, crowdfundingFulfillmentOperationsPack, developerAdoptionReadinessPack, developerProductReadinessPack, developerProjectLaunchPack, firstCustomerSprintPack, functionalHardwarePrototypePack, hardwareLaunchPack, kickstarterFulfillmentPack, kickstarterFundingPack, launchContentCampaignPack, launchContentPackagePack, manufacturingReadinessPack, marketingOperationsPack, mechanicalCadReviewPack, openSourceReleasePack, playableWebGamePack, productionReadinessDecisionPack, productionWebReleasePack, researchProtocolReadinessPack, robotDigitalPrototypePack, robotPrototypePack, softwareOpportunityDiscoveryPack, studyReadinessPack, webAppOperationsPack, webPresentationPack, workingHardwarePrototypePack, workingWebAppPack };
 export { compileInstallCommands, compilePack, compileRunPrompt, compileWorkstreamWaves, evaluateCriticalProofResults, evaluateExpectationResults, recordOutcomeJourney, validateExpectationContract, validateOutcomeCheckpoint, validateOutcomeRecord } from "./compiler.js";
 export type { ArchivedPackMetadata, CandidateOutcomeRecommendation, CompiledPack, CriticalProofEvaluation, CriticalProofObligation, CriticalProofResult, CrowdfundingCampaignReadinessContract, DecisionRationaleContract, EvidenceBackedFact, ExpectationEvaluation, ExpectationLevel, ExpectationResult, ExpectationSource, FirstCustomerSprintContract, FunctionalHardwareModule, FunctionalHardwareModuleId, FunctionalHardwarePrototypeContract, HardwarePrototypeContract, LaunchContentModule, LaunchContentModuleId, LaunchContentPackageContract, ManufacturingReadinessContract, MechanicalCadReviewContract, ModularOutcomeContract, ModularOutcomeModule, OpportunityDiscoveryContract, OutcomeApprovalRecord, OutcomeArtifactRecord, OutcomeCheckpoint, OutcomeDecisionRecord, OutcomeExpectation, OutcomeExpectationContract, OutcomeExternalActionRecord, OutcomeJourneyHistory, OutcomePack, OutcomePrerequisite, OutcomeProofRecord, OutcomeProofStatus, OutcomeRecord, OutcomeRepairRecord, PackExpectation, PackLane, PackStatus, PluginCapability, RemixContract, ScheduleContract, SkillSource, StudyReadinessContract, Workstream } from "./types.js";
 
@@ -68,6 +69,7 @@ export const outcomePacks = [
   researchProtocolReadinessPack,
   crowdfundingFundingRunPack,
   crowdfundingFulfillmentOperationsPack,
+  developerProductReadinessPack,
 ] as const;
 
 const stablePackSlugSet = new Set<string>(stablePackSlugs);

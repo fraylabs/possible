@@ -28,7 +28,7 @@ export const productionWebReleasePack: OutcomePack = {
     "The application can use an authorized OpenAI Sites or Vercel project, or planning-only output is acceptable for another provider.",
   ],
   notFor: [
-    "Building the product or producing adoption or launch content; use Working Web App, Developer Adoption Readiness, or Launch Content Package as appropriate.",
+    "Building the product or producing developer-product interfaces or launch content; use Working Web App, Developer Product Readiness, or Launch Content Package as appropriate.",
     "Tagging or publishing a reusable repository or package; use Open-Source Release.",
     "Establishing recurring monitoring and maintenance after release; use Web App Operations.",
     "Executing production changes outside the reviewed OpenAI Sites and Vercel adapters.",

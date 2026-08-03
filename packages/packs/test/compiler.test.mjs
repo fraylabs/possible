@@ -34,6 +34,7 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
     "research-protocol-readiness",
     "crowdfunding-funding-run",
     "crowdfunding-fulfillment-operations",
+    "developer-product-readiness",
   ]);
   assert.deepEqual(outcomePacks.map(({ slug, lane }) => [slug, lane]), [
     ["hardware-launch", "launch"],
@@ -64,8 +65,9 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
     ["research-protocol-readiness", "create"],
     ["crowdfunding-funding-run", "operate"],
     ["crowdfunding-fulfillment-operations", "operate"],
+    ["developer-product-readiness", "launch"],
   ]);
-  assert.deepEqual(outcomePacks.map((pack) => pack.catalogNumber), Array.from({ length: 28 }, (_, index) => index + 1));
+  assert.deepEqual(outcomePacks.map((pack) => pack.catalogNumber), Array.from({ length: 29 }, (_, index) => index + 1));
   assert.equal(new Set(outcomePacks.map((pack) => pack.catalogNumber)).size, outcomePacks.length);
   assert.equal(new Set(outcomePacks.map((pack) => pack.slug)).size, outcomePacks.length);
   assert.deepEqual(stableOutcomePacks.map((pack) => pack.slug), [
@@ -76,7 +78,7 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
   ]);
   assert.equal(experimentalOutcomePacks.length, 15);
   assert.equal(activeOutcomePacks.length, 19);
-  assert.deepEqual(archivedOutcomePacks.map((pack) => pack.slug), ["hardware-launch", "kickstarter-funding", "kickstarter-fulfillment", "robot-prototype", "developer-project-launch", "working-hardware-prototype", "launch-content-campaign", "manufacturing-readiness", "study-readiness"]);
+  assert.deepEqual(archivedOutcomePacks.map((pack) => pack.slug), ["hardware-launch", "kickstarter-funding", "kickstarter-fulfillment", "robot-prototype", "developer-project-launch", "working-hardware-prototype", "launch-content-campaign", "manufacturing-readiness", "study-readiness", "developer-adoption-readiness"]);
   assert.equal(getPackStatus("hardware-launch"), "archived");
   assert.equal(getPackStatus("missing"), undefined);
 
@@ -766,7 +768,7 @@ test("Robot Prototype generalizes one verified digital-prototype contract across
 
 test("Sites is exposed only on web deployment outcomes and never as a fake Skills CLI install", () => {
   const sitesPacks = outcomePacks.filter((pack) => pack.plugins?.some((plugin) => plugin.id === "sites"));
-  assert.deepEqual(sitesPacks.map((pack) => pack.slug), ["hardware-launch", "production-web-release", "web-presentation", "developer-project-launch"]);
+  assert.deepEqual(sitesPacks.map((pack) => pack.slug), ["hardware-launch", "production-web-release", "web-presentation", "developer-project-launch", "developer-product-readiness"]);
   for (const pack of sitesPacks) {
     const compiled = compilePack(pack);
     assert.doesNotMatch(compiled.installCommands.join("\n"), /sites|openai-bundled/i);
@@ -785,7 +787,7 @@ test("Developer Project Launch turns a working developer project into an evidenc
   assert.match(developer.useWhen.join(" "), /working CLI.*library.*API.*developer platform/i);
   assert.match(developer.notFor.join(" "), /core product.*Working Web App.*Launch Content Package/i);
   assert.match(developer.notFor.join(" "), /repository release engineering.*Open-Source Release/i);
-  assert.match(openSource.notFor.join(" "), /Developer Adoption Readiness/i);
+  assert.match(openSource.notFor.join(" "), /Developer Product Readiness/i);
 
   const outputs = developer.outputs.join(" ");
   assert.match(outputs, /positioning.*claims register/i);
@@ -820,6 +822,61 @@ test("Developer Project Launch turns a working developer project into an evidenc
   assert.match(developer.verification.join(" "), /launch-receipt\.json.*prepared.*no-go.*published.*verified/i);
   assert.match(developer.verification.join(" "), /explicit approval evidence.*public URLs.*immutable source.*clean-room quickstart.*rollback target/i);
   assert.doesNotMatch(developer.outputs.join(" "), /\bLive launch\b/i);
+});
+
+test("Developer Product Readiness activates only the interfaces one working capability needs", () => {
+  const archived = outcomePacks.find((pack) => pack.slug === "developer-adoption-readiness");
+  const product = outcomePacks.find((pack) => pack.slug === "developer-product-readiness");
+  assert.ok(archived?.archived);
+  assert.deepEqual(archived.archived.replacementSlugs, ["developer-product-readiness"]);
+  assert.ok(product);
+  assert.equal(product.catalogNumber, 29);
+  assert.equal(product.lane, "launch");
+  assert.equal(product.name, "Developer Product Readiness");
+  assert.equal(product.modularOutcome.minimumActiveModules, 0);
+  assert.deepEqual(product.modularOutcome.modules.map(({ id }) => id), [
+    "website",
+    "agent-skill",
+    "mcp-server",
+    "cli-package",
+    "sdk-api",
+    "expanded-docs",
+    "interactive-demo",
+    "examples",
+    "public-deployment",
+  ]);
+  assert.deepEqual(compileWorkstreamWaves(product).map((wave) => wave.map(({ id }) => id)), [
+    ["contract"],
+    ["surfaces"],
+    ["review"],
+  ]);
+
+  const skillIds = new Set(product.skills.map(({ id }) => id));
+  for (const required of ["copywriting", "frontend-design", "webapp-testing", "skill-creator", "mcp-builder", "create-readme", "documentation-writer"]) {
+    assert.equal(skillIds.has(required), true, `missing ${required}`);
+  }
+  assert.equal(product.plugins[0].id, "sites");
+  assert.match(product.promise, /working capability.*coherent developer product.*only the interfaces/i);
+  assert.match(product.guardrails.join(" "), /Do not make every project imitate Possible/i);
+  assert.match(product.guardrails.join(" "), /Inactive modules create no implementation.*placeholder/i);
+  assert.match(product.verification.join(" "), /capability matrix/i);
+  assert.match(product.verification.join(" "), /positive and negative trigger prompts/i);
+  assert.match(product.verification.join(" "), /invalid input.*upstream failure.*unavailable-auth/i);
+
+  const compiled = compilePack(product);
+  assert.match(compiled.runPrompt, /DEVELOPER PRODUCT READINESS GATE/);
+  assert.match(compiled.runPrompt, /inactive modules create no implementation or proof work/i);
+  assert.match(compiled.installCommands.join("\n"), /anthropics\/skills@fa0fa64bdc967915dc8399e803be67759e1e62b8.*skill-creator.*mcp-builder/is);
+  assert.match(compiled.runPrompt, /shared capability contract/i);
+  assert.match(compiled.runPrompt, /exactly one decision: ready, repair-required, no-go/i);
+
+  const coreResults = product.expectations
+    .filter(({ moduleId }) => moduleId === undefined)
+    .map(({ id }) => ({ expectationId: id, status: "passed", evidence: [`developer-product/review/${id}.json`] }));
+  const skillResult = { expectationId: "agent-skill-output", status: "passed", evidence: ["developer-product/review/agent-skill.json"] };
+  assert.equal(evaluateExpectationResults(product.expectations, coreResults), "passed");
+  assert.equal(evaluateExpectationResults(product.expectations, [...coreResults, skillResult], ["agent-skill"]), "passed");
+  assert.equal(evaluateExpectationResults(product.expectations, coreResults, ["agent-skill"]), "unproven");
 });
 
 test("Software Opportunity Discovery selects a thesis without claiming demand", () => {

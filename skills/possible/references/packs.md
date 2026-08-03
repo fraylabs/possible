@@ -459,7 +459,7 @@ Slug: `developer-project-launch`
 
 Lane: `launch`
 
-Status: `archived` — historical specification only; use Developer Adoption Readiness for new work.
+Status: `archived` — historical specification only; use Developer Product Readiness for new work.
 
 Public page: `https://possible.sh/packs/developer-project-launch`
 
@@ -899,7 +899,7 @@ Slug: `developer-adoption-readiness`
 
 Lane: `launch`
 
-Status: `experimental`.
+Status: `archived` — historical specification only; use Developer Product Readiness for new work.
 
 Use when a working developer project needs one truthful, clean-room-verified first-use path. Launch site, interactive demo, expanded documentation, examples, and public deployment are conditional modules, not universal deliverables.
 
@@ -913,6 +913,33 @@ npx skills@1.5.19 add vercel-labs/agent-skills@f8a72b9603728bb92a217a879b7e62e43
 ```
 
 Completion is `ready`, `repair-required`, or `no-go`. Ready proves outsider comprehension and one meaningful first result; it does not prove demand or imply public deployment.
+
+This pack is archived because its optional model covered presentation surfaces but not agent Skills, MCP servers, CLIs or packages, and SDK or API surfaces as equal interfaces governed by one capability contract. Its specification and public URL remain available for historical runs.
+
+## Developer Product Readiness
+
+Slug: `developer-product-readiness`
+
+Lane: `launch`
+
+Status: `experimental`.
+
+Public page: `https://possible.sh/packs/developer-product-readiness`
+
+Use when one working capability must become a coherent developer product that outsiders can discover, install, use, and verify. The shared capability contract, minimum README, and clean-room first-use path are mandatory. Website, agent Skill, MCP server, CLI or package, SDK or API, expanded documentation, interactive demo, examples, and public deployment activate independently from direct user, architecture, and adoption evidence.
+
+Install:
+
+```bash
+npx skills@1.5.19 add coreyhaines31/marketingskills@67264763cb107d61749f418d081c56e5bcbc0209 --skill copywriting --agent codex
+npx skills@1.5.19 add anthropics/skills@fa0fa64bdc967915dc8399e803be67759e1e62b8 --skill frontend-design --skill webapp-testing --skill skill-creator --skill mcp-builder --agent codex
+npx skills@1.5.19 add github/awesome-copilot@26fe2d126bf79aafb38f43344d450b69632200f8 --skill create-readme --skill documentation-writer --agent codex
+npx skills@1.5.19 add vercel-labs/agent-skills@f8a72b9603728bb92a217a879b7e62e43ad76c81 --skill deploy-to-vercel --agent codex
+```
+
+The optional OpenAI Sites plugin is invoked as `@sites` through `$sites-building` and `$sites-hosting`; it is not installed by the Skills CLI. Public deployment through Sites or Vercel requires separate approval for the exact candidate and target.
+
+Completion is `ready`, `repair-required`, or `no-go`. Ready proves that every active surface coherently exposes the same verified capability and that an outsider reaches one meaningful result. It does not prove demand, repository release, security, production readiness, registry publication, or public deployment unless the applicable evidence and approved module passed.
 
 ## Robot Digital Prototype
 
@@ -1033,13 +1060,13 @@ Recommend the Outcome Pack whose finished outputs most closely match the user's 
 - Measured physical prototype plus one frozen configuration, named production commitment, representative pilot, and applicable production modules → Production Readiness Decision.
 - Defined research question plus a reproducible protocol, analysis plan, and only the ethics, privacy, regulatory, or operating modules its design requires → Research Protocol Readiness.
 - Pitch, talk, lesson, demo, or internal presentation plus a coded browser deck, presenter experience, export, and evidence review → Web Presentation.
-- Working developer tool, library, CLI, API, agent project, or platform plus one truthful clean-room-verified first-use path and only needed presentation modules → Developer Adoption Readiness.
+- Working developer capability plus one shared interface contract, truthful clean-room first-use path, and only the needed website, Skill, MCP, CLI or package, SDK or API, docs, demo, examples, and deployment modules → Developer Product Readiness.
 - Vague software ambition with no selected opportunity plus one traceable provisional thesis and first-customer handoff → Software Opportunity Discovery.
 - Selected product, service, or software opportunity plus real prospects, one concrete offer, and the strongest available commercial commitment → First Customer Sprint.
 - Real product, prototype, offer, release, event, or announcement plus one truthful post-ready package containing only selected text, static, carousel, short-video, long-video, or thread exports → Launch Content Package.
 
-Recommend Software Opportunity Discovery when no opportunity is selected. Hardware Launch, Kickstarter Funding, Kickstarter Fulfillment, Robot Prototype, Developer Project Launch, Working Hardware Prototype, Launch Content Campaign, Manufacturing Readiness, and Study Readiness are archived: never recommend or execute them. Use the focused active replacement only when its finished outcome matches. Conditional modules activate from direct architecture, obligation, market, or study-design evidence; inactive modules add no work or proof. Crowdfunding Campaign Readiness stops before platform entry, Crowdfunding Funding Run controls the live campaign and settlement, and Crowdfunding Fulfillment Operations starts only from funded-settled evidence. Repository-only licensing, packaging, CI, versioning, and release engineering belong to Open-Source Release. A focused one-off task with no matching finished outcome is a catalog gap, not permission to force a pack.
+Recommend Software Opportunity Discovery when no opportunity is selected. Hardware Launch, Kickstarter Funding, Kickstarter Fulfillment, Robot Prototype, Developer Project Launch, Developer Adoption Readiness, Working Hardware Prototype, Launch Content Campaign, Manufacturing Readiness, and Study Readiness are archived: never recommend or execute them. Use the focused active replacement only when its finished outcome matches. Conditional modules activate from direct architecture, obligation, market, or study-design evidence; inactive modules add no work or proof. Crowdfunding Campaign Readiness stops before platform entry, Crowdfunding Funding Run controls the live campaign and settlement, and Crowdfunding Fulfillment Operations starts only from funded-settled evidence. Repository-only licensing, packaging, CI, versioning, and release engineering belong to Open-Source Release. A focused one-off task with no matching finished outcome is a catalog gap, not permission to force a pack.
 
-For an ambition spanning several valuable results, recommend only the next independently useful Outcome Pack. Choose it from the current reality and the most important unresolved decision; do not preselect a future sequence. After verification, reassess the new evidence and stop for fresh approval. A strong working project may qualify for Developer Adoption Readiness directly; a discovery receipt alone does not.
+For an ambition spanning several valuable results, recommend only the next independently useful Outcome Pack. Choose it from the current reality and the most important unresolved decision; do not preselect a future sequence. After verification, reassess the new evidence and stop for fresh approval. A strong working capability with a defined developer and first meaningful result may qualify for Developer Product Readiness directly; a discovery receipt alone does not.
 
 If none fits, say so. Do not force an Outcome Pack or invent a new one during intake.
