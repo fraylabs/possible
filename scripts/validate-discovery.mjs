@@ -8,7 +8,6 @@ const escape = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
 const canonicalRoutes = [
   ["index.html", "https://possible.sh/"],
-  ["packs/index.html", "https://possible.sh/packs/"],
   ["docs/index.html", "https://possible.sh/docs/"],
   ["docs/how-to-use/index.html", "https://possible.sh/docs/how-to-use/"],
   ["judging/index.html", "https://possible.sh/judging/"],

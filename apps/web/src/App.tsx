@@ -1,7 +1,7 @@
 "use client";
 
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
-import type { KeyboardEvent as ReactKeyboardEvent, MouseEvent } from "react";
+import type { KeyboardEvent as ReactKeyboardEvent } from "react";
 import { compilePack, getPack, getPackStatus } from "@possible/packs";
 import type { OutcomePack } from "@possible/packs";
 import { exampleCatalog, getExample } from "./example-content";
@@ -163,103 +163,67 @@ function CreatePage() {
         </div>
       </section>
 
-      <SiteFooter />
-    </main>
-  );
-}
-
-function PackCard({ pack }: { pack: OutcomePack }) {
-  return (
-    <a className={`pack-card pack-card--text pack-card--${pack.slug}`} href={`/packs/${pack.slug}`}>
-      <header className="pack-card-text-header">
-        <span>OUTCOME PACK</span>
-        <small>{packStatusLabel(pack.slug)}</small>
-        <b aria-hidden="true">↗</b>
-      </header>
-      <div className="pack-card-text-title">
-        <span>{String(pack.catalogNumber).padStart(2, "0")}</span>
-        <h2>{pack.name}</h2>
-      </div>
-      <p className="pack-card-text-promise">{pack.promise}</p>
-      <div className="pack-card-text-meta">
-        <span>{pack.skills.length} skills{pack.plugins?.length ? ` + ${pack.plugins.length} plugin${pack.plugins.length === 1 ? "" : "s"}` : ""}</span>
-        <span>{pack.workstreams.length} workstreams</span>
-        <span>{pack.outputs.length} outputs</span>
-      </div>
-    </a>
-  );
-}
-
-function PacksPage() {
-  const pageSize = 4;
-  const pageCount = Math.ceil(publishedPacks.length / pageSize);
-  const [currentPage, setCurrentPage] = useState(1);
-
-  useEffect(() => {
-    const syncPage = () => {
-      const requestedPage = Number(new URLSearchParams(window.location.search).get("page") ?? "1");
-      setCurrentPage(Number.isInteger(requestedPage) && requestedPage >= 1 && requestedPage <= pageCount ? requestedPage : 1);
-    };
-    syncPage();
-    window.addEventListener("popstate", syncPage);
-    return () => window.removeEventListener("popstate", syncPage);
-  }, [pageCount]);
-
-  function selectPage(event: MouseEvent<HTMLAnchorElement>, page: number) {
-    event.preventDefault();
-    const href = page === 1 ? "/packs" : `/packs?page=${page}`;
-    window.history.pushState({}, "", href);
-    setCurrentPage(page);
-    window.requestAnimationFrame(() => {
-      const catalog = document.getElementById("pack-catalog");
-      document.getElementById(`pack-catalog-page-${page}`)?.focus({ preventScroll: true });
-      catalog?.scrollIntoView?.({ block: "start" });
-    });
-  }
-
-  const pages = Array.from({ length: pageCount }, (_, index) => publishedPacks.slice(index * pageSize, (index + 1) * pageSize));
-
-  return (
-    <main>
-      <SiteNav label="Outcome Packs" />
-      <section className="catalog-hero">
-        <p className="eyebrow">OUTCOME PACKS</p>
-        <h1>Reviewed Outcome Packs.<br /><em>Recommended by $possible.</em></h1>
-        <div className="catalog-intro">
-          <p>This is a text-first library of reviewed outcome contracts. Each pack combines a reusable prompt, selected agent skills, sequencing, safeguards, outputs, and completion checks. Describe the outcome; <code>$possible</code> recommends the right pack.</p>
-          <a className="button-link" href="/#start">Start with Possible <span>→</span></a>
+      <section className="home-pack-gallery" id="packs" aria-labelledby="home-packs-heading">
+        <header className="home-pack-gallery-header">
+          <div>
+            <p className="eyebrow">OUTCOME PACKS / LIBRARY</p>
+            <h2 id="home-packs-heading">Choose the work.<br /><em>Make it real.</em></h2>
+          </div>
+          <div className="home-pack-gallery-intro">
+            <p>Browse the reviewed contracts Possible can recommend. Each one turns a rough ambition into coordinated workstreams, safeguards, and proof.</p>
+            <a className="text-link" href="/docs#glossary">How Outcome Packs work ↗</a>
+          </div>
+        </header>
+        <div className="home-pack-gallery-grid" aria-label="Reviewed Outcome Packs">
+          {publishedPacks.map((pack) => <PackCard pack={pack} key={pack.slug} />)}
+        </div>
+        <div className="home-pack-gallery-footer">
+          <span>{publishedPacks.length} REVIEWED PACKS</span>
+          <a href={`${githubUrl}/tree/main/packages/packs/src`} target="_blank" rel="noreferrer">Inspect the source ↗</a>
         </div>
       </section>
-      <div id="pack-catalog" className="pack-catalog-pages">
-        {pages.map((packs, index) => {
-          const page = index + 1;
-          return (
-            <section
-              id={`pack-catalog-page-${page}`}
-              className={`pack-grid${packs.length < pageSize ? " pack-grid--filtered" : ""}`}
-              aria-label={`Outcome Packs page ${page} of ${pageCount}`}
-              hidden={currentPage !== page}
-              tabIndex={-1}
-              key={page}
-            >
-              {packs.map((pack) => <PackCard pack={pack} key={pack.slug} />)}
-            </section>
-          );
-        })}
-      </div>
-      <nav className="pack-pagination" aria-label="Outcome Pack pages">
-        <span>PAGE {String(currentPage).padStart(2, "0")} / {String(pageCount).padStart(2, "0")}</span>
-        <div>{pages.map((_, index) => {
-          const page = index + 1;
-          return <a href={page === 1 ? "/packs" : `/packs?page=${page}`} aria-current={currentPage === page ? "page" : undefined} onClick={(event) => selectPage(event, page)} key={page}>{String(page).padStart(2, "0")}</a>;
-        })}</div>
-      </nav>
-      <section className="catalog-principle">
-        <span>THE DIFFERENCE</span>
-        <p>Agent skills provide capabilities. Outcome Packs coordinate them toward a complete, verified result.</p>
-      </section>
+
       <SiteFooter />
     </main>
+  );
+}
+
+const packPreviewMeta: Record<string, { label: string; mark: string; caption: string }> = {
+  "playable-web-game": { label: "PLAYABLE", mark: "PLAY", caption: "INTERACTIVE PROOF" },
+  "web-presentation": { label: "PRESENT", mark: "SHOW", caption: "RESPONSIVE DECK" },
+  "software-opportunity-discovery": { label: "DISCOVER", mark: "THESIS", caption: "ONE PROVISIONAL BET" },
+  "first-customer-sprint": { label: "CUSTOMER", mark: "SIGNAL", caption: "COMMERCIAL EVIDENCE" },
+};
+
+function PackCard({ pack }: { pack: OutcomePack }) {
+  const preview = packPreviewMeta[pack.slug] ?? { label: "OUTCOME", mark: "BUILD", caption: "REVIEWED CONTRACT" };
+
+  return (
+    <a className={`pack-card pack-card--visual pack-card--${pack.slug}`} href={`/packs/${pack.slug}`}>
+      <div className="pack-card-preview" aria-hidden="true">
+        <div className="pack-preview-art">
+          <div className="pack-preview-toolbar"><span>{String(pack.catalogNumber).padStart(2, "0")}</span><span>OUTCOME / {preview.label}</span><b>↗</b></div>
+          <div className="pack-preview-composition"><i /><i /><i /></div>
+          <strong>{preview.mark}</strong>
+          <span className="pack-preview-caption">{preview.caption}</span>
+        </div>
+      </div>
+      <div className="pack-card-info">
+        <header>
+          <div>
+            <p className="pack-card-kicker">OUTCOME PACK · {packStatusLabel(pack.slug)}</p>
+            <h3>{pack.name}</h3>
+          </div>
+          <span className="pack-card-open" aria-hidden="true">↗</span>
+        </header>
+        <p className="pack-card-promise">{pack.promise}</p>
+        <div className="pack-card-meta">
+          <span>{pack.skills.length} SKILLS{pack.plugins?.length ? ` + ${pack.plugins.length} PLUGIN${pack.plugins.length === 1 ? "" : "S"}` : ""}</span>
+          <span>{pack.workstreams.length} WORKSTREAMS</span>
+          <span>{pack.outputs.length} OUTPUTS</span>
+        </div>
+      </div>
+    </a>
   );
 }
 
@@ -299,12 +263,12 @@ function PackDetailPage({ pack }: { pack: OutcomePack }) {
               </a>
             ))}
           </nav>
-          <a className="pack-reference-back" href="/packs">← Gallery</a>
+          <a className="pack-reference-back" href="/#packs">← Gallery</a>
         </aside>
 
         <article className="pack-reference-document" id="pack-specification" tabIndex={-1}>
           <header className="pack-reference-header" id="overview">
-            <div className="pack-reference-breadcrumb"><a href="/packs">OUTCOME PACKS</a><span>/</span><strong>{statusLabel(status).toUpperCase()}</strong></div>
+            <div className="pack-reference-breadcrumb"><a href="/#packs">OUTCOME PACKS</a><span>/</span><strong>{statusLabel(status).toUpperCase()}</strong></div>
             <dl className="pack-reference-meta">
               <div><dt>STATUS</dt><dd>{statusLabel(status)}</dd></div>
               <div><dt>SCHEMA</dt><dd>v{pack.schemaVersion}</dd></div>
@@ -334,7 +298,7 @@ function PackDetailPage({ pack }: { pack: OutcomePack }) {
             <p className="pack-reference-promise">{pack.promise}</p>
             <div className="pack-reference-actions">
               {pack.archived
-                ? <a href="/packs">View active packs <span>→</span></a>
+                ? <a href="/#packs">View active packs <span>→</span></a>
                 : <a href="/#start">Start with $possible <span>→</span></a>}
               <a href={`/packs/${pack.slug}.json`}>Outcome Pack JSON ↗</a>
             </div>
@@ -750,7 +714,7 @@ function DocsSidebar({ active }: { active: "overview" | "how-to-use" }) {
         <a href="/docs#files">Project files</a>
         <a href="/docs#safety">Safety boundary</a>
         <a href="/docs#troubleshooting">Troubleshooting</a>
-        <a href="/packs">Outcome Pack library ↗</a>
+        <a href="/#packs">Outcome Pack library ↗</a>
       </nav>
     </aside>
   );
@@ -1055,7 +1019,7 @@ function HowToUsePage() {
 
           <nav className="docs-next" aria-label="Next documentation page">
             <span>NEXT</span>
-            <a href="/packs">Explore Outcome Packs <b>→</b></a>
+            <a href="/#packs">Explore Outcome Packs <b>→</b></a>
           </nav>
         </article>
 
@@ -1282,7 +1246,6 @@ function JudgingPage() {
 export function PossibleSite({ path: requestedPath }: { path?: string }) {
   const path = (requestedPath ?? (typeof window === "undefined" ? "/" : window.location.pathname)).replace(/\/+$/, "") || "/";
   if (path === "/") return <CreatePage />;
-  if (path === "/packs") return <PacksPage />;
   if (path === "/docs") return <DocsPage />;
   if (path === "/docs/how-to-use") return <HowToUsePage />;
   if (path === "/judging") return <JudgingPage />;

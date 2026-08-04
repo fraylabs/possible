@@ -36,10 +36,10 @@ describe("Possible", () => {
     const navigation = Array.from(container.querySelectorAll(".nav-links a")).map((link) => link.textContent);
     expect(navigation).toEqual(["EXAMPLES", "DOCS", "GITHUB ↗"]);
 
-    expect(container.querySelectorAll("main > section")).toHaveLength(1);
+    expect(container.querySelectorAll("main > section")).toHaveLength(2);
     expect(container.querySelector(".home-workflow")).not.toBeInTheDocument();
     expect(container.querySelector(".home-demo")).not.toBeInTheDocument();
-    expect(container.querySelector(".home-pack-index")).not.toBeInTheDocument();
+    expect(container.querySelector(".home-pack-gallery")).toBeInTheDocument();
     expect(container.querySelector(".home-source")).not.toBeInTheDocument();
 
     expect(container.querySelector("main")).not.toHaveTextContent(/50[–-]100|RECORDED OUTCOMES \/|BENCHMARK|Direct.*\/goal|schedule operations/i);
@@ -66,16 +66,23 @@ describe("Possible", () => {
     expect(writeText).toHaveBeenCalledWith("npx @fraylabs/possible@0.1.11 init");
   });
 
-  it("paginates every reviewed public Outcome Pack in one catalog", async () => {
-    const { container } = renderRoute("/packs");
-    const firstPage = screen.getByRole("region", { name: "Outcome Packs page 1 of 1" });
-    expect(within(firstPage).getAllByRole("link")).toHaveLength(4);
-    for (const pack of publishedPacks.slice(0, 4)) expect(within(firstPage).getByRole("heading", { name: pack.name })).toBeInTheDocument();
-    expect(firstPage.querySelectorAll(".pack-art")).toHaveLength(0);
-    expect(container).toHaveTextContent(/text-first library of reviewed outcome contracts/i);
-
-    expect(screen.queryByText(/EXPERIMENTAL OUTCOME PACK/i)).not.toBeInTheDocument();
+  it("shows the reviewed Outcome Pack gallery on the homepage", async () => {
+    const { container } = render(<App />);
+    const gallery = screen.getByRole("region", { name: /Choose the work\.Make it real\./i });
+    const grid = gallery.querySelector(".home-pack-gallery-grid")!;
+    expect(within(grid).getAllByRole("link")).toHaveLength(4);
+    for (const pack of publishedPacks.slice(0, 4)) expect(within(grid).getByRole("heading", { name: pack.name, level: 3 })).toBeInTheDocument();
+    expect(grid.querySelectorAll(".pack-card-preview")).toHaveLength(4);
+    expect(container).toHaveTextContent(/Choose the work\.Make it real\./i);
+    expect(container).not.toHaveTextContent(/text-first library|EXPERIMENTAL OUTCOME PACK/i);
     expect(container).not.toHaveTextContent(/Hardware Launch|Open-Source Release|Marketing Operations/i);
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("retires the standalone /packs catalog route", async () => {
+    const { container } = renderRoute("/packs");
+    expect(screen.getByRole("heading", { name: /This outcome isnot here/i })).toBeInTheDocument();
+    expect(container).not.toHaveTextContent(/Choose the work|Reviewed Outcome Packs/i);
     expect(await axe(container)).toHaveNoViolations();
   });
 
@@ -129,7 +136,7 @@ describe("Possible", () => {
     expect(notice).toHaveTextContent(/will not recommend or compile it for new work/i);
     expect(within(notice).getByRole("link", { name: "Mechanical CAD Review" })).toHaveAttribute("href", expect.stringContaining("mechanical-cad-review.ts"));
     expect(screen.queryByRole("link", { name: /Start with \$possible/i })).not.toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /View active packs/i })).toHaveAttribute("href", "/packs");
+    expect(screen.getByRole("link", { name: /View active packs/i })).toHaveAttribute("href", "/#packs");
     expect(container.querySelector(".pack-prompt-disclosure code")?.textContent).toBe(compilePack(pack!).runPrompt);
     expect(await axe(container)).toHaveNoViolations();
   });

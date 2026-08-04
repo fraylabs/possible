@@ -190,7 +190,7 @@ await write("llms.txt", [
   "- Preserved /goal control artifacts: /demo/robot-snake/control/",
   "- Possible artifact manifest: /demo/robot-snake/manifest.json",
   "- Possible completion report: https://github.com/fraylabs/possible/blob/main/apps/web/public/demo/robot-snake/evidence/outcome-receipt.md",
-  "- Pack catalog: /packs/",
+  "- Pack catalog: /#packs",
   "- Pack index: /packs/index.json",
   ...publishedPacks.flatMap((pack) => [
     `- ${pack.name}: /packs/${pack.slug}.json`,

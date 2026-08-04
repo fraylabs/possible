@@ -96,20 +96,23 @@ for (const forbidden of [
 const heroIndex = home.indexOf('class="build-hero"');
 const workflowIndex = home.indexOf('class="home-workflow"');
 const demosIndex = home.indexOf('class="home-demo"');
-const technicalIndex = home.indexOf('class="home-pack-index"');
+const galleryIndex = home.indexOf('class="home-pack-gallery"');
 const sourceIndex = home.indexOf('aria-labelledby="home-source-heading"');
 assert.ok(heroIndex >= 0, "Homepage must render the install hero");
-assert.equal((home.match(/<section\b/g) ?? []).length, 1, "Homepage must contain only the hero section");
-for (const [index, label] of [[workflowIndex, "workflow"], [demosIndex, "examples"], [technicalIndex, "pack index"], [sourceIndex, "source"]]) {
+assert.equal((home.match(/<section\b/g) ?? []).length, 2, "Homepage must contain the hero and visual pack gallery sections");
+assert.ok(galleryIndex > heroIndex, "Homepage must place the visual pack gallery after the install hero");
+for (const [index, label] of [[workflowIndex, "workflow"], [demosIndex, "examples"], [sourceIndex, "source"]]) {
   assert.equal(index, -1, `Homepage must not render the ${label} section`);
 }
+assert.match(homeMarkup, /class="home-pack-gallery"[\s\S]*aria-label="Reviewed Outcome Packs"/);
+assert.equal((homeMarkup.match(/class="pack-card-preview"/g) ?? []).length, featuredPacks.length, "Homepage must show one visual preview per published pack");
 
 const homepageWordCount = plainText(home.match(/<main[\s\S]*<\/main>/)?.[0] ?? "").split(/\s+/).filter(Boolean).length;
-assert.ok(homepageWordCount <= 330, `Homepage must remain concise; found ${homepageWordCount} words`);
+assert.ok(homepageWordCount <= 500, `Homepage must remain concise; found ${homepageWordCount} words`);
 assert.match(homeMarkup, /<meta property="og:image" content="https:\/\/possible\.sh\/og\.png"\/>/);
 assert.doesNotMatch(home, /<div id="root"><\/div>/);
 
-const catalog = visibleText(await html("packs/index.html"));
+const catalog = home;
 for (const pack of featuredPacks) {
   assert.match(catalog, new RegExp(escape(pack.name)));
   const detail = visibleText(await html(`packs/${pack.slug}/index.html`));
@@ -117,8 +120,8 @@ for (const pack of featuredPacks) {
   assert.doesNotMatch(detail, /SCHEDULABLE|OPTIONAL SCHEDULE|Schedule the operating loop/i);
   assert.doesNotMatch(detail, /EXPERIMENTAL OUTCOME PACK|Preserved end-to-end evidence is still in progress/i);
 }
-assert.match(catalog, /Outcome Packs page 1 of 1/);
-assert.match(catalog, /aria-label="Outcome Pack pages"/);
+assert.match(catalog, /Choose the work\.[\s\S]*Make it real\./i);
+assert.match(homeMarkup, /aria-label="Reviewed Outcome Packs"/);
 assert.doesNotMatch(catalog, /Hardware Launch/);
 assert.doesNotMatch(catalog, /Working Hardware Prototype/);
 assert.doesNotMatch(catalog, /Launch Content Campaign/);

@@ -2,10 +2,10 @@
 
 The public Possible site has one judge journey:
 
-- `/` — proposition, install, workflow, featured outcomes and technical explanation
+- `/` — proposition, install, visual Outcome Pack gallery and featured outcomes
 - `/examples` — one gallery where every example switches between finished outputs and its process record
 - `/docs` — installation, intake, approval, execution and safety
-- `/packs` — the four featured Outcome Pack specifications
+- `/packs/<slug>` — individual Outcome Pack specifications linked from the homepage gallery
 - `/presentation` — the coded visual explainer
 
 `/demo/**` is retained only as the raw artifact namespace for films, CAD, simulations and evidence. Exact retired Demo pages redirect to the corresponding example’s Process view.
