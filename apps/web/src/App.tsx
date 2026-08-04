@@ -11,12 +11,16 @@ import { getPublishedPack, getRoutablePack, githubUrl, installCommand, published
 const PaperPlaneGame = lazy(() => import("./PaperPlaneGame"));
 type CopyState = "idle" | "copied" | "failed";
 const approvalDisclosure = "Saying yes authorizes repo-local agent skill installation, the shared outcome brief and state files, and local outcome work. External actions still require separate approval.";
-const laneLabels = {
-  create: "Create",
-  launch: "Launch",
-  release: "Release",
-  operate: "Operate",
+const statusLabels = {
+  stable: "Reviewed",
+  experimental: "Experimental",
+  archived: "Archived",
 } as const;
+const statusLabel = (status: keyof typeof statusLabels) => statusLabels[status];
+const packStatusLabel = (slug: string) => {
+  const status = getPackStatus(slug);
+  return status ? statusLabel(status) : "Unlisted";
+};
 const navigationItems = [
   { label: "EXAMPLES", href: "/examples", external: false },
   { label: "DOCS", href: "/docs", external: false },
@@ -189,15 +193,15 @@ function CreatePage() {
           </header>
 
           <div className="home-pack-columns" aria-hidden="true">
-            <span>OUTCOME PACK</span><span>PURPOSE</span><span>CATEGORY</span><span>OPEN</span>
+            <span>OUTCOME PACK</span><span>PURPOSE</span><span>STATUS</span><span>OPEN</span>
           </div>
           <ol aria-label="Outcome Packs Possible can recommend">
             {publishedPacks.map((pack) => (
               <li key={pack.slug}>
-                <a href={`/packs/${pack.slug}`} aria-label={`${pack.name}, ${laneLabels[pack.lane]} Outcome Pack`}>
+                <a href={`/packs/${pack.slug}`} aria-label={`${pack.name}, ${packStatusLabel(pack.slug)} Outcome Pack`}>
                   <strong>{pack.name}</strong>
                   <span>{pack.promise}</span>
-                  <span className={`home-pack-lane home-pack-lane--${pack.lane}`}>{laneLabels[pack.lane]}</span>
+                  <span className={`home-pack-status home-pack-status--${getPackStatus(pack.slug)}`}>{packStatusLabel(pack.slug)}</span>
                   <i>↗</i>
                 </a>
               </li>
@@ -221,161 +225,23 @@ function CreatePage() {
 
 function PackCard({ pack }: { pack: OutcomePack }) {
   return (
-    <a className={`pack-card pack-card--${pack.slug}`} href={`/packs/${pack.slug}`}>
-      <div className="pack-cover">
-        <header><span>OUTCOME PACK</span><small>{pack.lane.toUpperCase()}</small><b>↗</b></header>
-        <PackArtwork slug={pack.slug} />
-        <div className="pack-cover-title">
-          <small>POSSIBLE OUTCOME</small>
-          <h2>{pack.name}</h2>
-        </div>
+    <a className={`pack-card pack-card--text pack-card--${pack.slug}`} href={`/packs/${pack.slug}`}>
+      <header className="pack-card-text-header">
+        <span>OUTCOME PACK</span>
+        <small>{packStatusLabel(pack.slug)}</small>
+        <b aria-hidden="true">↗</b>
+      </header>
+      <div className="pack-card-text-title">
+        <span>{String(pack.catalogNumber).padStart(2, "0")}</span>
+        <h2>{pack.name}</h2>
       </div>
-      <div className="pack-card-body">
-        <p>{pack.promise}</p>
-        <div className="pack-card-stats">
-          <span>{pack.skills.length} AGENT SKILLS{pack.plugins?.length ? ` + ${pack.plugins.length} PLUGIN` : ""}</span>
-          <span>{pack.workstreams.length} WORKSTREAMS</span>
-          <span>{pack.outputs.length} ARTIFACTS</span>
-        </div>
+      <p className="pack-card-text-promise">{pack.promise}</p>
+      <div className="pack-card-text-meta">
+        <span>{pack.skills.length} skills{pack.plugins?.length ? ` + ${pack.plugins.length} plugin${pack.plugins.length === 1 ? "" : "s"}` : ""}</span>
+        <span>{pack.workstreams.length} workstreams</span>
+        <span>{pack.outputs.length} outputs</span>
       </div>
     </a>
-  );
-}
-
-function PackArtwork({ slug }: { slug: string }) {
-  if (slug === "hardware-launch") {
-    return (
-      <div className="pack-art pack-art--hardware" aria-hidden="true">
-        <i className="hardware-orbit" /><i className="hardware-device" />
-        <span>FORM</span><span>FILM</span><span>FRONTEND</span>
-      </div>
-    );
-  }
-  if (slug === "working-web-app") {
-    return (
-      <div className="pack-art pack-art--working" aria-hidden="true">
-        <div className="working-window"><i /><i /><i /><b /><b /><b /><b /></div>
-        <span>FLOW / COMPLETE</span><span>STATE / SAVED</span><span>BUILD / PASS</span>
-      </div>
-    );
-  }
-  if (slug === "playable-web-game") {
-    return (
-      <div className="pack-art pack-art--game" aria-hidden="true">
-        <i className="game-flight-line" /><i className="game-plane" /><i className="game-gate game-gate--one" /><i className="game-gate game-gate--two" />
-        <span>LOOP</span><span>FEEL</span><span>PLAY</span>
-      </div>
-    );
-  }
-  if (slug === "web-app-operations") {
-    return (
-      <div className="pack-art pack-art--operations" aria-hidden="true">
-        <div className="operations-board"><i /><i /><i /><i /><i /><i /></div>
-        <b className="operations-pulse" />
-        <span>CYCLE / MANUAL FIRST</span><span>REPORT / DATED</span><span>SCHEDULE / SEPARATE YES</span>
-      </div>
-    );
-  }
-  if (slug === "marketing-operations") {
-    return (
-      <div className="pack-art pack-art--marketing" aria-hidden="true">
-        <div className="marketing-cycle"><i /><i /><i /><b>REVIEW</b></div>
-        <div className="marketing-calendar"><i /><i /><i /><i /><i /><i /></div>
-        <span>PLAN / CONFIRMED</span><span>DRAFT / REVIEW</span><span>PUBLISH / GATED</span>
-      </div>
-    );
-  }
-  if (slug === "production-web-release") {
-    return (
-      <div className="pack-art pack-art--production-release" aria-hidden="true">
-        <div className="release-track"><i /><i /><i /><b>APPROVAL</b></div>
-        <span>CANDIDATE / PINNED</span><span>ROLLBACK / READY</span><span>PRODUCTION / VERIFIED</span>
-      </div>
-    );
-  }
-  if (slug === "kickstarter-funding") {
-    return (
-      <div className="pack-art pack-art--funding" aria-hidden="true">
-        <div><i /><b>0%</b></div><strong>GOAL → PAYOUT</strong>
-        <span>OFFER</span><span>PROOF</span><span>AUDIENCE</span>
-      </div>
-    );
-  }
-  if (slug === "kickstarter-fulfillment") {
-    return (
-      <div className="pack-art pack-art--fulfillment" aria-hidden="true">
-        <div><i /><i /><i /><i /><i /></div><strong>95% SHIPPED</strong>
-        <span>BUILD</span><span>PACK</span><span>SHIP</span>
-      </div>
-    );
-  }
-  if (slug === "robot-prototype") {
-    return (
-      <div className="pack-art pack-art--robot" aria-hidden="true">
-        <div className="robot-kinematic"><b />{Array.from({ length: 8 }, (_, index) => <i key={index} />)}</div>
-        <strong>MODEL → CONTROL → PROOF</strong>
-        <span>CAD</span><span>KINEMATICS</span><span>MUJOCO</span>
-      </div>
-    );
-  }
-  if (slug === "web-presentation") {
-    return (
-      <div className="pack-art pack-art--presentation" aria-hidden="true">
-        <div className="presentation-atlas" />
-        <strong>STORY → DECK → REVIEW</strong>
-        <span>HTML</span><span>MOTION</span><span>PRESENT</span>
-      </div>
-    );
-  }
-  if (slug === "software-opportunity-discovery") {
-    return (
-      <div className="pack-art pack-art--discovery" aria-hidden="true">
-        <i className="discovery-radar" /><i className="discovery-signal" />
-        <strong>PROBLEM → OPPORTUNITY</strong>
-        <span>FIT</span><span>ALTERNATIVES</span><span>SELECT</span>
-      </div>
-    );
-  }
-  if (slug === "first-customer-sprint") {
-    return (
-      <div className="pack-art pack-art--discovery" aria-hidden="true">
-        <i className="discovery-radar" /><i className="discovery-signal" />
-        <strong>OFFER → CUSTOMER</strong>
-        <span>REACH</span><span>SELL</span><span>LEARN</span>
-      </div>
-    );
-  }
-  if (slug === "working-hardware-prototype") {
-    return (
-      <div className="pack-art pack-art--robot" aria-hidden="true">
-        <div className="robot-kinematic"><b />{Array.from({ length: 8 }, (_, index) => <i key={index} />)}</div>
-        <strong>BUILD → MEASURE → REVIEW</strong>
-        <span>FORM</span><span>CONTROL</span><span>PROOF</span>
-      </div>
-    );
-  }
-  if (slug === "launch-content-campaign") {
-    return (
-      <div className="pack-art pack-art--presentation" aria-hidden="true">
-        <div className="presentation-atlas" />
-        <strong>DECIDE → CREATE → POST</strong>
-        <span>CAROUSEL</span><span>VIDEO</span><span>THREAD</span>
-      </div>
-    );
-  }
-  if (slug === "developer-project-launch") {
-    return (
-      <div className="pack-art pack-art--developer-launch" aria-hidden="true">
-        <div className="developer-launch-path"><i /><i /><i /><b>ADOPT</b></div>
-        <span>POSITION / CLEAR</span><span>QUICKSTART / TESTED</span><span>LAUNCH / GATED</span>
-      </div>
-    );
-  }
-  return (
-    <div className="pack-art pack-art--release" aria-hidden="true">
-      <i className="release-ring" /><i className="release-dot" />
-      <code>README.md</code><code>CI / PASS</code><code>v1.0.0</code>
-    </div>
   );
 }
 
@@ -415,7 +281,7 @@ function PacksPage() {
         <p className="eyebrow">OUTCOME PACKS</p>
         <h1>Reviewed Outcome Packs.<br /><em>Recommended by $possible.</em></h1>
         <div className="catalog-intro">
-          <p>Each Outcome Pack combines a reusable execution prompt, selected agent skills, sequencing, safeguards, and completion checks. Describe the outcome; <code>$possible</code> recommends the right pack.</p>
+          <p>This is a text-first library of reviewed outcome contracts. Each pack combines a reusable prompt, selected agent skills, sequencing, safeguards, outputs, and completion checks. Describe the outcome; <code>$possible</code> recommends the right pack.</p>
           <a className="button-link" href="/#start">Start with Possible <span>→</span></a>
         </div>
       </section>
@@ -454,7 +320,7 @@ function PacksPage() {
 
 function PackDetailPage({ pack }: { pack: OutcomePack }) {
   const compiled = compilePack(pack);
-  const status = getPackStatus(pack.slug);
+  const status = getPackStatus(pack.slug) ?? (pack.archived ? "archived" : "experimental");
   const reviewedLabel = new Date(`${pack.reviewedAt}T00:00:00Z`).toLocaleDateString("en-US", {
     month: "short",
     day: "numeric",
@@ -464,7 +330,7 @@ function PackDetailPage({ pack }: { pack: OutcomePack }) {
   const sections = [
     ["overview", "Overview"],
     ["fit", "Fit"],
-    ["outputs", "Outcome contract"],
+    ["outputs", "Outputs"],
     ["workstreams", "Execution plan"],
     ["agent-skills", "Agent skills"],
     ["install", "Install"],
@@ -484,7 +350,7 @@ function PackDetailPage({ pack }: { pack: OutcomePack }) {
             {publishedPacks.map((candidate) => (
               <a href={`/packs/${candidate.slug}`} aria-current={candidate.slug === pack.slug ? "page" : undefined} key={candidate.slug}>
                 <strong>{candidate.name}</strong>
-                <small>{candidate.lane}</small>
+                <small>{packStatusLabel(candidate.slug)}</small>
               </a>
             ))}
           </nav>
@@ -493,10 +359,9 @@ function PackDetailPage({ pack }: { pack: OutcomePack }) {
 
         <article className="pack-reference-document" id="pack-specification" tabIndex={-1}>
           <header className="pack-reference-header" id="overview">
-            <div className="pack-reference-breadcrumb"><a href="/packs">OUTCOME PACKS</a><span>/</span><strong>{pack.lane.toUpperCase()}</strong></div>
+            <div className="pack-reference-breadcrumb"><a href="/packs">OUTCOME PACKS</a><span>/</span><strong>{statusLabel(status).toUpperCase()}</strong></div>
             <dl className="pack-reference-meta">
-              <div><dt>CATEGORY</dt><dd>{pack.lane}</dd></div>
-              <div><dt>STATUS</dt><dd>{status}</dd></div>
+              <div><dt>STATUS</dt><dd>{statusLabel(status)}</dd></div>
               <div><dt>SCHEMA</dt><dd>v{pack.schemaVersion}</dd></div>
               <div><dt>LAST REVIEWED</dt><dd><time dateTime={pack.reviewedAt}>{reviewedLabel}</time></dd></div>
             </dl>
@@ -544,7 +409,7 @@ function PackDetailPage({ pack }: { pack: OutcomePack }) {
           </section>
 
           <section className="pack-reference-section" id="outputs">
-            <header><span>02</span><h2>Outcome contract</h2><p>Completion requires every artifact below.</p></header>
+            <header><span>02</span><h2>Outputs</h2><p>These are the inspectable deliverables. The expectation contract and evidence decide whether they make the promised outcome true.</p></header>
             <ol className="pack-contract-list">{pack.outputs.map((output, index) => <li key={output}><span>{String(index + 1).padStart(2, "0")}</span><strong>{output}</strong></li>)}</ol>
           </section>
 
@@ -565,7 +430,7 @@ function PackDetailPage({ pack }: { pack: OutcomePack }) {
             {pack.decisionRationale ? <div className="pack-review-callout"><span>PRODUCT DECISIONS</span><div><code>{pack.decisionRationale.rootPath}</code><code>{pack.decisionRationale.publicNarrativePath}</code></div><p>Important choices retain their alternatives, evidence, trade-offs, uncertainty, reversal conditions, and a truthful public explanation.</p></div> : null}
             {pack.hardwarePrototype ? <div className="pack-review-callout"><span>MEASURED PHYSICAL PROTOTYPE</span><div>{pack.hardwarePrototype.measurementClasses.map((measurement) => <code key={measurement}>{measurement}</code>)}</div><p>CAD and firmware are inputs. Working status requires calibrated evidence from the integrated physical artifact; otherwise the receipt records repair-required or no-go.</p></div> : null}
             {pack.remix ? <div className="pack-review-callout"><span>{pack.remix.kind === "physical-direction" ? "PHYSICAL REMIX" : "REMIX"}</span><div><code>{pack.remix.candidateCount} directions</code><code>{pack.remix.decisionPath}</code></div><p>{pack.remix.kind === "physical-direction" ? "Possible compares form, ergonomics, materials, layout, controls, assembly, service and sensory character while preserving function, safety, interfaces, claims and measurement access." : "Possible derives project-specific directions after product truth is known, then records one decision before dependent implementation begins. The outcome contract does not change."}</p></div> : null}
-            <div className="pack-review-callout"><span>INDEPENDENT REVIEW</span><div>{pack.reviewSkills.map((skill) => <code key={skill}>${skill}</code>)}</div><p>A verifier checks the complete integrated outcome expectation by expectation. Failed requirements block passing, remain preserved as evidence, and trigger artifact repair plus a complete-review rerun.</p></div>
+            <div className="pack-review-callout"><span>INDEPENDENT REVIEW</span><div><code>fresh reviewer</code><code>separate ownership</code><code>expectation by expectation</code></div><p>A verifier checks the complete integrated outcome expectation by expectation. Failed requirements block passing, remain preserved as evidence, and trigger artifact repair plus a complete-review rerun.</p></div>
           </section>
 
           <section className="pack-reference-section" id="agent-skills">
@@ -601,7 +466,7 @@ function PackDetailPage({ pack }: { pack: OutcomePack }) {
           </section>
 
           <section className="pack-reference-section" id="verification">
-            <header><span>08</span><h2>Verification</h2><p>Completion requires evidence. Every run indexes its artifacts, checks, decisions, repairs, approvals and limitations in one Outcome Record.</p></header>
+            <header><span>08</span><h2>Verification</h2><p>Completion requires evidence. Every run indexes its outputs, expectation results, decisions, repairs, approvals and limitations in one Outcome Record.</p></header>
             <ol className="pack-verification-list">{pack.verification.map((item, index) => <li key={item}><span>{String(index + 1).padStart(2, "0")}</span><p>{item}</p></li>)}</ol>
           </section>
 
@@ -998,7 +863,7 @@ function DocsPage() {
 
           <section id="glossary">
             <h2>Glossary</h2>
-            <p>Possible uses a small set of terms to separate the result you want from the work an agent performs.</p>
+            <p>Possible uses a small set of terms to separate the result you want, the artifacts it produces, and the evidence that makes completion trustworthy.</p>
             <aside className="docs-outcome-definition">
               <span>OUTCOME</span>
               <strong>An observable end state that can be checked—not an activity the agent performs.</strong>
@@ -1013,7 +878,7 @@ function DocsPage() {
               <div><dt>Task</dt><dd>One action taken toward an outcome. A task describes work; it does not define success.</dd></div>
               <div><dt>Possible.sh</dt><dd>The open-source library of Outcome Packs, documentation, examples, and evidence.</dd></div>
               <div><dt>$possible</dt><dd>The installed agent skill that understands a request, recommends an Outcome Pack, and runs it after approval.</dd></div>
-              <div><dt>Outcome Pack</dt><dd>A reusable execution prompt, selected agent skills, sequencing, safeguards, and completion checks for one class of outcomes.</dd></div>
+              <div><dt>Outcome Pack</dt><dd>A reviewed contract for one class of outcomes: it names the result, outputs, skills, workstreams, safeguards, and checks without becoming permission for external action.</dd></div>
               <div><dt>Creative direction</dt><dd>A project-specific visual system derived from its audience, product truth, evidence, assets, and constraints.</dd></div>
               <div><dt>Remix</dt><dd>Reconsider how an outcome is expressed without changing its promised facts, safeguards, product behavior, or definition of done.</dd></div>
               <div><dt>Outcome Journey</dt><dd>The retrospective sequence of outcomes completed for one ambition. It becomes visible only after each outcome is verified and the next is recommended from the new reality.</dd></div>
@@ -1022,11 +887,12 @@ function DocsPage() {
               <div><dt>Agent skill</dt><dd>A reusable capability that performs focused work during a run.</dd></div>
               <div><dt>Run</dt><dd>One approved Outcome Pack applied to one project.</dd></div>
               <div><dt>Workstream</dt><dd>A bounded part of the outcome with named inputs, outputs, ownership, and checks. Independent workstreams may run in parallel.</dd></div>
+              <div><dt>Output</dt><dd>An inspectable artifact or deliverable the run produces. An output is not itself proof that the promised outcome is true.</dd></div>
               <div><dt>Outcome brief</dt><dd>The durable record of confirmed intent, audience, current reality, constraints, gates, and unknowns.</dd></div>
-              <div><dt>Expectation contract</dt><dd>The observable required and preferred outcomes that connect user intent to work, evidence, and completion.</dd></div>
-              <div><dt>Outcome Record</dt><dd>The machine-readable index every run produces. It links artifacts, hashes, proofs, decisions, failures, repairs, approvals, limitations, and fresh verification without replacing the underlying evidence.</dd></div>
-              <div><dt>Acceptance check</dt><dd>A concrete condition the finished work must satisfy. It turns “done” into something inspectable.</dd></div>
-              <div><dt>Verification</dt><dd>The tests, review, measurements, or inspected evidence used to determine whether the promised end state is true.</dd></div>
+              <div><dt>Expectation contract</dt><dd>The frozen acceptance conditions for a run. Expectations describe what must become true; they are not outputs or implementation tasks.</dd></div>
+              <div><dt>Evidence</dt><dd>A preserved observation, file, measurement, test result, or review record linked to an expectation. Evidence supports a claim without replacing the underlying artifact.</dd></div>
+              <div><dt>Outcome Record</dt><dd>The machine-readable index every run produces. It links artifacts, hashes, expectation results, decisions, failures, repairs, approvals, limitations, and fresh verification.</dd></div>
+              <div><dt>Verification</dt><dd>The independent tests, review, measurements, or inspected evidence used to determine whether each active expectation is true.</dd></div>
               <div><dt>Completion report</dt><dd>The final evidence and status: artifacts created, checks passed or failed, limitations, unproven claims, and external actions not taken.</dd></div>
               <div><dt>External action</dt><dd>A real-world change—such as deploying, publishing, spending, outreach, or fabrication—that requires separate approval.</dd></div>
             </dl>

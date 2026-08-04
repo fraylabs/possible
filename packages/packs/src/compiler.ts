@@ -1,8 +1,5 @@
 import type {
   CompiledPack,
-  CriticalProofEvaluation,
-  CriticalProofObligation,
-  CriticalProofResult,
   ExpectationEvaluation,
   ExpectationResult,
   OutcomeCheckpoint,
@@ -25,13 +22,7 @@ function requireEvidencePaths(paths: string[], label: string): void {
 }
 
 function packExpectations(pack: OutcomePack): PackExpectation[] {
-  if (pack.expectations?.length && pack.criticalProofs?.length) {
-    throw new Error(`${pack.slug} cannot define both expectations and legacy critical proofs`);
-  }
-  return pack.expectations ?? (pack.criticalProofs ?? []).map(({ claim, ...proof }) => ({
-    ...proof,
-    statement: claim,
-  }));
+  return pack.expectations ?? [];
 }
 
 function validateConditionalExpectationModules(
@@ -141,42 +132,6 @@ export function validateExpectationContract(contract: OutcomeExpectationContract
     throw new Error("Expectation contract requires at least one active required expectation");
   }
   return contract;
-}
-
-export function evaluateCriticalProofResults(
-  obligations: CriticalProofObligation[],
-  results: CriticalProofResult[],
-  activeModuleIds: string[] = [],
-): CriticalProofEvaluation {
-  const obligationIds = new Set(obligations.map(({ id }) => id));
-  if (obligationIds.size !== obligations.length) throw new Error("Critical proof obligations require unique ids");
-  const knownModuleIds = new Set(obligations.flatMap(({ moduleId }) => moduleId ? [moduleId] : []));
-  const activeModules = new Set(activeModuleIds);
-  if (activeModules.size !== activeModuleIds.length) throw new Error("Active critical proof modules require unique ids");
-  for (const moduleId of activeModules) {
-    if (!knownModuleIds.has(moduleId)) throw new Error(`Unknown active critical proof module ${moduleId}`);
-  }
-  const resultsById = new Map<string, CriticalProofResult>();
-  for (const result of results) {
-    if (!obligationIds.has(result.obligationId)) {
-      throw new Error(`Unknown critical proof obligation ${result.obligationId}`);
-    }
-    if (resultsById.has(result.obligationId)) {
-      throw new Error(`Duplicate critical proof result ${result.obligationId}`);
-    }
-    if (!["passed", "failed", "skipped", "unproven"].includes(result.status)) {
-      throw new Error(`Critical proof ${result.obligationId} has an invalid status`);
-    }
-    requireEvidencePaths(result.evidence, `Critical proof ${result.obligationId} evidence`);
-    if (result.status === "passed" && result.evidence.length === 0) {
-      throw new Error(`Critical proof ${result.obligationId} cannot pass without direct evidence`);
-    }
-    resultsById.set(result.obligationId, result);
-  }
-  const requiredObligations = obligations.filter(({ moduleId }) => moduleId === undefined || activeModules.has(moduleId));
-  if (requiredObligations.some(({ id }) => resultsById.get(id)?.status === "failed")) return "failed";
-  if (requiredObligations.some(({ id }) => resultsById.get(id)?.status !== "passed")) return "unproven";
-  return "passed";
 }
 
 export function compileWorkstreamWaves(pack: OutcomePack): Workstream[][] {
@@ -336,16 +291,16 @@ FIRST CUSTOMER SPRINT
   const conditionalModuleContracts = [
     pack.functionalHardwarePrototype ? {
       label: "functional hardware",
-      modules: pack.functionalHardwarePrototype.modules.map(({ requiredProofIds, ...module }) => ({
+      modules: pack.functionalHardwarePrototype.modules.map(({ requiredExpectationIds, ...module }) => ({
         ...module,
-        requiredExpectationIds: requiredProofIds,
+        requiredExpectationIds,
       })),
     } : undefined,
     pack.launchContentPackage ? {
       label: "launch content",
-      modules: pack.launchContentPackage.modules.map(({ requiredProofIds, ...module }) => ({
+      modules: pack.launchContentPackage.modules.map(({ requiredExpectationIds, ...module }) => ({
         ...module,
-        requiredExpectationIds: requiredProofIds,
+        requiredExpectationIds,
       })),
     } : undefined,
     pack.modularOutcome ? { label: pack.modularOutcome.gateName.toLowerCase(), modules: pack.modularOutcome.modules } : undefined,
@@ -391,22 +346,6 @@ ${(pack.expectations ?? []).map((expectation) => [
 ].join("\n")).join("\n")}`;
   })() : "";
 
-  const legacyCriticalProofs = pack.criticalProofs?.length ? (() => {
-    const ids = new Set<string>();
-    for (const proof of pack.criticalProofs ?? []) {
-      if (!/^[a-z0-9][a-z0-9-]*$/.test(proof.id)) throw new Error(`${pack.slug} critical proof id ${proof.id} must be a safe identifier`);
-      if (ids.has(proof.id)) throw new Error(`${pack.slug} contains duplicate critical proof id ${proof.id}`);
-      ids.add(proof.id);
-      if (!proof.claim.trim()) throw new Error(`${pack.slug}/${proof.id} critical proof claim must be non-empty`);
-      if (proof.failureModes.length === 0 || proof.requiredEvidence.length === 0) throw new Error(`${pack.slug}/${proof.id} requires failure modes and evidence`);
-    }
-    return `
-
-HISTORICAL CRITICAL PROOF CONTRACT
-This preserved pack predates expectation contracts. Materialize these obligations as required pack expectations before any new run.
-${(pack.criticalProofs ?? []).map((proof) => `- ${proof.id}: ${proof.claim}`).join("\n")}`;
-  })() : "";
-
   const functionalHardwarePrototype = pack.functionalHardwarePrototype ? (() => {
     const contract = pack.functionalHardwarePrototype;
     if (contract.decisions.join(",") !== "working,repair-required,no-go") {
@@ -422,10 +361,10 @@ ${(pack.criticalProofs ?? []).map((proof) => `- ${proof.id}: ${proof.claim}`).jo
     ] as const) requireSafeRelativePath(value, `${pack.slug} functional hardware ${label}`);
     const workstreamIds = new Set(pack.workstreams.map(({ id }) => id));
     if (workstreamIds.size > 3) throw new Error(`${pack.slug} functional hardware prototype must use no more than three core workstreams`);
-    validateConditionalExpectationModules(pack, "functional hardware", contract.modules.map(({ requiredProofIds, ...module }) => ({
-      ...module,
-      requiredExpectationIds: requiredProofIds,
-    })));
+      validateConditionalExpectationModules(pack, "functional hardware", contract.modules.map(({ requiredExpectationIds, ...module }) => ({
+        ...module,
+        requiredExpectationIds,
+      })));
     for (const module of contract.modules) {
       if (module.earlyHardStops.length === 0 || module.earlyHardStops.some((item) => !item.trim())) {
         throw new Error(`${pack.slug}/${module.id} module requires early hard stops`);
@@ -441,7 +380,7 @@ FUNCTIONAL HARDWARE PROTOTYPE GATE
 2. Write ${contract.moduleDecisionPath} before implementation. Infer every module from the actual architecture and intended exposure; do not ask the user to choose engineering categories. Record each module as active or inactive with direct design evidence. Activate only what is present—not what might appear in a future version—and record active ids in the outcome record as activeModules.
 3. Build the simplest credible integrated artifact under ${contract.buildRoot}. Use only the mechanics, electronics, firmware, controls, fixtures, and instrumentation required by the contract and active modules. A passive artifact activates no electronics work. Prefer a current-limited bench supply before adding a battery when stored energy is not part of the function.
 4. Purchasing, external fabrication or assembly, energized work, battery charging, actuator connection, mains or high-energy work, and human or animal exposure each require separate approval for the exact revision, procedure, operator, environment, limits, stop conditions, and cost. Apply each active module's early hard stops before its hazardous action; missing authority, parts, tools, or qualified supervision produces no-go rather than simulated proof.
-5. Preserve instruments, fixtures, calibration or reference checks, raw samples, units, uncertainty, environment, revisions, failures, and thresholds in ${contract.measurementPath}. Test the authentic integrated artifact under nominal, boundary, and intentionally failing conditions. Measure only what decides the primary function and active-module proofs.
+5. Preserve instruments, fixtures, calibration or reference checks, raw samples, units, uncertainty, environment, revisions, failures, and thresholds in ${contract.measurementPath}. Test the authentic integrated artifact under nominal, boundary, and intentionally failing conditions. Measure only what decides the primary function and active-module expectations.
 6. After the first coherent artifact exists, perform a concrete safety and misuse revision at ${contract.safetyRevisionPath}. Apply only the active modules' revision checks, repair material findings, and rerun affected functional and failure tests. Safety is a design revision around real geometry and behavior, not a universal pre-design dossier; early hard stops still precede hazardous exposure.
 7. Write ${contract.decisionReceiptPath} with exactly one status: working, repair-required, or no-go. Working means only that the named immutable artifact passed its primary-function contract and all active required expectations. It never means safe for sale, suitable for unsupervised use, clinically effective, certified, manufacturable, demanded, or production-ready.
 
@@ -451,7 +390,7 @@ ${contract.modules.map((module) => [
   `  Activate when: ${module.activationWhen}`,
   `  Early hard stops: ${module.earlyHardStops.join("; ")}`,
   `  Revision checks: ${module.revisionChecks.join("; ")}`,
-  `  Required expectations: ${module.requiredProofIds.join(", ")}`,
+      `  Required expectations: ${module.requiredExpectationIds.join(", ")}`,
 ].join("\n")).join("\n")}`;
   })() : "";
 
@@ -513,9 +452,9 @@ Keep artifacts under ${contract.artifactRoot}. Write ${contract.decisionReceiptP
     ] as const) requireSafeRelativePath(value, `${pack.slug} launch content ${label}`);
     if (pack.workstreams.length > 3) throw new Error(`${pack.slug} launch content package must use no more than three core workstreams`);
     if (pack.remix) throw new Error(`${pack.slug} launch content package must not require three creative directions`);
-    validateConditionalExpectationModules(pack, "launch content", contract.modules.map(({ requiredProofIds, ...module }) => ({
+    validateConditionalExpectationModules(pack, "launch content", contract.modules.map(({ requiredExpectationIds, ...module }) => ({
       ...module,
-      requiredExpectationIds: requiredProofIds,
+      requiredExpectationIds,
     })));
     for (const module of contract.modules) {
       if (module.deliverables.length === 0 || module.deliverables.some((item) => !item.trim())) {
@@ -542,7 +481,7 @@ ${contract.modules.map((module) => [
   `  Activate when: ${module.activationWhen}`,
   `  Deliverables: ${module.deliverables.join("; ")}`,
   `  Production checks: ${module.productionChecks.join("; ")}`,
-  `  Required expectations: ${module.requiredProofIds.join(", ")}`,
+      `  Required expectations: ${module.requiredExpectationIds.join(", ")}`,
 ].join("\n")).join("\n")}`;
   })() : "";
 
@@ -771,7 +710,7 @@ ${pack.guardrails.map((guardrail) => `- ${guardrail}`).join("\n")}
 
 VERIFICATION CONTRACT
 ${pack.verification.map((item) => `- ${item}`).join("\n")}
-${expectationSpine}${expectations}${legacyCriticalProofs}${prerequisites}${opportunityDiscovery}${firstCustomerSprint}${decisionRationale}${mechanicalCadReview}${functionalHardwarePrototype}${launchContentPackage}${crowdfundingCampaignReadiness}${hardwarePrototype}${manufacturingReadiness}${studyReadiness}${modularOutcome}${remixGate}${releaseGate}${launchGate}${sitesPath}${operateLoop}
+${expectationSpine}${expectations}${prerequisites}${opportunityDiscovery}${firstCustomerSprint}${decisionRationale}${mechanicalCadReview}${functionalHardwarePrototype}${launchContentPackage}${crowdfundingCampaignReadiness}${hardwarePrototype}${manufacturingReadiness}${studyReadiness}${modularOutcome}${remixGate}${releaseGate}${launchGate}${sitesPath}${operateLoop}
 
 OUTCOME RECORD
 Every run—including a partial, blocked, or no-go result—must write one machine-readable evidence index at .possible/runs/<run-id>/outcome-record.json.
@@ -785,7 +724,7 @@ Use schemaVersion 1 and record:
 - external-action approvals and actions actually taken or not taken;
 - limitations; and
 - the fresh reviewer's identity, report path, independence from implementation, and passed/partial/failed status.
-This record is an index of preserved evidence, not the evidence itself. Never paste secrets, personal data, unverifiable claims, or fabricated evidence into it. Use empty arrays when a category did not occur; never omit a field. A passing record requires every active required expectation to pass and may not hide failed, skipped, unproven, unresolved, denied, or not-taken items. The historical proofs field is compatibility-only for preserved pre-expectation runs.
+This record is an index of preserved evidence, not the evidence itself. Never paste secrets, personal data, unverifiable claims, or fabricated evidence into it. Use empty arrays when a category did not occur; never omit a field. A passing record requires every active required expectation to pass and may not hide failed, skipped, unproven, unresolved, denied, or not-taken items.
 
 NEW-REALITY CHECKPOINT
 Only after this bounded outcome finishes—including a partial or no-go result—write .possible/checkpoints/<run-id>.json with:
@@ -802,18 +741,12 @@ Do not ask me to choose implementation details that can be safely inferred from 
 
 export function validateOutcomeRecord(
   record: OutcomeRecord,
-  contracts: OutcomeExpectationContract | PackExpectation[] | CriticalProofObligation[] = [],
+  contracts: OutcomeExpectationContract | PackExpectation[] = [],
 ): OutcomeRecord {
   const frozenContract = Array.isArray(contracts) ? undefined : validateExpectationContract(contracts);
-  const definitions: PackExpectation[] | CriticalProofObligation[] = Array.isArray(contracts)
+  const expectationDefinitions: PackExpectation[] = Array.isArray(contracts)
     ? contracts
     : frozenContract!.expectations;
-  const expectationDefinitions: PackExpectation[] = definitions.map((contract) => {
-    if ("statement" in contract) return contract;
-    const { claim, ...legacy } = contract;
-    return { ...legacy, statement: claim };
-  });
-  const legacyCriticalProofs = definitions.filter((contract): contract is CriticalProofObligation => "claim" in contract);
   if (record.schemaVersion !== 1) throw new Error("Outcome record schemaVersion must be 1");
   if (!/^[a-z0-9][a-z0-9-]*$/.test(record.runId)) throw new Error("Outcome record runId must be a safe identifier");
   if (!/^[a-z0-9][a-z0-9-]*$/.test(record.packSlug)) throw new Error("Outcome record packSlug must be a safe identifier");
@@ -848,28 +781,29 @@ export function validateOutcomeRecord(
     if (!artifact.description.trim() || !artifact.workstreamId.trim()) {
       throw new Error(`Outcome record artifact ${artifact.path} requires a description and workstream id`);
     }
-    if (record.expectationResults && (!artifact.expectationIds?.length || artifact.expectationIds.some((id) => !knownExpectationIds.has(id)))) {
+    if (expectationDefinitions.length > 0 && (!artifact.expectationIds?.length || artifact.expectationIds.some((id) => !knownExpectationIds.has(id)))) {
       throw new Error(`Outcome record artifact ${artifact.path} must map to known expectation ids`);
     }
     if (!/^[a-f0-9]{64}$/.test(artifact.sha256)) throw new Error(`Outcome record artifact ${artifact.path} requires a SHA-256`);
   }
-  const proofs = record.proofs ?? [];
-  if (proofs.length === 0 && !record.expectationResults?.length) {
-    throw new Error("Outcome record must include expectation results or historical proofs");
-  }
-  for (const proof of proofs) {
-    if (!proof.claim.trim()) throw new Error("Outcome record proof claim must be non-empty");
-    if (!["passed", "failed", "skipped", "unproven"].includes(proof.status)) {
-      throw new Error(`Outcome record proof ${proof.claim} has an invalid status`);
+  const expectationResults = record.expectationResults ?? [];
+  if (expectationResults.length === 0) throw new Error("Outcome record must include expectation results");
+  const resultIds = new Set<string>();
+  for (const result of expectationResults) {
+    if (!result.expectationId.trim()) throw new Error("Outcome record expectation result requires an expectation id");
+    if (resultIds.has(result.expectationId)) throw new Error(`Outcome record expectation ${result.expectationId} is duplicated`);
+    resultIds.add(result.expectationId);
+    if (!["passed", "failed", "skipped", "unproven"].includes(result.status)) {
+      throw new Error(`Outcome record expectation ${result.expectationId} has an invalid status`);
     }
-    requireEvidencePaths(proof.evidence, `Outcome record proof ${proof.claim} evidence`);
-    if (proof.status === "passed" && proof.evidence.length === 0) {
-      throw new Error(`Outcome record passed proof ${proof.claim} requires direct evidence`);
+    requireEvidencePaths(result.evidence, `Outcome record expectation ${result.expectationId} evidence`);
+    if (result.status === "passed" && result.evidence.length === 0) {
+      throw new Error(`Outcome record passed expectation ${result.expectationId} requires direct evidence`);
     }
   }
-  if (record.expectationResults) {
-    if (!record.expectationContractPath) throw new Error("Outcome record expectation results require expectationContractPath");
-    evaluateExpectationResults(expectationDefinitions, record.expectationResults, record.activeModules ?? []);
+  if (!record.expectationContractPath) throw new Error("Outcome record expectation results require expectationContractPath");
+  if (expectationDefinitions.length > 0) {
+    evaluateExpectationResults(expectationDefinitions, expectationResults, record.activeModules ?? []);
   }
   for (const decision of record.decisions) {
     if (!decision.question.trim() || !decision.selection.trim()) {
@@ -923,39 +857,21 @@ export function validateOutcomeRecord(
   if (record.status === "passed") {
     if (
       record.verification.status !== "passed" ||
-      ![...proofs, ...(record.expectationResults ?? [])].some((result) => result.status === "passed")
+      !expectationResults.some((result) => result.status === "passed")
     ) {
       throw new Error("A passed outcome record requires passed independent verification and at least one passed expectation");
     }
     if (record.repairs.some((repair) => repair.status === "unresolved")) {
       throw new Error("A passed outcome record cannot contain unresolved repairs");
     }
-    if (expectationDefinitions.length > 0 && legacyCriticalProofs.length === 0) {
-      if (!record.expectationContractPath || !record.expectationResults?.length) {
-        throw new Error("A passed expectation-based outcome requires a frozen expectation contract and results");
-      }
+    if (expectationDefinitions.length > 0) {
       const evaluation = evaluateExpectationResults(
         expectationDefinitions,
-        record.expectationResults,
+        expectationResults,
         record.activeModules ?? [],
       );
       if (evaluation !== "passed") {
         throw new Error(`A passed outcome record requires every active required expectation to pass; current result is ${evaluation}`);
-      }
-    } else if (legacyCriticalProofs.length > 0) {
-      const evaluation = evaluateCriticalProofResults(
-        legacyCriticalProofs,
-        proofs
-          .filter((proof): proof is typeof proof & { obligationId: string } => Boolean(proof.obligationId))
-          .map((proof) => ({
-            obligationId: proof.obligationId,
-            status: proof.status,
-            evidence: proof.evidence,
-          })),
-        record.activeModules ?? [],
-      );
-      if (evaluation !== "passed") {
-        throw new Error(`A passed outcome record requires every critical proof to pass; current result is ${evaluation}`);
       }
     }
   }

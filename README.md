@@ -117,6 +117,21 @@ Each run writes one predictable `.possible/runs/<run-id>/outcome-record.json`. I
 
 After a verified run, Possible creates a new-reality checkpoint. It does not automatically begin another Outcome Pack or inherit approval into a future outcome.
 
+### Core model
+
+Possible keeps the user-facing model small:
+
+- **Outcome** — the observable end state the user wants to make true.
+- **Outcome Pack** — a reviewed contract for one class of outcomes, including its prompt, skills, workstreams, safeguards, outputs, and checks.
+- **Run** — one approved pack applied to one project and one frozen brief.
+- **Expectation** — an acceptance condition describing what must become true. Expectations are not outputs or tasks.
+- **Output** — an inspectable artifact or deliverable produced by the run.
+- **Evidence** — a preserved observation, measurement, test, or review record linked to an expectation.
+- **Verification** — an independent attempt to determine whether the active expectations are true.
+- **Checkpoint** — the new reality recorded after a run, including unknowns and the next decision.
+
+Catalog status and the legacy lane field stay as internal discovery/compiler metadata; they are not user-facing workflow primitives. Pack-specific contracts add detail only when an outcome needs it. An Outcome Journey is retrospective: it is visible only after separate outcomes have been verified, not a predeclared sequence.
+
 ## Built During Build Week
 
 Commit [`afb5fc1`](https://github.com/fraylabs/possible/commit/afb5fc1c1e01d746753712ddc79f456df0984826) marks the product reset that introduced the current Outcome Pack architecture. The repository history after that boundary records the typed manifests, compiler, installable skill, CLI, public site, preserved runs and verification repairs.

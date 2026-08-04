@@ -83,6 +83,8 @@ describe("Possible", () => {
     const firstPage = screen.getByRole("region", { name: "Outcome Packs page 1 of 1" });
     expect(within(firstPage).getAllByRole("link")).toHaveLength(4);
     for (const pack of publishedPacks.slice(0, 4)) expect(within(firstPage).getByRole("heading", { name: pack.name })).toBeInTheDocument();
+    expect(firstPage.querySelectorAll(".pack-art")).toHaveLength(0);
+    expect(container).toHaveTextContent(/text-first library of reviewed outcome contracts/i);
 
     expect(screen.queryByText(/EXPERIMENTAL OUTCOME PACK/i)).not.toBeInTheDocument();
     expect(container).not.toHaveTextContent(/Hardware Launch|Open-Source Release|Marketing Operations/i);
@@ -94,6 +96,7 @@ describe("Possible", () => {
       const { container, unmount } = renderRoute(`/packs/${pack.slug}`);
       const compiled = compilePack(pack);
       expect(screen.getByRole("heading", { name: pack.name, level: 1 })).toBeInTheDocument();
+      expect(screen.getByRole("heading", { name: "Outputs", level: 2 })).toBeInTheDocument();
       expect(container.querySelectorAll(".pack-reference-section")).toHaveLength(8);
       expect(container.querySelector(".pack-prompt-disclosure code")?.textContent).toBe(compiled.runPrompt);
       expect(container.querySelector("main")).not.toHaveTextContent(/SCHEDULABLE|OPTIONAL SCHEDULE|Schedule the/i);
@@ -221,6 +224,7 @@ describe("Possible", () => {
     expect(screen.getByText(installCommand, { selector: ".docs-command code" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Glossary" })).toBeInTheDocument();
     expect(container.querySelector(".docs-glossary")).toHaveTextContent(/Outcome Journey.*retrospective.*verified.*new reality/i);
+    expect(container.querySelector(".docs-glossary")).toHaveTextContent(/Output.*not itself proof.*Expectation contract.*not outputs.*Evidence.*preserved/i);
     expect(container.querySelector("#execute")).toHaveTextContent(/inspect the verified result.*recommend.*next outcome.*fresh approval/i);
     expect(screen.getByRole("link", { name: /complete recorded Hardware Launch run/i })).toHaveAttribute("href", "/examples/still?view=process");
     expect(container.querySelector("main")).not.toHaveTextContent(/schedule operations|recurring outcome|\.possible\/schedule\.json/i);

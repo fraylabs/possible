@@ -397,7 +397,7 @@ test("Functional Hardware Prototype activates only the expectation modules prese
   );
 
   const wrongModuleProof = structuredClone(pack);
-  wrongModuleProof.functionalHardwarePrototype.modules[0].requiredProofIds = ["motion-system"];
+  wrongModuleProof.functionalHardwarePrototype.modules[0].requiredExpectationIds = ["motion-system"];
   assert.throws(() => compilePack(wrongModuleProof), /expectation motion-system must declare the same moduleId/);
 
   const unlistedModuleProof = structuredClone(pack);
@@ -420,6 +420,7 @@ test("every run exposes one extractable outcome record", () => {
     status: "passed",
     completedAt: "2026-07-24T04:00:00.000Z",
     outcomeBriefPath: ".possible/runs/robot-snake-001/outcome-brief.md",
+    expectationContractPath: ".possible/runs/robot-snake-001/expectations.json",
     packSnapshotPath: ".possible/runs/robot-snake-001/pack.json",
     skillLockPath: ".possible/runs/robot-snake-001/skills-lock.json",
     workspaceRevision: "0123456789abcdef",
@@ -429,8 +430,8 @@ test("every run exposes one extractable outcome record", () => {
       workstreamId: "mechanical",
       sha256: "a".repeat(64),
     }],
-    proofs: [{
-      claim: "The robot model passes its interface checks.",
+    expectationResults: [{
+      expectationId: "robot-interface",
       status: "passed",
       evidence: ["verification/interface-checks.json"],
     }],
@@ -467,11 +468,11 @@ test("every run exposes one extractable outcome record", () => {
   assert.equal(validateOutcomeRecord(record), record);
 
   const missingProof = structuredClone(record);
-  missingProof.proofs = [];
-  assert.throws(() => validateOutcomeRecord(missingProof), /expectation results or historical proofs/);
+  missingProof.expectationResults = [];
+  assert.throws(() => validateOutcomeRecord(missingProof), /must include expectation results/);
 
   const unsafeEvidence = structuredClone(record);
-  unsafeEvidence.proofs[0].evidence = ["../outside.json"];
+  unsafeEvidence.expectationResults[0].evidence = ["../outside.json"];
   assert.throws(() => validateOutcomeRecord(unsafeEvidence), /safe repository-relative path/);
 
   const incompletePass = structuredClone(record);
@@ -479,7 +480,7 @@ test("every run exposes one extractable outcome record", () => {
   assert.throws(() => validateOutcomeRecord(incompletePass), /requires passed independent verification/);
 
   const visibleUnknown = structuredClone(record);
-  visibleUnknown.proofs.push({ claim: "Physical reliability is established.", status: "unproven", evidence: [] });
+  visibleUnknown.expectationResults.push({ expectationId: "physical-reliability", status: "unproven", evidence: [] });
   assert.equal(validateOutcomeRecord(visibleUnknown), visibleUnknown);
 });
 

@@ -74,7 +74,7 @@ export interface FunctionalHardwareModule {
   activationWhen: string;
   earlyHardStops: string[];
   revisionChecks: string[];
-  requiredProofIds: string[];
+  requiredExpectationIds: string[];
 }
 
 export interface FunctionalHardwarePrototypeContract {
@@ -102,7 +102,7 @@ export interface LaunchContentModule {
   activationWhen: string;
   deliverables: string[];
   productionChecks: string[];
-  requiredProofIds: string[];
+  requiredExpectationIds: string[];
 }
 
 export interface LaunchContentPackageContract {
@@ -179,14 +179,6 @@ export interface MechanicalCadReviewContract {
   decisions: ["review-ready", "repair-required", "no-go"];
 }
 
-export interface CriticalProofObligation {
-  id: string;
-  moduleId?: string;
-  claim: string;
-  failureModes: string[];
-  requiredEvidence: string[];
-}
-
 export type ExpectationLevel = "required" | "preferred";
 export type ExpectationSource = "pack" | "user" | "inferred";
 
@@ -259,6 +251,7 @@ export type PackLane = "create" | "launch" | "release" | "operate";
 export interface OutcomePack {
   schemaVersion: 1;
   catalogNumber: number;
+  /** Internal catalog metadata retained for registry compatibility; it never changes run semantics. */
   lane: PackLane;
   slug: string;
   name: string;
@@ -288,8 +281,6 @@ export interface OutcomePack {
   modularOutcome?: ModularOutcomeContract;
   studyReadiness?: StudyReadinessContract;
   expectations?: PackExpectation[];
-  /** Historical compatibility for archived and pre-expectation pack specifications. */
-  criticalProofs?: CriticalProofObligation[];
   remix?: RemixContract;
   prerequisites?: OutcomePrerequisite[];
   firstCustomerSprint?: FirstCustomerSprintContract;
@@ -307,32 +298,16 @@ export interface EvidenceBackedFact {
   evidence: string[];
 }
 
-export type OutcomeProofStatus = "passed" | "failed" | "skipped" | "unproven";
-
-export interface OutcomeProofRecord {
-  obligationId?: string;
-  expectationId?: string;
-  claim: string;
-  status: OutcomeProofStatus;
-  evidence: string[];
-}
+export type ExpectationResultStatus = "passed" | "failed" | "skipped" | "unproven";
 
 export interface ExpectationResult {
   expectationId: string;
-  status: OutcomeProofStatus;
+  status: ExpectationResultStatus;
   evidence: string[];
   finding?: string;
 }
 
 export type ExpectationEvaluation = "passed" | "failed" | "unproven";
-
-export interface CriticalProofResult {
-  obligationId: string;
-  status: OutcomeProofStatus;
-  evidence: string[];
-}
-
-export type CriticalProofEvaluation = "passed" | "failed" | "unproven";
 
 export interface OutcomeArtifactRecord {
   path: string;
@@ -382,11 +357,9 @@ export interface OutcomeRecord {
   skillLockPath: string;
   workspaceRevision: string;
   activeModules?: string[];
-  expectationContractPath?: string;
-  expectationResults?: ExpectationResult[];
+  expectationContractPath: string;
+  expectationResults: ExpectationResult[];
   artifacts: OutcomeArtifactRecord[];
-  /** Historical proof records; new runs use expectationResults. */
-  proofs?: OutcomeProofRecord[];
   decisions: OutcomeDecisionRecord[];
   repairs: OutcomeRepairRecord[];
   approvals: OutcomeApprovalRecord[];
