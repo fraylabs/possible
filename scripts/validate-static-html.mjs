@@ -32,8 +32,8 @@ const home = visibleText(homeMarkup);
 assert.match(home, /Complete a possible[\s\S]*outcome\./);
 assert.match(home, /Possible\.sh is an open-source library of Outcome Packs\.[\s\S]*dozens of coordinated tasks\./);
 assert.match(home, /npx @fraylabs\/possible@0\.1\.11 init/);
-assert.match(home, /DESCRIBE[\s\S]*APPROVE[\s\S]*EXECUTE[\s\S]*VERIFY/);
-assert.match(home, /FEATURED OUTCOMES/);
+assert.doesNotMatch(home, /DESCRIBE[\s\S]*APPROVE[\s\S]*EXECUTE[\s\S]*VERIFY/);
+assert.doesNotMatch(home, /FEATURED OUTCOMES|Outcome Packs Possible can recommend/);
 
 const judgingMarkup = await html("judging/index.html");
 const judgingText = plainText(visibleText(judgingMarkup));
@@ -85,20 +85,6 @@ for (const [href, label] of [["/examples", "EXAMPLES"], ["/docs", "DOCS"], ["htt
 }
 assert.doesNotMatch(headerLinks, /BLOGS|PACKS|BENCH|SOURCE/);
 
-for (const [href, name] of [
-  ["/examples/still", "Still"],
-  ["/examples/robot-snake", "Robot Snake"],
-  ["/examples/fold", "Fold"],
-  ["/examples/web-presentation", "Web Presentation"],
-]) {
-  assert.match(home, new RegExp(`href="${escape(href)}"[\\s\\S]*?${escape(name)}`));
-}
-
-for (const pack of featuredPacks) {
-  assert.match(home, new RegExp(escape(pack.name)));
-  assert.match(home, new RegExp(`href="/packs/${pack.slug}"`));
-}
-
 for (const forbidden of [
   /50[–-]100 coordinated tasks/i,
   /RECORDED OUTCOMES \/ \d+/i,
@@ -112,7 +98,11 @@ const workflowIndex = home.indexOf('class="home-workflow"');
 const demosIndex = home.indexOf('class="home-demo"');
 const technicalIndex = home.indexOf('class="home-pack-index"');
 const sourceIndex = home.indexOf('aria-labelledby="home-source-heading"');
-assert.ok(heroIndex >= 0 && workflowIndex > heroIndex && demosIndex > workflowIndex && technicalIndex > demosIndex && sourceIndex > technicalIndex, "Homepage sections must follow the judge journey");
+assert.ok(heroIndex >= 0, "Homepage must render the install hero");
+assert.equal((home.match(/<section\b/g) ?? []).length, 1, "Homepage must contain only the hero section");
+for (const [index, label] of [[workflowIndex, "workflow"], [demosIndex, "examples"], [technicalIndex, "pack index"], [sourceIndex, "source"]]) {
+  assert.equal(index, -1, `Homepage must not render the ${label} section`);
+}
 
 const homepageWordCount = plainText(home.match(/<main[\s\S]*<\/main>/)?.[0] ?? "").split(/\s+/).filter(Boolean).length;
 assert.ok(homepageWordCount <= 330, `Homepage must remain concise; found ${homepageWordCount} words`);

@@ -161,64 +161,7 @@ function CreatePage() {
             </article>
           </div>
         </div>
-
-        <section className="home-workflow" aria-labelledby="home-workflow-heading">
-          <header><span>HOW IT WORKS</span><h2 id="home-workflow-heading">Bring the ambition.<br /><em>Possible supplies the missing work.</em></h2></header>
-          <ol>
-            <li><span>DESCRIBE</span><strong>Tell <code>$possible</code> what you want.</strong><p>A rough idea is enough.</p></li>
-            <li><span>APPROVE</span><strong>Review the outcome.</strong><p>Possible sets its boundaries.</p></li>
-            <li><span>EXECUTE</span><strong>Codex runs the workstreams.</strong></li>
-            <li><span>VERIFY</span><strong>Evidence decides what is done.</strong><p>Evidence informs what comes next.</p></li>
-          </ol>
-        </section>
-
-        <section className="home-demo" aria-labelledby="home-demo-heading">
-          <header>
-            <span>FEATURED OUTCOMES</span>
-            <h2 id="home-demo-heading">Finished outcomes.<br /><em>Open one.</em></h2>
-          </header>
-          <ol aria-label="Possible example outcomes">
-            {exampleCatalog.slice(0, 4).map((example) => (
-              <li key={example.slug}><a href={`/examples/${example.slug}`}><span>{example.outcomeLabel}</span><h3>{example.name}</h3><i>↗</i></a></li>
-            ))}
-          </ol>
-        </section>
-
-        <div className="home-pack-index" id="packs" role="region" aria-labelledby="home-packs-heading">
-          <header>
-            <div>
-              <span>THE TECHNICAL IDEA</span>
-              <h2 id="home-packs-heading">Skills perform tasks.<br /><em>Outcome Packs coordinate the outcome.</em></h2>
-            </div>
-          </header>
-
-          <div className="home-pack-columns" aria-hidden="true">
-            <span>OUTCOME PACK</span><span>PURPOSE</span><span>STATUS</span><span>OPEN</span>
-          </div>
-          <ol aria-label="Outcome Packs Possible can recommend">
-            {publishedPacks.map((pack) => (
-              <li key={pack.slug}>
-                <a href={`/packs/${pack.slug}`} aria-label={`${pack.name}, ${packStatusLabel(pack.slug)} Outcome Pack`}>
-                  <strong>{pack.name}</strong>
-                  <span>{pack.promise}</span>
-                  <span className={`home-pack-status home-pack-status--${getPackStatus(pack.slug)}`}>{packStatusLabel(pack.slug)}</span>
-                  <i>↗</i>
-                </a>
-              </li>
-            ))}
-          </ol>
-        </div>
       </section>
-
-      <section className="home-source" aria-labelledby="home-source-heading">
-        <header><div><span>OPEN SOURCE</span><h2 id="home-source-heading">Inspect the compiler.<br /><em>Run the tests.</em></h2></div></header>
-        <div className="home-source-links">
-          <a href={githubUrl} target="_blank" rel="noreferrer"><strong>GitHub</strong><span>Read the source ↗</span></a>
-          <a href={`${githubUrl}#judge-quickstart`} target="_blank" rel="noreferrer"><strong>Judge quickstart</strong><span>Install and test ↗</span></a>
-        </div>
-      </section>
-
-      <SiteFooter />
     </main>
   );
 }

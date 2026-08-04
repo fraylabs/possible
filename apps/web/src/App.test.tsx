@@ -25,7 +25,7 @@ const exampleContracts = [
 ] as const;
 
 describe("Possible", () => {
-  it("presents one judge journey around four outcomes", async () => {
+  it("presents a focused install hero", async () => {
     const { container } = render(<App />);
 
     expect(screen.getByRole("heading", { name: /Complete a possible\s*outcome\./, level: 1 })).toBeInTheDocument();
@@ -36,23 +36,11 @@ describe("Possible", () => {
     const navigation = Array.from(container.querySelectorAll(".nav-links a")).map((link) => link.textContent);
     expect(navigation).toEqual(["EXAMPLES", "DOCS", "GITHUB ↗"]);
 
-    const workflow = screen.getByRole("region", { name: /Bring the ambition.*Possible supplies the missing work/i });
-    expect(within(workflow).getAllByRole("listitem")).toHaveLength(4);
-    expect(workflow).toHaveTextContent(/DESCRIBE.*APPROVE.*EXECUTE.*VERIFY/i);
-    expect(workflow).toHaveTextContent(/Evidence decides what is done.*Evidence informs what comes next/i);
-
-    const demos = screen.getByRole("region", { name: /Finished outcomes.*Open one/i });
-    expect(within(demos).getAllByRole("listitem")).toHaveLength(4);
-    for (const [name, href] of ([
-      ["Still", "/examples/still"],
-      ["Robot Snake", "/examples/robot-snake"],
-      ["Fold", "/examples/fold"],
-      ["Web Presentation", "/examples/web-presentation"],
-    ] as const)) expect(within(demos).getByRole("link", { name: new RegExp(name) })).toHaveAttribute("href", href);
-
-    const packs = screen.getByRole("list", { name: "Outcome Packs Possible can recommend" });
-    expect(within(packs).getAllByRole("listitem")).toHaveLength(publishedPacks.length);
-    for (const pack of publishedPacks) expect(within(packs).getByRole("link", { name: new RegExp(pack.name) })).toHaveAttribute("href", `/packs/${pack.slug}`);
+    expect(container.querySelectorAll("main > section")).toHaveLength(1);
+    expect(container.querySelector(".home-workflow")).not.toBeInTheDocument();
+    expect(container.querySelector(".home-demo")).not.toBeInTheDocument();
+    expect(container.querySelector(".home-pack-index")).not.toBeInTheDocument();
+    expect(container.querySelector(".home-source")).not.toBeInTheDocument();
 
     expect(container.querySelector("main")).not.toHaveTextContent(/50[–-]100|RECORDED OUTCOMES \/|BENCHMARK|Direct.*\/goal|schedule operations/i);
     expect(await axe(container)).toHaveNoViolations();
