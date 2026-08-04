@@ -162,6 +162,8 @@ function CreatePage() {
           </div>
         </div>
       </section>
+
+      <SiteFooter />
     </main>
   );
 }
