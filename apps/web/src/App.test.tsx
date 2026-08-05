@@ -217,11 +217,11 @@ describe("Possible", () => {
   it("keeps the primary documentation focused on first use", async () => {
     const { container } = renderRoute("/docs");
     expect(screen.getByText(installCommand, { selector: ".docs-command code" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Glossary" })).toBeInTheDocument();
-    expect(container.querySelector(".docs-glossary")).toHaveTextContent(/Outcome Journey.*retrospective.*verified.*new reality/i);
-    expect(container.querySelector(".docs-glossary")).toHaveTextContent(/Output.*not itself proof.*Expectation contract.*not outputs.*Evidence.*preserved/i);
-    expect(container.querySelector("#execute")).toHaveTextContent(/inspect the verified result.*recommend.*next outcome.*fresh approval/i);
-    expect(screen.getByRole("link", { name: /complete recorded Hardware Launch run/i })).toHaveAttribute("href", "/examples/still?view=process");
+    expect(screen.getByRole("heading", { name: "What happens next" })).toBeInTheDocument();
+    expect(container.querySelector("#next")).toHaveTextContent(/clarify the outcome.*recommend one contract.*wait for your yes/i);
+    expect(screen.getByRole("link", { name: /Read the complete workflow/i })).toHaveAttribute("href", "/docs/how-to-use");
+    expect(container.querySelector(".docs-glossary")).not.toBeInTheDocument();
+    expect(container).not.toHaveTextContent(/Hardware Launch|Outcome Journey|The artifact is not the proof/i);
     expect(container.querySelector("main")).not.toHaveTextContent(/schedule operations|recurring outcome|\.possible\/schedule\.json/i);
     expect(await axe(container)).toHaveNoViolations();
   });

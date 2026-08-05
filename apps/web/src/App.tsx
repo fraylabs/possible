@@ -754,7 +754,7 @@ function DocsNavLinks({ active }: { active: DocsPageKey }) {
 function DocsSidebar({ active }: { active: DocsPageKey }) {
   return (
     <aside className="docs-sidebar" aria-label="Documentation navigation">
-      <div className="docs-sidebar-title"><strong>Documentation</strong><span>V0.1</span></div>
+      <div className="docs-sidebar-title"><strong>Documentation</strong><span>GUIDE</span></div>
       <DocsNavLinks active={active} />
       <details className="docs-mobile-menu">
         <summary>Browse docs <span>＋</span></summary>
@@ -778,12 +778,12 @@ function DocsPage() {
           <header className="docs-title" id="overview">
             <p className="eyebrow">GETTING STARTED</p>
             <h1>Build complete outcomes with Possible</h1>
-            <p>Possible.sh is an open-source library of Outcome Packs for Codex. The installed <code>$possible</code> skill understands your request, recommends the right Outcome Pack, and runs it after approval—even when you do not know all the work required.</p>
+            <p>Possible is an open-source library of Outcome Packs for Codex. Install <code>$possible</code>, describe what you want to make, and review the recommended path before any work begins.</p>
           </header>
 
           <aside className="docs-callout docs-callout--info">
             <strong>THE SHORT VERSION</strong>
-            <p>Install <code>$possible</code> once. Describe what you want to make. The skill finds the right Outcome Pack with you.</p>
+            <p>Install once. Describe the outcome in your own words. Possible helps clarify the target, recommends one contract, and waits for your confirmation.</p>
           </aside>
 
           <section id="installation">
@@ -814,102 +814,22 @@ function DocsPage() {
             <blockquote>What would you like to make possible today? A rough idea is enough — we can brainstorm it together.</blockquote>
           </section>
 
-          <section id="glossary">
-            <h2>Glossary</h2>
-            <p>Possible uses a small set of terms to separate the result you want, the artifacts it produces, and the evidence that makes completion trustworthy.</p>
-            <aside className="docs-outcome-definition">
-              <span>OUTCOME</span>
-              <strong>An observable end state that can be checked—not an activity the agent performs.</strong>
-              <p>In practice: what should exist, who it is for, the constraints that matter, and the evidence required to call it complete.</p>
-            </aside>
-            <div className="docs-outcome-example" aria-label="Task and outcome example">
-              <div><span>TASK</span><p>Build a landing page.</p></div>
-              <div><span>OUTCOME</span><p>A responsive launch page for the confirmed audience, using approved claims, with one complete conversion flow and passing accessibility checks.</p></div>
-            </div>
-            <dl className="docs-glossary">
-              {glossaryTerms.map(([term, definition]) => <div key={term}><dt>{term}</dt><dd>{definition}</dd></div>)}
-            </dl>
-            <a className="docs-text-link" href="/docs/glossary">Open the full glossary →</a>
-          </section>
-
-          <section id="brainstorm">
-            <h2>Brainstorm the outcome</h2>
-            <p>You do not need a finished brief. Describe the idea in your own words. Possible reflects what it heard and asks one useful question per turn until the desired end state is clear enough to recommend a path.</p>
-            <div className="docs-do-dont">
-              <div><strong>DURING INTAKE</strong><ul><li>Reflect the user&apos;s intent</li><li>Ask one question at a time</li><li>Preserve assumptions as assumptions</li></ul></div>
-              <div><strong>NOT DURING INTAKE</strong><ul><li>Name or install an Outcome Pack</li><li>Edit files or create state</li><li>Spawn specialists</li></ul></div>
-            </div>
-          </section>
-
-          <section id="recommend">
-            <h2>Review the recommendation</h2>
-            <p><code>$possible</code> recommends one primary Outcome Pack and links its public specification. Every recommendation should answer four questions:</p>
+          <section id="next">
+            <h2>What happens next</h2>
+            <p>Possible keeps the handoff explicit:</p>
             <ol>
-              <li><strong>What does Possible think you want to make?</strong><span>A concise outcome statement and any material assumptions.</span></li>
-              <li><strong>Why does this Outcome Pack fit?</strong><span>A link to its specification and a short explanation.</span></li>
-              <li><strong>What will exist afterward?</strong><span>Concrete outputs and the expectations that decide whether the outcome is real.</span></li>
-              <li><strong>What remains unauthorized?</strong><span>External actions and claims that still require separate approval.</span></li>
+              <li><strong>Clarify the outcome</strong><span>It reflects your intent and asks only the questions that materially change the result.</span></li>
+              <li><strong>Recommend one contract</strong><span>It shows the fit, outputs, expectations, safeguards, and remaining approval boundaries.</span></li>
+              <li><strong>Wait for your yes</strong><span>Only direct confirmation authorizes the disclosed repo-local run.</span></li>
             </ol>
-            <a className="docs-reference-link" href="/packs/hardware-launch"><span>EXAMPLE OUTCOME PACK</span><strong>Hardware Launch</strong><i>View specification →</i></a>
+            <a className="docs-text-link" href="/docs/how-to-use">Read the complete workflow →</a>
           </section>
 
-          <section id="confirm">
-            <h2>Confirm before execution</h2>
-            <p><code>$possible</code> waits for direct confirmation such as “yes, proceed,” “use this Outcome Pack,” or “go ahead.” A question, correction, or enthusiastic reaction is not confirmation.</p>
-            <aside className="docs-callout docs-callout--approval">
-              <strong>WHAT “YES” AUTHORIZES</strong>
-              <p>{approvalDisclosure}</p>
-            </aside>
-            <p>If the recommendation is wrong, correct the understanding and continue the conversation. Possible should recommend again instead of defending the first answer.</p>
-          </section>
-
-          <section id="execute">
-            <h2>Run the Outcome Pack</h2>
-            <p>After confirmation, Codex coordinates the run:</p>
-            <ol>
-              <li><strong>Inspect and install</strong><span>Resolve the Outcome Pack&apos;s agent skills and detect optional agent plugins without pretending to install them.</span></li>
-              <li><strong>Write shared state</strong><span>Record the confirmed brief, exact Outcome Pack snapshot, and resolved skill versions.</span></li>
-              <li><strong>Coordinate workstreams</strong><span>Run independent specialist work in parallel where appropriate.</span></li>
-              <li><strong>Review the complete outcome</strong><span>Integrate one coherent result, challenge every active expectation, preserve failures, repair the artifact, and rerun the complete review.</span></li>
-              <li><strong>Reassess what comes next</strong><span>Inspect the verified result and changed reality before recommending one next outcome for fresh approval.</span></li>
-            </ol>
-            <a className="docs-text-link" href="/examples/still?view=process">See a complete recorded Hardware Launch run →</a>
-          </section>
-
-          <section id="files">
-            <h2>Project files</h2>
-            <p>Possible creates outcome state only after confirmation.</p>
-            <div className="docs-table" role="table" aria-label="Possible project files">
-              <div role="row"><strong role="columnheader">Path</strong><strong role="columnheader">Purpose</strong></div>
-              <div role="row"><code role="cell">.possible/outcome-brief.md</code><span role="cell">Confirmed intent, constraints, interfaces, gates, and unknowns.</span></div>
-              <div role="row"><code role="cell">.possible/runs/&lt;run-id&gt;/expectations.json</code><span role="cell">Frozen required and preferred expectations with evidence requirements and activation state.</span></div>
-              <div role="row"><code role="cell">.possible/pack.json</code><span role="cell">The exact Outcome Pack snapshot approved for this run.</span></div>
-              <div role="row"><code role="cell">.possible/skills-lock.json</code><span role="cell">Resolved sources, revisions, paths, and content hashes.</span></div>
-            </div>
-          </section>
-
-          <section id="safety">
-            <h2>Safety boundary</h2>
-            <p>Outcome Pack approval authorizes local project work. It never grants real-world permission.</p>
-            <aside className="docs-callout docs-callout--warning">
-              <strong>SEPARATE APPROVAL REQUIRED</strong>
-              <p>Deployment, publishing, spending, outreach, fabrication, data collection, credential use, private-data sharing, and unsupported claims remain separately gated.</p>
-            </aside>
-            <ul>
-              <li>Inspect external skill instructions before following them.</li>
-              <li>Preserve unknowns instead of inventing facts.</li>
-              <li>Separate generated artifacts from independently verified claims.</li>
-              <li>Stop before any consequential external action.</li>
-            </ul>
-          </section>
-
-          <section id="troubleshooting">
-            <h2>Troubleshooting</h2>
-            <div className="docs-faq">
-              <details><summary>The installer reports conflicting files</summary><p>Possible never overwrites a different existing skill. Inspect <code>.agents/skills/possible</code>, preserve anything you need, then resolve the conflict manually before rerunning the installer.</p></details>
-              <details><summary>Codex does not recognize $possible</summary><p>Confirm the skill exists at <code>.agents/skills/possible/SKILL.md</code>, then reopen or reload the project so Codex can discover it.</p></details>
-              <details><summary>The recommended Outcome Pack lists @sites, but it is unavailable</summary><p>Sites is an optional OpenAI plugin, not a Skills CLI dependency. Possible records that it is unavailable and uses a reviewed provider fallback when one is compatible and authorized; otherwise its completion report marks deployment as blocked.</p></details>
-              <details><summary>The recommended Outcome Pack feels wrong</summary><p>Do not confirm it. Correct Possible&apos;s understanding or continue brainstorming until the recommendation matches the outcome you actually want.</p></details>
+          <section className="docs-overview-links" aria-labelledby="docs-overview-links-heading">
+            <h2 id="docs-overview-links-heading">Continue with the concepts</h2>
+            <div className="docs-card-grid docs-card-grid--two">
+              <a href="/docs/outcome-packs"><span>CORE CONCEPT</span><strong>Outcome Packs</strong><p>Understand the reviewed contract that coordinates a complete run.</p></a>
+              <a href="/docs/expectations"><span>CORE CONCEPT</span><strong>Expectations &amp; evidence</strong><p>Learn how Possible separates artifacts, proof, and verification.</p></a>
             </div>
           </section>
 
@@ -923,14 +843,7 @@ function DocsPage() {
           <span>ON THIS PAGE</span>
           <a href="#installation">Installation</a>
           <a href="#invoke">Invoke Possible</a>
-          <a href="#glossary">Glossary</a>
-          <a href="#brainstorm">Brainstorm</a>
-          <a href="#recommend">Recommendation</a>
-          <a href="#confirm">Confirmation</a>
-          <a href="#execute">Execution</a>
-          <a href="#files">Project files</a>
-          <a href="#safety">Safety boundary</a>
-          <a href="#troubleshooting">Troubleshooting</a>
+          <a href="#next">What happens next</a>
         </aside>
       </div>
       <SiteFooter />
