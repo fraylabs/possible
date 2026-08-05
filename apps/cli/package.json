@@ -1,0 +1,43 @@
+{
+  "name": "@fraylabs/possible",
+  "version": "0.1.11",
+  "description": "Install the Possible Outcome Pack skill for Codex",
+  "keywords": [
+    "codex",
+    "ai-agents",
+    "agent-skills",
+    "outcome-packs",
+    "developer-tools",
+    "verification"
+  ],
+  "homepage": "https://possible.sh",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fraylabs/possible.git",
+    "directory": "apps/cli"
+  },
+  "bugs": {
+    "url": "https://github.com/fraylabs/possible/issues"
+  },
+  "type": "module",
+  "bin": {
+    "possible": "src/index.mjs"
+  },
+  "files": [
+    "assets/possible",
+    "src"
+  ],
+  "scripts": {
+    "build": "node scripts/verify-snapshot.mjs",
+    "test": "node --test test/*.test.mjs && node scripts/verify-snapshot.mjs",
+    "sync:skill": "node scripts/sync-skill.mjs",
+    "prepack": "node scripts/verify-snapshot.mjs --quiet"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  }
+}

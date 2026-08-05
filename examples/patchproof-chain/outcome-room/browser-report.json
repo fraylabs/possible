@@ -1,0 +1,20 @@
+{
+  "desktop": {
+    "viewport": "1440x1000",
+    "primaryFlow": "passed",
+    "persistenceRecovery": "passed",
+    "deterministicReload": "passed",
+    "malformedImportAtomicity": "passed",
+    "failureClassification": "passed",
+    "download": "passed"
+  },
+  "mobile": {
+    "viewport": "390x844",
+    "primaryFlow": "passed",
+    "horizontalOverflowPx": 0,
+    "downloadVisible": true
+  },
+  "consoleErrors": [],
+  "pageErrors": [],
+  "externalRequests": []
+}

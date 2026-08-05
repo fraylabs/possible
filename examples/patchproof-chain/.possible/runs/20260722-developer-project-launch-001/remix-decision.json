@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "product": "PatchProof",
+  "copySource": "launch/positioning/copy-deck.md",
+  "comparisonViewport": {"width": 1440, "height": 900},
+  "candidateCount": 3,
+  "selectionType": "agent-selected",
+  "userTasteDecisionRequired": false,
+  "candidates": [
+    {
+      "id": "continuous-form",
+      "name": "Continuous Form",
+      "preview": "launch/direction/previews/continuous-form/index.html",
+      "scores": {"audienceFit": 5, "productTruth": 5, "accessibility": 5, "maintainability": 5, "distinctiveness": 5, "lowerComplexity": 5},
+      "audienceEffect": "Makes the receipt and evidence trail feel physical, inspectable, and familiar to developers who already read logs."
+    },
+    {
+      "id": "evidence-stamp",
+      "name": "Evidence Stamp",
+      "preview": "launch/direction/previews/evidence-stamp/index.html",
+      "scores": {"audienceFit": 4, "productTruth": 4, "accessibility": 4, "maintainability": 4, "distinctiveness": 5, "lowerComplexity": 4},
+      "audienceEffect": "Creates urgency around the acceptance decision, but needs extra care not to imply that every receipt is an approval."
+    },
+    {
+      "id": "patch-panel",
+      "name": "Patch Panel",
+      "preview": "launch/direction/previews/patch-panel/index.html",
+      "scores": {"audienceFit": 5, "productTruth": 5, "accessibility": 3, "maintainability": 3, "distinctiveness": 5, "lowerComplexity": 2},
+      "audienceEffect": "Explains evidence-to-claim routing vividly, but cable geometry adds responsive and accessibility complexity."
+    }
+  ],
+  "selected": "continuous-form",
+  "rationale": "Continuous Form most directly joins PatchProof's verified mechanism to artifacts developers already trust: logs, receipts, line output, and immutable records. It scores highest across every declared criterion, communicates uncertainty without approval theater, remains legible without animation, and is the simplest direction to maintain across the site, docs, and product handoff. No subjective preference changes the product outcome enough to require user interruption.",
+  "preserved": [
+    "confirmed product facts",
+    "claims register",
+    "demonstration behavior",
+    "quickstart and documentation",
+    "approval and verification boundaries"
+  ],
+  "notAuthorized": ["deployment", "publication", "push", "tag", "release", "DNS", "analytics", "outreach", "data collection", "spending"]
+}

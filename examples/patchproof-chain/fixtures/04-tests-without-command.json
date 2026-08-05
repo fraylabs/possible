@@ -1,0 +1,36 @@
+{
+  "id": "tests-without-command",
+  "title": "Tests without a command",
+  "description": "A test claim without a reproducible command is unsupported.",
+  "expectedClaimStatuses": { "tests-no-command": "unsupported" },
+  "expectedEvidence": {
+    "changedFiles": [
+      { "path": "src/serialize.js", "change": "modified", "status": "passed" }
+    ],
+    "checks": [{ "command": "", "exitCode": 0, "status": "unsupported" }],
+    "artifacts": []
+  },
+  "expectedWarnings": [
+    "The supplied check log does not identify the command.",
+    "Changed path is not referenced by any claim: src/serialize.js."
+  ],
+  "expectedLimitations": ["The exact command was not supplied."],
+  "draft": {
+    "kind": "patchproof.draft",
+    "schemaVersion": 1,
+    "task": "Verify receipt serialization.",
+    "unifiedDiff": "diff --git a/src/serialize.js b/src/serialize.js\n--- a/src/serialize.js\n+++ b/src/serialize.js\n@@ -1 +1 @@\n-export default null;\n+export default serialize;",
+    "checkLog": "All receipt tests passed.\nexit code: 0",
+    "artifacts": [],
+    "claims": [
+      {
+        "id": "tests-no-command",
+        "text": "Receipt tests pass",
+        "kind": "tests",
+        "target": "unknown command",
+        "evidenceRefs": ["check-001"]
+      }
+    ],
+    "limitations": ["The exact command was not supplied."]
+  }
+}

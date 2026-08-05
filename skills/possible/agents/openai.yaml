@@ -1,0 +1,4 @@
+interface:
+  display_name: "Possible"
+  short_description: "Turn ideas into outcomes that can run again"
+  default_prompt: "Use $possible to clarify and complete one verified outcome, then reassess what should happen next."

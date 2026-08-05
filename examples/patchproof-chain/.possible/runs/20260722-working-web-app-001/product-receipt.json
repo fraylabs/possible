@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "packSlug": "working-web-app",
+  "product": "PatchProof",
+  "status": "passed",
+  "completedAt": "2026-07-22T22:05:59+08:00",
+  "workspaceRevision": "ae88d46686b23b6374899c5f0606e17859b93b99",
+  "entry": {
+    "sourceRunId": "20260722-software-opportunity-discovery-001",
+    "sourceDecision": "pursue",
+    "handoff": ".possible/handoffs/20260722-software-opportunity-discovery-001--working-web-app.json",
+    "interpretation": "Approval authorized a narrow local build-and-test stage, not market validation."
+  },
+  "localSetup": {
+    "requirements": "Node.js >=20.19.0 and npm",
+    "install": "npm ci",
+    "run": "npm run dev",
+    "verify": "npm run verify"
+  },
+  "primaryFlow": {
+    "result": "passed",
+    "job": "Turn a task, unified diff, check log, artifacts, claims, and limitations into deterministic Markdown and JSON completion receipts.",
+    "states": ["passed", "failed", "skipped", "unknown", "unsupported"],
+    "recovery": "Malformed JSON import is rejected without changing the active or persisted draft."
+  },
+  "checks": {
+    "unitAssertions": {"passed": 34, "failed": 0},
+    "fixtureCases": {"passed": 12, "failed": 0},
+    "productionBuild": "passed",
+    "desktopBrowserFlow": "passed",
+    "mobileBrowserFlow": "passed",
+    "mobileHorizontalOverflowPx": 0,
+    "externalBrowserRequests": 0,
+    "consoleErrors": 0,
+    "pageErrors": 0,
+    "dependencyAuditVulnerabilities": 0,
+    "freshVerification": "passed"
+  },
+  "evidence": [
+    {"path": "outcome-room/verification.md", "sha256": "309b3112f32d9ee08b04b515712fc0e6403a2040e9fe80410762bf719fc3b7a7"},
+    {"path": "outcome-room/browser-report.json", "sha256": "364bd17693997cb8bd80cfbef45f05d38288c50287bbd5ed54d22aca23fa25a1"},
+    {"path": "outcome-room/security-review.md", "sha256": "95c1780026022b1cfcfe014a1fa8546cc8885d0d2cf6d1e954721f9bd0ed8078"},
+    {"path": "outcome-room/implementation-report.md", "sha256": "e3d5386d46b94df2e44d4984c41984eea95bf1d3e9c28ee7386545bf84b85979"},
+    {"path": "outcome-room/repair-log.md", "sha256": "b9d3cfa6db443e1fd45980c7f6004a17e348b456c642977eaf56ccee9dd77f4a"},
+    {"path": "README.md", "sha256": "38332bc4be2a670200668bc30e47df631d8002d13c31b6f5863b96ec4088a72c"}
+  ],
+  "hypotheses": [
+    "Developers will value a lightweight manual receipt builder across agents.",
+    "A browser-only local workflow will be easier than reviewing raw logs.",
+    "Portable Markdown and JSON receipts will fit existing review habits."
+  ],
+  "unknowns": [
+    "willingness to use or pay",
+    "preferred automatic versus manual capture",
+    "distribution channel",
+    "commercial versus open-source model"
+  ],
+  "limitations": [
+    "The tested local Chromium flow does not establish cross-browser support, deployment readiness, scale, reliability, or comprehensive security.",
+    "The product does not prove semantic patch correctness, demand, or product-market fit.",
+    "Storage-denial, clipboard-denial, and download-initiation failures were reviewed in source but not dynamically injected."
+  ],
+  "externalActionsTaken": [],
+  "externalAuthority": "none",
+  "nextStage": {
+    "packSlug": "developer-project-launch",
+    "status": "eligible-only-after-handoff-review-and-separate-approval"
+  }
+}

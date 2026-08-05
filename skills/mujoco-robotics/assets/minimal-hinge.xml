@@ -1,0 +1,18 @@
+<mujoco model="minimal_hinge">
+  <compiler angle="radian" autolimits="true"/>
+  <option timestep="0.002" gravity="0 0 -9.81"/>
+  <worldbody>
+    <light pos="0 -1 2"/>
+    <geom name="floor" type="plane" size="2 2 0.1"/>
+    <body name="pedestal" pos="0 0 0.25">
+      <geom type="cylinder" size="0.08 0.25" mass="1"/>
+      <body name="link" pos="0 0 0.25">
+        <joint name="hinge" type="hinge" axis="0 1 0" range="-1.57 1.57" damping="0.1"/>
+        <geom type="capsule" fromto="0 0 0 0 0 0.5" size="0.04" mass="0.5"/>
+      </body>
+    </body>
+  </worldbody>
+  <actuator>
+    <motor name="hinge_motor" joint="hinge" ctrllimited="true" ctrlrange="-2 2"/>
+  </actuator>
+</mujoco>

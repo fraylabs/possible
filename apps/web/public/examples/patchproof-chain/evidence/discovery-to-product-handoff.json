@@ -1,0 +1,83 @@
+{
+  "schemaVersion": 1,
+  "handoffId": "20260722-software-opportunity-discovery-001--working-web-app",
+  "createdAt": "2026-07-22T00:00:00+08:00",
+  "source": {
+    "runId": "20260722-software-opportunity-discovery-001",
+    "packSlug": "software-opportunity-discovery",
+    "workspaceRevision": "3cdefb90807a8a7d65a2131b73cf568a490fe43a",
+    "archiveManifest": ".possible/runs/20260722-software-opportunity-discovery-001/archive-manifest.json",
+    "receipt": {
+      "path": ".possible/runs/20260722-software-opportunity-discovery-001/decision-receipt.json",
+      "sha256": "3702628f1bc97253d7a34a9dbf340caeb9495d2cbe2ffcfdcd0f84f0eaf49766",
+      "status": "pursue"
+    },
+    "verification": {
+      "path": ".possible/runs/20260722-software-opportunity-discovery-001/verification.md",
+      "sha256": "46c2b99682974e250d41a35de0e6db5cf2a1fd5b042dcb345ea4468f827c82b4",
+      "taskId": "/root/chain_discovery_run/discovery_verifier"
+    }
+  },
+  "destination": {
+    "packSlug": "working-web-app",
+    "packDefinitionSource": ".agents/skills/possible/references/packs.md",
+    "packDefinitionSourceSha256": "1edcf5b828562976de1f504dc4412ee486541806c6afc54028bdcbc3518544a1"
+  },
+  "transfer": {
+    "facts": [
+      "The 2025 Stack Overflow survey reports substantial AI trust and debugging friction among its respondents.",
+      "GitHub status checks and agent-session logs expose only parts of the completion-evidence workflow.",
+      "Current products already address agent action records and receipts."
+    ],
+    "hypotheses": [
+      "Developers will value a lightweight manual receipt builder across agents.",
+      "A browser-only local workflow will be easier than reviewing raw logs.",
+      "Portable Markdown and JSON receipts will fit existing review habits."
+    ],
+    "decisions": [
+      "Pursue a narrow local MVP named PatchProof.",
+      "Do not pursue Repo Contract Doctor, ExampleLens, or RunnerGap in this chain.",
+      "The first product must not execute unknown code, upload repositories, or claim semantic correctness."
+    ],
+    "constraints": [
+      "Local-only work unless a later external action is separately approved.",
+      "Preserve passed, failed, skipped, unknown, and unsupported evidence states.",
+      "Do not present the discovery decision as customer validation or product-market fit."
+    ],
+    "unknowns": [
+      "willingness to use or pay",
+      "preferred automatic versus manual capture",
+      "distribution channel",
+      "commercial versus open-source model"
+    ],
+    "evidence": [
+      {"path": "outcome-room/recommendation.md", "sha256": "d6bf5c2e0a33a24e9bc8fd29adc083198f27572fb3f6465f469cc2f69c0b6175"},
+      {"path": "outcome-room/scorecard.md", "sha256": "88a6da745a8b91dd18078ee0fd9c0e55a5013df250160f7b46db22713d35bf7d"},
+      {"path": "outcome-room/validation-plan.md", "sha256": "ab4fd1b2ea1a66d13c62c4ce217cb50018aa9bbf7ff7590a0b8dc9f5857125e8"},
+      {"path": "opportunity/research/source-ledger.md", "sha256": "83eac04719fc66cd807fc243f393178b14f08482d742d914fd06d080687d0581"},
+      {"path": "opportunity/research/problem-evidence-map.md", "sha256": "2ad395b175da3ce8cd86347475b0872dffe1e224a67b32e4076d51358fc6c967"},
+      {"path": "opportunity/landscape/alternatives.md", "sha256": "f438df143fe9618a2c28ce2d928376e8a40044de25dac0e816c9444c60a2d0f5"}
+    ]
+  },
+  "eligibility": {
+    "status": "eligible",
+    "checks": [
+      "source receipt status is pursue",
+      "selected and rejected opportunities are preserved",
+      "source evidence and limitations are preserved",
+      "unresolved assumptions remain classified as unknowns",
+      "fresh reviewer passed the source and handoff boundary"
+    ],
+    "review": {
+      "path": ".possible/runs/20260722-software-opportunity-discovery-001/verification.md",
+      "sha256": "46c2b99682974e250d41a35de0e6db5cf2a1fd5b042dcb345ea4468f827c82b4",
+      "taskId": "/root/chain_discovery_run/discovery_verifier"
+    }
+  },
+  "authorization": {
+    "status": "approved",
+    "approvedAt": "2026-07-22T00:00:00+08:00",
+    "approvedScope": "reviewed repo-local skill installation and local product work only",
+    "externalAuthority": "none"
+  }
+}

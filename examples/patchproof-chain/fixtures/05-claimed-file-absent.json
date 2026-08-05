@@ -1,0 +1,39 @@
+{
+  "id": "claimed-file-absent",
+  "title": "Claimed file absent from diff",
+  "description": "A file claim cannot pass when its target is absent from the diff.",
+  "expectedClaimStatuses": { "missing-file": "unsupported" },
+  "expectedEvidence": {
+    "changedFiles": [
+      { "path": "src/export.js", "change": "modified", "status": "passed" }
+    ],
+    "checks": [
+      { "command": "npm run build", "exitCode": 0, "status": "passed" }
+    ],
+    "artifacts": []
+  },
+  "expectedWarnings": [],
+  "expectedLimitations": [
+    "Only paths present in the supplied diff can support file-change claims."
+  ],
+  "draft": {
+    "kind": "patchproof.draft",
+    "schemaVersion": 1,
+    "task": "Generate the release receipt.",
+    "unifiedDiff": "diff --git a/src/export.js b/src/export.js\n--- a/src/export.js\n+++ b/src/export.js\n@@ -1 +1 @@\n-export const ready = false;\n+export const ready = true;",
+    "checkLog": "$ npm run build\nexit code: 0",
+    "artifacts": [],
+    "claims": [
+      {
+        "id": "missing-file",
+        "text": "The release receipt exists",
+        "kind": "file-change",
+        "target": "dist/release-receipt.json",
+        "evidenceRefs": ["diff-001"]
+      }
+    ],
+    "limitations": [
+      "Only paths present in the supplied diff can support file-change claims."
+    ]
+  }
+}

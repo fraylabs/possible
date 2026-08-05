@@ -1,0 +1,33 @@
+# Changelog
+
+All notable changes to Possible are documented here. The project follows semantic versioning while the public API is experimental.
+
+## Unreleased
+
+## 0.1.11 — 2026-07-24
+
+- Add Manufacturing Readiness and Study Readiness Outcome Packs.
+- Route hardware crowdfunding through measured prototype, production, and qualified research-review evidence.
+- Package both new compiled contracts in the Possible skill snapshot.
+
+## 0.1.10 — 2026-07-22
+
+- Add the experimental Software Opportunity Discovery pack for evidence-backed problem selection, alternative research, opportunity scoring, and falsifiable validation plans.
+- Add the experimental Developer Project Launch pack for evidence-backed developer positioning, websites, demonstrations, quickstarts, and adoption paths.
+- Add a shared launch gate so local preparation cannot be reported as a verified public launch without exact approval and public evidence.
+- Make repository validation portable and add Linux CI.
+- Enforce exact reviewed revisions in generated skill-install commands.
+- Distinguish four stable public packs from additional experimental registry packs.
+- Add the MIT license text, security policy and repeatable evidence validation.
+- Remove developer-machine paths from tracked files.
+
+## 0.1.9 — 2026-07-22
+
+- Published the Build Week judge path and machine-readable evidence manifest.
+- Added the recorded Robot Snake comparison and preserved control artifacts.
+- Improved discovery metadata for the Possible skill.
+
+## 0.1.8 — 2026-07-21
+
+- Focused the public catalog on Hardware Launch, Robot Prototype, Playable Web Game and Web Presentation.
+- Added the Robot Snake verified digital-prototype demo.

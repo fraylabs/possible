@@ -1,0 +1,31 @@
+{
+  "id": "empty-diff",
+  "title": "Empty diff",
+  "description": "No supplied diff means a file-change claim is unsupported.",
+  "expectedClaimStatuses": { "empty-change": "unsupported" },
+  "expectedEvidence": {
+    "changedFiles": [],
+    "checks": [{ "command": "npm test", "exitCode": 0, "status": "passed" }],
+    "artifacts": []
+  },
+  "expectedWarnings": ["No unified diff was supplied."],
+  "expectedLimitations": ["No diff was supplied."],
+  "draft": {
+    "kind": "patchproof.draft",
+    "schemaVersion": 1,
+    "task": "Complete the receipt generator.",
+    "unifiedDiff": "",
+    "checkLog": "$ npm test\nexit code: 0",
+    "artifacts": [],
+    "claims": [
+      {
+        "id": "empty-change",
+        "text": "The receipt module changed",
+        "kind": "file-change",
+        "target": "src/receipt.js",
+        "evidenceRefs": []
+      }
+    ],
+    "limitations": ["No diff was supplied."]
+  }
+}

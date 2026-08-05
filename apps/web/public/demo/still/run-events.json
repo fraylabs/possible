@@ -1,0 +1,44 @@
+[
+  {
+    "sequence": 1,
+    "event": "shared-facts-locked",
+    "actor": "captain",
+    "status": "passed",
+    "evidence": "./PRODUCT-BRIEF.md"
+  },
+  {
+    "sequence": 2,
+    "event": "launch-site-workstream",
+    "actor": "web-subagent",
+    "status": "passed",
+    "evidence": "./evidence/site-receipt.md"
+  },
+  {
+    "sequence": 3,
+    "event": "launch-film-workstream",
+    "actor": "film-subagent",
+    "status": "passed",
+    "evidence": "./evidence/film-receipt.md"
+  },
+  {
+    "sequence": 4,
+    "event": "prototype-cad-workstream",
+    "actor": "hardware-subagent",
+    "status": "passed-with-caveats",
+    "evidence": "./evidence/hardware-receipt.md"
+  },
+  {
+    "sequence": 5,
+    "event": "outcome-integration",
+    "actor": "captain",
+    "status": "passed",
+    "evidence": "./manifest.json"
+  },
+  {
+    "sequence": 6,
+    "event": "fresh-independent-review",
+    "actor": "verification-subagent",
+    "status": "passed-after-repair",
+    "evidence": "./evidence/final-receipt.md"
+  }
+]

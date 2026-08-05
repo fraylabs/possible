@@ -1,0 +1,38 @@
+{
+  "id": "unrelated-changes",
+  "title": "Unrelated changes",
+  "description": "Unreferenced changed paths stay visible and create a warning.",
+  "expectedClaimStatuses": { "copy-change": "passed" },
+  "expectedEvidence": {
+    "changedFiles": [
+      { "path": "src/copy.js", "change": "modified", "status": "passed" },
+      { "path": "package-lock.json", "change": "modified", "status": "passed" }
+    ],
+    "checks": [{ "command": "npm test", "exitCode": 0, "status": "passed" }],
+    "artifacts": []
+  },
+  "expectedWarnings": [
+    "Changed path is not referenced by any claim: package-lock.json."
+  ],
+  "expectedLimitations": [
+    "The lockfile change is unrelated to the stated task."
+  ],
+  "draft": {
+    "kind": "patchproof.draft",
+    "schemaVersion": 1,
+    "task": "Update receipt copy.",
+    "unifiedDiff": "diff --git a/src/copy.js b/src/copy.js\n--- a/src/copy.js\n+++ b/src/copy.js\n@@ -1 +1 @@\n-export const title = 'Proof';\n+export const title = 'Completion receipt';\ndiff --git a/package-lock.json b/package-lock.json\n--- a/package-lock.json\n+++ b/package-lock.json\n@@ -1 +1 @@\n-\"version\": 1\n+\"version\": 2",
+    "checkLog": "$ npm test\nexit code: 0",
+    "artifacts": [],
+    "claims": [
+      {
+        "id": "copy-change",
+        "text": "The receipt copy changed",
+        "kind": "file-change",
+        "target": "src/copy.js",
+        "evidenceRefs": ["diff-001"]
+      }
+    ],
+    "limitations": ["The lockfile change is unrelated to the stated task."]
+  }
+}

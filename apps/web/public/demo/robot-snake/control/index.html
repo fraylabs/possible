@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Robot Snake Simulator</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main>
+    <header><div><p class="eyebrow">SIMULATION 01</p><h1>Robot Snake</h1></div><p id="status"></p></header>
+    <section class="stage"><canvas></canvas><div class="hint">WASD / ARROWS TO MOVE · R TO RESET</div></section>
+    <aside class="controls">
+      <h2>Gait controls</h2>
+      <div class="preset-row"><select id="preset" aria-label="Gait preset"><option value="efficient">Efficient</option><option value="explore" selected>Explore</option><option value="tight">Tight spaces</option><option value="custom">My preset</option></select><button id="savePreset">Save</button></div>
+      <label>Amplitude <output data-for="amplitude"></output><input id="amplitude" type="range" min="0.1" max="1.15" step="0.05" value="0.72"></label>
+      <label>Frequency <output data-for="frequency"></output><input id="frequency" type="range" min="0.2" max="2.5" step="0.05" value="1.25"></label>
+      <label>Wavelength <output data-for="wavelength"></output><input id="wavelength" type="range" min="3" max="10" step="0.5" value="5.5"></label>
+      <label>Speed <output data-for="speed"></output><input id="speed" type="range" min="20" max="160" step="5" value="85"></label>
+      <label>Joint limit <output data-for="maxJointAngle"></output><input id="maxJointAngle" type="range" min="0.35" max="1.20" step="0.05" value="0.95"></label>
+      <label>Joint rate <output data-for="maxJointSpeed"></output><input id="maxJointSpeed" type="range" min="1" max="8" step="0.5" value="4.5"></label>
+      <details>
+        <summary>Hardware assumptions</summary>
+        <label>Module mass (kg) <output data-for="moduleMassKg"></output><input data-group="hardware" id="moduleMassKg" type="range" min="0.04" max="0.25" step="0.01" value="0.14"></label>
+        <label>Module length (m) <output data-for="moduleLengthM"></output><input data-group="hardware" id="moduleLengthM" type="range" min="0.05" max="0.16" step="0.01" value="0.08"></label>
+        <label>Surface friction <output data-for="frictionCoefficient"></output><input data-group="hardware" id="frictionCoefficient" type="range" min="0.15" max="0.90" step="0.05" value="0.35"></label>
+        <label>Battery capacity (Ah) <output data-for="batteryCapacityAh"></output><input data-group="hardware" id="batteryCapacityAh" type="range" min="0.8" max="6" step="0.2" value="2.2"></label>
+      </details>
+      <details open>
+        <summary>Experiment console</summary>
+        <p id="consoleState" class="state">Simulator only</p>
+        <div class="button-grid"><button id="record">Record telemetry</button><button id="export" disabled>Export CSV</button></div>
+        <p id="sampleCount" class="state">0 samples</p>
+        <div class="button-grid"><button id="connect">Connect ESP32</button><button id="arm">Arm outputs</button></div>
+        <button id="estop" class="estop">Emergency stop (Space)</button>
+      </details>
+      <p class="note">Joint controls map to a future servo controller. Hardware estimates are conservative sizing guides, not component guarantees.</p>
+    </aside>
+    <section class="estimates" aria-label="Hardware estimates">
+      <div><span>Estimated mass</span><strong id="massEstimate">—</strong></div>
+      <div><span>Minimum servo torque</span><strong id="torqueEstimate">—</strong></div>
+      <div><span>Average / peak current</span><strong id="currentEstimate">—</strong></div>
+      <div><span>Estimated runtime</span><strong id="runtimeEstimate">—</strong></div>
+    </section>
+  </main>
+  <script type="module" src="src/app.js"></script>
+</body>
+</html>

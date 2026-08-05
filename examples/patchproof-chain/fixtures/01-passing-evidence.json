@@ -1,0 +1,44 @@
+{
+  "id": "passing-evidence",
+  "title": "Passing evidence",
+  "description": "A scoped file and test claim with a named command and zero exit.",
+  "expectedClaimStatuses": { "tests-pass": "passed", "file-pass": "passed" },
+  "expectedEvidence": {
+    "changedFiles": [
+      { "path": "src/receipt.js", "change": "modified", "status": "passed" }
+    ],
+    "checks": [
+      { "command": "npm test -- receipt", "exitCode": 0, "status": "passed" }
+    ],
+    "artifacts": []
+  },
+  "expectedWarnings": [],
+  "expectedLimitations": [
+    "This fixture does not prove semantic patch correctness."
+  ],
+  "draft": {
+    "kind": "patchproof.draft",
+    "schemaVersion": 1,
+    "task": "Add deterministic receipt export for supplied patch evidence.",
+    "unifiedDiff": "diff --git a/src/receipt.js b/src/receipt.js\nindex 1111111..2222222 100644\n--- a/src/receipt.js\n+++ b/src/receipt.js\n@@ -1 +1,2 @@\n-export const format = null;\n+export const format = 'json';",
+    "checkLog": "$ npm test -- receipt\n8 tests passed\nexit code: 0",
+    "artifacts": [],
+    "claims": [
+      {
+        "id": "tests-pass",
+        "text": "Receipt tests pass",
+        "kind": "tests",
+        "target": "npm test -- receipt",
+        "evidenceRefs": ["check-001"]
+      },
+      {
+        "id": "file-pass",
+        "text": "The receipt module changed",
+        "kind": "file-change",
+        "target": "src/receipt.js",
+        "evidenceRefs": ["diff-001"]
+      }
+    ],
+    "limitations": ["This fixture does not prove semantic patch correctness."]
+  }
+}

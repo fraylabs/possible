@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "handoffId": "20260722-working-web-app-001--developer-project-launch",
+  "createdAt": "2026-07-22T22:05:59+08:00",
+  "source": {
+    "runId": "20260722-working-web-app-001",
+    "packSlug": "working-web-app",
+    "workspaceRevision": "ae88d46686b23b6374899c5f0606e17859b93b99",
+    "archiveManifest": ".possible/runs/20260722-working-web-app-001/archive-manifest.json",
+    "receipt": {
+      "path": ".possible/runs/20260722-working-web-app-001/product-receipt.json",
+      "sha256": "67a53b4a2a6290ab649dac4deb0a2d2700ce60702fd1e77c3804ff417b22fb17",
+      "status": "passed"
+    },
+    "verification": {
+      "path": ".possible/runs/20260722-working-web-app-001/verification.md",
+      "sha256": "309b3112f32d9ee08b04b515712fc0e6403a2040e9fe80410762bf719fc3b7a7",
+      "taskId": "/root/chain_product_run/patchproof_fresh_verifier"
+    }
+  },
+  "destination": {
+    "packSlug": "developer-project-launch",
+    "packDefinitionSource": ".agents/skills/possible/references/packs.md",
+    "packDefinitionSourceSha256": "1edcf5b828562976de1f504dc4412ee486541806c6afc54028bdcbc3518544a1"
+  },
+  "transfer": {
+    "facts": [
+      "PatchProof is a locally runnable browser application at immutable revision ae88d46686b23b6374899c5f0606e17859b93b99.",
+      "The documented setup is npm ci followed by npm run dev; npm run verify is the integrated proof command.",
+      "Fresh verification passed 34 unit assertions, 12 complete fixture contracts, a production build, and desktop/mobile browser flows.",
+      "The product derives five distinct claim states and rejects malformed JSON import without replacing the current draft.",
+      "The Working Web App matches the PatchProof opportunity selected by the archived Discovery run."
+    ],
+    "hypotheses": [
+      "Developers will value a lightweight manual receipt builder across agents.",
+      "A browser-only local workflow will be easier than reviewing raw logs.",
+      "Portable Markdown and JSON receipts will fit existing review habits."
+    ],
+    "decisions": [
+      "Advance PatchProof—not a rejected alternative—to launch-package eligibility.",
+      "Use verified product behavior and preserved repair evidence as the launch proof surface.",
+      "Let Developer Project Launch derive three project-specific creative directions; do not inherit a stock aesthetic."
+    ],
+    "constraints": [
+      "Do not change confirmed product behavior, five-state semantics, run commands, evidence, or claims during creative Remix.",
+      "No deployment, publication, outreach, analytics, customer-data collection, spending, or other external mutation is authorized.",
+      "Do not call the product secure, production-ready, market-validated, or proven to have demand."
+    ],
+    "unknowns": [
+      "willingness to use or pay",
+      "preferred automatic versus manual capture",
+      "distribution channel",
+      "commercial versus open-source model"
+    ],
+    "recordedMismatches": [
+      "No material mismatch exists between the selected PatchProof opportunity and the built primary flow.",
+      "Discovery proposed later developer testing; this local build did not run or claim that external validation."
+    ],
+    "evidence": [
+      {"path": "README.md", "sha256": "38332bc4be2a670200668bc30e47df631d8002d13c31b6f5863b96ec4088a72c"},
+      {"path": "outcome-room/product-receipt.json", "sha256": "67a53b4a2a6290ab649dac4deb0a2d2700ce60702fd1e77c3804ff417b22fb17"},
+      {"path": "outcome-room/verification.md", "sha256": "309b3112f32d9ee08b04b515712fc0e6403a2040e9fe80410762bf719fc3b7a7"},
+      {"path": "outcome-room/browser-report.json", "sha256": "364bd17693997cb8bd80cfbef45f05d38288c50287bbd5ed54d22aca23fa25a1"},
+      {"path": ".possible/runs/20260722-software-opportunity-discovery-001/decision-receipt.json", "sha256": "3702628f1bc97253d7a34a9dbf340caeb9495d2cbe2ffcfdcd0f84f0eaf49766"}
+    ]
+  },
+  "eligibility": {
+    "status": "eligible",
+    "checks": [
+      "source receipt status is passed",
+      "immutable working-project revision is recorded",
+      "local run and integrated verification commands are documented",
+      "primary browser flow passed fresh verification",
+      "opportunity alignment and remaining mismatches are recorded",
+      "claims, hypotheses, unknowns, and external boundaries remain distinct"
+    ],
+    "review": {
+      "path": ".possible/runs/20260722-working-web-app-001/eligibility-review.md",
+      "sha256": "7c4d35961051db07680c21cbd55a1ac2120c00c9391428d8bdba154bf39ab790",
+      "taskId": "/root/chain_product_run/patchproof_fresh_verifier"
+    }
+  },
+  "authorization": {
+    "status": "approved",
+    "approvedAt": "2026-07-22T22:14:35+08:00",
+    "approvedScope": "Reviewed repo-local skill installation and local Developer Project Launch preparation for PatchProof only. No deployment, publication, push, tagging, release creation, DNS, analytics, outreach, data collection, spending, or provider mutation.",
+    "externalAuthority": "none"
+  }
+}

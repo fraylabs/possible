@@ -1,0 +1,39 @@
+{
+  "id": "explicit-limitations",
+  "title": "Explicit limitations",
+  "description": "Precise limitations survive alongside passing evidence.",
+  "expectedClaimStatuses": { "local-change": "passed" },
+  "expectedEvidence": {
+    "changedFiles": [
+      { "path": "src/receipt.js", "change": "modified", "status": "passed" }
+    ],
+    "checks": [{ "command": "npm test", "exitCode": 0, "status": "passed" }],
+    "artifacts": []
+  },
+  "expectedWarnings": [],
+  "expectedLimitations": [
+    "Manual inputs may be incomplete or mistaken.",
+    "This receipt does not prove semantic correctness, security, production readiness, repository state, or market demand."
+  ],
+  "draft": {
+    "kind": "patchproof.draft",
+    "schemaVersion": 1,
+    "task": "Generate a local receipt from manually supplied evidence.",
+    "unifiedDiff": "diff --git a/src/receipt.js b/src/receipt.js\n--- a/src/receipt.js\n+++ b/src/receipt.js\n@@ -1 +1 @@\n-export const local = false;\n+export const local = true;",
+    "checkLog": "$ npm test\nexit code: 0",
+    "artifacts": [],
+    "claims": [
+      {
+        "id": "local-change",
+        "text": "The receipt module changed",
+        "kind": "file-change",
+        "target": "src/receipt.js",
+        "evidenceRefs": ["diff-001"]
+      }
+    ],
+    "limitations": [
+      "Manual inputs may be incomplete or mistaken.",
+      "This receipt does not prove semantic correctness, security, production readiness, repository state, or market demand."
+    ]
+  }
+}

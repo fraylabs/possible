@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="PatchProof turns supplied task, diff, and check evidence into an honest local completion receipt."
+    />
+    <title>PatchProof — Completion receipts from supplied evidence</title>
+    <script type="module" crossorigin src="./assets/product-LIbKmWNN.js"></script>
+    <link rel="modulepreload" crossorigin href="./assets/receipt-DSjH-XN3.js">
+    <link rel="stylesheet" crossorigin href="./assets/product-BkkWUSMU.css">
+  </head>
+  <body>
+    <a class="skip-link" href="#evidence-form">Skip to evidence</a>
+    <header class="site-header">
+      <div class="brand-block">
+        <a class="brand" href="/" aria-label="PatchProof home">
+          <span class="brand-mark" aria-hidden="true">P/</span>
+          <span>PatchProof</span>
+        </a>
+        <p>Completion receipts from evidence you can inspect.</p>
+      </div>
+      <div class="local-mark" aria-label="Local-only product">
+        <span class="pulse" aria-hidden="true"></span>
+        Local only · nothing uploads
+      </div>
+    </header>
+
+    <main>
+      <section class="intro" aria-labelledby="page-title">
+        <div>
+          <p class="kicker">Evidence workbench</p>
+          <h1 id="page-title">Turn the claim<br />into a receipt.</h1>
+        </div>
+        <p class="intro-copy">
+          Supply the task, change, and check log. PatchProof preserves failed,
+          skipped, unknown, and unsupported evidence instead of polishing every
+          result into “done.”
+        </p>
+      </section>
+
+      <section class="fixture-dock" aria-labelledby="fixture-title">
+        <div>
+          <p class="kicker" id="fixture-title">Reproducible cases</p>
+          <p id="fixture-description">Load a case to inspect how its evidence is classified.</p>
+        </div>
+        <div class="fixture-actions">
+          <label for="fixture-select">Fixture</label>
+          <select id="fixture-select" data-testid="fixture-select"></select>
+          <button class="button button-dark" id="load-fixture" type="button" data-testid="load-fixture">
+            Load fixture
+          </button>
+        </div>
+      </section>
+
+      <div class="workbench">
+        <section class="evidence-panel" aria-labelledby="evidence-title">
+          <div class="panel-heading">
+            <div>
+              <p class="kicker">Input / editable</p>
+              <h2 id="evidence-title">Evidence</h2>
+            </div>
+            <div class="draft-actions">
+              <span id="save-state" class="save-state" role="status">Draft ready</span>
+              <button class="text-button" id="open-import" type="button" data-testid="open-import">
+                Import JSON
+              </button>
+              <button class="text-button" id="reset-draft" type="button">Reset</button>
+            </div>
+          </div>
+
+          <form id="evidence-form" data-testid="evidence-form">
+            <fieldset class="evidence-section">
+              <legend><span>01</span> Task</legend>
+              <label for="task">What was supposed to change?</label>
+              <textarea id="task" name="task" rows="3" data-testid="task-input" placeholder="Describe one bounded completion claim."></textarea>
+            </fieldset>
+
+            <fieldset class="evidence-section">
+              <legend><span>02</span> Change</legend>
+              <label for="diff">Unified diff</label>
+              <textarea class="code-input" id="diff" name="diff" rows="10" data-testid="diff-input" spellcheck="false" placeholder="Paste a unified diff. It stays in this browser."></textarea>
+            </fieldset>
+
+            <fieldset class="evidence-section">
+              <legend><span>03</span> Checks</legend>
+              <label for="check-log">Check log</label>
+              <textarea class="code-input" id="check-log" name="checkLog" rows="7" data-testid="check-log" spellcheck="false" placeholder="$ npm test&#10;12 tests passed&#10;exit code: 0"></textarea>
+            </fieldset>
+
+            <fieldset class="evidence-section">
+              <legend><span>04</span> Artifacts</legend>
+              <p class="field-help">Record screenshots, files, or notes. Their status is evidence classification—not a completion claim.</p>
+              <div id="artifact-list" class="artifact-list" data-testid="artifact-list"></div>
+              <button class="button button-outline" id="add-artifact" type="button" data-testid="add-artifact">+ Add artifact</button>
+            </fieldset>
+
+            <fieldset class="evidence-section">
+              <legend><span>05</span> Claims</legend>
+              <p class="field-help">Name what you believe is complete and reference the supplied evidence. PatchProof derives the status.</p>
+              <div id="claim-list" class="claim-list" data-testid="claim-list"></div>
+              <button class="button button-outline" id="add-claim" type="button" data-testid="add-claim">+ Add claim</button>
+            </fieldset>
+
+            <fieldset class="evidence-section">
+              <legend><span>06</span> Limitations</legend>
+              <label for="limitations">What does this evidence not prove?</label>
+              <textarea id="limitations" name="limitations" rows="4" data-testid="limitations" placeholder="One limitation per line."></textarea>
+            </fieldset>
+
+            <button id="generate-receipt" class="button button-generate" type="button" data-testid="generate-receipt">Generate receipt</button>
+          </form>
+        </section>
+
+        <aside class="receipt-panel" aria-labelledby="receipt-title">
+          <div class="receipt-sticky">
+            <div class="receipt-paper">
+              <div class="receipt-topline">
+                <p class="kicker">Output / generated locally</p>
+                <span class="receipt-number">PP–001</span>
+              </div>
+              <div class="receipt-status-row">
+                <h2 id="receipt-title">Completion receipt</h2>
+                <span id="overall-status" class="status-stamp" data-testid="overall-status">unknown</span>
+              </div>
+
+              <dl class="evidence-ledger" aria-label="Evidence summary">
+                <div><dt>Passed claims</dt><dd id="summary-passed">0</dd></div>
+                <div><dt>Failed claims</dt><dd id="summary-failed">0</dd></div>
+                <div><dt>Skipped claims</dt><dd id="summary-skipped">0</dd></div>
+                <div><dt>Unknown claims</dt><dd id="summary-unknown">0</dd></div>
+                <div><dt>Unsupported claims</dt><dd id="summary-unsupported">0</dd></div>
+              </dl>
+
+              <div id="claim-ledger" class="finding-list" data-testid="claim-ledger"></div>
+
+              <div class="output-toolbar">
+                <div class="format-tabs" role="group" aria-label="Receipt format">
+                  <button id="show-markdown" class="format-tab is-active" type="button" aria-pressed="true">Markdown</button>
+                  <button id="show-json" class="format-tab" type="button" aria-pressed="false">JSON</button>
+                </div>
+                <button id="copy-output" class="text-button" type="button" data-testid="copy-output">Copy</button>
+              </div>
+              <pre id="receipt-output" class="receipt-output" tabindex="0" data-testid="receipt-output"></pre>
+              <button id="download-output" class="button button-dark download-button" type="button" data-testid="download-output" disabled>Download Markdown</button>
+              <p class="claim-boundary">Describes supplied evidence—not code correctness, security, readiness, or demand.</p>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </main>
+
+    <dialog id="import-dialog" aria-labelledby="import-title">
+      <form method="dialog" class="dialog-card" id="import-form">
+        <div>
+          <p class="kicker">Atomic import</p>
+          <h2 id="import-title">Import a PatchProof draft</h2>
+          <p>Invalid JSON is rejected before the current draft changes.</p>
+        </div>
+        <label for="import-json">Draft or receipt JSON</label>
+        <textarea id="import-json" class="code-input" rows="12" data-testid="import-json" spellcheck="false" placeholder='{"schemaVersion": 1, ...}'></textarea>
+        <p id="import-error" class="import-error" role="alert"></p>
+        <p id="import-summary" class="import-summary" data-testid="import-summary"></p>
+        <div class="dialog-actions">
+          <button class="button button-outline" value="cancel" type="button" id="cancel-import">Keep current draft</button>
+          <button class="button button-dark" value="default" type="submit" id="confirm-import" data-testid="confirm-import">Validate import</button>
+        </div>
+      </form>
+    </dialog>
+
+    <div id="live-region" class="sr-only" aria-live="polite"></div>
+  </body>
+</html>

@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "runId": "20260722-working-web-app-001",
+  "packSlug": "working-web-app",
+  "workspaceRevision": "ae88d46686b23b6374899c5f0606e17859b93b99",
+  "artifacts": [
+    {"path": "outcome-brief.md", "sha256": "771037677c0a37e6633992817d4b01b6f0cdce11acc948837cef2c8989d0c0c4"},
+    {"path": "pack.json", "sha256": "5060430e2030ce35bf6a3285efcc8419528aa8b3ea761d254c24e79d03ade638"},
+    {"path": "skills-lock.json", "sha256": "dd22af78dbc2d02d8b3708ae2b238a4704ea23ef3186afd6257308f18e5146f2"},
+    {"path": "product-receipt.json", "sha256": "67a53b4a2a6290ab649dac4deb0a2d2700ce60702fd1e77c3804ff417b22fb17"},
+    {"path": "completion-report.md", "sha256": "27512d03f9ed1c8c5dbc036c6d89408b0df23884c8aae794d4d6aecb64568a63"},
+    {"path": "verification.md", "sha256": "309b3112f32d9ee08b04b515712fc0e6403a2040e9fe80410762bf719fc3b7a7"},
+    {"path": "security-review.md", "sha256": "95c1780026022b1cfcfe014a1fa8546cc8885d0d2cf6d1e954721f9bd0ed8078"},
+    {"path": "implementation-report.md", "sha256": "e3d5386d46b94df2e44d4984c41984eea95bf1d3e9c28ee7386545bf84b85979"},
+    {"path": "repair-log.md", "sha256": "b9d3cfa6db443e1fd45980c7f6004a17e348b456c642977eaf56ccee9dd77f4a"},
+    {"path": "browser-report.json", "sha256": "364bd17693997cb8bd80cfbef45f05d38288c50287bbd5ed54d22aca23fa25a1"},
+    {"path": "eligibility-review.md", "sha256": "7c4d35961051db07680c21cbd55a1ac2120c00c9391428d8bdba154bf39ab790"}
+  ]
+}

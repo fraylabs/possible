@@ -1,0 +1,255 @@
+{
+  "title": "PatchProof / Working Web App",
+  "runId": "patchproof-working-web-app-20260722",
+  "recordedAt": "2026-07-22T13:35:03.425Z",
+  "disclosure": "Exported from the real clean-room Codex captain and specialist session logs. Includes their public assistant messages with local paths normalized and evidence links mapped to the public record. Private reasoning, system instructions, user metadata, raw tool output, usage telemetry, and UI annotations are excluded. Revision IDs mentioned belong to the isolated run; its Git object history is not embedded here, while archived SHA-256 manifests verify the portable files.",
+  "prompt": "Build and independently verify a local PatchProof browser app from the approved discovery handoff.",
+  "agents": [
+    {
+      "name": "Possible",
+      "role": "Captain",
+      "thread": "captain"
+    },
+    {
+      "name": "Parfit",
+      "role": "Product contract",
+      "thread": "product-contract"
+    },
+    {
+      "name": "Carver",
+      "role": "Application implementation",
+      "thread": "application-implementation"
+    },
+    {
+      "name": "Carson",
+      "role": "Independent product review",
+      "thread": "independent-product-review"
+    }
+  ],
+  "messages": [
+    {
+      "timestamp": "2026-07-22T13:35:10.607Z",
+      "agent": "Possible",
+      "role": "Captain",
+      "thread": "captain",
+      "phase": "commentary",
+      "message": "I’m taking only the Working Web App stage. I’ll first verify the inherited chain state and Discovery handoff byte-for-byte, then build and independently verify the local PatchProof product; I will stop before any launch work or external action."
+    },
+    {
+      "timestamp": "2026-07-22T13:35:21.052Z",
+      "agent": "Possible",
+      "role": "Captain",
+      "thread": "captain",
+      "phase": "commentary",
+      "message": "The installed Possible skill confirms this stage is separately approved and local-only. I’m now checking the archived Discovery receipt, commit, and handoff hashes before accepting any inherited claim; market demand will remain explicitly unproven."
+    },
+    {
+      "timestamp": "2026-07-22T13:35:36.325Z",
+      "agent": "Possible",
+      "role": "Captain",
+      "thread": "captain",
+      "phase": "commentary",
+      "message": "The handoff verifier passes, its receipt is `pursue`, and the archived Discovery revision is immutable at `3cdefb9`. I’m accepting only the narrow PatchProof build hypothesis and installing the pack’s three pinned repo-local skills now; the rejected ideas and market unknowns remain unchanged."
+    },
+    {
+      "timestamp": "2026-07-22T13:37:34.823Z",
+      "agent": "Possible",
+      "role": "Captain",
+      "thread": "captain",
+      "phase": "commentary",
+      "message": "The stage contract is now durable. I’m splitting the build into independent product-contract and application workstreams while I own integration and automated proof; after integration, a different fresh agent will review the result with no implementation ownership."
+    },
+    {
+      "timestamp": "2026-07-22T13:37:44.316Z",
+      "agent": "Parfit",
+      "role": "Product contract",
+      "thread": "product-contract",
+      "phase": "commentary",
+      "message": "I’m defining the Working Web App stage as a verifiable product contract: one job, explicit browser states, honest evidence labels, deterministic recovery, and an export format the builder and reviewer can share. I’ll limit edits to the three assigned product documents."
+    },
+    {
+      "timestamp": "2026-07-22T13:38:10.169Z",
+      "agent": "Carver",
+      "role": "Application implementation",
+      "thread": "application-implementation",
+      "phase": "commentary",
+      "message": "I’ll build only the PatchProof browser application inside the assigned example folder. I’m first reading the approved brief, handoff, pack contract, and frontend-design instructions so the UI reflects the chained outcome rather than inventing a different product."
+    },
+    {
+      "timestamp": "2026-07-22T13:39:16.305Z",
+      "agent": "Carver",
+      "role": "Application implementation",
+      "thread": "application-implementation",
+      "phase": "commentary",
+      "message": "The approved product is PatchProof: a local evidence workbench, not a generic dashboard. I’m using a “verification bench + printed receipt” direction—the editor reads like a disciplined lab worksheet, while the output is a receipt with explicit status marks. The signature is the receipt edge and evidence stamps; everything else stays quiet and functional."
+    },
+    {
+      "timestamp": "2026-07-22T13:40:43.002Z",
+      "agent": "Parfit",
+      "role": "Product contract",
+      "thread": "product-contract",
+      "phase": "commentary",
+      "message": "The inherited Phase A gate adds an important constraint: this is not just a form-and-export demo. The contract will require 12 deterministic adversarial fixtures, byte-stable JSON, and a hard rule that missing evidence can never become “passed.”"
+    },
+    {
+      "timestamp": "2026-07-22T13:43:28.076Z",
+      "agent": "Parfit",
+      "role": "Product contract",
+      "thread": "product-contract",
+      "phase": "commentary",
+      "message": "The product contract is complete and frozen for integration. I found an early implementation drift—flat user-set statuses and a single overall result—and escalated it; the application lane is now being realigned to the stricter claim-ledger contract rather than weakening the documentation."
+    },
+    {
+      "timestamp": "2026-07-22T13:43:32.799Z",
+      "agent": "Carver",
+      "role": "Application implementation",
+      "thread": "application-implementation",
+      "phase": "commentary",
+      "message": "The product-flow contract arrived while the application was being built. I’m aligning the app now so completion claims are explicit and receipt statuses are derived from referenced evidence—users can classify evidence, but they cannot simply force a claim to “passed.”"
+    },
+    {
+      "timestamp": "2026-07-22T13:43:41.287Z",
+      "agent": "Parfit",
+      "role": "Product contract",
+      "thread": "product-contract",
+      "phase": "final_answer",
+      "message": "Completed the Working Web App product contract without touching implementation or state files:\n\n- `product/flow.md`\n- `product/states.md`\n- `product/data-contract.md`\n\nKey decisions:\n\n- One job: turn supplied developer evidence into portable, inspectable Markdown and JSON receipts.\n- Five statuses remain distinct: `passed`, `failed`, `skipped`, `unknown`, `unsupported`.\n- Claim results are derived from referenced evidence; users cannot force absent evidence to pass.\n- JSON imports are transactional and cannot damage the current or saved draft.\n- Browser persistence uses `patchproof:draft:v1`; stale receipts cannot be exported.\n- JSON generation excludes timestamps and randomness, enabling byte-equivalent output across generation and reload.\n- All 12 inherited Phase A fixtures have explicit required results.\n- Product claims remain limited to supplied evidence; correctness, security, production readiness, demand, and product-market fit remain unproven.\n- All inherited hypotheses and unknowns were preserved.\n\nI identified early implementation drift toward flat user-set statuses and a single overall result. The parent has directed the application lane to align with this stricter contract.\n\nVerification passed: file presence, `git diff --check`, required terminology, all 12 fixture cases, and scope inspection. No commit created."
+    },
+    {
+      "timestamp": "2026-07-22T13:49:05.407Z",
+      "agent": "Possible",
+      "role": "Captain",
+      "thread": "captain",
+      "phase": "commentary",
+      "message": "The contract/code mismatch is fixed: PatchProof now has explicit claims whose status is derived from referenced evidence, so missing proof becomes `unsupported` rather than something the user can mark passed. I’m exercising all 12 fixtures now, then I’ll run the complete browser flow and production build."
+    },
+    {
+      "timestamp": "2026-07-22T13:49:09.313Z",
+      "agent": "Carver",
+      "role": "Application implementation",
+      "thread": "application-implementation",
+      "phase": "commentary",
+      "message": "The aligned flow is in place: users create claims, reference extracted evidence IDs, and see calculated statuses. Receipt export now stays disabled until generation and becomes stale after any edit; malformed imports validate in a separate candidate state before replacement. I’m running the fixtures and production build now."
+    },
+    {
+      "timestamp": "2026-07-22T13:50:42.399Z",
+      "agent": "Carver",
+      "role": "Application implementation",
+      "thread": "application-implementation",
+      "phase": "commentary",
+      "message": "The application implementation is handed off and integration is stable. The parent agent is applying two final bounded UI fixes discovered during integration—restoring the skipped count and preserving focus while editing claim fields—so I’m stopping edits to avoid conflicts."
+    },
+    {
+      "timestamp": "2026-07-22T13:50:56.126Z",
+      "agent": "Carver",
+      "role": "Application implementation",
+      "thread": "application-implementation",
+      "phase": "final_answer",
+      "message": "PatchProof application delivered and handed off to the parent agent.\n\nOwned files:\n\n- `package.json`, `package-lock.json`, `vite.config.js`, `index.html`\n- `src/main.js`, `src/styles.css`, `src/fixtures.js`\n- `src/lib/receipt.js`\n- Twelve deterministic fixtures under `fixtures/`\n\nVerified:\n\n- `npm run check` — 33/33 tests pass\n- Production Vite build passes\n- Desktop and mobile screenshots reviewed\n- No network, analytics, unsafe HTML rendering, or code execution\n- No commit created\n\nRun locally:\n\n```bash\nnpm install\nnpm run dev\n```\n\nProduction verification:\n\n```bash\nnpm run check\nnpm run preview\n```"
+    },
+    {
+      "timestamp": "2026-07-22T13:52:54.486Z",
+      "agent": "Possible",
+      "role": "Captain",
+      "thread": "captain",
+      "phase": "commentary",
+      "message": "The browser run caught a real integration failure: the import button had a test identifier but no DOM `id`, so opening the import dialog crashed before the transactional failure path could run. I’ve isolated it to the missing identifier and am repairing it, then rerunning the full desktop/mobile flow."
+    },
+    {
+      "timestamp": "2026-07-22T13:55:04.029Z",
+      "agent": "Possible",
+      "role": "Captain",
+      "thread": "captain",
+      "phase": "commentary",
+      "message": "The integrated command now passes: 33 unit assertions, production build, desktop/mobile browser flow, persistence, download, malformed-import recovery, and zero external requests. I’m handing the finished app to a fresh reviewer with no implementation ownership before I create the immutable stage receipt or launch handoff."
+    },
+    {
+      "timestamp": "2026-07-22T13:55:16.619Z",
+      "agent": "Carson",
+      "role": "Independent product review",
+      "thread": "independent-product-review",
+      "phase": "commentary",
+      "message": "I’m beginning a clean-room verification of the Working Web App stage only. I’ll treat the implementation reports as untrusted, rerun the product’s checks from a clean install, probe the negative paths directly, and write only the requested verification record."
+    },
+    {
+      "timestamp": "2026-07-22T13:56:18.836Z",
+      "agent": "Carson",
+      "role": "Independent product review",
+      "thread": "independent-product-review",
+      "phase": "commentary",
+      "message": "The contracts and implementation align on the core claim model: five distinct statuses are derived from supplied evidence, not selected by the user. I’ve also confirmed the inherited Discovery handoff explicitly preserves its market assumptions as hypotheses and grants no external authority. Next I’m rerunning the complete suite from a clean install and probing failure boundaries the existing suite could miss."
+    },
+    {
+      "timestamp": "2026-07-22T13:57:47.234Z",
+      "agent": "Possible",
+      "role": "Captain",
+      "thread": "captain",
+      "phase": "commentary",
+      "message": "The fresh reviewer found a real chain-level defect, separate from the app: after stage approval, the inherited handoff verifier assumed a transition was still pending and crashed on `null`. I’m repairing it to verify either a pending outbound handoff or the single approved inbound handoff for the active stage, while keeping all archived evidence and hashes unchanged."
+    },
+    {
+      "timestamp": "2026-07-22T13:58:36.074Z",
+      "agent": "Possible",
+      "role": "Captain",
+      "thread": "captain",
+      "phase": "commentary",
+      "message": "Fresh negative probing found another real truth-model bug: a conventional contradictory log (`1 failing` plus `exit code: 0`) was incorrectly accepted as passed because the parser recognized “failed” but not “failing.” I’m tightening the conflict detector and adding a direct regression assertion before the reviewer reruns."
+    },
+    {
+      "timestamp": "2026-07-22T14:00:11.382Z",
+      "agent": "Possible",
+      "role": "Captain",
+      "thread": "captain",
+      "phase": "commentary",
+      "message": "The verifier found a proof-coverage gap rather than an app failure: the 12 fixtures declared expected claim results, but not their exact extracted evidence, warnings, and limitations. I’m making those expectations explicit so regressions cannot hide behind a passing claim-only suite."
+    },
+    {
+      "timestamp": "2026-07-22T14:03:29.895Z",
+      "agent": "Carson",
+      "role": "Independent product review",
+      "thread": "independent-product-review",
+      "phase": "commentary",
+      "message": "The implementation agent repaired all three issues caught by independent review: post-approval handoff verification, conflicting “1 failing” log handling, and incomplete fixture expectations. I’m now running the final stable-target pass; no further exploratory scope is being added."
+    },
+    {
+      "timestamp": "2026-07-22T14:05:22.107Z",
+      "agent": "Carson",
+      "role": "Independent product review",
+      "thread": "independent-product-review",
+      "phase": "final_answer",
+      "message": "Independent verification completed with status recommendation `passed`.\n\nEvidence written to `outcome-room/verification.md`. Final checks passed:\n\n- Fresh `npm ci`\n- 34/34 tests, production build, and Playwright flow\n- Zero audit vulnerabilities\n- Chain handoff and preserved hashes\n- Desktop and complete mobile receipt flow\n- Targeted negative and safety probes\n\nThree defects were caught, repaired, and reverified. The integration agent can now create the product receipt against the final immutable revision."
+    },
+    {
+      "timestamp": "2026-07-22T14:05:29.886Z",
+      "agent": "Possible",
+      "role": "Captain",
+      "thread": "captain",
+      "phase": "commentary",
+      "message": "Fresh verification now recommends `passed` after independently catching and rechecking three blockers. I’m freezing the verified product revision next; the product receipt and launch handoff will point to that immutable commit, not to a moving working tree."
+    },
+    {
+      "timestamp": "2026-07-22T14:07:42.027Z",
+      "agent": "Carson",
+      "role": "Independent product review",
+      "thread": "independent-product-review",
+      "phase": "commentary",
+      "message": "I’m performing the final chain-boundary review only. I’ll recompute every referenced hash and verify that the launch stage is eligible but still unapproved; I will not rerun the product or begin launch work."
+    },
+    {
+      "timestamp": "2026-07-22T14:09:09.877Z",
+      "agent": "Carson",
+      "role": "Independent product review",
+      "thread": "independent-product-review",
+      "phase": "final_answer",
+      "message": "PASS. The Working Web App → Developer Project Launch handoff is eligible.\n\n- Every handoff, archive, receipt, verification, and evidence hash matches.\n- All referenced paths are safe regular files inside the repository.\n- Immutable revision `ae88d46686b23b6374899c5f0606e17859b93b99` exists and matches the archived product evidence.\n- Primary-flow proof and PatchProof opportunity alignment are preserved.\n- Hypotheses, unknowns, and the unrun external-validation mismatch remain explicit.\n- Developer Project Launch remains `proposed-unapproved`.\n- No external authority transferred.\n\nRequired corrections: none. Launch work still requires separate explicit approval.\n\nNo files were edited and the product suite was not rerun."
+    },
+    {
+      "timestamp": "2026-07-22T14:11:24.373Z",
+      "agent": "Possible",
+      "role": "Captain",
+      "thread": "captain",
+      "phase": "final_answer",
+      "message": "Stage 2 is complete and independently verified.\n\nPatchProof now provides a real local browser flow:\n\n- Load or enter patch evidence\n- Create explicit claims\n- Derive five evidence states\n- Generate deterministic Markdown and JSON receipts\n- Persist and recover drafts\n- Reject malformed imports without data loss\n\nVerification passed:\n\n- 34/34 unit assertions\n- 12 complete fixture contracts\n- Production Vite build\n- Desktop and mobile Playwright flows\n- Zero external requests or browser errors\n- `npm audit`: 0 vulnerabilities\n- Handoff/archive hash verification\n\nFresh review caught and verified repairs for contradictory test logs, incomplete fixture assertions, and a non-resumable chain verifier. Earlier UI and contract repairs are also preserved.\n\nCommits:\n\n- Product revision: `ae88d46686b23b6374899c5f0606e17859b93b99`\n- Archive and handoff: `ba1d7030165143a2bccc8905369cd00fedc251e1`\n\nKey evidence:\n\n- [Product receipt](/examples/patchproof-chain/evidence/product-receipt.json)\n- [Independent verification](/examples/patchproof-chain/evidence/product-verification.md)\n- [Repair log](/examples/patchproof-chain/evidence/product-repair-log.md)\n- [Desktop proof](/examples/patchproof-chain/evidence/product-desktop.png)\n- [Mobile proof](/examples/patchproof-chain/evidence/product-mobile.png)\n\nDeveloper Project Launch is now `eligible-awaiting-approval`. It remains unapproved, with no deployment, publication, outreach, analytics, spending, or other external authority transferred. Worktree is clean, and I stopped before launch work."
+    }
+  ]
+}

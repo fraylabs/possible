@@ -1,0 +1,41 @@
+{
+  "id": "binary-files",
+  "title": "Binary file change",
+  "description": "A binary path is preserved while content-dependent status stays unknown.",
+  "expectedClaimStatuses": { "binary-change": "unknown" },
+  "expectedEvidence": {
+    "changedFiles": [
+      { "path": "public/receipt.png", "change": "binary", "status": "unknown" }
+    ],
+    "checks": [
+      { "command": "npm run build", "exitCode": 0, "status": "passed" }
+    ],
+    "artifacts": []
+  },
+  "expectedWarnings": [
+    "Binary content was not inspected for public/receipt.png."
+  ],
+  "expectedLimitations": [
+    "Binary contents and rendered appearance were not inspected."
+  ],
+  "draft": {
+    "kind": "patchproof.draft",
+    "schemaVersion": 1,
+    "task": "Replace the completion screenshot.",
+    "unifiedDiff": "diff --git a/public/receipt.png b/public/receipt.png\nBinary files a/public/receipt.png and b/public/receipt.png differ",
+    "checkLog": "$ npm run build\nexit code: 0",
+    "artifacts": [],
+    "claims": [
+      {
+        "id": "binary-change",
+        "text": "The receipt image changed",
+        "kind": "file-change",
+        "target": "public/receipt.png",
+        "evidenceRefs": ["diff-001"]
+      }
+    ],
+    "limitations": [
+      "Binary contents and rendered appearance were not inspected."
+    ]
+  }
+}

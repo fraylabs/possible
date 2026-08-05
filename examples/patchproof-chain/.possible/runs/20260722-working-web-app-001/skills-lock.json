@@ -1,0 +1,33 @@
+{
+  "installedBy": "npx skills@1.5.19",
+  "skills": [
+    {
+      "name": "frontend-design",
+      "source": "https://github.com/anthropics/skills.git",
+      "reviewedRevision": "fa0fa64bdc967915dc8399e803be67759e1e62b8",
+      "path": ".agents/skills/frontend-design",
+      "available": true,
+      "skillMdSha256": "1608ea77fbb6fc30d13a97d12cfa8ebf31358d40f0dd97beed24829d6b3f45dd",
+      "skillsCliComputedHash": "4eabc66183767153e404b39d1b839b1c37f2d82d86f0a0d7e880a579d8d62336"
+    },
+    {
+      "name": "webapp-testing",
+      "source": "https://github.com/anthropics/skills.git",
+      "reviewedRevision": "fa0fa64bdc967915dc8399e803be67759e1e62b8",
+      "path": ".agents/skills/webapp-testing",
+      "available": true,
+      "skillMdSha256": "51b7349e77ec63b7744a6f63647e7566a0b4d2e301121cc10e8c2113af6556a2",
+      "skillsCliComputedHash": "ad5b1fc52807e9afa4635e59218a026b164dc58b6c3f41b0f7c644dcd6ccf572"
+    },
+    {
+      "name": "security-review",
+      "source": "https://github.com/github/awesome-copilot.git",
+      "reviewedRevision": "26fe2d126bf79aafb38f43344d450b69632200f8",
+      "path": ".agents/skills/security-review",
+      "available": true,
+      "skillMdSha256": "002392d88637b89e4cbc409a0531834970937f3b57c0b448a17e04b5ca6d356c",
+      "skillsCliComputedHash": "9b1791054c648b84ca424fc1342dede2e04759dc73436bb91d21675d5a4c13ea"
+    }
+  ],
+  "drift": "not detected against the exact reviewed sources requested by the pack"
+}

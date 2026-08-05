@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PatchProof Remix Preview — Evidence Stamp</title>
+    <style>
+      :root { --ground:#eef0eb; --navy:#101d3d; --red:#e62f2d; --blue:#285ea8; --white:#fff; font-family:"Arial Narrow","Helvetica Neue",Arial,sans-serif; }
+      * { box-sizing:border-box; }
+      body { margin:0; color:var(--navy); background:var(--ground); }
+      main { min-height:900px; overflow:hidden; }
+      nav { display:flex; justify-content:space-between; align-items:center; min-height:72px; padding:0 56px; color:var(--white); background:var(--navy); text-transform:uppercase; font-size:13px; font-weight:800; letter-spacing:.06em; }
+      .brand { font-size:23px; letter-spacing:-.04em; }
+      nav a { color:var(--navy); background:var(--white); }
+      a { display:inline-flex; align-items:center; min-height:44px; padding:0 18px; color:var(--white); background:var(--navy); border:2px solid var(--navy); font-size:13px; font-weight:900; text-decoration:none; text-transform:uppercase; }
+      a.secondary { color:var(--navy); background:transparent; }
+      .hero { position:relative; display:grid; grid-template-columns:1fr 460px; min-height:510px; padding:54px 56px; background:var(--red); }
+      .hero::after { content:"EVIDENCE"; position:absolute; right:-70px; bottom:-42px; color:transparent; -webkit-text-stroke:2px rgba(255,255,255,.5); font-size:152px; font-weight:900; transform:rotate(-8deg); }
+      h1 { position:relative; z-index:1; max-width:820px; margin:0; color:var(--white); font-size:clamp(76px,10vw,148px); line-height:.73; letter-spacing:-.04em; text-transform:uppercase; transform:rotate(-3deg); transform-origin:left top; }
+      .hero-copy { position:relative; z-index:2; align-self:end; padding:30px; color:var(--white); background:var(--navy); box-shadow:12px 12px 0 var(--white); }
+      .hero-copy p { margin:0 0 22px; font-family:Arial,sans-serif; font-size:18px; line-height:1.5; }
+      .actions { display:flex; gap:10px; flex-wrap:wrap; }.hero a{color:var(--navy);background:var(--white);border-color:var(--white)}.hero a.secondary{color:var(--white);background:transparent}
+      .run { margin:0; padding:16px 56px; color:var(--white); background:var(--blue); font-family:Arial,sans-serif; font-size:14px; font-weight:700; }
+      .demo { display:grid; grid-template-columns:1.1fr .9fr; gap:34px; padding:42px 56px 50px; }
+      .input { padding-right:40px; border-right:8px solid var(--red); }
+      .label { margin:0 0 10px; color:var(--red); font-size:13px; font-weight:900; text-transform:uppercase; }
+      h2 { margin:0 0 20px; font-size:36px; line-height:1; text-transform:uppercase; }
+      dl { display:grid; grid-template-columns:100px 1fr; gap:9px 18px; margin:0; font-family:Arial,sans-serif; font-size:14px; } dt{font-weight:800;text-transform:uppercase}dd{margin:0}
+      .stamps { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; }
+      .stamps div { display:grid; min-height:92px; padding:12px; place-items:center; border:4px solid currentColor; font-size:13px; font-weight:900; text-align:center; text-transform:uppercase; transform:rotate(-2deg); }.stamps div:nth-child(2){transform:rotate(2deg)}
+      .passed{color:#14735a}.unknown{color:#9b5d00}.unsupported{color:var(--red)}
+      .boundary { margin:20px 0 0; font-family:Arial,sans-serif; font-size:14px; line-height:1.45; }
+      @media (prefers-reduced-motion:no-preference) { .stamps div { transition:transform .18s ease-out; }.stamps div:hover { transform:scale(1.06) rotate(0); } }
+      @media(max-width:800px){nav{padding:0 20px}nav span:nth-child(2){display:none}.hero{grid-template-columns:1fr;padding:44px 20px}.hero-copy{margin-top:44px}.demo{grid-template-columns:1fr;padding:34px 20px}.input{border-right:0;border-bottom:8px solid var(--red);padding:0 0 28px}.run{padding-inline:20px}h1{font-size:70px}.stamps{grid-template-columns:1fr}}
+    </style>
+  </head>
+  <body>
+    <main data-preview="evidence-stamp" data-viewport="1440x900">
+      <nav><span class="brand">PatchProof</span><span>Local developer tool</span><a href="#">Open the local app</a></nav>
+      <section class="hero">
+        <h1>Know what “done” is made of.</h1>
+        <div class="hero-copy"><p>PatchProof turns the task, diff, check log, artifacts, and limitations you already have into an inspectable completion receipt—without uploading them.</p><div class="actions"><a href="#">Open the local app</a><a class="secondary" href="#">Read the 5-minute quickstart</a></div></div>
+      </section>
+      <p class="run">34 unit assertions · 12 fixture contracts · desktop + mobile browser flow</p>
+      <section class="demo">
+        <div class="input"><p class="label">Supply evidence. Preserve the result.</p><h2>Input</h2><dl><dt>Task</dt><dd>Add deterministic receipt export.</dd><dt>Diff</dt><dd><code>src/lib/receipt.js</code> changed.</dd><dt>Check</dt><dd><code>npm test</code> exited 0.</dd><dt>Limitation</dt><dd>No semantic code review was performed.</dd></dl></div>
+        <div><p class="label">Generated receipt</p><h2>Output</h2><div class="stamps"><div class="passed">Export claim<br />passed</div><div class="unknown">UI review claim<br />unknown</div><div class="unsupported">Security claim<br />unsupported</div></div><p class="boundary">A receipt describes supplied evidence. It does not prove code correctness, security, readiness, or demand.</p></div>
+      </section>
+      <section><h2>Inspect the evidence before accepting “done.”</h2><p>Open the real local product or follow the verified quickstart.</p></section>
+    </main>
+  </body>
+</html>

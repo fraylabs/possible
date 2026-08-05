@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PatchProof Remix Preview — Patch Panel</title>
+    <style>
+      :root { --metal:#d9ddd8; --plate:#eef0ec; --ink:#151917; --blue:#1248c9; --orange:#ff5d24; --green:#147e55; --line:#737b76; font-family:Tahoma,"Segoe UI",sans-serif; }
+      * { box-sizing:border-box; }
+      body { margin:0; color:var(--ink); background:#858b87; }
+      main { min-height:900px; padding:26px; background:linear-gradient(105deg,#adb2ae 0,#edf0ec 18%,#c2c7c3 48%,#f2f3ef 77%,#a6aca8 100%); }
+      .panel { min-height:848px; border:2px solid #505650; border-radius:14px; background:rgba(238,240,236,.82); box-shadow:inset 0 0 0 5px rgba(255,255,255,.35),8px 12px 24px rgba(20,24,21,.26); }
+      nav { display:grid; grid-template-columns:1fr auto auto; gap:32px; align-items:center; min-height:70px; padding:0 34px; border-bottom:2px solid var(--line); font-size:12px; font-weight:800; letter-spacing:.05em; text-transform:uppercase; }
+      .brand { font-size:22px; letter-spacing:-.04em; }.bolt{display:inline-block;width:12px;height:12px;margin-right:12px;border:2px solid #555;border-radius:50%;background:#c8ccc8;box-shadow:inset 2px 2px 2px #fff}
+      a { display:inline-flex; align-items:center; min-height:42px; padding:0 17px; color:white; background:var(--blue); border:2px solid var(--ink); border-radius:4px; font-size:12px; font-weight:900; text-decoration:none; text-transform:uppercase; box-shadow:3px 3px 0 var(--ink); }
+      a.secondary { color:var(--ink); background:transparent; box-shadow:none; }
+      .hero { display:grid; grid-template-columns:minmax(0,1.15fr) minmax(360px,.85fr); gap:56px; align-items:center; padding:50px 44px 40px; }
+      h1 { max-width:800px; margin:0; font-size:clamp(62px,7.4vw,108px); line-height:.82; letter-spacing:-.04em; text-transform:uppercase; }
+      h1 span { color:var(--blue); }
+      .hero-copy p { max-width:520px; margin:0 0 24px; font-size:18px; line-height:1.5; }
+      .actions { display:flex; gap:12px; flex-wrap:wrap; }
+      .run { margin:0 44px; padding:13px 18px; color:white; background:var(--ink); border-radius:3px; font-family:ui-monospace,monospace; font-size:13px; }
+      .patchbay { display:grid; grid-template-columns:1fr 120px 1fr; gap:20px; margin:34px 44px 0; padding:26px; border:2px solid var(--line); border-radius:8px; background:#cbd0cc; box-shadow:inset 0 2px 9px rgba(0,0,0,.16); }
+      .label { margin:0 0 18px; font-size:12px; font-weight:900; letter-spacing:.08em; text-transform:uppercase; }
+      h2 { margin:0 0 18px; font-size:25px; text-transform:uppercase; }
+      dl { display:grid; grid-template-columns:92px 1fr; gap:9px 15px; margin:0; font-size:13px; }dt{font-weight:800;text-transform:uppercase}dd{margin:0}
+      .routes { display:grid; align-content:center; gap:19px; }.route{position:relative;height:14px;border:4px solid var(--ink);border-radius:999px;background:var(--orange)}.route::before,.route::after{content:"";position:absolute;top:50%;width:22px;height:22px;border:4px solid var(--ink);border-radius:50%;background:var(--plate);transform:translateY(-50%)}.route::before{left:-13px}.route::after{right:-13px}.route:nth-child(2){background:var(--blue)}.route:nth-child(3){background:#dca200}
+      .status { display:grid; gap:10px; }.status div{display:flex;justify-content:space-between;padding:10px 12px;border:2px solid var(--line);border-radius:4px;background:var(--plate);font-size:12px}.status strong{text-transform:uppercase}.passed{color:var(--green)}.unknown{color:#8b5a00}.unsupported{color:#b12f31}
+      .boundary { margin:18px 0 0; font-size:13px; line-height:1.45; }
+      @media(prefers-reduced-motion:no-preference){.route{background-size:40px 100%;animation:signal 1.8s linear infinite}@keyframes signal{to{filter:hue-rotate(24deg)}}}
+      @media(max-width:800px){main{padding:8px}.panel{min-height:0}nav{grid-template-columns:1fr auto;padding:0 18px}nav span:nth-child(2){display:none}.hero{grid-template-columns:1fr;padding:40px 20px 26px}.hero-copy{margin-top:20px}.run{margin-inline:20px}.patchbay{grid-template-columns:1fr;margin:24px 20px;padding:20px}.routes{grid-template-columns:repeat(3,1fr)}h1{font-size:56px}}
+    </style>
+  </head>
+  <body>
+    <main data-preview="patch-panel" data-viewport="1440x900"><div class="panel">
+      <nav><span class="brand"><span class="bolt"></span>PatchProof</span><span>Local developer tool</span><a href="#">Open the local app</a></nav>
+      <section class="hero"><h1>Know what <span>“done”</span> is made of.</h1><div class="hero-copy"><p>PatchProof turns the task, diff, check log, artifacts, and limitations you already have into an inspectable completion receipt—without uploading them.</p><div class="actions"><a href="#">Open the local app</a><a class="secondary" href="#">Read the 5-minute quickstart</a></div></div></section>
+      <p class="run">34 unit assertions · 12 fixture contracts · desktop + mobile browser flow</p>
+      <section class="patchbay">
+        <div><p class="label">Supply evidence. Preserve the result.</p><h2>Input</h2><dl><dt>Task</dt><dd>Add deterministic receipt export.</dd><dt>Diff</dt><dd><code>src/lib/receipt.js</code> changed.</dd><dt>Check</dt><dd><code>npm test</code> exited 0.</dd><dt>Limitation</dt><dd>No semantic code review was performed.</dd></dl></div>
+        <div class="routes" aria-hidden="true"><div class="route"></div><div class="route"></div><div class="route"></div></div>
+        <div><p class="label">Generated receipt</p><h2>Output</h2><div class="status"><div><span>Export claim</span><strong class="passed">passed</strong></div><div><span>UI review claim</span><strong class="unknown">unknown</strong></div><div><span>Security claim</span><strong class="unsupported">unsupported</strong></div></div><p class="boundary">A receipt describes supplied evidence. It does not prove code correctness, security, readiness, or demand.</p></div>
+      </section>
+      <section><h2>Inspect the evidence before accepting “done.”</h2><p>Open the real local product or follow the verified quickstart.</p></section>
+    </div></main>
+  </body>
+</html>

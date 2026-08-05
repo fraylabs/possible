@@ -1,0 +1,25 @@
+{
+  "name": "patchproof",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test:unit": "node --test tests/receipt.test.mjs",
+    "test:browser": "python .agents/skills/webapp-testing/scripts/with_server.py --server \"npm run dev -- --host 127.0.0.1\" --port 5173 -- python tests/browser_flow.py",
+    "test:remix": "python tests/remix_previews.py",
+    "test:launch-contract": "node tests/verify_launch_contract.mjs",
+    "test:chain": "node verify-example.mjs",
+    "test:launch": "python .agents/skills/webapp-testing/scripts/with_server.py --server \"npm run dev -- --host 127.0.0.1\" --port 5173 -- python tests/launch_flow.py",
+    "check": "npm run test:unit && npm run test:remix && npm run test:launch-contract && npm run test:chain && npm run build",
+    "verify": "npm run check && npm run test:browser && npm run test:launch"
+  },
+  "devDependencies": {
+    "vite": "^7.0.5"
+  }
+}

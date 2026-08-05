@@ -1,0 +1,4 @@
+interface:
+  display_name: "Humanizer"
+  short_description: "Make copy specific, natural, and evidence-led"
+  default_prompt: "Use $humanizer to make this copy sound natural and specific without changing its facts or claims."

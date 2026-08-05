@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "runId": "20260722-developer-project-launch-001",
+  "packSlug": "developer-project-launch",
+  "product": "PatchProof",
+  "status": "passed-local-only",
+  "completedAt": "2026-07-22T22:34:47+08:00",
+  "verifiedWorkspaceRevision": "29b6e94a0c45ba8b996d7f0036f276d2ceda1e25",
+  "remix": {
+    "candidateCount": 3,
+    "comparisonViewport": "1440x900",
+    "selected": "continuous-form",
+    "selectionType": "agent-selected",
+    "decision": {"path": "launch/direction/decision.json", "sha256": "233036440f7b1a239e7c603f54c5e60ea23b20844430d7be4d644a3edeca2d3c"}
+  },
+  "artifacts": [
+    {"path": "launch/site/index.html", "sha256": "4c9d418a901f684b2be64a50615cd3fd95273f67786796996d6707709717fa6e"},
+    {"path": "launch/site/styles.css", "sha256": "1187cbddc115fcb009dde1a3874b4144008846a382139089e37a6cb194386904"},
+    {"path": "launch/site/app.js", "sha256": "ee19b48a067a7a6e5a217bff372fb44627a291c475e02caeeb7e851c1a7ebca9"},
+    {"path": "README.md", "sha256": "8c03a6d7569e958f2d850e091df25808d6d32bb6c27cf6919a3affe2ca8f6927"},
+    {"path": "launch/docs/quickstart.md", "sha256": "8e6f71c1ef19891134a8dc86e3591226ed720653898ac6f92413c6f7a43a7ad0"},
+    {"path": "launch/claims/claims-register.md", "sha256": "d43b4dae14126fd14716f308296ade54d9c9ec0fcb0846c633351fa61af2286d"},
+    {"path": "launch/assets/provenance.md", "sha256": "2bcb86c064e082c2bb062d1b9b5e4789491f439a87b0487a80ce6293e2ab0167"},
+    {"path": "launch/evidence/browser-report.json", "sha256": "896247948be41488afadaf35b10fa50dc230e18e100510b2608ead105f4f9104"}
+  ],
+  "verification": {
+    "integrated": {"command": "npm run verify", "revision": "29b6e94a0c45ba8b996d7f0036f276d2ceda1e25", "status": "passed"},
+    "cleanRoom": {"command": "npm ci && npm run verify", "revision": "d37fc385e328015703ce7bf7daca352f29d988df", "elapsedSeconds": 12, "status": "passed", "path": "launch/evidence/clean-room-quickstart.md", "sha256": "6685f11ce1fdb97e94c7206c809090adff0c58babb3060dc50693cf350df757d"},
+    "freshReview": {"taskId": "/root/chain_launch_run/patchproof_launch_verifier", "revision": "d37fc385e328015703ce7bf7daca352f29d988df", "status": "passed", "path": "launch/evidence/verification.md", "sha256": "2bc5806336f84ace60767b81428587657d1105bfdf49c16bfbf120a4c94db00f"},
+    "claimsReview": {"status": "passed", "path": "launch/evidence/claims-review.md", "sha256": "a84bc4dc32034f05047314c8cca02a723ab89a20c976368e26799b7ab5fc4bb4"},
+    "unitAssertions": 34,
+    "fixtureContracts": 12,
+    "externalRequests": 0,
+    "consoleErrors": 0,
+    "pageErrors": 0,
+    "mobileOverflowPixels": 0
+  },
+  "repairs": [
+    "verified mutable handoff evidence against its immutable source revision",
+    "replaced undocumented design literals and generic fallback",
+    "made copy comparison case-normalized without weakening factual equality",
+    "made browser screenshot evidence deterministic and worktree-clean",
+    "made chain verification recognize the completed state without weakening handoff checks"
+  ],
+  "externalGate": {
+    "authority": "none",
+    "deploymentAuthorized": false,
+    "deploymentAttempted": false,
+    "publicationAttempted": false,
+    "publicUrls": [],
+    "status": "stopped-before-external-launch"
+  },
+  "unproven": [
+    "demand",
+    "willingness to pay",
+    "review speed or accuracy improvement",
+    "compatibility across coding agents",
+    "semantic patch correctness",
+    "comprehensive security",
+    "production readiness",
+    "product-market fit"
+  ]
+}

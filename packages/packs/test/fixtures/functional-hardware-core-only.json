@@ -1,0 +1,45 @@
+{
+  "name": "bench-powered-core-prototype",
+  "results": [
+    {
+      "expectationId": "module-scope",
+      "status": "passed",
+      "evidence": ["fixtures/functional-hardware/module-decisions.json"]
+    },
+    {
+      "expectationId": "integrated-artifact",
+      "status": "passed",
+      "evidence": ["fixtures/functional-hardware/artifact-inspection.md"]
+    },
+    {
+      "expectationId": "primary-function",
+      "status": "passed",
+      "evidence": ["fixtures/functional-hardware/primary-function.csv"]
+    },
+    {
+      "expectationId": "mechanical-integrity",
+      "status": "passed",
+      "evidence": ["fixtures/functional-hardware/mechanical-boundary.md"]
+    },
+    {
+      "expectationId": "boundary-failure",
+      "status": "passed",
+      "evidence": ["fixtures/functional-hardware/failure-tests.json"]
+    },
+    {
+      "expectationId": "revision-closure",
+      "status": "passed",
+      "evidence": ["fixtures/functional-hardware/revision-review.md"]
+    },
+    {
+      "expectationId": "completion-boundary",
+      "status": "passed",
+      "evidence": ["fixtures/functional-hardware/decision-receipt.json"]
+    }
+  ],
+  "batteryResult": {
+    "expectationId": "battery-system",
+    "status": "passed",
+    "evidence": ["fixtures/functional-hardware/battery-tests.json"]
+  }
+}

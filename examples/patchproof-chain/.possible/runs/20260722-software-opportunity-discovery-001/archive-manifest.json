@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "runId": "20260722-software-opportunity-discovery-001",
+  "packSlug": "software-opportunity-discovery",
+  "workspaceRevision": "3cdefb90807a8a7d65a2131b73cf568a490fe43a",
+  "artifacts": [
+    {"path": "outcome-brief.md", "sha256": "4f7a08fac0308d293e7202208592f0e33170b1d71ac8de0f33f3ce61fb975855"},
+    {"path": "pack.json", "sha256": "770b15659b9261e9c4f524a2b17e3d453f4a1b6f875e29426c8fa59d96c36163"},
+    {"path": "skills-lock.json", "sha256": "085d7e9810f59ac89adb365b2bf1070c0e10ef7692e764f638f1ebf7f307824a"},
+    {"path": "decision-receipt.json", "sha256": "3702628f1bc97253d7a34a9dbf340caeb9495d2cbe2ffcfdcd0f84f0eaf49766"},
+    {"path": "completion-report.md", "sha256": "bb49cfa09ea4217b778797b24e15788764d1e4ca52a05327ab410e1b1a949dbe"},
+    {"path": "verification.md", "sha256": "46c2b99682974e250d41a35de0e6db5cf2a1fd5b042dcb345ea4468f827c82b4"}
+  ]
+}

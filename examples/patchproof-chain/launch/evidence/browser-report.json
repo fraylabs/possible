@@ -1,0 +1,22 @@
+{
+  "desktop": {
+    "viewport": "1440x1000",
+    "firstViewport": "passed",
+    "actualLogicFixtureSwitching": "passed",
+    "threeOutcomeStates": [
+      "passed",
+      "failed",
+      "unsupported"
+    ],
+    "localProductLink": "passed",
+    "metadata": "passed"
+  },
+  "mobile": {
+    "viewport": "390x844",
+    "fixtureSwitching": "passed",
+    "horizontalOverflowPx": 0
+  },
+  "consoleErrors": [],
+  "pageErrors": [],
+  "externalRequests": []
+}

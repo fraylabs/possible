@@ -1,0 +1,50 @@
+import type { OutcomePack } from "./types.js";
+import { kickstarterFundingPack } from "./kickstarter-funding.js";
+
+export const crowdfundingFundingRunPack: OutcomePack = {
+  schemaVersion: 1,
+  catalogNumber: 27,
+  lane: "operate",
+  slug: "crowdfunding-funding-run",
+  name: "Crowdfunding Funding Run",
+  eyebrow: "27 / EXPERIMENTAL PACK",
+  promise: "Run one approved crowdfunding campaign from immutable readiness evidence to an honest funding and settlement receipt.",
+  summary: "A readiness-locked campaign candidate, exact publication approvals, bounded operating cycles, selected audience modules, immutable pledge and change evidence, and a funded, unfunded, cancelled, or unsettled receipt.",
+  useWhen: ["Crowdfunding Campaign Readiness has passed and the user wants to publish and operate the exact candidate.", "A live campaign needs bounded monitoring, truthful updates, controlled changes, and payout reconciliation."],
+  notFor: ["Preparing an unverified campaign package.", "Fabricating prototype, manufacturing, safety, study, or audience evidence.", "Treating a funding target, pledge, or platform total as settled cash."],
+  reviewedAt: "2026-07-29",
+  schedule: { request: "Continue one bounded approved crowdfunding operating cycle.", title: "Crowdfunding funding cycle", description: "Reconcile live evidence, approvals, changes, and stop conditions.", safeDefault: "Do not publish, message, spend, change rewards, or collect new data without exact approval." },
+  skills: kickstarterFundingPack.skills,
+  workstreams: [
+    { id: "baseline", name: "Immutable campaign and authority baseline", skills: ["product-marketing", "analytics"], owns: ["funding-run/baseline/"], brief: "Verify the readiness receipt, exact platform candidate, ownership, payout setup boundary, approved actions, budget, duration, and stop conditions." },
+    { id: "operate", name: "Approved funding operation", skills: ["social", "marketing-loops", "analytics"], owns: ["funding-run/cycles/", "funding-run/audience/"], dependsOn: ["baseline"], brief: "After exact approvals, publish or resume the verified candidate, execute only active audience modules, and preserve every material change and platform observation." },
+    { id: "settle", name: "Independent reconciliation", skills: ["analytics", "webapp-testing"], owns: ["funding-run/review/", "funding-run/decision.json"], dependsOn: ["operate"], brief: "Reconcile pledges, cancellations, fees, refunds, platform state, payout state, privacy, and fulfillment eligibility without converting estimates into cash." },
+  ],
+  reviewSkills: ["analytics", "webapp-testing"],
+  outputs: ["Immutable readiness and campaign baseline", "Exact external-action approvals", "Dated funding cycle records", "Selected audience execution evidence", "Funding and settlement decision receipt"],
+  guardrails: ["Do not publish, message audiences, buy ads, change campaign terms, charge, refund, withdraw, or mutate platform state without separate approval for the exact action.", "Do not invent pledges, backers, conversion, reach, platform status, fees, payout, or settlement.", "Never expose backer identities, contact details, payment data, addresses, credentials, or private platform exports.", "Stop when the readiness candidate changes materially; return to repair rather than silently rewriting the promise, rewards, economics, or delivery boundary."],
+  verification: ["Verify the input readiness receipt and immutable candidate before any platform action.", "Preserve platform timestamps and denominators for views, pledges, cancellations, refunds, fees, and payout state.", "Reconcile campaign totals independently and distinguish pledged, collectible, collected, refunded, disputed, and settled amounts.", "Record funded, unfunded, cancelled, or unsettled honestly and authorize no fulfillment work from unsettled evidence."],
+  prerequisites: [{ id: "campaign-ready", description: "Crowdfunding Campaign Readiness passed for this exact candidate.", requiredEvidence: ["readiness receipt", "candidate hash", "economics and fulfillment boundaries"] }],
+  expectations: [
+    { id: "readiness-locked", statement: "The live candidate matches a passing crowdfunding-readiness receipt.", failureModes: ["candidate drift", "stale economics", "missing prerequisite"], requiredEvidence: ["readiness receipt", "candidate hash comparison"] },
+    { id: "authority-preserved", statement: "Every external action stayed within exact approval.", failureModes: ["unapproved publication", "unapproved spend", "scope drift"], requiredEvidence: ["approval and action ledger"] },
+    { id: "platform-evidence-reconciled", statement: "Campaign state and money categories match preserved platform evidence.", failureModes: ["pledge treated as cash", "missing cancellation", "fee omission"], requiredEvidence: ["platform snapshots", "independent reconciliation"] },
+    { id: "email-proof", moduleId: "email-audience", statement: "Approved email activity preserves consent, denominators, and outcomes.", failureModes: ["unapproved list", "missing unsubscribe", "inflated conversion"], requiredEvidence: ["approval", "send and response record"] },
+    { id: "social-proof", moduleId: "social-posting", statement: "Approved social activity matches the verified campaign claims.", failureModes: ["claim drift", "unapproved account action"], requiredEvidence: ["post archive", "approval record"] },
+    { id: "partner-proof", moduleId: "partner-press", statement: "Approved partner or press outreach preserves targets, messages, and responses.", failureModes: ["invented coverage", "spam", "missing denominator"], requiredEvidence: ["outreach ledger", "response evidence"] },
+    { id: "paid-proof", moduleId: "paid-media", statement: "Approved paid media stays within budget and reports attributable evidence honestly.", failureModes: ["unapproved spend", "platform metric treated as causal lift"], requiredEvidence: ["spend record", "platform report", "attribution limits"] },
+  ],
+  modularOutcome: {
+    kind: "modular-outcome", gateName: "Crowdfunding funding run", action: "Run",
+    contractPath: "funding-run/baseline/run-contract.json", moduleDecisionPath: "funding-run/baseline/modules.json", artifactRoot: "funding-run/", decisionReceiptPath: "funding-run/decision.json", minimumActiveModules: 0,
+    modules: [
+      { id: "email-audience", activationWhen: "An authorized consented email audience is part of the approved run.", work: ["prepare and send only the approved message and follow-up"], checks: ["verify consent, denominator, delivery, unsubscribe, and response records"], requiredExpectationIds: ["email-proof"] },
+      { id: "social-posting", activationWhen: "Named social accounts and posts are part of the approved run.", work: ["publish only approved claim-aligned posts"], checks: ["archive exact posts and platform observations"], requiredExpectationIds: ["social-proof"] },
+      { id: "partner-press", activationWhen: "Named partners, communities, creators, or press targets are approved.", work: ["conduct bounded approved outreach"], checks: ["preserve targets, sends, responses, refusals, and silence"], requiredExpectationIds: ["partner-proof"] },
+      { id: "paid-media", activationWhen: "A platform, audience, creative, budget, and stop condition are explicitly approved.", work: ["run the bounded approved paid test"], checks: ["reconcile spend, delivery, attribution, and stop conditions"], requiredExpectationIds: ["paid-proof"] },
+    ],
+    decisions: ["funded-settled", "funded-unsettled", "unfunded", "cancelled", "repair-required", "no-go"],
+    steps: ["Validate the readiness receipt and hash the exact campaign candidate.", "Present every platform publication, audience action, spend, and material change for separate exact approval.", "Run immutable dated cycles that preserve observations, denials, waiting states, and stop conditions.", "Reconcile final campaign and payout evidence independently before declaring settlement or fulfillment eligibility."],
+    completionBoundary: "Only funded-settled establishes eligibility for a separately approved fulfillment outcome; every other state preserves evidence and stops without manufacturing or delivery authority.",
+  },
+};

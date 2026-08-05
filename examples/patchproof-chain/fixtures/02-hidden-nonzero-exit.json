@@ -1,0 +1,35 @@
+{
+  "id": "hidden-nonzero-exit",
+  "title": "Hidden nonzero exit",
+  "description": "Later success text cannot hide an earlier nonzero exit.",
+  "expectedClaimStatuses": { "tests-fail": "failed" },
+  "expectedEvidence": {
+    "changedFiles": [
+      { "path": "src/parser.js", "change": "modified", "status": "passed" }
+    ],
+    "checks": [{ "command": "npm test", "exitCode": 1, "status": "failed" }],
+    "artifacts": []
+  },
+  "expectedWarnings": [
+    "Changed path is not referenced by any claim: src/parser.js."
+  ],
+  "expectedLimitations": ["The nonzero exit must be resolved."],
+  "draft": {
+    "kind": "patchproof.draft",
+    "schemaVersion": 1,
+    "task": "Update the parser and run its tests.",
+    "unifiedDiff": "diff --git a/src/parser.js b/src/parser.js\n--- a/src/parser.js\n+++ b/src/parser.js\n@@ -1 +1 @@\n-return null;\n+return parse(value);",
+    "checkLog": "$ npm test\nProcess exited with code 1\nCleanup complete; all done successfully",
+    "artifacts": [],
+    "claims": [
+      {
+        "id": "tests-fail",
+        "text": "The parser tests pass",
+        "kind": "tests",
+        "target": "npm test",
+        "evidenceRefs": ["check-001"]
+      }
+    ],
+    "limitations": ["The nonzero exit must be resolved."]
+  }
+}

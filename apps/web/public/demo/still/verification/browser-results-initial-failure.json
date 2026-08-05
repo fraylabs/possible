@@ -1,0 +1,443 @@
+{
+  "base_url": "http://127.0.0.1:4177/",
+  "console_messages": [
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (File not found)"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (File not found)"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (File not found)"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (File not found)"
+    }
+  ],
+  "page_errors": [],
+  "requests": [
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/",
+      "path": "/",
+      "resource_type": "document"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/styles.css",
+      "path": "/styles.css",
+      "resource_type": "stylesheet"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/film/still-launch-preview.png",
+      "path": "/assets/film/still-launch-preview.png",
+      "resource_type": "image"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/film/still-launch-interaction.png",
+      "path": "/assets/film/still-launch-interaction.png",
+      "resource_type": "image"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/film/still-launch-contact-sheet.png",
+      "path": "/assets/film/still-launch-contact-sheet.png",
+      "resource_type": "image"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/hardware/still-iso.png",
+      "path": "/assets/hardware/still-iso.png",
+      "resource_type": "image"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/hardware/still-rear.png",
+      "path": "/assets/hardware/still-rear.png",
+      "resource_type": "image"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/hardware/still-top.png",
+      "path": "/assets/hardware/still-top.png",
+      "resource_type": "image"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/hardware/still-front.png",
+      "path": "/assets/hardware/still-front.png",
+      "resource_type": "image"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/app.js",
+      "path": "/app.js",
+      "resource_type": "script"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/film/still-launch.mp4",
+      "path": "/assets/film/still-launch.mp4",
+      "resource_type": "media"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/film/still-launch.mp4",
+      "path": "/assets/film/still-launch.mp4",
+      "resource_type": "media"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/site/index.html",
+      "path": "/assets/site/index.html",
+      "resource_type": "document"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/index-CbZgcUBE.js",
+      "path": "/assets/index-CbZgcUBE.js",
+      "resource_type": "script"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/index-CovCuj17.css",
+      "path": "/assets/index-CovCuj17.css",
+      "resource_type": "stylesheet"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/",
+      "path": "/",
+      "resource_type": "document"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/styles.css",
+      "path": "/styles.css",
+      "resource_type": "stylesheet"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/film/still-launch-preview.png",
+      "path": "/assets/film/still-launch-preview.png",
+      "resource_type": "image"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/film/still-launch-interaction.png",
+      "path": "/assets/film/still-launch-interaction.png",
+      "resource_type": "image"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/film/still-launch-contact-sheet.png",
+      "path": "/assets/film/still-launch-contact-sheet.png",
+      "resource_type": "image"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/hardware/still-iso.png",
+      "path": "/assets/hardware/still-iso.png",
+      "resource_type": "image"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/hardware/still-rear.png",
+      "path": "/assets/hardware/still-rear.png",
+      "resource_type": "image"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/hardware/still-top.png",
+      "path": "/assets/hardware/still-top.png",
+      "resource_type": "image"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/hardware/still-front.png",
+      "path": "/assets/hardware/still-front.png",
+      "resource_type": "image"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/app.js",
+      "path": "/app.js",
+      "resource_type": "script"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/film/still-launch.mp4",
+      "path": "/assets/film/still-launch.mp4",
+      "resource_type": "media"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/film/still-launch.mp4",
+      "path": "/assets/film/still-launch.mp4",
+      "resource_type": "media"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/site/index.html",
+      "path": "/assets/site/index.html",
+      "resource_type": "document"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/index-CbZgcUBE.js",
+      "path": "/assets/index-CbZgcUBE.js",
+      "resource_type": "script"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/index-CovCuj17.css",
+      "path": "/assets/index-CovCuj17.css",
+      "resource_type": "stylesheet"
+    }
+  ],
+  "responses": [
+    {
+      "url": "http://127.0.0.1:4177/",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4177/assets/film/still-launch-preview.png",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4177/styles.css",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4177/assets/film/still-launch-interaction.png",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4177/assets/film/still-launch-contact-sheet.png",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4177/assets/hardware/still-iso.png",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4177/assets/hardware/still-top.png",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4177/assets/hardware/still-rear.png",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4177/assets/hardware/still-front.png",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4177/app.js",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4177/assets/film/still-launch.mp4",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4177/assets/film/still-launch.mp4",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4177/assets/site/index.html",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4177/assets/index-CbZgcUBE.js",
+      "status": 404,
+      "ok": false
+    },
+    {
+      "url": "http://127.0.0.1:4177/assets/index-CovCuj17.css",
+      "status": 404,
+      "ok": false
+    },
+    {
+      "url": "http://127.0.0.1:4177/",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4177/styles.css",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4177/assets/film/still-launch-interaction.png",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4177/assets/film/still-launch-preview.png",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4177/assets/film/still-launch-contact-sheet.png",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4177/assets/hardware/still-top.png",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4177/assets/hardware/still-iso.png",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4177/assets/hardware/still-rear.png",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4177/assets/hardware/still-front.png",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4177/app.js",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4177/assets/film/still-launch.mp4",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4177/assets/film/still-launch.mp4",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4177/assets/site/index.html",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "http://127.0.0.1:4177/assets/index-CovCuj17.css",
+      "status": 404,
+      "ok": false
+    },
+    {
+      "url": "http://127.0.0.1:4177/assets/index-CbZgcUBE.js",
+      "status": 404,
+      "ok": false
+    }
+  ],
+  "request_failures": [
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/film/still-launch.mp4",
+      "path": "/assets/film/still-launch.mp4",
+      "resource_type": "media",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/film/still-launch.mp4",
+      "path": "/assets/film/still-launch.mp4",
+      "resource_type": "media",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/index-CbZgcUBE.js",
+      "path": "/assets/index-CbZgcUBE.js",
+      "resource_type": "script",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/index-CovCuj17.css",
+      "path": "/assets/index-CovCuj17.css",
+      "resource_type": "stylesheet",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/film/still-launch.mp4",
+      "path": "/assets/film/still-launch.mp4",
+      "resource_type": "media",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/film/still-launch.mp4",
+      "path": "/assets/film/still-launch.mp4",
+      "resource_type": "media",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/index-CovCuj17.css",
+      "path": "/assets/index-CovCuj17.css",
+      "resource_type": "stylesheet",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4177/assets/index-CbZgcUBE.js",
+      "path": "/assets/index-CbZgcUBE.js",
+      "resource_type": "script",
+      "failure": "net::ERR_ABORTED"
+    }
+  ],
+  "checks": [
+    {
+      "name": "desktop-room-or-waitlist",
+      "status": "failed",
+      "detail": "Locator.wait_for: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator(\"#site-preview\").content_frame.locator(\"h1\") to be visible\n"
+    },
+    {
+      "name": "mobile-room",
+      "status": "failed",
+      "detail": "Locator.wait_for: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator(\"#site-preview\").content_frame.locator(\"h1\") to be visible\n"
+    }
+  ],
+  "summary": {
+    "status": "failed",
+    "failure_count": 5,
+    "failures": [
+      "desktop/waitlist: Locator.wait_for: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator(\"#site-preview\").content_frame.locator(\"h1\") to be visible\n",
+      "mobile: Locator.wait_for: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator(\"#site-preview\").content_frame.locator(\"h1\") to be visible\n",
+      "console errors: [{'type': 'error', 'text': 'Failed to load resource: the server responded with a status of 404 (File not found)'}, {'type': 'error', 'text': 'Failed to load resource: the server responded with a status of 404 (File not found)'}, {'type': 'error', 'text': 'Failed to load resource: the server responded with a status of 404 (File not found)'}, {'type': 'error', 'text': 'Failed to load resource: the server responded with a status of 404 (File not found)'}]",
+      "request failures: [{'method': 'GET', 'url': 'http://127.0.0.1:4177/assets/film/still-launch.mp4', 'path': '/assets/film/still-launch.mp4', 'resource_type': 'media', 'failure': 'net::ERR_ABORTED'}, {'method': 'GET', 'url': 'http://127.0.0.1:4177/assets/film/still-launch.mp4', 'path': '/assets/film/still-launch.mp4', 'resource_type': 'media', 'failure': 'net::ERR_ABORTED'}, {'method': 'GET', 'url': 'http://127.0.0.1:4177/assets/index-CbZgcUBE.js', 'path': '/assets/index-CbZgcUBE.js', 'resource_type': 'script', 'failure': 'net::ERR_ABORTED'}, {'method': 'GET', 'url': 'http://127.0.0.1:4177/assets/index-CovCuj17.css', 'path': '/assets/index-CovCuj17.css', 'resource_type': 'stylesheet', 'failure': 'net::ERR_ABORTED'}, {'method': 'GET', 'url': 'http://127.0.0.1:4177/assets/film/still-launch.mp4', 'path': '/assets/film/still-launch.mp4', 'resource_type': 'media', 'failure': 'net::ERR_ABORTED'}, {'method': 'GET', 'url': 'http://127.0.0.1:4177/assets/film/still-launch.mp4', 'path': '/assets/film/still-launch.mp4', 'resource_type': 'media', 'failure': 'net::ERR_ABORTED'}, {'method': 'GET', 'url': 'http://127.0.0.1:4177/assets/index-CovCuj17.css', 'path': '/assets/index-CovCuj17.css', 'resource_type': 'stylesheet', 'failure': 'net::ERR_ABORTED'}, {'method': 'GET', 'url': 'http://127.0.0.1:4177/assets/index-CbZgcUBE.js', 'path': '/assets/index-CbZgcUBE.js', 'resource_type': 'script', 'failure': 'net::ERR_ABORTED'}]",
+      "non-OK responses: [{'url': 'http://127.0.0.1:4177/assets/index-CbZgcUBE.js', 'status': 404, 'ok': False}, {'url': 'http://127.0.0.1:4177/assets/index-CovCuj17.css', 'status': 404, 'ok': False}, {'url': 'http://127.0.0.1:4177/assets/index-CovCuj17.css', 'status': 404, 'ok': False}, {'url': 'http://127.0.0.1:4177/assets/index-CbZgcUBE.js', 'status': 404, 'ok': False}]"
+    ],
+    "request_count": 30,
+    "response_count": 30,
+    "console_error_count": 4,
+    "page_error_count": 0,
+    "request_failure_count": 8,
+    "bad_response_count": 4
+  }
+}
