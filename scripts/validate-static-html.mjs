@@ -1,13 +1,22 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
-import { stableOutcomePacks } from "../packages/packs/dist/index.js";
+import { archivedOutcomePacks, stableOutcomePacks } from "../packages/packs/dist/index.js";
 
 const output = new URL("../apps/web/out/", import.meta.url);
 const html = (relativePath) => readFile(new URL(relativePath, output), "utf8");
 const visibleText = (markup) => markup.replace(/<script[\s\S]*?<\/script>/gi, " ").replace(/<style[\s\S]*?<\/style>/gi, " ");
 const plainText = (markup) => markup.replace(/<[^>]+>/g, " ").replace(/&[a-z0-9#]+;/gi, " ").replace(/\s+/g, " ").trim();
 const escape = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-const featuredPacks = stableOutcomePacks;
+const publicArchiveSlugs = new Set([
+  "hardware-launch",
+  "kickstarter-funding",
+  "kickstarter-fulfillment",
+  "robot-prototype",
+  "developer-project-launch",
+  "working-hardware-prototype",
+  "launch-content-campaign",
+]);
+const homePacks = [...stableOutcomePacks, ...archivedOutcomePacks.filter(({ slug }) => publicArchiveSlugs.has(slug))];
 const exampleRoutes = [
   ["still", "Still"],
   ["robot-snake", "Robot Snake"],
@@ -104,8 +113,8 @@ assert.ok(galleryIndex > heroIndex, "Homepage must place the visual pack gallery
 for (const [index, label] of [[workflowIndex, "workflow"], [demosIndex, "examples"], [sourceIndex, "source"]]) {
   assert.equal(index, -1, `Homepage must not render the ${label} section`);
 }
-assert.match(homeMarkup, /class="home-pack-gallery"[\s\S]*aria-label="Reviewed Outcome Packs"/);
-assert.equal((homeMarkup.match(/class="pack-card-preview"/g) ?? []).length, featuredPacks.length, "Homepage must show one visual preview per published pack");
+assert.match(homeMarkup, /class="home-pack-gallery"[\s\S]*aria-label="Public Outcome Pack catalog"/);
+assert.equal((homeMarkup.match(/class="pack-card-preview"/g) ?? []).length, homePacks.length, "Homepage must show one visual preview per public pack");
 
 const homepageWordCount = plainText(home.match(/<main[\s\S]*<\/main>/)?.[0] ?? "").split(/\s+/).filter(Boolean).length;
 assert.ok(homepageWordCount <= 500, `Homepage must remain concise; found ${homepageWordCount} words`);
@@ -113,20 +122,16 @@ assert.match(homeMarkup, /<meta property="og:image" content="https:\/\/possible\
 assert.doesNotMatch(home, /<div id="root"><\/div>/);
 
 const catalog = home;
-for (const pack of featuredPacks) {
+for (const pack of homePacks) {
   assert.match(catalog, new RegExp(escape(pack.name)));
   const detail = visibleText(await html(`packs/${pack.slug}/index.html`));
   assert.match(detail, new RegExp(escape(pack.promise)));
   assert.doesNotMatch(detail, /SCHEDULABLE|OPTIONAL SCHEDULE|Schedule the operating loop/i);
-  assert.doesNotMatch(detail, /EXPERIMENTAL OUTCOME PACK|Preserved end-to-end evidence is still in progress/i);
+  if (!pack.archived) assert.doesNotMatch(detail, /EXPERIMENTAL OUTCOME PACK|Preserved end-to-end evidence is still in progress/i);
 }
 assert.match(catalog, /Choose the work\.[\s\S]*Make it real\./i);
-assert.match(homeMarkup, /aria-label="Reviewed Outcome Packs"/);
-assert.doesNotMatch(catalog, /Hardware Launch/);
-assert.doesNotMatch(catalog, /Working Hardware Prototype/);
-assert.doesNotMatch(catalog, /Launch Content Campaign/);
-assert.doesNotMatch(catalog, /Kickstarter Funding/);
-assert.doesNotMatch(catalog, /Kickstarter Fulfillment|Robot Prototype|Developer Project Launch/);
+assert.match(homeMarkup, /aria-label="Public Outcome Pack catalog"/);
+for (const pack of homePacks) assert.match(catalog, new RegExp(escape(pack.name)), `Homepage must include ${pack.name}`);
 const archivedHardwareLaunch = visibleText(await html("packs/hardware-launch/index.html"));
 assert.match(archivedHardwareLaunch, /ARCHIVED[\s\S]*2026-07-27/i);
 assert.match(archivedHardwareLaunch, /will not recommend or compile it for new work/i);

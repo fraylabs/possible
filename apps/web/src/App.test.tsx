@@ -4,7 +4,7 @@ import { axe } from "vitest-axe";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { compilePack } from "@possible/packs";
 import App from "./App";
-import { getPublishedPack, getRoutablePack, installCommand, publishedPacks } from "./public-content";
+import { getPublishedPack, getRoutablePack, installCommand, publishedPacks, routablePacks } from "./public-content";
 
 afterEach(() => {
   cleanup();
@@ -66,16 +66,16 @@ describe("Possible", () => {
     expect(writeText).toHaveBeenCalledWith("npx @fraylabs/possible@0.1.11 init");
   });
 
-  it("shows the reviewed Outcome Pack gallery on the homepage", async () => {
+  it("shows the complete public Outcome Pack catalog on the homepage", async () => {
     const { container } = render(<App />);
     const gallery = screen.getByRole("region", { name: /Choose the work\.Make it real\./i });
     const grid = gallery.querySelector(".home-pack-gallery-grid")!;
-    expect(within(grid).getAllByRole("link")).toHaveLength(4);
-    for (const pack of publishedPacks.slice(0, 4)) expect(within(grid).getByRole("heading", { name: pack.name, level: 3 })).toBeInTheDocument();
-    expect(grid.querySelectorAll(".pack-card-preview")).toHaveLength(4);
+    expect(within(grid).getAllByRole("link")).toHaveLength(routablePacks.length);
+    for (const pack of routablePacks) expect(within(grid).getByRole("heading", { name: pack.name, level: 3 })).toBeInTheDocument();
+    expect(grid.querySelectorAll(".pack-card-preview")).toHaveLength(routablePacks.length);
     expect(container).toHaveTextContent(/Choose the work\.Make it real\./i);
     expect(container).not.toHaveTextContent(/text-first library|EXPERIMENTAL OUTCOME PACK/i);
-    expect(container).not.toHaveTextContent(/Hardware Launch|Open-Source Release|Marketing Operations/i);
+    expect(container).toHaveTextContent(/Hardware Launch|Open-Source Release|Marketing Operations/i);
     expect(await axe(container)).toHaveNoViolations();
   });
 

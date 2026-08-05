@@ -6,7 +6,7 @@ import { compilePack, getPack, getPackStatus } from "@possible/packs";
 import type { OutcomePack } from "@possible/packs";
 import { exampleCatalog, getExample } from "./example-content";
 import type { PossibleExample } from "./example-content";
-import { getPublishedPack, getRoutablePack, githubUrl, installCommand, publishedPacks } from "./public-content";
+import { getPublishedPack, getRoutablePack, githubUrl, installCommand, routablePacks } from "./public-content";
 
 const PaperPlaneGame = lazy(() => import("./PaperPlaneGame"));
 type CopyState = "idle" | "copied" | "failed";
@@ -173,11 +173,11 @@ function CreatePage() {
             <a className="text-link" href="/docs/glossary">How it works ↗</a>
           </div>
         </header>
-        <div className="home-pack-gallery-grid" aria-label="Reviewed Outcome Packs">
-          {publishedPacks.map((pack) => <PackCard pack={pack} key={pack.slug} />)}
+        <div className="home-pack-gallery-grid" aria-label="Public Outcome Pack catalog">
+          {routablePacks.map((pack) => <PackCard pack={pack} key={pack.slug} />)}
         </div>
         <div className="home-pack-gallery-footer">
-          <span>{publishedPacks.length} REVIEWED PACKS</span>
+          <span>{routablePacks.length} PACKS IN CATALOG</span>
           <a href={`${githubUrl}/tree/main/packages/packs/src`} target="_blank" rel="noreferrer">Inspect the source ↗</a>
         </div>
       </section>
@@ -255,7 +255,7 @@ function PackDetailPage({ pack }: { pack: OutcomePack }) {
         <aside className="pack-reference-packs" aria-label="Outcome Pack navigation">
           <header><span>OUTCOME PACKS</span></header>
           <nav aria-label="Outcome Packs">
-            {publishedPacks.map((candidate) => (
+            {routablePacks.map((candidate) => (
               <a href={`/packs/${candidate.slug}`} aria-current={candidate.slug === pack.slug ? "page" : undefined} key={candidate.slug}>
                 <strong>{candidate.name}</strong>
                 <small>{packStatusLabel(candidate.slug)}</small>
