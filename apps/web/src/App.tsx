@@ -1,7 +1,7 @@
 "use client";
 
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
-import type { KeyboardEvent as ReactKeyboardEvent } from "react";
+import type { KeyboardEvent as ReactKeyboardEvent, ReactNode } from "react";
 import { compilePack, getPack, getPackStatus } from "@possible/packs";
 import type { OutcomePack } from "@possible/packs";
 import { exampleCatalog, getExample } from "./example-content";
@@ -689,32 +689,53 @@ function ExamplesPage({ activeSlug }: { activeSlug?: string }) {
   );
 }
 
-function DocsSidebar({ active }: { active: "overview" | "how-to-use" }) {
+type DocsPageKey = "overview" | "how-to-use" | "outcome-packs" | "expectations" | "reference";
+type DocsNavGroup = { label: string; links: Array<{ label: string; href: string; active?: DocsPageKey }> };
+const docsNavGroups: DocsNavGroup[] = [
+  {
+    label: "GETTING STARTED",
+    links: [
+      { label: "Overview", href: "/docs", active: "overview" },
+      { label: "How to use Possible", href: "/docs/how-to-use", active: "how-to-use" },
+      { label: "Installation", href: "/docs#installation" },
+      { label: "Invoke Possible", href: "/docs#invoke" },
+    ],
+  },
+  {
+    label: "CORE CONCEPTS",
+    links: [
+      { label: "Outcome Packs", href: "/docs/outcome-packs", active: "outcome-packs" },
+      { label: "Expectations & evidence", href: "/docs/expectations", active: "expectations" },
+    ],
+  },
+  {
+    label: "REFERENCE",
+    links: [
+      { label: "Project files & safety", href: "/docs/reference", active: "reference" },
+      { label: "Glossary", href: "/docs#glossary" },
+      { label: "Outcome Pack library ↗", href: "/#packs" },
+    ],
+  },
+];
+
+function DocsNavLinks({ active }: { active: DocsPageKey }) {
+  return <>
+    {docsNavGroups.map((group) => <nav key={group.label} aria-label={group.label.toLowerCase()}>
+      <span>{group.label}</span>
+      {group.links.map((link) => <a key={link.href} className={link.active === active ? "is-active" : undefined} href={link.href}>{link.label}</a>)}
+    </nav>)}
+  </>;
+}
+
+function DocsSidebar({ active }: { active: DocsPageKey }) {
   return (
     <aside className="docs-sidebar" aria-label="Documentation navigation">
       <div className="docs-sidebar-title"><strong>Documentation</strong><span>V0.1</span></div>
-      <nav aria-label="Getting started">
-        <span>GETTING STARTED</span>
-        <a className={active === "overview" ? "is-active" : undefined} href="/docs">Overview</a>
-        <a className={active === "how-to-use" ? "is-active" : undefined} href="/docs/how-to-use">How to use Possible</a>
-        <a href="/docs#installation">Installation</a>
-        <a href="/docs#invoke">Invoke Possible</a>
-      </nav>
-      <nav aria-label="Core workflow">
-        <span>CORE WORKFLOW</span>
-        <a href="/docs#brainstorm">Brainstorm</a>
-        <a href="/docs#recommend">Recommendation</a>
-        <a href="/docs#confirm">Confirmation</a>
-        <a href="/docs#execute">Execution</a>
-      </nav>
-      <nav aria-label="Reference">
-        <span>REFERENCE</span>
-        <a href="/docs#glossary">Glossary</a>
-        <a href="/docs#files">Project files</a>
-        <a href="/docs#safety">Safety boundary</a>
-        <a href="/docs#troubleshooting">Troubleshooting</a>
-        <a href="/#packs">Outcome Pack library ↗</a>
-      </nav>
+      <DocsNavLinks active={active} />
+      <details className="docs-mobile-menu">
+        <summary>Browse docs <span>＋</span></summary>
+        <DocsNavLinks active={active} />
+      </details>
     </aside>
   );
 }
@@ -1037,6 +1058,217 @@ function HowToUsePage() {
   );
 }
 
+type DocsTocItem = { label: string; href: string };
+
+function DocsSimplePage({
+  active,
+  label,
+  section,
+  eyebrow,
+  title,
+  description,
+  toc,
+  next,
+  children,
+}: {
+  active: DocsPageKey;
+  label: string;
+  section: string;
+  eyebrow: string;
+  title: string;
+  description: string;
+  toc: DocsTocItem[];
+  next?: { label: string; href: string };
+  children: ReactNode;
+}) {
+  return (
+    <main className="docs-page">
+      <SiteNav label={`Docs / ${label}`} />
+      <div className="docs-shell">
+        <DocsSidebar active={active} />
+        <article className="docs-article docs-article--focused">
+          <div className="docs-breadcrumb"><a href="/docs">DOCS</a><span>/</span><strong>{section}</strong></div>
+          <header className="docs-title" id="overview">
+            <p className="eyebrow">{eyebrow}</p>
+            <h1>{title}</h1>
+            <p>{description}</p>
+          </header>
+          {children}
+          {next ? <nav className="docs-next" aria-label="Next documentation page"><span>NEXT</span><a href={next.href}>{next.label} <b>→</b></a></nav> : null}
+        </article>
+        <aside className="docs-toc" aria-label="On this page">
+          <span>ON THIS PAGE</span>
+          {toc.map((item) => <a key={item.href} href={item.href}>{item.label}</a>)}
+        </aside>
+      </div>
+      <SiteFooter />
+    </main>
+  );
+}
+
+function OutcomePacksDocsPage() {
+  return <DocsSimplePage
+    active="outcome-packs"
+    label="Outcome Packs"
+    section="CORE CONCEPTS / OUTCOME PACKS"
+    eyebrow="CORE CONCEPTS"
+    title="Choose a complete outcome, not a pile of tasks."
+    description="An Outcome Pack is a reviewed contract for one class of outcomes. It gives Possible a coherent target, the workstreams to coordinate, the boundaries to preserve, and the evidence needed to call the result complete."
+    toc={[{ label: "What a pack is", href: "#what-is-a-pack" }, { label: "Pack anatomy", href: "#anatomy" }, { label: "Pack statuses", href: "#statuses" }, { label: "Choose and approve", href: "#choose" }]}
+    next={{ label: "Expectations & evidence", href: "/docs/expectations" }}
+  >
+    <section id="what-is-a-pack">
+      <h2>What an Outcome Pack is</h2>
+      <p>A pack turns a rough ambition into one inspectable run. It is not a generic prompt, a permission slip, or a promise that every claim has already been proven.</p>
+      <div className="docs-callout docs-callout--info">
+        <strong>THE CONTRACT</strong>
+        <p>The pack fixes the outcome, outputs, selected skills, independent workstreams, safeguards, approval gates, and verification boundary before execution begins.</p>
+      </div>
+      <div className="docs-card-grid" aria-label="What an Outcome Pack coordinates">
+        <article><span>01 / TARGET</span><strong>Observable result</strong><p>What should exist when the run is complete, for whom, and under which constraints.</p></article>
+        <article><span>02 / WORK</span><strong>Owned workstreams</strong><p>Bounded specialist contributions that can be coordinated and integrated without losing the shared brief.</p></article>
+        <article><span>03 / PROOF</span><strong>Completion checks</strong><p>Expectations, evidence, and independent review that separate an artifact from a trustworthy claim.</p></article>
+      </div>
+    </section>
+
+    <section id="anatomy">
+      <h2>Pack anatomy</h2>
+      <p>Every public pack page exposes the same contract so you can inspect the fit before approving it.</p>
+      <div className="docs-table" role="table" aria-label="Outcome Pack anatomy">
+        <div role="row"><strong role="columnheader">Part</strong><strong role="columnheader">What to inspect</strong></div>
+        <div role="row"><code role="cell">Fit</code><span role="cell">The outcome the pack is designed to make real, including its entry conditions and non-scope.</span></div>
+        <div role="row"><code role="cell">Outputs</code><span role="cell">The artifacts the run must leave behind. Outputs are inspectable deliverables, not proof by themselves.</span></div>
+        <div role="row"><code role="cell">Skills & workstreams</code><span role="cell">The sources, reviewed revisions, owners, inputs, and integration points used during the run.</span></div>
+        <div role="row"><code role="cell">Expectations</code><span role="cell">The required and preferred conditions that determine whether the promised outcome is true.</span></div>
+        <div role="row"><code role="cell">Approval boundaries</code><span role="cell">The local work the run may do and the external actions that still need a separate yes.</span></div>
+        <div role="row"><code role="cell">Verification</code><span role="cell">The fresh tests, review, measurements, and evidence needed for the completion report.</span></div>
+      </div>
+    </section>
+
+    <section id="statuses">
+      <h2>Pack statuses</h2>
+      <p>Status tells you how much preserved evidence exists for the contract. It does not change the scope of approval or make an unverified claim true.</p>
+      <div className="docs-status-list">
+        <div><span className="docs-status-dot docs-status-dot--stable">REVIEWED</span><strong>Stable</strong><p>Backed by a preserved end-to-end run and independent verification.</p></div>
+        <div><span className="docs-status-dot docs-status-dot--experimental">EXPERIMENTAL</span><strong>Experimental</strong><p>Available to inspect and try while equivalent preserved evidence is still being built.</p></div>
+        <div><span className="docs-status-dot docs-status-dot--archived">ARCHIVED</span><strong>Archived</strong><p>Kept for historical reference, but not recommended or compiled for new work.</p></div>
+      </div>
+    </section>
+
+    <section id="choose">
+      <h2>Choose and approve</h2>
+      <p>Start with <code>$possible</code> and describe the ambition in your own words. Possible should recommend one primary pack, explain why it fits, show the outputs and expectations, and name what remains unauthorized.</p>
+      <p>Do not approve a pack because its label sounds close. Correct the understanding until the outcome, constraints, and evidence boundary match what you actually want to make true.</p>
+      <a className="docs-reference-link" href="/#packs"><span>LIBRARY</span><strong>Browse active Outcome Packs</strong><i>Open the gallery →</i></a>
+    </section>
+  </DocsSimplePage>;
+}
+
+function ExpectationsDocsPage() {
+  return <DocsSimplePage
+    active="expectations"
+    label="Expectations & evidence"
+    section="CORE CONCEPTS / EXPECTATIONS & EVIDENCE"
+    eyebrow="CORE CONCEPTS"
+    title="The artifact is not the proof."
+    description="Expectations make the definition of done explicit. Evidence records what was observed. Verification decides whether the active expectations are actually true."
+    toc={[{ label: "The four layers", href: "#layers" }, { label: "Required vs preferred", href: "#activation" }, { label: "A complete review", href: "#review" }, { label: "Outcome Record", href: "#record" }]}
+    next={{ label: "Project files & safety", href: "/docs/reference" }}
+  >
+    <section id="layers">
+      <h2>The four layers</h2>
+      <p>Keeping these terms separate prevents a polished deliverable from being mistaken for a completed outcome.</p>
+      <ol className="docs-handshake docs-concept-steps" aria-label="Outcome proof layers">
+        <li><span>OUTPUT</span><strong>The inspectable artifact</strong></li>
+        <li><span>EXPECTATION</span><strong>What must become true</strong></li>
+        <li><span>EVIDENCE</span><strong>What was observed or preserved</strong></li>
+        <li><span>VERIFICATION</span><strong>Why the claim can be trusted</strong></li>
+      </ol>
+      <div className="docs-outcome-example" aria-label="Output and expectation example">
+        <div><span>OUTPUT</span><p>A responsive launch page with a working conversion flow.</p></div>
+        <div><span>EXPECTATION</span><p>The confirmed audience can complete the flow on supported screen sizes, approved claims are used, and accessibility checks pass.</p></div>
+      </div>
+    </section>
+
+    <section id="activation">
+      <h2>Required and preferred expectations</h2>
+      <p>A pack can include optional modules that activate only when the artifact or user request calls for them. The run must report which expectations were active and why.</p>
+      <div className="docs-card-grid docs-card-grid--two" aria-label="Expectation activation levels">
+        <article><span>REQUIRED</span><strong>Completion blockers</strong><p>If an active required expectation fails, the run cannot honestly close. Preserve the failure, repair the result, and rerun the complete review.</p></article>
+        <article><span>PREFERRED</span><strong>Quality signals</strong><p>Useful improvements that inform the completion report without pretending they are blockers when the approved contract did not require them.</p></article>
+      </div>
+    </section>
+
+    <section id="review">
+      <h2>What a complete review does</h2>
+      <ol>
+        <li><strong>Inspect the integrated artifact</strong><span>Review the result as one coherent outcome, not as isolated specialist handoffs.</span></li>
+        <li><strong>Challenge every active expectation</strong><span>Use the appropriate tests, measurements, review, or fixture and preserve the evidence used.</span></li>
+        <li><strong>Record failures and limitations</strong><span>Do not silently downgrade a failed check or turn an unproven claim into a success.</span></li>
+        <li><strong>Repair and rerun</strong><span>After a material repair, repeat the complete review so the new result is freshly verified.</span></li>
+      </ol>
+    </section>
+
+    <section id="record">
+      <h2>Outcome Record</h2>
+      <p>Every run exposes one machine-readable Outcome Record. It connects the approved brief and pack snapshot to artifacts, hashes, expectation results, decisions, failures, repairs, approvals, limitations, and fresh verification.</p>
+      <aside className="docs-callout docs-callout--approval">
+        <strong>COMPLETION REPORT</strong>
+        <p>The final report says what was produced, what was checked, what remains unproven, and which external actions were intentionally not taken.</p>
+      </aside>
+    </section>
+  </DocsSimplePage>;
+}
+
+function DocsReferencePage() {
+  return <DocsSimplePage
+    active="reference"
+    label="Project files & safety"
+    section="REFERENCE / PROJECT FILES & SAFETY"
+    eyebrow="REFERENCE"
+    title="Keep the run inspectable."
+    description="Possible writes shared state only after confirmation. These files make the approved contract, resolved skills, expectations, and evidence trail easy to inspect and preserve."
+    toc={[{ label: "Project files", href: "#files" }, { label: "Safety boundary", href: "#safety" }, { label: "Troubleshooting", href: "#troubleshooting" }]}
+    next={{ label: "Back to documentation overview", href: "/docs" }}
+  >
+    <section id="files">
+      <h2>Project files</h2>
+      <div className="docs-table" role="table" aria-label="Possible project files">
+        <div role="row"><strong role="columnheader">Path</strong><strong role="columnheader">Purpose</strong></div>
+        <div role="row"><code role="cell">.possible/outcome-brief.md</code><span role="cell">Confirmed intent, audience, current reality, constraints, gates, and unknowns.</span></div>
+        <div role="row"><code role="cell">.possible/runs/&lt;run-id&gt;/expectations.json</code><span role="cell">Frozen required and preferred expectations with evidence requirements and activation state.</span></div>
+        <div role="row"><code role="cell">.possible/pack.json</code><span role="cell">The exact Outcome Pack snapshot approved for this run.</span></div>
+        <div role="row"><code role="cell">.possible/skills-lock.json</code><span role="cell">Resolved sources, revisions, paths, and content hashes.</span></div>
+      </div>
+    </section>
+
+    <section id="safety">
+      <h2>Safety boundary</h2>
+      <p>Outcome Pack approval authorizes disclosed repo-local work. It never grants real-world permission or open-ended autonomy.</p>
+      <aside className="docs-callout docs-callout--warning">
+        <strong>SEPARATE APPROVAL REQUIRED</strong>
+        <p>Deployment, publishing, spending, outreach, fabrication, data collection, credential use, private-data sharing, and unsupported claims remain separately gated.</p>
+      </aside>
+      <ul>
+        <li>Inspect external skill instructions before following them.</li>
+        <li>Preserve unknowns instead of inventing facts.</li>
+        <li>Separate generated artifacts from independently verified claims.</li>
+        <li>Stop before any consequential external action.</li>
+      </ul>
+    </section>
+
+    <section id="troubleshooting">
+      <h2>Troubleshooting</h2>
+      <div className="docs-faq">
+        <details><summary>The installer reports conflicting files</summary><p>Possible never overwrites a different existing skill. Inspect <code>.agents/skills/possible</code>, preserve anything you need, then resolve the conflict manually before rerunning the installer.</p></details>
+        <details><summary>Codex does not recognize $possible</summary><p>Confirm the skill exists at <code>.agents/skills/possible/SKILL.md</code>, then reopen or reload the project so Codex can discover it.</p></details>
+        <details><summary>A pack lists an optional plugin I do not have</summary><p>Possible records that the capability is unavailable and uses a reviewed fallback only when one is compatible and authorized. Otherwise the completion report marks the affected expectation as blocked.</p></details>
+        <details><summary>The recommended Outcome Pack feels wrong</summary><p>Do not confirm it. Correct Possible&apos;s understanding or continue brainstorming until the recommendation matches the outcome you actually want.</p></details>
+      </div>
+    </section>
+  </DocsSimplePage>;
+}
+
 function NotFoundPage() {
   return (
     <main>
@@ -1247,6 +1479,9 @@ export function PossibleSite({ path: requestedPath }: { path?: string }) {
   if (path === "/") return <CreatePage />;
   if (path === "/docs") return <DocsPage />;
   if (path === "/docs/how-to-use") return <HowToUsePage />;
+  if (path === "/docs/outcome-packs") return <OutcomePacksDocsPage />;
+  if (path === "/docs/expectations") return <ExpectationsDocsPage />;
+  if (path === "/docs/reference") return <DocsReferencePage />;
   if (path === "/judging") return <JudgingPage />;
   if (path === "/comparisons/robot-snake") return <RobotSnakeComparisonPage />;
   if (path === "/examples") return <ExamplesPage />;

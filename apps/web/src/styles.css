@@ -374,6 +374,10 @@ nav { height: 74px; padding: 0 3.5vw; border-bottom: 1px solid #aaa59a; display:
 .docs-sidebar nav > span { margin-bottom: 11px; }
 .docs-sidebar nav a { padding: 7px 10px; border-left: 2px solid transparent; color: #656159; font-size: 12px; line-height: 1.35; }
 .docs-sidebar nav a:hover, .docs-sidebar nav a:focus-visible, .docs-sidebar nav a.is-active { border-left-color: #ff4d00; background: #ece9e1; color: #151411; }
+.docs-mobile-menu { display: none; }
+.docs-mobile-menu summary { cursor: pointer; display: flex; justify-content: space-between; align-items: center; padding: 12px 0; color: #151411; font: 9px "DM Mono", monospace; letter-spacing: .08em; text-transform: uppercase; }
+.docs-mobile-menu summary span { color: #ff4d00; font-size: 16px; line-height: 1; }
+.docs-mobile-menu[open] summary { border-bottom: 1px solid #d7d3ca; }
 .docs-article { min-width: 0; padding: 45px 0 100px; }
 .docs-breadcrumb { margin-bottom: 68px; display: flex; gap: 10px; color: #8a857d; font: 8px "DM Mono", monospace; }
 .docs-breadcrumb a { color: #ff4d00; }
@@ -475,6 +479,26 @@ nav { height: 74px; padding: 0 3.5vw; border-bottom: 1px solid #aaa59a; display:
 .docs-toc > span { margin-bottom: 8px; }
 .docs-toc a { color: #777169; font-size: 10px; line-height: 1.35; }
 .docs-toc a:hover, .docs-toc a:focus-visible { color: #ff4d00; }
+.docs-card-grid { margin-top: 34px; display: grid; grid-template-columns: repeat(3, 1fr); border: 1px solid #151411; }
+.docs-card-grid--two { grid-template-columns: repeat(2, 1fr); }
+.docs-card-grid article { min-height: 190px; padding: 22px; display: flex; flex-direction: column; }
+.docs-card-grid article + article { border-left: 1px solid #151411; }
+.docs-card-grid article:nth-child(odd) { background: #d9ff63; }
+.docs-card-grid article:nth-child(even) { background: #151411; color: #f8f7f2; }
+.docs-card-grid article span { color: #ff4d00; font: 9px "DM Mono", monospace; letter-spacing: .07em; }
+.docs-card-grid article:nth-child(even) span { color: #a8ff52; }
+.docs-card-grid article strong { margin-top: auto; font-size: 21px; line-height: 1.1; }
+.docs-card-grid article p { margin: 10px 0 0; color: #514d47; font-size: 12px; line-height: 1.65; }
+.docs-card-grid article:nth-child(even) p { color: #bdb8ae; }
+.docs-status-list { margin-top: 30px; border-top: 1px solid #d7d3ca; }
+.docs-status-list > div { padding: 18px 0; border-bottom: 1px solid #d7d3ca; display: grid; grid-template-columns: 120px minmax(120px, .55fr) 1.45fr; gap: 18px; align-items: baseline; }
+.docs-status-list strong { color: #151411; font-size: 15px; }
+.docs-status-list p { margin: 0; }
+.docs-status-dot { color: #5e5952; font: 8px "DM Mono", monospace; letter-spacing: .06em; }
+.docs-status-dot--stable { color: #31822e; }
+.docs-status-dot--experimental { color: #a33600; }
+.docs-status-dot--archived { color: #777169; }
+.docs-concept-steps { margin-top: 30px !important; }
 
 /* Judge-facing evidence */
 .judging-page { background: #f8f7f2; }
@@ -1824,6 +1848,11 @@ footer .wordmark span { color: #151411; }
   .docs-sidebar { position: static; height: auto; padding: 24px 0; border-right: 0; border-bottom: 1px solid #d7d3ca; }
   .docs-sidebar-title { margin: 0; }
   .docs-sidebar nav { display: none; }
+  .docs-mobile-menu { display: block; }
+  .docs-mobile-menu nav { display: flex; margin: 0; padding: 0 0 14px; }
+  .docs-mobile-menu nav + nav { margin-top: 12px; }
+  .docs-mobile-menu nav > span { margin-bottom: 7px; }
+  .docs-mobile-menu nav a { padding-block: 6px; }
   .docs-article { padding-top: 30px; }
   .docs-breadcrumb { margin-bottom: 45px; }
   .docs-title h1 { font-size: 13vw; }
@@ -1843,6 +1872,9 @@ footer .wordmark span { color: #151411; }
   .docs-do-dont > div + div { border-top: 1px solid #d7d3ca; border-left: 0; }
   .docs-reference-link { grid-template-columns: 1fr; gap: 8px; }
   .docs-reference-link i { margin-top: 10px; }
+  .docs-card-grid, .docs-card-grid--two { grid-template-columns: 1fr; }
+  .docs-card-grid article + article { border-top: 1px solid #151411; border-left: 0; }
+  .docs-status-list > div { grid-template-columns: 1fr; gap: 5px; }
   .docs-table > div { grid-template-columns: 1fr; }
   .docs-table span { border-top: 1px solid #d7d3ca; border-left: 0; }
   .install-card { box-shadow: 7px 7px 0 #ff4d00; }

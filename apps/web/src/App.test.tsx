@@ -249,6 +249,30 @@ describe("Possible", () => {
     expect(await axe(section!)).toHaveNoViolations();
   });
 
+  it("gives docs a persistent multi-page sidebar and a mobile browse menu", async () => {
+    const pages = [
+      ["/docs", /Build complete outcomes with Possible/i, "overview"],
+      ["/docs/how-to-use", /How to use Possible/i, "how-to-use"],
+      ["/docs/outcome-packs", /Choose a complete outcome/i, "outcome-packs"],
+      ["/docs/expectations", /The artifact is not the proof/i, "expectations"],
+      ["/docs/reference", /Keep the run inspectable/i, "reference"],
+    ] as const;
+
+    for (const [path, heading, active] of pages) {
+      const { container, unmount } = renderRoute(path);
+      expect(screen.getByRole("heading", { name: heading, level: 1 })).toBeInTheDocument();
+      const sidebar = container.querySelector(".docs-sidebar");
+      expect(sidebar).toBeInTheDocument();
+      expect(sidebar?.querySelector(".docs-mobile-menu")).toBeInTheDocument();
+      expect(sidebar?.querySelector(`a.is-active[href*="${active === "overview" ? "/docs" : active}"]`)).toBeInTheDocument();
+      for (const href of ["/docs/outcome-packs", "/docs/expectations", "/docs/reference"]) {
+        expect(sidebar?.querySelector(`a[href="${href}"]`)).toBeInTheDocument();
+      }
+      expect(await axe(container)).toHaveNoViolations();
+      unmount();
+    }
+  });
+
   it("maps the four official judging criteria to direct evidence", async () => {
     const { container } = renderRoute("/judging");
     expect(screen.getByRole("heading", { name: /One rough idea\.\s*A verified outcome\./, level: 1 })).toBeInTheDocument();
