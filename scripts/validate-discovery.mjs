@@ -13,6 +13,7 @@ const canonicalRoutes = [
   ["docs/outcome-packs/index.html", "https://possible.sh/docs/outcome-packs/"],
   ["docs/expectations/index.html", "https://possible.sh/docs/expectations/"],
   ["docs/reference/index.html", "https://possible.sh/docs/reference/"],
+  ["docs/glossary/index.html", "https://possible.sh/docs/glossary/"],
   ["judging/index.html", "https://possible.sh/judging/"],
   ["comparisons/robot-snake/index.html", "https://possible.sh/comparisons/robot-snake/"],
   ["examples/index.html", "https://possible.sh/examples/"],

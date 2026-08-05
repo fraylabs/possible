@@ -689,7 +689,7 @@ function ExamplesPage({ activeSlug }: { activeSlug?: string }) {
   );
 }
 
-type DocsPageKey = "overview" | "how-to-use" | "outcome-packs" | "expectations" | "reference";
+type DocsPageKey = "overview" | "how-to-use" | "outcome-packs" | "expectations" | "reference" | "glossary";
 type DocsNavGroup = { label: string; links: Array<{ label: string; href: string; active?: DocsPageKey }> };
 const docsNavGroups: DocsNavGroup[] = [
   {
@@ -712,11 +712,37 @@ const docsNavGroups: DocsNavGroup[] = [
     label: "REFERENCE",
     links: [
       { label: "Project files & safety", href: "/docs/reference", active: "reference" },
-      { label: "Glossary", href: "/docs#glossary" },
+      { label: "Glossary", href: "/docs/glossary", active: "glossary" },
       { label: "Outcome Pack library ↗", href: "/#packs" },
     ],
   },
 ];
+
+const glossaryTerms = [
+  ["Outcome", "A specific end state the user wants to make true. One outcome can require many tasks."],
+  ["Task", "One action taken toward an outcome. A task describes work; it does not define success."],
+  ["Possible.sh", "The open-source library of Outcome Packs, documentation, examples, and evidence."],
+  ["$possible", "The installed agent skill that understands a request, recommends an Outcome Pack, and runs it after approval."],
+  ["Outcome Pack", "A reviewed contract for one class of outcomes: it names the result, outputs, skills, workstreams, safeguards, and checks without becoming permission for external action."],
+  ["Creative direction", "A project-specific visual system derived from its audience, product truth, evidence, assets, and constraints."],
+  ["Remix", "Reconsider how an outcome is expressed without changing its promised facts, safeguards, product behavior, or definition of done."],
+  ["Outcome Journey", "The retrospective sequence of outcomes completed for one ambition. It becomes visible only after each outcome is verified and the next is recommended from the new reality."],
+  ["Stable pack", "An Outcome Pack backed by a preserved end-to-end run and independent verification."],
+  ["Experimental pack", "An Outcome Pack available to inspect and test before equivalent preserved evidence exists."],
+  ["Agent skill", "A reusable capability that performs focused work during a run."],
+  ["Run", "One approved Outcome Pack applied to one project."],
+  ["Workstream", "A bounded part of the outcome with named inputs, outputs, ownership, and checks. Independent workstreams may run in parallel."],
+  ["Output", "An inspectable artifact or deliverable the run produces. An output is not itself proof that the promised outcome is true."],
+  ["Outcome brief", "The durable record of confirmed intent, audience, current reality, constraints, gates, and unknowns."],
+  ["Expectation contract", "The frozen acceptance conditions for a run. Expectations describe what must become true; they are not outputs or implementation tasks."],
+  ["Required expectation", "An active acceptance condition that must pass before the run can honestly close."],
+  ["Preferred expectation", "An active quality condition that informs the completion report without becoming a blocker unless the approved contract says it is required."],
+  ["Evidence", "A preserved observation, file, measurement, test result, or review record linked to an expectation. Evidence supports a claim without replacing the underlying artifact."],
+  ["Outcome Record", "The machine-readable index every run produces. It links artifacts, hashes, expectation results, decisions, failures, repairs, approvals, limitations, and fresh verification."],
+  ["Verification", "The independent tests, review, measurements, or inspected evidence used to determine whether each active expectation is true."],
+  ["Completion report", "The final evidence and status: artifacts created, checks passed or failed, limitations, unproven claims, and external actions not taken."],
+  ["External action", "A real-world change—such as deploying, publishing, spending, outreach, or fabrication—that requires separate approval."],
+] as const;
 
 function DocsNavLinks({ active }: { active: DocsPageKey }) {
   return <>
@@ -803,28 +829,9 @@ function DocsPage() {
               <div><span>OUTCOME</span><p>A responsive launch page for the confirmed audience, using approved claims, with one complete conversion flow and passing accessibility checks.</p></div>
             </div>
             <dl className="docs-glossary">
-              <div><dt>Outcome</dt><dd>A specific end state the user wants to make true. One outcome can require many tasks.</dd></div>
-              <div><dt>Task</dt><dd>One action taken toward an outcome. A task describes work; it does not define success.</dd></div>
-              <div><dt>Possible.sh</dt><dd>The open-source library of Outcome Packs, documentation, examples, and evidence.</dd></div>
-              <div><dt>$possible</dt><dd>The installed agent skill that understands a request, recommends an Outcome Pack, and runs it after approval.</dd></div>
-              <div><dt>Outcome Pack</dt><dd>A reviewed contract for one class of outcomes: it names the result, outputs, skills, workstreams, safeguards, and checks without becoming permission for external action.</dd></div>
-              <div><dt>Creative direction</dt><dd>A project-specific visual system derived from its audience, product truth, evidence, assets, and constraints.</dd></div>
-              <div><dt>Remix</dt><dd>Reconsider how an outcome is expressed without changing its promised facts, safeguards, product behavior, or definition of done.</dd></div>
-              <div><dt>Outcome Journey</dt><dd>The retrospective sequence of outcomes completed for one ambition. It becomes visible only after each outcome is verified and the next is recommended from the new reality.</dd></div>
-              <div><dt>Stable pack</dt><dd>An Outcome Pack backed by a preserved end-to-end run and independent verification.</dd></div>
-              <div><dt>Experimental pack</dt><dd>An Outcome Pack available to inspect and test before equivalent preserved evidence exists.</dd></div>
-              <div><dt>Agent skill</dt><dd>A reusable capability that performs focused work during a run.</dd></div>
-              <div><dt>Run</dt><dd>One approved Outcome Pack applied to one project.</dd></div>
-              <div><dt>Workstream</dt><dd>A bounded part of the outcome with named inputs, outputs, ownership, and checks. Independent workstreams may run in parallel.</dd></div>
-              <div><dt>Output</dt><dd>An inspectable artifact or deliverable the run produces. An output is not itself proof that the promised outcome is true.</dd></div>
-              <div><dt>Outcome brief</dt><dd>The durable record of confirmed intent, audience, current reality, constraints, gates, and unknowns.</dd></div>
-              <div><dt>Expectation contract</dt><dd>The frozen acceptance conditions for a run. Expectations describe what must become true; they are not outputs or implementation tasks.</dd></div>
-              <div><dt>Evidence</dt><dd>A preserved observation, file, measurement, test result, or review record linked to an expectation. Evidence supports a claim without replacing the underlying artifact.</dd></div>
-              <div><dt>Outcome Record</dt><dd>The machine-readable index every run produces. It links artifacts, hashes, expectation results, decisions, failures, repairs, approvals, limitations, and fresh verification.</dd></div>
-              <div><dt>Verification</dt><dd>The independent tests, review, measurements, or inspected evidence used to determine whether each active expectation is true.</dd></div>
-              <div><dt>Completion report</dt><dd>The final evidence and status: artifacts created, checks passed or failed, limitations, unproven claims, and external actions not taken.</dd></div>
-              <div><dt>External action</dt><dd>A real-world change—such as deploying, publishing, spending, outreach, or fabrication—that requires separate approval.</dd></div>
+              {glossaryTerms.map(([term, definition]) => <div key={term}><dt>{term}</dt><dd>{definition}</dd></div>)}
             </dl>
+            <a className="docs-text-link" href="/docs/glossary">Open the full glossary →</a>
           </section>
 
           <section id="brainstorm">
@@ -1269,6 +1276,48 @@ function DocsReferencePage() {
   </DocsSimplePage>;
 }
 
+function DocsGlossaryPage() {
+  return <DocsSimplePage
+    active="glossary"
+    label="Glossary"
+    section="REFERENCE / GLOSSARY"
+    eyebrow="REFERENCE"
+    title="The language of complete outcomes."
+    description="Use these terms consistently when you describe an ambition, review a recommendation, inspect an artifact, or decide whether a run is complete."
+    toc={[{ label: "Core terms", href: "#core" }, { label: "Run terms", href: "#run" }, { label: "Proof terms", href: "#proof" }, { label: "Boundary terms", href: "#boundary" }]}
+    next={{ label: "Project files & safety", href: "/docs/reference" }}
+  >
+    <section id="core">
+      <h2>Core terms</h2>
+      <dl className="docs-glossary">
+        {glossaryTerms.slice(0, 10).map(([term, definition]) => <div key={term}><dt>{term}</dt><dd>{definition}</dd></div>)}
+      </dl>
+    </section>
+    <section id="run">
+      <h2>Run terms</h2>
+      <dl className="docs-glossary">
+        {glossaryTerms.slice(10, 16).map(([term, definition]) => <div key={term}><dt>{term}</dt><dd>{definition}</dd></div>)}
+      </dl>
+    </section>
+    <section id="proof">
+      <h2>Proof terms</h2>
+      <dl className="docs-glossary">
+        {glossaryTerms.slice(16, 22).map(([term, definition]) => <div key={term}><dt>{term}</dt><dd>{definition}</dd></div>)}
+      </dl>
+    </section>
+    <section id="boundary">
+      <h2>Boundary term</h2>
+      <dl className="docs-glossary">
+        {glossaryTerms.slice(22).map(([term, definition]) => <div key={term}><dt>{term}</dt><dd>{definition}</dd></div>)}
+      </dl>
+      <aside className="docs-callout docs-callout--warning">
+        <strong>WHEN IN DOUBT</strong>
+        <p>Ask whether you are naming an outcome, describing an output, preserving evidence, or authorizing an external action. Those are different things.</p>
+      </aside>
+    </section>
+  </DocsSimplePage>;
+}
+
 function NotFoundPage() {
   return (
     <main>
@@ -1482,6 +1531,7 @@ export function PossibleSite({ path: requestedPath }: { path?: string }) {
   if (path === "/docs/outcome-packs") return <OutcomePacksDocsPage />;
   if (path === "/docs/expectations") return <ExpectationsDocsPage />;
   if (path === "/docs/reference") return <DocsReferencePage />;
+  if (path === "/docs/glossary") return <DocsGlossaryPage />;
   if (path === "/judging") return <JudgingPage />;
   if (path === "/comparisons/robot-snake") return <RobotSnakeComparisonPage />;
   if (path === "/examples") return <ExamplesPage />;

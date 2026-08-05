@@ -256,6 +256,7 @@ describe("Possible", () => {
       ["/docs/outcome-packs", /Choose a complete outcome/i, "outcome-packs"],
       ["/docs/expectations", /The artifact is not the proof/i, "expectations"],
       ["/docs/reference", /Keep the run inspectable/i, "reference"],
+      ["/docs/glossary", /The language of complete outcomes/i, "glossary"],
     ] as const;
 
     for (const [path, heading, active] of pages) {
