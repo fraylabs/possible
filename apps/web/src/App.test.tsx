@@ -218,6 +218,8 @@ describe("Possible", () => {
     const { container } = renderRoute("/docs");
     expect(screen.getByText(installCommand, { selector: ".docs-command code" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "What happens next" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Copy page" })).toBeInTheDocument();
+    expect(container.querySelector('.docs-context-nav a.is-active[href="/docs"]')).toBeInTheDocument();
     expect(container.querySelector("#next")).toHaveTextContent(/clarify the outcome.*recommend one contract.*wait for your yes/i);
     expect(screen.getByRole("link", { name: /Read the complete workflow/i })).toHaveAttribute("href", "/docs/how-to-use");
     expect(container.querySelector(".docs-glossary")).not.toBeInTheDocument();
@@ -266,6 +268,8 @@ describe("Possible", () => {
       expect(sidebar).toBeInTheDocument();
       expect(sidebar?.querySelector(".docs-mobile-menu")).toBeInTheDocument();
       expect(sidebar?.querySelector(`a.is-active[href*="${active === "overview" ? "/docs" : active}"]`)).toBeInTheDocument();
+      expect(container.querySelector(`.docs-context-nav a.is-active[href="${path}"]`)).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: "Copy page" })).toBeInTheDocument();
       expect(Array.from(sidebar?.querySelectorAll("a") ?? []).every((link) => !link.getAttribute("href")?.includes("#"))).toBe(true);
       for (const href of ["/docs/outcome-packs", "/docs/expectations", "/docs/reference"]) {
         expect(sidebar?.querySelector(`a[href="${href}"]`)).toBeInTheDocument();

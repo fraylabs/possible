@@ -696,7 +696,6 @@ const docsNavGroups: DocsNavGroup[] = [
     label: "GETTING STARTED",
     links: [
       { label: "Overview", href: "/docs", active: "overview" },
-      { label: "How to use Possible", href: "/docs/how-to-use", active: "how-to-use" },
     ],
   },
   {
@@ -707,11 +706,23 @@ const docsNavGroups: DocsNavGroup[] = [
     ],
   },
   {
+    label: "GUIDES",
+    links: [
+      { label: "How to use Possible", href: "/docs/how-to-use", active: "how-to-use" },
+    ],
+  },
+  {
     label: "REFERENCE",
     links: [
       { label: "Project files & safety", href: "/docs/reference", active: "reference" },
       { label: "Glossary", href: "/docs/glossary", active: "glossary" },
+    ],
+  },
+  {
+    label: "EXPLORE",
+    links: [
       { label: "Outcome Pack library ↗", href: "/" },
+      { label: "Examples ↗", href: "/examples" },
     ],
   },
 ];
@@ -764,10 +775,54 @@ function DocsSidebar({ active }: { active: DocsPageKey }) {
   );
 }
 
+const docsContextLinks: Array<{ label: string; href: string; active: DocsPageKey }> = [
+  { label: "Overview", href: "/docs", active: "overview" },
+  { label: "How to use", href: "/docs/how-to-use", active: "how-to-use" },
+  { label: "Outcome Packs", href: "/docs/outcome-packs", active: "outcome-packs" },
+  { label: "Expectations", href: "/docs/expectations", active: "expectations" },
+  { label: "Reference", href: "/docs/reference", active: "reference" },
+  { label: "Glossary", href: "/docs/glossary", active: "glossary" },
+];
+
+function DocsContextNav({ active }: { active: DocsPageKey }) {
+  return (
+    <nav className="docs-context-nav" aria-label="Documentation sections">
+      <div className="docs-context-nav-inner">
+        <span>DOCS</span>
+        {docsContextLinks.map((link) => <a key={link.href} className={link.active === active ? "is-active" : undefined} href={link.href}>{link.label}</a>)}
+      </div>
+    </nav>
+  );
+}
+
+function DocsCopyPageButton() {
+  const [state, setState] = useState<CopyState>("idle");
+
+  async function copyPage() {
+    const article = document.querySelector<HTMLElement>(".docs-article");
+    if (!article) return;
+    try {
+      await navigator.clipboard.writeText(article.innerText);
+      setState("copied");
+      window.setTimeout(() => setState("idle"), 1600);
+    } catch {
+      setState("failed");
+    }
+  }
+
+  return (
+    <button className="docs-copy-page" type="button" onClick={copyPage}>
+      <span aria-hidden="true">▣</span>
+      <span aria-live="polite">{state === "copied" ? "Copied" : state === "failed" ? "Copy failed" : "Copy page"}</span>
+    </button>
+  );
+}
+
 function DocsPage() {
   return (
     <main className="docs-page">
       <SiteNav label="Docs / Getting started" />
+      <DocsContextNav active="overview" />
 
       <div className="docs-shell">
         <DocsSidebar active="overview" />
@@ -776,9 +831,12 @@ function DocsPage() {
           <div className="docs-breadcrumb"><a href="/docs">DOCS</a><span>/</span><strong>GETTING STARTED</strong></div>
 
           <header className="docs-title" id="overview">
-            <p className="eyebrow">GETTING STARTED</p>
-            <h1>Build complete outcomes with Possible</h1>
-            <p>Possible is an open-source library of Outcome Packs for Codex. Install <code>$possible</code>, describe what you want to make, and review the recommended path before any work begins.</p>
+            <div className="docs-title-copy">
+              <p className="eyebrow">GETTING STARTED</p>
+              <h1>Build complete outcomes with Possible</h1>
+              <p>Possible is an open-source library of Outcome Packs for Codex. Install <code>$possible</code>, describe what you want to make, and review the recommended path before any work begins.</p>
+            </div>
+            <DocsCopyPageButton />
           </header>
 
           <aside className="docs-callout docs-callout--info">
@@ -855,6 +913,7 @@ function HowToUsePage() {
   return (
     <main className="docs-page">
       <SiteNav label="Docs / How to use" />
+      <DocsContextNav active="how-to-use" />
 
       <div className="docs-shell">
         <DocsSidebar active="how-to-use" />
@@ -863,9 +922,12 @@ function HowToUsePage() {
           <div className="docs-breadcrumb"><a href="/docs">DOCS</a><span>/</span><strong>HOW TO USE POSSIBLE</strong></div>
 
           <header className="docs-title" id="overview">
-            <p className="eyebrow">USING POSSIBLE</p>
-            <h1>How to use Possible</h1>
-            <p>Possible.sh provides the Outcome Pack library. The installed <code>$possible</code> skill turns human intent into a coordinated, verifiable run.</p>
+            <div className="docs-title-copy">
+              <p className="eyebrow">USING POSSIBLE</p>
+              <h1>How to use Possible</h1>
+              <p>Possible.sh provides the Outcome Pack library. The installed <code>$possible</code> skill turns human intent into a coordinated, verifiable run.</p>
+            </div>
+            <DocsCopyPageButton />
           </header>
 
           <aside className="docs-role-summary" aria-label="Human and Possible responsibilities">
@@ -1002,14 +1064,18 @@ function DocsSimplePage({
   return (
     <main className="docs-page">
       <SiteNav label={`Docs / ${label}`} />
+      <DocsContextNav active={active} />
       <div className="docs-shell">
         <DocsSidebar active={active} />
         <article className="docs-article docs-article--focused">
           <div className="docs-breadcrumb"><a href="/docs">DOCS</a><span>/</span><strong>{section}</strong></div>
           <header className="docs-title" id="overview">
-            <p className="eyebrow">{eyebrow}</p>
-            <h1>{title}</h1>
-            <p>{description}</p>
+            <div className="docs-title-copy">
+              <p className="eyebrow">{eyebrow}</p>
+              <h1>{title}</h1>
+              <p>{description}</p>
+            </div>
+            <DocsCopyPageButton />
           </header>
           {children}
           {next ? <nav className="docs-next" aria-label="Next documentation page"><span>NEXT</span><a href={next.href}>{next.label} <b>→</b></a></nav> : null}
