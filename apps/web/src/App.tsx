@@ -170,8 +170,7 @@ function CreatePage() {
             <h2 id="home-packs-heading">Choose the work.<br /><em>Make it real.</em></h2>
           </div>
           <div className="home-pack-gallery-intro">
-            <p>Browse the reviewed contracts Possible can recommend. Each one turns a rough ambition into coordinated workstreams, safeguards, and proof.</p>
-            <a className="text-link" href="/docs#glossary">How Outcome Packs work ↗</a>
+            <a className="text-link" href="/docs#glossary">How it works ↗</a>
           </div>
         </header>
         <div className="home-pack-gallery-grid" aria-label="Reviewed Outcome Packs">
