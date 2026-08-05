@@ -266,6 +266,7 @@ describe("Possible", () => {
       expect(sidebar).toBeInTheDocument();
       expect(sidebar?.querySelector(".docs-mobile-menu")).toBeInTheDocument();
       expect(sidebar?.querySelector(`a.is-active[href*="${active === "overview" ? "/docs" : active}"]`)).toBeInTheDocument();
+      expect(Array.from(sidebar?.querySelectorAll("a") ?? []).every((link) => !link.getAttribute("href")?.includes("#"))).toBe(true);
       for (const href of ["/docs/outcome-packs", "/docs/expectations", "/docs/reference"]) {
         expect(sidebar?.querySelector(`a[href="${href}"]`)).toBeInTheDocument();
       }

@@ -170,7 +170,7 @@ function CreatePage() {
             <h2 id="home-packs-heading">Choose the work.<br /><em>Make it real.</em></h2>
           </div>
           <div className="home-pack-gallery-intro">
-            <a className="text-link" href="/docs#glossary">How it works ↗</a>
+            <a className="text-link" href="/docs/glossary">How it works ↗</a>
           </div>
         </header>
         <div className="home-pack-gallery-grid" aria-label="Reviewed Outcome Packs">
@@ -697,8 +697,6 @@ const docsNavGroups: DocsNavGroup[] = [
     links: [
       { label: "Overview", href: "/docs", active: "overview" },
       { label: "How to use Possible", href: "/docs/how-to-use", active: "how-to-use" },
-      { label: "Installation", href: "/docs#installation" },
-      { label: "Invoke Possible", href: "/docs#invoke" },
     ],
   },
   {
@@ -713,7 +711,7 @@ const docsNavGroups: DocsNavGroup[] = [
     links: [
       { label: "Project files & safety", href: "/docs/reference", active: "reference" },
       { label: "Glossary", href: "/docs/glossary", active: "glossary" },
-      { label: "Outcome Pack library ↗", href: "/#packs" },
+      { label: "Outcome Pack library ↗", href: "/" },
     ],
   },
 ];
