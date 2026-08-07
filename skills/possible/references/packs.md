@@ -307,7 +307,7 @@ Lane: `launch`
 
 Status: `experimental`.
 
-Source specification: `https://github.com/fraylabs/possible/blob/dev/packages/packs/src/crowdfunding-campaign-readiness.ts`
+Source specification: `https://github.com/fraylabs/possible/blob/dev/packages/packs/src/manifests/crowdfunding-campaign-readiness.json`
 
 Use when a physical product already has measured prototype, manufacturing-readiness, applicable study-boundary, and final-content evidence, and the next decision is whether one crowdfunding package is coherent enough for pre-publication platform review.
 
@@ -641,7 +641,7 @@ Lane: `create`
 
 Status: `experimental`.
 
-Source specification: `https://github.com/fraylabs/possible/blob/dev/packages/packs/src/functional-hardware-prototype.ts`
+Source specification: `https://github.com/fraylabs/possible/blob/dev/packages/packs/src/manifests/functional-hardware-prototype.json`
 
 Use when a selected physical-product concept must become one authentic integrated artifact whose single primary function can be directly measured.
 
@@ -731,7 +731,7 @@ Lane: `launch`
 
 Status: `experimental`.
 
-Source specification: `https://github.com/fraylabs/possible/blob/dev/packages/packs/src/launch-content-package.ts`
+Source specification: `https://github.com/fraylabs/possible/blob/dev/packages/packs/src/manifests/launch-content-package.json`
 
 Use when a real product, prototype, offer, release, event, or announcement already has enough evidence and the missing result is one finite set of finished local content for selected channels.
 
@@ -774,7 +774,7 @@ Lane: `release`
 
 Status: `archived` — historical specification only; use Production Readiness Decision for new work.
 
-Source specification: `https://github.com/fraylabs/possible/blob/dev/packages/packs/src/manufacturing-readiness.ts`
+Source specification: `https://github.com/fraylabs/possible/blob/dev/packages/packs/src/manifests/manufacturing-readiness.json`
 
 Use when one measured physical prototype exists and the next decision is whether its frozen configuration can responsibly be quoted, piloted, manufactured, or promised to customers.
 
@@ -820,7 +820,7 @@ Lane: `create`
 
 Status: `archived` — historical specification only; use Research Protocol Readiness for new work.
 
-Source specification: `https://github.com/fraylabs/possible/blob/dev/packages/packs/src/study-readiness.ts`
+Source specification: `https://github.com/fraylabs/possible/blob/dev/packages/packs/src/manifests/study-readiness.json`
 
 Use when a defined product, intervention, exposure, or workflow has one research hypothesis that must become a protocol package for qualified review before recruitment or data collection.
 
@@ -862,7 +862,7 @@ Lane: `create`
 
 Status: `experimental`.
 
-Source specification: `https://github.com/fraylabs/possible/blob/dev/packages/packs/src/mechanical-cad-review.ts`
+Source specification: `https://github.com/fraylabs/possible/blob/dev/packages/packs/src/manifests/mechanical-cad-review.json`
 
 Use when a passive object, enclosure, fixture, furniture part, or simple mechanism needs a focused CAD package for a 3D-printing or fabrication vendor to quote and critique, but no physical build or measurement has been authorized.
 

@@ -39,7 +39,7 @@ During the brainstorm:
 
 ## Recommend one primary Outcome Pack
 
-After the walkthrough, read [references/packs.md](references/packs.md). If `list_packs` and `compile_pack` are available, use them to check for a newer canonical Outcome Pack definition; otherwise the bundled reference is the runtime source.
+After the walkthrough, read [references/packs.md](references/packs.md). If `list_packs` and `fetch_pack` are available, use them to check for a newer canonical public JSON Outcome Pack definition; otherwise the bundled reference is the runtime source. MCP only distributes public manifests. It never writes project files or handles private packs.
 
 Recommend one primary Outcome Pack for the next independently valuable result. Do not preselect, sequence, or promise future Outcome Packs. When the ambition spans several possible outcomes, choose the nearest outcome that resolves the most important present uncertainty or creates the evidence needed for a later decision. Explain that Possible will reassess what should happen next only after this outcome is verified.
 
@@ -88,9 +88,23 @@ Do not install, edit, create state, or begin execution before a direct confirmat
 
 ## Prepare the run after confirmation
 
+### Project-local Outcome Packs
+
+Project-local packs live under `.possible/packs/<slug>/pack.json` and use the same JSON contract as public packs. Treat them as private unless the manifest explicitly says otherwise; never send them to MCP or include them in a public recommendation. Use the local CLI for lifecycle work:
+
+```text
+possible pack init <slug>
+possible pack validate [<slug-or-path>]
+possible pack compile <slug-or-path>
+possible pack inspect [<slug-or-path>]
+possible pack export <slug-or-path> [output-path]
+```
+
+`draft` packs may be edited and validated but cannot compile or run. A private `reviewed` pack is still not public and does not grant authority. `export` creates a public-review draft without publishing it; a separate review process must accept it before catalog distribution. The selected pack snapshot for a run remains `.possible/pack.json`; it is not the authoring source.
+
 After confirmation:
 
-1. Resolve the selected Outcome Pack from `compile_pack` when available, otherwise use [references/packs.md](references/packs.md).
+1. Resolve the selected Outcome Pack from `fetch_pack` when available, otherwise use [references/packs.md](references/packs.md). Save the exact public JSON manifest and content hash locally before using it. For a private pack, load and validate `.possible/packs/<slug>/pack.json` through the local CLI/compiler.
 2. Show the repo-scoped agent skills, sources, and reviewed revisions selected by the Outcome Pack, then show and run only its listed Skills CLI commands. Install those agent skills into `.agents/skills`; do not modify global skills or overwrite user instructions.
 3. Separately detect any optional agent plugin listed by the Outcome Pack. Plugins provide capabilities but are not installed by the Skills CLI commands: do not claim to install them or silently imitate one that is unavailable. If `@sites` is available, inspect and follow its `$sites-building` and `$sites-hosting` skills; otherwise use the Outcome Pack's reviewed fallback or finish with a completion report that clearly states why the run could not proceed.
 4. Immediately write `.possible/outcome-brief.md` from the confirmed conversation and already-known project facts. Include the audience, desired end state, current reality, constraints, assumptions, interfaces, external-action gates, and unproven claims. Do not delay this durable checkpoint for a broad workspace or agent-skill audit.

@@ -1,78 +1,74 @@
-import { compilePack, getPack, getPackStatus, outcomePacks, validateOutcomeCheckpoint, type OutcomeCheckpoint } from "@possible/packs";
+import { createHash } from "node:crypto";
+import { getCatalogNumber, getPack, getPackStatus, publicOutcomePacks } from "@possible/packs";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod/v4";
 import { errorResult, successResult } from "./result.js";
 
-export const POSSIBLE_TOOL_NAMES = ["list_packs", "compile_pack", "validate_checkpoint"] as const;
-export const POSSIBLE_SERVER_INSTRUCTIONS = "Possible publishes inspectable outcome packs: selected external skills, workstream ownership, integration order, guardrails, and verification. Recommend and compile only active Outcome Packs after fresh user approval; archived packs remain readable historical specifications and must not start new runs. After an outcome finishes, validate its new-reality checkpoint and recommend—but never preselect or execute—the next outcome. Review external sources before installation; pack approval does not authorize external actions.";
+export const POSSIBLE_TOOL_NAMES = ["list_packs", "fetch_pack"] as const;
+export const POSSIBLE_SERVER_INSTRUCTIONS = "Possible MCP is a read-only public Outcome Pack distributor. It lists and fetches exact reviewed JSON manifests with provenance and content hashes. It never writes project files, discovers private packs, compiles or executes packs, approves work, validates checkpoints, or grants authority. The Possible skill and local CLI own project-local pack handling and execution.";
 const READ_ONLY = { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false } as const;
-const candidateOutcomeSchema = z.object({
-  outcome: z.string().trim().min(1),
-  matchingPackSlug: z.string().trim().min(1).optional(),
-  rationale: z.string().trim().min(1),
-  addressesUnknowns: z.array(z.string().trim().min(1)).min(1),
-  testsAssumption: z.string().trim().min(1),
-  approvalRequired: z.literal(true),
-}).passthrough();
-const checkpointSchema = z.object({
-  schemaVersion: z.literal(1),
-  runId: z.string().trim().min(1),
-  packSlug: z.string().trim().min(1),
-  completedAt: z.string().trim().min(1),
-  receiptPath: z.string().trim().min(1),
-  verificationStatus: z.enum(["passed", "partial", "failed"]),
-  becameTrue: z.array(z.object({
-    statement: z.string().trim().min(1),
-    evidence: z.array(z.string().trim().min(1)).min(1),
-  })).min(1),
-  remainingUnknowns: z.array(z.string().trim().min(1)),
-  riskiestAssumption: z.string().trim().min(1),
-  nextDecision: z.string().trim().min(1),
-  candidateNextOutcomes: z.array(candidateOutcomeSchema),
-});
+
+const canonicalJson = (value: unknown): string => {
+  if (Array.isArray(value)) return `[${value.map(canonicalJson).join(",")}]`;
+  if (value !== null && typeof value === "object") {
+    return `{${Object.entries(value as Record<string, unknown>).sort(([left], [right]) => left.localeCompare(right)).map(([key, item]) => `${JSON.stringify(key)}:${canonicalJson(item)}`).join(",")}}`;
+  }
+  return JSON.stringify(value);
+};
+
+const contentHash = (pack: unknown): string => createHash("sha256").update(canonicalJson(pack)).digest("hex");
+const sourceUrl = (slug: string): string => `https://github.com/fraylabs/possible/blob/main/packages/packs/src/manifests/${slug}.json`;
+const reviewUrl = (slug: string): string => `https://possible.sh/packs/${slug}`;
 
 export async function createPossibleServer(): Promise<McpServer> {
   const server = new McpServer({ name: "possible", version: "0.1.0" }, { instructions: POSSIBLE_SERVER_INSTRUCTIONS });
   server.registerTool("list_packs", {
-    title: "List Possible outcome packs",
-    description: "List Possible outcome packs and whether each is stable, experimental, or archived.",
+    title: "List public Possible outcome packs",
+    description: "List public Outcome Pack metadata. Private project-local packs are never exposed by this server.",
     annotations: READ_ONLY,
   }, async () => successResult({
-    packs: outcomePacks.map(({ catalogNumber, slug, lane, name, promise, reviewedAt }) => ({ catalogNumber, slug, lane, name, promise, reviewedAt, status: getPackStatus(slug) })),
+    packs: publicOutcomePacks.map((pack) => ({
+      catalogNumber: getCatalogNumber(pack.slug),
+      slug: pack.slug,
+      packVersion: pack.packVersion,
+      visibility: pack.visibility,
+      lifecycle: pack.lifecycle,
+      lane: pack.lane,
+      name: pack.name,
+      promise: pack.promise,
+      reviewedAt: pack.reviewedAt,
+      status: getPackStatus(pack.slug),
+      contentHash: contentHash(pack),
+      sourceUrl: sourceUrl(pack.slug),
+      reviewUrl: reviewUrl(pack.slug),
+    })),
   }));
-  server.registerTool("compile_pack", {
-    title: "Compile a Possible outcome pack",
-    description: "Return the manifest, install commands, and Codex run prompt for one exact pack.",
+  server.registerTool("fetch_pack", {
+    title: "Fetch a public Possible outcome pack",
+    description: "Return one exact public JSON manifest with its immutable content hash and review provenance. The server never writes it to disk.",
     inputSchema: { slug: z.string().trim().min(1) },
     annotations: READ_ONLY,
   }, async ({ slug }) => {
     const pack = getPack(slug);
-    if (pack === undefined) return errorResult("PACK_NOT_FOUND", `Outcome pack '${slug}' does not exist.`, { slug });
-    if (pack.archived) {
-      return errorResult("PACK_ARCHIVED", `Outcome pack '${slug}' is archived and cannot start a new run.`, {
-        slug,
-        archivedAt: pack.archived.archivedAt,
-        reason: pack.archived.reason,
-        replacementSlugs: pack.archived.replacementSlugs,
-      });
-    }
-    return successResult(compilePack(pack));
-  });
-  server.registerTool("validate_checkpoint", {
-    title: "Validate a Possible outcome checkpoint",
-    description: "Validate one completed outcome's changed reality and non-executable candidate recommendations.",
-    inputSchema: { checkpoint: checkpointSchema },
-    annotations: READ_ONLY,
-  }, async ({ checkpoint }) => {
-    try {
-      return successResult({
-        checkpoint: validateOutcomeCheckpoint(checkpoint as OutcomeCheckpoint),
-        retrospectiveOnly: true,
-        executableNextOutcome: false,
-      });
-    } catch (error) {
-      return errorResult("CHECKPOINT_INVALID", error instanceof Error ? error.message : "Outcome checkpoint is invalid.");
-    }
+    if (pack === undefined || pack.visibility !== "public") return errorResult("PACK_NOT_FOUND", `Public outcome pack '${slug}' does not exist.`, { slug });
+    const hash = contentHash(pack);
+    return successResult({
+      manifest: pack,
+      metadata: {
+        slug: pack.slug,
+        packVersion: pack.packVersion,
+        visibility: pack.visibility,
+        lifecycle: pack.lifecycle,
+        status: getPackStatus(pack.slug),
+        reviewedAt: pack.reviewedAt ?? null,
+        contentHash: hash,
+        immutableRef: `${pack.slug}@${pack.packVersion}#${hash}`,
+        sourceUrl: sourceUrl(pack.slug),
+        reviewUrl: reviewUrl(pack.slug),
+      },
+      writesProjectFiles: false,
+      executable: false,
+    });
   });
   return server;
 }

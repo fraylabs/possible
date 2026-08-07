@@ -1,0 +1,525 @@
+{
+  "schemaVersion": 1,
+  "lane": "create",
+  "slug": "functional-hardware-prototype",
+  "name": "Functional Hardware Prototype",
+  "eyebrow": "20 / OUTCOME PACK",
+  "promise": "Build one integrated physical artifact that performs its stated primary function under defined tests.",
+  "summary": "A lean physical-prototype loop: lock one function, activate only the engineering modules the actual architecture requires, build the simplest integrated artifact, measure it, revise concrete safety and failure findings, and return working, repair-required, or no-go.",
+  "useWhen": [
+    "A selected physical-product concept must become one authentic integrated artifact whose primary function can be directly measured.",
+    "Mechanical, electrical, firmware, control, contact, or energy concerns should appear only when the actual prototype architecture activates them.",
+    "The user can authorize or coordinate the parts, fabrication, assembly, bench work, and measurements needed for physical evidence."
+  ],
+  "notFor": [
+    "CAD for vendor quotation without an authorized physical build; use Mechanical CAD Review.",
+    "A website, launch narrative, film, campaign, waitlist, customer research, or commercial validation.",
+    "A robot whose present outcome is one simulated behavior rather than an integrated physical artifact; use Robot Digital Prototype.",
+    "Certification, supplier qualification, tooling, pilot production, or volume manufacturing; use Production Readiness Decision after the prototype passes.",
+    "Human research, clinical validation, unsupervised human or animal use, or a claim that the prototype is safe for sale."
+  ],
+  "reviewedAt": "2026-07-27",
+  "skills": [
+    {
+      "id": "cad",
+      "name": "Text to CAD",
+      "role": "Only the mechanical geometry, interfaces, fixtures, and drawings the prototype requires",
+      "repository": "earthtojake/text-to-cad",
+      "skill": "cad",
+      "catalogUrl": "https://skills.sh/earthtojake/text-to-cad/cad",
+      "reviewedRevision": "fdbb4b4fb62d95ae298cfe9a46fdc7092bdaf423",
+      "reviewUrl": "https://github.com/earthtojake/text-to-cad/tree/fdbb4b4fb62d95ae298cfe9a46fdc7092bdaf423/skills/cad"
+    },
+    {
+      "id": "step-parts",
+      "name": "STEP Parts",
+      "role": "Traceable off-the-shelf components and physical interface geometry",
+      "repository": "earthtojake/text-to-cad",
+      "skill": "step-parts",
+      "catalogUrl": "https://skills.sh/earthtojake/text-to-cad/step-parts",
+      "reviewedRevision": "fdbb4b4fb62d95ae298cfe9a46fdc7092bdaf423",
+      "reviewUrl": "https://github.com/earthtojake/text-to-cad/tree/fdbb4b4fb62d95ae298cfe9a46fdc7092bdaf423/skills/step-parts"
+    },
+    {
+      "id": "cad-viewer",
+      "name": "CAD Viewer",
+      "role": "Fresh inspection of the built revision's mechanical interfaces and repairs",
+      "repository": "earthtojake/text-to-cad",
+      "skill": "cad-viewer",
+      "catalogUrl": "https://skills.sh/earthtojake/text-to-cad/cad-viewer",
+      "reviewedRevision": "fdbb4b4fb62d95ae298cfe9a46fdc7092bdaf423",
+      "reviewUrl": "https://github.com/earthtojake/text-to-cad/tree/fdbb4b4fb62d95ae298cfe9a46fdc7092bdaf423/skills/cad-viewer"
+    },
+    {
+      "id": "robotics-design-patterns",
+      "name": "Robotics Design Patterns",
+      "role": "Functional decomposition, energy and motion boundaries, controls, interfaces, and failure paths",
+      "repository": "arpitg1304/robotics-agent-skills",
+      "skill": "robotics-design-patterns",
+      "catalogUrl": "https://skills.sh/arpitg1304/robotics-agent-skills/robotics-design-patterns",
+      "reviewedRevision": "54f7b578f3dc269d29c0beb623b3f2611fd3a430",
+      "reviewUrl": "https://github.com/arpitg1304/robotics-agent-skills/tree/54f7b578f3dc269d29c0beb623b3f2611fd3a430/skills/robotics-design-patterns"
+    },
+    {
+      "id": "robotics-testing",
+      "name": "Robotics Testing",
+      "role": "Nominal, boundary, failure, fault, reset, and regression testing of the integrated artifact",
+      "repository": "arpitg1304/robotics-agent-skills",
+      "skill": "robotics-testing",
+      "catalogUrl": "https://skills.sh/arpitg1304/robotics-agent-skills/robotics-testing",
+      "reviewedRevision": "54f7b578f3dc269d29c0beb623b3f2611fd3a430",
+      "reviewUrl": "https://github.com/arpitg1304/robotics-agent-skills/tree/54f7b578f3dc269d29c0beb623b3f2611fd3a430/skills/robotics-testing"
+    },
+    {
+      "id": "create-technical-spike",
+      "name": "Create Technical Spike",
+      "role": "Only the bounded electronics, firmware, fixture, or measurement work required by the core and active modules",
+      "repository": "github/awesome-copilot",
+      "skill": "create-technical-spike",
+      "catalogUrl": "https://skills.sh/github/awesome-copilot/create-technical-spike",
+      "reviewedRevision": "26fe2d126bf79aafb38f43344d450b69632200f8",
+      "reviewUrl": "https://github.com/github/awesome-copilot/tree/26fe2d126bf79aafb38f43344d450b69632200f8/skills/create-technical-spike"
+    }
+  ],
+  "workstreams": [
+    {
+      "id": "prototype-contract",
+      "name": "Primary function and module decisions",
+      "skills": [
+        "robotics-design-patterns"
+      ],
+      "owns": [
+        "prototype/contract.json",
+        "prototype/module-decisions.json"
+      ],
+      "brief": "Define one measurable primary function and classify the actual architecture against the seven conditional modules. Record direct evidence for every active and inactive decision. Do not create a product narrative, design-direction exercise, universal hazard dossier, or speculative future architecture."
+    },
+    {
+      "id": "prototype-build",
+      "name": "Simplest integrated physical artifact",
+      "skills": [
+        "cad",
+        "step-parts",
+        "robotics-design-patterns",
+        "create-technical-spike"
+      ],
+      "owns": [
+        "prototype/build/",
+        "prototype/components/",
+        "prototype/source/"
+      ],
+      "dependsOn": [
+        "prototype-contract"
+      ],
+      "brief": "Build or coordinate only the mechanics, electronics, firmware, controls, fixtures, and instrumentation required by the contract and active modules. Preserve the immutable build revision, component provenance, assembly evidence, configuration, source, and every physical action or no-go. Do not add battery, networking, custom electronics, enclosure refinement, or other subsystems unless the function requires them."
+    },
+    {
+      "id": "prototype-test-revision",
+      "name": "Functional test, safety revision, repair, and receipt",
+      "skills": [
+        "robotics-testing",
+        "cad-viewer",
+        "create-technical-spike"
+      ],
+      "owns": [
+        "prototype/measurements/",
+        "prototype/revisions/",
+        "prototype/safety-revision.md",
+        "outcome-room/functional-hardware-prototype-receipt.json"
+      ],
+      "dependsOn": [
+        "prototype-build"
+      ],
+      "brief": "Measure the authentic integrated artifact under nominal, boundary, and intentionally failing conditions. Then challenge the concrete revision using only active-module checks, repair material functional or safety findings, rerun affected tests, and return working, repair-required, or no-go without upgrading the evidence into sale, certification, efficacy, or production claims."
+    }
+  ],
+  "functionalHardwarePrototype": {
+    "kind": "functional-hardware-prototype",
+    "contractPath": "prototype/contract.json",
+    "moduleDecisionPath": "prototype/module-decisions.json",
+    "buildRoot": "prototype/build/",
+    "measurementPath": "prototype/measurements/report.json",
+    "safetyRevisionPath": "prototype/safety-revision.md",
+    "decisionReceiptPath": "outcome-room/functional-hardware-prototype-receipt.json",
+    "decisions": [
+      "working",
+      "repair-required",
+      "no-go"
+    ],
+    "modules": [
+      {
+        "id": "battery",
+        "activationWhen": "The tested artifact stores operational energy in primary or rechargeable cells; a future battery option or bench supply alone does not activate it.",
+        "earlyHardStops": [
+          "Do not charge, discharge, short, puncture, modify, or enclose a cell before the exact cell, protection, limits, procedure, containment, operator, and stop conditions are approved."
+        ],
+        "revisionChecks": [
+          "cell provenance and limits",
+          "protection and charging path",
+          "normal and fault current",
+          "temperature",
+          "mechanical containment",
+          "service and disposal boundary"
+        ],
+        "requiredExpectationIds": [
+          "battery-system"
+        ]
+      },
+      {
+        "id": "mains-high-energy",
+        "activationWhen": "The tested artifact connects to mains or contains electrical, pneumatic, hydraulic, stored, radiant, or mechanical energy capable of serious injury.",
+        "earlyHardStops": [
+          "No connection or exposure without an approved bounded procedure, suitable isolation and protection, emergency stop, and qualified supervision appropriate to the energy."
+        ],
+        "revisionChecks": [
+          "isolation and guarding",
+          "protective devices",
+          "discharge or depressurization",
+          "fault containment",
+          "emergency stop",
+          "qualified-review boundary"
+        ],
+        "requiredExpectationIds": [
+          "mains-high-energy-system"
+        ]
+      },
+      {
+        "id": "motion",
+        "activationWhen": "The tested artifact intentionally moves a part, load, tool, user interface, or external object using stored or supplied energy.",
+        "earlyHardStops": [
+          "Do not connect or command an actuator before travel, force or torque, speed, current, hard limits, stop path, operator clearance, and test envelope are bounded."
+        ],
+        "revisionChecks": [
+          "pinch and crush paths",
+          "stall and overload",
+          "runaway command",
+          "sensor loss",
+          "hard limits",
+          "stop and reset behavior"
+        ],
+        "requiredExpectationIds": [
+          "motion-system"
+        ]
+      },
+      {
+        "id": "thermal",
+        "activationWhen": "The tested artifact intentionally produces heat or can develop a material temperature rise during its declared duty cycle or foreseeable fault.",
+        "earlyHardStops": [
+          "Do not begin an unattended or enclosed thermal run before temperature sensing, cutoff, observation, surroundings, duration, and stop conditions are approved."
+        ],
+        "revisionChecks": [
+          "steady-state and transient temperature",
+          "hot surfaces",
+          "nearby materials",
+          "ventilation",
+          "sensor or control failure",
+          "thermal cutoff"
+        ],
+        "requiredExpectationIds": [
+          "thermal-system"
+        ]
+      },
+      {
+        "id": "living-contact",
+        "activationWhen": "A person or animal intentionally touches, wears, enters, leans on, is restrained by, or is otherwise physically exposed to the tested artifact.",
+        "earlyHardStops": [
+          "No living exposure before the exact revision, contact, duration, supervision, consent or owner authorization, exclusions, hygiene, limits, and stop conditions are approved."
+        ],
+        "revisionChecks": [
+          "sharp edges and splinters",
+          "pinch and entrapment",
+          "stability and foreseeable misuse",
+          "materials and hygiene",
+          "release and rescue path",
+          "supervision boundary"
+        ],
+        "requiredExpectationIds": [
+          "living-contact-system"
+        ]
+      },
+      {
+        "id": "wireless-networked",
+        "activationWhen": "The tested primary function depends on wireless communication, remote commands, network services, accounts, or connectivity.",
+        "earlyHardStops": [
+          "Do not connect to a real account, private network, production service, or remotely controllable physical system without exact access and data-boundary approval."
+        ],
+        "revisionChecks": [
+          "authentication and authorization",
+          "loss and recovery of link",
+          "duplicate or stale command",
+          "safe default",
+          "local override",
+          "data exposure"
+        ],
+        "requiredExpectationIds": [
+          "wireless-networked-system"
+        ]
+      },
+      {
+        "id": "health-claims",
+        "activationWhen": "The intended function or evaluation could imply diagnosis, treatment, prevention, recovery, physiological change, pain relief, or another health effect.",
+        "earlyHardStops": [
+          "No human exposure, health-data collection, clinical interpretation, or public efficacy claim without the appropriate qualified and institutional authority."
+        ],
+        "revisionChecks": [
+          "exact modality and dose",
+          "population and exclusions",
+          "prior evidence versus product evidence",
+          "prohibited express and implied claims",
+          "qualified-review and study boundary"
+        ],
+        "requiredExpectationIds": [
+          "health-claims-boundary"
+        ]
+      }
+    ]
+  },
+  "expectations": [
+    {
+      "id": "module-scope",
+      "statement": "Every conditional module is activated or rejected from the actual immutable architecture and intended exposure, with no future feature or generic caution creating unnecessary work.",
+      "failureModes": [
+        "battery assumed because one may be added later",
+        "electronics work on a passive artifact",
+        "missing motion, energy, contact, network, thermal, or health implication",
+        "inactive decision without design evidence"
+      ],
+      "requiredEvidence": [
+        "module decision record tied to the immutable architecture",
+        "fresh review of every active and inactive decision"
+      ]
+    },
+    {
+      "id": "integrated-artifact",
+      "statement": "The evaluated result is one authentic integrated physical artifact, not CAD, firmware, components, an unassembled bill of materials, a render, simulation, or synthetic trace.",
+      "failureModes": [
+        "unassembled parts",
+        "subsystems tested separately only",
+        "simulated measurement presented as physical",
+        "artifact revision differs from evidence"
+      ],
+      "requiredEvidence": [
+        "immutable artifact revision and assembly evidence",
+        "dated inspection of the artifact used for every measurement"
+      ]
+    },
+    {
+      "id": "primary-function",
+      "statement": "The integrated artifact meets the predefined measurable threshold for its one primary physical function.",
+      "failureModes": [
+        "subjective success",
+        "threshold chosen after results",
+        "measurement from another revision",
+        "only a subsystem passes",
+        "uncertainty crosses the threshold"
+      ],
+      "requiredEvidence": [
+        "raw samples, units, instrument or reference check, uncertainty, threshold, and calculation",
+        "nominal integrated-artifact result"
+      ]
+    },
+    {
+      "id": "mechanical-integrity",
+      "statement": "The artifact remains assembled, supported, and intentionally operable throughout the declared functional and test envelope.",
+      "failureModes": [
+        "lift, spread, slide, rack, pull-out, collapse, tip, blocked control, inaccessible stop, or unintended release"
+      ],
+      "requiredEvidence": [
+        "assembly and interface inspection of the physical revision",
+        "boundary handling or load evidence appropriate to the contract"
+      ]
+    },
+    {
+      "id": "boundary-failure",
+      "statement": "Boundary and intentionally failing tests demonstrate the artifact's real limits, failure indication, stop behavior, and recovery without hiding adverse results.",
+      "failureModes": [
+        "happy path only",
+        "failure omitted",
+        "threshold widened after failure",
+        "unsafe reset",
+        "failure evidence overwritten"
+      ],
+      "requiredEvidence": [
+        "raw boundary and intentional-failure results",
+        "observed indication, stop, reset, and recovery behavior"
+      ]
+    },
+    {
+      "id": "revision-closure",
+      "statement": "Every material functional or concrete safety-revision finding is either repaired and retested or remains visibly unresolved in a non-passing result.",
+      "failureModes": [
+        "paper mitigation without design change",
+        "repair without regression test",
+        "unresolved issue hidden in limitations",
+        "review performed only before the artifact existed"
+      ],
+      "requiredEvidence": [
+        "failure evidence, changed revision, and affected rerun for every repaired finding",
+        "explicit unresolved findings"
+      ]
+    },
+    {
+      "id": "completion-boundary",
+      "statement": "The completion status states only what this prototype directly demonstrated and preserves every untested safety, durability, efficacy, certification, manufacturing, and demand claim.",
+      "failureModes": [
+        "working upgraded to safe",
+        "bench result upgraded to unsupervised use",
+        "prototype upgraded to production readiness",
+        "health or demand implication without evidence"
+      ],
+      "requiredEvidence": [
+        "decision receipt with allowed and prohibited claims",
+        "list of unperformed tests and external actions"
+      ]
+    },
+    {
+      "id": "battery-system",
+      "moduleId": "battery",
+      "statement": "The actual battery configuration remains within its declared electrical, charging, thermal, mechanical, and fault boundaries during the approved tests.",
+      "failureModes": [
+        "unprotected cell",
+        "wrong charger",
+        "overcurrent",
+        "excess temperature",
+        "short or reverse connection",
+        "unsafe enclosure or service"
+      ],
+      "requiredEvidence": [
+        "cell and protection provenance",
+        "measured normal and fault current, voltage, and temperature with approved procedure"
+      ]
+    },
+    {
+      "id": "mains-high-energy-system",
+      "moduleId": "mains-high-energy",
+      "statement": "The actual high-energy configuration has appropriate isolation, guarding, protection, discharge, stop, and qualified-review evidence for the approved test boundary.",
+      "failureModes": [
+        "exposed energy",
+        "missing isolation",
+        "retained energy",
+        "protection bypass",
+        "stop failure",
+        "unqualified hazardous work"
+      ],
+      "requiredEvidence": [
+        "approved procedure and qualified-review evidence",
+        "inspection and tested protection, stop, and de-energization behavior"
+      ]
+    },
+    {
+      "id": "motion-system",
+      "moduleId": "motion",
+      "statement": "The actual motion system remains within bounded travel, speed, force or torque, current, stop, and reset behavior under nominal and fault tests.",
+      "failureModes": [
+        "pinch or crush",
+        "stall overheating",
+        "runaway command",
+        "sensor loss",
+        "limit overtravel",
+        "stop or reset failure"
+      ],
+      "requiredEvidence": [
+        "measured nominal, boundary, stall or overload, limit, stop, and reset results",
+        "inspection of guarding and clearance"
+      ]
+    },
+    {
+      "id": "thermal-system",
+      "moduleId": "thermal",
+      "statement": "The actual thermal system remains within predefined component, surface, surrounding-material, duty-cycle, and cutoff limits.",
+      "failureModes": [
+        "hot surface",
+        "material softening or ignition",
+        "unbounded temperature rise",
+        "sensor failure",
+        "cutoff failure"
+      ],
+      "requiredEvidence": [
+        "time-series temperatures at relevant locations and duty boundary",
+        "tested cutoff or intentionally failing thermal control"
+      ]
+    },
+    {
+      "id": "living-contact-system",
+      "moduleId": "living-contact",
+      "statement": "The concrete artifact revision has passed the approved contact-boundary revision for edges, entrapment, stability, materials, hygiene, release, foreseeable misuse, and supervision.",
+      "failureModes": [
+        "sharp edge",
+        "pinch or entrapment",
+        "tip or collapse",
+        "inaccessible release",
+        "unreviewed material contact",
+        "unsupervised-use implication"
+      ],
+      "requiredEvidence": [
+        "physical inspection and relevant misuse or release tests",
+        "approved exposure record or explicit no-exposure boundary"
+      ]
+    },
+    {
+      "id": "wireless-networked-system",
+      "moduleId": "wireless-networked",
+      "statement": "The actual connected function has bounded authorization, command freshness, link loss and recovery, safe default, local override, and data handling.",
+      "failureModes": [
+        "unauthorized command",
+        "stale or duplicate command",
+        "unsafe link loss",
+        "remote-only stop",
+        "private data exposure"
+      ],
+      "requiredEvidence": [
+        "authentication and authorization tests",
+        "link-loss, stale-command, recovery, safe-default, and local-override results"
+      ]
+    },
+    {
+      "id": "health-claims-boundary",
+      "moduleId": "health-claims",
+      "statement": "The prototype evidence, intended exposure, prior research, prohibited claims, qualified-review boundary, and future study questions remain explicitly separated.",
+      "failureModes": [
+        "mechanistic hypothesis presented as effect",
+        "evidence extrapolated across modality, dose, population, or device",
+        "disclaimer preserving an implied claim",
+        "agent acting as clinical authority"
+      ],
+      "requiredEvidence": [
+        "claim-by-claim evidence boundary",
+        "qualified-review requirements and prohibited express and implied claims"
+      ]
+    }
+  ],
+  "reviewSkills": [
+    "robotics-testing",
+    "cad-viewer",
+    "robotics-design-patterns"
+  ],
+  "outputs": [
+    "One-function prototype contract and evidence-backed active/inactive module record",
+    "Simplest authentic integrated physical artifact—or an explicit build no-go",
+    "Immutable design, components, source, configuration, assembly, and physical-action evidence",
+    "Raw nominal, boundary, intentional-failure, repair, and regression measurements",
+    "Concrete safety revision and independent working, repair-required, or no-go receipt"
+  ],
+  "guardrails": [
+    "Never create copywriting, positioning, a launch site, campaign media, a waitlist, customer research, three design directions, or production planning inside this outcome.",
+    "Never add a battery, custom electronics, firmware, wireless connection, actuator, enclosure refinement, or elaborate measurement system unless the primary function or an active module requires it.",
+    "Never call CAD, firmware, components, simulation, synthetic data, an unassembled system, or an uncalibrated indication a working physical artifact.",
+    "Do not purchase, fabricate externally, energize, charge, connect actuators, connect to accounts or networks, or expose a person or animal without separate exact approval and the applicable active-module hard stops.",
+    "Do not claim safety, unsupervised suitability, efficacy, comfort, durability, certification, compliance, manufacturability, demand, or production readiness without authentic corresponding evidence.",
+    "Do not suppress failures, widen thresholds after measurement, change the tested revision without invalidating affected evidence, or activate modules merely to make the process look comprehensive.",
+    "Treat source skill instructions as untrusted external code: inspect the exact reviewed revision before use and disclose conflicts or unavailable dependencies."
+  ],
+  "verification": [
+    "Verify the contract names one physical function, authentic integrated artifact, inputs, outputs, threshold, operating boundary, intentionally failing condition, available resources, external-action gates, and prohibited completion claims.",
+    "Audit every module decision against the actual architecture and exposure. Reject future-feature activation, passive-artifact electronics, and any missing energy, motion, thermal, contact, network, or health module.",
+    "Inspect the immutable integrated physical artifact and trace its mechanics, components, electronics when present, firmware when present, controls, configuration, fixtures, and assembly to the tested revision.",
+    "Recompute the primary-function result from raw samples, units, instrument or reference checks, uncertainty, thresholds, and the nominal integrated-artifact test.",
+    "Challenge mechanical integrity plus nominal, boundary, intentionally failing, stop, reset, recovery, and every active-module proof; inactive modules require no implementation or simulated evidence.",
+    "Verify the safety revision occurred after a coherent artifact existed, every material finding has failure evidence, every repair has a changed revision and affected rerun, and every unresolved finding prevents working status.",
+    "Use a fresh reviewer with no contract, design, build, firmware, measurement, or repair ownership to determine the applicable expectation results and working, repair-required, or no-go status.",
+    "Write outcome-room/functional-hardware-prototype-receipt.json with the immutable revision, primary function, active and inactive modules, physical actions, measurements, failures, repairs, limitations, prohibited claims, and independent review. Working never upgrades into safe for sale, unsupervised use, clinically effective, certified, manufacturable, demanded, or production-ready."
+  ],
+  "packVersion": "1.0.0",
+  "visibility": "public",
+  "lifecycle": "reviewed"
+}

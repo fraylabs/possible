@@ -213,6 +213,8 @@ export interface ArchivedPackMetadata {
 }
 
 export type PackStatus = "stable" | "experimental" | "archived";
+export type PackVisibility = "private" | "public";
+export type PackLifecycle = "draft" | "reviewed" | "archived";
 
 export interface DecisionRationaleContract {
   kind: "evidence-backed-product-decisions";
@@ -250,8 +252,9 @@ export type PackLane = "create" | "launch" | "release" | "operate";
 
 export interface OutcomePack {
   schemaVersion: 1;
-  catalogNumber: number;
-  /** Internal catalog metadata retained for registry compatibility; it never changes run semantics. */
+  packVersion: string;
+  visibility: PackVisibility;
+  lifecycle: PackLifecycle;
   lane: PackLane;
   slug: string;
   name: string;
@@ -260,7 +263,7 @@ export interface OutcomePack {
   summary: string;
   useWhen: string[];
   notFor: string[];
-  reviewedAt: string;
+  reviewedAt?: string;
   artifactRoot?: string;
   schedule?: ScheduleContract;
   skills: SkillSource[];

@@ -54,3 +54,34 @@ test("init exits non-zero and explains a conflict without overwriting it", async
   );
   assert.equal(await readFile(conflict, "utf8"), "keep me\n");
 });
+
+test("pack init and validate create a private JSON authoring surface", async () => {
+  const project = await projectFixture();
+  const init = await execute(process.execPath, [cli, "pack", "init", "cat-house"], { cwd: project });
+  assert.match(init.stdout, /Created draft private pack/);
+  const manifestPath = join(project, ".possible", "packs", "cat-house", "pack.json");
+  const manifest = JSON.parse(await readFile(manifestPath, "utf8"));
+  assert.deepEqual({ visibility: manifest.visibility, lifecycle: manifest.lifecycle, slug: manifest.slug }, { visibility: "private", lifecycle: "draft", slug: "cat-house" });
+
+  const validation = await execute(process.execPath, [cli, "pack", "validate", "cat-house"], { cwd: project });
+  assert.match(validation.stdout, /"valid": true/);
+  await assert.rejects(
+    execute(process.execPath, [cli, "pack", "compile", "cat-house"], { cwd: project }),
+    (error) => error.code === 1 && /must be reviewed before compilation/.test(error.stderr),
+  );
+});
+
+test("pack export creates a public-review draft without publishing it", async () => {
+  const project = await projectFixture();
+  const source = JSON.parse(await readFile(resolve(packageRoot, "..", "..", "packages", "packs", "src", "manifests", "playable-web-game.json"), "utf8"));
+  source.visibility = "private";
+  source.lifecycle = "reviewed";
+  await mkdir(join(project, ".possible", "packs", "playable-web-game"), { recursive: true });
+  await writeFile(join(project, ".possible", "packs", "playable-web-game", "pack.json"), `${JSON.stringify(source, null, 2)}\n`);
+
+  const result = await execute(process.execPath, [cli, "pack", "export", "playable-web-game"], { cwd: project });
+  assert.match(result.stdout, /public-review draft/);
+  const exported = JSON.parse(await readFile(join(project, ".possible", "exports", "playable-web-game-1.0.0", "pack.json"), "utf8"));
+  assert.deepEqual({ visibility: exported.visibility, lifecycle: exported.lifecycle }, { visibility: "public", lifecycle: "draft" });
+  assert.equal("reviewedAt" in exported, false);
+});

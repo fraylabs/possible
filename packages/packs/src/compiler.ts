@@ -941,6 +941,7 @@ export function recordOutcomeJourney(originalAmbition: string, completedOutcomes
 }
 
 export function compilePack(pack: OutcomePack): CompiledPack {
+  if (pack.lifecycle === "draft") throw new Error(`Outcome pack '${pack.slug}' is a draft and must be reviewed before compilation`);
   return {
     pack,
     installCommands: compileInstallCommands(pack),

@@ -1,4 +1,5 @@
 import { mkdir, writeFile } from "node:fs/promises";
+import { createHash } from "node:crypto";
 import { archivedOutcomePacks, compilePack, getPackStatus, stableOutcomePacks } from "@possible/packs";
 
 const publicArchiveSlugs = new Set([
@@ -62,7 +63,7 @@ const evidenceManifest = {
   judgingCriteria: [
     {
       criterion: "Technological Implementation",
-      claim: "Typed Outcome Packs coordinate execution and verification.",
+      claim: "JSON Outcome Packs coordinate execution and verification.",
       implementationFact: "The compiler converts manifests into skill installs, owned workstreams, approval gates, and completion requirements.",
       significance: "One contract governs the run from preparation through verification.",
       evidence: {
@@ -87,7 +88,7 @@ const evidenceManifest = {
       significance: "One rough request can start multidisciplinary work outside existing expertise.",
       evidence: {
         label: "Robot Prototype pack",
-        url: "https://github.com/fraylabs/possible/blob/main/packages/packs/src/robot-prototype.ts",
+        url: "https://github.com/fraylabs/possible/blob/main/packages/packs/src/manifests/robot-prototype.json",
       },
     },
     {
@@ -137,6 +138,12 @@ const evidenceManifest = {
 
 const outputRoot = new URL("../out/", import.meta.url);
 const json = (value) => `${JSON.stringify(value, null, 2)}\n`;
+const canonicalJson = (value) => Array.isArray(value)
+  ? `[${value.map(canonicalJson).join(",")}]`
+  : value !== null && typeof value === "object"
+    ? `{${Object.entries(value).sort(([left], [right]) => left.localeCompare(right)).map(([key, item]) => `${JSON.stringify(key)}:${canonicalJson(item)}`).join(",")}}`
+    : JSON.stringify(value);
+const contentHash = (pack) => createHash("sha256").update(canonicalJson(pack)).digest("hex");
 const write = async (relativePath, contents) => {
   const target = new URL(relativePath, outputRoot);
   await mkdir(new URL("./", target), { recursive: true });
@@ -152,14 +159,18 @@ for (const pack of publishedPacks) {
 
 await write("packs/index.json", json({
   schemaVersion: 1,
-  packs: publishedPacks.map(({ slug, lane, name, promise, summary, reviewedAt }) => ({
-    slug,
-    lane,
-    name,
-    promise,
-    summary,
-    reviewedAt,
-    status: getPackStatus(slug),
+  packs: publishedPacks.map((pack) => ({
+    packVersion: pack.packVersion,
+    slug: pack.slug,
+    visibility: pack.visibility,
+    lifecycle: pack.lifecycle,
+    lane: pack.lane,
+    name: pack.name,
+    promise: pack.promise,
+    summary: pack.summary,
+    reviewedAt: pack.reviewedAt,
+    status: getPackStatus(pack.slug),
+    contentHash: contentHash(pack),
   })),
 }));
 
@@ -178,7 +189,7 @@ await write("llms.txt", [
   "",
   "/goal provides dynamic pursuit. Possible provides the reviewed outcome contract. Possible defines the multidisciplinary completion target; /goal can sustain and adapt its execution.",
   "",
-  "Possible.sh is an open-source library of Outcome Packs for Codex. Each typed specification coordinates selected agent skills, owned workstreams, shared constraints, approval boundaries, and the evidence required for completion.",
+  "Possible.sh is an open-source library of Outcome Packs for Codex. Each JSON specification coordinates selected agent skills, owned workstreams, shared constraints, approval boundaries, and the evidence required for completion.",
   "",
   "- Homepage: https://possible.sh/",
   "- Human documentation: /docs/",

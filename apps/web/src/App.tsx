@@ -2,7 +2,7 @@
 
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import type { KeyboardEvent as ReactKeyboardEvent, ReactNode } from "react";
-import { compilePack, getPack, getPackStatus } from "@possible/packs";
+import { compilePack, getCatalogNumber, getPack, getPackStatus } from "@possible/packs";
 import type { OutcomePack } from "@possible/packs";
 import { exampleCatalog, getExample } from "./example-content";
 import type { PossibleExample } from "./example-content";
@@ -178,7 +178,7 @@ function CreatePage() {
         </div>
         <div className="home-pack-gallery-footer">
           <span>{routablePacks.length} PACKS IN CATALOG</span>
-          <a href={`${githubUrl}/tree/main/packages/packs/src`} target="_blank" rel="noreferrer">Inspect the source ↗</a>
+          <a href={`${githubUrl}/tree/main/packages/packs/src/manifests`} target="_blank" rel="noreferrer">Inspect the JSON source ↗</a>
         </div>
       </section>
 
@@ -201,7 +201,7 @@ function PackCard({ pack }: { pack: OutcomePack }) {
     <a className={`pack-card pack-card--visual pack-card--${pack.slug}`} href={`/packs/${pack.slug}`}>
       <div className="pack-card-preview" aria-hidden="true">
         <div className="pack-preview-art">
-          <div className="pack-preview-toolbar"><span>{String(pack.catalogNumber).padStart(2, "0")}</span><span>OUTCOME / {preview.label}</span><b>↗</b></div>
+          <div className="pack-preview-toolbar"><span>{String(getCatalogNumber(pack.slug)).padStart(2, "0")}</span><span>OUTCOME / {preview.label}</span><b>↗</b></div>
           <div className="pack-preview-composition"><i /><i /><i /></div>
           <strong>{preview.mark}</strong>
           <span className="pack-preview-caption">{preview.caption}</span>
@@ -229,12 +229,12 @@ function PackCard({ pack }: { pack: OutcomePack }) {
 function PackDetailPage({ pack }: { pack: OutcomePack }) {
   const compiled = compilePack(pack);
   const status = getPackStatus(pack.slug) ?? (pack.archived ? "archived" : "experimental");
-  const reviewedLabel = new Date(`${pack.reviewedAt}T00:00:00Z`).toLocaleDateString("en-US", {
+  const reviewedLabel = pack.reviewedAt ? new Date(`${pack.reviewedAt}T00:00:00Z`).toLocaleDateString("en-US", {
     month: "short",
     day: "numeric",
     year: "numeric",
     timeZone: "UTC",
-  });
+  }) : "Not reviewed";
   const sections = [
     ["overview", "Overview"],
     ["fit", "Fit"],
@@ -286,7 +286,7 @@ function PackDetailPage({ pack }: { pack: OutcomePack }) {
                       <li key={slug}>
                         {publishedReplacement
                           ? <a href={`/packs/${slug}`}>{replacement?.name ?? slug}</a>
-                          : <a href={`${githubUrl}/blob/dev/packages/packs/src/${slug}.ts`}>{replacement?.name ?? slug}</a>}
+                          : <a href={`${githubUrl}/blob/dev/packages/packs/src/manifests/${slug}.json`}>{replacement?.name ?? slug}</a>}
                       </li>
                     );
                   })}
@@ -689,7 +689,7 @@ function ExamplesPage({ activeSlug }: { activeSlug?: string }) {
   );
 }
 
-type DocsPageKey = "overview" | "how-to-use" | "outcome-packs" | "expectations" | "reference" | "glossary";
+type DocsPageKey = "overview" | "how-to-use" | "outcome-packs" | "expectations" | "authoring" | "reference" | "glossary";
 type DocsNavGroup = { label: string; links: Array<{ label: string; href: string; active?: DocsPageKey }> };
 const docsNavGroups: DocsNavGroup[] = [
   {
@@ -709,6 +709,7 @@ const docsNavGroups: DocsNavGroup[] = [
     label: "GUIDES",
     links: [
       { label: "How to use Possible", href: "/docs/how-to-use", active: "how-to-use" },
+      { label: "Author an Outcome Pack", href: "/docs/authoring", active: "authoring" },
     ],
   },
   {
@@ -780,6 +781,7 @@ const docsContextLinks: Array<{ label: string; href: string; active: DocsPageKey
   { label: "How to use", href: "/docs/how-to-use", active: "how-to-use" },
   { label: "Outcome Packs", href: "/docs/outcome-packs", active: "outcome-packs" },
   { label: "Expectations", href: "/docs/expectations", active: "expectations" },
+  { label: "Authoring", href: "/docs/authoring", active: "authoring" },
   { label: "Reference", href: "/docs/reference", active: "reference" },
   { label: "Glossary", href: "/docs/glossary", active: "glossary" },
 ];
@@ -1148,6 +1150,80 @@ function OutcomePacksDocsPage() {
   </DocsSimplePage>;
 }
 
+function AuthoringDocsPage() {
+  return <DocsSimplePage
+    active="authoring"
+    label="Author an Outcome Pack"
+    section="GUIDES / AUTHORING OUTCOME PACKS"
+    eyebrow="GUIDE"
+    title="Write the contract in JSON."
+    description="A project-local Outcome Pack is a private, declarative contract for one observable result. Start with a draft, validate it locally, and request review before it can compile or run."
+    toc={[{ label: "Where packs live", href: "#where" }, { label: "Minimal shape", href: "#shape" }, { label: "Authoring workflow", href: "#workflow" }, { label: "Review boundary", href: "#review" }]}
+    next={{ label: "Expectations & evidence", href: "/docs/expectations" }}
+  >
+    <section id="where">
+      <h2>Where packs live</h2>
+      <p>Keep private project packs inside the project that owns them. MCP only distributes public manifests; it never discovers or writes private packs.</p>
+      <pre className="docs-code-block"><code>{`.possible/
+  packs/
+    my-pack/
+      pack.json
+      README.md
+      fixtures/`}</code></pre>
+      <div className="docs-callout docs-callout--info">
+        <strong>CONTRACT, NOT PERMISSION</strong>
+        <p>A pack can describe approval gates and guardrails, but its existence never authorizes deployment, publishing, spending, outreach, fabrication, or access to private data.</p>
+      </div>
+    </section>
+
+    <section id="shape">
+      <h2>Minimal shape</h2>
+      <p>Use strict JSON. The local validator checks the schema and semantic relationships before the compiler sees the pack.</p>
+      <pre className="docs-code-block"><code>{`{
+  "schemaVersion": 1,
+  "packVersion": "0.1.0",
+  "visibility": "private",
+  "lifecycle": "draft",
+  "slug": "my-pack",
+  "name": "My Outcome Pack",
+  "promise": "The observable result this pack makes true.",
+  "useWhen": [],
+  "notFor": [],
+  "skills": [],
+  "workstreams": [],
+  "outputs": [],
+  "expectations": [],
+  "guardrails": [],
+  "verification": []
+}`}</code></pre>
+      <p>As the pack matures, add reviewed skill sources, owned workstreams, required evidence, approval boundaries, and the pack-specific contract needed by the outcome.</p>
+    </section>
+
+    <section id="workflow">
+      <h2>Authoring workflow</h2>
+      <ol>
+        <li><strong>Create a draft</strong><span><code>possible pack init my-pack</code> creates the private directory and starter manifest.</span></li>
+        <li><strong>Describe fit</strong><span>Write the promise, entry conditions, non-scope, outputs, and stopping boundary before choosing skills.</span></li>
+        <li><strong>Connect proof</strong><span>Give each active expectation failure modes and required evidence. An output is not proof by itself.</span></li>
+        <li><strong>Validate locally</strong><span>Run <code>possible pack validate my-pack</code>. Fix schema, duplicate-ID, dependency, and safety errors.</span></li>
+        <li><strong>Request review</strong><span>Move the manifest to <code>lifecycle: "reviewed"</code> only when the review source, revisions, guardrails, and verification boundary are explicit.</span></li>
+        <li><strong>Compile after review</strong><span><code>possible pack compile my-pack</code> is refused for drafts and produces the deterministic local run contract for a reviewed pack.</span></li>
+        <li><strong>Export for public review</strong><span><code>possible pack export my-pack</code> creates a public-review draft without publishing or granting authority.</span></li>
+      </ol>
+    </section>
+
+    <section id="review">
+      <h2>Review and promotion</h2>
+      <div className="docs-card-grid docs-card-grid--two" aria-label="Pack visibility and lifecycle">
+        <article><span>VISIBILITY</span><strong>Private or public</strong><p>Private packs stay inside the project. Public packs may be distributed through the catalog and MCP.</p></article>
+        <article><span>LIFECYCLE</span><strong>Draft, reviewed, archived</strong><p>Lifecycle describes maturity. A private pack may be reviewed without becoming public.</p></article>
+      </div>
+      <p>Promotion is an explicit export for a separate public review process. It preserves the pack version, source provenance, content hash, and review record; it never silently publishes or inherits approval.</p>
+      <a className="docs-reference-link" href="/docs/reference"><span>REFERENCE</span><strong>Inspect project files & safety</strong><i>Read the boundary →</i></a>
+    </section>
+  </DocsSimplePage>;
+}
+
 function ExpectationsDocsPage() {
   return <DocsSimplePage
     active="expectations"
@@ -1312,7 +1388,7 @@ function NotFoundPage() {
 const judgingCriteria = [
   {
     name: "Technological Implementation",
-    claim: "Typed Outcome Packs coordinate execution and verification.",
+    claim: "JSON Outcome Packs coordinate execution and verification.",
     fact: "The compiler converts manifests into skill installs, owned workstreams, approval gates, and completion requirements.",
     significance: "One contract governs the run from preparation through verification.",
     href: "https://github.com/fraylabs/possible/blob/main/packages/packs/src/compiler.ts",
@@ -1331,7 +1407,7 @@ const judgingCriteria = [
     claim: "Possible supplies work a novice did not know to request.",
     fact: "The Robot Prototype pack covers mechanical design, simulation, control, telemetry, safety, and review.",
     significance: "One rough request can start multidisciplinary work outside existing expertise.",
-    href: "https://github.com/fraylabs/possible/blob/main/packages/packs/src/robot-prototype.ts",
+    href: "https://github.com/fraylabs/possible/blob/main/packages/packs/src/manifests/robot-prototype.json",
     evidence: "Robot Prototype pack",
   },
   {
@@ -1507,6 +1583,7 @@ export function PossibleSite({ path: requestedPath }: { path?: string }) {
   if (path === "/docs/how-to-use") return <HowToUsePage />;
   if (path === "/docs/outcome-packs") return <OutcomePacksDocsPage />;
   if (path === "/docs/expectations") return <ExpectationsDocsPage />;
+  if (path === "/docs/authoring") return <AuthoringDocsPage />;
   if (path === "/docs/reference") return <DocsReferencePage />;
   if (path === "/docs/glossary") return <DocsGlossaryPage />;
   if (path === "/judging") return <JudgingPage />;

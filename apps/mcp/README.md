@@ -1,11 +1,11 @@
 # Possible MCP
 
-Read-only access to the same outcome pack used by possible.sh:
+Read-only distribution access to the public JSON Outcome Pack catalog:
 
-- `list_packs` returns the published pack summaries, including internal catalog metadata and review status. Catalog lanes are metadata only; recommendation is based on the requested outcome.
-- `compile_pack` returns one manifest, its install commands, and its complete Codex run prompt.
+- `list_packs` returns public pack summaries, lifecycle metadata, source/review links, and immutable content hashes.
+- `fetch_pack` returns one exact public JSON manifest, review provenance, source/review links, and its immutable content hash.
 
-The server does not install skills, modify projects, or authorize external actions.
+The server never discovers private packs, writes project files, compiles or executes packs, approves work, or authorizes external actions. The Possible skill and local CLI own project-local pack handling.
 
 ```bash
 npm run dev:mcp

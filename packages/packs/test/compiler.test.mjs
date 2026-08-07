@@ -2,10 +2,12 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import * as packApi from "../dist/index.js";
-import { activeOutcomePacks, archivedOutcomePacks, compilePack, compileWorkstreamWaves, evaluateExpectationResults, experimentalOutcomePacks, getPackStatus, outcomePacks, recordOutcomeJourney, stableOutcomePacks, validateExpectationContract, validateOutcomeCheckpoint, validateOutcomeRecord } from "../dist/index.js";
+import { activeOutcomePacks, archivedOutcomePacks, compilePack, compileWorkstreamWaves, evaluateExpectationResults, experimentalOutcomePacks, getCatalogNumber, getPackStatus, publicOutcomePacks, recordOutcomeJourney, stableOutcomePacks, validateExpectationContract, validateOutcomeCheckpoint, validateOutcomeRecord } from "../dist/index.js";
+
+const publicPacks = publicOutcomePacks;
 
 test("every outcome pack compiles to inspectable installs and a complete prompt", () => {
-  assert.deepEqual(outcomePacks.map((pack) => pack.slug), [
+  assert.deepEqual(publicPacks.map((pack) => pack.slug), [
     "hardware-launch",
     "open-source-release",
     "playable-web-game",
@@ -36,7 +38,7 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
     "crowdfunding-fulfillment-operations",
     "developer-product-readiness",
   ]);
-  assert.deepEqual(outcomePacks.map(({ slug, lane }) => [slug, lane]), [
+  assert.deepEqual(publicPacks.map(({ slug, lane }) => [slug, lane]), [
     ["hardware-launch", "launch"],
     ["open-source-release", "release"],
     ["playable-web-game", "create"],
@@ -67,9 +69,9 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
     ["crowdfunding-fulfillment-operations", "operate"],
     ["developer-product-readiness", "launch"],
   ]);
-  assert.deepEqual(outcomePacks.map((pack) => pack.catalogNumber), Array.from({ length: 29 }, (_, index) => index + 1));
-  assert.equal(new Set(outcomePacks.map((pack) => pack.catalogNumber)).size, outcomePacks.length);
-  assert.equal(new Set(outcomePacks.map((pack) => pack.slug)).size, outcomePacks.length);
+  assert.deepEqual(publicPacks.map((pack) => getCatalogNumber(pack.slug)), Array.from({ length: 29 }, (_, index) => index + 1));
+  assert.equal(new Set(publicPacks.map((pack) => getCatalogNumber(pack.slug))).size, publicPacks.length);
+  assert.equal(new Set(publicPacks.map((pack) => pack.slug)).size, publicPacks.length);
   assert.deepEqual(stableOutcomePacks.map((pack) => pack.slug), [
     "playable-web-game",
     "web-presentation",
@@ -82,9 +84,9 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
   assert.equal(getPackStatus("hardware-launch"), "archived");
   assert.equal(getPackStatus("missing"), undefined);
 
-  for (const pack of outcomePacks) {
+  for (const pack of publicPacks) {
     assert.ok(["create", "launch", "release", "operate"].includes(pack.lane));
-    assert.match(pack.eyebrow, new RegExp(`^${String(pack.catalogNumber).padStart(2, "0")} / `));
+    assert.match(pack.eyebrow, new RegExp(`^${String(getCatalogNumber(pack.slug)).padStart(2, "0")} / `));
     for (const forbidden of ["lanes", "category", "categories", "track", "tracks"]) assert.equal(forbidden in pack, false);
     const compiled = compilePack(pack);
     assert.equal(compiled.pack.lane, pack.lane);
@@ -153,9 +155,9 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
 });
 
 test("Mechanical CAD Review rejects the unrestrained cat-house roof", async () => {
-  const pack = outcomePacks.find((candidate) => candidate.slug === "mechanical-cad-review");
+  const pack = publicPacks.find((candidate) => candidate.slug === "mechanical-cad-review");
   assert.ok(pack);
-  assert.equal(pack.catalogNumber, 19);
+  assert.equal(getCatalogNumber(pack.slug), 19);
   assert.equal(pack.lane, "create");
   assert.equal(pack.workstreams.length, 2);
   assert.equal(pack.skills.length, 3);
@@ -316,9 +318,9 @@ test("expectations connect user intent to evidence without making preferences co
 });
 
 test("Functional Hardware Prototype activates only the expectation modules present in the artifact", async () => {
-  const pack = outcomePacks.find((candidate) => candidate.slug === "functional-hardware-prototype");
+  const pack = publicPacks.find((candidate) => candidate.slug === "functional-hardware-prototype");
   assert.ok(pack);
-  assert.equal(pack.catalogNumber, 20);
+  assert.equal(getCatalogNumber(pack.slug), 20);
   assert.equal(pack.lane, "create");
   assert.equal(pack.workstreams.length, 3);
   assert.equal(pack.skills.length, 6);
@@ -407,7 +409,7 @@ test("Functional Hardware Prototype activates only the expectation modules prese
   });
   assert.throws(() => compilePack(unlistedModuleProof), /battery must list conditional expectation battery-secondary-proof/);
 
-  const unrelatedConditionalProof = structuredClone(outcomePacks.find((candidate) => candidate.slug === "mechanical-cad-review"));
+  const unrelatedConditionalProof = structuredClone(publicPacks.find((candidate) => candidate.slug === "mechanical-cad-review"));
   unrelatedConditionalProof.expectations[0].moduleId = "battery";
   assert.throws(() => compilePack(unrelatedConditionalProof), /conditional expectations require a conditional module contract/);
 });
@@ -485,13 +487,13 @@ test("every run exposes one extractable outcome record", () => {
 });
 
 test("custom install sources cannot drift from the reviewed revision", () => {
-  const pack = structuredClone(outcomePacks[0]);
+  const pack = structuredClone(publicPacks[0]);
   pack.skills[0].installSource = `${pack.skills[0].repository}@main`;
   assert.throws(() => compilePack(pack), /must install the exact reviewed revision/);
 });
 
 test("Developer Project Launch remixes project-specific direction before implementation", () => {
-  const developer = outcomePacks.find((pack) => pack.slug === "developer-project-launch");
+  const developer = publicPacks.find((pack) => pack.slug === "developer-project-launch");
   assert.ok(developer);
   assert.deepEqual(compileWorkstreamWaves(developer).map((wave) => wave.map(({ id }) => id)), [
     ["positioning", "developer-experience"],
@@ -528,14 +530,15 @@ test("Developer Project Launch remixes project-specific direction before impleme
   cycle.workstreams.find(({ id }) => id === "positioning").dependsOn = ["creative-direction"];
   assert.throws(() => compileWorkstreamWaves(cycle), /dependency cycle/);
 
-  assert.doesNotMatch(compilePack(outcomePacks.find((pack) => pack.slug === "hardware-launch")).runPrompt, /REMIX GATE/);
+  assert.doesNotMatch(compilePack(publicPacks.find((pack) => pack.slug === "hardware-launch")).runPrompt, /REMIX GATE/);
 });
 
 test("outcomes produce new-reality checkpoints, while journeys preserve only completed history", () => {
-  const pack = (slug) => outcomePacks.find((candidate) => candidate.slug === slug);
+  const pack = (slug) => publicPacks.find((candidate) => candidate.slug === slug);
   const discovery = pack("software-opportunity-discovery");
   const working = pack("working-web-app");
   const developer = pack("developer-project-launch");
+  assert.equal("outcomePacks" in packApi, false);
   assert.equal("compileChain" in packApi, false);
   assert.equal("chainExit" in discovery, false);
   assert.equal("chainEntry" in working, false);
@@ -637,7 +640,7 @@ test("outcomes produce new-reality checkpoints, while journeys preserve only com
 });
 
 test("deterministic stages remain inside one separately approved outcome", () => {
-  const developer = outcomePacks.find((candidate) => candidate.slug === "developer-project-launch");
+  const developer = publicPacks.find((candidate) => candidate.slug === "developer-project-launch");
   assert.deepEqual(compileWorkstreamWaves(developer).map((wave) => wave.map(({ id }) => id)), [
     ["positioning", "developer-experience"],
     ["creative-direction"],
@@ -664,7 +667,7 @@ test("deterministic stages remain inside one separately approved outcome", () =>
 });
 
 test("install commands group skills by upstream repository", () => {
-  const bySlug = (slug) => compilePack(outcomePacks.find((pack) => pack.slug === slug));
+  const bySlug = (slug) => compilePack(publicPacks.find((pack) => pack.slug === slug));
   const openSource = bySlug("open-source-release");
   assert.equal(openSource.installCommands.length, 1);
   assert.match(openSource.installCommands[0], /github\/awesome-copilot.+github-release.+create-readme.+documentation-writer.+github-actions-hardening.+security-review/);
@@ -727,9 +730,9 @@ test("install commands group skills by upstream repository", () => {
 });
 
 test("Web Presentation produces a coded, evidence-backed deck instead of a PowerPoint file", () => {
-  const presentation = outcomePacks.find((pack) => pack.slug === "web-presentation");
+  const presentation = publicPacks.find((pack) => pack.slug === "web-presentation");
   assert.ok(presentation);
-  assert.equal(presentation.catalogNumber, 11);
+  assert.equal(getCatalogNumber(presentation.slug), 11);
   assert.equal(presentation.lane, "create");
   assert.match(presentation.promise, /runs in the browser/i);
   assert.match(presentation.useWhen.join(" "), /HTML, CSS, and JavaScript instead of PowerPoint/i);
@@ -745,9 +748,9 @@ test("Web Presentation produces a coded, evidence-backed deck instead of a Power
 });
 
 test("Robot Prototype generalizes one verified digital-prototype contract across robot forms", () => {
-  const robot = outcomePacks.find((pack) => pack.slug === "robot-prototype");
+  const robot = publicPacks.find((pack) => pack.slug === "robot-prototype");
   assert.ok(robot);
-  assert.equal(robot.catalogNumber, 10);
+  assert.equal(getCatalogNumber(robot.slug), 10);
   assert.equal(robot.lane, "create");
   assert.match(robot.useWhen.join(" "), /robot hand.*gripper.*arm.*mobile robot.*quadruped.*full robot/i);
   assert.match(robot.outputs.join(" "), /STEP assembly.*robot-description.*MuJoCo.*controller.*simulation tests.*sim-to-real gap/i);
@@ -768,7 +771,7 @@ test("Robot Prototype generalizes one verified digital-prototype contract across
 });
 
 test("Sites is exposed only on web deployment outcomes and never as a fake Skills CLI install", () => {
-  const sitesPacks = outcomePacks.filter((pack) => pack.plugins?.some((plugin) => plugin.id === "sites"));
+  const sitesPacks = publicPacks.filter((pack) => pack.plugins?.some((plugin) => plugin.id === "sites"));
   assert.deepEqual(sitesPacks.map((pack) => pack.slug), ["hardware-launch", "production-web-release", "web-presentation", "developer-project-launch", "developer-product-readiness"]);
   for (const pack of sitesPacks) {
     const compiled = compilePack(pack);
@@ -779,10 +782,10 @@ test("Sites is exposed only on web deployment outcomes and never as a fake Skill
 });
 
 test("Developer Project Launch turns a working developer project into an evidence-backed adoption path", () => {
-  const developer = outcomePacks.find((pack) => pack.slug === "developer-project-launch");
-  const openSource = outcomePacks.find((pack) => pack.slug === "open-source-release");
+  const developer = publicPacks.find((pack) => pack.slug === "developer-project-launch");
+  const openSource = publicPacks.find((pack) => pack.slug === "open-source-release");
   assert.ok(developer);
-  assert.equal(developer.catalogNumber, 12);
+  assert.equal(getCatalogNumber(developer.slug), 12);
   assert.equal(developer.lane, "launch");
   assert.match(developer.eyebrow, /EXPERIMENTAL/);
   assert.match(developer.useWhen.join(" "), /working CLI.*library.*API.*developer platform/i);
@@ -826,12 +829,12 @@ test("Developer Project Launch turns a working developer project into an evidenc
 });
 
 test("Developer Product Readiness activates only the interfaces one working capability needs", () => {
-  const archived = outcomePacks.find((pack) => pack.slug === "developer-adoption-readiness");
-  const product = outcomePacks.find((pack) => pack.slug === "developer-product-readiness");
+  const archived = publicPacks.find((pack) => pack.slug === "developer-adoption-readiness");
+  const product = publicPacks.find((pack) => pack.slug === "developer-product-readiness");
   assert.ok(archived?.archived);
   assert.deepEqual(archived.archived.replacementSlugs, ["developer-product-readiness"]);
   assert.ok(product);
-  assert.equal(product.catalogNumber, 29);
+  assert.equal(getCatalogNumber(product.slug), 29);
   assert.equal(product.lane, "launch");
   assert.equal(product.name, "Developer Product Readiness");
   assert.equal(product.modularOutcome.minimumActiveModules, 0);
@@ -881,10 +884,10 @@ test("Developer Product Readiness activates only the interfaces one working capa
 });
 
 test("Software Opportunity Discovery selects a thesis without claiming demand", () => {
-  const discovery = outcomePacks.find((pack) => pack.slug === "software-opportunity-discovery");
-  const working = outcomePacks.find((pack) => pack.slug === "working-web-app");
+  const discovery = publicPacks.find((pack) => pack.slug === "software-opportunity-discovery");
+  const working = publicPacks.find((pack) => pack.slug === "working-web-app");
   assert.ok(discovery);
-  assert.equal(discovery.catalogNumber, 13);
+  assert.equal(getCatalogNumber(discovery.slug), 13);
   assert.equal(discovery.lane, "create");
   assert.equal(discovery.name, "Software Opportunity Discovery");
   assert.match(discovery.eyebrow, /OUTCOME PACK/);
@@ -943,9 +946,9 @@ test("Software Opportunity Discovery selects a thesis without claiming demand", 
 });
 
 test("First Customer Sprint pursues commercial commitment and remains resumable", () => {
-  const sprint = outcomePacks.find((pack) => pack.slug === "first-customer-sprint");
+  const sprint = publicPacks.find((pack) => pack.slug === "first-customer-sprint");
   assert.ok(sprint);
-  assert.equal(sprint.catalogNumber, 14);
+  assert.equal(getCatalogNumber(sprint.slug), 14);
   assert.equal(sprint.lane, "launch");
   assert.equal(sprint.name, "First Customer Sprint");
   assert.match(sprint.promise, /real customers.*strongest available commitment/i);
@@ -1043,9 +1046,9 @@ test("First Customer Sprint pursues commercial commitment and remains resumable"
 });
 
 test("Working Hardware Prototype requires a measured physical artifact and fresh review", () => {
-  const prototype = outcomePacks.find((pack) => pack.slug === "working-hardware-prototype");
+  const prototype = publicPacks.find((pack) => pack.slug === "working-hardware-prototype");
   assert.ok(prototype);
-  assert.equal(prototype.catalogNumber, 15);
+  assert.equal(getCatalogNumber(prototype.slug), 15);
   assert.equal(prototype.lane, "create");
   assert.equal(prototype.name, "Working Hardware Prototype");
   assert.match(prototype.promise, /functional, measured, independently reviewed hardware prototype/i);
@@ -1117,9 +1120,9 @@ test("Working Hardware Prototype requires a measured physical artifact and fresh
 });
 
 test("Manufacturing Readiness requires production evidence before a production commitment", () => {
-  const manufacturing = outcomePacks.find((pack) => pack.slug === "manufacturing-readiness");
+  const manufacturing = publicPacks.find((pack) => pack.slug === "manufacturing-readiness");
   assert.ok(manufacturing);
-  assert.equal(manufacturing.catalogNumber, 17);
+  assert.equal(getCatalogNumber(manufacturing.slug), 17);
   assert.equal(manufacturing.lane, "release");
   assert.equal(manufacturing.name, "Manufacturing Readiness");
   assert.match(manufacturing.promise, /measured hardware prototype.*production decision/i);
@@ -1171,9 +1174,9 @@ test("Manufacturing Readiness requires production evidence before a production c
 });
 
 test("Study Readiness stops at a protocol package for qualified review", () => {
-  const study = outcomePacks.find((pack) => pack.slug === "study-readiness");
+  const study = publicPacks.find((pack) => pack.slug === "study-readiness");
   assert.ok(study);
-  assert.equal(study.catalogNumber, 18);
+  assert.equal(getCatalogNumber(study.slug), 18);
   assert.equal(study.lane, "create");
   assert.equal(study.name, "Study Readiness");
   assert.match(study.promise, /research hypothesis.*protocol package ready for qualified review/i);
@@ -1215,10 +1218,10 @@ test("Study Readiness stops at a protocol package for qualified review", () => {
 });
 
 test("archived Launch Content Campaign preserves its original post-ready media contract", () => {
-  const campaign = outcomePacks.find((pack) => pack.slug === "launch-content-campaign");
+  const campaign = publicPacks.find((pack) => pack.slug === "launch-content-campaign");
   assert.ok(campaign);
   assert.ok(campaign.archived);
-  assert.equal(campaign.catalogNumber, 16);
+  assert.equal(getCatalogNumber(campaign.slug), 16);
   assert.equal(campaign.lane, "launch");
   assert.equal(campaign.name, "Launch Content Campaign");
   assert.match(campaign.promise, /post-ready.*campaign/i);
@@ -1250,9 +1253,9 @@ test("archived Launch Content Campaign preserves its original post-ready media c
 });
 
 test("Launch Content Package activates only the requested final-export formats", () => {
-  const content = outcomePacks.find((pack) => pack.slug === "launch-content-package");
+  const content = publicPacks.find((pack) => pack.slug === "launch-content-package");
   assert.ok(content);
-  assert.equal(content.catalogNumber, 21);
+  assert.equal(getCatalogNumber(content.slug), 21);
   assert.equal(content.lane, "launch");
   assert.equal(content.name, "Launch Content Package");
   assert.equal(content.workstreams.length, 3);
@@ -1316,9 +1319,9 @@ test("Launch Content Package activates only the requested final-export formats",
 });
 
 test("Marketing Operations compiles a manual-first, truthfully gated recurring schedule", () => {
-  const marketing = outcomePacks.find((pack) => pack.slug === "marketing-operations");
+  const marketing = publicPacks.find((pack) => pack.slug === "marketing-operations");
   assert.ok(marketing, "Marketing Operations is present in the catalog");
-  assert.equal(marketing.catalogNumber, 7);
+  assert.equal(getCatalogNumber(marketing.slug), 7);
   assert.equal(marketing.lane, "operate");
   assert.match(marketing.eyebrow, /^07 \/ /);
   assert.match(marketing.useWhen.join(" "), /schedule (?:recurring )?marketing operations/i);
@@ -1365,19 +1368,19 @@ test("Marketing Operations compiles a manual-first, truthfully gated recurring s
 });
 
 test("the web-app lifecycle packs have non-overlapping entry conditions", () => {
-  const pack = (slug) => outcomePacks.find((candidate) => candidate.slug === slug);
+  const pack = (slug) => publicPacks.find((candidate) => candidate.slug === slug);
   assert.match(pack("working-web-app").useWhen.join(" "), /first coherent|first complete|first.*usable/i);
   assert.match(pack("production-web-release").useWhen.join(" "), /existing tested web app/i);
   assert.match(pack("web-app-operations").useWhen.join(" "), /already live/i);
 });
 
 test("archived Kickstarter Funding preserves its original funding and payout contract", () => {
-  const pack = (slug) => outcomePacks.find((candidate) => candidate.slug === slug);
+  const pack = (slug) => publicPacks.find((candidate) => candidate.slug === slug);
   const funding = pack("kickstarter-funding");
 
   assert.ok(funding);
   assert.ok(funding.archived);
-  assert.equal(funding.catalogNumber, 8);
+  assert.equal(getCatalogNumber(funding.slug), 8);
   assert.equal(funding.lane, "launch");
   assert.match(funding.promise, /Kickstarter campaign system/i);
   assert.match(funding.outputs.join(" "), /deposited net payout/i);
@@ -1390,9 +1393,9 @@ test("archived Kickstarter Funding preserves its original funding and payout con
 });
 
 test("Crowdfunding Campaign Readiness stops before platform or funding action", () => {
-  const readiness = outcomePacks.find((candidate) => candidate.slug === "crowdfunding-campaign-readiness");
+  const readiness = publicPacks.find((candidate) => candidate.slug === "crowdfunding-campaign-readiness");
   assert.ok(readiness);
-  assert.equal(readiness.catalogNumber, 22);
+  assert.equal(getCatalogNumber(readiness.slug), 22);
   assert.equal(readiness.lane, "launch");
   assert.equal(readiness.workstreams.length, 3);
   assert.equal(readiness.skills.length, 5);
@@ -1436,10 +1439,10 @@ test("Crowdfunding Campaign Readiness stops before platform or funding action", 
 });
 
 test("Kickstarter Fulfillment begins only after funding and preserves shipment evidence", () => {
-  const fulfillment = outcomePacks.find((candidate) => candidate.slug === "kickstarter-fulfillment");
+  const fulfillment = publicPacks.find((candidate) => candidate.slug === "kickstarter-fulfillment");
 
   assert.ok(fulfillment);
-  assert.equal(fulfillment.catalogNumber, 9);
+  assert.equal(getCatalogNumber(fulfillment.slug), 9);
   assert.equal(fulfillment.lane, "operate");
   assert.match(fulfillment.promise, /95% shipped/i);
   assert.match(fulfillment.guardrails.join(" "), /personal names.*addresses.*version control/i);

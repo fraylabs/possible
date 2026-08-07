@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://possible.sh/schemas/outcome-pack.schema.json",
+  "title": "Possible Outcome Pack",
+  "description": "Structural reference for a declarative contract describing one observable, verifiable outcome. Runtime validation additionally enforces semantic relationships and lifecycle rules.",
+  "$comment": "Catalog numbers are public presentation metadata and intentionally do not belong in this manifest schema.",
+  "type": "object",
+  "additionalProperties": true,
+  "not": { "required": ["catalogNumber"] },
+  "required": [
+    "schemaVersion",
+    "packVersion",
+    "visibility",
+    "lifecycle",
+    "lane",
+    "slug",
+    "name",
+    "eyebrow",
+    "promise",
+    "summary",
+    "useWhen",
+    "notFor",
+    "skills",
+    "workstreams",
+    "reviewSkills",
+    "outputs",
+    "guardrails",
+    "verification"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "packVersion": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:-[0-9A-Za-z.-]+)?$" },
+    "visibility": { "enum": ["private", "public"] },
+    "lifecycle": { "enum": ["draft", "reviewed", "archived"] },
+    "lane": { "enum": ["create", "launch", "release", "operate"] },
+    "slug": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+    "name": { "type": "string", "minLength": 1 },
+    "eyebrow": { "type": "string", "minLength": 1 },
+    "promise": { "type": "string", "minLength": 1 },
+    "summary": { "type": "string", "minLength": 1 },
+    "reviewedAt": { "type": "string", "format": "date" },
+    "useWhen": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+    "notFor": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+    "skills": { "type": "array", "items": { "$ref": "#/$defs/skill" } },
+    "workstreams": { "type": "array", "items": { "$ref": "#/$defs/workstream" } },
+    "reviewSkills": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+    "outputs": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+    "guardrails": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+    "verification": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+    "expectations": { "type": "array", "items": { "$ref": "#/$defs/expectation" } }
+  },
+  "$defs": {
+    "skill": {
+      "type": "object",
+      "required": ["id", "name", "role", "repository", "skill", "reviewedRevision", "reviewUrl"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "name": { "type": "string", "minLength": 1 },
+        "role": { "type": "string", "minLength": 1 },
+        "repository": { "type": "string", "minLength": 1 },
+        "installSource": { "type": "string" },
+        "skill": { "type": "string", "minLength": 1 },
+        "catalogUrl": { "type": "string" },
+        "reviewedRevision": { "type": "string", "minLength": 1 },
+        "reviewUrl": { "type": "string", "minLength": 1 }
+      }
+    },
+    "workstream": {
+      "type": "object",
+      "required": ["id", "name", "skills", "owns", "brief"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "name": { "type": "string", "minLength": 1 },
+        "skills": { "type": "array", "items": { "type": "string" } },
+        "owns": { "type": "array", "items": { "type": "string" } },
+        "brief": { "type": "string", "minLength": 1 },
+        "dependsOn": { "type": "array", "items": { "type": "string" } },
+        "activation": { "type": "string" }
+      }
+    },
+    "expectation": {
+      "type": "object",
+      "required": ["id", "statement", "failureModes", "requiredEvidence"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "moduleId": { "type": "string" },
+        "statement": { "type": "string", "minLength": 1 },
+        "level": { "enum": ["required", "preferred"] },
+        "failureModes": { "type": "array", "items": { "type": "string" } },
+        "requiredEvidence": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  }
+}

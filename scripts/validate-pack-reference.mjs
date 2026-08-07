@@ -1,10 +1,10 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
-import { compilePack, outcomePacks } from "../packages/packs/dist/index.js";
+import { compilePack, publicOutcomePacks } from "../packages/packs/dist/index.js";
 
 const catalog = await readFile(new URL("../skills/possible/references/packs.md", import.meta.url), "utf8");
 
-for (const pack of outcomePacks) {
+for (const pack of publicOutcomePacks) {
   const start = catalog.indexOf(`Slug: \`${pack.slug}\``);
   const next = catalog.indexOf("\n## ", start);
   const section = start === -1 ? "" : catalog.slice(start, next === -1 ? undefined : next);

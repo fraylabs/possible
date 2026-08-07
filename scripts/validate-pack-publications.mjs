@@ -152,7 +152,7 @@ for (const item of index.packs) assert.equal(item.status, getPackStatus(item.slu
 const llms = await text("llms.txt");
 assert.match(llms, /AI made execution accessible\. Possible makes operational judgment accessible\./);
 assert.match(llms, /Possible\.sh is an open-source library of Outcome Packs for Codex\./);
-assert.match(llms, /Each typed specification coordinates selected agent skills, owned workstreams, shared constraints, approval boundaries, and the evidence required for completion\./);
+assert.match(llms, /Each JSON specification coordinates selected agent skills, owned workstreams, shared constraints, approval boundaries, and the evidence required for completion\./);
 assert.match(llms, /- Judging evidence: \/judging\//);
 assert.match(llms, /- Machine-readable evidence: \/evidence\.json/);
 assert.match(llms, /recorded[\s\S]{0,160}\/goal[\s\S]{0,160}(?:control|comparison)/i, "llms.txt must surface the recorded /goal comparison");

@@ -11,6 +11,7 @@ const staticPaths = [
   "/docs/how-to-use/",
   "/docs/outcome-packs/",
   "/docs/expectations/",
+  "/docs/authoring/",
   "/docs/reference/",
   "/docs/glossary/",
   "/judging/",

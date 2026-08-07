@@ -86,7 +86,7 @@ describe("Possible", () => {
     expect(await axe(container)).toHaveNoViolations();
   });
 
-  it("renders each reviewed public pack from its typed manifest", async () => {
+  it("renders each reviewed public pack from its JSON manifest", async () => {
     for (const pack of publishedPacks) {
       const { container, unmount } = renderRoute(`/packs/${pack.slug}`);
       const compiled = compilePack(pack);
@@ -134,7 +134,7 @@ describe("Possible", () => {
     const notice = screen.getByRole("complementary", { name: "Archived Outcome Pack" });
     expect(notice).toHaveTextContent(/ARCHIVED.*2026-07-27/i);
     expect(notice).toHaveTextContent(/will not recommend or compile it for new work/i);
-    expect(within(notice).getByRole("link", { name: "Mechanical CAD Review" })).toHaveAttribute("href", expect.stringContaining("mechanical-cad-review.ts"));
+    expect(within(notice).getByRole("link", { name: "Mechanical CAD Review" })).toHaveAttribute("href", expect.stringContaining("mechanical-cad-review.json"));
     expect(screen.queryByRole("link", { name: /Start with \$possible/i })).not.toBeInTheDocument();
     expect(screen.getByRole("link", { name: /View active packs/i })).toHaveAttribute("href", "/#packs");
     expect(container.querySelector(".pack-prompt-disclosure code")?.textContent).toBe(compilePack(pack!).runPrompt);
@@ -149,7 +149,7 @@ describe("Possible", () => {
     const notice = screen.getByRole("complementary", { name: "Archived Outcome Pack" });
     expect(notice).toHaveTextContent(/ARCHIVED.*2026-07-27/i);
     expect(notice).toHaveTextContent(/seven fixed workstreams/i);
-    expect(within(notice).getByRole("link", { name: "Functional Hardware Prototype" })).toHaveAttribute("href", expect.stringContaining("functional-hardware-prototype.ts"));
+    expect(within(notice).getByRole("link", { name: "Functional Hardware Prototype" })).toHaveAttribute("href", expect.stringContaining("functional-hardware-prototype.json"));
     expect(screen.queryByRole("link", { name: /Start with \$possible/i })).not.toBeInTheDocument();
     expect(screen.getByText("MEASURED PHYSICAL PROTOTYPE")).toBeInTheDocument();
     expect(screen.getByText("PRODUCT DECISIONS")).toBeInTheDocument();
@@ -167,8 +167,8 @@ describe("Possible", () => {
     const notice = screen.getByRole("complementary", { name: "Archived Outcome Pack" });
     expect(notice).toHaveTextContent(/ARCHIVED.*2026-07-27/i);
     expect(notice).toHaveTextContent(/five workstreams.*three creative directions/i);
-    expect(within(notice).getByRole("link", { name: "Launch Content Package" })).toHaveAttribute("href", expect.stringContaining("launch-content-package.ts"));
-    expect(within(notice).getByRole("link", { name: "Marketing Operations" })).toHaveAttribute("href", expect.stringContaining("marketing-operations.ts"));
+    expect(within(notice).getByRole("link", { name: "Launch Content Package" })).toHaveAttribute("href", expect.stringContaining("launch-content-package.json"));
+    expect(within(notice).getByRole("link", { name: "Marketing Operations" })).toHaveAttribute("href", expect.stringContaining("marketing-operations.json"));
     expect(screen.queryByRole("link", { name: /Start with \$possible/i })).not.toBeInTheDocument();
     expect(screen.getByText("PRODUCT DECISIONS")).toBeInTheDocument();
     expect(screen.getByText("REMIX")).toBeInTheDocument();
@@ -185,8 +185,8 @@ describe("Possible", () => {
     const notice = screen.getByRole("complementary", { name: "Archived Outcome Pack" });
     expect(notice).toHaveTextContent(/ARCHIVED.*2026-07-29/i);
     expect(notice).toHaveTextContent(/prototype and manufacturing feasibility.*deposited payout/i);
-    expect(within(notice).getByRole("link", { name: "Crowdfunding Campaign Readiness" })).toHaveAttribute("href", expect.stringContaining("crowdfunding-campaign-readiness.ts"));
-    expect(within(notice).getByRole("link", { name: "Launch Content Package" })).toHaveAttribute("href", expect.stringContaining("launch-content-package.ts"));
+    expect(within(notice).getByRole("link", { name: "Crowdfunding Campaign Readiness" })).toHaveAttribute("href", expect.stringContaining("crowdfunding-campaign-readiness.json"));
+    expect(within(notice).getByRole("link", { name: "Launch Content Package" })).toHaveAttribute("href", expect.stringContaining("launch-content-package.json"));
     expect(screen.queryByRole("link", { name: /Start with \$possible/i })).not.toBeInTheDocument();
     expect(route.container.querySelector(".pack-prompt-disclosure code")?.textContent).toMatch(/deposited platform payout/i);
     expect(await axe(route.container)).toHaveNoViolations();
@@ -257,6 +257,7 @@ describe("Possible", () => {
       ["/docs/how-to-use", /How to use Possible/i, "how-to-use"],
       ["/docs/outcome-packs", /Choose a complete outcome/i, "outcome-packs"],
       ["/docs/expectations", /The artifact is not the proof/i, "expectations"],
+      ["/docs/authoring", /Write the contract in JSON/i, "authoring"],
       ["/docs/reference", /Keep the run inspectable/i, "reference"],
       ["/docs/glossary", /The language of complete outcomes/i, "glossary"],
     ] as const;
@@ -271,7 +272,7 @@ describe("Possible", () => {
       expect(container.querySelector(`.docs-context-nav a.is-active[href="${path}"]`)).toBeInTheDocument();
       expect(screen.getByRole("button", { name: "Copy page" })).toBeInTheDocument();
       expect(Array.from(sidebar?.querySelectorAll("a") ?? []).every((link) => !link.getAttribute("href")?.includes("#"))).toBe(true);
-      for (const href of ["/docs/outcome-packs", "/docs/expectations", "/docs/reference"]) {
+      for (const href of ["/docs/outcome-packs", "/docs/expectations", "/docs/authoring", "/docs/reference"]) {
         expect(sidebar?.querySelector(`a[href="${href}"]`)).toBeInTheDocument();
       }
       expect(await axe(container)).toHaveNoViolations();

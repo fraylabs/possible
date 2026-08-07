@@ -1,10 +1,10 @@
 import { readFile, writeFile } from "node:fs/promises";
-import { compilePack, outcomePacks } from "../packages/packs/dist/index.js";
+import { compilePack, publicOutcomePacks } from "../packages/packs/dist/index.js";
 
 const target = new URL("../skills/possible/references/packs.md", import.meta.url);
 let catalog = await readFile(target, "utf8");
 
-for (const pack of outcomePacks) {
+for (const pack of publicOutcomePacks) {
   const marker = `Slug: \`${pack.slug}\``;
   const sectionStart = catalog.indexOf(marker);
   const sectionEnd = catalog.indexOf("\n## ", sectionStart);
@@ -19,4 +19,4 @@ for (const pack of outcomePacks) {
 }
 
 await writeFile(target, catalog);
-console.log(`Synchronized ${outcomePacks.length} pack install blocks to reviewed revisions.`);
+console.log(`Synchronized ${publicOutcomePacks.length} pack install blocks to reviewed revisions.`);

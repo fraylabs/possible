@@ -25,13 +25,14 @@
   },
   "files": [
     "assets/possible",
-    "src"
+    "src",
+    "runtime"
   ],
   "scripts": {
-    "build": "node scripts/verify-snapshot.mjs",
+    "build": "node scripts/sync-runtime.mjs && node scripts/verify-snapshot.mjs",
     "test": "node --test test/*.test.mjs && node scripts/verify-snapshot.mjs",
     "sync:skill": "node scripts/sync-skill.mjs",
-    "prepack": "node scripts/verify-snapshot.mjs --quiet"
+    "prepack": "node scripts/sync-runtime.mjs && node scripts/verify-snapshot.mjs --quiet"
   },
   "engines": {
     "node": ">=22"

@@ -51,26 +51,26 @@ The installer is idempotent and refuses to overwrite conflicting skill files. Ou
 
 Possible publishes four active reviewed public packs. Experimental packs remain available for testing, while archived packs preserve their original specifications and links without appearing in new recommendations.
 
-- [Playable Web Game](packages/packs/src/playable-web-game.ts) — a polished browser game with responsive controls and playability review.
-- [Web Presentation](packages/packs/src/web-presentation.ts) — an evidence-backed coded deck with responsive presenter behavior.
-- [Software Opportunity Discovery](packages/packs/src/software-opportunity-discovery.ts) — turns a rough software ambition into one provisional opportunity and a credible first-customer approach.
-- [First Customer Sprint](packages/packs/src/first-customer-sprint.ts) — takes one selected product, service, or software opportunity to real prospects and pursues the strongest available commercial commitment.
+- [Playable Web Game](packages/packs/src/manifests/playable-web-game.json) — a polished browser game with responsive controls and playability review.
+- [Web Presentation](packages/packs/src/manifests/web-presentation.json) — an evidence-backed coded deck with responsive presenter behavior.
+- [Software Opportunity Discovery](packages/packs/src/manifests/software-opportunity-discovery.json) — turns a rough software ambition into one provisional opportunity and a credible first-customer approach.
+- [First Customer Sprint](packages/packs/src/manifests/first-customer-sprint.json) — takes one selected product, service, or software opportunity to real prospects and pursues the strongest available commercial commitment.
 
-The experimental [Mechanical CAD Review](packages/packs/src/mechanical-cad-review.ts) pack is the focused option for passive objects and simple mechanisms: editable CAD, explicit restraint and assembly proof, fit coupons, a vendor package, and an honest review boundary without launch-site or film work.
+The experimental [Mechanical CAD Review](packages/packs/src/manifests/mechanical-cad-review.json) pack is the focused option for passive objects and simple mechanisms: editable CAD, explicit restraint and assembly proof, fit coupons, a vendor package, and an honest review boundary without launch-site or film work.
 
-The experimental [Functional Hardware Prototype](packages/packs/src/functional-hardware-prototype.ts) pack builds the simplest integrated artifact that proves one physical function. Battery, high-energy, motion, thermal, living-contact, networked, and health-claim work activates only when the actual architecture requires it; concrete safety review follows the first coherent artifact while hazardous actions retain early hard stops.
+The experimental [Functional Hardware Prototype](packages/packs/src/manifests/functional-hardware-prototype.json) pack builds the simplest integrated artifact that proves one physical function. Battery, high-energy, motion, thermal, living-contact, networked, and health-claim work activates only when the actual architecture requires it; concrete safety review follows the first coherent artifact while hazardous actions retain early hard stops.
 
-The experimental [Launch Content Package](packages/packs/src/launch-content-package.ts) pack produces one truthful, post-ready package for selected channels. Text posts, static visuals, carousels, short videos, long videos, and threads activate independently; it does not add a three-direction exercise, every platform, analytics, or a campaign calendar.
+The experimental [Launch Content Package](packages/packs/src/manifests/launch-content-package.json) pack produces one truthful, post-ready package for selected channels. Text posts, static visuals, carousels, short videos, long videos, and threads activate independently; it does not add a three-direction exercise, every platform, analytics, or a campaign calendar.
 
-The experimental [Crowdfunding Campaign Readiness](packages/packs/src/crowdfunding-campaign-readiness.ts) pack verifies one physical-product campaign package before platform entry. It consumes existing prototype, manufacturing, study-boundary, and final-content evidence, recomputes economics and rewards, then stops before publication, audience activation, pledges, or payout.
+The experimental [Crowdfunding Campaign Readiness](packages/packs/src/manifests/crowdfunding-campaign-readiness.json) pack verifies one physical-product campaign package before platform entry. It consumes existing prototype, manufacturing, study-boundary, and final-content evidence, recomputes economics and rewards, then stops before publication, audience activation, pledges, or payout.
 
-The experimental [Developer Product Readiness](packages/packs/src/developer-product-readiness.ts) pack turns one working capability into a coherent developer product. Website, agent Skill, MCP server, CLI or package, SDK or API, expanded docs, demo, examples, and deployment activate only when the actual users and product require them; every active surface must agree with one verified capability contract.
+The experimental [Developer Product Readiness](packages/packs/src/manifests/developer-product-readiness.json) pack turns one working capability into a coherent developer product. Website, agent Skill, MCP server, CLI or package, SDK or API, expanded docs, demo, examples, and deployment activate only when the actual users and product require them; every active surface must agree with one verified capability contract.
 
-The experimental [Robot Digital Prototype](packages/packs/src/robot-digital-prototype.ts), [Production Readiness Decision](packages/packs/src/production-readiness-decision.ts), and [Research Protocol Readiness](packages/packs/src/research-protocol-readiness.ts) packs prove one bounded core outcome and activate subsystem, production, ethics, privacy, and regulatory modules only from the actual project.
+The experimental [Robot Digital Prototype](packages/packs/src/manifests/robot-digital-prototype.json), [Production Readiness Decision](packages/packs/src/manifests/production-readiness-decision.json), and [Research Protocol Readiness](packages/packs/src/manifests/research-protocol-readiness.json) packs prove one bounded core outcome and activate subsystem, production, ethics, privacy, and regulatory modules only from the actual project.
 
-The experimental [Crowdfunding Funding Run](packages/packs/src/crowdfunding-funding-run.ts) consumes a passing readiness receipt and controls exact publication, audience, campaign, and payout evidence. [Crowdfunding Fulfillment Operations](packages/packs/src/crowdfunding-fulfillment-operations.ts) begins only from a funded-settled run and reconciles physical, digital, regional, address, exception, and communication obligations without imposing a universal shipment percentage.
+The experimental [Crowdfunding Funding Run](packages/packs/src/manifests/crowdfunding-funding-run.json) consumes a passing readiness receipt and controls exact publication, audience, campaign, and payout evidence. [Crowdfunding Fulfillment Operations](packages/packs/src/manifests/crowdfunding-fulfillment-operations.json) begins only from a funded-settled run and reconciles physical, digital, regional, address, exception, and communication obligations without imposing a universal shipment percentage.
 
-[Hardware Launch](packages/packs/src/hardware-launch.ts), [Kickstarter Funding](packages/packs/src/kickstarter-funding.ts), [Kickstarter Fulfillment](packages/packs/src/kickstarter-fulfillment.ts), [Robot Prototype](packages/packs/src/robot-prototype.ts), [Developer Project Launch](packages/packs/src/developer-project-launch.ts), [Developer Adoption Readiness](packages/packs/src/developer-adoption-readiness.ts), [Working Hardware Prototype](packages/packs/src/working-hardware-prototype.ts), [Launch Content Campaign](packages/packs/src/launch-content-campaign.ts), [Manufacturing Readiness](packages/packs/src/manufacturing-readiness.ts), and [Study Readiness](packages/packs/src/study-readiness.ts) are archived. Their original specifications and existing public links remain available for historical evidence, but Possible no longer recommends their mixed, incomplete, or universally heavyweight contracts.
+[Hardware Launch](packages/packs/src/manifests/hardware-launch.json), [Kickstarter Funding](packages/packs/src/manifests/kickstarter-funding.json), [Kickstarter Fulfillment](packages/packs/src/manifests/kickstarter-fulfillment.json), [Robot Prototype](packages/packs/src/manifests/robot-prototype.json), [Developer Project Launch](packages/packs/src/manifests/developer-project-launch.json), [Developer Adoption Readiness](packages/packs/src/manifests/developer-adoption-readiness.json), [Working Hardware Prototype](packages/packs/src/manifests/working-hardware-prototype.json), [Launch Content Campaign](packages/packs/src/manifests/launch-content-campaign.json), [Manufacturing Readiness](packages/packs/src/manifests/manufacturing-readiness.json), and [Study Readiness](packages/packs/src/manifests/study-readiness.json) are archived. Their original specifications and existing public links remain available for historical evidence, but Possible no longer recommends their mixed, incomplete, or universally heavyweight contracts.
 
 The preserved PatchProof journey verifies Software Opportunity Discovery and Developer Project Launch as separate outcomes—and records why Possible no longer chooses their sequence in advance.
 
@@ -101,7 +101,7 @@ npm run journey-example:verify
 
 ## How Possible works
 
-Each Outcome Pack has a [typed manifest](packages/packs/src/types.ts). The [compiler](packages/packs/src/compiler.ts) prepares the prompt, skills, workstreams, and checks. The manifest defines:
+Each Outcome Pack has a [JSON manifest](packages/packs/src/manifests/playable-web-game.json) validated by the [manifest loader](packages/packs/src/manifest.ts). The [compiler](packages/packs/src/compiler.ts) prepares the prompt, skills, workstreams, and checks. The manifest defines:
 
 - required outputs;
 - independent workstreams and ownership;
@@ -134,16 +134,29 @@ Catalog status and the legacy lane field stay as internal discovery/compiler met
 
 ## Built During Build Week
 
-Commit [`afb5fc1`](https://github.com/fraylabs/possible/commit/afb5fc1c1e01d746753712ddc79f456df0984826) marks the product reset that introduced the current Outcome Pack architecture. The repository history after that boundary records the typed manifests, compiler, installable skill, CLI, public site, preserved runs and verification repairs.
+Commit [`afb5fc1`](https://github.com/fraylabs/possible/commit/afb5fc1c1e01d746753712ddc79f456df0984826) marks the product reset that introduced the current Outcome Pack architecture. The repository history after that boundary records the JSON manifests, compiler, installable skill, CLI, public site, preserved runs and verification repairs.
 
 [BUILD-WEEK.md](BUILD-WEEK.md) documents the implementation boundary, Codex session, Codex contributions and human product decisions.
 
 ## Repository
 
-- `packages/packs` — typed manifests and compiler
+- `packages/packs` — canonical JSON manifests, schema validation, and compiler
 - `apps/cli` — the published installer
 - `apps/web` — website, documentation and demo evidence
 - `skills/possible` — the conversational Codex workflow
+
+## Author private packs
+
+Public and project-local packs use the same JSON contract. Start a private pack in the project that owns it:
+
+```bash
+possible pack init my-pack
+possible pack validate my-pack
+possible pack inspect my-pack
+possible pack compile my-pack
+```
+
+Draft packs can be edited and validated but cannot compile until reviewed. MCP only distributes public JSON manifests; the Possible skill and local CLI handle private packs and execution.
 
 ## Verify
 

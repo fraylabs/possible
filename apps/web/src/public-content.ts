@@ -1,4 +1,4 @@
-import { outcomePacks } from "@possible/packs";
+import { publicOutcomePacks } from "@possible/packs";
 
 export const installCommand = "npx @fraylabs/possible@0.1.11 init";
 export const githubUrl = "https://github.com/fraylabs/possible";
@@ -10,21 +10,21 @@ export const featuredPackSlugs = [
 ] as const;
 
 export const featuredPacks = featuredPackSlugs.map((slug) => {
-  const pack = outcomePacks.find((candidate) => candidate.slug === slug);
+  const pack = publicOutcomePacks.find((candidate) => candidate.slug === slug);
   if (!pack) throw new Error(`Missing featured Outcome Pack: ${slug}`);
   return pack;
 });
 
 export const publishedPackSlugs = [...featuredPackSlugs, "first-customer-sprint"] as const;
 export const publishedPacks = publishedPackSlugs.map((slug) => {
-  const pack = outcomePacks.find((candidate) => candidate.slug === slug);
+  const pack = publicOutcomePacks.find((candidate) => candidate.slug === slug);
   if (!pack) throw new Error(`Missing published Outcome Pack: ${slug}`);
   return pack;
 });
 
 export const archivedPublishedPackSlugs = ["hardware-launch", "kickstarter-funding", "kickstarter-fulfillment", "robot-prototype", "developer-project-launch", "working-hardware-prototype", "launch-content-campaign"] as const;
 export const archivedPublishedPacks = archivedPublishedPackSlugs.map((slug) => {
-  const pack = outcomePacks.find((candidate) => candidate.slug === slug);
+  const pack = publicOutcomePacks.find((candidate) => candidate.slug === slug);
   if (!pack?.archived) throw new Error(`Missing archived published Outcome Pack: ${slug}`);
   return pack;
 });

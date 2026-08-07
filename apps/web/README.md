@@ -16,7 +16,7 @@ Canonical install:
 npx @fraylabs/possible@0.1.11 init
 ```
 
-The site imports typed manifests and the compiler from `@possible/packs`. Production builds export only the featured pack pages and their JSON and text contracts.
+The site imports canonical JSON manifests and the compiler from `@possible/packs`. Production builds export only the featured pack pages and their JSON and text contracts.
 
 ```bash
 npm run test -w @possible/web

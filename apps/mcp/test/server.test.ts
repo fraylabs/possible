@@ -8,351 +8,51 @@ import { createPossibleServer, POSSIBLE_SERVER_INSTRUCTIONS, POSSIBLE_TOOL_NAMES
 describe("Possible MCP", () => {
   let client: Client;
   let server: McpServer;
+
   beforeEach(async () => {
     server = await createPossibleServer();
     client = new Client({ name: "possible-test", version: "0.1.0" });
     const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
     await Promise.all([server.connect(serverTransport), client.connect(clientTransport)]);
   });
-  afterEach(async () => { await client.close(); await server.close(); });
 
-  it("exposes three read-only outcome tools", async () => {
+  afterEach(async () => {
+    await client.close();
+    await server.close();
+  });
+
+  it("exposes only read-only public distribution tools", async () => {
     const response = await client.listTools();
     assert.deepEqual(response.tools.map((tool) => tool.name).sort(), [...POSSIBLE_TOOL_NAMES].sort());
     for (const tool of response.tools) assert.equal(tool.annotations?.readOnlyHint, true);
     assert.equal(client.getInstructions(), POSSIBLE_SERVER_INSTRUCTIONS);
+    assert.match(client.getInstructions() ?? "", /never writes project files/i);
   });
 
-  it("validates a completed checkpoint without making its candidate executable", async () => {
-    const checkpoint = {
-      schemaVersion: 1,
-      runId: "discovery-001",
-      packSlug: "software-opportunity-discovery",
-      completedAt: "2026-07-23T10:00:00.000Z",
-      receiptPath: "outcome-room/decision-receipt.json",
-      verificationStatus: "passed",
-      becameTrue: [{
-        statement: "Manual receipt import remains unvalidated.",
-        evidence: ["outcome-room/decision-receipt.json"],
-      }],
-      remainingUnknowns: ["Whether developers prefer automatic capture."],
-      riskiestAssumption: "Developers will manually import evidence.",
-      nextDecision: "Validate the preferred evidence-capture surface.",
-      candidateNextOutcomes: [{
-        outcome: "Validate whether developers prefer automatic evidence capture.",
-        rationale: "Test the riskiest assumption before choosing a product surface.",
-        addressesUnknowns: ["Whether developers prefer automatic capture."],
-        testsAssumption: "Developers will manually import evidence.",
-        approvalRequired: true,
-      }],
-    };
-    const result = await client.callTool({ name: "validate_checkpoint", arguments: { checkpoint } });
-    const envelope = result.structuredContent as { ok: boolean; data: { checkpoint: typeof checkpoint; retrospectiveOnly: boolean; executableNextOutcome: boolean } };
-    assert.equal(envelope.ok, true);
-    assert.deepEqual(envelope.data.checkpoint, checkpoint);
-    assert.equal(envelope.data.retrospectiveOnly, true);
-    assert.equal(envelope.data.executableNextOutcome, false);
-    assert.doesNotMatch(client.getInstructions() ?? "", /chain/i);
-  });
-
-  it("lists four stable, fifteen experimental, and ten archived outcome packs", async () => {
+  it("lists public packs with lifecycle and immutable content hashes", async () => {
     const result = await client.callTool({ name: "list_packs", arguments: {} });
-    const envelope = result.structuredContent as { ok: boolean; data: { packs: Array<{ slug: string; lane: string; status: string }> } };
+    const envelope = result.structuredContent as { ok: boolean; data: { packs: Array<{ slug: string; visibility: string; lifecycle: string; contentHash: string }> } };
     assert.equal(envelope.ok, true);
-    assert.deepEqual(envelope.data.packs.map(({ slug, lane }) => [slug, lane]), [
-      ["hardware-launch", "launch"],
-      ["open-source-release", "release"],
-      ["playable-web-game", "create"],
-      ["web-app-operations", "operate"],
-      ["working-web-app", "create"],
-      ["production-web-release", "release"],
-      ["marketing-operations", "operate"],
-      ["kickstarter-funding", "launch"],
-      ["kickstarter-fulfillment", "operate"],
-      ["robot-prototype", "create"],
-      ["web-presentation", "create"],
-      ["developer-project-launch", "launch"],
-      ["software-opportunity-discovery", "create"],
-      ["first-customer-sprint", "launch"],
-      ["working-hardware-prototype", "create"],
-      ["launch-content-campaign", "launch"],
-      ["manufacturing-readiness", "release"],
-      ["study-readiness", "create"],
-      ["mechanical-cad-review", "create"],
-      ["functional-hardware-prototype", "create"],
-      ["launch-content-package", "launch"],
-      ["crowdfunding-campaign-readiness", "launch"],
-      ["developer-adoption-readiness", "launch"],
-      ["robot-digital-prototype", "create"],
-      ["production-readiness-decision", "release"],
-      ["research-protocol-readiness", "create"],
-      ["crowdfunding-funding-run", "operate"],
-      ["crowdfunding-fulfillment-operations", "operate"],
-      ["developer-product-readiness", "launch"],
-    ]);
-    assert.equal(envelope.data.packs.filter(({ status }) => status === "stable").length, 4);
-    assert.equal(envelope.data.packs.filter(({ status }) => status === "experimental").length, 15);
-    assert.equal(envelope.data.packs.filter(({ status }) => status === "archived").length, 10);
-    assert.equal(envelope.data.packs.find(({ slug }) => slug === "hardware-launch")?.status, "archived");
-    assert.equal(envelope.data.packs.find(({ slug }) => slug === "working-hardware-prototype")?.status, "archived");
-    assert.equal(envelope.data.packs.find(({ slug }) => slug === "launch-content-campaign")?.status, "archived");
-    assert.equal(envelope.data.packs.find(({ slug }) => slug === "kickstarter-funding")?.status, "archived");
+    assert.equal(envelope.data.packs.length, 29);
+    assert.ok(envelope.data.packs.every((pack) => pack.visibility === "public"));
+    assert.ok(envelope.data.packs.every((pack) => /^[a-f0-9]{64}$/.test(pack.contentHash)));
+    assert.equal(envelope.data.packs.find(({ slug }) => slug === "hardware-launch")?.lifecycle, "archived");
   });
 
-  it("compiles Web Presentation as a coded browser-deck outcome", async () => {
-    const result = await client.callTool({ name: "compile_pack", arguments: { slug: "web-presentation" } });
-    const envelope = result.structuredContent as { ok: boolean; data: { pack: { catalogNumber: number; lane: string; plugins: Array<{ invocation: string }> }; installCommands: string[]; runPrompt: string } };
+  it("fetches an exact JSON manifest without writing or making it executable", async () => {
+    const result = await client.callTool({ name: "fetch_pack", arguments: { slug: "web-presentation" } });
+    const envelope = result.structuredContent as { ok: boolean; data: { manifest: { slug: string; packVersion: string; visibility: string; lifecycle: string }; metadata: { contentHash: string; immutableRef: string }; writesProjectFiles: boolean; executable: boolean } };
     assert.equal(envelope.ok, true);
-    assert.equal(envelope.data.pack.catalogNumber, 11);
-    assert.equal(envelope.data.pack.lane, "create");
-    assert.equal(envelope.data.installCommands.length, 4);
-    assert.equal(envelope.data.pack.plugins.at(0)?.invocation, "@sites");
-    assert.match(envelope.data.runPrompt, /\$frontend-slides/);
-    assert.match(envelope.data.runPrompt, /\$impeccable/);
-    assert.match(envelope.data.runPrompt, /Editable coded browser presentation/);
+    assert.equal(envelope.data.manifest.slug, "web-presentation");
+    assert.equal(envelope.data.manifest.visibility, "public");
+    assert.equal(envelope.data.manifest.lifecycle, "reviewed");
+    assert.match(envelope.data.metadata.immutableRef, /^web-presentation@1\.0\.0#[a-f0-9]{64}$/);
+    assert.equal(envelope.data.writesProjectFiles, false);
+    assert.equal(envelope.data.executable, false);
   });
 
-  it("compiles Robot Digital Prototype and refuses the archived predecessor", async () => {
-    const archived = await client.callTool({ name: "compile_pack", arguments: { slug: "robot-prototype" } });
-    assert.equal(archived.isError, true);
-    const result = await client.callTool({ name: "compile_pack", arguments: { slug: "robot-digital-prototype" } });
-    const envelope = result.structuredContent as { ok: boolean; data: { installCommands: string[]; runPrompt: string } };
-    assert.equal(envelope.ok, true);
-    assert.equal(envelope.data.installCommands.length, 3);
-    assert.match(envelope.data.runPrompt, /\$mujoco-robotics/);
-    assert.match(envelope.data.runPrompt, /ROBOT DIGITAL PROTOTYPE GATE/);
-    assert.match(envelope.data.runPrompt, /inactive modules create no implementation or proof work/i);
-  });
-
-  it("preserves but refuses to compile the archived Hardware Launch pack", async () => {
-    const result = await client.callTool({ name: "compile_pack", arguments: { slug: "hardware-launch" } });
+  it("returns a not-found error for private or missing packs", async () => {
+    const result = await client.callTool({ name: "fetch_pack", arguments: { slug: "missing-pack" } });
     assert.equal(result.isError, true);
-    const envelope = result.structuredContent as { ok: boolean; error: { code: string; message: string; details: { replacementSlugs: string[] } } };
-    assert.equal(envelope.ok, false);
-    assert.equal(envelope.error.code, "PACK_ARCHIVED");
-    assert.match(envelope.error.message, /archived and cannot start a new run/i);
-    assert.deepEqual(envelope.error.details.replacementSlugs, ["mechanical-cad-review", "functional-hardware-prototype", "launch-content-package"]);
-  });
-
-  it("compiles Open-Source Release", async () => {
-    const result = await client.callTool({ name: "compile_pack", arguments: { slug: "open-source-release" } });
-    const envelope = result.structuredContent as { ok: boolean; data: { installCommands: string[]; runPrompt: string } };
-    assert.equal(envelope.ok, true);
-    assert.equal(envelope.data.installCommands.length, 1);
-    assert.match(envelope.data.runPrompt, /\$github-release/);
-  });
-
-  it("compiles Playable Web Game", async () => {
-    const result = await client.callTool({ name: "compile_pack", arguments: { slug: "playable-web-game" } });
-    const envelope = result.structuredContent as { ok: boolean; data: { installCommands: string[]; runPrompt: string } };
-    assert.equal(envelope.ok, true);
-    assert.equal(envelope.data.installCommands.length, 3);
-    assert.match(envelope.data.runPrompt, /\$threejs/);
-    assert.match(envelope.data.runPrompt, /Playable browser game/);
-  });
-
-  it("compiles Web App Operations", async () => {
-    const result = await client.callTool({ name: "compile_pack", arguments: { slug: "web-app-operations" } });
-    const envelope = result.structuredContent as { ok: boolean; data: { pack: { lane: string }; installCommands: string[]; runPrompt: string } };
-    assert.equal(envelope.ok, true);
-    assert.equal(envelope.data.pack.lane, "operate");
-    assert.equal(envelope.data.installCommands.length, 2);
-    assert.match(envelope.data.runPrompt, /\$impediment-prioritization/);
-    assert.match(envelope.data.runPrompt, /First dated operations completion report/);
-    assert.match(envelope.data.runPrompt, /OPERATING LOOP/);
-    assert.match(envelope.data.runPrompt, /YYYY-MM-DDTHHMMSSZ\.md/);
-  });
-
-  it("compiles Working Web App", async () => {
-    const result = await client.callTool({ name: "compile_pack", arguments: { slug: "working-web-app" } });
-    const envelope = result.structuredContent as { ok: boolean; data: { pack: { catalogNumber: number; lane: string }; installCommands: string[]; runPrompt: string } };
-    assert.equal(envelope.ok, true);
-    assert.equal(envelope.data.pack.catalogNumber, 5);
-    assert.equal(envelope.data.pack.lane, "create");
-    assert.equal(envelope.data.installCommands.length, 2);
-    assert.match(envelope.data.runPrompt, /^Build the Working Web App outcome/);
-  });
-
-  it("compiles Software Opportunity Discovery without claiming validation", async () => {
-    const result = await client.callTool({ name: "compile_pack", arguments: { slug: "software-opportunity-discovery" } });
-    const envelope = result.structuredContent as { ok: boolean; data: { pack: { catalogNumber: number; lane: string; name: string }; installCommands: string[]; runPrompt: string } };
-    assert.equal(envelope.ok, true);
-    assert.equal(envelope.data.pack.catalogNumber, 13);
-    assert.equal(envelope.data.pack.lane, "create");
-    assert.equal(envelope.data.pack.name, "Software Opportunity Discovery");
-    assert.equal(envelope.data.installCommands.length, 1);
-    assert.match(envelope.data.runPrompt, /\$customer-research/);
-    assert.match(envelope.data.runPrompt, /\$competitor-profiling/);
-    assert.match(envelope.data.runPrompt, /OPPORTUNITY DISCOVERY GATE/i);
-    assert.match(envelope.data.runPrompt, /select, broaden, or stop/i);
-    assert.doesNotMatch(envelope.data.runPrompt, /\nFIRST CUSTOMER SPRINT\n/);
-  });
-
-  it("compiles the resumable First Customer Sprint", async () => {
-    const result = await client.callTool({ name: "compile_pack", arguments: { slug: "first-customer-sprint" } });
-    const envelope = result.structuredContent as { ok: boolean; data: { pack: { catalogNumber: number; lane: string; name: string }; installCommands: string[]; runPrompt: string } };
-    assert.equal(envelope.ok, true);
-    assert.equal(envelope.data.pack.catalogNumber, 14);
-    assert.equal(envelope.data.pack.lane, "launch");
-    assert.equal(envelope.data.pack.name, "First Customer Sprint");
-    assert.equal(envelope.data.installCommands.length, 2);
-    assert.match(envelope.data.runPrompt, /\$create-technical-spike/);
-    assert.match(envelope.data.runPrompt, /FIRST CUSTOMER SPRINT/i);
-    assert.match(envelope.data.runPrompt, /payment received → repeat use/i);
-    assert.match(envelope.data.runPrompt, /awaiting-participants/i);
-    assert.match(envelope.data.runPrompt, /continue, revise, or stop/i);
-    assert.match(envelope.data.runPrompt, /Do not build the full product merely to avoid asking for commitment/i);
-  });
-
-  it("preserves but refuses to compile the archived Working Hardware Prototype pack", async () => {
-    const result = await client.callTool({ name: "compile_pack", arguments: { slug: "working-hardware-prototype" } });
-    assert.equal(result.isError, true);
-    const envelope = result.structuredContent as { ok: boolean; error: { code: string; details: { replacementSlugs: string[] } } };
-    assert.equal(envelope.ok, false);
-    assert.equal(envelope.error.code, "PACK_ARCHIVED");
-    assert.deepEqual(envelope.error.details.replacementSlugs, ["functional-hardware-prototype", "mechanical-cad-review"]);
-  });
-
-  it("compiles Functional Hardware Prototype with conditional expectation modules", async () => {
-    const result = await client.callTool({ name: "compile_pack", arguments: { slug: "functional-hardware-prototype" } });
-    const envelope = result.structuredContent as { ok: boolean; data: { pack: { catalogNumber: number; lane: string; name: string }; installCommands: string[]; runPrompt: string } };
-    assert.equal(envelope.ok, true);
-    assert.equal(envelope.data.pack.catalogNumber, 20);
-    assert.equal(envelope.data.pack.lane, "create");
-    assert.equal(envelope.data.pack.name, "Functional Hardware Prototype");
-    assert.equal(envelope.data.installCommands.length, 3);
-    assert.match(envelope.data.runPrompt, /FUNCTIONAL HARDWARE PROTOTYPE GATE/);
-    assert.match(envelope.data.runPrompt, /CONDITIONAL MODULES/);
-    assert.match(envelope.data.runPrompt, /inactive expectations and modules create no implementation work/i);
-  });
-
-  it("compiles Mechanical CAD Review with interface expectation gates", async () => {
-    const result = await client.callTool({ name: "compile_pack", arguments: { slug: "mechanical-cad-review" } });
-    const envelope = result.structuredContent as { ok: boolean; data: { pack: { catalogNumber: number; lane: string; name: string }; installCommands: string[]; runPrompt: string } };
-    assert.equal(envelope.ok, true);
-    assert.equal(envelope.data.pack.catalogNumber, 19);
-    assert.equal(envelope.data.pack.lane, "create");
-    assert.equal(envelope.data.pack.name, "Mechanical CAD Review");
-    assert.equal(envelope.data.installCommands.length, 2);
-    assert.match(envelope.data.runPrompt, /PACK EXPECTATION TEMPLATES/);
-    assert.match(envelope.data.runPrompt, /MECHANICAL CAD REVIEW GATE/);
-    assert.match(envelope.data.runPrompt, /review-ready, repair-required, or no-go/i);
-  });
-
-  it("preserves but refuses to compile the archived Launch Content Campaign pack", async () => {
-    const result = await client.callTool({ name: "compile_pack", arguments: { slug: "launch-content-campaign" } });
-    assert.equal(result.isError, true);
-    const envelope = result.structuredContent as { ok: boolean; error: { code: string; details: { replacementSlugs: string[] } } };
-    assert.equal(envelope.ok, false);
-    assert.equal(envelope.error.code, "PACK_ARCHIVED");
-    assert.deepEqual(envelope.error.details.replacementSlugs, ["launch-content-package", "marketing-operations"]);
-  });
-
-  it("compiles Launch Content Package with conditional final-export modules", async () => {
-    const result = await client.callTool({ name: "compile_pack", arguments: { slug: "launch-content-package" } });
-    const envelope = result.structuredContent as { ok: boolean; data: { pack: { catalogNumber: number; lane: string; name: string }; installCommands: string[]; runPrompt: string } };
-    assert.equal(envelope.ok, true);
-    assert.equal(envelope.data.pack.catalogNumber, 21);
-    assert.equal(envelope.data.pack.lane, "launch");
-    assert.equal(envelope.data.pack.name, "Launch Content Package");
-    assert.equal(envelope.data.installCommands.length, 3);
-    assert.match(envelope.data.runPrompt, /\$humanizer/);
-    assert.match(envelope.data.runPrompt, /LAUNCH CONTENT PACKAGE GATE/);
-    assert.match(envelope.data.runPrompt, /CONDITIONAL CONTENT MODULES/);
-    assert.doesNotMatch(envelope.data.runPrompt, /REMIX GATE|PRODUCT DECISION RECORD/);
-  });
-
-  it("preserves but refuses to compile the archived Kickstarter Funding pack", async () => {
-    const result = await client.callTool({ name: "compile_pack", arguments: { slug: "kickstarter-funding" } });
-    assert.equal(result.isError, true);
-    const envelope = result.structuredContent as { ok: boolean; error: { code: string; details: { replacementSlugs: string[] } } };
-    assert.equal(envelope.ok, false);
-    assert.equal(envelope.error.code, "PACK_ARCHIVED");
-    assert.deepEqual(envelope.error.details.replacementSlugs, ["crowdfunding-campaign-readiness", "crowdfunding-funding-run", "launch-content-package", "marketing-operations"]);
-  });
-
-  it("compiles Crowdfunding Campaign Readiness without live funding actions", async () => {
-    const result = await client.callTool({ name: "compile_pack", arguments: { slug: "crowdfunding-campaign-readiness" } });
-    const envelope = result.structuredContent as { ok: boolean; data: { pack: { catalogNumber: number; lane: string; name: string }; installCommands: string[]; runPrompt: string } };
-    assert.equal(envelope.ok, true);
-    assert.equal(envelope.data.pack.catalogNumber, 22);
-    assert.equal(envelope.data.pack.lane, "launch");
-    assert.equal(envelope.data.pack.name, "Crowdfunding Campaign Readiness");
-    assert.equal(envelope.data.installCommands.length, 2);
-    assert.match(envelope.data.runPrompt, /CROWDFUNDING CAMPAIGN READINESS GATE/);
-    assert.match(envelope.data.runPrompt, /ends before platform entry or publication/i);
-    assert.doesNotMatch(envelope.data.runPrompt, /LAUNCH GATE|SCHEDULE GATE|PRODUCT DECISION RECORD/);
-  });
-
-  it("compiles the focused product, funding, and fulfillment replacements", async () => {
-    for (const [slug, gate] of [
-      ["developer-product-readiness", "DEVELOPER PRODUCT READINESS GATE"],
-      ["crowdfunding-funding-run", "CROWDFUNDING FUNDING RUN GATE"],
-      ["crowdfunding-fulfillment-operations", "CROWDFUNDING FULFILLMENT OPERATIONS GATE"],
-    ] as const) {
-      const result = await client.callTool({ name: "compile_pack", arguments: { slug } });
-      const envelope = result.structuredContent as { ok: boolean; data: { runPrompt: string } };
-      assert.equal(envelope.ok, true);
-      assert.match(envelope.data.runPrompt, new RegExp(gate));
-      assert.match(envelope.data.runPrompt, /inactive modules create no implementation or proof work/i);
-    }
-    for (const slug of ["developer-project-launch", "developer-adoption-readiness", "kickstarter-fulfillment"]) {
-      const result = await client.callTool({ name: "compile_pack", arguments: { slug } });
-      assert.equal(result.isError, true);
-    }
-  });
-
-  it("compiles Production Readiness Decision and refuses the archived predecessor", async () => {
-    const archived = await client.callTool({ name: "compile_pack", arguments: { slug: "manufacturing-readiness" } });
-    assert.equal(archived.isError, true);
-    const result = await client.callTool({ name: "compile_pack", arguments: { slug: "production-readiness-decision" } });
-    const envelope = result.structuredContent as { ok: boolean; data: { pack: { catalogNumber: number; lane: string; name: string }; installCommands: string[]; runPrompt: string } };
-    assert.equal(envelope.ok, true);
-    assert.equal(envelope.data.pack.catalogNumber, 25);
-    assert.equal(envelope.data.pack.lane, "release");
-    assert.equal(envelope.data.pack.name, "Production Readiness Decision");
-    assert.match(envelope.data.runPrompt, /PRODUCTION READINESS DECISION GATE/);
-    assert.match(envelope.data.runPrompt, /named production commitment/i);
-    assert.match(envelope.data.runPrompt, /ready, repair-required, no-go/i);
-  });
-
-  it("compiles Research Protocol Readiness and refuses the archived predecessor", async () => {
-    const archived = await client.callTool({ name: "compile_pack", arguments: { slug: "study-readiness" } });
-    assert.equal(archived.isError, true);
-    const result = await client.callTool({ name: "compile_pack", arguments: { slug: "research-protocol-readiness" } });
-    const envelope = result.structuredContent as { ok: boolean; data: { pack: { catalogNumber: number; lane: string; name: string }; installCommands: string[]; runPrompt: string } };
-    assert.equal(envelope.ok, true);
-    assert.equal(envelope.data.pack.catalogNumber, 26);
-    assert.equal(envelope.data.pack.lane, "create");
-    assert.equal(envelope.data.pack.name, "Research Protocol Readiness");
-    assert.equal(envelope.data.installCommands.length, 2);
-    assert.match(envelope.data.runPrompt, /RESEARCH PROTOCOL READINESS GATE/);
-    assert.match(envelope.data.runPrompt, /actual design/i);
-    assert.match(envelope.data.runPrompt, /ready-for-qualified-review/i);
-  });
-
-  it("compiles Production Web Release with its second approval gate", async () => {
-    const result = await client.callTool({ name: "compile_pack", arguments: { slug: "production-web-release" } });
-    const envelope = result.structuredContent as { ok: boolean; data: { pack: { catalogNumber: number; lane: string }; installCommands: string[]; runPrompt: string } };
-    assert.equal(envelope.ok, true);
-    assert.equal(envelope.data.pack.catalogNumber, 6);
-    assert.equal(envelope.data.pack.lane, "release");
-    assert.equal(envelope.data.installCommands.length, 3);
-    assert.match(envelope.data.runPrompt, /^Prepare and verify the Production Web Release outcome/);
-    assert.match(envelope.data.runPrompt, /RELEASE GATE/);
-  });
-
-  it("compiles Marketing Operations as a safely schedulable loop", async () => {
-    const result = await client.callTool({ name: "compile_pack", arguments: { slug: "marketing-operations" } });
-    const envelope = result.structuredContent as { ok: boolean; data: { pack: { catalogNumber: number; lane: string; artifactRoot: string }; installCommands: string[]; runPrompt: string } };
-    assert.equal(envelope.ok, true);
-    assert.equal(envelope.data.pack.catalogNumber, 7);
-    assert.equal(envelope.data.pack.lane, "operate");
-    assert.equal(envelope.data.pack.artifactRoot, "marketing");
-    assert.equal(envelope.data.installCommands.length, 1);
-    assert.match(envelope.data.runPrompt, /\$marketing-loops/);
-    assert.match(envelope.data.runPrompt, /marketing\/receipts\/YYYY-MM-DDTHHMMSSZ\.md/);
-    assert.match(envelope.data.runPrompt, /SCHEDULE GATE/);
-    assert.match(envelope.data.runPrompt, /must never publish, post, send email or messages/);
   });
 });
