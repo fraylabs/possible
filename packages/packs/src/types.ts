@@ -169,6 +169,23 @@ export interface ModularOutcomeContract {
   completionBoundary: string;
 }
 
+export type PresentationVideoRenderer = "hyperframes" | "remotion" | "html-browser-capture";
+export type PresentationAudioSource = "procedural" | "tts" | "generated-music" | "generated-sfx" | "licensed" | "provided" | "none";
+
+export interface PresentationVideoContract {
+  kind: "presentation-video";
+  briefPath: string;
+  scenePath: string;
+  audioPlanPath: string;
+  assetManifestPath: string;
+  artifactRoot: string;
+  decisionReceiptPath: string;
+  renderers: PresentationVideoRenderer[];
+  mediaPipeline: "ffmpeg";
+  audioSources: PresentationAudioSource[];
+  decisions: ["ready", "repair-required", "no-go"];
+}
+
 export interface MechanicalCadReviewContract {
   kind: "mechanical-cad-review";
   requirementsPath: string;
@@ -282,6 +299,7 @@ export interface OutcomePack {
   mechanicalCadReview?: MechanicalCadReviewContract;
   manufacturingReadiness?: ManufacturingReadinessContract;
   modularOutcome?: ModularOutcomeContract;
+  presentationVideo?: PresentationVideoContract;
   studyReadiness?: StudyReadinessContract;
   expectations?: PackExpectation[];
   remix?: RemixContract;

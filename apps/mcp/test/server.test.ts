@@ -33,7 +33,7 @@ describe("Possible MCP", () => {
     const result = await client.callTool({ name: "list_packs", arguments: {} });
     const envelope = result.structuredContent as { ok: boolean; data: { packs: Array<{ slug: string; visibility: string; lifecycle: string; contentHash: string }> } };
     assert.equal(envelope.ok, true);
-    assert.equal(envelope.data.packs.length, 29);
+    assert.equal(envelope.data.packs.length, 30);
     assert.ok(envelope.data.packs.every((pack) => pack.visibility === "public"));
     assert.ok(envelope.data.packs.every((pack) => /^[a-f0-9]{64}$/.test(pack.contentHash)));
     assert.equal(envelope.data.packs.find(({ slug }) => slug === "hardware-launch")?.lifecycle, "archived");

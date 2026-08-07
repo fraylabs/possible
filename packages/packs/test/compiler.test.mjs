@@ -37,6 +37,7 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
     "crowdfunding-funding-run",
     "crowdfunding-fulfillment-operations",
     "developer-product-readiness",
+    "presentation-video",
   ]);
   assert.deepEqual(publicPacks.map(({ slug, lane }) => [slug, lane]), [
     ["hardware-launch", "launch"],
@@ -68,8 +69,9 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
     ["crowdfunding-funding-run", "operate"],
     ["crowdfunding-fulfillment-operations", "operate"],
     ["developer-product-readiness", "launch"],
+    ["presentation-video", "create"],
   ]);
-  assert.deepEqual(publicPacks.map((pack) => getCatalogNumber(pack.slug)), Array.from({ length: 29 }, (_, index) => index + 1));
+  assert.deepEqual(publicPacks.map((pack) => getCatalogNumber(pack.slug)), Array.from({ length: 30 }, (_, index) => index + 1));
   assert.equal(new Set(publicPacks.map((pack) => getCatalogNumber(pack.slug))).size, publicPacks.length);
   assert.equal(new Set(publicPacks.map((pack) => pack.slug)).size, publicPacks.length);
   assert.deepEqual(stableOutcomePacks.map((pack) => pack.slug), [
@@ -78,8 +80,8 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
     "software-opportunity-discovery",
     "first-customer-sprint",
   ]);
-  assert.equal(experimentalOutcomePacks.length, 15);
-  assert.equal(activeOutcomePacks.length, 19);
+  assert.equal(experimentalOutcomePacks.length, 16);
+  assert.equal(activeOutcomePacks.length, 20);
   assert.deepEqual(archivedOutcomePacks.map((pack) => pack.slug), ["hardware-launch", "kickstarter-funding", "kickstarter-fulfillment", "robot-prototype", "developer-project-launch", "working-hardware-prototype", "launch-content-campaign", "manufacturing-readiness", "study-readiness", "developer-adoption-readiness"]);
   assert.equal(getPackStatus("hardware-launch"), "archived");
   assert.equal(getPackStatus("missing"), undefined);
@@ -745,6 +747,22 @@ test("Web Presentation produces a coded, evidence-backed deck instead of a Power
   for (const required of ["copywriting", "frontend-slides", "impeccable", "webapp-testing"]) {
     assert.equal(skillIds.has(required), true, `missing ${required}`);
   }
+});
+
+test("Presentation Video keeps renderers, audio generation, and FFmpeg assembly explicit", () => {
+  const presentation = publicPacks.find((pack) => pack.slug === "presentation-video");
+  assert.ok(presentation);
+  assert.equal(getCatalogNumber(presentation.slug), 30);
+  assert.equal(presentation.lane, "create");
+  assert.deepEqual(presentation.presentationVideo?.renderers, ["hyperframes", "remotion", "html-browser-capture"]);
+  assert.equal(presentation.presentationVideo?.mediaPipeline, "ffmpeg");
+  assert.deepEqual(presentation.presentationVideo?.audioSources, ["procedural", "tts", "generated-music", "generated-sfx", "licensed", "provided", "none"]);
+  const compiled = compilePack(presentation);
+  assert.match(compiled.runPrompt, /PRESENTATION VIDEO GATE/);
+  assert.match(compiled.runPrompt, /Procedural audio must preserve its synthesis source and seed/);
+  assert.match(compiled.runPrompt, /FFmpeg as the media assembly boundary/);
+  assert.match(compiled.runPrompt, /never claim a renderer was used when it was unavailable/);
+  assert.deepEqual(presentation.reviewSkills, ["webapp-testing", "remotion-best-practices", "humanizer"]);
 });
 
 test("Robot Prototype generalizes one verified digital-prototype contract across robot forms", () => {

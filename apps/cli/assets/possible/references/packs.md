@@ -1041,6 +1041,47 @@ npx skills@1.5.19 add github/awesome-copilot@26fe2d126bf79aafb38f43344d450b69632
 
 Completion is `complete`, `operating`, `blocked`, `repair-required`, or `no-go`. Complete requires direct terminal evidence for every in-scope obligation, not a universal shipment percentage.
 
+## Presentation Video
+
+Slug: `presentation-video`
+
+Lane: `create`
+
+Status: `experimental`.
+
+Public page: `https://possible.sh/packs/presentation-video`
+
+Use when a pitch, lesson, demo, product story, announcement, or internal talk needs a timed audiovisual video with editable scene sources, explicit sound design, and a verified export. Use Web Presentation when the desired result is a browser deck with presenter controls and PDF export instead.
+
+Outputs: evidence-aware script and scene timing; provider-neutral scene source; HyperFrames, Remotion, or HTML/browser-capture visual source; procedural, generated, supplied, licensed, or silent audio plan; synchronized FFmpeg-assembled masters; captions; provenance, rights, commands, and hash manifest; fresh technical review; ready, repair-required, or no-go receipt.
+
+Workstreams:
+
+- Narrative, claims, and timing — `copywriting`, `humanizer`; owns the brief, script, claims map, and scene beats.
+- Visual composition and scene source — `frontend-slides`, `remotion-best-practices`; selects one available renderer from HyperFrames, Remotion, or HTML/browser capture.
+- Sound design and audio plan — `remotion-best-practices`, `humanizer`; creates procedural cues or records approved TTS, music, SFX, supplied, licensed, or silent sources with provenance.
+- Media assembly and fresh review — `remotion-best-practices`, `webapp-testing`, `humanizer`; uses FFmpeg/FFprobe to assemble, inspect, repair, and receipt the complete result.
+
+Sources:
+
+- `coreyhaines31/marketingskills`: `copywriting`; reviewed `67264763cb107d61749f418d081c56e5bcbc0209`.
+- `zarazhangrui/frontend-slides`: `frontend-slides`; reviewed `9906a34d640d2111f724544cbc50f7f130569ae1`.
+- `remotion-dev/skills`: `remotion-best-practices`; reviewed `ab22f5fa89962ec943eaa18797cbf38c9d727743`.
+- `fraylabs/possible`: `humanizer`; reviewed `e081be4df826b7bd545e6b80406622f52d0bb49b`.
+- `anthropics/skills`: `webapp-testing`; reviewed `fa0fa64bdc967915dc8399e803be67759e1e62b8`.
+
+Install:
+
+```bash
+npx skills@1.5.19 add coreyhaines31/marketingskills@67264763cb107d61749f418d081c56e5bcbc0209 --skill copywriting --agent codex
+npx skills@1.5.19 add zarazhangrui/frontend-slides@9906a34d640d2111f724544cbc50f7f130569ae1 --skill frontend-slides --agent codex
+npx skills@1.5.19 add remotion-dev/skills@ab22f5fa89962ec943eaa18797cbf38c9d727743 --skill remotion-best-practices --agent codex
+npx skills@1.5.19 add fraylabs/possible@e081be4df826b7bd545e6b80406622f52d0bb49b --skill humanizer --agent codex
+npx skills@1.5.19 add anthropics/skills@fa0fa64bdc967915dc8399e803be67759e1e62b8 --skill webapp-testing --agent codex
+```
+
+HyperFrames, audio providers, and downloaded assets are optional capabilities, not Skills CLI dependencies. FFmpeg assembles and verifies media; it does not prove how audio was created. Preserve synthesis code and seeds for procedural sound, provider settings for generated audio, and actual licenses for supplied assets. Never publish, upload, deploy, or contact an audience without separate approval.
+
 ## Selection rule
 
 Recommend the Outcome Pack whose finished outputs most closely match the user's desired end state:
@@ -1060,6 +1101,7 @@ Recommend the Outcome Pack whose finished outputs most closely match the user's 
 - Measured physical prototype plus one frozen configuration, named production commitment, representative pilot, and applicable production modules → Production Readiness Decision.
 - Defined research question plus a reproducible protocol, analysis plan, and only the ethics, privacy, regulatory, or operating modules its design requires → Research Protocol Readiness.
 - Pitch, talk, lesson, demo, or internal presentation plus a coded browser deck, presenter experience, export, and evidence review → Web Presentation.
+- Pitch, talk, lesson, demo, product story, or internal presentation plus a timed audiovisual master with editable scenes, explicit sound design, and verified media export → Presentation Video.
 - Working developer capability plus one shared interface contract, truthful clean-room first-use path, and only the needed website, Skill, MCP, CLI or package, SDK or API, docs, demo, examples, and deployment modules → Developer Product Readiness.
 - Vague software ambition with no selected opportunity plus one traceable provisional thesis and first-customer handoff → Software Opportunity Discovery.
 - Selected product, service, or software opportunity plus real prospects, one concrete offer, and the strongest available commercial commitment → First Customer Sprint.

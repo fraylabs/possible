@@ -4,7 +4,7 @@ import { compilePack, getCatalogNumber, publicOutcomePacks, validatePackManifest
 import { createDraftPack } from "../dist/local.js";
 
 test("public JSON manifests are validated before entering the registry", () => {
-  assert.equal(publicOutcomePacks.length, 29);
+  assert.equal(publicOutcomePacks.length, 30);
   for (const pack of publicOutcomePacks) {
     assert.equal(pack.visibility, "public");
     assert.ok(["reviewed", "archived"].includes(pack.lifecycle));

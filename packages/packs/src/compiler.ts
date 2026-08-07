@@ -437,6 +437,43 @@ Required expectations: ${module.requiredExpectationIds.join(", ")}`).join("\n")}
 Keep artifacts under ${contract.artifactRoot}. Write ${contract.decisionReceiptPath} with exactly one decision: ${contract.decisions.join(", ")}. Completion boundary: ${contract.completionBoundary}`;
   })() : "";
 
+  const presentationVideo = pack.presentationVideo ? (() => {
+    const contract = pack.presentationVideo;
+    if (contract.kind !== "presentation-video") throw new Error(pack.slug + " presentation video kind must be presentation-video");
+    if (contract.decisions.join(",") !== "ready,repair-required,no-go") {
+      throw new Error(pack.slug + " presentation video decisions must be ready, repair-required, no-go");
+    }
+    for (const [label, value] of [
+      ["briefPath", contract.briefPath],
+      ["scenePath", contract.scenePath],
+      ["audioPlanPath", contract.audioPlanPath],
+      ["assetManifestPath", contract.assetManifestPath],
+      ["artifactRoot", contract.artifactRoot],
+      ["decisionReceiptPath", contract.decisionReceiptPath],
+    ] as const) requireSafeRelativePath(value, pack.slug + " presentation video " + label);
+    const supportedRenderers = new Set(["hyperframes", "remotion", "html-browser-capture"]);
+    if (contract.renderers.length === 0 || new Set(contract.renderers).size !== contract.renderers.length || contract.renderers.some((renderer) => !supportedRenderers.has(renderer))) {
+      throw new Error(pack.slug + " presentation video renderers must be unique supported renderers");
+    }
+    if (contract.mediaPipeline !== "ffmpeg") throw new Error(pack.slug + " presentation video mediaPipeline must be ffmpeg");
+    if (contract.audioSources.length === 0 || new Set(contract.audioSources).size !== contract.audioSources.length) {
+      throw new Error(pack.slug + " presentation video audioSources must be unique and non-empty");
+    }
+    return [
+      "",
+      "PRESENTATION VIDEO GATE",
+      "1. Freeze the verified audience, message, timing, claims boundary, delivery formats, visual treatment, audio intent, source assets, rights, and external-action approvals in " + contract.briefPath + ". Do not begin rendering from an unbounded prompt.",
+      "2. Write " + contract.scenePath + " as a provider-neutral scene and timing contract. Select one available renderer per run from: " + contract.renderers.join(", ") + ". Preserve the scene source, renderer, version, settings, and output hash; never claim a renderer was used when it was unavailable.",
+      "3. Write " + contract.audioPlanPath + " before rendering. Every requested cue must identify its start, duration, kind, source mode, provenance, and required or optional status. Supported audio modes are: " + contract.audioSources.join(", ") + ". Procedural audio must preserve its synthesis source and seed; TTS, generated music, supplied recordings, and licensed assets must preserve provider or rights evidence. A silent result is valid only when the plan explicitly selects silence.",
+      "4. Render the visual candidate, then use FFmpeg as the media assembly boundary to synchronize, mix, normalize, caption, transcode, and export the requested masters. Keep editable scene sources and audio stems alongside the final media; do not treat a flattened export as the only artifact.",
+      "5. Write " + contract.assetManifestPath + " with dimensions, frame rate, duration, audio properties, captions, source inputs, generated versus supplied material, licenses, approvals, renderer and provider versions, commands, and SHA-256 hashes. Missing provider access or rights produces a repair-required or no-go result, never an invented asset.",
+      "6. Inspect the complete synchronized result at delivery dimensions. Check visual integrity, timing, audio clipping and silence, intelligibility, caption alignment, reduced-motion or accessibility requirements, provenance, and reproducibility. Use FFprobe or equivalent direct media evidence rather than trusting filenames.",
+      "7. Write " + contract.decisionReceiptPath + " with exactly one status: " + contract.decisions.join(", ") + ". Ready means the named local audiovisual package passed its requested technical and evidence contract; it does not mean published, licensed in every jurisdiction, audience-tested, or commercially effective.",
+      "",
+      "Keep presentation artifacts under " + contract.artifactRoot + ".",
+    ].join("\n");
+  })() : "";
+
   const launchContentPackage = pack.launchContentPackage ? (() => {
     const contract = pack.launchContentPackage;
     if (contract.minimumActiveModules !== 1) throw new Error(`${pack.slug} launch content package requires at least one active module`);
@@ -710,7 +747,7 @@ ${pack.guardrails.map((guardrail) => `- ${guardrail}`).join("\n")}
 
 VERIFICATION CONTRACT
 ${pack.verification.map((item) => `- ${item}`).join("\n")}
-${expectationSpine}${expectations}${prerequisites}${opportunityDiscovery}${firstCustomerSprint}${decisionRationale}${mechanicalCadReview}${functionalHardwarePrototype}${launchContentPackage}${crowdfundingCampaignReadiness}${hardwarePrototype}${manufacturingReadiness}${studyReadiness}${modularOutcome}${remixGate}${releaseGate}${launchGate}${sitesPath}${operateLoop}
+${expectationSpine}${expectations}${prerequisites}${opportunityDiscovery}${firstCustomerSprint}${decisionRationale}${mechanicalCadReview}${functionalHardwarePrototype}${launchContentPackage}${presentationVideo}${crowdfundingCampaignReadiness}${hardwarePrototype}${manufacturingReadiness}${studyReadiness}${modularOutcome}${remixGate}${releaseGate}${launchGate}${sitesPath}${operateLoop}
 
 OUTCOME RECORD
 Every run—including a partial, blocked, or no-go result—must write one machine-readable evidence index at .possible/runs/<run-id>/outcome-record.json.
