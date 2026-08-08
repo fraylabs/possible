@@ -37,7 +37,7 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
     "crowdfunding-funding-run",
     "crowdfunding-fulfillment-operations",
     "developer-product-readiness",
-    "presentation-video",
+    "product-explainer-video",
   ]);
   assert.deepEqual(publicPacks.map(({ slug, lane }) => [slug, lane]), [
     ["hardware-launch", "launch"],
@@ -69,7 +69,7 @@ test("every outcome pack compiles to inspectable installs and a complete prompt"
     ["crowdfunding-funding-run", "operate"],
     ["crowdfunding-fulfillment-operations", "operate"],
     ["developer-product-readiness", "launch"],
-    ["presentation-video", "create"],
+    ["product-explainer-video", "create"],
   ]);
   assert.deepEqual(publicPacks.map((pack) => getCatalogNumber(pack.slug)), Array.from({ length: 30 }, (_, index) => index + 1));
   assert.equal(new Set(publicPacks.map((pack) => getCatalogNumber(pack.slug))).size, publicPacks.length);
@@ -749,16 +749,16 @@ test("Web Presentation produces a coded, evidence-backed deck instead of a Power
   }
 });
 
-test("Presentation Video keeps renderers, audio generation, and FFmpeg assembly explicit", () => {
-  const presentation = publicPacks.find((pack) => pack.slug === "presentation-video");
+test("Product Explainer Video keeps renderers, audio generation, and FFmpeg assembly explicit", () => {
+  const presentation = publicPacks.find((pack) => pack.slug === "product-explainer-video");
   assert.ok(presentation);
   assert.equal(getCatalogNumber(presentation.slug), 30);
   assert.equal(presentation.lane, "create");
-  assert.deepEqual(presentation.presentationVideo?.renderers, ["hyperframes", "remotion", "html-browser-capture"]);
-  assert.equal(presentation.presentationVideo?.mediaPipeline, "ffmpeg");
-  assert.deepEqual(presentation.presentationVideo?.audioSources, ["procedural", "tts", "generated-music", "generated-sfx", "licensed", "provided", "none"]);
+  assert.deepEqual(presentation.productExplainerVideo?.renderers, ["hyperframes", "remotion", "html-browser-capture"]);
+  assert.equal(presentation.productExplainerVideo?.mediaPipeline, "ffmpeg");
+  assert.deepEqual(presentation.productExplainerVideo?.audioSources, ["procedural", "tts", "generated-music", "generated-sfx", "licensed", "provided", "none"]);
   const compiled = compilePack(presentation);
-  assert.match(compiled.runPrompt, /PRESENTATION VIDEO GATE/);
+  assert.match(compiled.runPrompt, /PRODUCT EXPLAINER VIDEO GATE/);
   assert.match(compiled.runPrompt, /Procedural audio must preserve its synthesis source and seed/);
   assert.match(compiled.runPrompt, /FFmpeg as the media assembly boundary/);
   assert.match(compiled.runPrompt, /never claim a renderer was used when it was unavailable/);

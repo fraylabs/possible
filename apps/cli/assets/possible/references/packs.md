@@ -1041,23 +1041,23 @@ npx skills@1.5.19 add github/awesome-copilot@26fe2d126bf79aafb38f43344d450b69632
 
 Completion is `complete`, `operating`, `blocked`, `repair-required`, or `no-go`. Complete requires direct terminal evidence for every in-scope obligation, not a universal shipment percentage.
 
-## Presentation Video
+## Product Explainer Video
 
-Slug: `presentation-video`
+Slug: `product-explainer-video`
 
 Lane: `create`
 
 Status: `experimental`.
 
-Public page: `https://possible.sh/packs/presentation-video`
+Public page: `https://possible.sh/packs/product-explainer-video`
 
-Use when a pitch, lesson, demo, product story, announcement, or internal talk needs a timed audiovisual video with editable scene sources, explicit sound design, and a verified export. Use Web Presentation when the desired result is a browser deck with presenter controls and PDF export instead.
+Use when a product, software capability, workflow, or system needs a short motion explainer with editable scene sources, explicit sound design, and a verified export. Use Web Presentation when the desired result is a browser deck with presenter controls and PDF export instead.
 
 Outputs: evidence-aware script and scene timing; provider-neutral scene source; HyperFrames, Remotion, or HTML/browser-capture visual source; procedural, generated, supplied, licensed, or silent audio plan; synchronized FFmpeg-assembled masters; captions; provenance, rights, commands, and hash manifest; fresh technical review; ready, repair-required, or no-go receipt.
 
 Workstreams:
 
-- Narrative, claims, and timing — `copywriting`, `humanizer`; owns the brief, script, claims map, and scene beats.
+- Narrative, claims, and timing — `copywriting`, `humanizer`; owns the brief, script, claims map, and explainer beats.
 - Visual composition and scene source — `frontend-slides`, `remotion-best-practices`; selects one available renderer from HyperFrames, Remotion, or HTML/browser capture.
 - Sound design and audio plan — `remotion-best-practices`, `humanizer`; creates procedural cues or records approved TTS, music, SFX, supplied, licensed, or silent sources with provenance.
 - Media assembly and fresh review — `remotion-best-practices`, `webapp-testing`, `humanizer`; uses FFmpeg/FFprobe to assemble, inspect, repair, and receipt the complete result.
@@ -1101,7 +1101,7 @@ Recommend the Outcome Pack whose finished outputs most closely match the user's 
 - Measured physical prototype plus one frozen configuration, named production commitment, representative pilot, and applicable production modules → Production Readiness Decision.
 - Defined research question plus a reproducible protocol, analysis plan, and only the ethics, privacy, regulatory, or operating modules its design requires → Research Protocol Readiness.
 - Pitch, talk, lesson, demo, or internal presentation plus a coded browser deck, presenter experience, export, and evidence review → Web Presentation.
-- Pitch, talk, lesson, demo, product story, or internal presentation plus a timed audiovisual master with editable scenes, explicit sound design, and verified media export → Presentation Video.
+- Product, software capability, workflow, or system plus a timed motion explainer with editable scenes, explicit sound design, and verified media export → Product Explainer Video.
 - Working developer capability plus one shared interface contract, truthful clean-room first-use path, and only the needed website, Skill, MCP, CLI or package, SDK or API, docs, demo, examples, and deployment modules → Developer Product Readiness.
 - Vague software ambition with no selected opportunity plus one traceable provisional thesis and first-customer handoff → Software Opportunity Discovery.
 - Selected product, service, or software opportunity plus real prospects, one concrete offer, and the strongest available commercial commitment → First Customer Sprint.

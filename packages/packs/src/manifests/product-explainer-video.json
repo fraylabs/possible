@@ -1,20 +1,21 @@
 {
   "schemaVersion": 1,
   "lane": "create",
-  "slug": "presentation-video",
-  "name": "Presentation Video",
+  "slug": "product-explainer-video",
+  "name": "Product Explainer Video",
   "eyebrow": "30 / EXPERIMENTAL PACK",
-  "promise": "Turn a presentation idea into a timed audiovisual story with editable sources, generated or supplied sound, and a verified final video.",
-  "summary": "A provider-neutral scene timeline rendered with HyperFrames, Remotion, or HTML/browser capture; an explicit audio plan; FFmpeg-assembled masters; captions, provenance, and a direct technical review—not a flattened video that hides how it was made.",
+  "promise": "Turn a product or workflow into a concise motion explainer with editable scenes, generated or supplied sound, and a verified final video.",
+  "summary": "A provider-neutral explainer timeline rendered with HyperFrames, Remotion, or HTML/browser capture; an explicit audio plan; FFmpeg-assembled masters; captions, provenance, and a direct technical review—not a generic presentation or flattened promo that hides how it was made.",
   "useWhen": [
-    "A pitch, lesson, demo, product story, announcement, or internal talk needs a shareable video rather than only a live browser deck or PDF.",
-    "The result needs timed visuals plus narration, music, sound effects, or an explicit silent treatment, with editable sources and a reproducible export.",
-    "The audience, duration, delivery format, source truth, and approval boundary are concrete enough to build one coherent audiovisual artifact."
+    "A product, software capability, workflow, or system needs a short shareable explanation rather than a live browser deck or PDF.",
+    "The explanation can be told through scripted motion graphics, UI or product visuals, typography, narration, sound design, and captions.",
+    "The audience, duration, delivery format, source truth, and approval boundary are concrete enough to build one coherent explainer artifact."
   ],
   "notFor": [
     "A browser-first deck with presenter controls and PDF export but no rendered video; use Web Presentation.",
+    "A live-action, interview-led, documentary, camera-footage, advanced 3D, or full music-production project that the supported renderers cannot represent honestly.",
     "Inventing claims, evidence, product capabilities, testimonials, customer outcomes, or citations to make the video feel more persuasive.",
-    "Training a new audio or video model, replacing qualified audio post-production, or claiming audience response, reach, or commercial effectiveness.",
+    "Training a new audio or video model, producing a general-purpose presentation, replacing qualified audio post-production, or claiming audience response, reach, or commercial effectiveness.",
     "Publishing, uploading, licensing, contacting an audience, or changing external provider state without separate approval for the exact artifact and audience."
   ],
   "reviewedAt": "2026-08-08",
@@ -75,14 +76,14 @@
       "id": "story",
       "name": "Narrative, claims, and timing",
       "skills": ["copywriting", "humanizer"],
-      "owns": ["presentation-video/brief.json", "presentation-video/story/", "presentation-video/script/"],
+      "owns": ["product-explainer-video/brief.json", "product-explainer-video/story/", "product-explainer-video/script/"],
       "brief": "Lock the audience, purpose, source truth, claims boundary, spoken script, scene beats, call to action, duration, and delivery constraints. Map every material claim to evidence and label unknowns; do not solve missing proof with rhetoric."
     },
     {
       "id": "visual-composition",
       "name": "Visual composition and scene source",
       "skills": ["frontend-slides", "remotion-best-practices"],
-      "owns": ["presentation-video/scenes/", "presentation-video/visuals/", "presentation-video/scene-timeline.json"],
+      "owns": ["product-explainer-video/scenes/", "product-explainer-video/visuals/", "product-explainer-video/scene-timeline.json"],
       "dependsOn": ["story"],
       "brief": "Create the provider-neutral scene timeline and the editable visual source. Select an available HyperFrames, Remotion, or HTML/browser-capture renderer, preserve its version and settings, and keep motion legible, accessible, and subordinate to the story."
     },
@@ -90,7 +91,7 @@
       "id": "sound-design",
       "name": "Sound design and audio plan",
       "skills": ["remotion-best-practices", "humanizer"],
-      "owns": ["presentation-video/audio-plan.json", "presentation-video/audio/", "presentation-video/audio-stems/"],
+      "owns": ["product-explainer-video/audio-plan.json", "product-explainer-video/audio/", "product-explainer-video/audio-stems/"],
       "dependsOn": ["story"],
       "brief": "Turn the scene beats into an explicit audio plan. Use procedural synthesis for original cues where useful, or an approved TTS, music, SFX, supplied recording, or licensed source. Preserve source mode, provider or synthesis code, seed, timing, rights, and required-versus-optional status; never hide unavailable audio behind a placeholder."
     },
@@ -98,19 +99,19 @@
       "id": "render-and-review",
       "name": "Media assembly and fresh review",
       "skills": ["remotion-best-practices", "webapp-testing", "humanizer"],
-      "owns": ["presentation-video/exports/", "presentation-video/asset-manifest.json", "outcome-room/presentation-video-receipt.json"],
+      "owns": ["product-explainer-video/exports/", "product-explainer-video/asset-manifest.json", "outcome-room/product-explainer-video-receipt.json"],
       "dependsOn": ["visual-composition", "sound-design"],
       "brief": "Render the complete audiovisual candidate, assemble it through FFmpeg, inspect actual frames and audio, repair material failures, and return ready, repair-required, or no-go with hashes, commands, provenance, and limitations."
     }
   ],
-  "presentationVideo": {
-    "kind": "presentation-video",
-    "briefPath": "presentation-video/brief.json",
-    "scenePath": "presentation-video/scene-timeline.json",
-    "audioPlanPath": "presentation-video/audio-plan.json",
-    "assetManifestPath": "presentation-video/asset-manifest.json",
-    "artifactRoot": "presentation-video/",
-    "decisionReceiptPath": "outcome-room/presentation-video-receipt.json",
+  "productExplainerVideo": {
+    "kind": "product-explainer-video",
+    "briefPath": "product-explainer-video/brief.json",
+    "scenePath": "product-explainer-video/scene-timeline.json",
+    "audioPlanPath": "product-explainer-video/audio-plan.json",
+    "assetManifestPath": "product-explainer-video/asset-manifest.json",
+    "artifactRoot": "product-explainer-video/",
+    "decisionReceiptPath": "outcome-room/product-explainer-video-receipt.json",
     "renderers": ["hyperframes", "remotion", "html-browser-capture"],
     "mediaPipeline": "ffmpeg",
     "audioSources": ["procedural", "tts", "generated-music", "generated-sfx", "licensed", "provided", "none"],

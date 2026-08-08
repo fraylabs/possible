@@ -18,7 +18,7 @@ import openSourceReleaseManifest from "./manifests/open-source-release.json" wit
 import playableWebGameManifest from "./manifests/playable-web-game.json" with { type: "json" };
 import productionReadinessDecisionManifest from "./manifests/production-readiness-decision.json" with { type: "json" };
 import productionWebReleaseManifest from "./manifests/production-web-release.json" with { type: "json" };
-import presentationVideoManifest from "./manifests/presentation-video.json" with { type: "json" };
+import productExplainerVideoManifest from "./manifests/product-explainer-video.json" with { type: "json" };
 import researchProtocolReadinessManifest from "./manifests/research-protocol-readiness.json" with { type: "json" };
 import robotDigitalPrototypeManifest from "./manifests/robot-digital-prototype.json" with { type: "json" };
 import robotPrototypeManifest from "./manifests/robot-prototype.json" with { type: "json" };
@@ -135,7 +135,7 @@ const rawPublicManifests: unknown[] = [
   crowdfundingFundingRunManifest,
   crowdfundingFulfillmentOperationsManifest,
   developerProductReadinessManifest,
-  presentationVideoManifest,
+  productExplainerVideoManifest,
 ];
 
 export const publicOutcomePacks = rawPublicManifests.map((manifest, index) => validatePackManifest(manifest, `publicPacks[${index}]`));
