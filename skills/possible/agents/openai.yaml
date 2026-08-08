@@ -1,4 +1,4 @@
 interface:
   display_name: "Possible"
-  short_description: "Turn ideas into outcomes that can run again"
+  short_description: "Discover and run proven Outcome Packs"
   default_prompt: "Use $possible to clarify and complete one verified outcome, then reassess what should happen next."

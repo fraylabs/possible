@@ -70,6 +70,26 @@
       "reviewUrl": "https://github.com/github/awesome-copilot/tree/26fe2d126bf79aafb38f43344d450b69632200f8/skills/security-review"
     }
   ],
+  "expectations": [
+    {
+      "id": "clean-install-path",
+      "statement": "A clean checkout can install the project and run its primary example using documented commands.",
+      "failureModes": ["Broken installation", "Example depends on undeclared local state"],
+      "requiredEvidence": ["Clean-directory install transcript", "Runnable primary example"]
+    },
+    {
+      "id": "documentation-agreement",
+      "statement": "README, docs, examples, versioning, and changelog describe the same tested behavior and supported environments.",
+      "failureModes": ["Docs promise untested behavior", "Version or example drift"],
+      "requiredEvidence": ["Documentation review", "Tested environment matrix"]
+    },
+    {
+      "id": "release-assurance",
+      "statement": "CI and security findings are reviewed with concrete scope and limitations before any publication decision.",
+      "failureModes": ["Unreviewed release blockers", "Security claims beyond inspected evidence"],
+      "requiredEvidence": ["CI results", "Scoped security report"]
+    }
+  ],
   "workstreams": [
     {
       "id": "release",

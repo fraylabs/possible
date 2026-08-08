@@ -3,7 +3,7 @@ import { execFile } from "node:child_process";
 import { mkdtemp, readFile, rm, writeFile, mkdir } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import { promisify } from "node:util";
 import { afterEach, test } from "node:test";
 
@@ -71,7 +71,7 @@ test("pack init and validate create a private JSON authoring surface", async () 
   );
 });
 
-test("pack export creates a public-review draft without publishing it", async () => {
+test("pack export creates a reviewed public contract without publishing it", async () => {
   const project = await projectFixture();
   const source = JSON.parse(await readFile(resolve(packageRoot, "..", "..", "packages", "packs", "src", "manifests", "playable-web-game.json"), "utf8"));
   source.visibility = "private";
@@ -80,8 +80,154 @@ test("pack export creates a public-review draft without publishing it", async ()
   await writeFile(join(project, ".possible", "packs", "playable-web-game", "pack.json"), `${JSON.stringify(source, null, 2)}\n`);
 
   const result = await execute(process.execPath, [cli, "pack", "export", "playable-web-game"], { cwd: project });
-  assert.match(result.stdout, /public-review draft/);
-  const exported = JSON.parse(await readFile(join(project, ".possible", "exports", "playable-web-game-1.0.0", "pack.json"), "utf8"));
-  assert.deepEqual({ visibility: exported.visibility, lifecycle: exported.lifecycle }, { visibility: "public", lifecycle: "draft" });
-  assert.equal("reviewedAt" in exported, false);
+  assert.match(result.stdout, /reviewed public contract/);
+  const exportDirectory = join(project, ".possible", "exports", "playable-web-game-1.0.0");
+  const exported = JSON.parse(await readFile(join(exportDirectory, "pack.json"), "utf8"));
+  assert.deepEqual({ visibility: exported.visibility, lifecycle: exported.lifecycle }, { visibility: "public", lifecycle: "reviewed" });
+  assert.equal(exported.reviewedAt, source.reviewedAt);
+  assert.match(await readFile(join(exportDirectory, "source-entry.template.json"), "utf8"), /<full-git-commit>/);
+  assert.match(await readFile(join(exportDirectory, "SUBMISSION.md"), "utf8"), /not PR-ready yet/);
+});
+
+test("pack export creates an exact PR-ready source package that the submission validator accepts", async () => {
+  const project = await projectFixture();
+  const source = JSON.parse(await readFile(resolve(packageRoot, "..", "..", "packages", "packs", "src", "manifests", "playable-web-game.json"), "utf8"));
+  source.visibility = "public";
+  source.lifecycle = "reviewed";
+  const sourcePath = join(project, "packs", "playable-web-game.json");
+  await mkdir(dirname(sourcePath), { recursive: true });
+  await writeFile(sourcePath, `${JSON.stringify(source, null, 2)}\n`);
+  const revision = "a".repeat(40);
+  const result = await execute(process.execPath, [
+    cli,
+    "pack",
+    "export",
+    "packs/playable-web-game.json",
+    "submission/playable-web-game",
+    "--source",
+    "https://github.com/example/outcome-packs",
+    "--revision",
+    revision,
+    "--path",
+    "packs/playable-web-game.json",
+  ], { cwd: project });
+
+  assert.match(result.stdout, /PR-ready pack submission/);
+  const exportDirectory = join(project, "submission", "playable-web-game");
+  const entryPath = join(exportDirectory, "source-entry.json");
+  const packPath = join(exportDirectory, "pack.json");
+  const entry = JSON.parse(await readFile(entryPath, "utf8"));
+  assert.deepEqual(entry, {
+    schemaVersion: 1,
+    id: "example/outcome-packs/playable-web-game",
+    source: "https://github.com/example/outcome-packs",
+    revision,
+    path: "packs/playable-web-game.json",
+    contentHash: entry.contentHash,
+  });
+  assert.match(entry.contentHash, /^sha256:[0-9a-f]{64}$/);
+  const instructions = await readFile(join(exportDirectory, "SUBMISSION.md"), "utf8");
+  assert.match(instructions, new RegExp(revision));
+  assert.match(instructions, new RegExp(entry.contentHash));
+  assert.match(instructions, new RegExp(`registry/snapshots/${entry.contentHash.slice("sha256:".length)}\\.json`));
+  assert.match(instructions, /content-addressed snapshot makes the catalog reproducible offline; it is provenance, not trust/);
+  assert.match(instructions, /npm run registry:sync/);
+  assert.match(instructions, /Do not edit those files by hand/);
+  assert.match(instructions, /No Possible account is required/);
+  assert.match(instructions, /no submission database/i);
+  assert.match(instructions, /Only maintainers can assign experimental, verified, or archived trust/);
+
+  const validator = resolve(packageRoot, "..", "..", "scripts", "validate-pack-submission.mjs");
+  const validation = await execute(process.execPath, [validator, "--entry", entryPath, "--pack", packPath], { cwd: resolve(packageRoot, "..", "..") });
+  assert.match(validation.stdout, /Validated example\/outcome-packs\/playable-web-game/);
+  await assert.rejects(
+    execute(process.execPath, [validator, "--entry", entryPath], { cwd: resolve(packageRoot, "..", "..") }),
+    (error) => error.code === 1 && /also requires --pack/.test(error.stderr),
+  );
+
+  const [{ validatePackSnapshot }, { compilePack, validatePackManifest }] = await Promise.all([
+    import(pathToFileURL(validator).href),
+    import("@possible/packs"),
+  ]);
+  const snapshotSource = await readFile(packPath, "utf8");
+  await validatePackSnapshot({ entry, snapshotSource, remoteSource: snapshotSource, validatePackManifest, compilePack, context: entry.id });
+  await assert.rejects(
+    validatePackSnapshot({ entry, snapshotSource, remoteSource: `${snapshotSource}\n`, validatePackManifest, compilePack, context: entry.id }),
+    /snapshot bytes do not match the pinned remote source/,
+  );
+
+  entry.status = "verified";
+  await writeFile(entryPath, `${JSON.stringify(entry, null, 2)}\n`);
+  await assert.rejects(
+    execute(process.execPath, [validator, "--entry", entryPath, "--pack", packPath], { cwd: resolve(packageRoot, "..", "..") }),
+    (error) => error.code === 1 && /status is not supported/.test(error.stderr),
+  );
+
+  delete entry.status;
+  delete entry.schemaVersion;
+  await writeFile(entryPath, `${JSON.stringify(entry, null, 2)}\n`);
+  await assert.rejects(
+    execute(process.execPath, [validator, "--entry", entryPath, "--pack", packPath], { cwd: resolve(packageRoot, "..", "..") }),
+    (error) => error.code === 1 && /schemaVersion must be 1/.test(error.stderr),
+  );
+
+  entry.schemaVersion = 1;
+  await writeFile(entryPath, `${JSON.stringify(entry, null, 2)}\n`);
+  await writeFile(packPath, `${await readFile(packPath, "utf8")}\n`);
+  await assert.rejects(
+    execute(process.execPath, [validator, "--entry", entryPath, "--pack", packPath], { cwd: resolve(packageRoot, "..", "..") }),
+    (error) => error.code === 1 && /contentHash does not match the exact pack bytes/.test(error.stderr),
+  );
+});
+
+test("pack export refuses incomplete or unpinned public source metadata", async () => {
+  const project = await projectFixture();
+  const source = JSON.parse(await readFile(resolve(packageRoot, "..", "..", "packages", "packs", "src", "manifests", "playable-web-game.json"), "utf8"));
+  source.visibility = "public";
+  source.lifecycle = "reviewed";
+  const sourcePath = join(project, "pack.json");
+  await writeFile(sourcePath, `${JSON.stringify(source, null, 2)}\n`);
+
+  await assert.rejects(
+    execute(process.execPath, [cli, "pack", "export", "pack.json", "--source", "https://github.com/example/outcome-packs"], { cwd: project }),
+    (error) => error.code === 1 && /requires --source, --revision, and --path together/.test(error.stderr),
+  );
+  await assert.rejects(
+    execute(process.execPath, [
+      cli,
+      "pack",
+      "export",
+      "pack.json",
+      "--source",
+      "https://github.com/example/outcome-packs",
+      "--revision",
+      "main",
+      "--path",
+      "pack.json",
+    ], { cwd: project }),
+    (error) => error.code === 1 && /full 40- or 64-character/.test(error.stderr),
+  );
+  await assert.rejects(
+    execute(process.execPath, [
+      cli,
+      "pack",
+      "export",
+      "pack.json",
+      "--source",
+      "https://github.com/example/outcome-packs",
+      "--revision",
+      "a".repeat(40),
+      "--path",
+      "../pack.json",
+    ], { cwd: project }),
+    (error) => error.code === 1 && /safe repository-relative JSON path/.test(error.stderr),
+  );
+
+  source.lifecycle = "draft";
+  delete source.reviewedAt;
+  await writeFile(sourcePath, `${JSON.stringify(source, null, 2)}\n`);
+  await assert.rejects(
+    execute(process.execPath, [cli, "pack", "export", "pack.json"], { cwd: project }),
+    (error) => error.code === 1 && /accepts a reviewed private or public pack/.test(error.stderr),
+  );
 });

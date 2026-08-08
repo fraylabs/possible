@@ -1,0 +1,95 @@
+{
+  "schemaVersion": 1,
+  "packVersion": "1.0.0",
+  "visibility": "public",
+  "lifecycle": "reviewed",
+  "lane": "create",
+  "slug": "community-workshop-registration-site",
+  "name": "Community Workshop Registration Site",
+  "eyebrow": "External author evaluation fixture",
+  "promise": "Produce an accessible community workshop registration website with a clear schedule, trustworthy event details, and a tested registration path.",
+  "summary": "A fictional third-party Outcome Pack used only to verify federated catalog ingestion and discovery. It turns confirmed workshop information into a small public website and checks that a visitor can understand the event and complete registration.",
+  "useWhen": [
+    "A community organizer needs a public workshop registration website rather than a general-purpose application.",
+    "The schedule, venue, capacity, accessibility notes, and registration destination can be confirmed before publication."
+  ],
+  "notFor": [
+    "A native mobile application or app store release.",
+    "Publishing unconfirmed claims or collecting personal data without approval."
+  ],
+  "reviewedAt": "2026-08-09",
+  "skills": [
+    {
+      "id": "community-web",
+      "name": "Community Web",
+      "role": "Build and review a small accessible event website",
+      "repository": "outside-author/community-web-skill",
+      "skill": "community-web",
+      "reviewedRevision": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "reviewUrl": "https://github.com/outside-author/community-web-skill/tree/bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb/skills/community-web"
+    }
+  ],
+  "workstreams": [
+    {
+      "id": "registration-site",
+      "name": "Workshop registration site",
+      "skills": [
+        "community-web"
+      ],
+      "owns": [
+        "event information",
+        "responsive website",
+        "registration path",
+        "accessibility review"
+      ],
+      "brief": "Confirm the supplied workshop facts, build the smallest responsive website that explains the event, connect only the approved registration destination, and test the complete visitor path."
+    }
+  ],
+  "reviewSkills": [
+    "community-web"
+  ],
+  "outputs": [
+    "Confirmed event-content sheet",
+    "Responsive workshop registration website",
+    "Registration-path and accessibility test report"
+  ],
+  "guardrails": [
+    "Do not invent dates, venue details, capacity, accessibility claims, or organizer contact information.",
+    "Do not publish or collect personal data without separate approval."
+  ],
+  "verification": [
+    "A fresh visitor can identify the workshop, schedule, venue, accessibility notes, and registration action.",
+    "Keyboard navigation, responsive layout, and the approved registration destination are tested."
+  ],
+  "expectations": [
+    {
+      "id": "event-facts",
+      "statement": "Every public event detail is traceable to confirmed organizer-provided information.",
+      "level": "required",
+      "failureModes": [
+        "invented event fact",
+        "conflicting schedule or venue information"
+      ],
+      "requiredEvidence": [
+        "confirmed event-content sheet",
+        "content comparison"
+      ]
+    },
+    {
+      "id": "registration-path",
+      "statement": "A visitor can understand the workshop and reach the approved registration destination using keyboard or touch navigation.",
+      "level": "required",
+      "failureModes": [
+        "unclear registration action",
+        "broken destination",
+        "keyboard trap",
+        "unreadable narrow layout"
+      ],
+      "requiredEvidence": [
+        "visitor-path test",
+        "keyboard test",
+        "narrow viewport capture"
+      ]
+    }
+  ]
+}

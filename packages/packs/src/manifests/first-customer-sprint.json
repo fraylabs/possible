@@ -19,19 +19,6 @@
     "Selling health-adjacent or human-contact hardware before its prototype status, safety and claims boundary, delivery limits, and refund terms are explicit."
   ],
   "reviewedAt": "2026-07-24",
-  "prerequisites": [
-    {
-      "id": "selected-opportunity",
-      "description": "One specific product, service, or software opportunity and customer segment have been selected for a first-customer attempt.",
-      "requiredEvidence": [
-        "intended customer and painful job",
-        "current alternatives and proposed difference",
-        "offer and credible delivery hypotheses",
-        "known evidence, contradictions, and unresolved assumptions",
-        "for physical products, verified prototype status plus safety, claims, manufacturing, delivery, and refund boundaries"
-      ]
-    }
-  ],
   "skills": [
     {
       "id": "customer-research",
@@ -86,6 +73,26 @@
       "catalogUrl": "https://skills.sh/github/awesome-copilot/create-technical-spike",
       "reviewedRevision": "26fe2d126bf79aafb38f43344d450b69632200f8",
       "reviewUrl": "https://github.com/github/awesome-copilot/tree/26fe2d126bf79aafb38f43344d450b69632200f8/skills/create-technical-spike"
+    }
+  ],
+  "expectations": [
+    {
+      "id": "selected-opportunity-boundary",
+      "statement": "The sprint names one reachable customer segment, painful job, alternative, offer, delivery hypothesis, and physical-product safety boundary where applicable.",
+      "failureModes": ["No selected opportunity", "Health or hardware offer hides safety, delivery, or refund limits"],
+      "requiredEvidence": ["Opportunity and customer brief", "Evidence and assumptions ledger"]
+    },
+    {
+      "id": "traceable-commercial-funnel",
+      "statement": "Every prospect, contact, reply, qualified problem, demo, commitment, payment, and repeat use is preserved with denominators and evidence rung.",
+      "failureModes": ["Silence treated as rejection", "Interest, pledge, or payment attempt overstated"],
+      "requiredEvidence": ["Raw activity records", "Recomputed funnel and source links"]
+    },
+    {
+      "id": "approval-and-decision",
+      "statement": "External outreach, offers, payments, data access, and proof work stay within exact approval, ending in continue, revise, or stop based on strongest observed evidence.",
+      "failureModes": ["Unapproved contact or spend", "Success forced despite weak evidence"],
+      "requiredEvidence": ["Approval and stop-condition record", "Independent decision review"]
     }
   ],
   "workstreams": [
@@ -189,33 +196,6 @@
       "brief": "Build the smallest truthful proof needed to answer the recorded objection. Preserve the exact revision, inputs, timing, constraints, physical or digital evidence, results, failure modes, safety boundary, and delivery effort. Do not generalize it into a full product or count synthetic mechanics as customer behavior."
     }
   ],
-  "firstCustomerSprint": {
-    "kind": "resumable-commercial-evidence",
-    "evidenceLadder": [
-      "reply",
-      "conversation",
-      "qualified problem",
-      "demo requested",
-      "pilot agreed",
-      "payment attempted",
-      "payment received",
-      "repeat use"
-    ],
-    "statePath": "sales/state.json",
-    "cycleRoot": "sales/cycles/",
-    "decisionReceiptPath": "outcome-room/first-customer-receipt.json",
-    "resumeCommand": "$possible resume",
-    "waitingStates": [
-      "awaiting-approval",
-      "awaiting-participants",
-      "awaiting-observation"
-    ],
-    "decisions": [
-      "continue",
-      "revise",
-      "stop"
-    ]
-  },
   "reviewSkills": [
     "customer-research",
     "analytics",

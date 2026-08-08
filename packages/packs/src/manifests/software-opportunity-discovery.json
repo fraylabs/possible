@@ -64,6 +64,26 @@
       "reviewUrl": "https://github.com/coreyhaines31/marketingskills/tree/67264763cb107d61749f418d081c56e5bcbc0209/skills/analytics"
     }
   ],
+  "expectations": [
+    {
+      "id": "traceable-candidates",
+      "statement": "Three to five materially distinct software opportunities are compared using dated evidence, authentic problem language, and source limitations.",
+      "failureModes": ["Idea list without evidence", "Duplicate candidates or invented customer language"],
+      "requiredEvidence": ["Candidate briefs", "Source ledger and dates"]
+    },
+    {
+      "id": "conservative-comparison",
+      "statement": "The comparison covers current alternatives, differentiation, operator fit, reachable prospects, value exchange, and unsupported dependencies.",
+      "failureModes": ["Competitor or market claims unverified", "Operator baseline ignored"],
+      "requiredEvidence": ["Shared comparison rubric", "Alternative and operator analysis"]
+    },
+    {
+      "id": "decision-and-handoff",
+      "statement": "The result records select, broaden, or stop with a provisional thesis, unresolved assumptions, and a bounded first-customer handoff without contacting or building.",
+      "failureModes": ["Demand or product-market fit claimed", "Discovery silently becomes sales or implementation"],
+      "requiredEvidence": ["Decision record", "Assumption and first-customer handoff"]
+    }
+  ],
   "workstreams": [
     {
       "id": "operator-baseline",
@@ -120,20 +140,6 @@
       "brief": "Compare three to five traceable opportunities with one disclosed rubric. Prefer strong problem evidence, credible differentiation, a narrow first boundary, reachable prospects, a concrete value exchange, and low unsupported operator dependence. Select one provisional opportunity, broaden the search, or stop. Produce the first-customer handoff without contacting anyone or claiming demand."
     }
   ],
-  "opportunityDiscovery": {
-    "kind": "opportunity-discovery",
-    "candidateRange": [
-      3,
-      5
-    ],
-    "opportunityBriefPath": "outcome-room/opportunity-brief.json",
-    "decisionReceiptPath": "outcome-room/discovery-receipt.json",
-    "decisions": [
-      "select",
-      "broaden",
-      "stop"
-    ]
-  },
   "reviewSkills": [
     "customer-research",
     "competitor-profiling",

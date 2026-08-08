@@ -128,13 +128,18 @@
     "Do not claim physical safety, durability, manufacturability, calibration, or real-world performance from simulation.",
     "Do not add subsystems merely to resemble a complete robot.",
     "Do not command physical equipment or deploy robot software without separate approval.",
-    "Preserve units, frames, solver settings, seeds, and asset provenance."
+    "Preserve units, frames, solver settings, seeds, and asset provenance.",
+    "Digitally proven means the contracted behavior passes reproducibly in the declared model; it never means a physical robot is safe, buildable, or commissioned."
   ],
   "verification": [
     "Replay nominal and intentionally failing scenarios from a clean environment.",
     "Challenge the behavior threshold across named perturbations.",
     "Inspect active-module interfaces and report numerical or modeling instability.",
-    "List every assumption that requires physical evidence."
+    "List every assumption that requires physical evidence.",
+    "Lock one behavior and its falsifiable threshold.",
+    "Build the smallest executable model with fixed units, frames, solver settings, and seeds.",
+    "Run active-module challenges plus at least one negative scenario.",
+    "Separate digital evidence from every claim that still needs physical proof."
   ],
   "expectations": [
     {
@@ -174,208 +179,107 @@
     },
     {
       "id": "mechanical-cad-proof",
-      "moduleId": "mechanical-cad",
-      "statement": "Active geometry and interfaces support the simulated behavior.",
+      "statement": "Active geometry and interfaces support the simulated behavior. Applicable when: Geometry, joints, collision, or physical interfaces materially determine the behavior.",
       "failureModes": [
         "collision mismatch",
         "invalid joint geometry"
       ],
       "requiredEvidence": [
         "CAD inspection",
-        "kinematic check"
+        "kinematic check",
+        "activation evidence"
       ]
     },
     {
       "id": "locomotion-proof",
-      "moduleId": "mobile-locomotion",
-      "statement": "The locomotion model meets the behavior threshold under named terrain conditions.",
+      "statement": "The locomotion model meets the behavior threshold under named terrain conditions. Applicable when: The behavior requires a mobile base or legged motion.",
       "failureModes": [
         "slip divergence",
         "unstable contact"
       ],
       "requiredEvidence": [
-        "terrain scenario logs"
+        "terrain scenario logs",
+        "activation evidence"
       ]
     },
     {
       "id": "manipulation-proof",
-      "moduleId": "manipulation",
-      "statement": "The manipulation model reaches and controls the named task.",
+      "statement": "The manipulation model reaches and controls the named task. Applicable when: The behavior requires reaching, grasping, or tool interaction.",
       "failureModes": [
         "unreachable pose",
         "unstable grasp"
       ],
       "requiredEvidence": [
         "task replay",
-        "workspace check"
+        "workspace check",
+        "activation evidence"
       ]
     },
     {
       "id": "planning-proof",
-      "moduleId": "planning-semantics",
-      "statement": "Planning state and failure semantics are explicit and exercised.",
+      "statement": "Planning state and failure semantics are explicit and exercised. Applicable when: The behavior requires sequencing, planning, or explicit recovery states.",
       "failureModes": [
         "undefined transition",
         "unhandled no-path"
       ],
       "requiredEvidence": [
         "state trace",
-        "negative plan"
+        "negative plan",
+        "activation evidence"
       ]
     },
     {
       "id": "ros2-proof",
-      "moduleId": "ros2-interface",
-      "statement": "The selected ROS 2 interface is coherent and testable.",
+      "statement": "The selected ROS 2 interface is coherent and testable. Applicable when: ROS 2 interoperability is an explicit requirement.",
       "failureModes": [
         "frame mismatch",
         "topic or service contract drift"
       ],
       "requiredEvidence": [
-        "interface test"
+        "interface test",
+        "activation evidence"
       ]
     },
     {
       "id": "perception-proof",
-      "moduleId": "perception",
-      "statement": "The selected perception model is tested against named uncertainty.",
+      "statement": "The selected perception model is tested against named uncertainty. Applicable when: The behavior depends on estimated rather than ground-truth state.",
       "failureModes": [
         "perfect-state leakage",
         "unmodeled noise"
       ],
       "requiredEvidence": [
-        "sensor perturbation test"
+        "sensor perturbation test",
+        "activation evidence"
       ]
     },
     {
       "id": "learned-control-proof",
-      "moduleId": "learned-control",
-      "statement": "The selected learned controller is reproducible and bounded.",
+      "statement": "The selected learned controller is reproducible and bounded. Applicable when: A learned policy is essential to the behavior under test.",
       "failureModes": [
         "seed sensitivity",
         "training-test leakage"
       ],
       "requiredEvidence": [
         "evaluation runs",
-        "model provenance"
+        "model provenance",
+        "activation evidence"
+      ]
+    },
+    {
+      "id": "robot-digital-prototype-boundary",
+      "statement": "Robot digital prototype produces enough evidence for an independent readiness decision. The possible decisions are digitally-proven, repair-required, no-go. Digitally proven means the contracted behavior passes reproducibly in the declared model; it never means a physical robot is safe, buildable, or commissioned.",
+      "level": "required",
+      "failureModes": [
+        "missing evidence for the declared outcome",
+        "decision made from assumptions or unverified claims"
+      ],
+      "requiredEvidence": [
+        "evidence baseline",
+        "independent review",
+        "decision record"
       ]
     }
   ],
-  "modularOutcome": {
-    "kind": "modular-outcome",
-    "gateName": "Robot digital prototype",
-    "action": "Build and challenge",
-    "contractPath": "robot-digital/contract/behavior.json",
-    "moduleDecisionPath": "robot-digital/contract/modules.json",
-    "artifactRoot": "robot-digital/",
-    "decisionReceiptPath": "robot-digital/decision.json",
-    "minimumActiveModules": 1,
-    "modules": [
-      {
-        "id": "mechanical-cad",
-        "activationWhen": "Geometry, joints, collision, or physical interfaces materially determine the behavior.",
-        "work": [
-          "create only behavior-relevant geometry and joints"
-        ],
-        "checks": [
-          "inspect collisions, limits, units, and interfaces"
-        ],
-        "requiredExpectationIds": [
-          "mechanical-cad-proof"
-        ]
-      },
-      {
-        "id": "mobile-locomotion",
-        "activationWhen": "The behavior requires a mobile base or legged motion.",
-        "work": [
-          "model contacts and locomotion control"
-        ],
-        "checks": [
-          "run terrain and disturbance cases"
-        ],
-        "requiredExpectationIds": [
-          "locomotion-proof"
-        ]
-      },
-      {
-        "id": "manipulation",
-        "activationWhen": "The behavior requires reaching, grasping, or tool interaction.",
-        "work": [
-          "model arm, end effector, and task control"
-        ],
-        "checks": [
-          "test reachability and task failure"
-        ],
-        "requiredExpectationIds": [
-          "manipulation-proof"
-        ]
-      },
-      {
-        "id": "planning-semantics",
-        "activationWhen": "The behavior requires sequencing, planning, or explicit recovery states.",
-        "work": [
-          "define states, transitions, and failure semantics"
-        ],
-        "checks": [
-          "exercise no-path and recovery cases"
-        ],
-        "requiredExpectationIds": [
-          "planning-proof"
-        ]
-      },
-      {
-        "id": "ros2-interface",
-        "activationWhen": "ROS 2 interoperability is an explicit requirement.",
-        "work": [
-          "define the minimum message, frame, and lifecycle surface"
-        ],
-        "checks": [
-          "run interface and frame tests"
-        ],
-        "requiredExpectationIds": [
-          "ros2-proof"
-        ]
-      },
-      {
-        "id": "perception",
-        "activationWhen": "The behavior depends on estimated rather than ground-truth state.",
-        "work": [
-          "model the minimum sensor and estimator"
-        ],
-        "checks": [
-          "inject realistic noise and dropout"
-        ],
-        "requiredExpectationIds": [
-          "perception-proof"
-        ]
-      },
-      {
-        "id": "learned-control",
-        "activationWhen": "A learned policy is essential to the behavior under test.",
-        "work": [
-          "preserve training and model provenance"
-        ],
-        "checks": [
-          "evaluate held-out seeds and perturbations"
-        ],
-        "requiredExpectationIds": [
-          "learned-control-proof"
-        ]
-      }
-    ],
-    "decisions": [
-      "digitally-proven",
-      "repair-required",
-      "no-go"
-    ],
-    "steps": [
-      "Lock one behavior and its falsifiable threshold.",
-      "Build the smallest executable model with fixed units, frames, solver settings, and seeds.",
-      "Run active-module challenges plus at least one negative scenario.",
-      "Separate digital evidence from every claim that still needs physical proof."
-    ],
-    "completionBoundary": "Digitally proven means the contracted behavior passes reproducibly in the declared model; it never means a physical robot is safe, buildable, or commissioned."
-  },
   "packVersion": "1.0.0",
   "visibility": "public",
   "lifecycle": "reviewed"

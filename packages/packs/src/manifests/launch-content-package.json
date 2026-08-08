@@ -139,153 +139,6 @@
       "brief": "Inspect the actual final exports using core checks plus only the active modules' production checks. Repair material claim, voice, accessibility, provenance, rights, legibility, timing, audio, or technical failures and rerun affected checks. Return ready, repair-required, or no-go without publishing, scheduling, or converting content completion into evidence of response."
     }
   ],
-  "launchContentPackage": {
-    "kind": "launch-content-package",
-    "minimumActiveModules": 1,
-    "briefPath": "launch-content-package/brief.json",
-    "moduleDecisionPath": "launch-content-package/module-decisions.json",
-    "assetRoot": "launch-content-package/assets/",
-    "manifestPath": "launch-content-package/manifest.json",
-    "decisionReceiptPath": "outcome-room/launch-content-package-receipt.json",
-    "decisions": [
-      "ready",
-      "repair-required",
-      "no-go"
-    ],
-    "modules": [
-      {
-        "id": "text-post",
-        "activationWhen": "The requested package includes a standalone caption, announcement, update, community post, email-safe copy block, or other final text unit that is not a multi-post thread.",
-        "deliverables": [
-          "final platform-native text",
-          "call to action and required disclosure",
-          "plain-text source"
-        ],
-        "productionChecks": [
-          "source-truth trace",
-          "platform length and structure",
-          "voice",
-          "links and mentions",
-          "disclosures",
-          "read-aloud clarity"
-        ],
-        "requiredExpectationIds": [
-          "text-post-output"
-        ]
-      },
-      {
-        "id": "static-visual",
-        "activationWhen": "The requested package includes a single image, poster, cover, thumbnail, announcement card, or other one-frame visual export.",
-        "deliverables": [
-          "final visual export at each requested size",
-          "editable source",
-          "caption or accompanying copy",
-          "alt text"
-        ],
-        "productionChecks": [
-          "delivery dimensions",
-          "crop and safe area",
-          "legibility",
-          "image continuity",
-          "alt text",
-          "rights and generation provenance"
-        ],
-        "requiredExpectationIds": [
-          "static-visual-output"
-        ]
-      },
-      {
-        "id": "carousel",
-        "activationWhen": "The requested package includes a swipeable, paginated, or multi-panel visual narrative.",
-        "deliverables": [
-          "ordered final panels",
-          "editable source",
-          "caption",
-          "panel-aware alt text or accessible transcript"
-        ],
-        "productionChecks": [
-          "panel order",
-          "opening hook",
-          "narrative progression",
-          "cross-panel continuity",
-          "delivery dimensions",
-          "legibility",
-          "accessible equivalent"
-        ],
-        "requiredExpectationIds": [
-          "carousel-output"
-        ]
-      },
-      {
-        "id": "short-video",
-        "activationWhen": "The requested package includes a vertical, square, or horizontal short-form moving-image export for a bounded platform duration.",
-        "deliverables": [
-          "final video master",
-          "editable timeline or reproducible source",
-          "caption or description",
-          "subtitles",
-          "thumbnail when requested"
-        ],
-        "productionChecks": [
-          "dimensions and duration",
-          "frame integrity",
-          "opening comprehension",
-          "product continuity",
-          "subtitle timing",
-          "audio levels",
-          "rights and generation provenance"
-        ],
-        "requiredExpectationIds": [
-          "short-video-output"
-        ]
-      },
-      {
-        "id": "long-video",
-        "activationWhen": "The requested package includes a launch film, product film, demo video, or other long-form moving-image master.",
-        "deliverables": [
-          "final video master",
-          "editable timeline or reproducible source",
-          "title and description when requested",
-          "captions or transcript",
-          "thumbnail or chapters when requested"
-        ],
-        "productionChecks": [
-          "dimensions, codec, and duration",
-          "narrative continuity",
-          "product evidence boundary",
-          "caption or transcript accuracy",
-          "audio levels",
-          "chapters and thumbnail when active",
-          "rights and generation provenance"
-        ],
-        "requiredExpectationIds": [
-          "long-video-output"
-        ]
-      },
-      {
-        "id": "thread",
-        "activationWhen": "The requested package includes an ordered multi-post announcement, founder, technical, product-decision, or update thread.",
-        "deliverables": [
-          "ordered final posts",
-          "links and media references",
-          "call to action and disclosures",
-          "plain-text source"
-        ],
-        "productionChecks": [
-          "post order and standalone context",
-          "platform limits",
-          "hook and progression",
-          "link placement",
-          "voice",
-          "disclosures",
-          "accessible media references"
-        ],
-        "requiredExpectationIds": [
-          "thread-output"
-        ]
-      }
-    ]
-  },
   "expectations": [
     {
       "id": "package-scope",
@@ -363,8 +216,7 @@
     },
     {
       "id": "text-post-output",
-      "moduleId": "text-post",
-      "statement": "The final text post is platform-native, truthful, understandable, within applicable limits, and complete with its call to action and disclosures.",
+      "statement": "The final text post is platform-native, truthful, understandable, within applicable limits, and complete with its call to action and disclosures. Applicable when: The requested package includes a standalone caption, announcement, update, community post, email-safe copy block, or other final text unit that is not a multi-post thread.",
       "failureModes": [
         "generic filler",
         "truncated or over limit",
@@ -375,13 +227,13 @@
       ],
       "requiredEvidence": [
         "final text and platform check",
-        "source-truth and humanized-voice review"
+        "source-truth and humanized-voice review",
+        "activation evidence"
       ]
     },
     {
       "id": "static-visual-output",
-      "moduleId": "static-visual",
-      "statement": "The final static visual remains accurate, legible, correctly sized and cropped, rights-traceable, and accessible in the requested delivery context.",
+      "statement": "The final static visual remains accurate, legible, correctly sized and cropped, rights-traceable, and accessible in the requested delivery context. Applicable when: The requested package includes a single image, poster, cover, thumbnail, announcement card, or other one-frame visual export.",
       "failureModes": [
         "unsafe crop",
         "illegible text",
@@ -392,13 +244,13 @@
       ],
       "requiredEvidence": [
         "delivery-size visual inspection",
-        "editable source, export, rights, provenance, and alt text"
+        "editable source, export, rights, provenance, and alt text",
+        "activation evidence"
       ]
     },
     {
       "id": "carousel-output",
-      "moduleId": "carousel",
-      "statement": "The final carousel is a coherent ordered narrative whose panels are accurate, legible, correctly exported, and accessible as a whole.",
+      "statement": "The final carousel is a coherent ordered narrative whose panels are accurate, legible, correctly exported, and accessible as a whole. Applicable when: The requested package includes a swipeable, paginated, or multi-panel visual narrative.",
       "failureModes": [
         "panel order broken",
         "repeated filler",
@@ -409,13 +261,13 @@
       ],
       "requiredEvidence": [
         "ordered final-panel inspection",
-        "editable source, caption, and panel-aware accessible equivalent"
+        "editable source, caption, and panel-aware accessible equivalent",
+        "activation evidence"
       ]
     },
     {
       "id": "short-video-output",
-      "moduleId": "short-video",
-      "statement": "The final short video satisfies its requested dimensions and duration while preserving frame integrity, product truth, subtitle timing, audio quality, rights, and disclosure.",
+      "statement": "The final short video satisfies its requested dimensions and duration while preserving frame integrity, product truth, subtitle timing, audio quality, rights, and disclosure. Applicable when: The requested package includes a vertical, square, or horizontal short-form moving-image export for a bounded platform duration.",
       "failureModes": [
         "wrong aspect or duration",
         "broken frames",
@@ -426,13 +278,13 @@
       ],
       "requiredEvidence": [
         "render receipt and full-duration inspection",
-        "subtitle, audio, source, rights, provenance, and disclosure review"
+        "subtitle, audio, source, rights, provenance, and disclosure review",
+        "activation evidence"
       ]
     },
     {
       "id": "long-video-output",
-      "moduleId": "long-video",
-      "statement": "The final long-form video is technically reproducible, narratively coherent, evidence-bounded, captioned or transcribed, rights-traceable, and complete for the requested channel package.",
+      "statement": "The final long-form video is technically reproducible, narratively coherent, evidence-bounded, captioned or transcribed, rights-traceable, and complete for the requested channel package. Applicable when: The requested package includes a launch film, product film, demo video, or other long-form moving-image master.",
       "failureModes": [
         "render failure",
         "unsupported demonstration",
@@ -443,13 +295,13 @@
       ],
       "requiredEvidence": [
         "render receipt and full-duration inspection",
-        "source timeline, captions or transcript, audio, rights, provenance, and requested packaging"
+        "source timeline, captions or transcript, audio, rights, provenance, and requested packaging",
+        "activation evidence"
       ]
     },
     {
       "id": "thread-output",
-      "moduleId": "thread",
-      "statement": "The final thread is ordered, platform-native, truthful, understandable post by post, and complete with links, media references, call to action, and disclosures.",
+      "statement": "The final thread is ordered, platform-native, truthful, understandable post by post, and complete with links, media references, call to action, and disclosures. Applicable when: The requested package includes an ordered multi-post announcement, founder, technical, product-decision, or update thread.",
       "failureModes": [
         "order dependency lost",
         "context missing",
@@ -460,7 +312,22 @@
       ],
       "requiredEvidence": [
         "ordered final-thread inspection",
-        "source-truth, platform, link, media-reference, voice, and disclosure review"
+        "source-truth, platform, link, media-reference, voice, and disclosure review",
+        "activation evidence"
+      ]
+    },
+    {
+      "id": "launch-content-package-boundary",
+      "statement": "Launch Content Package produces enough evidence for an independent readiness decision. The possible decisions are ready, repair-required, no-go.",
+      "level": "required",
+      "failureModes": [
+        "missing evidence for the declared outcome",
+        "decision made from assumptions or unverified claims"
+      ],
+      "requiredEvidence": [
+        "evidence baseline",
+        "independent review",
+        "decision record"
       ]
     }
   ],

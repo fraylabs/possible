@@ -1,22 +1,14 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
-import { archivedOutcomePacks, stableOutcomePacks } from "../packages/packs/dist/index.js";
+import { publicCatalog } from "../packages/packs/dist/index.js";
 
 const output = new URL("../apps/web/out/", import.meta.url);
 const html = (relativePath) => readFile(new URL(relativePath, output), "utf8");
 const visibleText = (markup) => markup.replace(/<script[\s\S]*?<\/script>/gi, " ").replace(/<style[\s\S]*?<\/style>/gi, " ");
 const plainText = (markup) => markup.replace(/<[^>]+>/g, " ").replace(/&[a-z0-9#]+;/gi, " ").replace(/\s+/g, " ").trim();
 const escape = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-const publicArchiveSlugs = new Set([
-  "hardware-launch",
-  "kickstarter-funding",
-  "kickstarter-fulfillment",
-  "robot-prototype",
-  "developer-project-launch",
-  "working-hardware-prototype",
-  "launch-content-campaign",
-]);
-const homePacks = [...stableOutcomePacks, ...archivedOutcomePacks.filter(({ slug }) => publicArchiveSlugs.has(slug))];
+const homeEntries = publicCatalog;
+const routeId = (entry) => entry.origin.kind === "bundled" ? entry.pack.slug : entry.id;
 const exampleRoutes = [
   ["still", "Still"],
   ["robot-snake", "Robot Snake"],
@@ -103,35 +95,40 @@ for (const forbidden of [
 ]) assert.doesNotMatch(home, forbidden);
 
 const heroIndex = home.indexOf('class="build-hero"');
+const filmIndex = home.indexOf('class="home-film"');
 const workflowIndex = home.indexOf('class="home-workflow"');
 const demosIndex = home.indexOf('class="home-demo"');
 const galleryIndex = home.indexOf('class="home-pack-gallery"');
 const sourceIndex = home.indexOf('aria-labelledby="home-source-heading"');
 assert.ok(heroIndex >= 0, "Homepage must render the install hero");
-assert.equal((home.match(/<section\b/g) ?? []).length, 2, "Homepage must contain the hero and visual pack gallery sections");
-assert.ok(galleryIndex > heroIndex, "Homepage must place the visual pack gallery after the install hero");
+assert.equal((home.match(/<section\b/g) ?? []).length, 3, "Homepage must contain the hero, launch film, and visual pack gallery sections");
+assert.ok(filmIndex > heroIndex, "Homepage must place the launch film after the install hero");
+assert.ok(galleryIndex > filmIndex, "Homepage must place the visual pack gallery after the launch film");
 for (const [index, label] of [[workflowIndex, "workflow"], [demosIndex, "examples"], [sourceIndex, "source"]]) {
   assert.equal(index, -1, `Homepage must not render the ${label} section`);
 }
 assert.match(homeMarkup, /class="home-pack-gallery"[\s\S]*aria-label="Public Outcome Pack catalog"/);
-assert.equal((homeMarkup.match(/class="pack-card-preview"/g) ?? []).length, homePacks.length, "Homepage must show one visual preview per public pack");
+assert.equal((homeMarkup.match(/class="pack-card-preview"/g) ?? []).length, homeEntries.length, "Homepage must show one visual preview per public catalog entry");
 
-const homepageWordCount = plainText(home.match(/<main[\s\S]*<\/main>/)?.[0] ?? "").split(/\s+/).filter(Boolean).length;
-assert.ok(homepageWordCount <= 500, `Homepage must remain concise; found ${homepageWordCount} words`);
+const homepageMain = home.match(/<main[\s\S]*<\/main>/)?.[0] ?? "";
+const homepageEditorialCopy = homepageMain.replace(/<section class="home-pack-gallery"[\s\S]*?<\/section>/, "");
+const homepageEditorialWordCount = plainText(homepageEditorialCopy).split(/\s+/).filter(Boolean).length;
+assert.ok(homepageEditorialWordCount <= 500, `Homepage editorial copy must remain concise; found ${homepageEditorialWordCount} words outside the catalog`);
 assert.match(homeMarkup, /<meta property="og:image" content="https:\/\/possible\.sh\/og\.png"\/>/);
 assert.doesNotMatch(home, /<div id="root"><\/div>/);
 
 const catalog = home;
-for (const pack of homePacks) {
+for (const entry of homeEntries) {
+  const { pack } = entry;
   assert.match(catalog, new RegExp(escape(pack.name)));
-  const detail = visibleText(await html(`packs/${pack.slug}/index.html`));
+  const detail = visibleText(await html(`packs/${routeId(entry)}/index.html`));
   assert.match(detail, new RegExp(escape(pack.promise)));
   assert.doesNotMatch(detail, /SCHEDULABLE|OPTIONAL SCHEDULE|Schedule the operating loop/i);
   if (!pack.archived) assert.doesNotMatch(detail, /EXPERIMENTAL OUTCOME PACK|Preserved end-to-end evidence is still in progress/i);
 }
 assert.match(catalog, /Choose the work\.[\s\S]*Make it real\./i);
 assert.match(homeMarkup, /aria-label="Public Outcome Pack catalog"/);
-for (const pack of homePacks) assert.match(catalog, new RegExp(escape(pack.name)), `Homepage must include ${pack.name}`);
+for (const { pack } of homeEntries) assert.match(catalog, new RegExp(escape(pack.name)), `Homepage must include ${pack.name}`);
 const archivedHardwareLaunch = visibleText(await html("packs/hardware-launch/index.html"));
 assert.match(archivedHardwareLaunch, /ARCHIVED[\s\S]*2026-07-27/i);
 assert.match(archivedHardwareLaunch, /will not recommend or compile it for new work/i);
@@ -167,10 +164,6 @@ assert.match(archivedKickstarterFunding, /Crowdfunding Campaign Readiness/i);
 assert.match(archivedKickstarterFunding, /Launch Content Package/i);
 assert.match(archivedKickstarterFunding, /View active packs/i);
 assert.doesNotMatch(archivedKickstarterFunding, /Start with \$possible/i);
-for (const slug of ["open-source-release", "marketing-operations"]) {
-  await assert.rejects(html(`packs/${slug}/index.html`), { code: "ENOENT" }, `${slug} must not be exported`);
-}
-
 const gallery = visibleText(await html("examples/index.html"));
 const canonicalCardLinks = gallery.match(/href="\/examples\/(?:still|robot-snake|fold|web-presentation|patchproof)"/g) ?? [];
 assert.equal(canonicalCardLinks.length, exampleRoutes.length, "/examples must contain five canonical example cards");
@@ -247,7 +240,7 @@ assert.match(howToUseMarkup, /href="#goal-and-possible"/, "/docs/how-to-use must
 assert.match(howToUse, /\/goal[\s\S]{0,240}(?:pursuit|persist|adapt)/i, "/docs/how-to-use must explain the role of /goal");
 assert.match(howToUse, /Possible[\s\S]{0,240}(?:reviewed|controlled)[\s\S]{0,120}(?:outcome )?contract/i, "/docs/how-to-use must explain the role of Possible");
 assert.match(howToUse, /(?:together|combine|both)[\s\S]{0,320}(?:target|execution|revision|discover)/i, "/docs/how-to-use must explain their combined workflow");
-assert.match(howToUseMarkup, /id="remix-and-journey"/, "/docs/how-to-use must teach Outcome Journeys as retrospective");
+assert.match(howToUseMarkup, /id="presentation-and-journey"/, "/docs/how-to-use must teach presentation variation and retrospective Outcome Journeys");
 assert.match(howToUse, /Outcome Journey[\s\S]{0,120}visible only afterward[\s\S]{0,260}new reality[\s\S]{0,180}fresh approval/i, "/docs/how-to-use must recommend future outcomes one at a time");
 assert.doesNotMatch(howToUse, /Outcome Chain|NOW \/ IF THIS PASSES \/ LATER/i, "/docs/how-to-use must not predeclare an Outcome Chain");
 

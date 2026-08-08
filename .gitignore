@@ -10,3 +10,8 @@ coverage/
 .env.*
 !.env.example
 artifacts/runtime/
+
+# Local Skills CLI installs and generated site export artifacts.
+.agents/
+skills-lock.json
+possible-sites.tar.gz

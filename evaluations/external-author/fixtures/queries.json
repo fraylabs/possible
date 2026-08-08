@@ -1,0 +1,14 @@
+{
+  "match": {
+    "outcome": "Build an accessible community workshop registration website with event details and a tested registration path.",
+    "currentReality": "The organizer has confirmed the schedule, venue, capacity, accessibility notes, and registration destination.",
+    "constraints": "The site must work on narrow screens and with keyboard navigation.",
+    "expectedDecision": "select"
+  },
+  "notForConflict": {
+    "outcome": "Build a community workshop registration website as a native mobile application.",
+    "currentReality": "The organizer needs registration for the same workshop.",
+    "constraints": "It must be a native mobile application prepared for an app store release.",
+    "expectedDecision": "reject"
+  }
+}

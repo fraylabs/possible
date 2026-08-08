@@ -1,7 +1,8 @@
 {
   "pack": "product-explainer-video",
   "subject": "Possible",
-  "decision": "ready",
+  "decision": "repair-required",
+  "status": "superseded",
   "verifiedAt": "2026-08-08",
   "immutableSource": {
     "brief": "brief.json",

@@ -8,9 +8,9 @@ The run produced CAD, URDF/SRDF, MuJoCo control, obstacle avoidance, and Rerun t
 
 A clean `/goal` control given the same rough idea produced a capable browser simulator, hardware plan, compiled firmware, and 18 tests. It did not infer the pack's CAD, robot descriptions, MuJoCo physics, autonomy proof, Rerun evidence, or fresh verification. [Inspect the preserved comparison](apps/web/public/demo/robot-snake/CONTROL-RUN.md).
 
-`/goal` sustains dynamic pursuit. Possible supplies the reviewed outcome contract. They work together: persistence toward a stronger definition of done.
+`/goal` sustains dynamic pursuit. Possible supplies the outcome contract and its evidence boundary. They work together: persistence toward a stronger definition of done.
 
-Possible.sh is an open-source library of Outcome Packs for Codex. An Outcome Pack combines an execution prompt, agent skills, sequencing, safeguards, and completion checks. The `$possible` skill understands the request, recommends a pack, asks for approval, and runs it.
+Possible.sh is an open-source library of Outcome Packs for Codex. An Outcome Pack combines a Structured Prompt, agent Skills, and an Expectations checklist; the compiler assembles one deterministic Run Prompt. The `$possible` skill understands the request, searches the current catalog, recommends a pack, asks for approval, and runs it.
 
 ## OpenAI Build Week
 
@@ -49,32 +49,13 @@ The installer is idempotent and refuses to overwrite conflicting skill files. Ou
 
 ## Public Outcome Packs
 
-Possible publishes four active reviewed public packs. Experimental packs remain available for testing, while archived packs preserve their original specifications and links without appearing in new recommendations.
+The catalog is generated from accepted, immutable pack snapshots rather than a list embedded in the `$possible` skill. Each catalog record keeps authorship and trust separate:
 
-- [Playable Web Game](packages/packs/src/manifests/playable-web-game.json) — a polished browser game with responsive controls and playability review.
-- [Web Presentation](packages/packs/src/manifests/web-presentation.json) — an evidence-backed coded deck with responsive presenter behavior.
-- [Software Opportunity Discovery](packages/packs/src/manifests/software-opportunity-discovery.json) — turns a rough software ambition into one provisional opportunity and a credible first-customer approach.
-- [First Customer Sprint](packages/packs/src/manifests/first-customer-sprint.json) — takes one selected product, service, or software opportunity to real prospects and pursues the strongest available commercial commitment.
+- the source record identifies the author repository, exact Git revision, manifest path, and content hash;
+- the accepted snapshot preserves the exact bytes indexed by Possible;
+- the trust record says whether the pack is listed, experimental, verified, or archived and links any accepted run evidence.
 
-The experimental [Mechanical CAD Review](packages/packs/src/manifests/mechanical-cad-review.json) pack is the focused option for passive objects and simple mechanisms: editable CAD, explicit restraint and assembly proof, fit coupons, a vendor package, and an honest review boundary without launch-site or film work.
-
-The experimental [Functional Hardware Prototype](packages/packs/src/manifests/functional-hardware-prototype.json) pack builds the simplest integrated artifact that proves one physical function. Battery, high-energy, motion, thermal, living-contact, networked, and health-claim work activates only when the actual architecture requires it; concrete safety review follows the first coherent artifact while hazardous actions retain early hard stops.
-
-The experimental [Launch Content Package](packages/packs/src/manifests/launch-content-package.json) pack produces one truthful, post-ready package for selected channels. Text posts, static visuals, carousels, short videos, long videos, and threads activate independently; it does not add a three-direction exercise, every platform, analytics, or a campaign calendar.
-
-The experimental [Crowdfunding Campaign Readiness](packages/packs/src/manifests/crowdfunding-campaign-readiness.json) pack verifies one physical-product campaign package before platform entry. It consumes existing prototype, manufacturing, study-boundary, and final-content evidence, recomputes economics and rewards, then stops before publication, audience activation, pledges, or payout.
-
-The experimental [Developer Product Readiness](packages/packs/src/manifests/developer-product-readiness.json) pack turns one working capability into a coherent developer product. Website, agent Skill, MCP server, CLI or package, SDK or API, expanded docs, demo, examples, and deployment activate only when the actual users and product require them; every active surface must agree with one verified capability contract.
-
-The experimental [Robot Digital Prototype](packages/packs/src/manifests/robot-digital-prototype.json), [Production Readiness Decision](packages/packs/src/manifests/production-readiness-decision.json), and [Research Protocol Readiness](packages/packs/src/manifests/research-protocol-readiness.json) packs prove one bounded core outcome and activate subsystem, production, ethics, privacy, and regulatory modules only from the actual project.
-
-The experimental [Crowdfunding Funding Run](packages/packs/src/manifests/crowdfunding-funding-run.json) consumes a passing readiness receipt and controls exact publication, audience, campaign, and payout evidence. [Crowdfunding Fulfillment Operations](packages/packs/src/manifests/crowdfunding-fulfillment-operations.json) begins only from a funded-settled run and reconciles physical, digital, regional, address, exception, and communication obligations without imposing a universal shipment percentage.
-
-[Hardware Launch](packages/packs/src/manifests/hardware-launch.json), [Kickstarter Funding](packages/packs/src/manifests/kickstarter-funding.json), [Kickstarter Fulfillment](packages/packs/src/manifests/kickstarter-fulfillment.json), [Robot Prototype](packages/packs/src/manifests/robot-prototype.json), [Developer Project Launch](packages/packs/src/manifests/developer-project-launch.json), [Developer Adoption Readiness](packages/packs/src/manifests/developer-adoption-readiness.json), [Working Hardware Prototype](packages/packs/src/manifests/working-hardware-prototype.json), [Launch Content Campaign](packages/packs/src/manifests/launch-content-campaign.json), [Manufacturing Readiness](packages/packs/src/manifests/manufacturing-readiness.json), and [Study Readiness](packages/packs/src/manifests/study-readiness.json) are archived. Their original specifications and existing public links remain available for historical evidence, but Possible no longer recommends their mixed, incomplete, or universally heavyweight contracts.
-
-The preserved PatchProof journey verifies Software Opportunity Discovery and Developer Project Launch as separate outcomes—and records why Possible no longer chooses their sequence in advance.
-
-You do not need to choose a pack. `$possible` recommends one after understanding your outcome.
+You do not need to memorize or choose a pack. `$possible` searches the current catalog after understanding your outcome, rejects explicit non-fit, and explains the status and evidence behind its recommendation. New accepted packs become discoverable without changing the skill.
 
 ## See the evidence
 
@@ -109,6 +90,8 @@ Each Outcome Pack has a [JSON manifest](packages/packs/src/manifests/playable-we
 - approval gates;
 - verification and the definition of done.
 
+Pack authoring stays deliberately small: a Structured Prompt, reviewed Skills, and an Expectations checklist. The Structured Prompt is the manifest's promise, summary, fit, workstreams, outputs, guardrails, and verification fields—not a second prose blob. The compiler turns those fields into one deterministic Run Prompt. Domain-specific contract objects, module registries, plugin lists, schedules, prerequisites, remix schemas, and bespoke compiler branches are not part of the authoring surface; put genuinely necessary guidance in the Structured Prompt or express it as an expectation.
+
 Each run freezes `.possible/runs/<run-id>/expectations.json` before implementation. Pack templates, explicit user expectations, and safe inferred preferences become one observable contract. Required expectations decide completion; preferred expectations guide tradeoffs without becoming hidden blockers. Workstreams, outputs, artifacts, verifier findings, and final results all map back to expectation IDs.
 
 Possible then reviews one coherent integrated outcome—not a pile of individually passing parts—against that frozen contract. A failed required expectation becomes a preserved repair finding. The run repairs the actual artifact, reruns the affected verifier and the complete-outcome review, and passes only the final integrated revision where every active required expectation has direct evidence. This keeps validation and refinement attached to the prototype instead of turning them into preliminary ceremony; applicable hard stops and external-action gates still remain.
@@ -122,7 +105,7 @@ After a verified run, Possible creates a new-reality checkpoint. It does not aut
 Possible keeps the user-facing model small:
 
 - **Outcome** — the observable end state the user wants to make true.
-- **Outcome Pack** — a reviewed contract for one class of outcomes, including its prompt, skills, workstreams, safeguards, outputs, and checks.
+- **Outcome Pack** — a versioned contract for one class of outcomes, including its Structured Prompt, Skills, and Expectations.
 - **Run** — one approved pack applied to one project and one frozen brief.
 - **Expectation** — an acceptance condition describing what must become true. Expectations are not outputs or tasks.
 - **Output** — an inspectable artifact or deliverable produced by the run.
@@ -130,7 +113,7 @@ Possible keeps the user-facing model small:
 - **Verification** — an independent attempt to determine whether the active expectations are true.
 - **Checkpoint** — the new reality recorded after a run, including unknowns and the next decision.
 
-Catalog status and the legacy lane field stay as internal discovery/compiler metadata; they are not user-facing workflow primitives. Pack-specific contracts add detail only when an outcome needs it. An Outcome Journey is retrospective: it is visible only after separate outcomes have been verified, not a predeclared sequence.
+Catalog trust status is visible discovery evidence, not a workflow primitive or permission. The legacy lane field remains internal browsing metadata. An Outcome Journey is retrospective: it is visible only after separate outcomes have been verified, not a predeclared sequence.
 
 ## Built During Build Week
 
@@ -156,16 +139,22 @@ possible pack inspect my-pack
 possible pack compile my-pack
 ```
 
-Draft packs can be edited and validated but cannot compile until reviewed. MCP only distributes public JSON manifests; the Possible skill and local CLI handle private packs and execution.
+Draft packs can be edited and validated but cannot compile until reviewed. MCP only distributes accepted public catalog snapshots; the Possible skill and local CLI handle private packs and execution.
+
+To contribute a public pack, keep its source in your own GitHub repository, export an exact source record and immutable snapshot, then open a normal pull request. The focused CI path validates the source commit, bytes, manifest, and generated catalog without letting authors assign trust. See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Verify
 
 ```bash
 npm install
-npm run check
+npm run packs:check
 ```
 
-The build publishes the four featured pack specifications and their compiled JSON and text contracts.
+`packs:check` is the fast inner-loop check for Outcome Pack work. The full
+`npm run check` release gate also builds the website and verifies every demo,
+publication, and historical evidence bundle.
+
+The build publishes discoverable pack specifications plus retained archived pack pages and their compiled JSON and Run Prompt contracts.
 
 The [Robot Snake evaluation protocol](evaluations/robot-snake/README.md) preserves the exact comparison input, maps the pre-existing contract to direct evidence and verifies every published artifact checksum with `npm run evaluation:verify`.
 

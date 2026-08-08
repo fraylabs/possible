@@ -30,18 +30,6 @@
       "marketing-operations"
     ]
   },
-  "prerequisites": [
-    {
-      "id": "campaign-ready-product",
-      "description": "The product evidence and production commitment are strong enough to price rewards and state delivery risks without inventing feasibility.",
-      "requiredEvidence": [
-        "measured product or prototype revision and claims boundary",
-        "manufacturing-readiness receipt or equivalent DFM, supplier, cost, compliance, quality, pilot, and fulfillment evidence",
-        "current unit economics, volume limits, cash timing, delivery assumptions, and unresolved risks",
-        "for any promised research program, a Study Readiness receipt or equivalent qualified-review package"
-      ]
-    }
-  ],
   "skills": [
     {
       "id": "product-marketing",
@@ -150,6 +138,26 @@
       "reviewUrl": "https://github.com/fraylabs/possible/tree/e081be4df826b7bd545e6b80406622f52d0bb49b/skills/humanizer"
     }
   ],
+  "expectations": [
+    {
+      "id": "campaign-feasibility",
+      "statement": "The campaign package uses measured product or prototype evidence, production and fulfillment evidence, current unit economics, and explicit delivery risks.",
+      "failureModes": ["Rewards priced without feasibility", "Prototype or manufacturing unknowns hidden"],
+      "requiredEvidence": ["Prototype and manufacturing evidence", "Cost and cash model", "Risk register"]
+    },
+    {
+      "id": "truthful-offer-and-assets",
+      "statement": "Audience, claims, rewards, page, film, FAQ, and launch calendar agree and label assumptions, provenance, and unresolved dependencies.",
+      "failureModes": ["Invented demand, testimonial, or supplier fact", "Offer promises unsupported delivery"],
+      "requiredEvidence": ["Campaign page package", "Claims and asset provenance review"]
+    },
+    {
+      "id": "funding-boundary",
+      "statement": "Local preparation never publishes, contacts, spends, or accepts money, and any funding result counts deposited platform payout rather than pledges or campaign theater.",
+      "failureModes": ["Mock campaign represented as live", "Pledges counted as received money"],
+      "requiredEvidence": ["Approval/no-go record", "Deposited-payout evidence or explicit unknown"]
+    }
+  ],
   "workstreams": [
     {
       "id": "feasibility",
@@ -240,22 +248,6 @@
       "brief": "Define milestone, traffic, conversion, pledge, cancellation, fee, payout, and risk evidence; create a bounded campaign review loop with decision thresholds and truthful empty states. Verify the local package now and prepare separate approval gates for live publication and every external action."
     }
   ],
-  "decisionRationale": {
-    "kind": "evidence-backed-product-decisions",
-    "rootPath": "campaign/decisions/",
-    "publicNarrativePath": "campaign/decisions/public-rationale.md",
-    "requiredFields": [
-      "question",
-      "options",
-      "evidence",
-      "selection",
-      "rationale",
-      "tradeoffs",
-      "uncertainty",
-      "reversal evidence",
-      "public explanation"
-    ]
-  },
   "reviewSkills": [
     "product-marketing",
     "analytics",

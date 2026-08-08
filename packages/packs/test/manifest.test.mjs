@@ -4,7 +4,7 @@ import { compilePack, getCatalogNumber, publicOutcomePacks, validatePackManifest
 import { createDraftPack } from "../dist/local.js";
 
 test("public JSON manifests are validated before entering the registry", () => {
-  assert.equal(publicOutcomePacks.length, 30);
+  assert.equal(publicOutcomePacks.length, 33);
   for (const pack of publicOutcomePacks) {
     assert.equal(pack.visibility, "public");
     assert.ok(["reviewed", "archived"].includes(pack.lifecycle));
@@ -30,7 +30,7 @@ test("pack validation rejects malformed versions and duplicate workstream ids", 
 
   const catalogLeak = createDraftPack("catalog-leak");
   catalogLeak.catalogNumber = 1;
-  assert.throws(() => validatePackManifest(catalogLeak), /belongs to public catalog metadata/i);
+  assert.throws(() => validatePackManifest(catalogLeak), /not part of the standard prompt, skills, and expectations contract/i);
 
   const duplicate = createDraftPack("duplicate-example");
   duplicate.skills = [{ id: "skill", name: "Skill", role: "role", repository: "owner/repo", skill: "skill", reviewedRevision: "a".repeat(40), reviewUrl: "https://example.com/a" }];
@@ -39,4 +39,18 @@ test("pack validation rejects malformed versions and duplicate workstream ids", 
     { id: "same", name: "Two", skills: ["skill"], owns: ["two/"], brief: "two" },
   ];
   assert.throws(() => validatePackManifest(duplicate), /workstreams contains duplicate ids/i);
+
+  const reviewedWithoutChecklist = createDraftPack("missing-checklist");
+  reviewedWithoutChecklist.lifecycle = "reviewed";
+  reviewedWithoutChecklist.reviewedAt = "2026-08-08";
+  reviewedWithoutChecklist.useWhen = ["a defined outcome"];
+  reviewedWithoutChecklist.notFor = ["an undefined ambition"];
+  reviewedWithoutChecklist.skills = [{ id: "skill", name: "Skill", role: "role", repository: "owner/repo", skill: "skill", reviewedRevision: "a".repeat(40), reviewUrl: "https://example.com/a" }];
+  reviewedWithoutChecklist.workstreams = [{ id: "work", name: "Work", skills: ["skill"], owns: ["outcome/"], brief: "Do the work" }];
+  reviewedWithoutChecklist.reviewSkills = ["skill"];
+  reviewedWithoutChecklist.outputs = ["result"];
+  reviewedWithoutChecklist.guardrails = ["stay honest"];
+  reviewedWithoutChecklist.verification = ["review the result"];
+  delete reviewedWithoutChecklist.expectations;
+  assert.throws(() => validatePackManifest(reviewedWithoutChecklist), /expectations is required for reviewed and archived packs/i);
 });

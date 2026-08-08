@@ -29,22 +29,6 @@
       "production-web-release"
     ]
   },
-  "plugins": [
-    {
-      "id": "sites",
-      "name": "OpenAI Sites",
-      "role": "Build, version, deploy, and inspect an MVP website without a separate hosting-provider signup",
-      "provider": "OpenAI",
-      "invocation": "@sites",
-      "skills": [
-        "sites-building",
-        "sites-hosting"
-      ],
-      "reviewedVersion": "0.1.30",
-      "docsUrl": "https://developers.openai.com/codex/plugins",
-      "availability": "Optional: use only when the Sites plugin is available in the current Codex workspace."
-    }
-  ],
   "skills": [
     {
       "id": "copywriting",
@@ -137,6 +121,26 @@
       "reviewUrl": "https://github.com/vercel-labs/agent-skills/tree/f8a72b9603728bb92a217a879b7e62e43ad76c81/skills/deploy-to-vercel"
     }
   ],
+  "expectations": [
+    {
+      "id": "working-project-truth",
+      "statement": "The launch story starts from a reproducible project revision, primary user flow, intended audience, and recorded opportunity alignment.",
+      "failureModes": ["Launch site hides a broken capability", "Polished implementation detached from a user problem"],
+      "requiredEvidence": ["Immutable revision and local run", "Primary-flow smoke check", "User/problem reference"]
+    },
+    {
+      "id": "evidence-backed-launch",
+      "statement": "Positioning, site, demonstration, quickstart, and documentation make only claims supported by the project and preserve asset provenance.",
+      "failureModes": ["Invented capability or outcome", "Demo cannot be reproduced"],
+      "requiredEvidence": ["Claims register", "Fresh demonstration", "Five-minute quickstart"]
+    },
+    {
+      "id": "deployment-approval",
+      "statement": "Any optional Sites or provider deployment remains a separate exact approval gate with target, candidate, method, risks, and rollback stated.",
+      "failureModes": ["Pack selection treated as deployment authorization", "Unapproved provider mutation"],
+      "requiredEvidence": ["Approval or no-go record", "Deployment and rollback details when approved"]
+    }
+  ],
   "workstreams": [
     {
       "id": "positioning",
@@ -198,41 +202,6 @@
         "creative-direction"
       ],
       "brief": "Implement the selected creative direction as a distinctive responsive site that makes the problem, product, proof, demonstration, and next action immediately understandable. Build or preserve one honest demonstration of the real project—interactive when practical, otherwise executable or reproducibly captured—and record every asset's provenance without changing confirmed facts or product behavior."
-    }
-  ],
-  "remix": {
-    "kind": "visual-direction",
-    "workstreamId": "creative-direction",
-    "candidateCount": 3,
-    "previewRoot": "launch/direction/previews/",
-    "decisionPath": "launch/direction/decision.json",
-    "onNoChoice": "agent-select",
-    "preserves": [
-      "confirmed product facts",
-      "claims register",
-      "demonstration behavior",
-      "quickstart and documentation",
-      "approval and verification boundaries"
-    ]
-  },
-  "prerequisites": [
-    {
-      "id": "working-project",
-      "description": "A real project exists and its primary user flow can be reproduced before launch work begins.",
-      "requiredEvidence": [
-        "immutable workspace revision",
-        "documented local run command",
-        "passing primary-flow smoke check"
-      ]
-    },
-    {
-      "id": "opportunity-alignment",
-      "description": "The working project corresponds to a specific user opportunity rather than only presenting a polished implementation.",
-      "requiredEvidence": [
-        "intended user and problem reference",
-        "project capability evidence",
-        "recorded mismatches or unresolved assumptions"
-      ]
     }
   ],
   "reviewSkills": [

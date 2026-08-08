@@ -1,0 +1,43 @@
+<template>
+  <style>
+    @font-face { font-family: HFGeist; src: url("assets/fonts/geist-latin.woff2") format("woff2"); font-weight: 400 700; }
+    @font-face { font-family: HFMono; src: url("assets/fonts/geist-mono-latin.woff2") format("woff2"); font-weight: 400 700; }
+    #root { position: absolute; inset: 0; width: 1920px; height: 1080px; overflow: hidden; background: #f3f0e8; color: #151411; font-family: HFGeist, sans-serif; }
+    .bg { position: absolute; inset: 0; background: #f3f0e8; }
+    .backdrop { position: absolute; left: 106px; top: 118px; width: 1708px; height: 760px; overflow: hidden; border: 1px solid rgba(21,20,17,.12); border-radius: 12px; opacity: .18; }
+    .backdrop img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top center; filter: grayscale(1); }
+    .kicker { position: absolute; left: 120px; top: 92px; color: #726d65; font: 500 20px/1 HFMono, monospace; letter-spacing: .15em; }
+    .card { position: absolute; top: 310px; width: 480px; height: 280px; padding: 36px; border: 1px solid rgba(21,20,17,.18); border-radius: 12px; background: rgba(243,240,232,.96); box-shadow: 0 1px 3px rgba(21,20,17,.08), 0 4px 16px rgba(21,20,17,.04); }
+    .card-one { left: 170px; }
+    .card-two { left: 720px; }
+    .card-three { left: 1270px; }
+    .number { color: #c83c00; font: 500 20px/1 HFMono, monospace; letter-spacing: .14em; }
+    .card h2 { margin-top: 76px; font-size: 42px; font-weight: 400; letter-spacing: -.04em; }
+    .card p { margin-top: 12px; color: #736d66; font-size: 21px; line-height: 1.35; }
+    .lock { position: absolute; left: 170px; top: 680px; color: #151411; font-size: 58px; line-height: 1; letter-spacing: -.045em; }
+    .lock em { color: #c83c00; font-style: normal; }
+    .rule { position: absolute; left: 170px; top: 770px; width: 1570px; height: 1px; background: rgba(21,20,17,.2); }
+  </style>
+  <div id="root" data-composition-id="04-three-primitives" data-width="1920" data-height="1080" data-duration="7.5">
+    <div id="f04-primitives-bg" class="clip bg" data-start="0" data-duration="7.5" data-track-index="0"></div>
+    <div id="f04-primitives-backdrop" class="clip backdrop" data-start="0" data-duration="7.5" data-track-index="1"><img src="assets/possible-expectations.png" alt="Captured Expectations documentation" /></div>
+    <div id="f04-primitives-kicker" class="clip kicker" data-start="0" data-duration="7.5" data-track-index="2">✱ THE AUTHORING SURFACE</div>
+    <div id="f04-primitives-one" class="clip card card-one" data-start="0" data-duration="7.5" data-track-index="3"><div class="number">01</div><h2>Long prompt</h2><p>What are we making?</p></div>
+    <div id="f04-primitives-two" class="clip card card-two" data-start="0" data-duration="7.5" data-track-index="4"><div class="number">02</div><h2>Reviewed Skills</h2><p>What can do it?</p></div>
+    <div id="f04-primitives-three" class="clip card card-three" data-start="0" data-duration="7.5" data-track-index="5"><div class="number">03</div><h2>Expectations</h2><p>What must become true?</p></div>
+    <div id="f04-primitives-lock" class="clip lock" data-start="0" data-duration="7.5" data-track-index="6">Three inputs.<br /><em>One concrete outcome.</em></div>
+    <div id="f04-primitives-rule" class="clip rule" data-start="0" data-duration="7.5" data-track-index="7"></div>
+  </div>
+  <script>
+    window.__timelines = window.__timelines || {};
+    const tl = gsap.timeline({ paused: true });
+    tl.fromTo("#f04-primitives-backdrop", { opacity: 0, scale: 1.04 }, { opacity: 0.18, scale: 1, duration: 0.8, ease: "power3.out" }, 0);
+    tl.fromTo("#f04-primitives-kicker", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.45, ease: "power3.out" }, 0.3);
+    tl.fromTo("#f04-primitives-one", { opacity: 0, y: 44 }, { opacity: 1, y: 0, duration: 0.75, ease: "power3.out" }, 1.35);
+    tl.fromTo("#f04-primitives-two", { opacity: 0, y: 44 }, { opacity: 1, y: 0, duration: 0.75, ease: "power3.out" }, 3.0);
+    tl.fromTo("#f04-primitives-three", { opacity: 0, y: 44 }, { opacity: 1, y: 0, duration: 0.75, ease: "power3.out" }, 4.55);
+    tl.fromTo("#f04-primitives-lock", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }, 5.75);
+    tl.fromTo("#f04-primitives-rule", { scaleX: 0 }, { scaleX: 1, duration: 0.7, ease: "power3.out" }, 6.15);
+    window.__timelines["04-three-primitives"] = tl;
+  </script>
+</template>

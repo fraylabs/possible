@@ -1,0 +1,10 @@
+{
+  "name": "possible-leverage-gap-launch",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "npx --yes hyperframes@0.7.101 check",
+    "snapshot": "npx --yes hyperframes@0.7.101 snapshot --frames 8",
+    "render": "npx --yes hyperframes@0.7.101 render --quality high --output possible-world-inside-codex.mp4"
+  }
+}

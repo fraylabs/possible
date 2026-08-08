@@ -5,7 +5,7 @@
   "description": "Structural reference for a declarative contract describing one observable, verifiable outcome. Runtime validation additionally enforces semantic relationships and lifecycle rules.",
   "$comment": "Catalog numbers are public presentation metadata and intentionally do not belong in this manifest schema.",
   "type": "object",
-  "additionalProperties": true,
+  "additionalProperties": false,
   "not": { "required": ["catalogNumber"] },
   "required": [
     "schemaVersion",
@@ -27,67 +27,87 @@
     "guardrails",
     "verification"
   ],
+  "allOf": [
+    {
+      "if": { "properties": { "lifecycle": { "enum": ["reviewed", "archived"] } } },
+      "then": { "required": ["expectations"] }
+    }
+  ],
   "properties": {
-    "schemaVersion": { "const": 1 },
-    "packVersion": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:-[0-9A-Za-z.-]+)?$" },
-    "visibility": { "enum": ["private", "public"] },
-    "lifecycle": { "enum": ["draft", "reviewed", "archived"] },
-    "lane": { "enum": ["create", "launch", "release", "operate"] },
-    "slug": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
-    "name": { "type": "string", "minLength": 1 },
-    "eyebrow": { "type": "string", "minLength": 1 },
-    "promise": { "type": "string", "minLength": 1 },
-    "summary": { "type": "string", "minLength": 1 },
-    "reviewedAt": { "type": "string", "format": "date" },
-    "useWhen": { "type": "array", "items": { "type": "string", "minLength": 1 } },
-    "notFor": { "type": "array", "items": { "type": "string", "minLength": 1 } },
-    "skills": { "type": "array", "items": { "$ref": "#/$defs/skill" } },
-    "workstreams": { "type": "array", "items": { "$ref": "#/$defs/workstream" } },
-    "reviewSkills": { "type": "array", "items": { "type": "string", "minLength": 1 } },
-    "outputs": { "type": "array", "items": { "type": "string", "minLength": 1 } },
-    "guardrails": { "type": "array", "items": { "type": "string", "minLength": 1 } },
-    "verification": { "type": "array", "items": { "type": "string", "minLength": 1 } },
-    "expectations": { "type": "array", "items": { "$ref": "#/$defs/expectation" } }
+    "schemaVersion": { "const": 1, "description": "The manifest contract in use. Currently 1." },
+    "packVersion": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:-[0-9A-Za-z.-]+)?$", "description": "The semantic revision of this pack." },
+    "visibility": { "enum": ["private", "public"], "description": "Where the manifest may be distributed. This is not permission." },
+    "lifecycle": { "enum": ["draft", "reviewed", "archived"], "description": "The maturity of the contract. Reviewed status never grants authority." },
+    "lane": { "enum": ["create", "launch", "release", "operate"], "description": "The broad kind of work, not a hidden workflow schema." },
+    "slug": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$", "description": "A stable lowercase hyphenated identifier." },
+    "name": { "type": "string", "minLength": 1, "description": "The human-readable outcome, not a tool or implementation name." },
+    "eyebrow": { "type": "string", "minLength": 1, "description": "A short catalog label for scanning." },
+    "promise": { "type": "string", "minLength": 1, "description": "One concise statement of the observable result this pack should make true." },
+    "summary": { "type": "string", "minLength": 1, "description": "The fuller plain-language outcome, including its shape and stopping boundary. This is the description; do not add a separate description field." },
+    "reviewedAt": { "type": "string", "format": "date", "description": "The date the author or owning repository last reviewed the contract as complete enough to compile. This is not Possible catalog trust." },
+    "useWhen": { "type": "array", "description": "Concrete starting conditions that make this pack a fit.", "items": { "type": "string", "minLength": 1 } },
+    "notFor": { "type": "array", "description": "Explicit non-scope and nearest cases to reject or redirect.", "items": { "type": "string", "minLength": 1 } },
+    "skills": { "type": "array", "description": "Reviewed, pinned capabilities needed to do the work.", "items": { "$ref": "#/$defs/skill" } },
+    "workstreams": { "type": "array", "description": "Independently owned slices with skills, artifacts, briefs, and dependencies.", "items": { "$ref": "#/$defs/workstream" } },
+    "reviewSkills": { "type": "array", "description": "Capabilities used to challenge and verify the integrated result.", "items": { "type": "string", "minLength": 1 } },
+    "outputs": { "type": "array", "description": "Artifacts the run leaves behind. Outputs are not proof by themselves.", "items": { "type": "string", "minLength": 1 } },
+    "guardrails": { "type": "array", "description": "Non-negotiable safety, authority, provenance, content, and external-action boundaries.", "items": { "type": "string", "minLength": 1 } },
+    "verification": { "type": "array", "description": "Fresh checks or reviews that can falsify the expectations on the integrated result.", "items": { "type": "string", "minLength": 1 } },
+    "expectations": { "type": "array", "description": "The observable definition-of-done checklist. Each item needs failure modes and required evidence.", "items": { "$ref": "#/$defs/expectation" } },
+    "archived": { "$ref": "#/$defs/archived", "description": "The reason and replacements for an archived pack." }
   },
   "$defs": {
     "skill": {
       "type": "object",
+      "additionalProperties": false,
       "required": ["id", "name", "role", "repository", "skill", "reviewedRevision", "reviewUrl"],
       "properties": {
-        "id": { "type": "string", "minLength": 1 },
-        "name": { "type": "string", "minLength": 1 },
-        "role": { "type": "string", "minLength": 1 },
-        "repository": { "type": "string", "minLength": 1 },
-        "installSource": { "type": "string" },
-        "skill": { "type": "string", "minLength": 1 },
-        "catalogUrl": { "type": "string" },
-        "reviewedRevision": { "type": "string", "minLength": 1 },
-        "reviewUrl": { "type": "string", "minLength": 1 }
+        "id": { "type": "string", "minLength": 1, "description": "Stable local identifier used by workstreams." },
+        "name": { "type": "string", "minLength": 1, "description": "Human-readable capability name." },
+        "role": { "type": "string", "minLength": 1, "description": "The capability's bounded contribution to this outcome." },
+        "repository": { "type": "string", "minLength": 1, "description": "The reviewed source repository." },
+        "installSource": { "type": "string", "description": "The exact source passed to the Skills installer, when it differs from the repository." },
+        "installMode": { "enum": ["selective", "full-depth"], "description": "Whether to install the named skill only or its full reviewed depth." },
+        "skill": { "type": "string", "minLength": 1, "description": "The skill name installed from the source." },
+        "catalogUrl": { "type": "string", "description": "A human-facing catalog or discovery link." },
+        "reviewedRevision": { "type": "string", "minLength": 1, "description": "The exact reviewed source revision to pin." },
+        "reviewUrl": { "type": "string", "minLength": 1, "description": "The source URL for the reviewed revision." }
       }
     },
     "workstream": {
       "type": "object",
+      "additionalProperties": false,
       "required": ["id", "name", "skills", "owns", "brief"],
       "properties": {
-        "id": { "type": "string", "minLength": 1 },
-        "name": { "type": "string", "minLength": 1 },
-        "skills": { "type": "array", "items": { "type": "string" } },
-        "owns": { "type": "array", "items": { "type": "string" } },
-        "brief": { "type": "string", "minLength": 1 },
-        "dependsOn": { "type": "array", "items": { "type": "string" } },
-        "activation": { "type": "string" }
+        "id": { "type": "string", "minLength": 1, "description": "Stable local identifier for this ownership slice." },
+        "name": { "type": "string", "minLength": 1, "description": "Human-readable workstream name." },
+        "skills": { "type": "array", "description": "Skill IDs this workstream may use.", "items": { "type": "string" } },
+        "owns": { "type": "array", "description": "Artifacts or decisions this workstream owns.", "items": { "type": "string" } },
+        "brief": { "type": "string", "minLength": 1, "description": "Plain-language work boundary, context, and completion handoff." },
+        "dependsOn": { "type": "array", "description": "Workstream IDs that must complete first.", "items": { "type": "string" } },
+        "activation": { "type": "string", "description": "Evidence-based condition for when this workstream applies." }
       }
     },
     "expectation": {
       "type": "object",
+      "additionalProperties": false,
       "required": ["id", "statement", "failureModes", "requiredEvidence"],
       "properties": {
-        "id": { "type": "string", "minLength": 1 },
-        "moduleId": { "type": "string" },
-        "statement": { "type": "string", "minLength": 1 },
-        "level": { "enum": ["required", "preferred"] },
-        "failureModes": { "type": "array", "items": { "type": "string" } },
-        "requiredEvidence": { "type": "array", "items": { "type": "string" } }
+        "id": { "type": "string", "minLength": 1, "description": "Stable identifier referenced by evidence and receipts." },
+        "statement": { "type": "string", "minLength": 1, "description": "An observable statement of what must become true." },
+        "level": { "enum": ["required", "preferred"], "description": "Whether failure blocks completion or records a quality gap." },
+        "failureModes": { "type": "array", "description": "Concrete ways this expectation could fail.", "items": { "type": "string" } },
+        "requiredEvidence": { "type": "array", "description": "Direct artifacts, checks, or observations needed to assess it.", "items": { "type": "string" } }
+      }
+    },
+    "archived": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["archivedAt", "reason", "replacementSlugs"],
+      "properties": {
+        "archivedAt": { "type": "string", "format": "date", "description": "The date the pack was archived." },
+        "reason": { "type": "string", "minLength": 1, "description": "Why this contract is retained but no longer recommended." },
+        "replacementSlugs": { "type": "array", "description": "Stable slugs for focused replacements, if any.", "items": { "type": "string", "minLength": 1 } }
       }
     }
   }

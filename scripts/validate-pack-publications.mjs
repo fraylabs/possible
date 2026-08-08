@@ -1,20 +1,12 @@
 import assert from "node:assert/strict";
 import { access, readFile } from "node:fs/promises";
-import { archivedOutcomePacks, compilePack, getPackStatus, stableOutcomePacks } from "../packages/packs/dist/index.js";
+import { compilePack, publicCatalog } from "../packages/packs/dist/index.js";
 
 const webDist = new URL("../apps/web/out/", import.meta.url);
 const text = (relative) => readFile(new URL(relative, webDist), "utf8");
 const index = JSON.parse(await text("packs/index.json"));
-const publicArchiveSlugs = new Set([
-  "hardware-launch",
-  "kickstarter-funding",
-  "kickstarter-fulfillment",
-  "robot-prototype",
-  "developer-project-launch",
-  "working-hardware-prototype",
-  "launch-content-campaign",
-]);
-const publishedPacks = [...stableOutcomePacks, ...archivedOutcomePacks.filter(({ slug }) => publicArchiveSlugs.has(slug))];
+const publishedEntries = publicCatalog;
+const publicationKey = (entry) => entry.origin.kind === "bundled" ? entry.pack.slug : entry.id;
 const evidence = JSON.parse(await text("evidence.json"));
 const judgingDocument = await readFile(new URL("../JUDGING.md", import.meta.url), "utf8");
 const nonEmptyString = (value, label) => {
@@ -144,15 +136,22 @@ assert.match(passingBrowserResult, /"request_failure_count": 0/);
 assert.match(passingBrowserResult, /"bad_response_count": 0/);
 
 assert.deepEqual(
-  index.packs.map(({ slug, lane }) => ({ slug, lane })),
-  publishedPacks.map(({ slug, lane }) => ({ slug, lane })),
+  index.packs.map(({ id, slug, lane }) => ({ id, slug, lane })),
+  publishedEntries.map(({ id, pack: { slug, lane } }) => ({ id, slug, lane })),
 );
-for (const item of index.packs) assert.equal(item.status, getPackStatus(item.slug));
+for (const [position, item] of index.packs.entries()) {
+  const entry = publishedEntries[position];
+  assert.equal(item.status, entry.trust.status);
+  assert.deepEqual(item.source, entry.sourceRecord);
+  assert.deepEqual(item.trust, entry.trust);
+  assert.equal(item.contentHash, entry.sourceRecord.contentHash);
+}
 
 const llms = await text("llms.txt");
 assert.match(llms, /AI made execution accessible\. Possible makes operational judgment accessible\./);
 assert.match(llms, /Possible\.sh is an open-source library of Outcome Packs for Codex\./);
-assert.match(llms, /Each JSON specification coordinates selected agent skills, owned workstreams, shared constraints, approval boundaries, and the evidence required for completion\./);
+assert.match(llms, /Each JSON specification has three authoring primitives: a Structured Prompt, reviewed Skills, and an Expectations checklist\./);
+assert.match(llms, /compiler assembles those fields into a deterministic Run Prompt/);
 assert.match(llms, /- Judging evidence: \/judging\//);
 assert.match(llms, /- Machine-readable evidence: \/evidence\.json/);
 assert.match(llms, /recorded[\s\S]{0,160}\/goal[\s\S]{0,160}(?:control|comparison)/i, "llms.txt must surface the recorded /goal comparison");
@@ -164,13 +163,27 @@ for (const url of comparisonUrls) {
   assert.ok(acceptedTargets.some((target) => llms.includes(target)), `llms.txt must directly link recorded comparison evidence: ${url}`);
 }
 assert.doesNotMatch(llms, /\b(?:recipes?|ingredients?|megaprompt|captain)\b|outcome compiler|composition layer/i);
-for (const pack of publishedPacks) {
-  const compiled = compilePack(pack);
-  const publication = JSON.parse(await text(`packs/${pack.slug}.json`));
-  assert.deepEqual(publication, compiled, `${pack.slug}.json must equal the canonical compiled pack`);
-  assert.equal(await text(`packs/${pack.slug}/install.txt`), `${compiled.installCommands.join("\n")}\n`);
-  assert.equal(await text(`packs/${pack.slug}/run.txt`), `${compiled.runPrompt}\n`);
-  assert.match(llms, new RegExp(`- ${pack.name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}: /packs/${pack.slug}\\.json`));
+for (const entry of publishedEntries) {
+  const { pack } = entry;
+  const key = publicationKey(entry);
+  const compiled = pack.lifecycle === "draft" ? undefined : compilePack(pack);
+  const publication = JSON.parse(await text(`packs/${key}.json`));
+  assert.deepEqual(publication, {
+    ...(compiled ?? { pack, installCommands: [], runPrompt: null }),
+    catalog: {
+      id: entry.id,
+      status: entry.trust.status,
+      source: entry.sourceRecord,
+      snapshotRef: entry.snapshotRef,
+      acceptedEvidenceCount: entry.acceptedEvidenceCount,
+      acceptedEvidenceSummary: entry.acceptedEvidenceSummary,
+    },
+  }, `${entry.id} publication must equal the catalog snapshot`);
+  if (compiled) {
+    assert.equal(await text(`packs/${key}/install.txt`), `${compiled.installCommands.join("\n")}\n`);
+    assert.equal(await text(`packs/${key}/run.txt`), `${compiled.runPrompt}\n`);
+  }
+  assert.match(llms, new RegExp(`- ${pack.name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")} \\[${entry.trust.status}\\]: /packs/${key.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\.json`));
 }
 
-console.log("All reviewed public pack publications are valid.");
+console.log("All public pack publications are valid.");

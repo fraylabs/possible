@@ -109,6 +109,32 @@
       "reviewUrl": "https://github.com/github/awesome-copilot/tree/26fe2d126bf79aafb38f43344d450b69632200f8/skills/create-technical-spike"
     }
   ],
+  "expectations": [
+    {
+      "id": "intended-use-and-claims",
+      "statement": "The prototype has a locked intended-use, functional, interface, measurement, evidence, and claims boundary that separates facts, assumptions, research hypotheses, and prohibited claims.",
+      "failureModes": ["Prototype implies efficacy or safety", "Measurement or use context unspecified"],
+      "requiredEvidence": ["Intended-use specification", "Claims and evidence register"]
+    },
+    {
+      "id": "hazard-and-safe-state",
+      "statement": "Mechanical, electrical, battery, thermal, contact, control, and misuse hazards have bounded controls, safe defaults, hard limits, and human-use gates.",
+      "failureModes": ["Hazard review omitted", "Unsafe energized or human use"],
+      "requiredEvidence": ["Hazard analysis", "Safe-state and stop-control review"]
+    },
+    {
+      "id": "measured-prototype-evidence",
+      "statement": "The immutable integrated revision is physically inspected and its nominal, boundary, and failure results are traceable to calibrated instruments, raw evidence, and thresholds.",
+      "failureModes": ["CAD or simulation presented as a working prototype", "Uncalibrated or selectively passing measurement"],
+      "requiredEvidence": ["Physical inspection", "Calibration record", "Raw measurement report"]
+    },
+    {
+      "id": "independent-completion-status",
+      "statement": "A fresh reviewer assigns only working, repair-required, or no-go, and does not upgrade the result into safe-for-sale, certified, manufacturable, or production-ready.",
+      "failureModes": ["Completion status inflated", "Designer reviews own evidence without independence"],
+      "requiredEvidence": ["Independent review", "Status receipt and limitations"]
+    }
+  ],
   "workstreams": [
     {
       "id": "product-truth",
@@ -227,62 +253,6 @@
       "brief": "After exact approval for every physical action, assemble or coordinate fabrication of the immutable prototype revision, run the calibrated nominal, boundary, and failure tests, preserve raw evidence, inspect the actual assembly, and integrate the result. If parts, tools, authority, qualified review, or physical evidence are missing, stop with a fabrication or test no-go instead of substituting CAD or simulation."
     }
   ],
-  "decisionRationale": {
-    "kind": "evidence-backed-product-decisions",
-    "rootPath": "prototype/decisions/",
-    "publicNarrativePath": "prototype/decisions/public-rationale.md",
-    "requiredFields": [
-      "question",
-      "options",
-      "evidence",
-      "selection",
-      "rationale",
-      "tradeoffs",
-      "uncertainty",
-      "reversal evidence",
-      "public explanation"
-    ]
-  },
-  "hardwarePrototype": {
-    "kind": "measured-functional-prototype",
-    "specificationPath": "prototype/specification.json",
-    "hazardPath": "prototype/safety/hazard-analysis.json",
-    "claimsPath": "prototype/claims/claims-register.json",
-    "measurementPath": "prototype/measurement/report.json",
-    "decisionReceiptPath": "outcome-room/hardware-prototype-receipt.json",
-    "measurementClasses": [
-      "functional output",
-      "control input",
-      "power",
-      "temperature",
-      "noise",
-      "duty cycle",
-      "failure controls",
-      "measurement uncertainty"
-    ],
-    "decisions": [
-      "working",
-      "repair-required",
-      "no-go"
-    ]
-  },
-  "remix": {
-    "kind": "physical-direction",
-    "workstreamId": "physical-direction",
-    "candidateCount": 3,
-    "previewRoot": "prototype/direction/previews/",
-    "decisionPath": "prototype/direction/decision.json",
-    "onNoChoice": "agent-select",
-    "preserves": [
-      "intended use",
-      "functional requirements",
-      "confirmed components",
-      "safety limits",
-      "hardware interfaces",
-      "claims boundary",
-      "measurement contract"
-    ]
-  },
   "reviewSkills": [
     "cad-viewer",
     "create-technical-spike",

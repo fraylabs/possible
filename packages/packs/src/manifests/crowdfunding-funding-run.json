@@ -16,12 +16,6 @@
     "Treating a funding target, pledge, or platform total as settled cash."
   ],
   "reviewedAt": "2026-07-29",
-  "schedule": {
-    "request": "Continue one bounded approved crowdfunding operating cycle.",
-    "title": "Crowdfunding funding cycle",
-    "description": "Reconcile live evidence, approvals, changes, and stop conditions.",
-    "safeDefault": "Do not publish, message, spend, change rewards, or collect new data without exact approval."
-  },
   "skills": [
     {
       "id": "product-marketing",
@@ -192,24 +186,21 @@
     "Do not publish, message audiences, buy ads, change campaign terms, charge, refund, withdraw, or mutate platform state without separate approval for the exact action.",
     "Do not invent pledges, backers, conversion, reach, platform status, fees, payout, or settlement.",
     "Never expose backer identities, contact details, payment data, addresses, credentials, or private platform exports.",
-    "Stop when the readiness candidate changes materially; return to repair rather than silently rewriting the promise, rewards, economics, or delivery boundary."
+    "Stop when the readiness candidate changes materially; return to repair rather than silently rewriting the promise, rewards, economics, or delivery boundary.",
+    "Safe default for each bounded cycle: Do not publish, message, spend, change rewards, or collect new data without exact approval.",
+    "Only funded-settled establishes eligibility for a separately approved fulfillment outcome; every other state preserves evidence and stops without manufacturing or delivery authority."
   ],
   "verification": [
     "Verify the input readiness receipt and immutable candidate before any platform action.",
     "Preserve platform timestamps and denominators for views, pledges, cancellations, refunds, fees, and payout state.",
     "Reconcile campaign totals independently and distinguish pledged, collectible, collected, refunded, disputed, and settled amounts.",
-    "Record funded, unfunded, cancelled, or unsettled honestly and authorize no fulfillment work from unsettled evidence."
-  ],
-  "prerequisites": [
-    {
-      "id": "campaign-ready",
-      "description": "Crowdfunding Campaign Readiness passed for this exact candidate.",
-      "requiredEvidence": [
-        "readiness receipt",
-        "candidate hash",
-        "economics and fulfillment boundaries"
-      ]
-    }
+    "Record funded, unfunded, cancelled, or unsettled honestly and authorize no fulfillment work from unsettled evidence.",
+    "Confirm the prerequisite baseline before beginning work: Crowdfunding Campaign Readiness passed for this exact candidate.",
+    "Reconcile each bounded cycle: Reconcile live evidence, approvals, changes, and stop conditions.",
+    "Validate the readiness receipt and hash the exact campaign candidate.",
+    "Present every platform publication, audience action, spend, and material change for separate exact approval.",
+    "Run immutable dated cycles that preserve observations, denials, waiting states, and stop conditions.",
+    "Reconcile final campaign and payout evidence independently before declaring settlement or fulfillment eligibility."
   ],
   "expectations": [
     {
@@ -252,8 +243,7 @@
     },
     {
       "id": "email-proof",
-      "moduleId": "email-audience",
-      "statement": "Approved email activity preserves consent, denominators, and outcomes.",
+      "statement": "Approved email activity preserves consent, denominators, and outcomes. Applicable when: An authorized consented email audience is part of the approved run.",
       "failureModes": [
         "unapproved list",
         "missing unsubscribe",
@@ -261,26 +251,26 @@
       ],
       "requiredEvidence": [
         "approval",
-        "send and response record"
+        "send and response record",
+        "activation evidence"
       ]
     },
     {
       "id": "social-proof",
-      "moduleId": "social-posting",
-      "statement": "Approved social activity matches the verified campaign claims.",
+      "statement": "Approved social activity matches the verified campaign claims. Applicable when: Named social accounts and posts are part of the approved run.",
       "failureModes": [
         "claim drift",
         "unapproved account action"
       ],
       "requiredEvidence": [
         "post archive",
-        "approval record"
+        "approval record",
+        "activation evidence"
       ]
     },
     {
       "id": "partner-proof",
-      "moduleId": "partner-press",
-      "statement": "Approved partner or press outreach preserves targets, messages, and responses.",
+      "statement": "Approved partner or press outreach preserves targets, messages, and responses. Applicable when: Named partners, communities, creators, or press targets are approved.",
       "failureModes": [
         "invented coverage",
         "spam",
@@ -288,13 +278,13 @@
       ],
       "requiredEvidence": [
         "outreach ledger",
-        "response evidence"
+        "response evidence",
+        "activation evidence"
       ]
     },
     {
       "id": "paid-proof",
-      "moduleId": "paid-media",
-      "statement": "Approved paid media stays within budget and reports attributable evidence honestly.",
+      "statement": "Approved paid media stays within budget and reports attributable evidence honestly. Applicable when: A platform, audience, creative, budget, and stop condition are explicitly approved.",
       "failureModes": [
         "unapproved spend",
         "platform metric treated as causal lift"
@@ -302,89 +292,39 @@
       "requiredEvidence": [
         "spend record",
         "platform report",
-        "attribution limits"
+        "attribution limits",
+        "activation evidence"
+      ]
+    },
+    {
+      "id": "prerequisite-campaign-ready",
+      "statement": "Crowdfunding Campaign Readiness passed for this exact candidate.",
+      "level": "required",
+      "failureModes": [
+        "missing prerequisite evidence",
+        "baseline does not match the proposed work"
+      ],
+      "requiredEvidence": [
+        "readiness receipt",
+        "candidate hash",
+        "economics and fulfillment boundaries"
+      ]
+    },
+    {
+      "id": "crowdfunding-funding-run-boundary",
+      "statement": "Crowdfunding funding run produces enough evidence for an independent readiness decision. The possible decisions are funded-settled, funded-unsettled, unfunded, cancelled, repair-required, no-go. Only funded-settled establishes eligibility for a separately approved fulfillment outcome; every other state preserves evidence and stops without manufacturing or delivery authority.",
+      "level": "required",
+      "failureModes": [
+        "missing evidence for the declared outcome",
+        "decision made from assumptions or unverified claims"
+      ],
+      "requiredEvidence": [
+        "evidence baseline",
+        "independent review",
+        "decision record"
       ]
     }
   ],
-  "modularOutcome": {
-    "kind": "modular-outcome",
-    "gateName": "Crowdfunding funding run",
-    "action": "Run",
-    "contractPath": "funding-run/baseline/run-contract.json",
-    "moduleDecisionPath": "funding-run/baseline/modules.json",
-    "artifactRoot": "funding-run/",
-    "decisionReceiptPath": "funding-run/decision.json",
-    "minimumActiveModules": 0,
-    "modules": [
-      {
-        "id": "email-audience",
-        "activationWhen": "An authorized consented email audience is part of the approved run.",
-        "work": [
-          "prepare and send only the approved message and follow-up"
-        ],
-        "checks": [
-          "verify consent, denominator, delivery, unsubscribe, and response records"
-        ],
-        "requiredExpectationIds": [
-          "email-proof"
-        ]
-      },
-      {
-        "id": "social-posting",
-        "activationWhen": "Named social accounts and posts are part of the approved run.",
-        "work": [
-          "publish only approved claim-aligned posts"
-        ],
-        "checks": [
-          "archive exact posts and platform observations"
-        ],
-        "requiredExpectationIds": [
-          "social-proof"
-        ]
-      },
-      {
-        "id": "partner-press",
-        "activationWhen": "Named partners, communities, creators, or press targets are approved.",
-        "work": [
-          "conduct bounded approved outreach"
-        ],
-        "checks": [
-          "preserve targets, sends, responses, refusals, and silence"
-        ],
-        "requiredExpectationIds": [
-          "partner-proof"
-        ]
-      },
-      {
-        "id": "paid-media",
-        "activationWhen": "A platform, audience, creative, budget, and stop condition are explicitly approved.",
-        "work": [
-          "run the bounded approved paid test"
-        ],
-        "checks": [
-          "reconcile spend, delivery, attribution, and stop conditions"
-        ],
-        "requiredExpectationIds": [
-          "paid-proof"
-        ]
-      }
-    ],
-    "decisions": [
-      "funded-settled",
-      "funded-unsettled",
-      "unfunded",
-      "cancelled",
-      "repair-required",
-      "no-go"
-    ],
-    "steps": [
-      "Validate the readiness receipt and hash the exact campaign candidate.",
-      "Present every platform publication, audience action, spend, and material change for separate exact approval.",
-      "Run immutable dated cycles that preserve observations, denials, waiting states, and stop conditions.",
-      "Reconcile final campaign and payout evidence independently before declaring settlement or fulfillment eligibility."
-    ],
-    "completionBoundary": "Only funded-settled establishes eligibility for a separately approved fulfillment outcome; every other state preserves evidence and stops without manufacturing or delivery authority."
-  },
   "packVersion": "1.0.0",
   "visibility": "public",
   "lifecycle": "reviewed"

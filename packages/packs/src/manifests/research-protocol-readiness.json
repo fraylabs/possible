@@ -132,13 +132,18 @@
     "Do not recruit, consent, intervene, collect data, access records, or register a study without separate approval and applicable qualified authorization.",
     "Do not invent ethics, legal, clinical, statistical, or regulatory approval.",
     "Do not add participant or health-data ceremony to a bench or computational protocol without activation evidence.",
-    "Minimize sensitive data and preserve withdrawal, deletion, access, retention, and incident boundaries when applicable."
+    "Minimize sensitive data and preserve withdrawal, deletion, access, retention, and incident boundaries when applicable.",
+    "Ready-for-qualified-review means the package is coherent enough for the applicable expert or authority to review; it does not approve or execute the study."
   ],
   "verification": [
     "Trace the research question and design choices to evidence.",
     "Challenge confounding, bias, missingness, multiplicity, power, and analysis flexibility as applicable.",
     "Dry-run the protocol with synthetic or non-sensitive fixtures where legitimate.",
-    "State the exact qualified review required before execution and every claim the protocol cannot establish."
+    "State the exact qualified review required before execution and every claim the protocol cannot establish.",
+    "Lock one falsifiable question and the claims the study could and could not support.",
+    "Write the minimum reproducible protocol and prespecified analysis plan.",
+    "Activate ethics, privacy, regulatory, and operational modules only from the actual design.",
+    "Use independent challenge to identify the exact qualified approval still required before execution."
   ],
   "expectations": [
     {
@@ -178,8 +183,7 @@
     },
     {
       "id": "human-proof",
-      "moduleId": "human-participants",
-      "statement": "Participant recruitment, consent, burden, withdrawal, and adverse-event boundaries are explicit.",
+      "statement": "Participant recruitment, consent, burden, withdrawal, and adverse-event boundaries are explicit. Applicable when: Living people are recruited, observed, surveyed, tested, or intervened upon.",
       "failureModes": [
         "coercion",
         "unclear consent",
@@ -187,13 +191,13 @@
       ],
       "requiredEvidence": [
         "participant materials",
-        "qualified review pathway"
+        "qualified review pathway",
+        "activation evidence"
       ]
     },
     {
       "id": "health-data-proof",
-      "moduleId": "health-data",
-      "statement": "Sensitive health-data collection and handling are minimized and controlled.",
+      "statement": "Sensitive health-data collection and handling are minimized and controlled. Applicable when: Health, biometric, diagnostic, treatment, or similarly sensitive data are used.",
       "failureModes": [
         "excess collection",
         "reidentification",
@@ -201,185 +205,85 @@
       ],
       "requiredEvidence": [
         "data-flow review",
-        "privacy controls"
+        "privacy controls",
+        "activation evidence"
       ]
     },
     {
       "id": "vulnerable-proof",
-      "moduleId": "vulnerable-populations",
-      "statement": "Additional protections for the named vulnerable population are explicit.",
+      "statement": "Additional protections for the named vulnerable population are explicit. Applicable when: The population has reduced autonomy or additional vulnerability.",
       "failureModes": [
         "inappropriate consent",
         "undue burden"
       ],
       "requiredEvidence": [
-        "population-specific review pathway"
+        "population-specific review pathway",
+        "activation evidence"
       ]
     },
     {
       "id": "regulated-proof",
-      "moduleId": "regulated-product",
-      "statement": "Applicable regulated-product and claim boundaries are mapped for qualified review.",
+      "statement": "Applicable regulated-product and claim boundaries are mapped for qualified review. Applicable when: The protocol involves a regulated product, indication, diagnostic, or efficacy claim.",
       "failureModes": [
         "wrong classification",
         "unapproved efficacy claim"
       ],
       "requiredEvidence": [
-        "qualified regulatory pathway"
+        "qualified regulatory pathway",
+        "activation evidence"
       ]
     },
     {
       "id": "multisite-proof",
-      "moduleId": "multisite",
-      "statement": "Site consistency, delegation, versioning, and data reconciliation are controlled.",
+      "statement": "Site consistency, delegation, versioning, and data reconciliation are controlled. Applicable when: More than one site, investigator, or operational unit executes the protocol.",
       "failureModes": [
         "protocol drift",
         "site-specific bias"
       ],
       "requiredEvidence": [
-        "site operations plan"
+        "site operations plan",
+        "activation evidence"
       ]
     },
     {
       "id": "remote-proof",
-      "moduleId": "remote-collection",
-      "statement": "Remote identity, environment, support, and failure handling are bounded.",
+      "statement": "Remote identity, environment, support, and failure handling are bounded. Applicable when: Material procedures or measurements occur outside a controlled study site.",
       "failureModes": [
         "uncontrolled environment",
         "identity ambiguity"
       ],
       "requiredEvidence": [
-        "remote dry run"
+        "remote dry run",
+        "activation evidence"
       ]
     },
     {
       "id": "specimen-proof",
-      "moduleId": "biological-specimens",
-      "statement": "Specimen collection, custody, storage, disposal, and biosafety paths are explicit.",
+      "statement": "Specimen collection, custody, storage, disposal, and biosafety paths are explicit. Applicable when: Biological specimens are collected, stored, transported, analyzed, or disposed.",
       "failureModes": [
         "custody loss",
         "unsafe handling"
       ],
       "requiredEvidence": [
-        "specimen flow review"
+        "specimen flow review",
+        "activation evidence"
+      ]
+    },
+    {
+      "id": "research-protocol-readiness-boundary",
+      "statement": "Research protocol readiness produces enough evidence for an independent readiness decision. The possible decisions are ready-for-qualified-review, repair-required, no-go. Ready-for-qualified-review means the package is coherent enough for the applicable expert or authority to review; it does not approve or execute the study.",
+      "level": "required",
+      "failureModes": [
+        "missing evidence for the declared outcome",
+        "decision made from assumptions or unverified claims"
+      ],
+      "requiredEvidence": [
+        "evidence baseline",
+        "independent review",
+        "decision record"
       ]
     }
   ],
-  "modularOutcome": {
-    "kind": "modular-outcome",
-    "gateName": "Research protocol readiness",
-    "action": "Prepare and challenge",
-    "contractPath": "research-protocol/question/contract.json",
-    "moduleDecisionPath": "research-protocol/question/modules.json",
-    "artifactRoot": "research-protocol/",
-    "decisionReceiptPath": "research-protocol/decision.json",
-    "minimumActiveModules": 0,
-    "modules": [
-      {
-        "id": "human-participants",
-        "activationWhen": "Living people are recruited, observed, surveyed, tested, or intervened upon.",
-        "work": [
-          "prepare recruitment, consent, burden, withdrawal, and event materials"
-        ],
-        "checks": [
-          "qualified pathway and comprehension review"
-        ],
-        "requiredExpectationIds": [
-          "human-proof"
-        ]
-      },
-      {
-        "id": "health-data",
-        "activationWhen": "Health, biometric, diagnostic, treatment, or similarly sensitive data are used.",
-        "work": [
-          "minimize and map collection, access, retention, export, and deletion"
-        ],
-        "checks": [
-          "privacy and reidentification challenge"
-        ],
-        "requiredExpectationIds": [
-          "health-data-proof"
-        ]
-      },
-      {
-        "id": "vulnerable-populations",
-        "activationWhen": "The population has reduced autonomy or additional vulnerability.",
-        "work": [
-          "define additional consent, assent, burden, and safeguard paths"
-        ],
-        "checks": [
-          "population-specific qualified review"
-        ],
-        "requiredExpectationIds": [
-          "vulnerable-proof"
-        ]
-      },
-      {
-        "id": "regulated-product",
-        "activationWhen": "The protocol involves a regulated product, indication, diagnostic, or efficacy claim.",
-        "work": [
-          "map classification, claim, reporting, and authorization boundaries"
-        ],
-        "checks": [
-          "qualified regulatory review"
-        ],
-        "requiredExpectationIds": [
-          "regulated-proof"
-        ]
-      },
-      {
-        "id": "multisite",
-        "activationWhen": "More than one site, investigator, or operational unit executes the protocol.",
-        "work": [
-          "define delegation, training, versioning, and reconciliation"
-        ],
-        "checks": [
-          "cross-site dry run"
-        ],
-        "requiredExpectationIds": [
-          "multisite-proof"
-        ]
-      },
-      {
-        "id": "remote-collection",
-        "activationWhen": "Material procedures or measurements occur outside a controlled study site.",
-        "work": [
-          "define identity, environment, support, failure, and device boundaries"
-        ],
-        "checks": [
-          "remote dry run and dropout challenge"
-        ],
-        "requiredExpectationIds": [
-          "remote-proof"
-        ]
-      },
-      {
-        "id": "biological-specimens",
-        "activationWhen": "Biological specimens are collected, stored, transported, analyzed, or disposed.",
-        "work": [
-          "define custody, labeling, storage, biosafety, and disposal"
-        ],
-        "checks": [
-          "specimen-flow and qualified-safety review"
-        ],
-        "requiredExpectationIds": [
-          "specimen-proof"
-        ]
-      }
-    ],
-    "decisions": [
-      "ready-for-qualified-review",
-      "repair-required",
-      "no-go"
-    ],
-    "steps": [
-      "Lock one falsifiable question and the claims the study could and could not support.",
-      "Write the minimum reproducible protocol and prespecified analysis plan.",
-      "Activate ethics, privacy, regulatory, and operational modules only from the actual design.",
-      "Use independent challenge to identify the exact qualified approval still required before execution."
-    ],
-    "completionBoundary": "Ready-for-qualified-review means the package is coherent enough for the applicable expert or authority to review; it does not approve or execute the study."
-  },
   "packVersion": "1.0.0",
   "visibility": "public",
   "lifecycle": "reviewed"

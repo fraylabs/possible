@@ -2,25 +2,23 @@
 
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import type { KeyboardEvent as ReactKeyboardEvent, ReactNode } from "react";
-import { compilePack, getCatalogNumber, getPack, getPackStatus } from "@possible/packs";
+import { compilePack, getPack } from "@possible/packs";
 import type { OutcomePack } from "@possible/packs";
 import { exampleCatalog, getExample } from "./example-content";
 import type { PossibleExample } from "./example-content";
-import { getPublishedPack, getRoutablePack, githubUrl, installCommand, routablePacks } from "./public-content";
+import { getPackCatalogEntry, getPublishedPack, getRoutablePack, githubUrl, installCommand, packHref, routablePacks } from "./public-content";
 
 const PaperPlaneGame = lazy(() => import("./PaperPlaneGame"));
 type CopyState = "idle" | "copied" | "failed";
 const approvalDisclosure = "Saying yes authorizes repo-local agent skill installation, the shared outcome brief and state files, and local outcome work. External actions still require separate approval.";
 const statusLabels = {
-  stable: "Reviewed",
+  listed: "Listed",
   experimental: "Experimental",
+  verified: "Verified",
   archived: "Archived",
 } as const;
 const statusLabel = (status: keyof typeof statusLabels) => statusLabels[status];
-const packStatusLabel = (slug: string) => {
-  const status = getPackStatus(slug);
-  return status ? statusLabel(status) : "Unlisted";
-};
+const packStatusLabel = (pack: OutcomePack) => statusLabel(getPackCatalogEntry(pack).trust.status);
 const navigationItems = [
   { label: "EXAMPLES", href: "/examples", external: false },
   { label: "DOCS", href: "/docs", external: false },
@@ -163,6 +161,43 @@ function CreatePage() {
         </div>
       </section>
 
+      <section className="home-film" aria-labelledby="home-film-heading">
+        <header className="home-film-header">
+          <div>
+            <p className="eyebrow">THE POSSIBLE FILM / 00:55</p>
+            <h2 id="home-film-heading">There’s a whole world<br /><em>inside Codex.</em></h2>
+          </div>
+          <div className="home-film-intro">
+            <p>Most people only know to ask Codex for code. Possible shows you the hardware, games, presentations, websites, films—and more—it can help you finish.</p>
+            <div className="home-film-pack-links" aria-label="Outcome Packs used to make the film">
+              <a href="/packs/html-css-animated-product-launch-film">Motion film pack <span>↗</span></a>
+              <a href="/packs/original-strudel-soundtrack">Soundtrack pack <span>↗</span></a>
+            </div>
+          </div>
+        </header>
+
+        <figure className="home-film-player">
+          <video
+            autoPlay
+            controls
+            loop
+            muted
+            playsInline
+            preload="metadata"
+            poster="/possible-launch-film-poster.jpg"
+            aria-describedby="home-film-caption"
+          >
+            <source src="/possible-launch-film.mp4" type="video/mp4" />
+            <a href="/possible-launch-film.mp4">Watch the Possible launch film</a>
+          </video>
+          <figcaption id="home-film-caption">
+            <span>01 / FILM</span>
+            <strong>THE WORLD INSIDE CODEX</strong>
+            <span>MADE WITH CODEX + POSSIBLE</span>
+          </figcaption>
+        </figure>
+      </section>
+
       <section className="home-pack-gallery" id="packs" aria-labelledby="home-packs-heading">
         <header className="home-pack-gallery-header">
           <div>
@@ -174,11 +209,11 @@ function CreatePage() {
           </div>
         </header>
         <div className="home-pack-gallery-grid" aria-label="Public Outcome Pack catalog">
-          {routablePacks.map((pack) => <PackCard pack={pack} key={pack.slug} />)}
+          {routablePacks.map((pack) => <PackCard pack={pack} key={getPackCatalogEntry(pack).id} />)}
         </div>
         <div className="home-pack-gallery-footer">
           <span>{routablePacks.length} PACKS IN CATALOG</span>
-          <a href={`${githubUrl}/tree/main/packages/packs/src/manifests`} target="_blank" rel="noreferrer">Inspect the JSON source ↗</a>
+          <a href={`${githubUrl}/tree/main/registry`} target="_blank" rel="noreferrer">Inspect the Git-backed registry ↗</a>
         </div>
       </section>
 
@@ -198,10 +233,10 @@ function PackCard({ pack }: { pack: OutcomePack }) {
   const preview = packPreviewMeta[pack.slug] ?? { label: "OUTCOME", mark: "BUILD", caption: "REVIEWED CONTRACT" };
 
   return (
-    <a className={`pack-card pack-card--visual pack-card--${pack.slug}`} href={`/packs/${pack.slug}`}>
+    <a className={`pack-card pack-card--visual pack-card--${pack.slug}`} href={packHref(pack)}>
       <div className="pack-card-preview" aria-hidden="true">
         <div className="pack-preview-art">
-          <div className="pack-preview-toolbar"><span>{String(getCatalogNumber(pack.slug)).padStart(2, "0")}</span><span>OUTCOME / {preview.label}</span><b>↗</b></div>
+          <div className="pack-preview-toolbar"><span>{String(getPackCatalogEntry(pack).catalogNumber).padStart(2, "0")}</span><span>OUTCOME / {preview.label}</span><b>↗</b></div>
           <div className="pack-preview-composition"><i /><i /><i /></div>
           <strong>{preview.mark}</strong>
           <span className="pack-preview-caption">{preview.caption}</span>
@@ -210,14 +245,14 @@ function PackCard({ pack }: { pack: OutcomePack }) {
       <div className="pack-card-info">
         <header>
           <div>
-            <p className="pack-card-kicker">OUTCOME PACK · {packStatusLabel(pack.slug)}</p>
+            <p className="pack-card-kicker">OUTCOME PACK · {packStatusLabel(pack)}</p>
             <h3>{pack.name}</h3>
           </div>
           <span className="pack-card-open" aria-hidden="true">↗</span>
         </header>
         <p className="pack-card-promise">{pack.promise}</p>
         <div className="pack-card-meta">
-          <span>{pack.skills.length} SKILLS{pack.plugins?.length ? ` + ${pack.plugins.length} PLUGIN${pack.plugins.length === 1 ? "" : "S"}` : ""}</span>
+          <span>{pack.skills.length} SKILLS</span>
           <span>{pack.workstreams.length} WORKSTREAMS</span>
           <span>{pack.outputs.length} OUTPUTS</span>
         </div>
@@ -227,8 +262,10 @@ function PackCard({ pack }: { pack: OutcomePack }) {
 }
 
 function PackDetailPage({ pack }: { pack: OutcomePack }) {
-  const compiled = compilePack(pack);
-  const status = getPackStatus(pack.slug) ?? (pack.archived ? "archived" : "experimental");
+  const compiled = pack.lifecycle === "draft" ? undefined : compilePack(pack);
+  const catalogEntry = getPackCatalogEntry(pack);
+  const status = catalogEntry.trust.status;
+  const publicationBase = packHref(pack);
   const reviewedLabel = pack.reviewedAt ? new Date(`${pack.reviewedAt}T00:00:00Z`).toLocaleDateString("en-US", {
     month: "short",
     day: "numeric",
@@ -239,13 +276,14 @@ function PackDetailPage({ pack }: { pack: OutcomePack }) {
     ["overview", "Overview"],
     ["fit", "Fit"],
     ["outputs", "Outputs"],
+    ["expectations", "Expectations"],
     ["workstreams", "Execution plan"],
     ["agent-skills", "Agent skills"],
     ["install", "Install"],
     ["run-prompt", "Run prompt"],
     ["boundaries", "Boundaries"],
     ["verification", "Verification"],
-  ];
+  ].filter(([id]) => compiled !== undefined || (id !== "install" && id !== "run-prompt"));
 
   return (
     <main className="pack-reference-page">
@@ -256,9 +294,9 @@ function PackDetailPage({ pack }: { pack: OutcomePack }) {
           <header><span>OUTCOME PACKS</span></header>
           <nav aria-label="Outcome Packs">
             {routablePacks.map((candidate) => (
-              <a href={`/packs/${candidate.slug}`} aria-current={candidate.slug === pack.slug ? "page" : undefined} key={candidate.slug}>
+              <a href={packHref(candidate)} aria-current={candidate === pack ? "page" : undefined} key={getPackCatalogEntry(candidate).id}>
                 <strong>{candidate.name}</strong>
-                <small>{packStatusLabel(candidate.slug)}</small>
+                <small>{packStatusLabel(candidate)}</small>
               </a>
             ))}
           </nav>
@@ -272,6 +310,7 @@ function PackDetailPage({ pack }: { pack: OutcomePack }) {
               <div><dt>STATUS</dt><dd>{statusLabel(status)}</dd></div>
               <div><dt>SCHEMA</dt><dd>v{pack.schemaVersion}</dd></div>
               <div><dt>LAST REVIEWED</dt><dd><time dateTime={pack.reviewedAt}>{reviewedLabel}</time></dd></div>
+              <div><dt>SOURCE</dt><dd>{catalogEntry.id}</dd></div>
             </dl>
             {pack.archived ? (
               <aside className="pack-archive-notice" aria-label="Archived Outcome Pack">
@@ -285,7 +324,7 @@ function PackDetailPage({ pack }: { pack: OutcomePack }) {
                     return (
                       <li key={slug}>
                         {publishedReplacement
-                          ? <a href={`/packs/${slug}`}>{replacement?.name ?? slug}</a>
+                          ? <a href={packHref(publishedReplacement)}>{replacement?.name ?? slug}</a>
                           : <a href={`${githubUrl}/blob/dev/packages/packs/src/manifests/${slug}.json`}>{replacement?.name ?? slug}</a>}
                       </li>
                     );
@@ -293,13 +332,20 @@ function PackDetailPage({ pack }: { pack: OutcomePack }) {
                 </ul>
               </aside>
             ) : null}
+            {status === "listed" ? (
+              <aside className="pack-archive-notice" aria-label="Listed Outcome Pack">
+                <strong>LISTED · COMMUNITY SUBMISSION</strong>
+                <p>This source submission is valid and its contract can compile, but Possible maintainers have not accepted it as experimental or verified. It is not recommended by default; inspect the source and ask before relying on it.</p>
+              </aside>
+            ) : null}
             <h1>{pack.name}</h1>
             <p className="pack-reference-promise">{pack.promise}</p>
+            <p className="pack-reference-summary">{pack.summary}</p>
             <div className="pack-reference-actions">
               {pack.archived
                 ? <a href="/#packs">View active packs <span>→</span></a>
                 : <a href="/#start">Start with $possible <span>→</span></a>}
-              <a href={`/packs/${pack.slug}.json`}>Outcome Pack JSON ↗</a>
+              <a href={`${publicationBase}.json`}>Outcome Pack JSON ↗</a>
             </div>
           </header>
 
@@ -321,8 +367,13 @@ function PackDetailPage({ pack }: { pack: OutcomePack }) {
             <ol className="pack-contract-list">{pack.outputs.map((output, index) => <li key={output}><span>{String(index + 1).padStart(2, "0")}</span><strong>{output}</strong></li>)}</ol>
           </section>
 
+          <section className="pack-reference-section" id="expectations">
+            <header><span>03</span><h2>Expectations</h2><p>This is the completion checklist: what must become true, how it can fail, and what evidence proves it.</p></header>
+            <ol className="pack-contract-list">{(pack.expectations ?? []).map((expectation) => <li key={expectation.id}><span>{expectation.level === "preferred" ? "~" : "!"}</span><div><strong>{expectation.statement}</strong><p><b>Failure modes:</b> {expectation.failureModes.join("; ")}</p><p><b>Evidence:</b> {expectation.requiredEvidence.join("; ")}</p></div></li>)}</ol>
+          </section>
+
           <section className="pack-reference-section" id="workstreams">
-            <header><span>03</span><h2 id="workstreams-heading">Execution plan</h2><p>Each workstream owns separate files.</p></header>
+            <header><span>04</span><h2 id="workstreams-heading">Execution plan</h2><p>Each workstream owns separate files.</p></header>
             <div className="pack-table-scroll">
               <table className="pack-reference-table pack-workstream-table" aria-labelledby="workstreams-heading">
                 <caption className="sr-only">Workstreams, activation rules, dependencies, invoked skills, owned files, and execution briefs for {pack.name}</caption>
@@ -332,49 +383,42 @@ function PackDetailPage({ pack }: { pack: OutcomePack }) {
                 </tbody>
               </table>
             </div>
-            {pack.opportunityDiscovery ? <div className="pack-review-callout"><span>OPPORTUNITY DISCOVERY</span><div><code>{pack.opportunityDiscovery.candidateRange.join("–")} candidates</code><code>{pack.opportunityDiscovery.decisionReceiptPath}</code></div><p>Possible infers a conservative operator baseline, compares traceable opportunities, and selects one thesis for a first-customer attempt. Selection is not demand or permission to build.</p></div> : null}
-            {pack.firstCustomerSprint ? <div className="pack-review-callout"><span>COMMERCIAL EVIDENCE LADDER</span><div>{pack.firstCustomerSprint.evidenceLadder.map((stage) => <code key={stage}>{stage}</code>)}</div><p>Possible pursues the strongest honest commitment available, preserves the complete funnel, and lets customer behavior determine what should happen next.</p></div> : null}
-            {pack.firstCustomerSprint ? <div className="pack-review-callout"><span>RESUMABLE SALES CYCLE</span><div>{pack.firstCustomerSprint.waitingStates.map((state) => <code key={state}>{state}</code>)}</div><p>Approved sales activity can pause for replies, conversations, payment, or use, then resume from durable state. Scheduling coordinates a follow-up; it never counts as commercial evidence.</p></div> : null}
-            {pack.decisionRationale ? <div className="pack-review-callout"><span>PRODUCT DECISIONS</span><div><code>{pack.decisionRationale.rootPath}</code><code>{pack.decisionRationale.publicNarrativePath}</code></div><p>Important choices retain their alternatives, evidence, trade-offs, uncertainty, reversal conditions, and a truthful public explanation.</p></div> : null}
-            {pack.hardwarePrototype ? <div className="pack-review-callout"><span>MEASURED PHYSICAL PROTOTYPE</span><div>{pack.hardwarePrototype.measurementClasses.map((measurement) => <code key={measurement}>{measurement}</code>)}</div><p>CAD and firmware are inputs. Working status requires calibrated evidence from the integrated physical artifact; otherwise the receipt records repair-required or no-go.</p></div> : null}
-            {pack.remix ? <div className="pack-review-callout"><span>{pack.remix.kind === "physical-direction" ? "PHYSICAL REMIX" : "REMIX"}</span><div><code>{pack.remix.candidateCount} directions</code><code>{pack.remix.decisionPath}</code></div><p>{pack.remix.kind === "physical-direction" ? "Possible compares form, ergonomics, materials, layout, controls, assembly, service and sensory character while preserving function, safety, interfaces, claims and measurement access." : "Possible derives project-specific directions after product truth is known, then records one decision before dependent implementation begins. The outcome contract does not change."}</p></div> : null}
             <div className="pack-review-callout"><span>INDEPENDENT REVIEW</span><div><code>fresh reviewer</code><code>separate ownership</code><code>expectation by expectation</code></div><p>A verifier checks the complete integrated outcome expectation by expectation. Failed requirements block passing, remain preserved as evidence, and trigger artifact repair plus a complete-review rerun.</p></div>
           </section>
 
           <section className="pack-reference-section" id="agent-skills">
-            <header><span>04</span><h2 id="agent-skills-heading">Agent skills</h2><p>Agent skills install through the CLI. Possible uses available plugins without installing them.</p></header>
+            <header><span>05</span><h2 id="agent-skills-heading">Agent skills</h2><p>These reviewed skills are the capabilities this outcome may use.</p></header>
             <div className="pack-table-scroll">
               <table className="pack-reference-table pack-agent-skills-table" aria-labelledby="agent-skills-heading">
-                <caption className="sr-only">Reviewed agent skills and optional agent plugins for {pack.name}</caption>
+                <caption className="sr-only">Reviewed agent skills for {pack.name}</caption>
                 <thead><tr><th>Capability</th><th>Role</th><th>Source</th><th>Reviewed</th></tr></thead>
                 <tbody>
                   {pack.skills.map((source) => <tr key={source.id}><th scope="row"><strong>{source.name}</strong><code>${source.skill}</code></th><td>{source.role}</td><td><a href={source.catalogUrl ?? source.reviewUrl} target="_blank" rel="noreferrer" aria-label={`${source.repository} skill catalog, opens in a new tab`}>{source.repository} ↗</a></td><td><a href={source.reviewUrl} target="_blank" rel="noreferrer" aria-label={`${source.name} reviewed revision ${source.reviewedRevision}, opens in a new tab`}><code>{source.reviewedRevision}</code> ↗</a></td></tr>)}
-                  {pack.plugins?.map((plugin) => <tr key={`plugin-${plugin.id}`}><th scope="row"><strong>{plugin.name}</strong><code>{plugin.invocation} · {plugin.skills.map((skill) => `$${skill}`).join(" · ")}</code></th><td>{plugin.role}<small>{plugin.availability}</small></td><td><a href={plugin.docsUrl} target="_blank" rel="noreferrer" aria-label={`${plugin.name} plugin documentation, opens in a new tab`}>{plugin.provider} plugin ↗</a></td><td><code>v{plugin.reviewedVersion}</code></td></tr>)}
                 </tbody>
               </table>
             </div>
           </section>
 
-          <section className="pack-reference-section" id="install">
-            <header><span>05</span><h2>Install agent skills</h2><p>Run these commands only after you approve the Outcome Pack.</p></header>
+          {compiled ? <section className="pack-reference-section" id="install">
+            <header><span>06</span><h2>Install agent skills</h2><p>Run these commands only after you approve the Outcome Pack.</p></header>
             <div className="pack-command-list">{compiled.installCommands.map((command, index) => <div key={command}><span>COMMAND {String(index + 1).padStart(2, "0")}</span><pre><code>{command}</code></pre><CopyButton label={`Copy install command ${index + 1} of ${compiled.installCommands.length}`} value={command} /></div>)}</div>
-            <p className="pack-reference-note">These commands install repo-local agent skills. Review source changes before use. {pack.plugins?.length ? `Possible can use available plugins such as ${pack.plugins.map((plugin) => plugin.invocation).join(", ")}; these commands do not install them. ` : ""}External actions require separate approval.</p>
-          </section>
+            <p className="pack-reference-note">These commands install repo-local agent skills. Review source changes before use. External actions require separate approval.</p>
+          </section> : null}
 
-          <section className="pack-reference-section" id="run-prompt">
-            <header><span>06</span><h2>Run prompt</h2><p>Possible generates this workflow from the approved Outcome Pack.</p></header>
-            <div className="pack-publication-actions"><CopyButton label="Copy full run prompt" value={compiled.runPrompt} /><a href={`/packs/${pack.slug}/run.txt`}>Download .txt ↓</a><a href={`/packs/${pack.slug}/install.txt`}>Install .txt ↓</a></div>
+          {compiled ? <section className="pack-reference-section" id="run-prompt">
+            <header><span>07</span><h2>Run prompt</h2><p>Possible generates this workflow from the approved Outcome Pack.</p></header>
+            <div className="pack-publication-actions"><CopyButton label="Copy full run prompt" value={compiled.runPrompt} /><a href={`${publicationBase}/run.txt`}>Download .txt ↓</a><a href={`${publicationBase}/install.txt`}>Install .txt ↓</a></div>
             <details className="pack-prompt-disclosure"><summary>Preview full compiled prompt <span>{compiled.runPrompt.split("\n").length} lines</span></summary><pre><code>{compiled.runPrompt}</code></pre></details>
-          </section>
+          </section> : null}
 
           <section className="pack-reference-section" id="boundaries">
-            <header><span>07</span><h2>Approval boundaries</h2><p>Outcome Pack approval permits local work only. External actions need separate approval.</p></header>
+            <header><span>08</span><h2>Approval boundaries</h2><p>Outcome Pack approval permits local work only. External actions need separate approval.</p></header>
             <div className="pack-approval-callout"><strong>What “yes” authorizes</strong><p>{approvalDisclosure}</p></div>
             <ul className="pack-reference-list">{pack.guardrails.map((item) => <li key={item}>{item}</li>)}</ul>
           </section>
 
           <section className="pack-reference-section" id="verification">
-            <header><span>08</span><h2>Verification</h2><p>Completion requires evidence. Every run indexes its outputs, expectation results, decisions, repairs, approvals and limitations in one Outcome Record.</p></header>
+            <header><span>09</span><h2>Verification</h2><p>Completion requires evidence. Every run indexes its outputs, expectation results, decisions, repairs, approvals and limitations in one Outcome Record.</p></header>
             <ol className="pack-verification-list">{pack.verification.map((item, index) => <li key={item}><span>{String(index + 1).padStart(2, "0")}</span><p>{item}</p></li>)}</ol>
           </section>
 
@@ -383,7 +427,7 @@ function PackDetailPage({ pack }: { pack: OutcomePack }) {
         <aside className="pack-reference-toc" aria-label="On this page">
           <span>ON THIS PAGE</span>
           <nav aria-label="Page sections">{sections.map(([id, label]) => <a href={`#${id}`} key={id}>{label}</a>)}</nav>
-          <div><span>PUBLICATIONS</span><a href={`/packs/${pack.slug}.json`}>Outcome Pack JSON ↗</a><a href={`/packs/${pack.slug}/install.txt`}>Install commands ↗</a><a href={`/packs/${pack.slug}/run.txt`}>Run prompt ↗</a></div>
+          <div><span>PUBLICATIONS</span><a href={`${publicationBase}.json`}>Outcome Pack JSON ↗</a>{compiled ? <><a href={`${publicationBase}/install.txt`}>Install commands ↗</a><a href={`${publicationBase}/run.txt`}>Run prompt ↗</a></> : null}</div>
         </aside>
       </div>
       <SiteFooter />
@@ -733,12 +777,16 @@ const glossaryTerms = [
   ["Task", "One action taken toward an outcome. A task describes work; it does not define success."],
   ["Possible.sh", "The open-source library of Outcome Packs, documentation, examples, and evidence."],
   ["$possible", "The installed agent skill that understands a request, recommends an Outcome Pack, and runs it after approval."],
-  ["Outcome Pack", "A reviewed contract for one class of outcomes: it names the result, outputs, skills, workstreams, safeguards, and checks without becoming permission for external action."],
+  ["Outcome Pack", "A contract for one class of outcomes. Its authoring surface is a Structured Prompt, reviewed Skills, and an Expectations checklist; it never becomes permission for external action."],
+  ["Structured Prompt", "The manifest fields that define the promise, context, fit, workstreams, outputs, guardrails, and verification boundary. The compiler assembles them into one Run Prompt."],
+  ["Run Prompt", "The deterministic execution prompt compiled from one approved Outcome Pack and frozen outcome brief."],
+  ["Skill source", "A reviewed external or local source pinned to a revision and installed only after the Outcome Pack is approved."],
   ["Creative direction", "A project-specific visual system derived from its audience, product truth, evidence, assets, and constraints."],
-  ["Remix", "Reconsider how an outcome is expressed without changing its promised facts, safeguards, product behavior, or definition of done."],
+  ["Presentation variation", "Reconsider how an outcome is expressed without changing its promised facts, safeguards, product behavior, or definition of done. It belongs in the Structured Prompt and Expectations, not a separate pack schema."],
   ["Outcome Journey", "The retrospective sequence of outcomes completed for one ambition. It becomes visible only after each outcome is verified and the next is recommended from the new reality."],
-  ["Stable pack", "An Outcome Pack backed by a preserved end-to-end run and independent verification."],
-  ["Experimental pack", "An Outcome Pack available to inspect and test before equivalent preserved evidence exists."],
+  ["Listed pack", "A valid community submission that can be discovered but is not recommended by default. Authorship is not Possible verification."],
+  ["Experimental pack", "A maintainer-reviewed Outcome Pack available to try before sufficient accepted run evidence exists."],
+  ["Verified pack", "An Outcome Pack supported by accepted run evidence. The evidence proves only its recorded scope."],
   ["Agent skill", "A reusable capability that performs focused work during a run."],
   ["Run", "One approved Outcome Pack applied to one project."],
   ["Workstream", "A bounded part of the outcome with named inputs, outputs, ownership, and checks. Independent workstreams may run in parallel."],
@@ -986,9 +1034,9 @@ function HowToUsePage() {
             </div>
           </section>
 
-          <section id="remix-and-journey">
-            <h2>Remix and Outcome Journeys</h2>
-            <p><strong>Remix changes the expression.</strong> A supporting pack can derive three project-specific creative directions from the audience and product truth, then select or ask about the choice before implementation. The promised outcome and its checks stay fixed.</p>
+          <section id="presentation-and-journey">
+            <h2>Presentation variations and Outcome Journeys</h2>
+            <p><strong>Presentation variation changes the expression.</strong> When taste is material, Possible can derive a small set of project-specific directions from the audience and product truth. That guidance belongs in the Structured Prompt and Expectations—not in a separate pack contract. The promised outcome and its checks stay fixed.</p>
             <p><strong>An Outcome Journey is visible only afterward.</strong> Possible completes and verifies one outcome, inspects the new reality, recommends one next outcome, and asks for fresh approval. It never fixes the future sequence in advance.</p>
           </section>
 
@@ -1030,7 +1078,7 @@ function HowToUsePage() {
           <a href="#human">For the human</a>
           <a href="#possible">What Possible does</a>
           <a href="#goal-and-possible">Use with /goal</a>
-          <a href="#remix-and-journey">Remix and journeys</a>
+          <a href="#presentation-and-journey">Presentation variations and journeys</a>
           <a href="#handshake">The handshake</a>
           <a href="#approval">Approval boundary</a>
         </aside>
@@ -1099,7 +1147,7 @@ function OutcomePacksDocsPage() {
     section="CORE CONCEPTS / OUTCOME PACKS"
     eyebrow="CORE CONCEPTS"
     title="Choose a complete outcome, not a pile of tasks."
-    description="An Outcome Pack is a reviewed contract for one class of outcomes. It gives Possible a coherent target, the workstreams to coordinate, the boundaries to preserve, and the evidence needed to call the result complete."
+    description="An Outcome Pack is a contract for one class of outcomes. Its authoring surface stays small: a Structured Prompt, reviewed Skills, and an Expectations checklist."
     toc={[{ label: "What a pack is", href: "#what-is-a-pack" }, { label: "Pack anatomy", href: "#anatomy" }, { label: "Pack statuses", href: "#statuses" }, { label: "Choose and approve", href: "#choose" }]}
     next={{ label: "Expectations & evidence", href: "/docs/expectations" }}
   >
@@ -1108,12 +1156,12 @@ function OutcomePacksDocsPage() {
       <p>A pack turns a rough ambition into one inspectable run. It is not a generic prompt, a permission slip, or a promise that every claim has already been proven.</p>
       <div className="docs-callout docs-callout--info">
         <strong>THE CONTRACT</strong>
-        <p>The pack fixes the outcome, outputs, selected skills, independent workstreams, safeguards, approval gates, and verification boundary before execution begins.</p>
+        <p>The pack fixes three things before execution begins: the Structured Prompt that explains the work, the reviewed Skills that provide capabilities, and the Expectations checklist that defines what must become true.</p>
       </div>
       <div className="docs-card-grid" aria-label="What an Outcome Pack coordinates">
-        <article><span>01 / TARGET</span><strong>Observable result</strong><p>What should exist when the run is complete, for whom, and under which constraints.</p></article>
-        <article><span>02 / WORK</span><strong>Owned workstreams</strong><p>Bounded specialist contributions that can be coordinated and integrated without losing the shared brief.</p></article>
-        <article><span>03 / PROOF</span><strong>Completion checks</strong><p>Expectations, evidence, and independent review that separate an artifact from a trustworthy claim.</p></article>
+        <article><span>01 / PROMPT</span><strong>Structured Prompt</strong><p>The promise, summary, fit, workstreams, outputs, guardrails, and verification fields. The compiler assembles them into one Run Prompt.</p></article>
+        <article><span>02 / SKILLS</span><strong>Reviewed capabilities</strong><p>Pinned sources and exact install commands for the capabilities this outcome may use.</p></article>
+        <article><span>03 / EXPECTATIONS</span><strong>Completion checklist</strong><p>Observable conditions, failure modes, and evidence that separate an artifact from a trustworthy claim.</p></article>
       </div>
     </section>
 
@@ -1133,10 +1181,11 @@ function OutcomePacksDocsPage() {
 
     <section id="statuses">
       <h2>Pack statuses</h2>
-      <p>Status tells you how much preserved evidence exists for the contract. It does not change the scope of approval or make an unverified claim true.</p>
+      <p>Status records Possible maintainer trust and accepted evidence for the contract. It does not change the scope of approval or make an unverified claim true.</p>
       <div className="docs-status-list">
-        <div><span className="docs-status-dot docs-status-dot--stable">REVIEWED</span><strong>Stable</strong><p>Backed by a preserved end-to-end run and independent verification.</p></div>
-        <div><span className="docs-status-dot docs-status-dot--experimental">EXPERIMENTAL</span><strong>Experimental</strong><p>Available to inspect and try while equivalent preserved evidence is still being built.</p></div>
+        <div><span className="docs-status-dot docs-status-dot--listed">LISTED</span><strong>Listed</strong><p>A valid submission that is discoverable but not recommended by default. Authors cannot self-award Possible trust.</p></div>
+        <div><span className="docs-status-dot docs-status-dot--experimental">EXPERIMENTAL</span><strong>Experimental</strong><p>Maintainer-reviewed and available to try while sufficient accepted run evidence is still being built.</p></div>
+        <div><span className="docs-status-dot docs-status-dot--verified">VERIFIED</span><strong>Verified</strong><p>Supported by accepted run evidence. Inspect that evidence before relying on a claim outside its recorded scope.</p></div>
         <div><span className="docs-status-dot docs-status-dot--archived">ARCHIVED</span><strong>Archived</strong><p>Kept for historical reference, but not recommended or compiled for new work.</p></div>
       </div>
     </section>
@@ -1157,13 +1206,13 @@ function AuthoringDocsPage() {
     section="GUIDES / AUTHORING OUTCOME PACKS"
     eyebrow="GUIDE"
     title="Write the contract in JSON."
-    description="A project-local Outcome Pack is a private, declarative contract for one observable result. Start with a draft, validate it locally, and request review before it can compile or run."
-    toc={[{ label: "Where packs live", href: "#where" }, { label: "Minimal shape", href: "#shape" }, { label: "Authoring workflow", href: "#workflow" }, { label: "Review boundary", href: "#review" }]}
+    description="Author one bounded outcome as strict JSON, prove it locally, and submit an exact Git-pinned snapshot without assigning your own trust."
+    toc={[{ label: "Where packs live", href: "#where" }, { label: "Minimal shape", href: "#shape" }, { label: "Field demands", href: "#fields" }, { label: "Authoring workflow", href: "#workflow" }, { label: "Publish through Git", href: "#publish" }, { label: "Review boundary", href: "#review" }]}
     next={{ label: "Expectations & evidence", href: "/docs/expectations" }}
   >
     <section id="where">
       <h2>Where packs live</h2>
-      <p>Keep private project packs inside the project that owns them. MCP only distributes public manifests; it never discovers or writes private packs.</p>
+      <p>Keep private project packs inside the project that owns them. MCP only distributes accepted public catalog snapshots; it never discovers or writes private packs.</p>
       <pre className="docs-code-block"><code>{`.possible/
   packs/
     my-pack/
@@ -1184,19 +1233,51 @@ function AuthoringDocsPage() {
   "packVersion": "0.1.0",
   "visibility": "private",
   "lifecycle": "draft",
+  "lane": "create",
   "slug": "my-pack",
   "name": "My Outcome Pack",
+  "eyebrow": "DRAFT / OUTCOME PACK",
   "promise": "The observable result this pack makes true.",
+  "summary": "The smallest coherent outcome and its stopping boundary.",
   "useWhen": [],
   "notFor": [],
   "skills": [],
   "workstreams": [],
+  "reviewSkills": [],
   "outputs": [],
   "expectations": [],
   "guardrails": [],
   "verification": []
 }`}</code></pre>
-      <p>As the pack matures, add reviewed skill sources, owned workstreams, required evidence, approval boundaries, and the pack-specific contract needed by the outcome.</p>
+      <p>As the pack matures, fill the three primitives: complete the Structured Prompt fields, add reviewed Skill sources, and make each expectation observable with failure modes and required evidence. Do not add a domain-specific contract object or a separate prose blob.</p>
+    </section>
+
+    <section id="fields">
+      <h2>Field demands</h2>
+      <p>Every field has one job. Together, the prompt-bearing fields form the Structured Prompt; the compiler assembles them into one Run Prompt. Keep implementation guidance in those fields rather than inventing new manifest keys.</p>
+      <div className="docs-table" role="table" aria-label="Outcome Pack field demands">
+        <div role="row"><strong role="columnheader">Field</strong><strong role="columnheader">What it must answer</strong></div>
+        <div role="row"><code role="cell">schemaVersion</code><span role="cell">Which manifest contract is being used. It must be <code>1</code>.</span></div>
+        <div role="row"><code role="cell">packVersion</code><span role="cell">Which semantic revision of this pack is being authored.</span></div>
+        <div role="row"><code role="cell">visibility</code><span role="cell">Where the manifest may be distributed: <code>private</code> or <code>public</code>. It is not permission.</span></div>
+        <div role="row"><code role="cell">lifecycle</code><span role="cell">How mature the authored contract is: <code>draft</code>, <code>reviewed</code>, or <code>archived</code>. Reviewed means complete enough to compile; it is not Possible catalog trust or authority.</span></div>
+        <div role="row"><code role="cell">lane</code><span role="cell">The broad kind of work, such as <code>create</code>, <code>launch</code>, <code>release</code>, or <code>operate</code>; never a hidden workflow schema.</span></div>
+        <div role="row"><code role="cell">slug</code><span role="cell">A stable, lowercase, hyphenated identifier that will not change just because the copy changes.</span></div>
+        <div role="row"><code role="cell">name</code><span role="cell">The human-readable outcome a user receives, not the tool, team, or implementation technique.</span></div>
+        <div role="row"><code role="cell">eyebrow</code><span role="cell">A short catalog label that helps someone scan the pack library.</span></div>
+        <div role="row"><code role="cell">promise</code><span role="cell">One concise statement of the observable result this pack is meant to make true.</span></div>
+        <div role="row"><code role="cell">summary</code><span role="cell">The fuller plain-language explanation of the outcome, its shape, and where the run stops. This is the description; do not add a separate <code>description</code> field.</span></div>
+        <div role="row"><code role="cell">useWhen</code><span role="cell">The concrete starting conditions that make this pack a fit.</span></div>
+        <div role="row"><code role="cell">notFor</code><span role="cell">The explicit non-scope and nearest cases that must be rejected or redirected.</span></div>
+        <div role="row"><code role="cell">skills</code><span role="cell">The reviewed capabilities needed to do the work, each pinned to a source, revision, role, and install command.</span></div>
+        <div role="row"><code role="cell">workstreams</code><span role="cell">Independently owned slices of work with named skills, owned artifacts, a brief, and dependencies; not one hidden module per concern.</span></div>
+        <div role="row"><code role="cell">reviewSkills</code><span role="cell">Capabilities used to challenge and verify the result, kept distinct from implementation work.</span></div>
+        <div role="row"><code role="cell">outputs</code><span role="cell">The artifacts the run leaves behind. An output is not proof that the promised outcome is true.</span></div>
+        <div role="row"><code role="cell">guardrails</code><span role="cell">Non-negotiable content, safety, authority, provenance, and external-action boundaries.</span></div>
+        <div role="row"><code role="cell">verification</code><span role="cell">Fresh checks or reviews that could falsify the expectations; name how the integrated result will be inspected.</span></div>
+        <div role="row"><code role="cell">expectations</code><span role="cell">The observable definition-of-done checklist. Each item needs a statement, level, failure modes, and required evidence.</span></div>
+        <div role="row"><code role="cell">archived</code><span role="cell">Why an archived pack is retained and what replaces it. Use only with <code>lifecycle: "archived"</code>.</span></div>
+      </div>
     </section>
 
     <section id="workflow">
@@ -1206,19 +1287,31 @@ function AuthoringDocsPage() {
         <li><strong>Describe fit</strong><span>Write the promise, entry conditions, non-scope, outputs, and stopping boundary before choosing skills.</span></li>
         <li><strong>Connect proof</strong><span>Give each active expectation failure modes and required evidence. An output is not proof by itself.</span></li>
         <li><strong>Validate locally</strong><span>Run <code>possible pack validate my-pack</code>. Fix schema, duplicate-ID, dependency, and safety errors.</span></li>
-        <li><strong>Request review</strong><span>Move the manifest to <code>lifecycle: "reviewed"</code> only when the review source, revisions, guardrails, and verification boundary are explicit.</span></li>
+        <li><strong>Record contract review</strong><span>Move the manifest to <code>lifecycle: "reviewed"</code> and record the author/repository review date in <code>reviewedAt</code> only when the skill sources, revisions, guardrails, and verification boundary are explicit. This does not assign Possible trust.</span></li>
         <li><strong>Compile after review</strong><span><code>possible pack compile my-pack</code> is refused for drafts and produces the deterministic local run contract for a reviewed pack.</span></li>
-        <li><strong>Export for public review</strong><span><code>possible pack export my-pack</code> creates a public-review draft without publishing or granting authority.</span></li>
+        <li><strong>Export for public review</strong><span><code>possible pack export my-pack</code> creates a reviewed public contract without publishing or granting Possible trust.</span></li>
       </ol>
+    </section>
+
+    <section id="publish">
+      <h2>Publish through Git</h2>
+      <p>Public authors keep the canonical <code>pack.json</code> in their own GitHub repository. Possible stores only a small source record, the exact accepted bytes, and separately maintained trust evidence. No account or submission database is required.</p>
+      <ol>
+        <li><strong>Pin your source</strong><span>Commit the exported reviewed public contract, then rerun <code>possible pack export</code> with its GitHub repository, full commit SHA, and repository-relative manifest path.</span></li>
+        <li><strong>Add provenance</strong><span>Copy the generated <code>source-entry.json</code> and content-addressed <code>pack.json</code> snapshot into the registry paths named by <code>SUBMISSION.md</code>.</span></li>
+        <li><strong>Regenerate discovery</strong><span>Run <code>npm run registry:sync</code>. Commit the generated catalog and offline skill references; never hand-edit them.</span></li>
+        <li><strong>Open a pull request</strong><span>Focused CI fetches the pinned public commit and proves its bytes, hash, schema, and snapshot agree.</span></li>
+      </ol>
+      <div className="docs-callout docs-callout--info"><strong>AUTHORSHIP IS NOT TRUST</strong><p>A merged valid submission becomes listed. Only Possible maintainers can make it experimental, verified, or archived; verified requires accepted run evidence.</p></div>
     </section>
 
     <section id="review">
       <h2>Review and promotion</h2>
       <div className="docs-card-grid docs-card-grid--two" aria-label="Pack visibility and lifecycle">
         <article><span>VISIBILITY</span><strong>Private or public</strong><p>Private packs stay inside the project. Public packs may be distributed through the catalog and MCP.</p></article>
-        <article><span>LIFECYCLE</span><strong>Draft, reviewed, archived</strong><p>Lifecycle describes maturity. A private pack may be reviewed without becoming public.</p></article>
+        <article><span>LIFECYCLE</span><strong>Draft, reviewed, archived</strong><p>Lifecycle describes the authored contract. Catalog trust is a separate maintainer-owned record.</p></article>
       </div>
-      <p>Promotion is an explicit export for a separate public review process. It preserves the pack version, source provenance, content hash, and review record; it never silently publishes or inherits approval.</p>
+      <p>Promotion is an explicit export for a separate public review process. The authored lifecycle only says the contract is complete enough to compile; the maintainer-owned catalog status says how Possible trusts it. Export preserves the pack version, source provenance, content hash, and review record; it never silently publishes or inherits approval.</p>
       <a className="docs-reference-link" href="/docs/reference"><span>REFERENCE</span><strong>Inspect project files & safety</strong><i>Read the boundary →</i></a>
     </section>
   </DocsSimplePage>;
@@ -1252,7 +1345,7 @@ function ExpectationsDocsPage() {
 
     <section id="activation">
       <h2>Required and preferred expectations</h2>
-      <p>A pack can include optional modules that activate only when the artifact or user request calls for them. The run must report which expectations were active and why.</p>
+      <p>A pack can include required and preferred checklist items. Each item is explicit and observable; no hidden module or domain-specific schema creates work outside the prompt, Skills, and Expectations.</p>
       <div className="docs-card-grid docs-card-grid--two" aria-label="Expectation activation levels">
         <article><span>REQUIRED</span><strong>Completion blockers</strong><p>If an active required expectation fails, the run cannot honestly close. Preserve the failure, repair the result, and rerun the complete review.</p></article>
         <article><span>PREFERRED</span><strong>Quality signals</strong><p>Useful improvements that inform the completion report without pretending they are blockers when the approved contract did not require them.</p></article>
@@ -1322,7 +1415,7 @@ function DocsReferencePage() {
       <div className="docs-faq">
         <details><summary>The installer reports conflicting files</summary><p>Possible never overwrites a different existing skill. Inspect <code>.agents/skills/possible</code>, preserve anything you need, then resolve the conflict manually before rerunning the installer.</p></details>
         <details><summary>Codex does not recognize $possible</summary><p>Confirm the skill exists at <code>.agents/skills/possible/SKILL.md</code>, then reopen or reload the project so Codex can discover it.</p></details>
-        <details><summary>A pack lists an optional plugin I do not have</summary><p>Possible records that the capability is unavailable and uses a reviewed fallback only when one is compatible and authorized. Otherwise the completion report marks the affected expectation as blocked.</p></details>
+        <details><summary>An external capability I need is unavailable</summary><p>Possible does not treat plugins or providers as pack fields. It records the missing capability, uses a reviewed fallback only when one is compatible and authorized, or marks the affected expectation as unproven.</p></details>
         <details><summary>The recommended Outcome Pack feels wrong</summary><p>Do not confirm it. Correct Possible&apos;s understanding or continue brainstorming until the recommendation matches the outcome you actually want.</p></details>
       </div>
     </section>

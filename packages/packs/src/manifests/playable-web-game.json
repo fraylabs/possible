@@ -69,6 +69,26 @@
       "reviewUrl": "https://github.com/anthropics/skills/tree/fa0fa64bdc967915dc8399e803be67759e1e62b8/skills/webapp-testing"
     }
   ],
+  "expectations": [
+    {
+      "id": "complete-core-loop",
+      "statement": "The build contains one understandable, replayable core loop with working start, play, win or loss, scoring, and restart behavior.",
+      "failureModes": ["Unclear objective", "Prototype stops before a replayable result"],
+      "requiredEvidence": ["Fresh browser playthrough", "State-transition checks"]
+    },
+    {
+      "id": "responsive-controls",
+      "statement": "Keyboard, pointer, and touch-sized controls plus HUD, pause, mute, and reduced-motion behavior work on the declared profiles.",
+      "failureModes": ["Controls inaccessible on a target profile", "HUD or audio settings do not respond"],
+      "requiredEvidence": ["Desktop and mobile browser review", "Console and interaction notes"]
+    },
+    {
+      "id": "licensed-assets",
+      "statement": "Every external model, texture, font, music, and sound effect is recorded with usable provenance and license information.",
+      "failureModes": ["Unlicensed asset", "Missing attribution or source"],
+      "requiredEvidence": ["Asset ledger", "License links or original-asset declaration"]
+    }
+  ],
   "workstreams": [
     {
       "id": "design",

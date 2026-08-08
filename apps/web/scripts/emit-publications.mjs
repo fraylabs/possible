@@ -1,17 +1,8 @@
 import { mkdir, writeFile } from "node:fs/promises";
-import { createHash } from "node:crypto";
-import { archivedOutcomePacks, compilePack, getPackStatus, stableOutcomePacks } from "@possible/packs";
+import { compilePack, publicCatalog } from "@possible/packs";
 
-const publicArchiveSlugs = new Set([
-  "hardware-launch",
-  "kickstarter-funding",
-  "kickstarter-fulfillment",
-  "robot-prototype",
-  "developer-project-launch",
-  "working-hardware-prototype",
-  "launch-content-campaign",
-]);
-const publishedPacks = [...stableOutcomePacks, ...archivedOutcomePacks.filter(({ slug }) => publicArchiveSlugs.has(slug))];
+const publishedEntries = publicCatalog;
+const publicationKey = (entry) => entry.origin.kind === "bundled" ? entry.pack.slug : entry.id;
 
 const evidenceManifest = {
   schemaVersion: 1,
@@ -138,39 +129,54 @@ const evidenceManifest = {
 
 const outputRoot = new URL("../out/", import.meta.url);
 const json = (value) => `${JSON.stringify(value, null, 2)}\n`;
-const canonicalJson = (value) => Array.isArray(value)
-  ? `[${value.map(canonicalJson).join(",")}]`
-  : value !== null && typeof value === "object"
-    ? `{${Object.entries(value).sort(([left], [right]) => left.localeCompare(right)).map(([key, item]) => `${JSON.stringify(key)}:${canonicalJson(item)}`).join(",")}}`
-    : JSON.stringify(value);
-const contentHash = (pack) => createHash("sha256").update(canonicalJson(pack)).digest("hex");
 const write = async (relativePath, contents) => {
   const target = new URL(relativePath, outputRoot);
   await mkdir(new URL("./", target), { recursive: true });
   await writeFile(target, contents);
 };
 
-for (const pack of publishedPacks) {
-  const compiled = compilePack(pack);
-  await write(`packs/${pack.slug}.json`, json(compiled));
-  await write(`packs/${pack.slug}/install.txt`, `${compiled.installCommands.join("\n")}\n`);
-  await write(`packs/${pack.slug}/run.txt`, `${compiled.runPrompt}\n`);
+for (const entry of publishedEntries) {
+  const { pack } = entry;
+  const key = publicationKey(entry);
+  const compiled = pack.lifecycle === "draft" ? undefined : compilePack(pack);
+  await write(`packs/${key}.json`, json({
+    ...(compiled ?? { pack, installCommands: [], runPrompt: null }),
+    catalog: {
+      id: entry.id,
+      status: entry.trust.status,
+      source: entry.sourceRecord,
+      snapshotRef: entry.snapshotRef,
+      acceptedEvidenceCount: entry.acceptedEvidenceCount,
+      acceptedEvidenceSummary: entry.acceptedEvidenceSummary,
+    },
+  }));
+  if (compiled) {
+    await write(`packs/${key}/install.txt`, `${compiled.installCommands.join("\n")}\n`);
+    await write(`packs/${key}/run.txt`, `${compiled.runPrompt}\n`);
+  }
 }
 
 await write("packs/index.json", json({
   schemaVersion: 1,
-  packs: publishedPacks.map((pack) => ({
-    packVersion: pack.packVersion,
-    slug: pack.slug,
-    visibility: pack.visibility,
-    lifecycle: pack.lifecycle,
-    lane: pack.lane,
-    name: pack.name,
-    promise: pack.promise,
-    summary: pack.summary,
-    reviewedAt: pack.reviewedAt,
-    status: getPackStatus(pack.slug),
-    contentHash: contentHash(pack),
+  packs: publishedEntries.map((entry) => ({
+    id: entry.id,
+    route: `/packs/${publicationKey(entry)}`,
+    source: entry.sourceRecord,
+    snapshotRef: entry.snapshotRef,
+    trust: entry.trust,
+    acceptedEvidenceCount: entry.acceptedEvidenceCount,
+    acceptedEvidenceSummary: entry.acceptedEvidenceSummary,
+    packVersion: entry.pack.packVersion,
+    slug: entry.pack.slug,
+    visibility: entry.pack.visibility,
+    lifecycle: entry.pack.lifecycle,
+    lane: entry.pack.lane,
+    name: entry.pack.name,
+    promise: entry.pack.promise,
+    summary: entry.pack.summary,
+    reviewedAt: entry.pack.reviewedAt,
+    status: entry.trust.status,
+    contentHash: entry.sourceRecord.contentHash,
   })),
 }));
 
@@ -189,7 +195,8 @@ await write("llms.txt", [
   "",
   "/goal provides dynamic pursuit. Possible provides the reviewed outcome contract. Possible defines the multidisciplinary completion target; /goal can sustain and adapt its execution.",
   "",
-  "Possible.sh is an open-source library of Outcome Packs for Codex. Each JSON specification coordinates selected agent skills, owned workstreams, shared constraints, approval boundaries, and the evidence required for completion.",
+  "Possible.sh is an open-source library of Outcome Packs for Codex. Each JSON specification has three authoring primitives: a Structured Prompt, reviewed Skills, and an Expectations checklist. The Structured Prompt is made from explicit manifest fields, and the compiler assembles those fields into a deterministic Run Prompt with selected capabilities, owned workstreams, approval boundaries, and evidence requirements.",
+  "Private packs stay project-local and are handled by the local CLI and Possible skill. MCP distributes public JSON manifests only.",
   "",
   "- Homepage: https://possible.sh/",
   "- Human documentation: /docs/",
@@ -203,12 +210,15 @@ await write("llms.txt", [
   "- Possible completion report: https://github.com/fraylabs/possible/blob/main/apps/web/public/demo/robot-snake/evidence/outcome-receipt.md",
   "- Pack catalog: /#packs",
   "- Pack index: /packs/index.json",
-  ...publishedPacks.flatMap((pack) => [
-    `- ${pack.name}: /packs/${pack.slug}.json`,
-    `  - Outcome Pack page: /packs/${pack.slug}/`,
-    `  - Install commands: /packs/${pack.slug}/install.txt`,
-    `  - Compiled run prompt: /packs/${pack.slug}/run.txt`,
-  ]),
+  ...publishedEntries.flatMap((entry) => {
+    const key = publicationKey(entry);
+    const links = [
+      `- ${entry.pack.name} [${entry.trust.status}]: /packs/${key}.json`,
+      `  - Outcome Pack page: /packs/${key}/`,
+    ];
+    if (entry.pack.lifecycle !== "draft") links.push(`  - Install commands: /packs/${key}/install.txt`, `  - Compiled run prompt: /packs/${key}/run.txt`);
+    return links;
+  }),
   "- GitHub: https://github.com/fraylabs/possible",
   "- npm: https://www.npmjs.com/package/@fraylabs/possible",
   "",

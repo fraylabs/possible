@@ -1,74 +1,134 @@
-import { createHash } from "node:crypto";
-import { getCatalogNumber, getPack, getPackStatus, publicOutcomePacks } from "@possible/packs";
+import { publicCatalog } from "@possible/packs";
+import type { PackCatalogEntry } from "@possible/packs";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod/v4";
 import { errorResult, successResult } from "./result.js";
+import {
+  lookupCatalogEntry,
+  type McpCatalogEntry,
+  normalizeCatalogMetadata,
+  unprefixedSha256,
+} from "./catalog.js";
+import { searchPublicPacks } from "./search.js";
 
-export const POSSIBLE_TOOL_NAMES = ["list_packs", "fetch_pack"] as const;
-export const POSSIBLE_SERVER_INSTRUCTIONS = "Possible MCP is a read-only public Outcome Pack distributor. It lists and fetches exact reviewed JSON manifests with provenance and content hashes. It never writes project files, discovers private packs, compiles or executes packs, approves work, validates checkpoints, or grants authority. The Possible skill and local CLI own project-local pack handling and execution.";
+export const POSSIBLE_TOOL_NAMES = ["list_packs", "fetch_pack", "search_packs"] as const;
+export const POSSIBLE_SERVER_INSTRUCTIONS = "Possible MCP is a read-only public Outcome Pack distributor. It lists, searches, and fetches exact public catalog snapshots with source, maintainer-owned trust, accepted-evidence summaries, and content hashes. A listed pack is a valid source submission, not a Possible-maintainer endorsement or verification. Search returns transparent text-overlap candidates, not an automatic recommendation; an agent must judge fit, conflicts, trust, and evidence. It never writes project files, discovers private packs, compiles or executes packs, approves work, validates checkpoints, or grants authority. The Possible skill and local CLI own project-local pack handling and execution.";
 const READ_ONLY = { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false } as const;
 
-const canonicalJson = (value: unknown): string => {
-  if (Array.isArray(value)) return `[${value.map(canonicalJson).join(",")}]`;
-  if (value !== null && typeof value === "object") {
-    return `{${Object.entries(value as Record<string, unknown>).sort(([left], [right]) => left.localeCompare(right)).map(([key, item]) => `${JSON.stringify(key)}:${canonicalJson(item)}`).join(",")}}`;
-  }
-  return JSON.stringify(value);
-};
+const reviewUrl = (entry: McpCatalogEntry): string => `https://possible.sh/packs/${entry.origin.kind === "bundled" ? entry.pack.slug : entry.id}`;
 
-const contentHash = (pack: unknown): string => createHash("sha256").update(canonicalJson(pack)).digest("hex");
-const sourceUrl = (slug: string): string => `https://github.com/fraylabs/possible/blob/main/packages/packs/src/manifests/${slug}.json`;
-const reviewUrl = (slug: string): string => `https://possible.sh/packs/${slug}`;
+export interface PossibleServerOptions {
+  catalog?: readonly PackCatalogEntry[];
+}
 
-export async function createPossibleServer(): Promise<McpServer> {
+export async function createPossibleServer(options: PossibleServerOptions = {}): Promise<McpServer> {
+  const catalog: readonly McpCatalogEntry[] = options.catalog ?? publicCatalog;
   const server = new McpServer({ name: "possible", version: "0.1.0" }, { instructions: POSSIBLE_SERVER_INSTRUCTIONS });
   server.registerTool("list_packs", {
     title: "List public Possible outcome packs",
     description: "List public Outcome Pack metadata. Private project-local packs are never exposed by this server.",
     annotations: READ_ONLY,
   }, async () => successResult({
-    packs: publicOutcomePacks.map((pack) => ({
-      catalogNumber: getCatalogNumber(pack.slug),
-      slug: pack.slug,
-      packVersion: pack.packVersion,
-      visibility: pack.visibility,
-      lifecycle: pack.lifecycle,
-      lane: pack.lane,
-      name: pack.name,
-      promise: pack.promise,
-      reviewedAt: pack.reviewedAt,
-      status: getPackStatus(pack.slug),
-      contentHash: contentHash(pack),
-      sourceUrl: sourceUrl(pack.slug),
-      reviewUrl: reviewUrl(pack.slug),
-    })),
-  }));
-  server.registerTool("fetch_pack", {
-    title: "Fetch a public Possible outcome pack",
-    description: "Return one exact public JSON manifest with its immutable content hash and review provenance. The server never writes it to disk.",
-    inputSchema: { slug: z.string().trim().min(1) },
-    annotations: READ_ONLY,
-  }, async ({ slug }) => {
-    const pack = getPack(slug);
-    if (pack === undefined || pack.visibility !== "public") return errorResult("PACK_NOT_FOUND", `Public outcome pack '${slug}' does not exist.`, { slug });
-    const hash = contentHash(pack);
-    return successResult({
-      manifest: pack,
-      metadata: {
+    packs: catalog.map((entry, index) => {
+      const { pack } = entry;
+      const metadata = normalizeCatalogMetadata(entry);
+      const digest = unprefixedSha256(metadata.source.contentHash);
+      return {
+        catalogNumber: entry.catalogNumber ?? index + 1,
+        id: entry.id,
         slug: pack.slug,
         packVersion: pack.packVersion,
         visibility: pack.visibility,
         lifecycle: pack.lifecycle,
-        status: getPackStatus(pack.slug),
+        lane: pack.lane,
+        name: pack.name,
+        promise: pack.promise,
+        reviewedAt: pack.reviewedAt,
+        status: metadata.trust.status,
+        contentHash: digest,
+        sourceUrl: metadata.source.manifestUrl,
+        reviewUrl: reviewUrl(entry),
+        source: metadata.source,
+        trust: metadata.trust,
+        evidence: metadata.evidence,
+      };
+    }),
+  }));
+  server.registerTool("fetch_pack", {
+    title: "Fetch a public Possible outcome pack",
+    description: "Return one exact public catalog snapshot by namespaced id or unique slug, with source, maintainer trust, evidence summary, and content hash. The server never writes it to disk.",
+    inputSchema: {
+      id: z.string().trim().min(1).optional(),
+      slug: z.string().trim().min(1).optional(),
+    },
+    annotations: READ_ONLY,
+  }, async ({ id, slug }) => {
+    if (id === undefined && slug === undefined) return errorResult("PACK_LOOKUP_INVALID", "fetch_pack requires a namespaced id or unique slug.");
+    if (id !== undefined && slug !== undefined && id !== slug) return errorResult("PACK_LOOKUP_INVALID", "fetch_pack accepts either id or slug, not two different values.", { id, slug });
+    const idOrSlug = id ?? slug!;
+    const lookup = lookupCatalogEntry(catalog, idOrSlug);
+    if (lookup.kind === "ambiguous") return errorResult("PACK_AMBIGUOUS", `Pack slug '${idOrSlug}' is ambiguous; use a namespaced id.`, { slug: idOrSlug, matchingIds: lookup.matchingIds });
+    if (lookup.kind === "missing" || lookup.entry.pack.visibility !== "public") return errorResult("PACK_NOT_FOUND", `Public outcome pack '${idOrSlug}' does not exist.`, { idOrSlug });
+    const { entry } = lookup;
+    const { pack } = entry;
+    const metadata = normalizeCatalogMetadata(entry);
+    const digest = unprefixedSha256(metadata.source.contentHash);
+    return successResult({
+      manifest: pack,
+      metadata: {
+        id: entry.id,
+        slug: pack.slug,
+        packVersion: pack.packVersion,
+        visibility: pack.visibility,
+        lifecycle: pack.lifecycle,
+        status: metadata.trust.status,
         reviewedAt: pack.reviewedAt ?? null,
-        contentHash: hash,
-        immutableRef: `${pack.slug}@${pack.packVersion}#${hash}`,
-        sourceUrl: sourceUrl(pack.slug),
-        reviewUrl: reviewUrl(pack.slug),
+        contentHash: digest,
+        immutableRef: `${pack.slug}@${pack.packVersion}#${digest}`,
+        catalogRef: `${entry.id}@${metadata.source.revision}#${metadata.source.contentHash}`,
+        sourceUrl: metadata.source.manifestUrl,
+        reviewUrl: reviewUrl(entry),
+        source: metadata.source,
+        trust: metadata.trust,
+        evidence: metadata.evidence,
       },
       writesProjectFiles: false,
       executable: false,
     });
   });
+  server.registerTool("search_packs", {
+    title: "Search public Possible outcome packs",
+    description: "Find plausible active packs by transparent text overlap across catalog metadata and expectations. Results expose notFor conflicts and require agent judgment; this is not semantic ranking or an automatic recommendation.",
+    inputSchema: {
+      outcome: z.string().trim().min(1),
+      currentReality: z.string().trim().min(1).optional(),
+      constraints: z.string().trim().min(1).optional(),
+    },
+    annotations: READ_ONLY,
+  }, async ({ outcome, currentReality, constraints }) => successResult({
+    query: {
+      outcome,
+      ...(currentReality === undefined ? {} : { currentReality }),
+      ...(constraints === undefined ? {} : { constraints }),
+    },
+    candidates: searchPublicPacks(
+      {
+        outcome,
+        ...(currentReality === undefined ? {} : { currentReality }),
+        ...(constraints === undefined ? {} : { constraints }),
+      },
+      {
+        catalog,
+      },
+    ),
+    method: {
+      type: "deterministic-text-overlap",
+      searchedFields: ["name", "promise", "summary", "useWhen", "notFor", "expectations.statement"],
+      semanticRanking: false,
+      embeddings: false,
+      automaticRecommendation: false,
+    },
+    agentJudgmentRequired: true,
+  }));
   return server;
 }

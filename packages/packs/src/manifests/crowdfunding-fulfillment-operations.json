@@ -16,12 +16,6 @@
     "Creating missing manufacturing or safety evidence inside fulfillment operations."
   ],
   "reviewedAt": "2026-07-29",
-  "schedule": {
-    "request": "Continue one bounded crowdfunding fulfillment cycle.",
-    "title": "Crowdfunding fulfillment cycle",
-    "description": "Reconcile obligations, execution evidence, exceptions, communications, and stop conditions.",
-    "safeDefault": "Do not purchase, manufacture, ship, message, refund, or expose backer data without exact authority."
-  },
   "skills": [
     {
       "id": "product-marketing",
@@ -162,24 +156,21 @@
     "Do not purchase, manufacture, access addresses, message backers, ship, refund, replace, or mutate provider state without exact approval and authority.",
     "Do not expose backer identity, contact, address, payment, tax, customs, or support data in general artifacts.",
     "Do not claim fulfillment from labels, tracking creation, bulk percentages, or shipped state alone; preserve delivered, failed, returned, refunded, replaced, disputed, and unknown states.",
-    "Do not hide an unready production dependency inside operations; stop and identify the missing outcome or authority."
+    "Do not hide an unready production dependency inside operations; stop and identify the missing outcome or authority.",
+    "Safe default for each bounded cycle: Do not purchase, manufacture, ship, message, refund, or expose backer data without exact authority.",
+    "Complete means every in-scope obligation has a directly evidenced terminal state; operating and blocked are honest durable outcomes, not failures to be hidden."
   ],
   "verification": [
     "Reconcile the settled funding receipt to the obligation ledger.",
     "Verify each terminal obligation state from direct evidence and preserve the denominator.",
     "Challenge privacy, regional, exception, refund, replacement, and communication controls for active modules.",
-    "Write a complete, operating, blocked, repair-required, or no-go receipt without a universal shipment threshold."
-  ],
-  "prerequisites": [
-    {
-      "id": "funded-settled",
-      "description": "Crowdfunding Funding Run finished funded-settled for the exact campaign.",
-      "requiredEvidence": [
-        "funding-run receipt",
-        "settlement evidence",
-        "immutable campaign and reward baseline"
-      ]
-    }
+    "Write a complete, operating, blocked, repair-required, or no-go receipt without a universal shipment threshold.",
+    "Confirm the prerequisite baseline before beginning work: Crowdfunding Funding Run finished funded-settled for the exact campaign.",
+    "Reconcile each bounded cycle: Reconcile obligations, execution evidence, exceptions, communications, and stop conditions.",
+    "Reconcile the funded-settled receipt into a minimized obligation ledger.",
+    "Define terminal states per obligation type rather than imposing one shipment percentage.",
+    "Execute only approved actions in immutable dated cycles and preserve exceptions.",
+    "Use independent reconciliation before declaring any obligation or campaign complete."
   ],
   "expectations": [
     {
@@ -220,8 +211,7 @@
     },
     {
       "id": "physical-proof",
-      "moduleId": "physical-rewards",
-      "statement": "Physical rewards follow verified production, quality, inventory, and delivery evidence.",
+      "statement": "Physical rewards follow verified production, quality, inventory, and delivery evidence. Applicable when: At least one settled obligation requires a physical item.",
       "failureModes": [
         "unverified batch",
         "inventory mismatch",
@@ -229,39 +219,39 @@
       ],
       "requiredEvidence": [
         "batch and quality records",
-        "carrier and outcome evidence"
+        "carrier and outcome evidence",
+        "activation evidence"
       ]
     },
     {
       "id": "digital-proof",
-      "moduleId": "digital-rewards",
-      "statement": "Digital rewards are delivered, accessible, and supportable for the named obligations.",
+      "statement": "Digital rewards are delivered, accessible, and supportable for the named obligations. Applicable when: At least one settled obligation requires a digital deliverable or entitlement.",
       "failureModes": [
         "broken access",
         "license mismatch",
         "send treated as use"
       ],
       "requiredEvidence": [
-        "delivery and access checks"
+        "delivery and access checks",
+        "activation evidence"
       ]
     },
     {
       "id": "regional-proof",
-      "moduleId": "regional-freight-customs",
-      "statement": "Active regions have explicit freight, customs, tax, restriction, and failure handling.",
+      "statement": "Active regions have explicit freight, customs, tax, restriction, and failure handling. Applicable when: Physical obligations cross regions with material freight, customs, tax, or restriction exposure.",
       "failureModes": [
         "prohibited shipment",
         "unpriced duties",
         "customs return"
       ],
       "requiredEvidence": [
-        "regional route evidence"
+        "regional route evidence",
+        "activation evidence"
       ]
     },
     {
       "id": "address-proof",
-      "moduleId": "backer-address-data",
-      "statement": "Address data is minimized, authorized, protected, and deleted or retained by policy.",
+      "statement": "Address data is minimized, authorized, protected, and deleted or retained by policy. Applicable when: Fulfillment requires access to backer addresses or related delivery data.",
       "failureModes": [
         "excess access",
         "stale address",
@@ -269,13 +259,13 @@
       ],
       "requiredEvidence": [
         "data-flow audit",
-        "access record"
+        "access record",
+        "activation evidence"
       ]
     },
     {
       "id": "exception-proof",
-      "moduleId": "replacements-refunds",
-      "statement": "Replacements, refunds, returns, disputes, and failed delivery remain explicit and reconciled.",
+      "statement": "Replacements, refunds, returns, disputes, and failed delivery remain explicit and reconciled. Applicable when: The campaign has or promises replacement, refund, return, dispute, or failed-delivery handling.",
       "failureModes": [
         "exception erased",
         "double fulfillment",
@@ -283,13 +273,13 @@
       ],
       "requiredEvidence": [
         "exception ledger",
-        "financial reconciliation"
+        "financial reconciliation",
+        "activation evidence"
       ]
     },
     {
       "id": "communications-proof",
-      "moduleId": "recurring-communications",
-      "statement": "Approved recurring communications are factual, consistent, and preserve responses and corrections.",
+      "statement": "Approved recurring communications are factual, consistent, and preserve responses and corrections. Applicable when: The approved fulfillment plan includes recurring backer updates or exception messages.",
       "failureModes": [
         "false date promise",
         "unapproved mass message",
@@ -297,114 +287,39 @@
       ],
       "requiredEvidence": [
         "message archive",
-        "approval record"
+        "approval record",
+        "activation evidence"
+      ]
+    },
+    {
+      "id": "prerequisite-funded-settled",
+      "statement": "Crowdfunding Funding Run finished funded-settled for the exact campaign.",
+      "level": "required",
+      "failureModes": [
+        "missing prerequisite evidence",
+        "baseline does not match the proposed work"
+      ],
+      "requiredEvidence": [
+        "funding-run receipt",
+        "settlement evidence",
+        "immutable campaign and reward baseline"
+      ]
+    },
+    {
+      "id": "crowdfunding-fulfillment-operations-boundary",
+      "statement": "Crowdfunding fulfillment operations produces enough evidence for an independent readiness decision. The possible decisions are complete, operating, blocked, repair-required, no-go. Complete means every in-scope obligation has a directly evidenced terminal state; operating and blocked are honest durable outcomes, not failures to be hidden.",
+      "level": "required",
+      "failureModes": [
+        "missing evidence for the declared outcome",
+        "decision made from assumptions or unverified claims"
+      ],
+      "requiredEvidence": [
+        "evidence baseline",
+        "independent review",
+        "decision record"
       ]
     }
   ],
-  "modularOutcome": {
-    "kind": "modular-outcome",
-    "gateName": "Crowdfunding fulfillment operations",
-    "action": "Establish and run the first cycle of",
-    "contractPath": "fulfillment-operations/baseline/contract.json",
-    "moduleDecisionPath": "fulfillment-operations/baseline/modules.json",
-    "artifactRoot": "fulfillment-operations/",
-    "decisionReceiptPath": "fulfillment-operations/decision.json",
-    "minimumActiveModules": 1,
-    "modules": [
-      {
-        "id": "physical-rewards",
-        "activationWhen": "At least one settled obligation requires a physical item.",
-        "work": [
-          "control production, quality, inventory, packing, carrier handoff, and delivery states"
-        ],
-        "checks": [
-          "reconcile units and test failed-delivery paths"
-        ],
-        "requiredExpectationIds": [
-          "physical-proof"
-        ]
-      },
-      {
-        "id": "digital-rewards",
-        "activationWhen": "At least one settled obligation requires a digital deliverable or entitlement.",
-        "work": [
-          "control versions, licenses, access, delivery, and support"
-        ],
-        "checks": [
-          "test delivery and recipient access"
-        ],
-        "requiredExpectationIds": [
-          "digital-proof"
-        ]
-      },
-      {
-        "id": "regional-freight-customs",
-        "activationWhen": "Physical obligations cross regions with material freight, customs, tax, or restriction exposure.",
-        "work": [
-          "define region-specific routes and exception handling"
-        ],
-        "checks": [
-          "verify restrictions, costs, documents, and returned paths"
-        ],
-        "requiredExpectationIds": [
-          "regional-proof"
-        ]
-      },
-      {
-        "id": "backer-address-data",
-        "activationWhen": "Fulfillment requires access to backer addresses or related delivery data.",
-        "work": [
-          "minimize, authorize, protect, correct, export, and dispose address data"
-        ],
-        "checks": [
-          "audit access, transfers, retention, and deletion"
-        ],
-        "requiredExpectationIds": [
-          "address-proof"
-        ]
-      },
-      {
-        "id": "replacements-refunds",
-        "activationWhen": "The campaign has or promises replacement, refund, return, dispute, or failed-delivery handling.",
-        "work": [
-          "operate an explicit exception and financial-reconciliation path"
-        ],
-        "checks": [
-          "test duplicate, reversal, and unresolved cases"
-        ],
-        "requiredExpectationIds": [
-          "exception-proof"
-        ]
-      },
-      {
-        "id": "recurring-communications",
-        "activationWhen": "The approved fulfillment plan includes recurring backer updates or exception messages.",
-        "work": [
-          "prepare factual cadence-bounded communications"
-        ],
-        "checks": [
-          "verify claims, dates, approval, corrections, and response capture"
-        ],
-        "requiredExpectationIds": [
-          "communications-proof"
-        ]
-      }
-    ],
-    "decisions": [
-      "complete",
-      "operating",
-      "blocked",
-      "repair-required",
-      "no-go"
-    ],
-    "steps": [
-      "Reconcile the funded-settled receipt into a minimized obligation ledger.",
-      "Define terminal states per obligation type rather than imposing one shipment percentage.",
-      "Execute only approved actions in immutable dated cycles and preserve exceptions.",
-      "Use independent reconciliation before declaring any obligation or campaign complete."
-    ],
-    "completionBoundary": "Complete means every in-scope obligation has a directly evidenced terminal state; operating and blocked are honest durable outcomes, not failures to be hidden."
-  },
   "packVersion": "1.0.0",
   "visibility": "public",
   "lifecycle": "reviewed"

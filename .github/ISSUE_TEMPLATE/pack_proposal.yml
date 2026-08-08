@@ -13,14 +13,21 @@ body:
   - type: textarea
     id: workstreams
     attributes:
-      label: Required workstreams
-      description: What independent expertise and owned outputs are required?
+      label: Structured Prompt
+      description: What workstreams, owned outputs, guardrails and verification should the Run Prompt coordinate?
     validations:
       required: true
   - type: textarea
-    id: verification
+    id: skills
     attributes:
-      label: Completion evidence
-      description: What fresh checks prove completion, and what remains unproven?
+      label: Skills
+      description: Which reviewed capabilities and exact source revisions does the outcome require?
+    validations:
+      required: true
+  - type: textarea
+    id: expectations
+    attributes:
+      label: Expectations
+      description: What observable checklist, failure modes and fresh evidence determine completion?
     validations:
       required: true

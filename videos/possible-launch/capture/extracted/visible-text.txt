@@ -1,0 +1,149 @@
+[a] possible
+[span] POSSIBLE
+[strong] START / $POSSIBLE
+[a] EXAMPLES
+[p] OPEN SOURCE / FOR CODEX
+[h1] Complete a possible
+[em] outcome.
+[strong] Possible.sh is an open-source library of Outcome Packs.
+[p] Each pack combines a reusable execution prompt and selected agent skills for dozens of coordinated tasks.
+[a] Star on GitHub
+[a] See the outcomes ↗
+[a] Install ↓
+[span] INSTALL POSSIBLE
+[strong] ONE COMMAND
+[code] npx @fraylabs/possible@0.1.11 init
+[span] Copy install command
+[span] THEN ASK CODEX
+[code] $possible
+[p] OUTCOME PACKS / LIBRARY
+[h2] Choose the work.
+[em] Make it real.
+[a] How it works ↗
+[span] OUTCOME /
+[span] PLAYABLE
+[strong] PLAY
+[span] INTERACTIVE PROOF
+[p] OUTCOME PACK ·
+[p] Reviewed
+[h3] Playable Web Game
+[p] Turn one strange game idea into a polished browser game people can play.
+[span] SKILLS
+[span] WORKSTREAMS
+[span] OUTPUTS
+[span] OUTCOME /
+[span] PRESENT
+[strong] SHOW
+[span] RESPONSIVE DECK
+[p] OUTCOME PACK ·
+[p] Reviewed
+[h3] Web Presentation
+[p] Turn rough material into a distinctive, evidence-backed presentation that runs in the browser.
+[span] SKILLS
+[span] WORKSTREAMS
+[span] OUTPUTS
+[span] OUTCOME /
+[span] DISCOVER
+[strong] THESIS
+[span] ONE PROVISIONAL BET
+[p] OUTCOME PACK ·
+[p] Reviewed
+[h3] Software Opportunity Discovery
+[p] Discover one software opportunity worth taking to a first customer.
+[span] SKILLS
+[span] WORKSTREAMS
+[span] OUTPUTS
+[span] OUTCOME /
+[span] CUSTOMER
+[strong] SIGNAL
+[span] COMMERCIAL EVIDENCE
+[p] OUTCOME PACK ·
+[p] Reviewed
+[h3] First Customer Sprint
+[p] Take one product opportunity to real customers and the strongest available commitment.
+[span] SKILLS
+[span] WORKSTREAMS
+[span] OUTPUTS
+[span] OUTCOME /
+[span] OUTCOME
+[strong] BUILD
+[span] REVIEWED CONTRACT
+[p] OUTCOME PACK ·
+[p] Archived
+[h3] Hardware Launch
+[p] Turn one hardware idea into a coherent, verified launch.
+[span] SKILLS
+[span] WORKSTREAMS
+[span] OUTPUTS
+[span] OUTCOME /
+[span] OUTCOME
+[strong] BUILD
+[span] REVIEWED CONTRACT
+[p] OUTCOME PACK ·
+[p] Archived
+[h3] Kickstarter Funding
+[p] Turn a campaign-ready product into an evidence-backed Kickstarter campaign system.
+[span] SKILLS
+[span] WORKSTREAMS
+[span] OUTPUTS
+[span] OUTCOME /
+[span] OUTCOME
+[strong] BUILD
+[span] REVIEWED CONTRACT
+[p] OUTCOME PACK ·
+[p] Archived
+[h3] Kickstarter Fulfillment
+[p] Turn a funded Kickstarter into an evidence-backed operation that reaches 95% shipped.
+[span] SKILLS
+[span] WORKSTREAMS
+[span] OUTPUTS
+[span] OUTCOME /
+[span] OUTCOME
+[strong] BUILD
+[span] REVIEWED CONTRACT
+[p] OUTCOME PACK ·
+[p] Archived
+[h3] Robot Prototype
+[p] Turn a robot idea into a coherent mechanical, kinematic, control, and simulation prototype.
+[span] SKILLS
+[span] WORKSTREAMS
+[span] OUTPUTS
+[span] OUTCOME /
+[span] OUTCOME
+[strong] BUILD
+[span] REVIEWED CONTRACT
+[p] OUTCOME PACK ·
+[p] Archived
+[h3] Developer Project Launch
+[p] Turn one working developer project into a launch people can understand, try, trust, and share.
+[span] SKILLS
+[span] WORKSTREAMS
+[span] OUTPUTS
+[span] OUTCOME /
+[span] OUTCOME
+[strong] BUILD
+[span] REVIEWED CONTRACT
+[p] OUTCOME PACK ·
+[p] Archived
+[h3] Working Hardware Prototype
+[p] Build a functional, measured, independently reviewed hardware prototype.
+[span] SKILLS
+[span] WORKSTREAMS
+[span] OUTPUTS
+[span] OUTCOME /
+[span] OUTCOME
+[strong] BUILD
+[span] REVIEWED CONTRACT
+[p] OUTCOME PACK ·
+[p] Archived
+[h3] Launch Content Campaign
+[p] Create one post-ready cross-platform launch campaign.
+[span] SKILLS
+[span] WORKSTREAMS
+[span] OUTPUTS
+[span] PACKS IN CATALOG
+[a] Inspect the JSON source ↗
+[a] possible
+[strong] AGENT SKILLS PROVIDE CAPABILITIES.
+[strong] OUTCOME PACKS COORDINATE COMPLETE RESULTS.
+[span] BUILDWEEK 2026

@@ -25,18 +25,6 @@
       "research-protocol-readiness"
     ]
   },
-  "prerequisites": [
-    {
-      "id": "defined-research-hypothesis",
-      "description": "The proposed research question and intervention or exposure are defined enough to distinguish protocol design from open-ended product ideation.",
-      "requiredEvidence": [
-        "research hypothesis, rationale, target population, and intended decision",
-        "exact intervention, exposure, product, or software revision—or the named evidence still required to freeze it",
-        "existing evidence, contradictions, claims boundary, and known safety questions",
-        "proposed outcomes and the reason a human study may be necessary"
-      ]
-    }
-  ],
   "skills": [
     {
       "id": "customer-research",
@@ -202,19 +190,6 @@
       "brief": "Integrate the evidence, protocol, intervention specification, safety monitoring, ethics and regulatory questions, consent, privacy, analysis, operations, budget, timeline, registration, publication, conflicts, missing authority, and limitations. Return ready-for-qualified-review, repair-required, or no-go without recruiting, collecting data, submitting externally, or claiming approval."
     }
   ],
-  "studyReadiness": {
-    "kind": "study-readiness",
-    "researchQuestionPath": "study/question/research-question.json",
-    "protocolPath": "study/protocol/protocol.md",
-    "ethicsPath": "study/ethics/readiness-matrix.json",
-    "analysisPath": "study/analysis/statistical-analysis-plan.md",
-    "decisionReceiptPath": "outcome-room/study-readiness-receipt.json",
-    "decisions": [
-      "ready-for-qualified-review",
-      "repair-required",
-      "no-go"
-    ]
-  },
   "reviewSkills": [
     "analytics",
     "security-review",
@@ -248,9 +223,41 @@
     "Verify operational feasibility from direct evidence for qualified people, partners, sites, equipment, intervention supply, measurement systems, monitoring, data systems, participant burden, budget, funding, timeline, registration, publication, and follow-up; preserve every missing item.",
     "Confirm no repository artifact contains private health data or fabricated participant evidence and that all external actions remain not-taken unless exact approval and direct evidence are recorded.",
     "Use a fresh reviewer with no evidence synthesis, protocol, ethics, analysis, operations, or integration ownership to return ready-for-qualified-review, repair-required, or no-go.",
-    "Write outcome-room/study-readiness-receipt.json with the immutable question and intervention, evidence state, protocol revision, accountable roles, ethics and regulatory state, analysis status, operational feasibility, budget, approvals, external actions, limitations, and independent review."
+    "Write outcome-room/study-readiness-receipt.json with the immutable question and intervention, evidence state, protocol revision, accountable roles, ethics and regulatory state, analysis status, operational feasibility, budget, approvals, external actions, limitations, and independent review.",
+    "Confirm the prerequisite baseline before beginning work: The proposed research question and intervention or exposure are defined enough to distinguish protocol design from open-ended product ideation."
   ],
   "packVersion": "1.0.0",
   "visibility": "public",
-  "lifecycle": "archived"
+  "lifecycle": "archived",
+  "expectations": [
+    {
+      "id": "prerequisite-defined-research-hypothesis",
+      "statement": "The proposed research question and intervention or exposure are defined enough to distinguish protocol design from open-ended product ideation.",
+      "level": "required",
+      "failureModes": [
+        "missing prerequisite evidence",
+        "baseline does not match the proposed work"
+      ],
+      "requiredEvidence": [
+        "research hypothesis, rationale, target population, and intended decision",
+        "exact intervention, exposure, product, or software revision—or the named evidence still required to freeze it",
+        "existing evidence, contradictions, claims boundary, and known safety questions",
+        "proposed outcomes and the reason a human study may be necessary"
+      ]
+    },
+    {
+      "id": "study-readiness-boundary",
+      "statement": "Study Readiness produces enough evidence for an independent readiness decision. The possible decisions are ready-for-qualified-review, repair-required, no-go.",
+      "level": "required",
+      "failureModes": [
+        "missing evidence for the declared outcome",
+        "decision made from assumptions or unverified claims"
+      ],
+      "requiredEvidence": [
+        "evidence baseline",
+        "independent review",
+        "decision record"
+      ]
+    }
+  ]
 }

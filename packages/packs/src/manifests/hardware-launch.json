@@ -78,20 +78,24 @@
       "reviewUrl": "https://github.com/earthtojake/text-to-cad/tree/fdbb4b4fb62d95ae298cfe9a46fdc7092bdaf423/skills/cad"
     }
   ],
-  "plugins": [
+  "expectations": [
     {
-      "id": "sites",
-      "name": "OpenAI Sites",
-      "role": "Build, version, deploy, and inspect an MVP website without a separate hosting-provider signup",
-      "provider": "OpenAI",
-      "invocation": "@sites",
-      "skills": [
-        "sites-building",
-        "sites-hosting"
-      ],
-      "reviewedVersion": "0.1.30",
-      "docsUrl": "https://developers.openai.com/codex/plugins",
-      "availability": "Optional: use only when the Sites plugin is available in the current Codex workspace."
+      "id": "coherent-launch-story",
+      "statement": "The site, film, and prototype concept communicate one consistent product, audience, problem, promise, and next action.",
+      "failureModes": ["Conflicting product facts", "Feature inventory without a clear audience or promise"],
+      "requiredEvidence": ["Integrated site and film review", "Confirmed product-fact ledger"]
+    },
+    {
+      "id": "prototype-boundary",
+      "statement": "The CAD and physical concept are clearly labeled as a prototype concept, with manufacturing, safety, and performance unknowns visible.",
+      "failureModes": ["CAD presented as fabrication-ready", "Unsupported manufacturing or certification claims"],
+      "requiredEvidence": ["Prototype geometry review", "Claims and assumptions list"]
+    },
+    {
+      "id": "external-action-approval",
+      "statement": "Deployment, waitlist collection, purchasing, fabrication, and outreach remain blocked until their exact external approval is recorded.",
+      "failureModes": ["Unapproved deployment or data collection", "Real customer activity implied by a mock artifact"],
+      "requiredEvidence": ["Approval record or explicit no-go", "External-action audit"]
     }
   ],
   "workstreams": [

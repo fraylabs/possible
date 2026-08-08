@@ -51,6 +51,26 @@
       "reviewUrl": "https://github.com/github/awesome-copilot/tree/26fe2d126bf79aafb38f43344d450b69632200f8/skills/security-review"
     }
   ],
+  "expectations": [
+    {
+      "id": "selected-opportunity",
+      "statement": "Implementation starts from a named user opportunity with source evidence, rationale, and unresolved assumptions rather than an untested feature request.",
+      "failureModes": ["No intended user or problem", "Opportunity treated as proven demand"],
+      "requiredEvidence": ["Selected opportunity and user", "Source evidence or rationale", "Validation boundary"]
+    },
+    {
+      "id": "complete-primary-flow",
+      "statement": "One valuable user job works end to end with explicit loading, empty, validation, failure, recovery, and success states.",
+      "failureModes": ["Polished shell with no completed job", "Missing or misleading state handling"],
+      "requiredEvidence": ["Fresh browser walkthrough", "State and data contract"]
+    },
+    {
+      "id": "reproducible-build",
+      "statement": "Fixtures, local setup, automated checks, and production build are reproducible from the declared repository revision.",
+      "failureModes": ["Undeclared local dependency", "Build or checks only work on the author machine"],
+      "requiredEvidence": ["Clean setup transcript", "Check and build results"]
+    }
+  ],
   "workstreams": [
     {
       "id": "flow",
@@ -90,17 +110,6 @@
         "repeatable verification command"
       ],
       "brief": "Create deterministic checks for the primary flow, one material failure path, responsive behavior, and any promised state reload. Exercise the integrated app without modifying product implementation."
-    }
-  ],
-  "prerequisites": [
-    {
-      "id": "selected-opportunity",
-      "description": "A specific software opportunity has been selected for implementation, with enough evidence to distinguish it from an untested feature request.",
-      "requiredEvidence": [
-        "selected opportunity and intended user",
-        "source evidence or user-supplied rationale",
-        "unresolved assumptions and validation boundary"
-      ]
     }
   ],
   "reviewSkills": [

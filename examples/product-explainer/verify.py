@@ -45,8 +45,8 @@ def main() -> None:
     output_hash = hashlib.sha256(output.read_bytes()).hexdigest()
     output_entry = next(item for item in receipt["artifacts"] if item["path"] == "exports/possible-explainer.mp4")
     require(output_hash == output_entry["sha256"], "receipt output hash must match the final MP4")
-    require(receipt["decision"] == "ready", "receipt must record the final decision")
-    print("Product Explainer dogfood verified: 30s H.264/AAC master, deterministic source, procedural audio, receipt hash, and no external actions.")
+    require(receipt["decision"] == "repair-required", "legacy receipt must remain repair-required")
+    print("Legacy Product Explainer dogfood verified as repair-required: retained historical H.264/AAC master, deterministic source, procedural audio, receipt hash, and no external actions.")
 
 
 if __name__ == "__main__":

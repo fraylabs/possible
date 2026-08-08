@@ -1,0 +1,39 @@
+name: Pack submission
+
+on:
+  pull_request:
+    paths:
+      - "registry/entries/**"
+      - "registry/snapshots/**"
+      - "packages/packs/src/federated-catalog.json"
+      - "skills/possible/references/packs.md"
+      - "apps/cli/assets/possible/references/packs.md"
+      - "scripts/validate-pack-submission.mjs"
+      - ".github/workflows/pack-submission.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build -w @possible/packs
+      - name: Validate changed pack submissions
+        run: node scripts/validate-pack-submission.mjs --changed-from "${{ github.event.pull_request.base.sha }}"
+      - name: Verify generated offline catalog
+        run: |
+          npm run registry:sync
+          git diff --exit-code -- \
+            packages/packs/src/federated-catalog.json \
+            skills/possible/references/packs.md \
+            apps/cli/assets/possible/references/packs.md

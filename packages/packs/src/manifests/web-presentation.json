@@ -17,22 +17,6 @@
     "Deploying, publishing, or sharing private material without separate approval."
   ],
   "reviewedAt": "2026-07-21",
-  "plugins": [
-    {
-      "id": "sites",
-      "name": "OpenAI Sites",
-      "role": "Build, version, deploy, and inspect an MVP website without a separate hosting-provider signup",
-      "provider": "OpenAI",
-      "invocation": "@sites",
-      "skills": [
-        "sites-building",
-        "sites-hosting"
-      ],
-      "reviewedVersion": "0.1.30",
-      "docsUrl": "https://developers.openai.com/codex/plugins",
-      "availability": "Optional: use only when the Sites plugin is available in the current Codex workspace."
-    }
-  ],
   "skills": [
     {
       "id": "copywriting",
@@ -73,6 +57,26 @@
       "catalogUrl": "https://skills.sh/anthropics/skills/webapp-testing",
       "reviewedRevision": "fa0fa64bdc967915dc8399e803be67759e1e62b8",
       "reviewUrl": "https://github.com/anthropics/skills/tree/fa0fa64bdc967915dc8399e803be67759e1e62b8/skills/webapp-testing"
+    }
+  ],
+  "expectations": [
+    {
+      "id": "audience-led-narrative",
+      "statement": "The presentation has one identifiable audience, a clear narrative arc, and evidence-backed claims rather than a feature dump.",
+      "failureModes": ["No audience or decision", "Unsupported metric, testimonial, or capability"],
+      "requiredEvidence": ["Narrative and claims review", "Source links for material claims"]
+    },
+    {
+      "id": "working-presentation-artifact",
+      "statement": "The coded 16:9 presentation, presenter controls, responsive fallback, PDF export, and contact sheet work from the declared revision.",
+      "failureModes": ["Broken navigation or export", "Fallback is unusable on a target profile"],
+      "requiredEvidence": ["Fresh browser walkthrough", "PDF and contact-sheet inspection"]
+    },
+    {
+      "id": "asset-provenance",
+      "statement": "External assets, fonts, citations, and visual references have recorded provenance and license boundaries.",
+      "failureModes": ["Protected expression copied", "Missing asset attribution"],
+      "requiredEvidence": ["Asset and citation ledger", "License/source links"]
     }
   ],
   "workstreams": [

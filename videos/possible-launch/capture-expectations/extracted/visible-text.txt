@@ -1,0 +1,89 @@
+[a] possible
+[span] POSSIBLE
+[strong] DOCS / EXPECTATIONS & EVIDENCE
+[a] EXAMPLES
+[a] Overview
+[a] How to use
+[a] Outcome Packs
+[a] Expectations
+[a] Authoring
+[a] Reference
+[a] Glossary
+[strong] Documentation
+[span] GUIDE
+[span] GETTING STARTED
+[a] Overview
+[span] CORE CONCEPTS
+[a] Outcome Packs
+[a] Expectations & evidence
+[a] How to use Possible
+[a] Author an Outcome Pack
+[span] REFERENCE
+[a] Project files & safety
+[a] Glossary
+[a] Outcome Pack library ↗
+[a] Examples ↗
+[summary] Browse docs
+[span] GETTING STARTED
+[a] Overview
+[span] CORE CONCEPTS
+[a] Outcome Packs
+[a] Expectations & evidence
+[a] How to use Possible
+[a] Author an Outcome Pack
+[span] REFERENCE
+[a] Project files & safety
+[a] Glossary
+[a] Outcome Pack library ↗
+[a] Examples ↗
+[a] DOCS
+[strong] CORE CONCEPTS / EXPECTATIONS & EVIDENCE
+[p] CORE CONCEPTS
+[h1] The artifact is not the proof.
+[p] Expectations make the definition of done explicit. Evidence records what was observed. Verification decides whether the active expectations are actually true.
+[span] Copy page
+[h2] The four layers
+[p] Keeping these terms separate prevents a polished deliverable from being mistaken for a completed outcome.
+[span] OUTPUT
+[strong] The inspectable artifact
+[span] EXPECTATION
+[strong] What must become true
+[span] EVIDENCE
+[strong] What was observed or preserved
+[span] VERIFICATION
+[strong] Why the claim can be trusted
+[span] OUTPUT
+[p] A responsive launch page with a working conversion flow.
+[span] EXPECTATION
+[p] The confirmed audience can complete the flow on supported screen sizes, approved claims are used, and accessibility checks pass.
+[h2] Required and preferred expectations
+[p] A pack can include required and preferred checklist items. Each item is explicit and observable; no hidden module or domain-specific schema creates work outside the prompt, Skills, and Expectations.
+[span] REQUIRED
+[strong] Completion blockers
+[p] If an active required expectation fails, the run cannot honestly close. Preserve the failure, repair the result, and rerun the complete review.
+[span] PREFERRED
+[strong] Quality signals
+[p] Useful improvements that inform the completion report without pretending they are blockers when the approved contract did not require them.
+[h2] What a complete review does
+[strong] Inspect the integrated artifact
+[span] Review the result as one coherent outcome, not as isolated specialist handoffs.
+[strong] Challenge every active expectation
+[span] Use the appropriate tests, measurements, review, or fixture and preserve the evidence used.
+[strong] Record failures and limitations
+[span] Do not silently downgrade a failed check or turn an unproven claim into a success.
+[strong] Repair and rerun
+[span] After a material repair, repeat the complete review so the new result is freshly verified.
+[h2] Outcome Record
+[p] Every run exposes one machine-readable Outcome Record. It connects the approved brief and pack snapshot to artifacts, hashes, expectation results, decisions, failures, repairs, approvals, limitations, and fresh verification.
+[strong] COMPLETION REPORT
+[p] The final report says what was produced, what was checked, what remains unproven, and which external actions were intentionally not taken.
+[a] Project files & safety
+[span] ON THIS PAGE
+[a] The four layers
+[a] Required vs preferred
+[a] A complete review
+[a] Outcome Record
+[a] possible
+[strong] AGENT SKILLS PROVIDE CAPABILITIES.
+[strong] OUTCOME PACKS COORDINATE COMPLETE RESULTS.
+[span] BUILDWEEK 2026

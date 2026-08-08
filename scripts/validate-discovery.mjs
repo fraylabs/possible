@@ -1,10 +1,12 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
+import { publicCatalog } from "../packages/packs/dist/index.js";
 
 const repository = new URL("../", import.meta.url);
 const output = new URL("../apps/web/out/", import.meta.url);
 const readOutput = (path) => readFile(new URL(path, output), "utf8");
 const escape = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+const packRouteId = (entry) => entry.origin.kind === "bundled" ? entry.pack.slug : entry.id;
 
 const canonicalRoutes = [
   ["index.html", "https://possible.sh/"],
@@ -24,17 +26,10 @@ const canonicalRoutes = [
   ["examples/web-presentation/index.html", "https://possible.sh/examples/web-presentation/"],
   ["examples/patchproof/index.html", "https://possible.sh/examples/patchproof/"],
   ["presentation/index.html", "https://possible.sh/presentation/"],
-  ["packs/hardware-launch/index.html", "https://possible.sh/packs/hardware-launch/"],
-  ["packs/robot-prototype/index.html", "https://possible.sh/packs/robot-prototype/"],
-  ["packs/playable-web-game/index.html", "https://possible.sh/packs/playable-web-game/"],
-  ["packs/web-presentation/index.html", "https://possible.sh/packs/web-presentation/"],
-  ["packs/developer-project-launch/index.html", "https://possible.sh/packs/developer-project-launch/"],
-  ["packs/software-opportunity-discovery/index.html", "https://possible.sh/packs/software-opportunity-discovery/"],
-  ["packs/first-customer-sprint/index.html", "https://possible.sh/packs/first-customer-sprint/"],
-  ["packs/working-hardware-prototype/index.html", "https://possible.sh/packs/working-hardware-prototype/"],
-  ["packs/launch-content-campaign/index.html", "https://possible.sh/packs/launch-content-campaign/"],
-  ["packs/kickstarter-funding/index.html", "https://possible.sh/packs/kickstarter-funding/"],
-  ["packs/kickstarter-fulfillment/index.html", "https://possible.sh/packs/kickstarter-fulfillment/"],
+  ...publicCatalog.map((entry) => {
+    const identity = packRouteId(entry);
+    return [`packs/${identity}/index.html`, `https://possible.sh/packs/${identity}/`];
+  }),
 ];
 
 const redirectRoutes = [

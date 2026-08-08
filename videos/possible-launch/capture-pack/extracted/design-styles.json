@@ -1,0 +1,147 @@
+{
+  "typography": [
+    {
+      "role": "display",
+      "fontFamily": "Manrope",
+      "fontSize": "72px",
+      "fontWeight": "500",
+      "lineHeight": "70.56px",
+      "letterSpacing": "-3.96px",
+      "color": "#151411",
+      "sampleText": "Playable Web Game"
+    },
+    {
+      "role": "heading",
+      "fontFamily": "Manrope",
+      "fontSize": "40px",
+      "fontWeight": "600",
+      "lineHeight": "44px",
+      "letterSpacing": "-1.4px",
+      "color": "#151411",
+      "sampleText": "Fit"
+    },
+    {
+      "role": "body",
+      "fontFamily": "Manrope",
+      "fontSize": "30px",
+      "fontWeight": "400",
+      "lineHeight": "39px",
+      "letterSpacing": "-0.75px",
+      "color": "#2D2A26",
+      "sampleText": "Turn one strange game idea into a polished browser game peop"
+    },
+    {
+      "role": "link",
+      "fontFamily": "Manrope",
+      "fontSize": "24px",
+      "fontWeight": "800",
+      "lineHeight": "normal",
+      "letterSpacing": "-1.44px",
+      "color": "#151411",
+      "sampleText": "possible.sh"
+    },
+    {
+      "role": "heading-3",
+      "fontFamily": "Manrope",
+      "fontSize": "17px",
+      "fontWeight": "700",
+      "lineHeight": "normal",
+      "letterSpacing": "normal",
+      "color": "#151411",
+      "sampleText": "Use this when"
+    },
+    {
+      "role": "code",
+      "fontFamily": "DM Mono",
+      "fontSize": "9px",
+      "fontWeight": "400",
+      "lineHeight": "13.05px",
+      "letterSpacing": "normal",
+      "color": "#34312C",
+      "sampleText": "$game-designer"
+    },
+    {
+      "role": "body-small",
+      "fontFamily": "DM Mono",
+      "fontSize": "7px",
+      "fontWeight": "400",
+      "lineHeight": "normal",
+      "letterSpacing": "normal",
+      "color": "#8A857D",
+      "sampleText": "Reviewed"
+    }
+  ],
+  "spacing": {
+    "observed": [
+      2,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      20
+    ],
+    "baseUnit": 4
+  },
+  "radius": [],
+  "shadows": [],
+  "buttons": [
+    {
+      "label": "Copy install command 1 of 3↗",
+      "background": "#FF4D00",
+      "backgroundImage": "",
+      "backdropFilter": "",
+      "color": "#151411",
+      "padding": "0px 15px",
+      "borderRadius": "0px",
+      "border": "",
+      "boxShadow": "none",
+      "fontSize": "8px",
+      "fontWeight": "500",
+      "height": "44px"
+    }
+  ],
+  "cards": [
+    {
+      "label": "card",
+      "background": "transparent",
+      "backgroundImage": "",
+      "backdropFilter": "",
+      "color": "#151411",
+      "padding": "44px 0px 100px",
+      "borderRadius": "0px",
+      "border": "0px none rgb(21, 20, 17)",
+      "boxShadow": "none",
+      "fontSize": "16px",
+      "fontWeight": "400",
+      "height": "5786.77px"
+    }
+  ],
+  "nav": {
+    "label": "navigation",
+    "background": "transparent",
+    "backgroundImage": "",
+    "backdropFilter": "",
+    "color": "#151411",
+    "padding": "0px 67.2px",
+    "borderRadius": "0px",
+    "border": "",
+    "boxShadow": "none",
+    "fontSize": "16px",
+    "fontWeight": "400",
+    "height": "74px"
+  },
+  "chips": [],
+  "statCells": [],
+  "tabs": [],
+  "backgrounds": [],
+  "glass": []
+}

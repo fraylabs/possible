@@ -3,7 +3,7 @@ import { pageMetadata } from "../../_metadata";
 
 export const metadata = pageMetadata({
   title: "Outcome Packs",
-  description: "Understand the reviewed contracts Possible uses to coordinate complete, verifiable outcomes.",
+  description: "Understand the versioned contracts, trust statuses, and evidence Possible uses to coordinate complete outcomes.",
   path: "/docs/outcome-packs",
 });
 

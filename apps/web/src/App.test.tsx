@@ -2,9 +2,9 @@ import { cleanup, render, screen, waitFor, within } from "@testing-library/react
 import userEvent from "@testing-library/user-event";
 import { axe } from "vitest-axe";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { compilePack } from "@possible/packs";
+import { compilePack, publicCatalog } from "@possible/packs";
 import App from "./App";
-import { getPublishedPack, getRoutablePack, installCommand, publishedPacks, routablePacks } from "./public-content";
+import { getPublishedPack, getRoutablePack, installCommand, packHref, publishedPacks, routablePacks } from "./public-content";
 
 afterEach(() => {
   cleanup();
@@ -36,9 +36,18 @@ describe("Possible", () => {
     const navigation = Array.from(container.querySelectorAll(".nav-links a")).map((link) => link.textContent);
     expect(navigation).toEqual(["EXAMPLES", "DOCS", "GITHUB ↗"]);
 
-    expect(container.querySelectorAll("main > section")).toHaveLength(2);
+    expect(container.querySelectorAll("main > section")).toHaveLength(3);
     expect(container.querySelector(".home-workflow")).not.toBeInTheDocument();
     expect(container.querySelector(".home-demo")).not.toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /There’s a whole world\s*inside Codex\./, level: 2 })).toBeInTheDocument();
+    const launchFilm = container.querySelector(".home-film-player video") as HTMLVideoElement;
+    expect(launchFilm).not.toHaveAttribute("src");
+    expect(launchFilm.autoplay).toBe(true);
+    expect(launchFilm.loop).toBe(true);
+    expect(launchFilm.muted).toBe(true);
+    expect(container.querySelector(".home-film-player source")).toHaveAttribute("src", "/possible-launch-film.mp4");
+    expect(screen.getByRole("link", { name: /Motion film pack/i })).toHaveAttribute("href", "/packs/html-css-animated-product-launch-film");
+    expect(screen.getByRole("link", { name: /Soundtrack pack/i })).toHaveAttribute("href", "/packs/original-strudel-soundtrack");
     expect(container.querySelector(".home-pack-gallery")).toBeInTheDocument();
     expect(container.querySelector(".home-source")).not.toBeInTheDocument();
 
@@ -70,12 +79,15 @@ describe("Possible", () => {
     const { container } = render(<App />);
     const gallery = screen.getByRole("region", { name: /Choose the work\.Make it real\./i });
     const grid = gallery.querySelector(".home-pack-gallery-grid")!;
+    expect(routablePacks).toHaveLength(publicCatalog.length);
     expect(within(grid).getAllByRole("link")).toHaveLength(routablePacks.length);
     for (const pack of routablePacks) expect(within(grid).getByRole("heading", { name: pack.name, level: 3 })).toBeInTheDocument();
     expect(grid.querySelectorAll(".pack-card-preview")).toHaveLength(routablePacks.length);
     expect(container).toHaveTextContent(/Choose the work\.Make it real\./i);
     expect(container).not.toHaveTextContent(/text-first library|EXPERIMENTAL OUTCOME PACK/i);
     expect(container).toHaveTextContent(/Hardware Launch|Open-Source Release|Marketing Operations/i);
+    expect(container).toHaveTextContent(/HTML\/CSS Animated Product Launch Film/i);
+    expect(container).toHaveTextContent(/Original Instrumental Soundtrack with Editable Strudel Source and WAV Master/i);
     expect(await axe(container)).toHaveNoViolations();
   });
 
@@ -86,14 +98,21 @@ describe("Possible", () => {
     expect(await axe(container)).toHaveNoViolations();
   });
 
-  it("renders each reviewed public pack from its JSON manifest", async () => {
+  it("renders every active public catalog snapshot at its canonical route", async () => {
     for (const pack of publishedPacks) {
-      const { container, unmount } = renderRoute(`/packs/${pack.slug}`);
-      const compiled = compilePack(pack);
+      const { container, unmount } = renderRoute(packHref(pack));
       expect(screen.getByRole("heading", { name: pack.name, level: 1 })).toBeInTheDocument();
+      expect(container.querySelector(".pack-reference-summary")).toHaveTextContent(pack.summary);
       expect(screen.getByRole("heading", { name: "Outputs", level: 2 })).toBeInTheDocument();
-      expect(container.querySelectorAll(".pack-reference-section")).toHaveLength(8);
-      expect(container.querySelector(".pack-prompt-disclosure code")?.textContent).toBe(compiled.runPrompt);
+      expect(screen.getByRole("heading", { name: "Expectations", level: 2 })).toBeInTheDocument();
+      if (pack.lifecycle === "draft") {
+        expect(container.querySelectorAll(".pack-reference-section")).toHaveLength(7);
+        expect(screen.getByRole("complementary", { name: "Listed Outcome Pack" })).toBeInTheDocument();
+        expect(container.querySelector(".pack-prompt-disclosure")).not.toBeInTheDocument();
+      } else {
+        expect(container.querySelectorAll(".pack-reference-section")).toHaveLength(9);
+        expect(container.querySelector(".pack-prompt-disclosure code")?.textContent).toBe(compilePack(pack).runPrompt);
+      }
       expect(container.querySelector("main")).not.toHaveTextContent(/SCHEDULABLE|OPTIONAL SCHEDULE|Schedule the/i);
       expect(await axe(container)).toHaveNoViolations();
       unmount();
@@ -134,14 +153,14 @@ describe("Possible", () => {
     const notice = screen.getByRole("complementary", { name: "Archived Outcome Pack" });
     expect(notice).toHaveTextContent(/ARCHIVED.*2026-07-27/i);
     expect(notice).toHaveTextContent(/will not recommend or compile it for new work/i);
-    expect(within(notice).getByRole("link", { name: "Mechanical CAD Review" })).toHaveAttribute("href", expect.stringContaining("mechanical-cad-review.json"));
+    expect(within(notice).getByRole("link", { name: "Mechanical CAD Review" })).toHaveAttribute("href", "/packs/mechanical-cad-review");
     expect(screen.queryByRole("link", { name: /Start with \$possible/i })).not.toBeInTheDocument();
     expect(screen.getByRole("link", { name: /View active packs/i })).toHaveAttribute("href", "/#packs");
     expect(container.querySelector(".pack-prompt-disclosure code")?.textContent).toBe(compilePack(pack!).runPrompt);
     expect(await axe(container)).toHaveNoViolations();
   });
 
-  it("preserves the archived Working Hardware Prototype page and its historical contract", async () => {
+  it("preserves the archived Working Hardware Prototype page on the standard contract", async () => {
     const pack = getRoutablePack("working-hardware-prototype");
     expect(pack?.archived).toBeDefined();
     const route = renderRoute("/packs/working-hardware-prototype");
@@ -149,17 +168,15 @@ describe("Possible", () => {
     const notice = screen.getByRole("complementary", { name: "Archived Outcome Pack" });
     expect(notice).toHaveTextContent(/ARCHIVED.*2026-07-27/i);
     expect(notice).toHaveTextContent(/seven fixed workstreams/i);
-    expect(within(notice).getByRole("link", { name: "Functional Hardware Prototype" })).toHaveAttribute("href", expect.stringContaining("functional-hardware-prototype.json"));
+    expect(within(notice).getByRole("link", { name: "Functional Hardware Prototype" })).toHaveAttribute("href", "/packs/functional-hardware-prototype");
     expect(screen.queryByRole("link", { name: /Start with \$possible/i })).not.toBeInTheDocument();
-    expect(screen.getByText("MEASURED PHYSICAL PROTOTYPE")).toBeInTheDocument();
-    expect(screen.getByText("PRODUCT DECISIONS")).toBeInTheDocument();
-    expect(screen.getByText("PHYSICAL REMIX")).toBeInTheDocument();
-    expect(route.container.querySelector(".pack-prompt-disclosure code")?.textContent).toMatch(/MEASURED HARDWARE PROTOTYPE GATE/);
-    expect(route.container.querySelector(".pack-prompt-disclosure code")?.textContent).toMatch(/PHYSICAL REMIX GATE/);
+    expect(screen.getByRole("heading", { name: "Expectations", level: 2 })).toBeInTheDocument();
+    expect(route.container.querySelector(".pack-prompt-disclosure code")?.textContent).toMatch(/EXPECTATIONS CHECKLIST/);
+    expect(route.container.querySelector(".pack-prompt-disclosure code")?.textContent).not.toMatch(/MEASURED HARDWARE PROTOTYPE GATE|PHYSICAL REMIX GATE/);
     expect(await axe(route.container)).toHaveNoViolations();
   });
 
-  it("preserves the archived Launch Content Campaign page and its historical contract", async () => {
+  it("preserves the archived Launch Content Campaign page on the standard contract", async () => {
     const pack = getRoutablePack("launch-content-campaign");
     expect(pack?.archived).toBeDefined();
     const route = renderRoute("/packs/launch-content-campaign");
@@ -167,13 +184,12 @@ describe("Possible", () => {
     const notice = screen.getByRole("complementary", { name: "Archived Outcome Pack" });
     expect(notice).toHaveTextContent(/ARCHIVED.*2026-07-27/i);
     expect(notice).toHaveTextContent(/five workstreams.*three creative directions/i);
-    expect(within(notice).getByRole("link", { name: "Launch Content Package" })).toHaveAttribute("href", expect.stringContaining("launch-content-package.json"));
-    expect(within(notice).getByRole("link", { name: "Marketing Operations" })).toHaveAttribute("href", expect.stringContaining("marketing-operations.json"));
+    expect(within(notice).getByRole("link", { name: "Launch Content Package" })).toHaveAttribute("href", "/packs/launch-content-package");
+    expect(within(notice).getByRole("link", { name: "Marketing Operations" })).toHaveAttribute("href", "/packs/marketing-operations");
     expect(screen.queryByRole("link", { name: /Start with \$possible/i })).not.toBeInTheDocument();
-    expect(screen.getByText("PRODUCT DECISIONS")).toBeInTheDocument();
-    expect(screen.getByText("REMIX")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Expectations", level: 2 })).toBeInTheDocument();
     expect(route.container.querySelector(".pack-prompt-disclosure code")?.textContent).toMatch(/\$humanizer/);
-    expect(route.container.querySelector(".pack-prompt-disclosure code")?.textContent).toMatch(/PRODUCT DECISION RECORD/);
+    expect(route.container.querySelector(".pack-prompt-disclosure code")?.textContent).not.toMatch(/PRODUCT DECISION RECORD|REMIX GATE/);
     expect(await axe(route.container)).toHaveNoViolations();
   });
 
@@ -185,8 +201,8 @@ describe("Possible", () => {
     const notice = screen.getByRole("complementary", { name: "Archived Outcome Pack" });
     expect(notice).toHaveTextContent(/ARCHIVED.*2026-07-29/i);
     expect(notice).toHaveTextContent(/prototype and manufacturing feasibility.*deposited payout/i);
-    expect(within(notice).getByRole("link", { name: "Crowdfunding Campaign Readiness" })).toHaveAttribute("href", expect.stringContaining("crowdfunding-campaign-readiness.json"));
-    expect(within(notice).getByRole("link", { name: "Launch Content Package" })).toHaveAttribute("href", expect.stringContaining("launch-content-package.json"));
+    expect(within(notice).getByRole("link", { name: "Crowdfunding Campaign Readiness" })).toHaveAttribute("href", "/packs/crowdfunding-campaign-readiness");
+    expect(within(notice).getByRole("link", { name: "Launch Content Package" })).toHaveAttribute("href", "/packs/launch-content-package");
     expect(screen.queryByRole("link", { name: /Start with \$possible/i })).not.toBeInTheDocument();
     expect(route.container.querySelector(".pack-prompt-disclosure code")?.textContent).toMatch(/deposited platform payout/i);
     expect(await axe(route.container)).toHaveNoViolations();
@@ -195,22 +211,17 @@ describe("Possible", () => {
   it("separates opportunity discovery from the resumable first-customer sprint", async () => {
     const discoveryRoute = renderRoute("/packs/software-opportunity-discovery");
     expect(screen.getByRole("heading", { name: "Software Opportunity Discovery", level: 1 })).toBeInTheDocument();
-    expect(screen.getByText("OPPORTUNITY DISCOVERY")).toBeInTheDocument();
-    expect(screen.queryByText("COMMERCIAL EVIDENCE LADDER")).not.toBeInTheDocument();
-    expect(discoveryRoute.container.querySelector(".pack-prompt-disclosure code")?.textContent).toMatch(/OPPORTUNITY DISCOVERY GATE/);
-    expect(discoveryRoute.container.querySelector(".pack-prompt-disclosure code")?.textContent).not.toMatch(/FIRST CUSTOMER SPRINT/);
+    expect(screen.getByRole("heading", { name: "Expectations", level: 2 })).toBeInTheDocument();
+    expect(discoveryRoute.container.querySelector(".pack-prompt-disclosure code")?.textContent).toMatch(/EXPECTATIONS CHECKLIST/);
+    expect(discoveryRoute.container.querySelector(".pack-prompt-disclosure code")?.textContent).not.toMatch(/OPPORTUNITY DISCOVERY GATE|FIRST CUSTOMER SPRINT/);
     expect(await axe(discoveryRoute.container)).toHaveNoViolations();
     discoveryRoute.unmount();
 
     const sprintRoute = renderRoute("/packs/first-customer-sprint");
     expect(screen.getByRole("heading", { name: "First Customer Sprint", level: 1 })).toBeInTheDocument();
-    expect(screen.getByText("COMMERCIAL EVIDENCE LADDER")).toBeInTheDocument();
-    expect(screen.getByText("RESUMABLE SALES CYCLE")).toBeInTheDocument();
-    expect(screen.getByText("qualified problem")).toBeInTheDocument();
-    expect(screen.getByText("payment received")).toBeInTheDocument();
-    expect(screen.getAllByText(/real qualified prospect requests one bounded feasibility proof/i).length).toBeGreaterThan(0);
-    expect(sprintRoute.container.querySelector(".pack-prompt-disclosure code")?.textContent).toMatch(/FIRST CUSTOMER SPRINT/);
-    expect(sprintRoute.container.querySelector(".pack-prompt-disclosure code")?.textContent).toMatch(/Scheduling is coordination, not commercial evidence/i);
+    expect(screen.getByRole("heading", { name: "Expectations", level: 2 })).toBeInTheDocument();
+    expect(sprintRoute.container.querySelector(".pack-prompt-disclosure code")?.textContent).toMatch(/EXPECTATIONS CHECKLIST/);
+    expect(sprintRoute.container.querySelector(".pack-prompt-disclosure code")?.textContent).not.toMatch(/FIRST CUSTOMER SPRINT|RESUMABLE SALES CYCLE/);
     expect(await axe(sprintRoute.container)).toHaveNoViolations();
   });
 
@@ -240,14 +251,16 @@ describe("Possible", () => {
     expect(await axe(section!)).toHaveNoViolations();
   });
 
-  it("explains Remix and retrospective Outcome Journeys without predeclaring the future", async () => {
+  it("explains presentation variations and retrospective Outcome Journeys without predeclaring the future", async () => {
     const { container } = renderRoute("/docs/how-to-use");
-    const section = container.querySelector("#remix-and-journey");
-    expect(section).toHaveTextContent(/Remix changes the expression/i);
-    expect(section).toHaveTextContent(/three project-specific creative directions/i);
+    const section = container.querySelector("#presentation-and-journey");
+    expect(section).toHaveTextContent(/Presentation variation changes the expression/i);
+    expect(section).toHaveTextContent(/small set of project-specific directions/i);
+    expect(section).toHaveTextContent(/not in a separate pack contract/i);
     expect(section).toHaveTextContent(/Outcome Journey.*visible only afterward/i);
     expect(section).toHaveTextContent(/completes and verifies one outcome.*inspects the new reality.*recommends one next outcome.*fresh approval/i);
     expect(section).toHaveTextContent(/never fixes the future sequence in advance/i);
+    expect(container.querySelector('a[href="#remix-and-journey"]')).not.toBeInTheDocument();
     expect(await axe(section!)).toHaveNoViolations();
   });
 
@@ -278,6 +291,17 @@ describe("Possible", () => {
       expect(await axe(container)).toHaveNoViolations();
       unmount();
     }
+  });
+
+  it("makes every authoring field's demand explicit", async () => {
+    const { container } = renderRoute("/docs/authoring");
+    const fields = container.querySelector("#fields");
+    expect(fields).toBeInTheDocument();
+    expect(fields).toHaveTextContent(/promise.*observable result/i);
+    expect(fields).toHaveTextContent(/summary.*run stops.*description/i);
+    expect(fields).toHaveTextContent(/expectations.*failure modes.*required evidence/i);
+    expect(fields).toHaveTextContent(/outputs.*not.*proof/i);
+    expect(await axe(fields!)).toHaveNoViolations();
   });
 
   it("maps the four official judging criteria to direct evidence", async () => {

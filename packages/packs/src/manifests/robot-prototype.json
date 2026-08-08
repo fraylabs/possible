@@ -128,6 +128,26 @@
       "reviewUrl": "https://github.com/arpitg1304/robotics-agent-skills/tree/54f7b578f3dc269d29c0beb623b3f2611fd3a430/skills/robotics-testing"
     }
   ],
+  "expectations": [
+    {
+      "id": "simulation-model",
+      "statement": "The robot model, kinematics, dynamics, environment, and simulation assumptions are explicit and reproducible.",
+      "failureModes": ["Simulation hides unsupported assumptions", "Model cannot be reproduced"],
+      "requiredEvidence": ["Versioned model", "Simulation configuration and run record"]
+    },
+    {
+      "id": "controls-and-tests",
+      "statement": "Control behavior, task objectives, safety limits, and deterministic nominal and failure tests are exercised in simulation.",
+      "failureModes": ["Controller only shown in a happy path", "No bounded failure or reset behavior"],
+      "requiredEvidence": ["Control test results", "Failure and reset traces"]
+    },
+    {
+      "id": "sim-to-real-boundary",
+      "statement": "The report separates simulated evidence from physical behavior and names the remaining sim-to-real gap; no hardware commissioning is implied.",
+      "failureModes": ["Simulation presented as field validation", "Physical action taken without approval"],
+      "requiredEvidence": ["Sim-to-real gap report", "Explicit hardware no-go or approval boundary"]
+    }
+  ],
   "workstreams": [
     {
       "id": "architecture",

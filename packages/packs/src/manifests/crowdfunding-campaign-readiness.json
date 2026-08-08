@@ -19,25 +19,6 @@
     "Running or fulfilling a campaign; use Crowdfunding Funding Run after readiness, then Crowdfunding Fulfillment Operations only from funded-settled evidence."
   ],
   "reviewedAt": "2026-07-29",
-  "prerequisites": [
-    {
-      "id": "measured-product-and-production",
-      "description": "The named physical product and proposed production commitment have direct evidence strong enough to support campaign claims, quantities, costs, and delivery risks.",
-      "requiredEvidence": [
-        "immutable measured prototype revision and claims boundary",
-        "Production Readiness Decision receipt or equivalent commitment-specific DFM, supplier, cost, compliance, quality, pilot, packaging, and fulfillment evidence",
-        "Research Protocol Readiness receipt when research or health claims are present, or an explicit record that no such claim is in scope"
-      ]
-    },
-    {
-      "id": "final-content-package",
-      "description": "The campaign's required public media already exists as verified final exports rather than being silently produced inside readiness work.",
-      "requiredEvidence": [
-        "Launch Content Package receipt or equivalent final-export inventory",
-        "asset manifest with source truth, claims, accessibility, rights, consent, provenance, technical specifications, approval state, and hashes"
-      ]
-    }
-  ],
   "skills": [
     {
       "id": "product-marketing",
@@ -145,18 +126,6 @@
       "brief": "Challenge the immutable package for product truth, reward coherence, economics, overfunding exposure, manufacturing capacity, shipping, timeline, claims, content completeness, accessibility, rights, and worst credible failure. Repair and recompute affected evidence, then return ready-for-platform-review, repair-required, or no-go without performing any platform or audience action."
     }
   ],
-  "crowdfundingCampaignReadiness": {
-    "kind": "crowdfunding-campaign-readiness",
-    "baselinePath": "crowdfunding-readiness/baseline.json",
-    "economicsPath": "crowdfunding-readiness/economics.json",
-    "campaignPackagePath": "crowdfunding-readiness/package/",
-    "decisionReceiptPath": "outcome-room/crowdfunding-campaign-readiness-receipt.json",
-    "decisions": [
-      "ready-for-platform-review",
-      "repair-required",
-      "no-go"
-    ]
-  },
   "expectations": [
     {
       "id": "prerequisite-baseline",
@@ -267,6 +236,47 @@
         "decision receipt with external actions not taken",
         "explicit Crowdfunding Funding Run handoff and fresh-approval boundary"
       ]
+    },
+    {
+      "id": "prerequisite-measured-product-and-production",
+      "statement": "The named physical product and proposed production commitment have direct evidence strong enough to support campaign claims, quantities, costs, and delivery risks.",
+      "level": "required",
+      "failureModes": [
+        "missing prerequisite evidence",
+        "baseline does not match the proposed work"
+      ],
+      "requiredEvidence": [
+        "immutable measured prototype revision and claims boundary",
+        "Production Readiness Decision receipt or equivalent commitment-specific DFM, supplier, cost, compliance, quality, pilot, packaging, and fulfillment evidence",
+        "Research Protocol Readiness receipt when research or health claims are present, or an explicit record that no such claim is in scope"
+      ]
+    },
+    {
+      "id": "prerequisite-final-content-package",
+      "statement": "The campaign's required public media already exists as verified final exports rather than being silently produced inside readiness work.",
+      "level": "required",
+      "failureModes": [
+        "missing prerequisite evidence",
+        "baseline does not match the proposed work"
+      ],
+      "requiredEvidence": [
+        "Launch Content Package receipt or equivalent final-export inventory",
+        "asset manifest with source truth, claims, accessibility, rights, consent, provenance, technical specifications, approval state, and hashes"
+      ]
+    },
+    {
+      "id": "crowdfunding-campaign-readiness-boundary",
+      "statement": "Crowdfunding Campaign Readiness produces enough evidence for an independent readiness decision. The possible decisions are ready-for-platform-review, repair-required, no-go.",
+      "level": "required",
+      "failureModes": [
+        "missing evidence for the declared outcome",
+        "decision made from assumptions or unverified claims"
+      ],
+      "requiredEvidence": [
+        "evidence baseline",
+        "independent review",
+        "decision record"
+      ]
     }
   ],
   "reviewSkills": [
@@ -296,7 +306,9 @@
     "Review the complete platform-entry package for product truth, creator statements, claims, risks, timeline, FAQ, content completeness, accessibility, rights, consent, provenance, and internal consistency.",
     "Challenge underfunding, expected volume, and worst credible overfunding; preserve capacity cliffs, cash shortfalls, supplier failures, quality escapes, shipping exceptions, refunds, and residual risk.",
     "Verify no account, platform, preview, publication, audience, pledge, backer, or payout action occurred and no synthetic fixture is represented as live evidence.",
-    "Use a fresh reviewer with no baseline, economics, reward, copy, or package ownership to write outcome-room/crowdfunding-campaign-readiness-receipt.json with ready-for-platform-review, repair-required, or no-go status. Ready never authorizes a live campaign."
+    "Use a fresh reviewer with no baseline, economics, reward, copy, or package ownership to write outcome-room/crowdfunding-campaign-readiness-receipt.json with ready-for-platform-review, repair-required, or no-go status. Ready never authorizes a live campaign.",
+    "Confirm the prerequisite baseline before beginning work: The named physical product and proposed production commitment have direct evidence strong enough to support campaign claims, quantities, costs, and delivery risks.",
+    "Confirm the prerequisite baseline before beginning work: The campaign's required public media already exists as verified final exports rather than being silently produced inside readiness work."
   ],
   "packVersion": "1.0.0",
   "visibility": "public",

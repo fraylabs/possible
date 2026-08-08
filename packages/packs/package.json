@@ -11,11 +11,17 @@
     "./local": {
       "types": "./dist/local.d.ts",
       "import": "./dist/local.js"
+    },
+    "./submission": {
+      "types": "./dist/submission.d.ts",
+      "import": "./dist/submission.js"
     }
   },
   "types": "./dist/index.d.ts",
   "scripts": {
+    "prebuild": "node --input-type=module --eval \"import { rmSync } from 'node:fs'; rmSync('dist', { recursive: true, force: true })\"",
     "build": "tsc -p tsconfig.json",
+    "snapshots:refresh": "node scripts/refresh-bundled-snapshots.mjs",
     "test": "npm run build && node --test test/*.test.mjs"
   },
   "devDependencies": {

@@ -1,0 +1,280 @@
+{
+  "schemaVersion": 1,
+  "lane": "create",
+  "slug": "html-css-animated-product-launch-film",
+  "name": "HTML/CSS Animated Product Launch Film",
+  "eyebrow": "32 / EXPERIMENTAL PACK",
+  "promise": "Produce a marketing-first product launch film as standalone HTML and CSS, with one audience insight, one visual argument, and a final video export.",
+  "summary": "A pure HTML/CSS launch-film contract that finds the marketing idea before animation begins, turns it into a value-first visual story, and verifies that a new viewer understands the problem, the product's role, and the next action. HyperFrames may direct, inspect, and render the film, but the authored source remains portable HTML and CSS that runs without a framework runtime.",
+  "useWhen": [
+    "A product, company, open-source project, or idea needs a short animated launch film rather than a deck, screenshot tour, or technical explainer.",
+    "The story can be reduced to one audience, its current belief or problem, a more useful truth, the product's role, and one next action.",
+    "Diagrams, typography, and authored visual systems can explain the promise without pretending to show a working product interface.",
+    "The editable source must remain standalone, offline-runnable HTML and CSS even when HyperFrames is used for production and export."
+  ],
+  "notFor": [
+    "A general motion study, decorative animation, presentation deck, screenshot montage, or technical walkthrough with no launch-marketing objective.",
+    "A product whose verified website or application interface should be captured and shown as-is; use Product Launch Video.",
+    "A complete web application, browser game, interactive product flow, or stateful experience.",
+    "Authored JavaScript animation, React, canvas, WebGL, Remotion, or a framework-dependent delivered source.",
+    "Inventing product behavior, capabilities, users, metrics, testimonials, evidence, or audience response.",
+    "Publishing, uploading, deploying, or contacting an audience without separate approval."
+  ],
+  "reviewedAt": "2026-08-08",
+  "skills": [
+    {
+      "id": "hyperframes",
+      "name": "HyperFrames",
+      "role": "Direct, author, inspect, and render a launch film while preserving standalone HTML/CSS as the editable source",
+      "repository": "heygen-com/hyperframes",
+      "installSource": "heygen-com/hyperframes@b08cefea631b2c13697b6cb31075bf5a9b7c738d",
+      "installMode": "full-depth",
+      "skill": "hyperframes",
+      "catalogUrl": "https://skills.sh/heygen-com/hyperframes/hyperframes",
+      "reviewedRevision": "b08cefea631b2c13697b6cb31075bf5a9b7c738d",
+      "reviewUrl": "https://github.com/heygen-com/hyperframes/tree/b08cefea631b2c13697b6cb31075bf5a9b7c738d/skills/hyperframes/SKILL.md"
+    },
+    {
+      "id": "copywriting",
+      "name": "Copywriting",
+      "role": "Find the audience's current belief, the useful reveal, the product's role, and one clear next action",
+      "repository": "coreyhaines31/marketingskills",
+      "skill": "copywriting",
+      "catalogUrl": "https://skills.sh/coreyhaines31/marketingskills/copywriting",
+      "reviewedRevision": "67264763cb107d61749f418d081c56e5bcbc0209",
+      "reviewUrl": "https://github.com/coreyhaines31/marketingskills/tree/67264763cb107d61749f418d081c56e5bcbc0209/skills/copywriting"
+    },
+    {
+      "id": "humanizer",
+      "name": "Humanizer",
+      "role": "Keep the story concrete, natural, jargon-light, and understandable without prior product knowledge",
+      "repository": "fraylabs/possible",
+      "skill": "humanizer",
+      "catalogUrl": "https://github.com/fraylabs/possible/tree/dev/skills/humanizer",
+      "reviewedRevision": "e081be4df826b7bd545e6b80406622f52d0bb49b",
+      "reviewUrl": "https://github.com/fraylabs/possible/tree/e081be4df826b7bd545e6b80406622f52d0bb49b/skills/humanizer"
+    }
+  ],
+  "workstreams": [
+    {
+      "id": "marketing-story",
+      "name": "Marketing idea and story",
+      "skills": [
+        "copywriting",
+        "humanizer"
+      ],
+      "owns": [
+        "audience",
+        "current belief or problem",
+        "revealed truth",
+        "product role",
+        "next action",
+        "storyboard copy"
+      ],
+      "brief": "Do not animate the first plausible explanation. First write one sentence in the form 'This film tells [audience] that [valuable truth], and shows how [product] helps.' Then define the audience's current belief or problem, the reveal that changes it, why that change matters, the product's precise role, and one next action. Build a beat table with on-screen copy, visual transformation, and the reason each beat must exist. Challenge generic language and internal terminology before approving the story."
+    },
+    {
+      "id": "html-css-launch-film",
+      "name": "HTML/CSS launch film",
+      "skills": [
+        "hyperframes"
+      ],
+      "owns": [
+        "visual argument",
+        "story rhythm",
+        "HTML/CSS source",
+        "motion",
+        "preview",
+        "video export"
+      ],
+      "dependsOn": [
+        "marketing-story"
+      ],
+      "brief": "Turn the approved marketing story into one continuous visual argument rather than a decorated slide sequence. Lead with the audience's world, make the reveal concrete through specific examples, introduce the product only after its value is understood, and explain internal mechanics in ordinary language. Author the delivered animation as semantic HTML and CSS only. HyperFrames may provide production direction, deterministic review, snapshots, and rendering, but the source must still open and communicate offline without JavaScript or a framework runtime."
+    },
+    {
+      "id": "outsider-review",
+      "name": "Outsider comprehension and handoff",
+      "skills": [
+        "hyperframes",
+        "humanizer"
+      ],
+      "owns": [
+        "fresh-viewer review",
+        "frame review",
+        "source portability",
+        "completion checklist",
+        "handoff"
+      ],
+      "dependsOn": [
+        "html-css-launch-film"
+      ],
+      "brief": "Review the actual film as someone who does not already understand the product. Confirm that one viewing makes the missed opportunity or problem, the product's role, and the next action clear. Inspect launch-film pacing, visual continuity, language, deterministic replay, standalone source, reduced motion, representative frames, and final export."
+    }
+  ],
+  "reviewSkills": [
+    "hyperframes",
+    "humanizer"
+  ],
+  "outputs": [
+    "Marketing brief with audience, current belief or problem, revealed truth, why it matters, product role, next action, and supported-claim boundary",
+    "Value-first storyboard with on-screen copy, visual transformation, and a reason for every beat",
+    "Editable, standalone, offline-runnable HTML/CSS animation",
+    "Representative start, middle, end, and transition frames plus deterministic motion checks",
+    "Explicitly silent film or separately approved and sourced audio treatment",
+    "Final video export and fresh-viewer completion checklist"
+  ],
+  "expectations": [
+    {
+      "id": "marketing-premise",
+      "statement": "Before production, the film states one identifiable audience, its current belief or problem, the useful truth being revealed, why that truth matters, the product's precise role, and one next action.",
+      "level": "required",
+      "failureModes": [
+        "generic audience",
+        "technical description instead of a valuable truth",
+        "unclear product role",
+        "missing next action"
+      ],
+      "requiredEvidence": [
+        "marketing brief",
+        "one-sentence film strategy",
+        "fresh story review"
+      ]
+    },
+    {
+      "id": "value-before-mechanics",
+      "statement": "The film makes the audience problem or missed opportunity and the product promise understandable before showing implementation details, framework terms, or internal product mechanics.",
+      "level": "required",
+      "failureModes": [
+        "product mechanics arrive before viewer value",
+        "framework vocabulary drives the hook",
+        "feature inventory replaces the story",
+        "concrete examples arrive too late"
+      ],
+      "requiredEvidence": [
+        "storyboard order",
+        "opening and midpoint frames",
+        "value-first review"
+      ]
+    },
+    {
+      "id": "outsider-comprehension",
+      "statement": "After one viewing, a person without prior product knowledge can explain what is being missed or solved, what the product does about it, and what action the film invites next.",
+      "level": "required",
+      "failureModes": [
+        "requires insider context",
+        "unclear problem",
+        "unclear product role",
+        "unclear call to action"
+      ],
+      "requiredEvidence": [
+        "fresh-viewer review",
+        "plain-language summary",
+        "revised copy where comprehension failed"
+      ]
+    },
+    {
+      "id": "launch-film-fit",
+      "statement": "The motion carries one developing visual argument with a clear hook, reveal, product turn, proof, and payoff rather than decorating a slideshow, dashboard tour, or generic explainer.",
+      "level": "required",
+      "failureModes": [
+        "deck-like pacing",
+        "unrelated animated cards",
+        "decorative motion",
+        "no visual or narrative payoff"
+      ],
+      "requiredEvidence": [
+        "beat-by-beat storyboard",
+        "representative frames and transitions",
+        "full-film review"
+      ]
+    },
+    {
+      "id": "standalone-html-css-source",
+      "statement": "The delivered animation is portable HTML and CSS that communicates offline without authored JavaScript, React, canvas, WebGL, Remotion, network-only assets, or a framework runtime; production and rendering tools do not become delivery dependencies.",
+      "level": "required",
+      "failureModes": [
+        "hidden JavaScript dependency",
+        "framework-dependent source",
+        "network-only asset",
+        "flattened video without editable source"
+      ],
+      "requiredEvidence": [
+        "source inspection",
+        "offline local run",
+        "dependency and network review"
+      ]
+    },
+    {
+      "id": "deterministic-readable-motion",
+      "statement": "The film starts from a known state, replays consistently, remains readable at the declared format, and preserves its meaning under reduced motion.",
+      "level": "required",
+      "failureModes": [
+        "different first frame",
+        "stuck or skipped reveal",
+        "clipped or low-contrast copy",
+        "reduced motion removes the story"
+      ],
+      "requiredEvidence": [
+        "motion checks",
+        "representative captures",
+        "contrast and reduced-motion review"
+      ]
+    },
+    {
+      "id": "truthful-content",
+      "statement": "Every material product claim and capability is supported by the supplied brief or source evidence, and illustrative diagrams never pretend to be observed product behavior or proof.",
+      "level": "required",
+      "failureModes": [
+        "invented capability",
+        "fake product evidence",
+        "unsupported outcome claim",
+        "illustration presented as observation"
+      ],
+      "requiredEvidence": [
+        "source brief",
+        "claim and illustration review",
+        "supported-claim boundary"
+      ]
+    },
+    {
+      "id": "deliberate-audio-and-handoff",
+      "statement": "The film is explicitly silent unless audio was separately requested and approved, and the editable source, final export, review result, limitations, and publication boundary are handed off together.",
+      "level": "required",
+      "failureModes": [
+        "creepy or procedural filler audio",
+        "unapproved or unsourced sound",
+        "missing final export",
+        "publication implied"
+      ],
+      "requiredEvidence": [
+        "audio decision",
+        "editable source and final export",
+        "completion checklist"
+      ]
+    }
+  ],
+  "guardrails": [
+    "Do not begin animation until the audience, current belief or problem, valuable reveal, product role, next action, and supported-claim boundary are explicit.",
+    "Speak in the audience's language. Use internal terms only after the value is clear, and explain them with ordinary words.",
+    "Show concrete outcomes or evidence before abstract framework mechanics when that is what makes the promise understandable.",
+    "Keep the delivered artifact standalone HTML and CSS. HyperFrames may direct, inspect, and render it, but must not become a runtime dependency of the source.",
+    "Do not invent product capabilities, evidence, users, metrics, testimonials, citations, or audience response.",
+    "Do not add audio merely to fill silence. Use silence unless sound is requested, approved, sourced, and reviewed.",
+    "Honor deterministic replay and reduced motion while preserving the story.",
+    "Do not publish, upload, deploy, or contact an audience without separate approval."
+  ],
+  "verification": [
+    "Review the marketing brief and one-sentence film strategy before production; reject generic descriptions that do not state why the audience should care.",
+    "Review the storyboard for value-before-mechanics order, one job per beat, concrete examples, plain language, visual continuity, and a clear payoff.",
+    "Review the actual film as a new viewer and record whether the problem or missed opportunity, product role, and next action are understandable after one viewing.",
+    "Open the authored source offline and inspect it for JavaScript, framework dependencies, network-only assets, random or clock-based motion, and flattened-only delivery.",
+    "Run deterministic motion, layout, contrast, reduced-motion, and representative-frame checks at the declared video format.",
+    "Review every material claim and illustrative diagram against the supplied brief or source evidence.",
+    "Review silence or separately approved audio, then verify the final export, editable source, limitations, completion checklist, and external-action boundary.",
+    "Record ready, repair-required, or no-go with the evidence that supports the decision."
+  ],
+  "packVersion": "1.0.0",
+  "visibility": "public",
+  "lifecycle": "reviewed"
+}

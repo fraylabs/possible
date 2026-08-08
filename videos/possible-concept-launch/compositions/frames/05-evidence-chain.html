@@ -1,0 +1,43 @@
+<template>
+  <style>
+    @font-face { font-family: HFGeist; src: url("assets/fonts/geist-latin.woff2") format("woff2"); font-weight: 400 700; }
+    @font-face { font-family: HFMono; src: url("assets/fonts/geist-mono-latin.woff2") format("woff2"); font-weight: 400 700; }
+    #root { position: absolute; inset: 0; width: 1920px; height: 1080px; overflow: hidden; background: #151411; color: #f3f0e8; font-family: HFGeist, sans-serif; }
+    .bg { position: absolute; inset: 0; background: #151411; }
+    .kicker { position: absolute; left: 94px; top: 82px; color: #a8ff52; font: 500 20px/1 HFMono, monospace; letter-spacing: .15em; }
+    .panel { position: absolute; top: 162px; width: 760px; height: 490px; overflow: hidden; border: 1px solid rgba(243,240,232,.28); border-radius: 10px; background: #f3f0e8; transform-origin: center center; }
+    .panel-left { left: 120px; }
+    .panel-right { left: 1040px; }
+    .panel img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top center; }
+    .panel::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(21,20,17,.05), rgba(21,20,17,.36)); pointer-events: none; }
+    .label { position: absolute; top: 690px; font: 500 24px/1 HFMono, monospace; letter-spacing: .14em; }
+    .label-left { left: 120px; color: #ff4d00; }
+    .label-right { left: 1040px; color: #a8ff52; }
+    .rail { position: absolute; left: 120px; top: 820px; width: 1680px; display: flex; align-items: center; justify-content: space-between; color: #f3f0e8; font: 500 30px/1 HFMono, monospace; letter-spacing: .04em; }
+    .rail span { display: inline-block; }
+    .rail .arrow { color: #ff4d00; font-size: 24px; }
+    .payoff { position: absolute; left: 120px; top: 910px; color: #d4d0c8; font-size: 33px; letter-spacing: -.02em; }
+  </style>
+  <div id="root" data-composition-id="05-evidence-chain" data-width="1920" data-height="1080" data-duration="8.4">
+    <div id="f05-evidence-bg" class="clip bg" data-start="0" data-duration="8.4" data-track-index="0"></div>
+    <div id="f05-evidence-kicker" class="clip kicker" data-start="0" data-duration="8.4" data-track-index="1">✱ A CONCRETE PATH</div>
+    <div id="f05-evidence-left" class="clip panel panel-left" data-start="0" data-duration="8.4" data-track-index="2"><img src="assets/possible-pack.png" alt="Captured Outcome Pack page" /></div>
+    <div id="f05-evidence-right" class="clip panel panel-right" data-start="0" data-duration="8.4" data-track-index="3"><img src="assets/possible-expectations.png" alt="Captured Expectations page" /></div>
+    <div id="f05-evidence-label-left" class="clip label label-left" data-start="0" data-duration="8.4" data-track-index="4">OUTCOME PACK</div>
+    <div id="f05-evidence-label-right" class="clip label label-right" data-start="0" data-duration="8.4" data-track-index="5">EXPECTATIONS</div>
+    <div id="f05-evidence-rail" class="clip rail" data-start="0" data-duration="8.4" data-track-index="6"><span>choose</span><span class="arrow">→</span><span>run</span><span class="arrow">→</span><span>inspect</span></div>
+    <div id="f05-evidence-payoff" class="clip payoff" data-start="0" data-duration="8.4" data-track-index="7">A vague ask, made concrete.</div>
+  </div>
+  <script>
+    window.__timelines = window.__timelines || {};
+    const tl = gsap.timeline({ paused: true });
+    tl.fromTo("#f05-evidence-kicker", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.45, ease: "power3.out" }, 0.05);
+    tl.fromTo("#f05-evidence-left", { opacity: 0, x: -80, rotation: -2 }, { opacity: 1, x: 0, rotation: 0, duration: 0.95, ease: "power3.out" }, 0.3);
+    tl.fromTo("#f05-evidence-right", { opacity: 0, x: 80, rotation: 2 }, { opacity: 1, x: 0, rotation: 0, duration: 0.95, ease: "power3.out" }, 0.55);
+    tl.fromTo("#f05-evidence-label-left", { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.55, ease: "power3.out" }, 2.0);
+    tl.fromTo("#f05-evidence-label-right", { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.55, ease: "power3.out" }, 2.35);
+    tl.fromTo("#f05-evidence-rail", { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }, 4.5);
+    tl.fromTo("#f05-evidence-payoff", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }, 6.2);
+    window.__timelines["05-evidence-chain"] = tl;
+  </script>
+</template>

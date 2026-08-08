@@ -20,13 +20,6 @@
     "Unapproved posting, email sends, outreach, ad spend, account changes, tracking, or customer-data access."
   ],
   "reviewedAt": "2026-07-19",
-  "artifactRoot": "marketing",
-  "schedule": {
-    "request": "I want to schedule marketing operations.",
-    "title": "Schedule the marketing loop",
-    "description": "A scheduled cycle may inspect approved inputs and prepare repository-local work. It never publishes, sends, spends, or changes live accounts.",
-    "safeDefault": "Standalone task. Isolated worktree. Authorized read-only inputs. Prepare review-required repo-local plans, drafts, measurements, state, and dated completion reports. Never publish, send, spend, contact people, change tracking or accounts, use write-capable connectors, or access unauthorized private data."
-  },
   "skills": [
     {
       "id": "product-marketing",
@@ -93,6 +86,26 @@
       "catalogUrl": "https://skills.sh/coreyhaines31/marketingskills/marketing-loops",
       "reviewedRevision": "67264763cb107d61749f418d081c56e5bcbc0209",
       "reviewUrl": "https://github.com/coreyhaines31/marketingskills/tree/67264763cb107d61749f418d081c56e5bcbc0209/skills/marketing-loops"
+    }
+  ],
+  "expectations": [
+    {
+      "id": "versioned-marketing-truth",
+      "statement": "Audience, positioning, voice, claims, channel priorities, and campaign calendar form a versioned source of truth with dated inputs.",
+      "failureModes": ["Conflicting or stale positioning", "Audience or claims invented from intuition"],
+      "requiredEvidence": ["Versioned source of truth", "Input dates and provenance"]
+    },
+    {
+      "id": "reviewable-drafts-and-measurement",
+      "statement": "The cycle produces review-required channel drafts and a measurement plan whose baselines, windows, samples, and attribution limits are explicit.",
+      "failureModes": ["Draft treated as published", "Metrics lack baseline or attribution scope"],
+      "requiredEvidence": ["Draft package", "Measurement plan and source ledger"]
+    },
+    {
+      "id": "read-only-operation",
+      "statement": "Manual and scheduled cycles remain repository-local and read-only until each external send, publish, spend, tracking, or account change receives separate approval.",
+      "failureModes": ["Unapproved external action", "Schedule silently gains write authority"],
+      "requiredEvidence": ["Manual cycle report", "Approval or no-go record"]
     }
   ],
   "workstreams": [

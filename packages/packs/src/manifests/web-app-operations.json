@@ -18,12 +18,6 @@
     "Unapproved production changes, customer-data access, paging, or issue-tracker writes."
   ],
   "reviewedAt": "2026-07-19",
-  "schedule": {
-    "request": "I want to schedule operations.",
-    "title": "Schedule the operating loop",
-    "description": "Scheduling is a second approval gate, never a side effect of choosing this pack.",
-    "safeDefault": "Standalone task. Isolated worktree. Report findings and prepare reviewable evidence—never deploy, restart, page, publish, or change production unattended."
-  },
   "skills": [
     {
       "id": "webapp-testing",
@@ -84,6 +78,26 @@
       "catalogUrl": "https://skills.sh/github/awesome-copilot/incident-postmortem",
       "reviewedRevision": "26fe2d126bf79aafb38f43344d450b69632200f8",
       "reviewUrl": "https://github.com/github/awesome-copilot/tree/26fe2d126bf79aafb38f43344d450b69632200f8/skills/incident-postmortem"
+    }
+  ],
+  "expectations": [
+    {
+      "id": "repeatable-health-cycle",
+      "statement": "The repository-native operations check runs twice against an authorized environment and produces dated reports without erasing unresolved work.",
+      "failureModes": ["One-off check mistaken for a baseline", "Repeat run resets or hides unresolved work"],
+      "requiredEvidence": ["Two dated run reports", "Environment and command record"]
+    },
+    {
+      "id": "critical-flow-and-triage",
+      "statement": "Declared critical flows, issue intake, dependency coverage, and security scope are tested and represented honestly, including empty states.",
+      "failureModes": ["Unmeasured critical path", "Invented issue, metric, or security result"],
+      "requiredEvidence": ["Browser checks", "Issue and dependency inventories"]
+    },
+    {
+      "id": "safe-operations-and-scheduling",
+      "statement": "Incident, rollback, and scheduling paths stop at explicit approval gates and are exercised only with labeled simulations or authorized actions.",
+      "failureModes": ["Production mutation without approval", "Simulation reported as a live incident"],
+      "requiredEvidence": ["Runbook tabletop record", "Manual schedule-prompt test and approval/no-go"]
     }
   ],
   "workstreams": [

@@ -25,18 +25,6 @@
       "production-readiness-decision"
     ]
   },
-  "prerequisites": [
-    {
-      "id": "measured-prototype",
-      "description": "One immutable physical prototype revision has direct functional and safety-boundary evidence suitable for manufacturing review.",
-      "requiredEvidence": [
-        "prototype revision, intended use, product configuration, and claims boundary",
-        "mechanical, electrical, firmware, component, and assembly sources",
-        "calibrated nominal, boundary, and failure measurements",
-        "hazard analysis, known defects, unproven assumptions, and human-use boundary"
-      ]
-    }
-  ],
   "skills": [
     {
       "id": "product-marketing",
@@ -232,19 +220,6 @@
       "brief": "Reconcile the exact configuration, release files, quotations, economics, capacity, compliance questions, quality controls, pilot evidence, packaging, schedule, cash exposure, delivery promise, failures, approvals, and unresolved risks. Return ready, repair-required, or no-go for one named production commitment without placing an order."
     }
   ],
-  "manufacturingReadiness": {
-    "kind": "manufacturing-readiness",
-    "baselinePath": "manufacturing/baseline/product-configuration.json",
-    "rfqPath": "manufacturing/sourcing/rfq-package/",
-    "compliancePath": "manufacturing/compliance/readiness-plan.json",
-    "pilotPath": "manufacturing/pilot/report.json",
-    "decisionReceiptPath": "outcome-room/manufacturing-readiness-receipt.json",
-    "decisions": [
-      "ready",
-      "repair-required",
-      "no-go"
-    ]
-  },
   "reviewSkills": [
     "cad-viewer",
     "robotics-testing",
@@ -277,9 +252,41 @@
     "Verify pilot evidence against the frozen revision and authentic production records; recompute produced quantity, first-pass yield, final yield, defect and rework rates, assembly and test time, packaging results, deviations, and unresolved failures.",
     "Red-team the minimum, expected, and overfunded cases for capacity, working capital, supplier concentration, substitutions, schedule, refunds, warranty, returns, fulfillment, and one plausible material disruption.",
     "Use a fresh reviewer with no design, sourcing, compliance, pilot, economics, or release ownership to return ready, repair-required, or no-go from the actual evidence.",
-    "Write outcome-room/manufacturing-readiness-receipt.json with the immutable configuration, proposed commitment, target markets, quantities, evidence, quotes, economics, compliance status, quality status, pilot results, failures, approvals, external actions, limitations, and independent review."
+    "Write outcome-room/manufacturing-readiness-receipt.json with the immutable configuration, proposed commitment, target markets, quantities, evidence, quotes, economics, compliance status, quality status, pilot results, failures, approvals, external actions, limitations, and independent review.",
+    "Confirm the prerequisite baseline before beginning work: One immutable physical prototype revision has direct functional and safety-boundary evidence suitable for manufacturing review."
   ],
   "packVersion": "1.0.0",
   "visibility": "public",
-  "lifecycle": "archived"
+  "lifecycle": "archived",
+  "expectations": [
+    {
+      "id": "prerequisite-measured-prototype",
+      "statement": "One immutable physical prototype revision has direct functional and safety-boundary evidence suitable for manufacturing review.",
+      "level": "required",
+      "failureModes": [
+        "missing prerequisite evidence",
+        "baseline does not match the proposed work"
+      ],
+      "requiredEvidence": [
+        "prototype revision, intended use, product configuration, and claims boundary",
+        "mechanical, electrical, firmware, component, and assembly sources",
+        "calibrated nominal, boundary, and failure measurements",
+        "hazard analysis, known defects, unproven assumptions, and human-use boundary"
+      ]
+    },
+    {
+      "id": "manufacturing-readiness-boundary",
+      "statement": "Manufacturing Readiness produces enough evidence for an independent readiness decision. The possible decisions are ready, repair-required, no-go.",
+      "level": "required",
+      "failureModes": [
+        "missing evidence for the declared outcome",
+        "decision made from assumptions or unverified claims"
+      ],
+      "requiredEvidence": [
+        "evidence baseline",
+        "independent review",
+        "decision record"
+      ]
+    }
+  ]
 }

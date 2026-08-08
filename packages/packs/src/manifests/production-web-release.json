@@ -70,20 +70,24 @@
       "reviewUrl": "https://github.com/vercel-labs/agent-skills/tree/f8a72b9603728bb92a217a879b7e62e43ad76c81/skills/deploy-to-vercel"
     }
   ],
-  "plugins": [
+  "expectations": [
     {
-      "id": "sites",
-      "name": "OpenAI Sites",
-      "role": "Build, version, deploy, and inspect an MVP website without a separate hosting-provider signup",
-      "provider": "OpenAI",
-      "invocation": "@sites",
-      "skills": [
-        "sites-building",
-        "sites-hosting"
-      ],
-      "reviewedVersion": "0.1.30",
-      "docsUrl": "https://developers.openai.com/codex/plugins",
-      "availability": "Optional: use only when the Sites plugin is available in the current Codex workspace."
+      "id": "pinned-release-candidate",
+      "statement": "The candidate revision, provider target, deployment method, environment assumptions, and known risks are explicit before promotion is considered.",
+      "failureModes": ["Unpinned or ambiguous candidate", "Target or migration risk left unspecified"],
+      "requiredEvidence": ["Immutable revision", "Provider preflight", "Risk register"]
+    },
+    {
+      "id": "preview-and-rollback",
+      "statement": "A fresh reviewer can smoke-test the preview and the rollback path is tested or the release is recorded as no-go.",
+      "failureModes": ["Preview not exercised", "Rollback plan is only prose"],
+      "requiredEvidence": ["Browser smoke report", "Rollback test or no-go decision"]
+    },
+    {
+      "id": "production-approval",
+      "statement": "Production promotion occurs only after exact approval naming the target, candidate, method, risks, and rollback boundary.",
+      "failureModes": ["Pack selection treated as authorization", "Unapproved production mutation"],
+      "requiredEvidence": ["Exact approval or explicit no-go", "Post-action smoke evidence when approved"]
     }
   ],
   "workstreams": [

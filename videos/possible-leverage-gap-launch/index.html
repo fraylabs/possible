@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=1920, height=1080">
+    <meta name="description" content="Possible reveals the larger world of things Codex can make and makes each possibility ready to run.">
+    <title>Possible — The world inside Codex</title>
+    <style>
+      @font-face {
+        font-family: "Geist";
+        src: url("assets/geist-latin.woff2") format("woff2");
+        font-style: normal;
+        font-weight: 100 900;
+        font-display: swap;
+      }
+
+      @font-face {
+        font-family: "Geist Mono";
+        src: url("assets/geist-mono-latin.woff2") format("woff2");
+        font-style: normal;
+        font-weight: 100 900;
+        font-display: swap;
+      }
+
+      :root {
+        --paper: #f4f1e9;
+        --paper-deep: #e8e2d6;
+        --ink: #171715;
+        --muted: #69645d;
+        --line: rgba(23, 23, 21, .18);
+        --orange: #c83c00;
+        --orange-soft: #f2c8b5;
+        --green: #607532;
+        --green-soft: #dce7bf;
+        --blue: #326fa8;
+        --blue-soft: #cedfee;
+        --shadow: 0 24px 70px rgba(23, 23, 21, .14);
+      }
+
+      * { box-sizing: border-box; }
+
+      html,
+      body {
+        width: 1920px;
+        height: 1080px;
+        margin: 0;
+        overflow: hidden;
+        background: var(--paper);
+        color: var(--ink);
+        font-family: "Geist", sans-serif;
+      }
+
+      body { -webkit-font-smoothing: antialiased; }
+
+      #root {
+        position: relative;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+      }
+
+      .base-paper {
+        position: absolute;
+        inset: 0;
+        background: var(--paper);
+      }
+
+      .base-paper::before {
+        position: absolute;
+        inset: 0;
+        content: "";
+        opacity: .52;
+        background-image:
+          linear-gradient(to right, transparent calc(25% - 1px), var(--line) 25%, transparent calc(25% + 1px), transparent calc(75% - 1px), var(--line) 75%, transparent calc(75% + 1px)),
+          linear-gradient(to bottom, transparent calc(25% - 1px), var(--line) 25%, transparent calc(25% + 1px), transparent calc(75% - 1px), var(--line) 75%, transparent calc(75% + 1px));
+      }
+
+      .base-paper::after {
+        position: absolute;
+        inset: 0;
+        content: "";
+        opacity: .075;
+        background-image: radial-gradient(rgba(23, 23, 21, .68) .55px, transparent .55px);
+        background-size: 5px 5px;
+        mix-blend-mode: multiply;
+      }
+
+      .scene {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+      }
+
+      .scene-fill {
+        position: absolute;
+        inset: 0;
+        background: var(--paper);
+      }
+
+      .scene-fill::after {
+        position: absolute;
+        inset: 0;
+        content: "";
+        opacity: .34;
+        background-image:
+          linear-gradient(to right, transparent calc(25% - 1px), var(--line) 25%, transparent calc(25% + 1px), transparent calc(75% - 1px), var(--line) 75%, transparent calc(75% + 1px)),
+          linear-gradient(to bottom, transparent calc(25% - 1px), var(--line) 25%, transparent calc(25% + 1px), transparent calc(75% - 1px), var(--line) 75%, transparent calc(75% + 1px));
+      }
+
+      .topline {
+        position: absolute;
+        top: 54px;
+        left: 78px;
+        right: 78px;
+        z-index: 8;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: var(--muted);
+        font: 700 18px/1 "Geist Mono", monospace;
+        letter-spacing: .14em;
+        text-transform: uppercase;
+      }
+
+      .topline strong { color: var(--ink); font-weight: 700; }
+      .topline strong span { color: var(--orange); }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 14px;
+        color: var(--orange);
+        font: 700 20px/1 "Geist Mono", monospace;
+        letter-spacing: .12em;
+        text-transform: uppercase;
+      }
+
+      .eyebrow::before {
+        display: block;
+        width: 11px;
+        height: 11px;
+        content: "";
+        border-radius: 50%;
+        background: currentColor;
+      }
+
+      h1,
+      h2,
+      h3,
+      p { margin: 0; }
+
+      h1,
+      h2,
+      h3 { font-weight: 520; letter-spacing: -.067em; }
+
+      .display-line { display: block; }
+      .orange { color: var(--orange); }
+      .green { color: var(--green); }
+      .blue { color: var(--blue); }
+
+      .lede {
+        color: var(--muted);
+        font-size: 30px;
+        line-height: 1.34;
+        letter-spacing: -.027em;
+      }
+
+      .mono {
+        font-family: "Geist Mono", monospace;
+        letter-spacing: .06em;
+        text-transform: uppercase;
+      }
+
+      /* 01 — start inside the familiar crop. */
+      .scene-code { animation: scene-code 5.5s 0s both; }
+      .code-copy { position: absolute; top: 190px; left: 138px; z-index: 4; width: 960px; }
+      .code-copy .eyebrow { animation: slide-right .65s .18s both; }
+      .code-copy h1 { margin-top: 34px; font-size: 132px; line-height: 1.1; animation: rise .88s .32s both; }
+      .code-copy .lede { width: 660px; margin-top: 42px; animation: fade .7s .86s both; }
+      .code-window {
+        position: absolute;
+        top: 225px;
+        right: 120px;
+        width: 600px;
+        height: 590px;
+        border: 3px solid var(--ink);
+        background: var(--paper);
+        box-shadow: 18px 18px 0 var(--orange-soft), var(--shadow);
+        animation: code-window-in 1s .46s both, code-window-breathe 3.2s 1.5s 1 both;
+      }
+      .window-bar { display: flex; align-items: center; height: 72px; padding: 0 27px; border-bottom: 3px solid var(--ink); }
+      .window-dots { display: flex; gap: 12px; }
+      .window-dots i { display: block; width: 14px; height: 14px; border: 2px solid var(--ink); border-radius: 50%; }
+      .window-dots i:first-child { background: var(--orange); border-color: var(--orange); }
+      .window-title { margin-left: auto; color: var(--muted); font: 700 15px/1 "Geist Mono", monospace; letter-spacing: .12em; text-transform: uppercase; }
+      .code-lines { display: grid; gap: 27px; padding: 75px 58px; }
+      .code-lines span { display: block; height: 14px; background: var(--ink); transform-origin: left center; animation: code-line 1s both; }
+      .code-lines span:nth-child(1) { width: 56%; animation-delay: 1s; }
+      .code-lines span:nth-child(2) { width: 84%; background: var(--blue); animation-delay: 1.12s; }
+      .code-lines span:nth-child(3) { width: 68%; animation-delay: 1.24s; }
+      .code-lines span:nth-child(4) { width: 91%; background: var(--orange); animation-delay: 1.36s; }
+      .code-lines span:nth-child(5) { width: 49%; animation-delay: 1.48s; }
+      .code-lines span:nth-child(6) { width: 73%; animation-delay: 1.6s; }
+      .code-label { position: absolute; right: 32px; bottom: 28px; color: var(--muted); font: 700 16px/1 "Geist Mono", monospace; letter-spacing: .1em; text-transform: uppercase; animation: fade .6s 1.72s both; }
+      .crop-corner { position: absolute; width: 46px; height: 46px; border-color: var(--orange); border-style: solid; animation: corner-pulse 2.4s 2s 1 both; }
+      .crop-a { top: 160px; right: 76px; border-width: 4px 4px 0 0; }
+      .crop-b { right: 76px; bottom: 220px; border-width: 0 4px 4px 0; }
+      .code-note { position: absolute; right: 122px; bottom: 110px; color: var(--muted); font: 700 16px/1 "Geist Mono", monospace; letter-spacing: .11em; text-transform: uppercase; animation: fade .6s 2.2s both; }
+
+      /* 02 — pull back and reveal the capability world. */
+      .scene-world { animation: scene-world 9.4s 5.2s both; }
+      .world-copy { position: absolute; top: 150px; left: 112px; z-index: 5; width: 670px; }
+      .world-copy .eyebrow { color: var(--blue); animation: slide-right .65s 5.46s both; }
+      .world-copy h2 { margin-top: 30px; font-size: 101px; line-height: 1.13; animation: rise .82s 5.62s both; }
+      .world-copy .lede { width: 605px; margin-top: 33px; animation: fade .68s 6.02s both; }
+      .world-copy .world-summary { margin-top: 44px; color: var(--ink); font: 700 18px/1.5 "Geist Mono", monospace; letter-spacing: .09em; text-transform: uppercase; animation: slide-right .65s 6.34s both; }
+      .world-stage { position: absolute; top: 130px; right: 55px; width: 1080px; height: 850px; animation: world-drift 7.8s 6.1s both; }
+      .capability {
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 24px 27px;
+        border: 2px solid var(--ink);
+        background: var(--paper);
+        box-shadow: 10px 10px 0 rgba(23, 23, 21, .08);
+        opacity: 0;
+        animation: capability-out .78s both;
+      }
+      .capability strong { font-size: 27px; font-weight: 560; letter-spacing: -.045em; }
+      .capability small { color: var(--muted); font: 700 14px/1 "Geist Mono", monospace; letter-spacing: .1em; text-transform: uppercase; }
+      .capability-code { top: 277px; left: 370px; width: 260px; height: 210px; border-color: var(--orange); animation-delay: 5.35s; }
+      .capability-cad { top: 25px; left: 80px; width: 280px; height: 220px; animation-delay: 5.82s; }
+      .capability-game { top: 10px; left: 402px; width: 245px; height: 190px; animation-delay: 6.02s; }
+      .capability-slides { top: 48px; right: 80px; width: 275px; height: 212px; animation-delay: 6.22s; }
+      .capability-video { top: 270px; right: 40px; width: 350px; height: 235px; border-color: var(--blue); animation-delay: 6.42s; }
+      .capability-web { top: 535px; right: 85px; width: 330px; height: 215px; animation-delay: 6.62s; }
+      .capability-infra { top: 560px; left: 10px; width: 310px; height: 205px; animation-delay: 6.82s; }
+      .capability-motion { top: 555px; left: 370px; width: 280px; height: 235px; animation-delay: 7.02s; }
+      .capability-more { top: 365px; left: 15px; width: 250px; height: 155px; border-style: dashed; animation-delay: 7.22s; }
+      .capability-more strong { color: var(--green); font-size: 42px; }
+      .mini { position: relative; width: 100%; height: 92px; }
+      .mini-code span { display: block; width: 72%; height: 9px; margin: 13px 0; background: var(--ink); }
+      .mini-code span:nth-child(2) { width: 48%; background: var(--orange); }
+      .mini-cad::before { position: absolute; top: 17px; left: 76px; width: 66px; height: 66px; content: ""; border: 3px solid var(--blue); transform: rotate(30deg) skewY(-14deg); }
+      .mini-cad::after { position: absolute; top: 49px; left: 49px; width: 122px; height: 2px; content: ""; background: var(--ink); transform: rotate(-26deg); }
+      .mini-game { display: grid; grid-template-columns: repeat(5, 20px); grid-auto-rows: 20px; gap: 7px; align-content: center; justify-content: center; }
+      .mini-game i { display: block; background: var(--ink); }
+      .mini-game i:nth-child(2), .mini-game i:nth-child(5), .mini-game i:nth-child(7) { background: var(--green); }
+      .mini-slides::before, .mini-slides::after { position: absolute; width: 120px; height: 72px; content: ""; border: 3px solid var(--ink); background: var(--paper); }
+      .mini-slides::before { top: 2px; left: 34px; transform: rotate(-5deg); }
+      .mini-slides::after { top: 14px; left: 75px; border-color: var(--orange); transform: rotate(4deg); }
+      .mini-video { display: grid; gap: 10px; align-content: center; }
+      .mini-video span { display: block; height: 13px; background: var(--blue); }
+      .mini-video span:nth-child(1) { width: 92%; }
+      .mini-video span:nth-child(2) { width: 66%; margin-left: 18%; background: var(--orange); }
+      .mini-video span:nth-child(3) { width: 44%; margin-left: 6%; background: var(--ink); }
+      .mini-web { border: 3px solid var(--ink); }
+      .mini-web::before { position: absolute; top: 0; left: 0; right: 0; height: 21px; content: ""; border-bottom: 3px solid var(--ink); background: var(--blue-soft); }
+      .mini-web::after { position: absolute; top: 40px; left: 25px; width: 58%; height: 27px; content: ""; background: var(--orange); }
+      .mini-infra { display: grid; gap: 12px; align-content: center; }
+      .mini-infra span { display: block; height: 20px; border: 3px solid var(--ink); background: var(--green-soft); }
+      .mini-infra span::after { float: right; width: 9px; height: 9px; margin: 3px 8px; content: ""; border-radius: 50%; background: var(--green); }
+      .mini-motion::before, .mini-motion::after { position: absolute; top: 7px; left: 62px; width: 80px; height: 80px; content: ""; border: 3px solid var(--orange); border-radius: 50%; }
+      .mini-motion::after { top: 23px; left: 78px; width: 48px; height: 48px; border-color: var(--blue); }
+
+      /* 03 — expose the awareness gap without jargon. */
+      .scene-gap { animation: scene-gap 6.5s 14.3s both; }
+      .gap-copy { position: absolute; top: 138px; left: 128px; z-index: 4; }
+      .gap-copy .eyebrow { animation: slide-right .6s 14.52s both; }
+      .gap-copy h2 { width: 1330px; margin-top: 29px; font-size: 92px; line-height: 1.03; animation: rise .8s 14.68s both; }
+      .gap-copy .lede { width: 800px; margin-top: 29px; animation: fade .64s 15.1s both; }
+      .views { position: absolute; top: 520px; left: 128px; right: 128px; height: 365px; display: grid; grid-template-columns: 1fr 1.42fr; gap: 34px; }
+      .view-card { position: relative; overflow: hidden; border: 3px solid var(--ink); background: var(--paper); box-shadow: 12px 12px 0 rgba(23, 23, 21, .075); opacity: 0; }
+      .view-small { animation: view-left .75s 15.4s both; }
+      .view-wide { border-color: var(--orange); animation: view-right .9s 15.62s both; }
+      .view-head { position: absolute; top: 24px; left: 28px; right: 28px; display: flex; justify-content: space-between; align-items: center; color: var(--muted); font: 700 15px/1 "Geist Mono", monospace; letter-spacing: .1em; text-transform: uppercase; }
+      .view-head b { color: var(--ink); font-size: 21px; }
+      .view-small .single-code { position: absolute; top: 107px; left: 153px; width: 270px; height: 160px; border: 3px solid var(--ink); background: var(--paper); box-shadow: 9px 9px 0 var(--orange-soft); }
+      .single-code::before { position: absolute; top: 38px; left: 35px; width: 170px; height: 11px; content: ""; background: var(--ink); box-shadow: 0 27px 0 var(--orange), 0 54px 0 var(--ink); }
+      .single-code::after { position: absolute; right: 20px; bottom: 16px; content: "CODE"; color: var(--muted); font: 700 13px/1 "Geist Mono", monospace; letter-spacing: .12em; }
+      .possibility-cloud { position: absolute; top: 86px; left: 34px; right: 34px; bottom: 32px; }
+      .possibility-cloud span { position: absolute; display: grid; place-items: center; padding: 0 21px; height: 60px; border: 2px solid var(--ink); background: var(--paper); color: var(--ink); font: 700 17px/1 "Geist Mono", monospace; letter-spacing: .07em; text-transform: uppercase; animation: cloud-breathe 2.6s both; }
+      .possibility-cloud span:nth-child(1) { top: 0; left: 30px; border-color: var(--blue); animation-delay: 16.2s; }
+      .possibility-cloud span:nth-child(2) { top: 22px; left: 246px; animation-delay: 16.28s; }
+      .possibility-cloud span:nth-child(3) { top: 0; right: 30px; border-color: var(--orange); animation-delay: 16.36s; }
+      .possibility-cloud span:nth-child(4) { top: 108px; left: 108px; animation-delay: 16.44s; }
+      .possibility-cloud span:nth-child(5) { top: 122px; left: 370px; border-color: var(--green); animation-delay: 16.52s; }
+      .possibility-cloud span:nth-child(6) { top: 103px; right: 14px; animation-delay: 16.6s; }
+      .possibility-cloud span:nth-child(7) { bottom: 0; left: 216px; border-color: var(--orange); animation-delay: 16.68s; }
+      .possibility-cloud span:nth-child(8) { bottom: 3px; right: 65px; border-style: dashed; animation-delay: 16.76s; }
+      .same-model { position: absolute; left: 0; right: 0; bottom: 65px; text-align: center; color: var(--muted); font: 700 16px/1 "Geist Mono", monospace; letter-spacing: .12em; text-transform: uppercase; animation: fade .6s 17.2s both; }
+      .same-model b { color: var(--orange); }
+
+      /* 04 — organize the world into Possible without connecting the packs. */
+      .scene-possible { animation: scene-possible 9s 20.5s both; }
+      .possible-copy { position: absolute; top: 132px; left: 128px; z-index: 5; width: 1180px; }
+      .possible-copy .eyebrow { animation: slide-right .62s 20.74s both; }
+      .possible-copy h2 { margin-top: 30px; font-size: 101px; line-height: 1.01; animation: rise .82s 20.9s both; }
+      .possible-copy .lede { width: 850px; margin-top: 28px; animation: fade .66s 21.32s both; }
+      .library { position: absolute; top: 500px; left: 128px; right: 128px; height: 405px; display: grid; grid-template-columns: 1.15fr .9fr 1.2fr; grid-template-rows: 1fr 1fr; gap: 20px; animation: library-breathe 6.8s 22.5s both; }
+      .library-card { position: relative; display: flex; flex-direction: column; justify-content: space-between; padding: 25px 28px; border: 2px solid var(--ink); background: var(--paper); box-shadow: 8px 8px 0 rgba(23, 23, 21, .075); opacity: 0; animation: library-card-in .7s both; }
+      .library-card:nth-child(1) { animation-delay: 21.74s; }
+      .library-card:nth-child(2) { animation-delay: 21.9s; }
+      .library-card:nth-child(3) { animation-delay: 22.06s; }
+      .library-card:nth-child(4) { animation-delay: 22.22s; }
+      .library-card:nth-child(5) { border-color: var(--orange); animation-delay: 22.38s; }
+      .library-card:nth-child(6) { border-style: dashed; animation-delay: 22.54s; }
+      .library-card span { color: var(--muted); font: 700 14px/1 "Geist Mono", monospace; letter-spacing: .11em; text-transform: uppercase; }
+      .library-card strong { max-width: 420px; font-size: 30px; font-weight: 560; line-height: 1.05; letter-spacing: -.045em; }
+      .library-card i { position: absolute; top: 22px; right: 23px; display: block; width: 15px; height: 15px; border: 2px solid currentColor; border-radius: 50%; color: var(--muted); }
+      .library-card:nth-child(5) i { color: var(--orange); background: var(--orange); }
+      .library-note { position: absolute; right: 134px; bottom: 66px; color: var(--muted); font: 700 15px/1 "Geist Mono", monospace; letter-spacing: .1em; text-transform: uppercase; animation: fade .6s 23.1s both; }
+
+      /* 05 — one independent pack unfolds into something runnable. */
+      .scene-pack { animation: scene-pack 8.5s 29.2s both; }
+      .pack-copy { position: absolute; top: 144px; left: 128px; z-index: 5; width: 700px; }
+      .pack-copy .eyebrow { color: var(--green); animation: slide-right .62s 29.44s both; }
+      .pack-copy h2 { margin-top: 30px; font-size: 96px; line-height: 1.01; animation: rise .82s 29.6s both; }
+      .pack-copy .lede { width: 610px; margin-top: 34px; animation: fade .66s 30.02s both; }
+      .pack-copy .plain-proof { display: grid; gap: 8px; margin-top: 42px; color: var(--ink); font: 700 18px/1.15 "Geist Mono", monospace; letter-spacing: .08em; text-transform: uppercase; animation: slide-right .65s 30.34s both; }
+      .pack-copy .plain-proof span { display: block; }
+      .pack-board { position: absolute; top: 140px; right: 95px; width: 970px; height: 790px; }
+      .pack-shell { position: absolute; inset: 0; border: 3px solid var(--ink); background: var(--paper); box-shadow: 16px 16px 0 var(--green-soft), var(--shadow); animation: pack-shell-in .88s 29.48s both; }
+      .pack-header { position: absolute; top: 0; left: 0; right: 0; height: 132px; display: flex; align-items: center; padding: 0 38px; border-bottom: 3px solid var(--ink); }
+      .pack-header .pack-number { display: grid; place-items: center; width: 54px; height: 54px; margin-right: 23px; border-radius: 50%; background: var(--orange); color: var(--paper); font: 700 17px/1 "Geist Mono", monospace; }
+      .pack-header strong { font-size: 36px; font-weight: 560; letter-spacing: -.045em; }
+      .pack-header small { margin-left: auto; color: var(--muted); font: 700 14px/1 "Geist Mono", monospace; letter-spacing: .1em; text-transform: uppercase; }
+      .pack-parts { position: absolute; top: 165px; left: 34px; right: 34px; display: grid; gap: 18px; }
+      .pack-part { position: relative; display: grid; grid-template-columns: 78px 1fr 205px; align-items: center; min-height: 118px; padding: 19px 25px; border: 2px solid var(--ink); background: var(--paper); opacity: 0; animation: part-in .68s both; }
+      .pack-part:nth-child(1) { animation-delay: 30.24s; }
+      .pack-part:nth-child(2) { animation-delay: 30.48s; }
+      .pack-part:nth-child(3) { animation-delay: 30.72s; }
+      .pack-part b { color: var(--orange); font: 700 28px/1 "Geist Mono", monospace; }
+      .pack-part strong { font-size: 27px; font-weight: 560; letter-spacing: -.04em; }
+      .pack-part span { justify-self: end; color: var(--muted); font: 700 13px/1.3 "Geist Mono", monospace; letter-spacing: .09em; text-align: right; text-transform: uppercase; }
+      .pack-result { position: absolute; left: 34px; right: 34px; bottom: 34px; height: 176px; display: grid; grid-template-columns: 1fr 215px; align-items: center; padding: 28px 32px; border: 3px solid var(--green); background: var(--green-soft); opacity: 0; animation: result-in .9s 31.22s both; }
+      .pack-result small { display: block; color: #596d2e; font: 700 14px/1 "Geist Mono", monospace; letter-spacing: .11em; text-transform: uppercase; }
+      .pack-result strong { display: block; margin-top: 15px; font-size: 36px; font-weight: 560; letter-spacing: -.045em; }
+      .mp4-tile { display: grid; place-items: center; width: 190px; height: 108px; border: 3px solid var(--green); background: var(--paper); color: var(--green); font: 700 24px/1 "Geist Mono", monospace; box-shadow: 8px 8px 0 rgba(96, 117, 50, .18); animation: mp4-breathe 4.5s 31.9s both; }
+
+      /* 06 — resolve on discovery, not mechanics. */
+      .scene-final { animation: scene-final 6.6s 37.4s both; }
+      .final-mark { position: absolute; top: 108px; left: 130px; display: flex; align-items: center; gap: 18px; color: var(--ink); font: 700 20px/1 "Geist Mono", monospace; letter-spacing: .14em; text-transform: uppercase; animation: slide-right .65s 37.66s both; }
+      .final-mark i { display: block; width: 18px; height: 18px; border-radius: 50%; background: var(--orange); }
+      .final-copy { position: absolute; top: 296px; left: 130px; z-index: 5; }
+      .final-copy h2 { width: 1230px; font-size: 128px; line-height: 1.1; animation: rise .9s 37.84s both; }
+      .final-copy .lede { width: 800px; margin-top: 40px; animation: fade .68s 38.34s both; }
+      .final-meta { position: absolute; left: 132px; bottom: 102px; display: flex; align-items: center; gap: 28px; animation: slide-right .65s 38.72s both; }
+      .final-meta strong { font: 700 26px/1 "Geist Mono", monospace; letter-spacing: .02em; }
+      .final-meta i { display: block; width: 112px; height: 3px; background: var(--orange); transform-origin: left center; animation: final-line 5s 38.9s both; }
+      .final-meta span { color: var(--muted); font: 700 18px/1 "Geist Mono", monospace; letter-spacing: .1em; text-transform: uppercase; }
+      .final-orbit { position: absolute; top: 150px; right: 70px; width: 730px; height: 730px; animation: final-orbit-drift 6s 37.8s both; }
+      .orbit-ring { position: absolute; inset: 92px; border: 2px solid var(--line); border-radius: 50%; }
+      .orbit-ring::before { position: absolute; inset: 74px; content: ""; border: 2px dashed rgba(200, 60, 0, .42); border-radius: 50%; }
+      .orbit-center { position: absolute; top: 326px; left: 326px; width: 78px; height: 78px; display: grid; place-items: center; border-radius: 50%; background: var(--orange); color: var(--paper); font: 700 17px/1 "Geist Mono", monospace; box-shadow: 0 0 0 20px rgba(200, 60, 0, .13); animation: center-pulse 4.8s 38.4s both; }
+      .orbit-word { position: absolute; display: grid; place-items: center; height: 54px; padding: 0 20px; border: 2px solid var(--ink); background: var(--paper); font: 700 15px/1 "Geist Mono", monospace; letter-spacing: .08em; text-transform: uppercase; opacity: 0; animation: orbit-word-in .7s both; }
+      .orbit-word:nth-of-type(1) { top: 60px; left: 275px; border-color: var(--blue); animation-delay: 38.08s; }
+      .orbit-word:nth-of-type(2) { top: 190px; right: 18px; animation-delay: 38.2s; }
+      .orbit-word:nth-of-type(3) { right: 25px; bottom: 175px; border-color: var(--green); animation-delay: 38.32s; }
+      .orbit-word:nth-of-type(4) { bottom: 55px; left: 270px; border-color: var(--orange); animation-delay: 38.44s; }
+      .orbit-word:nth-of-type(5) { left: 10px; bottom: 190px; animation-delay: 38.56s; }
+      .orbit-word:nth-of-type(6) { top: 190px; left: 5px; animation-delay: 38.68s; }
+
+      /* 07 — the soundtrack becomes one final proof of the promise. */
+      .scene-music { z-index: 12; animation: scene-music 11.5s 43.5s both; }
+      .music-copy { position: absolute; top: 150px; left: 118px; z-index: 5; width: 1040px; }
+      .music-copy .eyebrow { color: var(--green); animation: slide-right .48s 43.66s both; }
+      .music-copy h2 { margin-top: 34px; font-size: 88px; line-height: 1.02; }
+      .music-copy h2 .music-line { display: block; opacity: 0; animation: music-line-in .36s both; }
+      .music-copy h2 .music-line:nth-child(1) { animation-delay: 43.78s; }
+      .music-copy h2 .music-line:nth-child(2) { animation-delay: 43.92s; }
+      .music-copy h2 .music-line:nth-child(3) { animation-delay: 44.06s; }
+      .music-copy .lede { width: 820px; margin-top: 34px; animation: fade .55s 44.34s both; }
+      .music-meta { position: absolute; left: 120px; bottom: 92px; display: flex; align-items: center; gap: 22px; color: var(--muted); font: 700 16px/1 "Geist Mono", monospace; letter-spacing: .1em; text-transform: uppercase; animation: slide-right .55s 44.58s both; }
+      .music-meta i { display: block; width: 86px; height: 3px; background: var(--green); }
+      .music-card { position: absolute; top: 128px; right: 88px; width: 590px; height: 824px; padding: 42px; border: 3px solid var(--ink); background: var(--paper); box-shadow: 16px 16px 0 var(--blue-soft), var(--shadow); animation: music-card-in .65s 43.66s both; }
+      .music-card-head { display: flex; justify-content: space-between; align-items: flex-start; padding-bottom: 30px; border-bottom: 2px solid var(--ink); }
+      .music-card-head span { color: var(--green); font: 700 14px/1 "Geist Mono", monospace; letter-spacing: .11em; text-transform: uppercase; }
+      .music-card-head b { font: 700 17px/1 "Geist Mono", monospace; letter-spacing: .07em; text-transform: uppercase; }
+      .music-title { margin-top: 44px; }
+      .music-title small { display: block; color: var(--muted); font: 700 14px/1 "Geist Mono", monospace; letter-spacing: .11em; text-transform: uppercase; }
+      .music-title strong { display: block; margin-top: 14px; font-size: 48px; font-weight: 560; letter-spacing: -.055em; }
+      .music-wave { position: relative; display: flex; align-items: center; justify-content: space-between; height: 240px; margin-top: 54px; padding: 0 10px; border-top: 2px solid var(--line); border-bottom: 2px solid var(--line); }
+      .music-wave::after { position: absolute; top: 50%; left: 0; right: 0; height: 2px; content: ""; background: rgba(23, 23, 21, .12); }
+      .music-wave i { position: relative; z-index: 2; display: block; width: 12px; height: var(--h); border-radius: 10px; background: var(--orange); transform-origin: center; animation: music-bar-in .42s calc(44.3s + var(--d)) both, music-bar-breathe 9.4s calc(44.76s + var(--d)) 1 both; }
+      .music-wave i:nth-child(3n) { background: var(--green); }
+      .music-wave i:nth-child(4n) { background: var(--blue); }
+      .music-process { display: grid; gap: 13px; margin-top: 38px; }
+      .music-process span { display: flex; align-items: center; min-height: 46px; padding: 0 15px; border: 2px solid var(--ink); color: var(--muted); font: 700 13px/1 "Geist Mono", monospace; letter-spacing: .08em; text-transform: uppercase; opacity: 0; animation: process-in .36s both; }
+      .music-process span:nth-child(1) { animation-delay: 44.28s; }
+      .music-process span:nth-child(2) { animation-delay: 44.42s; }
+      .music-process span:nth-child(3) { color: var(--green); border-color: var(--green); background: var(--green-soft); animation-delay: 44.56s; }
+
+      @keyframes scene-code { 0%, 2% { opacity: 1; } 8%, 91% { opacity: 1; } 100% { opacity: 0; } }
+      @keyframes scene-world { 0%, 2% { opacity: 0; } 7%, 94% { opacity: 1; } 100% { opacity: 0; } }
+      @keyframes scene-gap { 0%, 2% { opacity: 0; } 8%, 93% { opacity: 1; } 100% { opacity: 0; } }
+      @keyframes scene-possible { 0%, 2% { opacity: 0; } 7%, 94% { opacity: 1; } 100% { opacity: 0; } }
+      @keyframes scene-pack { 0%, 2% { opacity: 0; } 8%, 94% { opacity: 1; } 100% { opacity: 0; } }
+      @keyframes scene-final { 0%, 2% { opacity: 0; transform: scale(1); } 9%, 82% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(.94); } }
+      @keyframes scene-music { 0%, 1% { opacity: 0; transform: scale(.965); } 5%, 100% { opacity: 1; transform: scale(1); } }
+      @keyframes slide-right { from { opacity: 0; transform: translateX(-44px); } to { opacity: 1; transform: translateX(0); } }
+      @keyframes rise { from { opacity: 0; transform: translateY(46px); } to { opacity: 1; transform: translateY(0); } }
+      @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+      @keyframes code-window-in { from { opacity: 0; transform: translateX(90px) rotate(2deg) scale(.93); } to { opacity: 1; transform: translateX(0) rotate(0) scale(1); } }
+      @keyframes code-window-breathe { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+      @keyframes code-line { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+      @keyframes corner-pulse { 0%, 100% { opacity: .35; transform: scale(.88); } 50% { opacity: 1; transform: scale(1.08); } }
+      @keyframes capability-out { from { opacity: 0; transform: translate(var(--from-x, 0), var(--from-y, 0)) scale(.32) rotate(var(--from-r, 0deg)); } to { opacity: 1; transform: translate(0, 0) scale(1) rotate(var(--to-r, 0deg)); } }
+      @keyframes world-drift { 0%, 100% { transform: translateY(0) scale(.99); } 46% { transform: translateY(-10px) scale(1); } 72% { transform: translateY(4px) scale(1.006); } }
+      @keyframes view-left { from { opacity: 0; transform: translateX(-60px); } to { opacity: 1; transform: translateX(0); } }
+      @keyframes view-right { from { opacity: 0; transform: translateX(70px) scale(.96); } to { opacity: 1; transform: translateX(0) scale(1); } }
+      @keyframes cloud-breathe { 0% { opacity: 0; transform: scale(.82); } 28% { opacity: 1; transform: scale(1.04); } 100% { opacity: 1; transform: scale(1); } }
+      @keyframes library-card-in { from { opacity: 0; transform: translateY(42px) scale(.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
+      @keyframes library-breathe { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-9px); } }
+      @keyframes pack-shell-in { from { opacity: 0; transform: translateX(80px) scale(.95); } to { opacity: 1; transform: translateX(0) scale(1); } }
+      @keyframes part-in { from { opacity: 0; transform: translateX(52px); } to { opacity: 1; transform: translateX(0); } }
+      @keyframes result-in { from { opacity: 0; transform: translateY(46px) scale(.97); } to { opacity: 1; transform: translateY(0) scale(1); } }
+      @keyframes mp4-breathe { 0%, 100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-8px) rotate(1deg); } }
+      @keyframes final-line { 0% { transform: scaleX(.2); } 42% { transform: scaleX(1); } 100% { transform: scaleX(.68); } }
+      @keyframes final-orbit-drift { 0%, 100% { transform: rotate(-2deg) scale(.985); } 52% { transform: rotate(2deg) scale(1.015); } }
+      @keyframes center-pulse { 0%, 100% { transform: scale(.95); } 45% { transform: scale(1.08); } }
+      @keyframes orbit-word-in { from { opacity: 0; transform: scale(.72); } to { opacity: 1; transform: scale(1); } }
+      @keyframes music-line-in { from { opacity: 0; transform: translateY(62px); } to { opacity: 1; transform: translateY(0); } }
+      @keyframes music-card-in { from { opacity: 0; transform: translateX(70px) scale(.9); } 74% { opacity: 1; transform: translateX(0) scale(1.025); } to { opacity: 1; transform: translateX(0) scale(1); } }
+      @keyframes music-bar-in { from { opacity: 0; transform: scaleY(.08); } to { opacity: 1; transform: scaleY(1); } }
+      @keyframes music-bar-breathe { 0%, 100% { transform: scaleY(1); } 38% { transform: scaleY(.62); } 72% { transform: scaleY(1.12); } }
+      @keyframes process-in { from { opacity: 0; transform: translateX(34px); } to { opacity: 1; transform: translateX(0); } }
+
+      .capability-cad { --from-x: 290px; --from-y: 280px; --from-r: -18deg; --to-r: -2deg; }
+      .capability-game { --from-x: 70px; --from-y: 330px; --from-r: 12deg; --to-r: 1deg; }
+      .capability-slides { --from-x: -260px; --from-y: 280px; --from-r: 18deg; --to-r: 2deg; }
+      .capability-video { --from-x: -310px; --from-y: 40px; --from-r: 12deg; --to-r: -1deg; }
+      .capability-web { --from-x: -260px; --from-y: -220px; --from-r: -14deg; --to-r: 1deg; }
+      .capability-infra { --from-x: 360px; --from-y: -250px; --from-r: 16deg; --to-r: -1deg; }
+      .capability-motion { --from-x: 80px; --from-y: -280px; --from-r: -16deg; --to-r: 2deg; }
+      .capability-more { --from-x: 360px; --from-y: 0; --from-r: 8deg; --to-r: -2deg; }
+
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after {
+          animation-duration: .001ms !important;
+          animation-delay: 0ms !important;
+          animation-iteration-count: 1 !important;
+          scroll-behavior: auto !important;
+        }
+      }
+
+      @media (max-width: 1100px) {
+        html, body { width: 100vw; height: 100vh; }
+        #root { transform: scale(.56); transform-origin: top left; }
+      }
+      @media (max-width: 800px) { #root { transform: scale(.4); } }
+      @media (max-width: 620px) { #root { transform: scale(.31); } }
+    </style>
+  </head>
+  <body>
+    <main data-hf-id="hf-bxwa" id="root" data-composition-id="possible-leverage-gap-launch" data-no-timeline="" data-start="0" data-duration="55" data-width="1920" data-height="1080">
+      <div data-hf-id="hf-kr3n" class="base-paper" data-layout-ignore=""></div>
+      <audio data-hf-id="hf-jqkw" id="garden-window-soundtrack" src="assets/audio/garden-window.wav" data-start="0" data-duration="55" data-track-index="20" data-volume="1"></audio>
+
+      <section data-hf-id="hf-xb5i" id="scene-code" class="scene scene-code" aria-label="Codex is bigger than code">
+        <div data-hf-id="hf-cw5b" class="scene-fill" data-layout-ignore=""></div>
+        <div data-hf-id="hf-o5lv" class="topline"><strong data-hf-id="hf-wsjl">possible<span data-hf-id="hf-akpy">.sh</span></strong><span data-hf-id="hf-3hgg">01 / the familiar view</span></div>
+        <div data-hf-id="hf-dcjb" class="code-copy">
+          <p data-hf-id="hf-ujfn" class="eyebrow">What most people see</p>
+          <h1 data-hf-id="hf-m3fm"><span data-hf-id="hf-xqzn" class="display-line">Codex is bigger</span><span data-hf-id="hf-aec4" class="display-line orange">than code.</span></h1>
+          <p data-hf-id="hf-zclg" class="lede">Most people meet it as a coding agent. That is only the first possibility.</p>
+        </div>
+        <div data-hf-id="hf-dsrr" class="code-window" aria-hidden="true">
+          <div data-hf-id="hf-85t8" class="window-bar"><span data-hf-id="hf-38wu" class="window-dots"><i data-hf-id="hf-wt6k"></i><i data-hf-id="hf-zeb8"></i><i data-hf-id="hf-y7e5"></i></span><span data-hf-id="hf-npzs" class="window-title">one familiar view</span></div>
+          <div data-hf-id="hf-kbmp" class="code-lines"><span data-hf-id="hf-uckh"></span><span data-hf-id="hf-l73p"></span><span data-hf-id="hf-me0s"></span><span data-hf-id="hf-lzpr"></span><span data-hf-id="hf-n6mu"></span><span data-hf-id="hf-msbt"></span></div>
+          <span data-hf-id="hf-95q4" class="code-label">codex / code</span>
+        </div>
+        <span data-hf-id="hf-5w0q" class="crop-corner crop-a" aria-hidden="true"></span><span data-hf-id="hf-zqax" class="crop-corner crop-b" aria-hidden="true"></span>
+        <span data-hf-id="hf-83ni" class="code-note">the frame is about to get much bigger</span>
+      </section>
+
+      <section data-hf-id="hf-x6z1" id="scene-world" class="scene scene-world" aria-label="The world of things Codex can make">
+        <div data-hf-id="hf-fyrj" class="scene-fill" data-layout-ignore=""></div>
+        <div data-hf-id="hf-pz6r" class="topline"><strong data-hf-id="hf-jus5">possible<span data-hf-id="hf-7u22">.sh</span></strong><span data-hf-id="hf-gfv0">02 / the world inside Codex</span></div>
+        <div data-hf-id="hf-71om" class="world-copy">
+          <p data-hf-id="hf-91pb" class="eyebrow">Look again</p>
+          <h2 data-hf-id="hf-2l5r"><span data-hf-id="hf-qs4h" class="display-line">It can design,</span><span data-hf-id="hf-113t" class="display-line">build, animate,</span><span data-hf-id="hf-bla5" class="display-line blue">and ship.</span></h2>
+          <p data-hf-id="hf-l9jp" class="lede">The same Codex can become an entire set of creative and technical studios.</p>
+          <p data-hf-id="hf-w7kd" class="world-summary">one model / many possible outcomes</p>
+        </div>
+        <div data-hf-id="hf-oqni" class="world-stage" aria-hidden="true">
+          <article data-hf-id="hf-u4qv" class="capability capability-code"><div data-hf-id="hf-i70s" class="mini mini-code"><span data-hf-id="hf-nz8w"></span><span data-hf-id="hf-nkxv"></span><span data-hf-id="hf-ieyi"></span></div><strong data-hf-id="hf-mbvr">Code</strong><small data-hf-id="hf-v0w2">the familiar one</small></article>
+          <article data-hf-id="hf-njz0" class="capability capability-cad"><div data-hf-id="hf-3gwd" class="mini mini-cad"></div><strong data-hf-id="hf-05ke">CAD</strong><small data-hf-id="hf-6wpd">design for 3D printing</small></article>
+          <article data-hf-id="hf-f4di" class="capability capability-game"><div data-hf-id="hf-iu79" class="mini mini-game"><i data-hf-id="hf-ylp6"></i><i data-hf-id="hf-0l8b"></i><i data-hf-id="hf-0zjc"></i><i data-hf-id="hf-zsm9"></i><i data-hf-id="hf-06xa"></i><i data-hf-id="hf-26gf"></i><i data-hf-id="hf-2krg"></i><i data-hf-id="hf-oz7w"></i><i data-hf-id="hf-okwv"></i><i data-hf-id="hf-o6lu"></i></div><strong data-hf-id="hf-u6ip">Games</strong><small data-hf-id="hf-vyfv">playable worlds</small></article>
+          <article data-hf-id="hf-01fq" class="capability capability-slides"><div data-hf-id="hf-c28t" class="mini mini-slides"></div><strong data-hf-id="hf-o0dw">Slides</strong><small data-hf-id="hf-il5l">tell the story</small></article>
+          <article data-hf-id="hf-at3d" class="capability capability-video"><div data-hf-id="hf-uts4" class="mini mini-video"><span data-hf-id="hf-i0nh"></span><span data-hf-id="hf-1qzj"></span><span data-hf-id="hf-25ak"></span></div><strong data-hf-id="hf-bjwb">Launch videos</strong><small data-hf-id="hf-7pfk">motion + message</small></article>
+          <article data-hf-id="hf-s9i2" class="capability capability-web"><div data-hf-id="hf-wy7f" class="mini mini-web"></div><strong data-hf-id="hf-19jg">Websites</strong><small data-hf-id="hf-eutj">design + ship</small></article>
+          <article data-hf-id="hf-d1zm" class="capability capability-infra"><div data-hf-id="hf-8tsn" class="mini mini-infra"><span data-hf-id="hf-0ydh"></span><span data-hf-id="hf-1coi"></span><span data-hf-id="hf-3c7n"></span></div><strong data-hf-id="hf-y63p">Infrastructure</strong><small data-hf-id="hf-nceg">run the systems</small></article>
+          <article data-hf-id="hf-5h1i" class="capability capability-motion"><div data-hf-id="hf-ylqt" class="mini mini-motion"></div><strong data-hf-id="hf-pr6w">Animation</strong><small data-hf-id="hf-z9ur">ideas in motion</small></article>
+          <article data-hf-id="hf-56r7" class="capability capability-more"><strong data-hf-id="hf-9id8">+ more</strong><small data-hf-id="hf-cz92">a growing world</small></article>
+        </div>
+      </section>
+
+      <section data-hf-id="hf-ly3b" id="scene-gap" class="scene scene-gap" aria-label="The difference is knowing what is possible">
+        <div data-hf-id="hf-fkgi" class="scene-fill" data-layout-ignore=""></div>
+        <div data-hf-id="hf-pkvq" class="topline"><strong data-hf-id="hf-l1p8">possible<span data-hf-id="hf-88d3">.sh</span></strong><span data-hf-id="hf-3tzf">03 / the awareness gap</span></div>
+        <div data-hf-id="hf-37n2" class="gap-copy">
+          <p data-hf-id="hf-9rao" class="eyebrow">The real difference</p>
+          <h2 data-hf-id="hf-igvx">Same Codex. <span data-hf-id="hf-jlxv" class="orange">Different idea</span> of what it can do.</h2>
+          <p data-hf-id="hf-7cg2" class="lede">You can only ask for possibilities you know exist.</p>
+        </div>
+        <div data-hf-id="hf-sw3h" class="views" aria-hidden="true">
+          <div data-hf-id="hf-cpyv" class="view-card view-small">
+            <div data-hf-id="hf-vpf6" class="view-head"><b data-hf-id="hf-d6p2">1× view</b><span data-hf-id="hf-x45t">one visible capability</span></div>
+            <div data-hf-id="hf-clhi" class="single-code"></div>
+          </div>
+          <div data-hf-id="hf-lyaj" class="view-card view-wide">
+            <div data-hf-id="hf-btiu" class="view-head"><b data-hf-id="hf-xvae">100× view</b><span data-hf-id="hf-iqh8">a much larger world</span></div>
+            <div data-hf-id="hf-wy81" class="possibility-cloud"><span data-hf-id="hf-w47n">CAD</span><span data-hf-id="hf-c748">Games</span><span data-hf-id="hf-fda5">Launch video</span><span data-hf-id="hf-237n">Slides</span><span data-hf-id="hf-xxaf">Websites</span><span data-hf-id="hf-p2ia">Infrastructure</span><span data-hf-id="hf-p8g9">Animation</span><span data-hf-id="hf-d5cz">+ more</span></div>
+          </div>
+        </div>
+        <p data-hf-id="hf-rr77" class="same-model">the model is the same / <b data-hf-id="hf-cv93">the visible world is not</b></p>
+      </section>
+
+      <section data-hf-id="hf-r8jz" id="scene-possible" class="scene scene-possible" aria-label="Possible shows what Codex can make">
+        <div data-hf-id="hf-f65h" class="scene-fill" data-layout-ignore=""></div>
+        <div data-hf-id="hf-p6kp" class="topline"><strong data-hf-id="hf-kne7">possible<span data-hf-id="hf-8mo4">.sh</span></strong><span data-hf-id="hf-ghe3">04 / make the world visible</span></div>
+        <div data-hf-id="hf-0xa9" class="possible-copy">
+          <p data-hf-id="hf-elxy" class="eyebrow">Meet Possible</p>
+          <h2 data-hf-id="hf-26s9">Possible shows you <span data-hf-id="hf-pyyg" class="orange">what Codex can make.</span></h2>
+          <p data-hf-id="hf-yi6g" class="lede">A growing library of real outcomes you can discover, choose, and build.</p>
+        </div>
+        <div data-hf-id="hf-qzma" class="library" aria-label="Independent Outcome Pack examples">
+          <article data-hf-id="hf-y9kt" class="library-card"><span data-hf-id="hf-vx8p">01 / hardware</span><strong data-hf-id="hf-to5z">Design something for 3D printing</strong><i data-hf-id="hf-jqbp"></i></article>
+          <article data-hf-id="hf-191t" class="library-card"><span data-hf-id="hf-2n2l">02 / games</span><strong data-hf-id="hf-w5qv">Build a playable web game</strong><i data-hf-id="hf-qkg0"></i></article>
+          <article data-hf-id="hf-2fyw" class="library-card"><span data-hf-id="hf-em3o">03 / presentations</span><strong data-hf-id="hf-h2px">Create a polished presentation</strong><i data-hf-id="hf-q64z"></i></article>
+          <article data-hf-id="hf-21nv" class="library-card"><span data-hf-id="hf-8m6u">04 / web</span><strong data-hf-id="hf-108p">Ship a working website</strong><i data-hf-id="hf-prty"></i></article>
+          <article data-hf-id="hf-024q" class="library-card"><span data-hf-id="hf-f3d7">05 / motion</span><strong data-hf-id="hf-oe9w">Make an animated launch video</strong><i data-hf-id="hf-pdix"></i></article>
+          <article data-hf-id="hf-zntp" class="library-card"><span data-hf-id="hf-2fm4">06 / and more</span><strong data-hf-id="hf-hgjs">Explore the growing library</strong><i data-hf-id="hf-hqsk"></i></article>
+        </div>
+        <p data-hf-id="hf-6edl" class="library-note">each card is one independent Outcome Pack</p>
+      </section>
+
+      <section data-hf-id="hf-qedd" id="scene-pack" class="scene scene-pack" aria-label="Each possibility comes ready to run">
+        <div data-hf-id="hf-hyao" class="scene-fill" data-layout-ignore=""></div>
+        <div data-hf-id="hf-os9o" class="topline"><strong data-hf-id="hf-luba">possible<span data-hf-id="hf-90z5">.sh</span></strong><span data-hf-id="hf-2iwg">05 / choose one</span></div>
+        <div data-hf-id="hf-o4o3" class="pack-copy">
+          <p data-hf-id="hf-pn1b" class="eyebrow">One possibility</p>
+          <h2 data-hf-id="hf-w57k">Choose one. It comes <span data-hf-id="hf-tmzr" class="green">ready to run.</span></h2>
+          <p data-hf-id="hf-il18" class="lede">Possible gives Codex a complete way to make the outcome—not another blank prompt.</p>
+          <p data-hf-id="hf-i1eg" class="plain-proof"><span data-hf-id="hf-6e9b">complete instructions</span><span data-hf-id="hf-28yi">selected skills</span><span data-hf-id="hf-7821">a checklist for done</span></p>
+        </div>
+        <div data-hf-id="hf-02wd" class="pack-board" aria-hidden="true">
+          <div data-hf-id="hf-6eu2" class="pack-shell">
+            <div data-hf-id="hf-7997" class="pack-header"><span data-hf-id="hf-ffbj" class="pack-number">05</span><strong data-hf-id="hf-kzng">Make an animated launch video</strong><small data-hf-id="hf-bpy9">Outcome Pack</small></div>
+            <div data-hf-id="hf-pvay" class="pack-parts">
+              <div data-hf-id="hf-6ufv" class="pack-part"><b data-hf-id="hf-27a2">01</b><strong data-hf-id="hf-g2im">Complete instructions</strong><span data-hf-id="hf-maqb">long prompt</span></div>
+              <div data-hf-id="hf-o7h7" class="pack-part"><b data-hf-id="hf-2ll3">02</b><strong data-hf-id="hf-i897">Selected capabilities</strong><span data-hf-id="hf-6uej">skills</span></div>
+              <div data-hf-id="hf-nt66" class="pack-part"><b data-hf-id="hf-2zw4">03</b><strong data-hf-id="hf-g1sa">A checklist for done</strong><span data-hf-id="hf-3oou">expectations</span></div>
+            </div>
+            <div data-hf-id="hf-n8z3" class="pack-result"><div data-hf-id="hf-yeow"><small data-hf-id="hf-x36e">Codex gets to work</small><strong data-hf-id="hf-2ywr">A finished launch video</strong></div><div data-hf-id="hf-k884" class="mp4-tile">VIDEO.MP4</div></div>
+          </div>
+        </div>
+      </section>
+
+      <section data-hf-id="hf-ivio" id="scene-final" class="scene scene-final" aria-label="See what you can make with Codex">
+        <div data-hf-id="hf-hjzn" class="scene-fill" data-layout-ignore=""></div>
+        <div data-hf-id="hf-w9rp" class="final-mark"><i data-hf-id="hf-hchj"></i> possible<span data-hf-id="hf-9fa6">.sh</span></div>
+        <div data-hf-id="hf-thpm" class="final-copy">
+          <h2 data-hf-id="hf-gavz"><span data-hf-id="hf-r0ue" class="display-line">See what you can</span><span data-hf-id="hf-4ci3" class="display-line orange">make with Codex.</span></h2>
+          <p data-hf-id="hf-dqyb" class="lede">Discover a growing world of possibilities. Choose one and make it real.</p>
+        </div>
+        <div data-hf-id="hf-5l0e" class="final-meta"><strong data-hf-id="hf-mjie">possible.sh</strong><i data-hf-id="hf-8d0n"></i><span data-hf-id="hf-8bd4">$possible / open source</span></div>
+        <div data-hf-id="hf-r52k" class="final-orbit" aria-hidden="true">
+          <div data-hf-id="hf-h2ff" class="orbit-ring"></div><div data-hf-id="hf-427u" class="orbit-center">P</div>
+          <span data-hf-id="hf-u9zk" class="orbit-word">CAD</span><span data-hf-id="hf-lwjz" class="orbit-word">Games</span><span data-hf-id="hf-ring" class="orbit-word">Videos</span><span data-hf-id="hf-uav2" class="orbit-word">Websites</span><span data-hf-id="hf-qsgm" class="orbit-word">Slides</span><span data-hf-id="hf-6mtm" class="orbit-word">+ more</span>
+        </div>
+      </section>
+
+      <section data-hf-id="hf-018c" id="scene-music" class="scene scene-music" aria-label="This soundtrack was made with Codex and Possible">
+        <div data-hf-id="hf-h5om" class="scene-fill" data-layout-ignore=""></div>
+        <div data-hf-id="hf-odyn" class="topline"><strong data-hf-id="hf-lg09">possible<span data-hf-id="hf-9tl7">.sh</span></strong><span data-hf-id="hf-gre5">07 / one more possibility</span></div>
+        <div data-hf-id="hf-shn1" class="music-copy">
+          <p data-hf-id="hf-31zv" class="eyebrow">What you are hearing</p>
+          <h2 data-hf-id="hf-fwky"><span data-hf-id="hf-v5q7" class="music-line">Even this soundtrack</span><span data-hf-id="hf-0b0l" class="music-line">was made with</span><span data-hf-id="hf-79ka" class="music-line orange">Codex + Possible.</span></h2>
+          <p data-hf-id="hf-s8xw" class="lede">One more outcome most people would never think to ask a coding agent for.</p>
+        </div>
+        <div data-hf-id="hf-5bj1" class="music-meta"><strong data-hf-id="hf-d1sa">possible.sh</strong><i data-hf-id="hf-8rbo"></i><span data-hf-id="hf-snc4">another possibility made real</span></div>
+        <div data-hf-id="hf-khq1" class="music-card" aria-label="Garden Window soundtrack provenance">
+          <div data-hf-id="hf-c727" class="music-card-head"><span data-hf-id="hf-2d15">Now playing</span><b data-hf-id="hf-807g">55 seconds</b></div>
+          <div data-hf-id="hf-jo7w" class="music-title"><small data-hf-id="hf-hsg7">Original soundtrack</small><strong data-hf-id="hf-rthh">Garden Window</strong></div>
+          <div data-hf-id="hf-ityw" class="music-wave" aria-hidden="true">
+            <i data-hf-id="hf-brd5" style="--h:42px;--d:0s"></i><i data-hf-id="hf-8snc" style="--h:78px;--d:.02s"></i><i data-hf-id="hf-t54h" style="--h:118px;--d:.04s"></i><i data-hf-id="hf-udbv" style="--h:66px;--d:.06s"></i><i data-hf-id="hf-fbi1" style="--h:150px;--d:.08s"></i><i data-hf-id="hf-codp" style="--h:98px;--d:.1s"></i><i data-hf-id="hf-qcwu" style="--h:176px;--d:.12s"></i><i data-hf-id="hf-41tl" style="--h:126px;--d:.14s"></i><i data-hf-id="hf-on0e" style="--h:194px;--d:.16s"></i><i data-hf-id="hf-kea3" style="--h:142px;--d:.18s"></i><i data-hf-id="hf-rs35" style="--h:170px;--d:.2s"></i><i data-hf-id="hf-snmc" style="--h:108px;--d:.22s"></i><i data-hf-id="hf-2plh" style="--h:156px;--d:.24s"></i><i data-hf-id="hf-zld2" style="--h:92px;--d:.26s"></i><i data-hf-id="hf-6vf3" style="--h:132px;--d:.28s"></i><i data-hf-id="hf-pugr" style="--h:72px;--d:.3s"></i><i data-hf-id="hf-5hid" style="--h:104px;--d:.32s"></i><i data-hf-id="hf-g0oi" style="--h:48px;--d:.34s"></i>
+          </div>
+          <div data-hf-id="hf-o5vx" class="music-process"><span data-hf-id="hf-0mrn">A rough music direction</span><span data-hf-id="hf-u8k7">An original composition</span><span data-hf-id="hf-twmj">The soundtrack you are hearing</span></div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

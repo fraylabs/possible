@@ -84,19 +84,6 @@
       "brief": "Independently regenerate and inspect the immutable design, try to make each interface lift, spread, slide, rack, flex, pull out, collide, trap assembly, or exceed the fabrication envelope, then record direct evidence for every active expectation. Return repair-required or no-go whenever restraint, assembly, fabrication, or physical-validation boundaries are not supported."
     }
   ],
-  "mechanicalCadReview": {
-    "kind": "mechanical-cad-review",
-    "requirementsPath": "mechanical/requirements.md",
-    "interfaceProofPath": "mechanical/interface-proof.md",
-    "vendorPackagePath": "mechanical/vendor/",
-    "fitCouponPath": "mechanical/fit-coupon/",
-    "decisionReceiptPath": "outcome-room/mechanical-cad-review-receipt.json",
-    "decisions": [
-      "review-ready",
-      "repair-required",
-      "no-go"
-    ]
-  },
   "expectations": [
     {
       "id": "requirements-fit",
@@ -186,6 +173,20 @@
       "requiredEvidence": [
         "fit-coupon files and acceptance checks for tolerance-critical interfaces",
         "explicit list of unperformed physical tests and prohibited claims"
+      ]
+    },
+    {
+      "id": "mechanical-cad-review-boundary",
+      "statement": "Mechanical CAD Review produces enough evidence for an independent readiness decision. The possible decisions are review-ready, repair-required, no-go.",
+      "level": "required",
+      "failureModes": [
+        "missing evidence for the declared outcome",
+        "decision made from assumptions or unverified claims"
+      ],
+      "requiredEvidence": [
+        "evidence baseline",
+        "independent review",
+        "decision record"
       ]
     }
   ],

@@ -1,0 +1,39 @@
+{
+  "studyStatus": "not-run",
+  "participantId": "external-author-N",
+  "priorPossibleExperience": "none",
+  "taskStartedAt": null,
+  "taskEndedAt": null,
+  "authoring": {
+    "firstValidManifestMinutes": null,
+    "validationAttempts": null,
+    "blockingQuestions": [],
+    "schemaMisunderstandings": [],
+    "expectationQualityNotes": []
+  },
+  "discovery": {
+    "matchingQuerySelectedPack": null,
+    "notForQueryRejectedPack": null,
+    "selectionExplanationWasAccurate": null
+  },
+  "comparison": {
+    "possibleRun": {
+      "minutesToStart": null,
+      "minutesToCompletion": null,
+      "requiredExpectationsPassed": null,
+      "requiredExpectationsTotal": null,
+      "verifiedCompletion": null,
+      "reworkCount": null
+    },
+    "ordinaryGoalRun": {
+      "minutesToStart": null,
+      "minutesToCompletion": null,
+      "equivalentChecksPassed": null,
+      "equivalentChecksTotal": null,
+      "verifiedCompletion": null,
+      "reworkCount": null
+    }
+  },
+  "observerNotes": [],
+  "participantQuoteWithConsent": null
+}

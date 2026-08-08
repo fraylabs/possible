@@ -1,4 +1,4 @@
-import { routablePacks } from "../src/public-content";
+import { packHref, routablePacks } from "../src/public-content";
 import { exampleCatalog } from "../src/example-content";
 import type { MetadataRoute } from "next";
 
@@ -28,7 +28,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly" as const,
     })),
     ...routablePacks.map((pack) => ({
-      url: `${baseUrl}/packs/${pack.slug}/`,
+      url: `${baseUrl}${packHref(pack)}/`,
       lastModified: siteUpdatedAt,
       changeFrequency: "weekly" as const,
     })),
