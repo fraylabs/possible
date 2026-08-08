@@ -1,0 +1,68 @@
+{
+  "pack": "product-explainer-video",
+  "subject": "Possible",
+  "decision": "ready",
+  "verifiedAt": "2026-08-08",
+  "immutableSource": {
+    "brief": "brief.json",
+    "sceneTimeline": "scene-timeline.json",
+    "audioPlan": "audio-plan.json",
+    "assetManifest": "asset-manifest.json",
+    "rendererSource": "scene.html"
+  },
+  "renderer": {
+    "kind": "html-browser-capture",
+    "engine": "Playwright Chromium 1.61.0",
+    "captureCommand": "python3 capture.py",
+    "frameCount": 900,
+    "fps": 30,
+    "dimensions": "1280x720"
+  },
+  "media": {
+    "assemblyCommand": "ffmpeg -y -framerate 30 -i frames/frame-%05d.png -i audio/possible-procedural.wav -c:v libx264 -preset medium -crf 18 -pix_fmt yuv420p -r 30 -c:a aac -b:a 160k -shortest -movflags +faststart exports/possible-explainer.mp4",
+    "inspectionCommand": "ffprobe -v error -show_streams -show_format -of json exports/possible-explainer.mp4",
+    "durationSeconds": 30,
+    "video": { "codec": "h264", "profile": "High", "width": 1280, "height": 720, "fps": 30, "pixelFormat": "yuv420p" },
+    "audio": { "codec": "aac", "sampleRate": 48000, "channels": 2, "meanVolumeDb": -32.4, "maxVolumeDb": -13.6 },
+    "output": "exports/possible-explainer.mp4"
+  },
+  "verifier": "python3 verify.py",
+  "passed": [
+    "The narrative claims are bounded to README.md and the preserved Robot Snake outcome receipt.",
+    "The visual source remains editable HTML and was rendered through exactly one declared supported path: HTML/browser capture.",
+    "The explicit audio plan selects procedural sound only; synthesis code and seed are preserved, with no placeholder or uncredited asset.",
+    "The final MP4 contains synchronized H.264 video and stereo AAC audio for exactly 30.00 seconds.",
+    "Text overlays provide the explainer captions; the contact sheet was inspected at representative five-second intervals for clipping, overlap, contrast, and scene isolation.",
+    "No publishing, upload, deployment, provider mutation, audience contact, or commercial-effectiveness claim occurred."
+  ],
+  "repairLog": [
+    {
+      "finding": "Initial capture left inline opacity on inactive scenes, causing previous beats to remain visible in later frames.",
+      "repair": "Reset inactive scene opacity and transform on every deterministic render step, then recaptured all 900 frames and reassembled the MP4.",
+      "recheck": "Final contact sheet shows one isolated scene at each five-second checkpoint."
+    },
+    {
+      "finding": "The workstream headline overlapped its four cards at delivery dimensions.",
+      "repair": "Moved the card grid below the two-line headline and moved the integration rail below the cards.",
+      "recheck": "Frame 450 and the final contact sheet show readable headline, cards, and descriptions with no collision."
+    }
+  ],
+  "limitations": [
+    "This dogfood run uses HTML/browser capture because HyperFrames and Remotion were not available locally; it does not claim either renderer was used.",
+    "Audio is original procedural bed and UI cues without narration or external TTS. The result is intentionally text-led and captioned.",
+    "The artifact explains Possible but does not prove customer demand, deployment, audience response, or commercial effectiveness."
+  ],
+  "artifacts": [
+    { "path": "brief.json", "sha256": "fe1a716e5153e4a86ab8bbd2dbc44dc9e6d199c0dd2763636607c311cbbd8f7f", "role": "claims-bound brief" },
+    { "path": "scene-timeline.json", "sha256": "51d325c9ebd23245cb36190786716f7097cbb4765b7cb1cd5ada7593623bf44e", "role": "timed scene contract" },
+    { "path": "audio-plan.json", "sha256": "9d7e5165839e71133fd288059515ac595b8ad6e3a287a125157b2b56534ae950", "role": "audio provenance and timing" },
+    { "path": "asset-manifest.json", "sha256": "67ba701f817ec07dd0ca7e457ec71140ccb46ecf7100d97001276fef1793e348", "role": "source and rights manifest" },
+    { "path": "scene.html", "sha256": "49e10269673b938314ca656031ed18a9db4077c92b4d00de370722726c3041db", "role": "editable visual source" },
+    { "path": "synthesize_audio.py", "sha256": "fa07701f4af3f4acab7f216b221c7d7c59b11d88a5c7a52e37306a5ae5593ef9", "role": "procedural audio source", "seed": 240808 },
+    { "path": "audio/possible-procedural.wav", "sha256": "2e4d9c23239fdcca04474f5f6c0281694b09c53cd33bba35d40c1faca7490070", "role": "generated audio stem" },
+    { "path": "exports/possible-explainer.mp4", "sha256": "21f9ed06bb9a157ad3025f73a448997190d107b6071f14b4171492c750292e3e", "role": "verified final master" },
+    { "path": "exports/possible-explainer.ffprobe.json", "sha256": "e746bacda2cf37a9ddc98c116a694a8390e539c85d1baf24dd1e85021d215b4b", "role": "direct final-media inspection" },
+    { "path": "previews/contact-sheet.png", "sha256": "fe819de45b75f32e76ad11283518090bd1f21f0fd8afdd0af4ce59ca37cbc320", "role": "representative visual review" }
+  ],
+  "externalActions": "none"
+}
