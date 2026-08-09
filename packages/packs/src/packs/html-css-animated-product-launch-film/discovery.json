@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "cases": [
+    {
+      "id": "film-01",
+      "outcome": "make a clean marketing launch video using HTML and CSS animation, then export the final movie",
+      "decision": "select",
+      "intended": [
+        "html-css-animated-product-launch-film"
+      ]
+    },
+    {
+      "id": "film-02",
+      "outcome": "explain why this product matters in a tasteful motion piece, not a slide deck",
+      "decision": "select",
+      "intended": [
+        "html-css-animated-product-launch-film"
+      ],
+      "mustNotRecommend": [
+        "web-presentation"
+      ]
+    },
+    {
+      "id": "film-03",
+      "outcome": "turn the product story into a short animated promo with a rendered video deliverable",
+      "decision": "select",
+      "intended": [
+        "html-css-animated-product-launch-film"
+      ]
+    },
+    {
+      "id": "film-04",
+      "outcome": "I want a standalone launch film whose visuals are authored in the browser and synced to audio",
+      "decision": "select",
+      "intended": [
+        "html-css-animated-product-launch-film"
+      ],
+      "mustNotRecommend": [
+        "cast-driven-product-story-animation"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "cases": [
+    {
+      "id": "webapp-01",
+      "outcome": "turn this rough idea into a small web product that actually works end to end",
+      "decision": "select",
+      "intended": [
+        "working-web-app"
+      ]
+    },
+    {
+      "id": "webapp-02",
+      "outcome": "finish the core workflow in this half-built app instead of adding more mock screens",
+      "decision": "select",
+      "intended": [
+        "working-web-app"
+      ]
+    },
+    {
+      "id": "webapp-03",
+      "outcome": "I need a usable browser app with real state, error handling and tests",
+      "decision": "select",
+      "intended": [
+        "working-web-app"
+      ]
+    },
+    {
+      "id": "webapp-04",
+      "outcome": "make the smallest coherent SaaS prototype someone can actually use locally",
+      "decision": "select",
+      "intended": [
+        "working-web-app"
+      ],
+      "mustNotRecommend": []
+    }
+  ]
+}

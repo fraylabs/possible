@@ -15,6 +15,8 @@ export interface ResolvedPackSubmission {
   rawManifest: string;
 }
 
+const isErrnoException = (cause: unknown): cause is NodeJS.ErrnoException => cause instanceof Error && "code" in cause;
+
 export type PackSourceFetcher = (url: string) => Promise<{
   ok: boolean;
   status: number;
@@ -53,7 +55,7 @@ export async function fetchPackSubmission(
   }
   let manifest: unknown;
   try {
-    manifest = JSON.parse(rawManifest) as unknown;
+    manifest = JSON.parse(rawManifest);
   } catch {
     throw new Error("Pack source must contain valid JSON");
   }
@@ -77,8 +79,8 @@ export async function writeAcceptedPackSnapshot(submission: ResolvedPackSubmissi
   await mkdir(dirname(path), { recursive: true });
   try {
     await writeFile(path, submission.rawManifest, { flag: "wx" });
-  } catch (error: unknown) {
-    if ((error as NodeJS.ErrnoException)?.code !== "EEXIST") throw error;
+  } catch (cause: unknown) {
+    if (!isErrnoException(cause) || cause.code !== "EEXIST") throw cause;
     const existing = await readFile(path);
     if (computePackContentHash(existing) !== snapshot.contentHash) throw new Error(`Immutable snapshot collision at ${path}`);
   }
@@ -94,7 +96,7 @@ export async function loadAcceptedPackSnapshot(entryInput: FederatedPackRegistry
   if (actualHash !== entry.contentHash) throw new Error(`Stored snapshot hash mismatch: expected ${entry.contentHash}, received ${actualHash}`);
   let manifest: unknown;
   try {
-    manifest = JSON.parse(rawManifest) as unknown;
+    manifest = JSON.parse(rawManifest);
   } catch {
     throw new Error(`Stored snapshot is not valid JSON: ${path}`);
   }

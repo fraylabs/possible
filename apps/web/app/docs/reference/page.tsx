@@ -1,4 +1,4 @@
-import PossibleRoute from "../../_components/PossibleRoute";
+import { DocsReferencePage as DocsReferenceContent } from "../../../src/App";
 import { pageMetadata } from "../../_metadata";
 
 export const metadata = pageMetadata({
@@ -8,5 +8,5 @@ export const metadata = pageMetadata({
 });
 
 export default function DocsReferencePage() {
-  return <PossibleRoute path="/docs/reference" />;
+  return <DocsReferenceContent />;
 }

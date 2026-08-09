@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "name": "Production Readiness Decision",
+  "promise": "Decide whether one frozen physical-product configuration can support one named production commitment.",
+  "prompt": "A frozen configuration, commitment-specific DFM and pilot evidence, only the production modules that actually apply, and an independently challenged ready, repair-required, or no-go decision.\n\n## Deliverables\n- Frozen configuration baseline\n- Named production commitment\n- Commitment-specific DFM package\n- Representative pilot evidence\n- Production readiness decision with supporting evidence\n\n## Execution guidance\n- Freeze one revision and define volume, cost, quality, schedule, delivery, claims, and change-control boundaries.\n- Produce commitment-specific DFM, process, test, yield, rework, and pilot evidence plus only active modules.\n- Challenge assumptions, normalize evidence, expose unpriced or untested risks, and decide without turning plans into proof.\n\n## Boundaries\n- Do not infer production readiness from prototype success, documents, quotes, or simulations alone.\n- Do not contact suppliers, buy parts, fabricate, certify, or commit spend without separate approval.\n- Do not activate compliance, logistics, firmware, or service work when the product architecture and commitment do not require it.\n- Preserve supplier confidentiality, quote assumptions, revision identity, and measurement uncertainty.\n- Ready applies only to the frozen configuration and named commitment; it is not authorization to spend, order, certify, sell, or scale.",
+  "skills": [
+    {
+      "repository": "coreyhaines31/marketingskills",
+      "lastReviewedCommit": "67264763cb107d61749f418d081c56e5bcbc0209",
+      "directory": "skills/analytics"
+    },
+    {
+      "repository": "earthtojake/text-to-cad",
+      "lastReviewedCommit": "fdbb4b4fb62d95ae298cfe9a46fdc7092bdaf423",
+      "directory": "skills/cad"
+    },
+    {
+      "repository": "earthtojake/text-to-cad",
+      "lastReviewedCommit": "fdbb4b4fb62d95ae298cfe9a46fdc7092bdaf423",
+      "directory": "skills/cad-viewer"
+    },
+    {
+      "repository": "arpitg1304/robotics-agent-skills",
+      "lastReviewedCommit": "54f7b578f3dc269d29c0beb623b3f2611fd3a430",
+      "directory": "skills/robotics-testing"
+    },
+    {
+      "repository": "github/awesome-copilot",
+      "lastReviewedCommit": "26fe2d126bf79aafb38f43344d450b69632200f8",
+      "directory": "skills/create-technical-spike"
+    }
+  ],
+  "expectations": [
+    "One production candidate and its allowed changes are unambiguous.",
+    "The production decision is tied to a named quantity, quality, cost, schedule, and delivery boundary.",
+    "Manufacturing processes and critical interfaces are supported by direct DFM evidence.",
+    "A representative pilot supports the named commitment and records yield, defects, rework, and limits.",
+    "Supplier feasibility and normalized economics support the commitment. Applicable when: External supplier capacity, pricing, tooling, MOQ, or lead time determines the commitment.",
+    "Electrical production testing detects named assembly faults. Applicable when: The product contains production electronics requiring assembly fault detection.",
+    "Firmware identity, flashing, keys, and recovery are controlled. Applicable when: Units require firmware, configuration, credentials, or field recovery.",
+    "Applicable market-access obligations and evidence gaps are explicit. Applicable when: The named market or product claims create regulatory or certification obligations.",
+    "Named reliability risks have representative test evidence. Applicable when: The commitment includes life, duty-cycle, environmental, or warranty exposure.",
+    "Packaging and logistics evidence covers the named delivery commitment. Applicable when: The commitment includes physical shipment or storage.",
+    "Required service, repair, and replacement paths are feasible. Applicable when: The commitment includes warranty, repair, replacement, or field service.",
+    "A representative functional prototype has passed its measured contract.",
+    "Production readiness decision produces enough evidence for an independent readiness decision. The possible decisions are ready, repair-required, no-go. Ready applies only to the frozen configuration and named commitment; it is not authorization to spend, order, certify, sell, or scale."
+  ],
+  "notFor": [
+    "Early concept exploration or first functional proof.",
+    "Universal production planning before a production commitment exists.",
+    "Launching, funding, or selling the product."
+  ]
+}

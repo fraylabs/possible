@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "cases": [
+    {
+      "id": "story-01",
+      "outcome": "show little characters using our product to solve one problem in a looping website animation",
+      "decision": "select",
+      "intended": [
+        "cast-driven-product-story-animation"
+      ]
+    },
+    {
+      "id": "story-02",
+      "outcome": "make our abstract product value obvious through a cast, an objective and a visible payoff on the homepage",
+      "decision": "select",
+      "intended": [
+        "cast-driven-product-story-animation"
+      ]
+    },
+    {
+      "id": "story-03",
+      "outcome": "I want an embedded animated scene where different roles coordinate through the product",
+      "decision": "select",
+      "intended": [
+        "cast-driven-product-story-animation"
+      ],
+      "mustNotRecommend": [
+        "html-css-animated-product-launch-film"
+      ]
+    },
+    {
+      "id": "story-04",
+      "outcome": "turn this customer story into an original character loop inside the site, with a useful reduced-motion version",
+      "decision": "select",
+      "intended": [
+        "cast-driven-product-story-animation"
+      ]
+    }
+  ]
+}

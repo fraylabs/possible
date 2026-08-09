@@ -1,4 +1,4 @@
 interface:
   display_name: "Possible"
-  short_description: "Discover and run proven Outcome Packs"
-  default_prompt: "Use $possible to clarify and complete one verified outcome, then reassess what should happen next."
+  short_description: "Find and run Outcome Packs"
+  default_prompt: "Use $possible to search my saved packs and the public catalog, show me fitting choices, and run the Outcome Pack I select."

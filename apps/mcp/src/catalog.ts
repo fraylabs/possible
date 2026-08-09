@@ -70,7 +70,7 @@ export type CatalogLookup =
 export function lookupCatalogEntry(catalog: readonly McpCatalogEntry[], idOrSlug: string): CatalogLookup {
   const byId = catalog.find(({ id }) => id === idOrSlug);
   if (byId !== undefined) return { kind: "found", entry: byId };
-  const bySlug = catalog.filter(({ pack }) => pack.slug === idOrSlug);
+  const bySlug = catalog.filter(({ slug }) => slug === idOrSlug);
   if (bySlug.length === 0) return { kind: "missing" };
   if (bySlug.length > 1) return { kind: "ambiguous", matchingIds: bySlug.map(({ id }) => id).sort() };
   return { kind: "found", entry: bySlug[0]! };

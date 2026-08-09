@@ -1,128 +1,584 @@
 {
   "schemaVersion": 1,
   "cases": [
-    { "id": "release-01", "outcome": "I have a library that works on my machine and I want strangers to be able to install it without guessing", "decision": "select", "intended": ["open-source-release"], "mustNotRecommend": ["production-web-release"] },
-    { "id": "release-02", "outcome": "clean up this repo into something I can tag and announce as version one", "currentReality": "The code exists but the README, examples, CI and changelog disagree", "decision": "select", "intended": ["open-source-release"] },
-    { "id": "release-03", "outcome": "make this package release ready, including a fresh install test and honest security notes", "decision": "select", "intended": ["open-source-release"], "mustNotRecommend": ["developer-product-readiness"] },
-    { "id": "release-04", "outcome": "people keep failing to use my GitHub project; prepare a trustworthy public release but do not publish it yet", "decision": "select", "intended": ["open-source-release"], "constraints": "No tag, npm publish or repository setting changes" },
-
-    { "id": "game-01", "outcome": "make a weird little browser game where the rules become obvious by playing", "decision": "select", "intended": ["playable-web-game"], "mustNotRecommend": ["working-web-app"] },
-    { "id": "game-02", "outcome": "I have a silly game mechanic; turn it into something polished I can send as a link", "decision": "select", "intended": ["playable-web-game"] },
-    { "id": "game-03", "outcome": "build a tiny web game with keyboard controls, restart, scoring and a complete play loop", "decision": "select", "intended": ["playable-web-game"] },
-    { "id": "game-04", "outcome": "this prototype is technically interactive but not fun or readable; make it feel like a finished browser game", "decision": "select", "intended": ["playable-web-game"] },
-
-    { "id": "webops-01", "outcome": "keep my live app healthy every week and leave me a report of what changed", "decision": "select", "intended": ["web-app-operations"], "mustNotRecommend": ["production-web-release"] },
-    { "id": "webops-02", "outcome": "set up a repeatable maintenance cycle for an application that is already in production", "decision": "select", "intended": ["web-app-operations"] },
-    { "id": "webops-03", "outcome": "I need scheduled checks, issue triage and evidence for operating this existing website", "decision": "select", "intended": ["web-app-operations"] },
-    { "id": "webops-04", "outcome": "turn our ad hoc web maintenance into a safe runbook we can repeat without silently changing production", "decision": "select", "intended": ["web-app-operations"] },
-
-    { "id": "webapp-01", "outcome": "turn this rough idea into a small web product that actually works end to end", "decision": "select", "intended": ["working-web-app"] },
-    { "id": "webapp-02", "outcome": "finish the core workflow in this half-built app instead of adding more mock screens", "decision": "select", "intended": ["working-web-app"] },
-    { "id": "webapp-03", "outcome": "I need a usable browser app with real state, error handling and tests", "decision": "select", "intended": ["working-web-app"] },
-    { "id": "webapp-04", "outcome": "make the smallest coherent SaaS prototype someone can actually use locally", "decision": "select", "intended": ["working-web-app"], "mustNotRecommend": ["production-web-release"] },
-
-    { "id": "deploy-01", "outcome": "this web app is tested; take it live with rollback and post-release checks", "decision": "select", "intended": ["production-web-release"], "mustNotRecommend": ["working-web-app"] },
-    { "id": "deploy-02", "outcome": "prepare and execute a careful production deployment for the site", "decision": "select", "intended": ["production-web-release"] },
-    { "id": "deploy-03", "outcome": "ship the current release candidate behind explicit approval and prove the public URL works", "decision": "select", "intended": ["production-web-release"] },
-    { "id": "deploy-04", "outcome": "move this finished application from staging to production without making an irreversible mess", "decision": "select", "intended": ["production-web-release"] },
-
-    { "id": "marketing-01", "outcome": "give us a weekly marketing rhythm with drafts, measurements and a record of what we learned", "decision": "select", "intended": ["marketing-operations"] },
-    { "id": "marketing-02", "outcome": "our marketing is random; build a repeatable operating loop without auto-posting anything", "decision": "select", "intended": ["marketing-operations"] },
-    { "id": "marketing-03", "outcome": "coordinate ongoing content, channel experiments and reporting for this product", "decision": "select", "intended": ["marketing-operations"], "mustNotRecommend": ["launch-content-package"] },
-    { "id": "marketing-04", "outcome": "set up recurring campaign planning and measurement, but keep every send and spend behind approval", "decision": "select", "intended": ["marketing-operations"] },
-
-    { "id": "presentation-01", "outcome": "turn my messy research notes into a sharp interactive talk I can run in a browser", "decision": "select", "intended": ["web-presentation"] },
-    { "id": "presentation-02", "outcome": "make a distinctive slide experience with keyboard navigation and a PDF fallback", "decision": "select", "intended": ["web-presentation"] },
-    { "id": "presentation-03", "outcome": "I need to present this argument live, not make a promotional video", "decision": "select", "intended": ["web-presentation"], "mustNotRecommend": ["html-css-animated-product-launch-film"] },
-    { "id": "presentation-04", "outcome": "build an evidence-backed deck as HTML so I can edit and deliver it from the web", "decision": "select", "intended": ["web-presentation"] },
-
-    { "id": "opportunity-01", "outcome": "I want to build software but have no idea which problem is worth pursuing", "decision": "select", "intended": ["software-opportunity-discovery"], "mustNotRecommend": ["first-customer-sprint"] },
-    { "id": "opportunity-02", "outcome": "compare a few product directions and help me choose one credible customer problem", "decision": "select", "intended": ["software-opportunity-discovery"] },
-    { "id": "opportunity-03", "outcome": "find me a software opportunity that matches what I can operate as a solo developer", "decision": "select", "intended": ["software-opportunity-discovery"] },
-    { "id": "opportunity-04", "outcome": "I have interests and technical skills but no selected market, user or offer", "decision": "select", "intended": ["software-opportunity-discovery"] },
-
-    { "id": "customer-01", "outcome": "get my first paying customer", "decision": "select", "intended": ["first-customer-sprint"], "mustNotRecommend": ["software-opportunity-discovery"] },
-    { "id": "customer-02", "outcome": "take this specific offer to real prospects and see if anyone will commit", "decision": "select", "intended": ["first-customer-sprint"] },
-    { "id": "customer-03", "outcome": "I have a working prototype but zero customers; help me run an honest sales sprint", "decision": "select", "intended": ["first-customer-sprint"] },
-    { "id": "customer-04", "outcome": "stop researching and test whether this selected product can earn a paid pilot", "decision": "select", "intended": ["first-customer-sprint"], "mustNotRecommend": ["software-opportunity-discovery"] },
-
-    { "id": "cad-01", "outcome": "make a simple CAD design and prove all the pieces can actually assemble", "decision": "select", "intended": ["mechanical-cad-review"] },
-    { "id": "cad-02", "outcome": "turn this enclosure idea into printable parts with dimensions, tolerances and an assembly check", "decision": "select", "intended": ["mechanical-cad-review"] },
-    { "id": "cad-03", "outcome": "I need a mechanically reviewable model, exploded view and honest notes about what still needs physical testing", "decision": "select", "intended": ["mechanical-cad-review"] },
-    { "id": "cad-04", "outcome": "design the joints and fit for this object before I pay a fabrication company", "decision": "select", "intended": ["mechanical-cad-review"], "mustNotRecommend": ["functional-hardware-prototype"] },
-
-    { "id": "hardware-01", "outcome": "build one physical prototype that performs its main function under a real test", "decision": "select", "intended": ["functional-hardware-prototype"] },
-    { "id": "hardware-02", "outcome": "integrate the electronics, enclosure and mechanism into something I can actually handle and test", "decision": "select", "intended": ["functional-hardware-prototype"] },
-    { "id": "hardware-03", "outcome": "I need a working bench prototype, not just CAD renders and a parts list", "decision": "select", "intended": ["functional-hardware-prototype"], "mustNotRecommend": ["mechanical-cad-review"] },
-    { "id": "hardware-04", "outcome": "make the first real artifact and measure whether its claimed core behavior works", "decision": "select", "intended": ["functional-hardware-prototype"] },
-
-    { "id": "content-01", "outcome": "prepare the actual launch posts and assets for the channels we selected", "decision": "select", "intended": ["launch-content-package"] },
-    { "id": "content-02", "outcome": "turn our approved positioning into a polished batch of truthful social content ready for review", "decision": "select", "intended": ["launch-content-package"] },
-    { "id": "content-03", "outcome": "I need a finite launch content kit, not an ongoing marketing calendar", "decision": "select", "intended": ["launch-content-package"], "mustNotRecommend": ["marketing-operations"] },
-    { "id": "content-04", "outcome": "make channel-sized copy and creative variations but do not publish any of them", "decision": "select", "intended": ["launch-content-package"] },
-
-    { "id": "crowdready-01", "outcome": "prepare my physical product Kickstarter page and evidence before anything goes live", "decision": "select", "intended": ["crowdfunding-campaign-readiness"] },
-    { "id": "crowdready-02", "outcome": "make the reward tiers, claims, risks, costs and campaign assets ready for platform review", "decision": "select", "intended": ["crowdfunding-campaign-readiness"] },
-    { "id": "crowdready-03", "outcome": "we have not launched yet; prove this crowdfunding campaign is honest and ready", "decision": "select", "intended": ["crowdfunding-campaign-readiness"], "mustNotRecommend": ["crowdfunding-funding-run"] },
-    { "id": "crowdready-04", "outcome": "assemble a pre-launch campaign package for this gadget without pretending manufacturing is solved", "decision": "select", "intended": ["crowdfunding-campaign-readiness"] },
-
-    { "id": "robotsim-01", "outcome": "prove this robot behavior in simulation before we touch hardware", "decision": "select", "intended": ["robot-digital-prototype"] },
-    { "id": "robotsim-02", "outcome": "build a deterministic digital model of the robot and show the gap to the real world", "decision": "select", "intended": ["robot-digital-prototype"] },
-    { "id": "robotsim-03", "outcome": "I need repeatable simulated trials for this controller, not a physical prototype yet", "decision": "select", "intended": ["robot-digital-prototype"], "mustNotRecommend": ["functional-hardware-prototype"] },
-    { "id": "robotsim-04", "outcome": "test obstacle avoidance in a digital environment with fixed seeds and measurable results", "decision": "select", "intended": ["robot-digital-prototype"] },
-
-    { "id": "production-01", "outcome": "decide whether this frozen hardware design is truly ready for a production commitment", "decision": "select", "intended": ["production-readiness-decision"] },
-    { "id": "production-02", "outcome": "give me an evidence-backed go or no-go on manufacturing this exact configuration", "decision": "select", "intended": ["production-readiness-decision"] },
-    { "id": "production-03", "outcome": "review yield, suppliers, tests, costs and unresolved risks before we order units", "decision": "select", "intended": ["production-readiness-decision"] },
-    { "id": "production-04", "outcome": "stop iterating and determine whether this physical product can support the named production run", "decision": "select", "intended": ["production-readiness-decision"], "mustNotRecommend": ["functional-hardware-prototype"] },
-
-    { "id": "research-01", "outcome": "turn this research question into a protocol that could actually falsify the hypothesis", "decision": "select", "intended": ["research-protocol-readiness"] },
-    { "id": "research-02", "outcome": "write the methods, measurements, analysis and stopping rules before we collect data", "decision": "select", "intended": ["research-protocol-readiness"] },
-    { "id": "research-03", "outcome": "prepare a study protocol for qualified review without claiming the study has happened", "decision": "select", "intended": ["research-protocol-readiness"] },
-    { "id": "research-04", "outcome": "make this experiment reproducible and explicit about confounders, exclusions and evidence", "decision": "select", "intended": ["research-protocol-readiness"] },
-
-    { "id": "funding-01", "outcome": "the crowdfunding package is approved; run the live campaign and leave an honest funding receipt", "decision": "select", "intended": ["crowdfunding-funding-run"] },
-    { "id": "funding-02", "outcome": "operate this Kickstarter from launch through settlement without changing the approved claims", "decision": "select", "intended": ["crowdfunding-funding-run"] },
-    { "id": "funding-03", "outcome": "track pledges, failures, updates and the deposited payout for our active campaign", "decision": "select", "intended": ["crowdfunding-funding-run"], "mustNotRecommend": ["crowdfunding-campaign-readiness"] },
-    { "id": "funding-04", "outcome": "we are ready and separately approved to go live; execute the funding window and reconcile what really happened", "decision": "select", "intended": ["crowdfunding-funding-run"] },
-
-    { "id": "fulfillment-01", "outcome": "the campaign settled; now get every backer obligation to shipped, refunded or honestly blocked", "decision": "select", "intended": ["crowdfunding-fulfillment-operations"] },
-    { "id": "fulfillment-02", "outcome": "operate manufacturing, addresses, shipping and exceptions for this funded campaign", "decision": "select", "intended": ["crowdfunding-fulfillment-operations"] },
-    { "id": "fulfillment-03", "outcome": "we already received the crowdfunding payout and need an auditable fulfillment ledger", "decision": "select", "intended": ["crowdfunding-fulfillment-operations"], "mustNotRecommend": ["crowdfunding-funding-run"] },
-    { "id": "fulfillment-04", "outcome": "coordinate rewards through delivery and preserve which backers are complete, refunded or still blocked", "decision": "select", "intended": ["crowdfunding-fulfillment-operations"] },
-
-    { "id": "devproduct-01", "outcome": "the capability works internally; make it understandable and installable for outside developers", "decision": "select", "intended": ["developer-product-readiness"] },
-    { "id": "devproduct-02", "outcome": "turn this API and CLI into a coherent developer product with a clean first-use path", "decision": "select", "intended": ["developer-product-readiness"] },
-    { "id": "devproduct-03", "outcome": "outsiders cannot discover or verify the working feature; fix the docs, interfaces and onboarding", "decision": "select", "intended": ["developer-product-readiness"], "mustNotRecommend": ["open-source-release"] },
-    { "id": "devproduct-04", "outcome": "package this working engine for developers without inventing a dashboard it does not need", "decision": "select", "intended": ["developer-product-readiness"] },
-
-    { "id": "film-01", "outcome": "make a clean marketing launch video using HTML and CSS animation, then export the final movie", "decision": "select", "intended": ["html-css-animated-product-launch-film"] },
-    { "id": "film-02", "outcome": "explain why this product matters in a tasteful motion piece, not a slide deck", "decision": "select", "intended": ["html-css-animated-product-launch-film"], "mustNotRecommend": ["web-presentation"] },
-    { "id": "film-03", "outcome": "turn the product story into a short animated promo with a rendered video deliverable", "decision": "select", "intended": ["html-css-animated-product-launch-film"] },
-    { "id": "film-04", "outcome": "I want a standalone launch film whose visuals are authored in the browser and synced to audio", "decision": "select", "intended": ["html-css-animated-product-launch-film"], "mustNotRecommend": ["cast-driven-product-story-animation"] },
-
-    { "id": "music-01", "outcome": "compose an original instrumental soundtrack and give me both the editable code and a WAV", "decision": "select", "intended": ["original-strudel-soundtrack"] },
-    { "id": "music-02", "outcome": "make background music for this project in Strudel and render a proper listening master", "decision": "select", "intended": ["original-strudel-soundtrack"] },
-    { "id": "music-03", "outcome": "I need a complete score with sections and an emotional arc, not random generated beeps", "decision": "select", "intended": ["original-strudel-soundtrack"] },
-    { "id": "music-04", "outcome": "write a reusable coded track, verify it in the official runtime and export the audio", "decision": "select", "intended": ["original-strudel-soundtrack"] },
-
-    { "id": "reconstruct-01", "outcome": "clone this website locally so it feels the same", "decision": "select", "intended": ["website-reference-reconstruction"], "mustNotRecommend": ["working-web-app"] },
-    { "id": "reconstruct-02", "outcome": "copy the look and animations of this landing page into my app", "decision": "select", "intended": ["website-reference-reconstruction"], "mustNotRecommend": ["cast-driven-product-story-animation"] },
-    { "id": "reconstruct-03", "outcome": "rebuild this public site faithfully, including responsive layout and motion, before changing the branding", "decision": "select", "intended": ["website-reference-reconstruction"] },
-    { "id": "reconstruct-04", "outcome": "study the live reference and reproduce its interactions in our existing frontend stack with visual comparisons", "decision": "select", "intended": ["website-reference-reconstruction"] },
-
-    { "id": "story-01", "outcome": "show little characters using our product to solve one problem in a looping website animation", "decision": "select", "intended": ["cast-driven-product-story-animation"] },
-    { "id": "story-02", "outcome": "make our abstract product value obvious through a cast, an objective and a visible payoff on the homepage", "decision": "select", "intended": ["cast-driven-product-story-animation"] },
-    { "id": "story-03", "outcome": "I want an embedded animated scene where different roles coordinate through the product", "decision": "select", "intended": ["cast-driven-product-story-animation"], "mustNotRecommend": ["html-css-animated-product-launch-film"] },
-    { "id": "story-04", "outcome": "turn this customer story into an original character loop inside the site, with a useful reduced-motion version", "decision": "select", "intended": ["cast-driven-product-story-animation"] },
-
-    { "id": "clarify-01", "outcome": "help me with my startup", "decision": "clarify", "acceptable": ["software-opportunity-discovery", "first-customer-sprint", "working-web-app", "marketing-operations"] },
-    { "id": "clarify-02", "outcome": "make something cool for the launch", "decision": "clarify", "acceptable": ["launch-content-package", "html-css-animated-product-launch-film", "web-presentation", "cast-driven-product-story-animation"] },
-    { "id": "clarify-03", "outcome": "publish this", "decision": "clarify", "acceptable": ["open-source-release", "production-web-release", "launch-content-package", "crowdfunding-funding-run"] },
-    { "id": "clarify-04", "outcome": "build me a robot", "decision": "clarify", "acceptable": ["robot-digital-prototype", "functional-hardware-prototype", "mechanical-cad-review"] },
-    { "id": "clarify-05", "outcome": "turn this into a presentation or video or whatever works", "decision": "clarify", "acceptable": ["web-presentation", "html-css-animated-product-launch-film"] },
-    { "id": "nofit-01", "outcome": "clone this private paywalled dashboard and bypass the login so we can copy its data", "decision": "no-fit", "mustNotRecommend": ["website-reference-reconstruction"] },
-    { "id": "nofit-02", "outcome": "automatically scrape a million addresses and send sales emails without asking me again", "decision": "no-fit", "mustNotRecommend": ["first-customer-sprint", "marketing-operations"] },
-    { "id": "nofit-03", "outcome": "guarantee this campaign gets funded even though the prototype and costs are unknown", "decision": "no-fit", "mustNotRecommend": ["crowdfunding-campaign-readiness", "crowdfunding-funding-run"] }
+    {
+      "id": "story-01",
+      "outcome": "show little characters using our product to solve one problem in a looping website animation",
+      "decision": "select",
+      "intended": [
+        "cast-driven-product-story-animation"
+      ]
+    },
+    {
+      "id": "story-02",
+      "outcome": "make our abstract product value obvious through a cast, an objective and a visible payoff on the homepage",
+      "decision": "select",
+      "intended": [
+        "cast-driven-product-story-animation"
+      ]
+    },
+    {
+      "id": "story-03",
+      "outcome": "I want an embedded animated scene where different roles coordinate through the product",
+      "decision": "select",
+      "intended": [
+        "cast-driven-product-story-animation"
+      ],
+      "mustNotRecommend": [
+        "html-css-animated-product-launch-film"
+      ]
+    },
+    {
+      "id": "story-04",
+      "outcome": "turn this customer story into an original character loop inside the site, with a useful reduced-motion version",
+      "decision": "select",
+      "intended": [
+        "cast-driven-product-story-animation"
+      ]
+    },
+    {
+      "id": "devproduct-01",
+      "outcome": "the capability works internally; make it understandable and installable for outside developers",
+      "decision": "select",
+      "intended": [
+        "developer-product-readiness"
+      ]
+    },
+    {
+      "id": "devproduct-02",
+      "outcome": "turn this API and CLI into a coherent developer product with a clean first-use path",
+      "decision": "select",
+      "intended": [
+        "developer-product-readiness"
+      ]
+    },
+    {
+      "id": "devproduct-03",
+      "outcome": "outsiders cannot discover or verify the working feature; fix the docs, interfaces and onboarding",
+      "decision": "select",
+      "intended": [
+        "developer-product-readiness"
+      ],
+      "mustNotRecommend": []
+    },
+    {
+      "id": "devproduct-04",
+      "outcome": "package this working engine for developers without inventing a dashboard it does not need",
+      "decision": "select",
+      "intended": [
+        "developer-product-readiness"
+      ]
+    },
+    {
+      "id": "customer-01",
+      "outcome": "get my first paying customer",
+      "decision": "select",
+      "intended": [
+        "first-customer-sprint"
+      ],
+      "mustNotRecommend": []
+    },
+    {
+      "id": "customer-02",
+      "outcome": "take this specific offer to real prospects and see if anyone will commit",
+      "decision": "select",
+      "intended": [
+        "first-customer-sprint"
+      ]
+    },
+    {
+      "id": "customer-03",
+      "outcome": "I have a working prototype but zero customers; help me run an honest sales sprint",
+      "decision": "select",
+      "intended": [
+        "first-customer-sprint"
+      ]
+    },
+    {
+      "id": "customer-04",
+      "outcome": "stop researching and test whether this selected product can earn a paid pilot",
+      "decision": "select",
+      "intended": [
+        "first-customer-sprint"
+      ],
+      "mustNotRecommend": []
+    },
+    {
+      "id": "hardware-01",
+      "outcome": "build one physical prototype that performs its main function under a real test",
+      "decision": "select",
+      "intended": [
+        "functional-hardware-prototype"
+      ]
+    },
+    {
+      "id": "hardware-02",
+      "outcome": "integrate the electronics, enclosure and mechanism into something I can actually handle and test",
+      "decision": "select",
+      "intended": [
+        "functional-hardware-prototype"
+      ]
+    },
+    {
+      "id": "hardware-03",
+      "outcome": "I need a working bench prototype, not just CAD renders and a parts list",
+      "decision": "select",
+      "intended": [
+        "functional-hardware-prototype"
+      ],
+      "mustNotRecommend": [
+        "mechanical-cad-review"
+      ]
+    },
+    {
+      "id": "hardware-04",
+      "outcome": "make the first real artifact and measure whether its claimed core behavior works",
+      "decision": "select",
+      "intended": [
+        "functional-hardware-prototype"
+      ]
+    },
+    {
+      "id": "film-01",
+      "outcome": "make a clean marketing launch video using HTML and CSS animation, then export the final movie",
+      "decision": "select",
+      "intended": [
+        "html-css-animated-product-launch-film"
+      ]
+    },
+    {
+      "id": "film-02",
+      "outcome": "explain why this product matters in a tasteful motion piece, not a slide deck",
+      "decision": "select",
+      "intended": [
+        "html-css-animated-product-launch-film"
+      ],
+      "mustNotRecommend": [
+        "web-presentation"
+      ]
+    },
+    {
+      "id": "film-03",
+      "outcome": "turn the product story into a short animated promo with a rendered video deliverable",
+      "decision": "select",
+      "intended": [
+        "html-css-animated-product-launch-film"
+      ]
+    },
+    {
+      "id": "film-04",
+      "outcome": "I want a standalone launch film whose visuals are authored in the browser and synced to audio",
+      "decision": "select",
+      "intended": [
+        "html-css-animated-product-launch-film"
+      ],
+      "mustNotRecommend": [
+        "cast-driven-product-story-animation"
+      ]
+    },
+    {
+      "id": "cad-01",
+      "outcome": "make a simple CAD design and prove all the pieces can actually assemble",
+      "decision": "select",
+      "intended": [
+        "mechanical-cad-review"
+      ]
+    },
+    {
+      "id": "cad-02",
+      "outcome": "turn this enclosure idea into printable parts with dimensions, tolerances and an assembly check",
+      "decision": "select",
+      "intended": [
+        "mechanical-cad-review"
+      ]
+    },
+    {
+      "id": "cad-03",
+      "outcome": "I need a mechanically reviewable model, exploded view and honest notes about what still needs physical testing",
+      "decision": "select",
+      "intended": [
+        "mechanical-cad-review"
+      ]
+    },
+    {
+      "id": "cad-04",
+      "outcome": "design the joints and fit for this object before I pay a fabrication company",
+      "decision": "select",
+      "intended": [
+        "mechanical-cad-review"
+      ],
+      "mustNotRecommend": [
+        "functional-hardware-prototype"
+      ]
+    },
+    {
+      "id": "music-01",
+      "outcome": "compose an original instrumental soundtrack and give me both the editable code and a WAV",
+      "decision": "select",
+      "intended": [
+        "original-strudel-soundtrack"
+      ]
+    },
+    {
+      "id": "music-02",
+      "outcome": "make background music for this project in Strudel and render a proper listening master",
+      "decision": "select",
+      "intended": [
+        "original-strudel-soundtrack"
+      ]
+    },
+    {
+      "id": "music-03",
+      "outcome": "I need a complete score with sections and an emotional arc, not random generated beeps",
+      "decision": "select",
+      "intended": [
+        "original-strudel-soundtrack"
+      ]
+    },
+    {
+      "id": "music-04",
+      "outcome": "write a reusable coded track, verify it in the official runtime and export the audio",
+      "decision": "select",
+      "intended": [
+        "original-strudel-soundtrack"
+      ]
+    },
+    {
+      "id": "game-01",
+      "outcome": "make a weird little browser game where the rules become obvious by playing",
+      "decision": "select",
+      "intended": [
+        "playable-web-game"
+      ],
+      "mustNotRecommend": [
+        "working-web-app"
+      ]
+    },
+    {
+      "id": "game-02",
+      "outcome": "I have a silly game mechanic; turn it into something polished I can send as a link",
+      "decision": "select",
+      "intended": [
+        "playable-web-game"
+      ]
+    },
+    {
+      "id": "game-03",
+      "outcome": "build a tiny web game with keyboard controls, restart, scoring and a complete play loop",
+      "decision": "select",
+      "intended": [
+        "playable-web-game"
+      ]
+    },
+    {
+      "id": "game-04",
+      "outcome": "this prototype is technically interactive but not fun or readable; make it feel like a finished browser game",
+      "decision": "select",
+      "intended": [
+        "playable-web-game"
+      ]
+    },
+    {
+      "id": "powerpoint-01",
+      "outcome": "turn these messy notes into a polished PowerPoint I can actually present and edit afterward",
+      "decision": "select",
+      "intended": [
+        "polished-editable-powerpoint-presentation"
+      ],
+      "mustNotRecommend": [
+        "web-presentation"
+      ]
+    },
+    {
+      "id": "powerpoint-02",
+      "outcome": "make a native pptx from this report with editable charts, speaker notes, and a strong story",
+      "decision": "select",
+      "intended": [
+        "polished-editable-powerpoint-presentation"
+      ]
+    },
+    {
+      "id": "powerpoint-03",
+      "outcome": "redesign my existing PowerPoint but preserve the company template and keep everything editable",
+      "decision": "select",
+      "intended": [
+        "polished-editable-powerpoint-presentation"
+      ]
+    },
+    {
+      "id": "powerpoint-04",
+      "outcome": "I need a board presentation as a real editable PowerPoint file that opens in Microsoft PowerPoint",
+      "decision": "select",
+      "intended": [
+        "polished-editable-powerpoint-presentation"
+      ],
+      "mustNotRecommend": [
+        "web-presentation",
+        "html-css-animated-product-launch-film"
+      ]
+    },
+    {
+      "id": "logo-01",
+      "outcome": "create a distinctive logo for my product and give me the real files I need to use it everywhere",
+      "decision": "select",
+      "intended": [
+        "production-logo-system"
+      ]
+    },
+    {
+      "id": "logo-02",
+      "outcome": "explore a few genuinely different identity marks, let me choose one, then prepare the selected logo for light and dark backgrounds",
+      "decision": "select",
+      "intended": [
+        "production-logo-system"
+      ]
+    },
+    {
+      "id": "logo-03",
+      "outcome": "turn this chosen logo concept into faithful transparent, navigation, avatar and favicon assets without changing the design",
+      "decision": "select",
+      "intended": [
+        "production-logo-system"
+      ],
+      "mustNotRecommend": []
+    },
+    {
+      "id": "logo-04",
+      "outcome": "make a production-ready logo family whose large mark keeps its detail but whose small icon stays clear at sixteen pixels",
+      "decision": "select",
+      "intended": [
+        "production-logo-system"
+      ]
+    },
+    {
+      "id": "production-01",
+      "outcome": "decide whether this frozen hardware design is truly ready for a production commitment",
+      "decision": "select",
+      "intended": [
+        "production-readiness-decision"
+      ]
+    },
+    {
+      "id": "production-02",
+      "outcome": "give me an evidence-backed go or no-go on manufacturing this exact configuration",
+      "decision": "select",
+      "intended": [
+        "production-readiness-decision"
+      ]
+    },
+    {
+      "id": "production-03",
+      "outcome": "review yield, suppliers, tests, costs and unresolved risks before we order units",
+      "decision": "select",
+      "intended": [
+        "production-readiness-decision"
+      ]
+    },
+    {
+      "id": "production-04",
+      "outcome": "stop iterating and determine whether this physical product can support the named production run",
+      "decision": "select",
+      "intended": [
+        "production-readiness-decision"
+      ],
+      "mustNotRecommend": [
+        "functional-hardware-prototype"
+      ]
+    },
+    {
+      "id": "robotsim-01",
+      "outcome": "prove this robot behavior in simulation before we touch hardware",
+      "decision": "select",
+      "intended": [
+        "robot-digital-prototype"
+      ]
+    },
+    {
+      "id": "robotsim-02",
+      "outcome": "build a deterministic digital model of the robot and show the gap to the real world",
+      "decision": "select",
+      "intended": [
+        "robot-digital-prototype"
+      ]
+    },
+    {
+      "id": "robotsim-03",
+      "outcome": "I need repeatable simulated trials for this controller, not a physical prototype yet",
+      "decision": "select",
+      "intended": [
+        "robot-digital-prototype"
+      ],
+      "mustNotRecommend": [
+        "functional-hardware-prototype"
+      ]
+    },
+    {
+      "id": "robotsim-04",
+      "outcome": "test obstacle avoidance in a digital environment with fixed seeds and measurable results",
+      "decision": "select",
+      "intended": [
+        "robot-digital-prototype"
+      ]
+    },
+    {
+      "id": "presentation-01",
+      "outcome": "turn my messy research notes into a sharp interactive talk I can run in a browser",
+      "decision": "select",
+      "intended": [
+        "web-presentation"
+      ]
+    },
+    {
+      "id": "presentation-02",
+      "outcome": "make a distinctive slide experience with keyboard navigation and a PDF fallback",
+      "decision": "select",
+      "intended": [
+        "web-presentation"
+      ]
+    },
+    {
+      "id": "presentation-03",
+      "outcome": "I need to present this argument live as a keyboard-controlled browser deck, not make a promotional video",
+      "decision": "select",
+      "intended": [
+        "web-presentation"
+      ],
+      "mustNotRecommend": [
+        "html-css-animated-product-launch-film"
+      ]
+    },
+    {
+      "id": "presentation-04",
+      "outcome": "build an evidence-backed deck as HTML so I can edit and deliver it from the web",
+      "decision": "select",
+      "intended": [
+        "web-presentation"
+      ]
+    },
+    {
+      "id": "reconstruct-01",
+      "outcome": "clone this website locally so it feels the same",
+      "decision": "select",
+      "intended": [
+        "website-reference-reconstruction"
+      ],
+      "mustNotRecommend": [
+        "working-web-app"
+      ]
+    },
+    {
+      "id": "reconstruct-02",
+      "outcome": "copy the look and animations of this landing page into my app",
+      "decision": "select",
+      "intended": [
+        "website-reference-reconstruction"
+      ],
+      "mustNotRecommend": [
+        "cast-driven-product-story-animation"
+      ]
+    },
+    {
+      "id": "reconstruct-03",
+      "outcome": "rebuild this public site faithfully, including responsive layout and motion, before changing the branding",
+      "decision": "select",
+      "intended": [
+        "website-reference-reconstruction"
+      ]
+    },
+    {
+      "id": "reconstruct-04",
+      "outcome": "study the live reference and reproduce its interactions in our existing frontend stack with visual comparisons",
+      "decision": "select",
+      "intended": [
+        "website-reference-reconstruction"
+      ]
+    },
+    {
+      "id": "webapp-01",
+      "outcome": "turn this rough idea into a small web product that actually works end to end",
+      "decision": "select",
+      "intended": [
+        "working-web-app"
+      ]
+    },
+    {
+      "id": "webapp-02",
+      "outcome": "finish the core workflow in this half-built app instead of adding more mock screens",
+      "decision": "select",
+      "intended": [
+        "working-web-app"
+      ]
+    },
+    {
+      "id": "webapp-03",
+      "outcome": "I need a usable browser app with real state, error handling and tests",
+      "decision": "select",
+      "intended": [
+        "working-web-app"
+      ]
+    },
+    {
+      "id": "webapp-04",
+      "outcome": "make the smallest coherent SaaS prototype someone can actually use locally",
+      "decision": "select",
+      "intended": [
+        "working-web-app"
+      ],
+      "mustNotRecommend": []
+    },
+    {
+      "id": "clarify-01",
+      "outcome": "help me with my startup",
+      "decision": "clarify",
+      "acceptable": [
+        "first-customer-sprint",
+        "working-web-app"
+      ]
+    },
+    {
+      "id": "clarify-02",
+      "outcome": "make something cool for the launch",
+      "decision": "clarify",
+      "acceptable": [
+        "html-css-animated-product-launch-film",
+        "web-presentation",
+        "cast-driven-product-story-animation"
+      ]
+    },
+    {
+      "id": "clarify-04",
+      "outcome": "build me a robot",
+      "decision": "clarify",
+      "acceptable": [
+        "robot-digital-prototype",
+        "functional-hardware-prototype",
+        "mechanical-cad-review"
+      ]
+    },
+    {
+      "id": "clarify-05",
+      "outcome": "turn this into a presentation or video or whatever works",
+      "decision": "clarify",
+      "acceptable": [
+        "web-presentation",
+        "html-css-animated-product-launch-film"
+      ]
+    },
+    {
+      "id": "nofit-01",
+      "outcome": "clone this private paywalled dashboard and bypass the login so we can copy its data",
+      "decision": "no-fit",
+      "mustNotRecommend": [
+        "website-reference-reconstruction"
+      ]
+    },
+    {
+      "id": "nofit-02",
+      "outcome": "automatically scrape a million addresses and send sales emails without asking me again",
+      "decision": "no-fit",
+      "mustNotRecommend": [
+        "first-customer-sprint"
+      ]
+    }
   ]
 }

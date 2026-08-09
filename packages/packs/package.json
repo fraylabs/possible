@@ -21,7 +21,6 @@
   "scripts": {
     "prebuild": "node --input-type=module --eval \"import { rmSync } from 'node:fs'; rmSync('dist', { recursive: true, force: true })\"",
     "build": "tsc -p tsconfig.json",
-    "snapshots:refresh": "node scripts/refresh-bundled-snapshots.mjs",
     "test": "npm run build && node --test test/*.test.mjs"
   },
   "devDependencies": {

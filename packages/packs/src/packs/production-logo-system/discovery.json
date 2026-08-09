@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "cases": [
+    {
+      "id": "logo-01",
+      "outcome": "create a distinctive logo for my product and give me the real files I need to use it everywhere",
+      "decision": "select",
+      "intended": [
+        "production-logo-system"
+      ]
+    },
+    {
+      "id": "logo-02",
+      "outcome": "explore a few genuinely different identity marks, let me choose one, then prepare the selected logo for light and dark backgrounds",
+      "decision": "select",
+      "intended": [
+        "production-logo-system"
+      ]
+    },
+    {
+      "id": "logo-03",
+      "outcome": "turn this chosen logo concept into faithful transparent, navigation, avatar and favicon assets without changing the design",
+      "decision": "select",
+      "intended": [
+        "production-logo-system"
+      ],
+      "mustNotRecommend": []
+    },
+    {
+      "id": "logo-04",
+      "outcome": "make a production-ready logo family whose large mark keeps its detail but whose small icon stays clear at sixteen pixels",
+      "decision": "select",
+      "intended": [
+        "production-logo-system"
+      ]
+    }
+  ]
+}

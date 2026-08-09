@@ -9,13 +9,13 @@ import {
   normalizeCatalogMetadata,
   unprefixedSha256,
 } from "./catalog.js";
-import { searchPublicPacks } from "./search.js";
+import { searchPublicPacks, type PackSearchInput } from "./search.js";
 
 export const POSSIBLE_TOOL_NAMES = ["list_packs", "fetch_pack", "search_packs"] as const;
 export const POSSIBLE_SERVER_INSTRUCTIONS = "Possible MCP is a read-only public Outcome Pack distributor. It lists, searches, and fetches exact public catalog snapshots with source, maintainer-owned trust, accepted-evidence summaries, and content hashes. A listed pack is a valid source submission, not a Possible-maintainer endorsement or verification. Search returns the complete active catalog with transparent lexical hints; lexical order is not semantic rank or an automatic recommendation. An agent must judge promise, fit, notFor, expectations, trust, and evidence across the returned catalog. It never writes project files, discovers private packs, compiles or executes packs, approves work, validates checkpoints, or grants authority. The Possible skill and local CLI own project-local pack handling and execution.";
 const READ_ONLY = { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false } as const;
 
-const reviewUrl = (entry: McpCatalogEntry): string => `https://possible.sh/packs/${entry.origin.kind === "bundled" ? entry.pack.slug : entry.id}`;
+const reviewUrl = (entry: McpCatalogEntry): string => `https://possible.sh/packs/${entry.origin.kind === "bundled" ? entry.slug : entry.id}`;
 
 export interface PossibleServerOptions {
   catalog?: readonly PackCatalogEntry[];
@@ -36,14 +36,9 @@ export async function createPossibleServer(options: PossibleServerOptions = {}):
       return {
         catalogNumber: entry.catalogNumber ?? index + 1,
         id: entry.id,
-        slug: pack.slug,
-        packVersion: pack.packVersion,
-        visibility: pack.visibility,
-        lifecycle: pack.lifecycle,
-        lane: pack.lane,
+        slug: entry.slug,
         name: pack.name,
         promise: pack.promise,
-        reviewedAt: pack.reviewedAt,
         status: metadata.trust.status,
         contentHash: digest,
         sourceUrl: metadata.source.manifestUrl,
@@ -68,7 +63,7 @@ export async function createPossibleServer(options: PossibleServerOptions = {}):
     const idOrSlug = id ?? slug!;
     const lookup = lookupCatalogEntry(catalog, idOrSlug);
     if (lookup.kind === "ambiguous") return errorResult("PACK_AMBIGUOUS", `Pack slug '${idOrSlug}' is ambiguous; use a namespaced id.`, { slug: idOrSlug, matchingIds: lookup.matchingIds });
-    if (lookup.kind === "missing" || lookup.entry.pack.visibility !== "public") return errorResult("PACK_NOT_FOUND", `Public outcome pack '${idOrSlug}' does not exist.`, { idOrSlug });
+    if (lookup.kind === "missing") return errorResult("PACK_NOT_FOUND", `Public outcome pack '${idOrSlug}' does not exist.`, { idOrSlug });
     const { entry } = lookup;
     const { pack } = entry;
     const metadata = normalizeCatalogMetadata(entry);
@@ -77,14 +72,10 @@ export async function createPossibleServer(options: PossibleServerOptions = {}):
       manifest: pack,
       metadata: {
         id: entry.id,
-        slug: pack.slug,
-        packVersion: pack.packVersion,
-        visibility: pack.visibility,
-        lifecycle: pack.lifecycle,
+        slug: entry.slug,
         status: metadata.trust.status,
-        reviewedAt: pack.reviewedAt ?? null,
         contentHash: digest,
-        immutableRef: `${pack.slug}@${pack.packVersion}#${digest}`,
+        immutableRef: `${entry.id}@${metadata.source.revision}#${digest}`,
         catalogRef: `${entry.id}@${metadata.source.revision}#${metadata.source.contentHash}`,
         sourceUrl: metadata.source.manifestUrl,
         reviewUrl: reviewUrl(entry),
@@ -98,39 +89,31 @@ export async function createPossibleServer(options: PossibleServerOptions = {}):
   });
   server.registerTool("search_packs", {
     title: "Search public Possible outcome packs",
-    description: "Return the complete active catalog with transparent lexical hints across metadata and expectations. Every candidate includes its full notFor boundary and requires semantic agent judgment; lexical order is not an automatic recommendation.",
+    description: "Return the complete active catalog with transparent lexical hints across each pack's name, promise, concise opening summary, and publisher. Every candidate includes its full notFor boundary and requires semantic agent judgment; lexical order is not an automatic recommendation.",
     inputSchema: {
       outcome: z.string().trim().min(1),
       currentReality: z.string().trim().min(1).optional(),
       constraints: z.string().trim().min(1).optional(),
     },
     annotations: READ_ONLY,
-  }, async ({ outcome, currentReality, constraints }) => successResult({
-    query: {
-      outcome,
-      ...(currentReality === undefined ? {} : { currentReality }),
-      ...(constraints === undefined ? {} : { constraints }),
-    },
-    candidates: searchPublicPacks(
-      {
-        outcome,
-        ...(currentReality === undefined ? {} : { currentReality }),
-        ...(constraints === undefined ? {} : { constraints }),
+  }, async ({ outcome, currentReality, constraints }) => {
+    const query: PackSearchInput = { outcome };
+    if (currentReality !== undefined) query.currentReality = currentReality;
+    if (constraints !== undefined) query.constraints = constraints;
+    return successResult({
+      query,
+      candidates: searchPublicPacks(query, { catalog }),
+      method: {
+        type: "complete-active-catalog-with-lexical-hints",
+        searchedFields: ["name", "promise", "summary", "publisher"],
+        completeCatalog: true,
+        lexicalHints: true,
+        semanticRanking: false,
+        embeddings: false,
+        automaticRecommendation: false,
       },
-      {
-        catalog,
-      },
-    ),
-    method: {
-      type: "complete-active-catalog-with-lexical-hints",
-      searchedFields: ["name", "promise", "summary", "useWhen", "notFor", "expectations.statement"],
-      completeCatalog: true,
-      lexicalHints: true,
-      semanticRanking: false,
-      embeddings: false,
-      automaticRecommendation: false,
-    },
-    agentJudgmentRequired: true,
-  }));
+      agentJudgmentRequired: true,
+    });
+  });
   return server;
 }

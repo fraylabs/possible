@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "cases": [
+    {
+      "id": "cad-01",
+      "outcome": "make a simple CAD design and prove all the pieces can actually assemble",
+      "decision": "select",
+      "intended": [
+        "mechanical-cad-review"
+      ]
+    },
+    {
+      "id": "cad-02",
+      "outcome": "turn this enclosure idea into printable parts with dimensions, tolerances and an assembly check",
+      "decision": "select",
+      "intended": [
+        "mechanical-cad-review"
+      ]
+    },
+    {
+      "id": "cad-03",
+      "outcome": "I need a mechanically reviewable model, exploded view and honest notes about what still needs physical testing",
+      "decision": "select",
+      "intended": [
+        "mechanical-cad-review"
+      ]
+    },
+    {
+      "id": "cad-04",
+      "outcome": "design the joints and fit for this object before I pay a fabrication company",
+      "decision": "select",
+      "intended": [
+        "mechanical-cad-review"
+      ],
+      "mustNotRecommend": [
+        "functional-hardware-prototype"
+      ]
+    }
+  ]
+}

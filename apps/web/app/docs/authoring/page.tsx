@@ -1,4 +1,4 @@
-import PossibleRoute from "../../_components/PossibleRoute";
+import { AuthoringDocsPage as AuthoringDocsContent } from "../../../src/App";
 import { pageMetadata } from "../../_metadata";
 
 export const metadata = pageMetadata({
@@ -8,5 +8,5 @@ export const metadata = pageMetadata({
 });
 
 export default function AuthoringDocsPage() {
-  return <PossibleRoute path="/docs/authoring" />;
+  return <AuthoringDocsContent />;
 }

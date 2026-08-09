@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "cases": [
+    {
+      "id": "hardware-01",
+      "outcome": "build one physical prototype that performs its main function under a real test",
+      "decision": "select",
+      "intended": [
+        "functional-hardware-prototype"
+      ]
+    },
+    {
+      "id": "hardware-02",
+      "outcome": "integrate the electronics, enclosure and mechanism into something I can actually handle and test",
+      "decision": "select",
+      "intended": [
+        "functional-hardware-prototype"
+      ]
+    },
+    {
+      "id": "hardware-03",
+      "outcome": "I need a working bench prototype, not just CAD renders and a parts list",
+      "decision": "select",
+      "intended": [
+        "functional-hardware-prototype"
+      ],
+      "mustNotRecommend": [
+        "mechanical-cad-review"
+      ]
+    },
+    {
+      "id": "hardware-04",
+      "outcome": "make the first real artifact and measure whether its claimed core behavior works",
+      "decision": "select",
+      "intended": [
+        "functional-hardware-prototype"
+      ]
+    }
+  ]
+}

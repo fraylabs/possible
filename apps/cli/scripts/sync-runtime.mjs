@@ -9,9 +9,22 @@ const targetRoot = join(packageRoot, "runtime");
 await rm(targetRoot, { recursive: true, force: true });
 await mkdir(targetRoot, { recursive: true });
 
-for (const file of ["catalog.js", "compiler.js", "index.js", "local.js", "manifest.js"]) {
+for (const file of [
+  "bundled-snapshots.json",
+  "bundled-trust.json",
+  "catalog.js",
+  "compiler.js",
+  "federated-catalog.json",
+  "generated-manifests.js",
+  "index.js",
+  "local.js",
+  "manifest.js",
+  "registry.js",
+  "search.js",
+  "submission.js",
+]) {
   await copyFile(join(compiledRoot, file), join(targetRoot, file));
 }
-await cp(join(compiledRoot, "manifests"), join(targetRoot, "manifests"), { recursive: true });
+await cp(join(compiledRoot, "packs"), join(targetRoot, "packs"), { recursive: true });
 
 console.log("Synced the local JSON pack runtime into the published CLI.");

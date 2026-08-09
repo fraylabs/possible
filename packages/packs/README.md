@@ -1,27 +1,59 @@
 # Authoring Outcome Packs
 
-Outcome Packs are declarative JSON contracts for one observable, verifiable result. A pack is a contract, not permission: it may describe approval gates and guardrails, but it never authorizes external actions.
+An Outcome Pack is a small JSON contract for one reusable finished result. A pack is direction, not permission.
 
-## Public manifests
+## Bundled folders
 
-Bundled public manifests live in [`src/manifests`](src/manifests). Accepted external manifests remain in their authors' Git repositories and enter Possible through the Git-backed registry as exact content-addressed snapshots. Both use the same contract and feed the compiler, website, bundled skill reference, and public MCP distribution.
+```text
+src/packs/<slug>/
+  pack.json          # required authored contract
+  discovery.json     # four ordinary-language selection cases
+  showcase.json      # optional presentation metadata
+  media/             # optional local showcase files
+```
 
-The schema is available at [`src/outcome-pack.schema.json`](src/outcome-pack.schema.json) as a structural reference for editors and tooling. Runtime validation is authoritative for semantic relationships, lifecycle rules, and references such as unique IDs and workstream skill ownership. Public catalog numbers are presentation metadata and are not part of a pack manifest.
+The folder name is the slug. `pack.json` must not repeat it.
+
+Everything derived from bundled folders is generated. Do not hand-edit generated manifests, bundled snapshots, bundled discovery output, public catalog references, or CLI skill snapshots.
+
+```bash
+npm run packs:generate
+npm run pack:create -- my-outcome
+npm run pack:remove -- my-outcome
+```
+
+Maintainer-owned trust lives in [`registry/bundled-trust.json`](../../registry/bundled-trust.json), outside pack folders. Accepted external packs remain in their authors' Git repositories and enter through exact source-pinned snapshots.
+
+## The authored contract
+
+The canonical schema is [`src/outcome-pack.schema.json`](src/outcome-pack.schema.json). Required fields are:
+
+- `schemaVersion` — use `1`;
+- `name` — name the finished outcome;
+- `promise` — say in one sentence what success leaves the user with;
+- `prompt` — supply a complete structured execution brief with only the useful context, deliverables, constraints, and stopping boundary;
+- `expectations` — write a short array of observable checklist statements about the finished result, not verification procedures.
+
+`skills` is optional. Add only the smallest necessary set using the GitHub `repository`, repository-relative `directory` containing `SKILL.md`, and exact `lastReviewedCommit` inspected by the author. Omit it when the agent needs no specialized capability.
+
+`notFor` is optional. Add it only when a nearby request could otherwise select this pack incorrectly.
+
+That is the entire pack. Do not add slug, version, visibility, lifecycle, category, source, trust, evidence, showcase, workstreams, outputs, guardrails, verification objects, plugins, schedules, prerequisites, or domain-specific contract keys. Useful instructions belong in `prompt`. Observable completion conditions belong in `expectations`.
+
+The compiler does only two things:
+
+1. generates direct repository-directory install commands for any listed Skills;
+2. appends the optional Skill names and required expectations checklist to the authored prompt.
+
+It does not invent orchestration. At run time, the agent checks each expectation using the cheapest reliable method available and creates no extra verification artifacts unless an expectation, the risk, or the user requires them.
+
+`lastReviewedCommit` identifies the exact Skill version reviewed by the pack author. Installation still uses the standard Skills CLI, which currently installs the named directory from the repository's live default branch. The agent must inspect the installed Skill and disclose drift instead of describing the installation as commit-pinned.
 
 ## Project-local packs
 
-Create a private pack inside the project that owns it:
-
 ```text
-.possible/
-  packs/
-    my-pack/
-      pack.json
-      README.md
-      fixtures/
+.possible/packs/my-pack/pack.json
 ```
-
-Use the CLI:
 
 ```text
 possible pack init my-pack
@@ -31,42 +63,8 @@ possible pack compile my-pack
 possible pack export my-pack
 ```
 
-`init` creates a draft. Drafts can be edited and validated, but compilation is refused until the pack is reviewed. A private reviewed pack remains private and does not grant authority.
+`init` creates an incomplete template. The pack remains project-local unless explicitly exported and submitted.
 
-## Required contract
+## Optional showcase
 
-Every pack is authored from three primitives:
-
-- **Structured Prompt** — the promise, summary, fit, workstreams, outputs, guardrails, verification, and stopping-boundary fields that compile into one Run Prompt;
-- **Skills** — reviewed sources, pinned revisions, and exact install commands;
-- **Expectations** — observable checklist items with failure modes and required evidence.
-
-Every manifest also carries catalog metadata and the generic workstream structure needed to compile those primitives. It must not add a domain-specific contract object, module registry, plugin list, schedule, prerequisite, remix schema, or compiler branch. Put domain guidance in the Structured Prompt fields or express it as an expectation.
-
-The generic manifest fields are:
-
-- `schemaVersion`, `packVersion`, `slug`, and a `visibility`/`lifecycle` pair;
-- `promise`, `summary`, `useWhen`, and `notFor`;
-- `skills` and independently owned `workstreams`;
-- `outputs`, `guardrails`, and `verification`;
-- `expectations` with failure modes and required evidence (required for reviewed and archived packs).
-
-Field demands are intentionally explicit:
-
-- `promise` names the observable result in one sentence; `summary` explains the outcome shape and stopping boundary. `summary` is the human-facing description—there is no separate `description` field.
-- `useWhen` and `notFor` define fit and non-scope, so a pack is not selected by a vague category match.
-- `skills` name reviewed, pinned capabilities; `workstreams` assign independently owned work and artifacts; `reviewSkills` challenge the integrated result.
-- `outputs` name artifacts, while `expectations` define what must be true. Each expectation records failure modes and required evidence; outputs alone are never proof.
-- `guardrails` state non-negotiable boundaries and `verification` names fresh checks that can falsify the expectations.
-- Metadata (`schemaVersion`, `packVersion`, `visibility`, `lifecycle`, `lane`, `slug`, `name`, `eyebrow`, and optional archive/review timestamps) identifies and distributes the contract; it never grants authority.
-
-Keep `visibility` and `lifecycle` separate:
-
-```json
-{
-  "visibility": "private",
-  "lifecycle": "draft"
-}
-```
-
-`export` converts a private reviewed contract into a reviewed public contract without publishing it. Keeping `lifecycle: reviewed` makes the exact external snapshot compilable; it does not assign Possible trust. A valid external submission enters the catalog as `listed`; maintainers assign `experimental`, `verified`, or `archived` trust separately, and verified requires accepted run evidence. MCP only lists, searches, and fetches public JSON snapshots; it never discovers private packs or writes project files.
+`showcase.json` may add a description, up to five images, one MP4/WebM video, and one CAD group with optional GLB preview plus STEP/STL/3MF downloads. Local assets are direct children of `media/`. Showcase media is illustrative and never accepted run evidence.

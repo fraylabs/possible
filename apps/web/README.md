@@ -1,23 +1,14 @@
 # @possible/web
 
-The public Possible site has one judge journey:
+The public site has three product surfaces:
 
-- `/` — proposition, install, visual Outcome Pack gallery and featured outcomes
-- `/examples` — one gallery where every example switches between finished outputs and its process record
-- `/docs` — overview and getting started
-- `/docs/how-to-use`, `/docs/outcome-packs`, `/docs/expectations`, `/docs/authoring`, `/docs/reference`, `/docs/glossary` — the human documentation sections
-- `/packs/<slug>` — individual Outcome Pack specifications linked from the homepage gallery
-- `/presentation` — the coded visual explainer
+- `/` — the searchable, paginated active Outcome Pack library and primary product surface;
+- `/packs/<identity>` — product-facing details with optional showcase media, contract contents, fit, trust, and run actions;
+- `/docs/**` — multi-page human documentation.
 
-`/demo/**` is retained only as the raw artifact namespace for films, CAD, simulations and evidence. Exact retired Demo pages redirect to the corresponding example’s Process view.
+The site imports the generated catalog, compiler, and bundled showcases from `@possible/packs`. Do not create separate example or demo catalogs. Representative media belongs in the owning pack folder as optional `showcase.json` plus `media/`; the build copies those assets into the static site. Showcase media is not evidence or verification.
 
-Canonical install:
-
-```bash
-npx @fraylabs/possible@0.1.11 init
-```
-
-The site imports the generated public catalog and compiler from `@possible/packs`. Production builds export bundled and federated pack pages from immutable snapshots; namespaced routes prevent external-author slug collisions. A listed contract is a valid source submission but not a Possible-maintainer endorsement; the page exposes that trust boundary explicitly.
+Production builds export bundled and federated pack pages from immutable catalog snapshots. Namespaced routes prevent external-author slug collisions. A listed contract is valid and discoverable but is not a Possible-maintainer endorsement.
 
 ```bash
 npm run test -w @possible/web

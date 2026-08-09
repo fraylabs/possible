@@ -11,8 +11,11 @@ export type RetrievalErrorCode =
 export interface RetrievalError {
   code: RetrievalErrorCode;
   message: string;
-  details?: Record<string, unknown>;
+  details?: RetrievalDetails;
 }
+
+export type RetrievalDetailValue = string | number | boolean | null | readonly string[];
+export type RetrievalDetails = Readonly<Record<string, RetrievalDetailValue>>;
 
 export interface SuccessEnvelope<T> {
   ok: true;
@@ -24,22 +27,18 @@ export interface ErrorEnvelope {
   error: RetrievalError;
 }
 
-function asStructuredContent(value: object): Record<string, unknown> {
-  return value as Record<string, unknown>;
-}
-
 export function successResult<T>(data: T): CallToolResult {
   const envelope: SuccessEnvelope<T> = { ok: true, data };
   return {
     content: [{ type: "text", text: JSON.stringify(envelope, null, 2) }],
-    structuredContent: asStructuredContent(envelope),
+    structuredContent: { ok: envelope.ok, data: envelope.data },
   };
 }
 
 export function errorResult(
   code: RetrievalErrorCode,
   message: string,
-  details?: Record<string, unknown>,
+  details?: RetrievalDetails,
 ): CallToolResult {
   const error: RetrievalError = details === undefined
     ? { code, message }
@@ -47,12 +46,12 @@ export function errorResult(
   const envelope: ErrorEnvelope = { ok: false, error };
   return {
     content: [{ type: "text", text: JSON.stringify(envelope, null, 2) }],
-    structuredContent: asStructuredContent(envelope),
+    structuredContent: { ok: envelope.ok, error: envelope.error },
     isError: true,
   };
 }
 
-export function retrievalFailure(error: unknown): CallToolResult {
-  const message = error instanceof Error ? error.message : "Unknown retrieval failure";
+export function retrievalFailure(cause: unknown): CallToolResult {
+  const message = cause instanceof Error ? cause.message : "Unknown retrieval failure";
   return errorResult("RETRIEVAL_FAILED", message);
 }

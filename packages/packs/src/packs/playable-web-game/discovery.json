@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "cases": [
+    {
+      "id": "game-01",
+      "outcome": "make a weird little browser game where the rules become obvious by playing",
+      "decision": "select",
+      "intended": [
+        "playable-web-game"
+      ],
+      "mustNotRecommend": [
+        "working-web-app"
+      ]
+    },
+    {
+      "id": "game-02",
+      "outcome": "I have a silly game mechanic; turn it into something polished I can send as a link",
+      "decision": "select",
+      "intended": [
+        "playable-web-game"
+      ]
+    },
+    {
+      "id": "game-03",
+      "outcome": "build a tiny web game with keyboard controls, restart, scoring and a complete play loop",
+      "decision": "select",
+      "intended": [
+        "playable-web-game"
+      ]
+    },
+    {
+      "id": "game-04",
+      "outcome": "this prototype is technically interactive but not fun or readable; make it feel like a finished browser game",
+      "decision": "select",
+      "intended": [
+        "playable-web-game"
+      ]
+    }
+  ]
+}

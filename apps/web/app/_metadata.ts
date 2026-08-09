@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const siteUrl = "https://possible.sh";
 export const siteName = "Possible";
-export const siteDescription = "Possible turns rough ideas into coordinated, independently verified outcomes with open-source Outcome Packs for Codex.";
+export const siteDescription = "Possible helps you discover what agents can do and gives each outcome a structured prompt, a checklist for what finished means, and optional specialized Skills.";
 
 type PageMetadataInput = {
   title: string;
@@ -22,7 +22,7 @@ export function pageMetadata({ title, description, path, alternates = {} }: Page
       canonical,
       types: {
         "text/plain": `${siteUrl}/llms.txt`,
-        "application/json": `${siteUrl}/evidence.json`,
+        "application/json": `${siteUrl}/packs/index.json`,
         ...alternates,
       },
     },

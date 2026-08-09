@@ -1,5 +1,5 @@
-import PossibleRoute from "./_components/PossibleRoute";
+import { NotFoundPage } from "../src/App";
 
 export default function NotFound() {
-  return <PossibleRoute path="/__not_found__" />;
+  return <NotFoundPage />;
 }

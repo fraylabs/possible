@@ -1,6 +1,5 @@
 import { access, mkdir, readFile, writeFile } from "node:fs/promises";
-import { createHash } from "node:crypto";
-import { dirname, join, resolve } from "node:path";
+import { basename, dirname, extname, join, resolve } from "node:path";
 
 const exists = async (path) => {
   try {
@@ -12,9 +11,6 @@ const exists = async (path) => {
 };
 
 const readJson = async (path) => JSON.parse(await readFile(path, "utf8"));
-
-const FULL_GIT_REVISION = /^(?:[0-9a-f]{40}|[0-9a-f]{64})$/;
-const GITHUB_PART = /^[A-Za-z0-9_.-]+$/;
 
 const parseExportArguments = (args) => {
   const positional = [];
@@ -40,29 +36,6 @@ const parseExportArguments = (args) => {
   return { value: positional[0], outputValue: positional[1], source: options.source, revision: options.revision, sourcePath: options.path };
 };
 
-const parseGitHubSource = (value) => {
-  let url;
-  try {
-    url = new URL(value);
-  } catch {
-    throw new Error("--source must be an HTTPS GitHub repository URL");
-  }
-  const parts = url.pathname.replace(/\.git$/, "").split("/").filter(Boolean);
-  if (url.protocol !== "https:" || url.hostname !== "github.com" || parts.length !== 2 || url.search || url.hash || !parts.every((part) => GITHUB_PART.test(part))) {
-    throw new Error("--source must look like https://github.com/<owner>/<repository>");
-  }
-  return { source: `https://github.com/${parts[0]}/${parts[1]}`, owner: parts[0], repository: parts[1] };
-};
-
-const validateSourcePath = (value) => {
-  if (value.startsWith("/") || value.includes("\\") || value.split("/").some((part) => part === "" || part === "." || part === "..") || !value.endsWith(".json")) {
-    throw new Error("--path must be a safe repository-relative JSON path");
-  }
-  return value;
-};
-
-const sha256 = (value) => `sha256:${createHash("sha256").update(value).digest("hex")}`;
-
 const writeExclusive = async (path, contents) => {
   await writeFile(path, contents, { flag: "wx" }).catch((error) => {
     if (error?.code === "EEXIST") throw new Error(`Export already exists: ${path}`);
@@ -72,12 +45,12 @@ const writeExclusive = async (path, contents) => {
 
 const submissionInstructions = ({ pack, sourceEntry, sourceEntryName }) => {
   if (!sourceEntry) {
-    return `# Submit ${pack.name}\n\nThis reviewed public contract is not PR-ready yet because its Git source is not pinned. Commit the exported \`pack.json\` to a public GitHub repository, then run:\n\n\`\`\`bash\npossible pack export <repository-path-to-pack.json> --source https://github.com/<owner>/<repository> --revision <full-commit> --path <repository-path-to-pack.json>\n\`\`\`\n\nThe exact export creates \`source-entry.json\`. Do not replace the full commit with a branch or tag. The contract lifecycle makes it compilable; it does not grant Possible catalog trust.\n`;
+    return `# Submit ${pack.name}\n\nThis valid Outcome Pack is not PR-ready yet because its Git source is not pinned. Commit the exported \`pack.json\` to a public GitHub repository, then run:\n\n\`\`\`bash\npossible pack export <repository-path-to-pack.json> --source https://github.com/<owner>/<repository> --revision <full-commit> --path <repository-path-to-pack.json>\n\`\`\`\n\nThe exact export creates \`source-entry.json\`. Do not replace the full commit with a branch or tag. A valid contract is still not Possible catalog trust.\n`;
   }
   const registryPath = `registry/entries/${sourceEntry.id}.json`;
   const snapshotPath = `registry/snapshots/${sourceEntry.contentHash.slice("sha256:".length)}.json`;
   const sourceAtRevision = `${sourceEntry.source}/blob/${sourceEntry.revision}/${sourceEntry.path}`;
-  return `# Submit ${pack.name}\n\nThis package pins the public source that Possible should review.\n\n- Source: ${sourceAtRevision}\n- Commit: \`${sourceEntry.revision}\`\n- Path: \`${sourceEntry.path}\`\n- Content: \`${sourceEntry.contentHash}\`\n\n## Open the pull request\n\n1. Fork \`fraylabs/possible\` on GitHub and create a branch. No Possible account is required.\n2. Copy \`${sourceEntryName}\` to \`${registryPath}\` in your fork. Do not add a trust or evidence record.\n3. Copy this package's \`pack.json\` unchanged to \`${snapshotPath}\`. This content-addressed snapshot makes the catalog reproducible offline; it is provenance, not trust.\n4. Run \`node scripts/validate-pack-submission.mjs --entry ${registryPath} --pack <path-to-this-package>/pack.json\`.\n5. Run \`npm run registry:sync\` and commit its generated catalog and reference files. Do not edit those files by hand.\n6. Open a pull request describing the outcome, non-scope, and evidence the Expectations require.\n\nPossible's Git-backed registry and immutable snapshot are the submission record; there is no submission database. Merge makes a valid pack listed. Only maintainers can assign experimental, verified, or archived trust through a separate trust record, and verification requires accepted run evidence.\n`;
+  return `# Submit ${pack.name}\n\nThis package pins the public source that Possible should review.\n\n- Source: ${sourceAtRevision}\n- Commit: \`${sourceEntry.revision}\`\n- Path: \`${sourceEntry.path}\`\n- Content: \`${sourceEntry.contentHash}\`\n\n## Open the pull request\n\n1. Fork \`fraylabs/possible\` on GitHub and create a branch. No Possible account is required.\n2. Copy \`${sourceEntryName}\` to \`${registryPath}\` in your fork. Do not add a trust or evidence record.\n3. Copy this package's \`pack.json\` unchanged to \`${snapshotPath}\`. This content-addressed snapshot makes the catalog reproducible offline; it is provenance, not trust.\n4. Run \`node scripts/validate-pack-submission.mjs --entry ${registryPath} --pack <path-to-this-package>/pack.json\`.\n5. Run \`npm run registry:sync\` and commit its generated catalog and reference files. Do not edit those files by hand.\n6. Open a pull request describing the outcome, non-scope, and evidence the Expectations require.\n\nPossible's Git-backed registry and immutable snapshot are the submission record; there is no submission database. Merge makes a valid pack listed. Only maintainers can assign experimental or verified trust through a separate trust record, and verification requires accepted run evidence.\n`;
 };
 
 const packPath = (projectDirectory, value) => {
@@ -86,15 +59,22 @@ const packPath = (projectDirectory, value) => {
   return join(projectDirectory, ".possible", "packs", value, "pack.json");
 };
 
-const loadRuntime = async () => {
+const slugForPackPath = (path) => {
+  const file = basename(path);
+  const slug = file === "pack.json" ? basename(dirname(path)) : basename(file, extname(file));
+  if (!/^[a-z0-9][a-z0-9-]*$/.test(slug)) throw new Error("Pack path must use a lowercase hyphenated folder or filename so its catalog slug is unambiguous");
+  return slug;
+};
+
+export const loadRuntime = async () => {
   try {
     const runtimeRoot = new URL("../runtime/", import.meta.url);
-    const [packs, local] = await Promise.all([import(new URL("index.js", runtimeRoot)), import(new URL("local.js", runtimeRoot))]);
-    return { ...packs, ...local };
+    const [packs, local, submission] = await Promise.all([import(new URL("index.js", runtimeRoot)), import(new URL("local.js", runtimeRoot)), import(new URL("submission.js", runtimeRoot))]);
+    return { ...packs, ...local, ...submission };
   } catch (error) {
     if (error?.code !== "ERR_MODULE_NOT_FOUND") throw error;
-    const [packs, local] = await Promise.all([import("@possible/packs"), import("@possible/packs/local")]);
-    return { ...packs, ...local };
+    const [packs, local, submission] = await Promise.all([import("@possible/packs"), import("@possible/packs/local"), import("@possible/packs/submission")]);
+    return { ...packs, ...local, ...submission };
   }
 };
 
@@ -104,12 +84,12 @@ export async function runPackCommand(args, projectDirectory = process.cwd()) {
 
   if (command === "init") {
     const slug = value ?? "my-pack";
-    const path = await runtime.writeLocalPack(runtime.createDraftPack(slug), projectDirectory);
+    const path = await runtime.writeLocalPack(slug, runtime.createDraftPack(), projectDirectory);
     const readmePath = join(dirname(path), "README.md");
     if (!(await exists(readmePath))) {
-      await writeFile(readmePath, `# ${slug}\n\nThis private Outcome Pack is a local contract. Complete pack.json, validate it, and request review before compiling or running it.\n`);
+      await writeFile(readmePath, `# ${slug}\n\nComplete the structured prompt and Expectations in pack.json, add Skills only when specialized capabilities are needed, then validate and compile it. This folder remains project-local unless you explicitly export and submit it.\n`);
     }
-    return `Created draft private pack at ${path}`;
+    return `Created Outcome Pack draft at ${path}`;
   }
 
   if (command === "validate") {
@@ -119,7 +99,7 @@ export async function runPackCommand(args, projectDirectory = process.cwd()) {
     const results = [];
     for (const target of targets) {
       const pack = runtime.validatePackManifest(await readJson(target), target);
-      results.push({ path: target, slug: pack.slug, visibility: pack.visibility, lifecycle: pack.lifecycle, valid: true });
+      results.push({ path: target, slug: slugForPackPath(target), name: pack.name, valid: true });
     }
     process.stdout.write(`${JSON.stringify(results, null, 2)}\n`);
     return null;
@@ -138,48 +118,34 @@ export async function runPackCommand(args, projectDirectory = process.cwd()) {
     const parsed = parseExportArguments(args.slice(1));
     const path = packPath(projectDirectory, parsed.value);
     const pack = runtime.validatePackManifest(await readJson(path), path);
-    const privateReviewed = pack.visibility === "private" && pack.lifecycle === "reviewed";
-    const publicReviewed = pack.visibility === "public" && pack.lifecycle === "reviewed";
-    if (!privateReviewed && !publicReviewed) throw new Error("Pack export accepts a reviewed private or public pack");
-    if (parsed.source && !publicReviewed) {
-      throw new Error("A PR-ready export must use the reviewed public pack already committed at --revision so its source and content hash agree");
-    }
-    let candidate = pack;
-    if (privateReviewed) {
-      candidate = { ...pack, visibility: "public" };
-    }
-    const packContents = `${JSON.stringify(candidate, null, 2)}\n`;
+    const slug = slugForPackPath(path);
+    const packContents = `${JSON.stringify(pack, null, 2)}\n`;
     const destination = parsed.outputValue
       ? resolve(projectDirectory, parsed.outputValue)
-      : join(projectDirectory, ".possible", "exports", `${pack.slug}-${pack.packVersion}`);
+      : join(projectDirectory, ".possible", "exports", slug);
     const outputPath = destination.endsWith(".json") ? destination : join(destination, "pack.json");
     const outputDirectory = dirname(outputPath);
     let sourceEntry = null;
     let sourceEntryName = "source-entry.template.json";
     if (parsed.source) {
-      const { source, owner, repository } = parseGitHubSource(parsed.source);
-      const revision = parsed.revision.toLowerCase();
-      if (!FULL_GIT_REVISION.test(revision)) throw new Error("--revision must be a full 40- or 64-character hexadecimal Git commit");
-      const sourcePath = validateSourcePath(parsed.sourcePath);
-      sourceEntry = {
-        schemaVersion: 1,
-        id: `${owner}/${repository}/${pack.slug}`,
-        source,
-        revision,
-        path: sourcePath,
-        contentHash: sha256(packContents),
-      };
+      sourceEntry = runtime.createFederatedRegistryEntry({
+        slug,
+        source: parsed.source,
+        revision: parsed.revision.toLowerCase(),
+        path: parsed.sourcePath,
+        contentHash: runtime.computePackContentHash(packContents),
+      });
       sourceEntryName = "source-entry.json";
     }
     const sourceEntryContents = sourceEntry
       ? `${JSON.stringify(sourceEntry, null, 2)}\n`
       : `${JSON.stringify({
           schemaVersion: 1,
-          id: `<github-owner>/<repository>/${pack.slug}`,
+          id: `<github-owner>/<repository>/${slug}`,
           source: "https://github.com/<github-owner>/<repository>",
           revision: "<full-git-commit>",
           path: "<repository-relative-path-to-pack.json>",
-          contentHash: sha256(packContents),
+          contentHash: runtime.computePackContentHash(packContents),
         }, null, 2)}\n`;
     await mkdir(outputDirectory, { recursive: true });
     for (const target of [outputPath, join(outputDirectory, sourceEntryName), join(outputDirectory, "SUBMISSION.md")]) {
@@ -187,10 +153,10 @@ export async function runPackCommand(args, projectDirectory = process.cwd()) {
     }
     await writeExclusive(outputPath, packContents);
     await writeExclusive(join(outputDirectory, sourceEntryName), sourceEntryContents);
-    await writeExclusive(join(outputDirectory, "SUBMISSION.md"), submissionInstructions({ pack: candidate, sourceEntry, sourceEntryName }));
+    await writeExclusive(join(outputDirectory, "SUBMISSION.md"), submissionInstructions({ pack, sourceEntry, sourceEntryName }));
     return sourceEntry
       ? `Exported a PR-ready pack submission at ${outputDirectory}`
-      : `Exported a reviewed public contract at ${outputDirectory}; pin its public Git source to make it PR-ready`;
+      : `Exported a valid Outcome Pack at ${outputDirectory}; pin its public Git source to make it PR-ready`;
   }
 
   if (command === "inspect") {
@@ -200,7 +166,7 @@ export async function runPackCommand(args, projectDirectory = process.cwd()) {
     const results = [];
     for (const target of targets) {
       const pack = runtime.validatePackManifest(await readJson(target), target);
-      results.push({ path: target, slug: pack.slug, name: pack.name, packVersion: pack.packVersion, visibility: pack.visibility, lifecycle: pack.lifecycle, reviewedAt: pack.reviewedAt ?? null, archived: pack.archived ?? null });
+      results.push({ path: target, slug: slugForPackPath(target), name: pack.name, promise: pack.promise, skills: pack.skills?.length ?? 0, expectations: pack.expectations.length });
     }
     process.stdout.write(`${JSON.stringify(results, null, 2)}\n`);
     return null;

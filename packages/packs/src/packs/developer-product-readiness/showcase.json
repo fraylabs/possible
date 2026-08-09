@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "description": "CSS Contrast Report turns a working contrast engine into a zero-dependency developer tool with one-command reports, stable CI exits, and JSON output.",
+  "images": [
+    { "src": "media/css-report.png", "alt": "CSS source beside a terminal report listing color-pair contrast ratios and WCAG AA results", "caption": "One command produces the first useful report", "cover": true },
+    { "src": "media/css-report-ci.png", "alt": "Developer-tool board explaining stable exit codes and machine-readable JSON output", "caption": "Predictable local and CI behavior" },
+    { "src": "media/css-report-contract.png", "alt": "Diagram showing CLI and JavaScript interfaces sharing one deterministic contrast-report engine", "caption": "One capability contract across both interfaces" }
+  ]
+}

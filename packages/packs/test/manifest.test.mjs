@@ -1,56 +1,55 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { compilePack, getCatalogNumber, publicOutcomePacks, validatePackManifest } from "../dist/index.js";
+import { bundledOutcomePacks, compilePack, getCatalogNumber, validatePackManifest } from "../dist/index.js";
 import { createDraftPack } from "../dist/local.js";
 
-test("public JSON manifests are validated before entering the registry", () => {
-  assert.equal(publicOutcomePacks.length, 33);
-  for (const pack of publicOutcomePacks) {
-    assert.equal(pack.visibility, "public");
-    assert.ok(["reviewed", "archived"].includes(pack.lifecycle));
-    assert.match(pack.packVersion, /^\d+\.\d+\.\d+$/);
-    assert.equal("catalogNumber" in pack, false);
-    assert.equal(getCatalogNumber(pack.slug), publicOutcomePacks.indexOf(pack) + 1);
-    assert.doesNotThrow(() => validatePackManifest(pack));
+test("bundled manifests contain only the minimal authored contract", () => {
+  assert.ok(bundledOutcomePacks.length > 0);
+  for (const [index, { slug, pack }] of bundledOutcomePacks.entries()) {
+    assert.match(slug, /^[a-z0-9][a-z0-9-]*$/);
+    assert.equal(getCatalogNumber(slug), index + 1);
+    assert.equal(validatePackManifest(pack), pack);
+    assert.doesNotThrow(() => compilePack(pack));
   }
 });
 
-test("draft private packs are valid for authoring but cannot compile", () => {
-  const draft = createDraftPack("local-example");
-  assert.equal(draft.visibility, "private");
-  assert.equal(draft.lifecycle, "draft");
-  assert.doesNotThrow(() => validatePackManifest(draft));
-  assert.throws(() => compilePack(draft), /must be reviewed before compilation/i);
+test("the starter is intentionally incomplete until the author supplies expectations", () => {
+  const draft = createDraftPack();
+  assert.equal("skills" in draft, false);
+  assert.throws(() => validatePackManifest(draft), /expectations must be a non-empty array/i);
 });
 
-test("pack validation rejects malformed versions and duplicate workstream ids", () => {
-  const draft = createDraftPack("invalid-example");
-  draft.packVersion = "draft";
-  assert.throws(() => validatePackManifest(draft), /packVersion must be a semantic version/i);
+test("Skills are optional but must be complete when supplied", () => {
+  const withoutSkills = structuredClone(bundledOutcomePacks[0].pack);
+  delete withoutSkills.skills;
+  assert.equal(validatePackManifest(withoutSkills), withoutSkills);
 
-  const catalogLeak = createDraftPack("catalog-leak");
-  catalogLeak.catalogNumber = 1;
-  assert.throws(() => validatePackManifest(catalogLeak), /not part of the standard prompt, skills, and expectations contract/i);
+  const emptySkills = { ...withoutSkills, skills: [] };
+  assert.throws(() => validatePackManifest(emptySkills), /skills must be omitted or a non-empty array/i);
+});
 
-  const duplicate = createDraftPack("duplicate-example");
-  duplicate.skills = [{ id: "skill", name: "Skill", role: "role", repository: "owner/repo", skill: "skill", reviewedRevision: "a".repeat(40), reviewUrl: "https://example.com/a" }];
-  duplicate.workstreams = [
-    { id: "same", name: "One", skills: ["skill"], owns: ["one/"], brief: "one" },
-    { id: "same", name: "Two", skills: ["skill"], owns: ["two/"], brief: "two" },
-  ];
-  assert.throws(() => validatePackManifest(duplicate), /workstreams contains duplicate ids/i);
+test("validation rejects extra framework fields and invalid Skill review commits", () => {
+  const valid = structuredClone(bundledOutcomePacks[0].pack);
+  valid.slug = "catalog-leak";
+  assert.throws(() => validatePackManifest(valid), /slug is not part of the Outcome Pack contract/i);
 
-  const reviewedWithoutChecklist = createDraftPack("missing-checklist");
-  reviewedWithoutChecklist.lifecycle = "reviewed";
-  reviewedWithoutChecklist.reviewedAt = "2026-08-08";
-  reviewedWithoutChecklist.useWhen = ["a defined outcome"];
-  reviewedWithoutChecklist.notFor = ["an undefined ambition"];
-  reviewedWithoutChecklist.skills = [{ id: "skill", name: "Skill", role: "role", repository: "owner/repo", skill: "skill", reviewedRevision: "a".repeat(40), reviewUrl: "https://example.com/a" }];
-  reviewedWithoutChecklist.workstreams = [{ id: "work", name: "Work", skills: ["skill"], owns: ["outcome/"], brief: "Do the work" }];
-  reviewedWithoutChecklist.reviewSkills = ["skill"];
-  reviewedWithoutChecklist.outputs = ["result"];
-  reviewedWithoutChecklist.guardrails = ["stay honest"];
-  reviewedWithoutChecklist.verification = ["review the result"];
-  delete reviewedWithoutChecklist.expectations;
-  assert.throws(() => validatePackManifest(reviewedWithoutChecklist), /expectations is required for reviewed and archived packs/i);
+  const invalidReviewCommit = structuredClone(bundledOutcomePacks[0].pack);
+  invalidReviewCommit.skills[0].lastReviewedCommit = "main";
+  assert.throws(() => validatePackManifest(invalidReviewCommit), /exact 40- or 64-character lowercase commit hash/i);
+
+  const duplicate = structuredClone(bundledOutcomePacks[0].pack);
+  duplicate.skills.push(structuredClone(duplicate.skills[0]));
+  assert.throws(() => validatePackManifest(duplicate), /duplicate Skill directory/i);
+
+  const legacy = structuredClone(bundledOutcomePacks[0].pack);
+  legacy.skills[0] = {
+    source: legacy.skills[0].repository,
+    lastReviewedCommit: legacy.skills[0].lastReviewedCommit,
+    skill: "legacy-selector",
+  };
+  assert.throws(() => validatePackManifest(legacy), /source is not a supported Skill field/i);
+
+  const unsafeDirectory = structuredClone(bundledOutcomePacks[0].pack);
+  unsafeDirectory.skills[0].directory = "../skills/example";
+  assert.throws(() => validatePackManifest(unsafeDirectory), /safe repository-relative directory/i);
 });

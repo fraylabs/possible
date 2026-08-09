@@ -1,54 +1,50 @@
-import { activeOutcomePacks, archivedOutcomePacks, catalogOutcomePacks, publicCatalog } from "@possible/packs";
-import type { OutcomePack, PackCatalogEntry } from "@possible/packs";
+import { getPackShowcase as getCorePackShowcase, parsePackIdentity, publicCatalog, searchPackCatalog } from "@possible/packs";
+import type { PackCatalogSearchResult, PublicCatalogEntry } from "@possible/packs";
+import cliPackage from "../../cli/package.json" with { type: "json" };
 
-export const installCommand = "npx @fraylabs/possible@0.1.11 init";
+export const possibleVersion = cliPackage.version;
+export const installCommand = `npx @fraylabs/possible@${possibleVersion} init`;
 export const githubUrl = "https://github.com/fraylabs/possible";
 
-export const featuredPackSlugs = [
-  "playable-web-game",
-  "web-presentation",
-  "software-opportunity-discovery",
-] as const;
+export const publishedPacks = publicCatalog;
+export const routablePacks = publicCatalog;
 
-export const featuredPacks = featuredPackSlugs.map((slug) => {
-  const pack = catalogOutcomePacks.find((candidate) => candidate.slug === slug);
-  if (!pack) throw new Error(`Missing featured Outcome Pack: ${slug}`);
-  return pack;
-});
+export type PublishedPackSearchResult = PackCatalogSearchResult<PublicCatalogEntry>;
 
-export const publishedPacks = activeOutcomePacks;
-export const archivedPublishedPacks = archivedOutcomePacks;
-export const routablePacks = catalogOutcomePacks;
-
-export function getPackCatalogEntry(pack: OutcomePack): PackCatalogEntry & { catalogNumber: number } {
-  const entry = publicCatalog.find((candidate) => candidate.pack === pack);
-  if (!entry) throw new Error(`Missing catalog entry for ${pack.slug}`);
-  return entry;
+export function packPublisher(entry: PublicCatalogEntry) {
+  return parsePackIdentity(entry.id).owner;
 }
 
-export function packRouteId(pack: OutcomePack) {
-  const entry = getPackCatalogEntry(pack);
-  return entry.origin.kind === "bundled" ? pack.slug : entry.id;
+export function searchPublishedPacks(query: string): PublishedPackSearchResult[] {
+  return searchPackCatalog({
+    query,
+    minimumMatchingTerms: 2,
+    minimumScoreRatio: 0.5,
+  }, publishedPacks);
 }
 
-export function packHref(pack: OutcomePack) {
-  return `/packs/${packRouteId(pack)}`;
+export function packRouteId(entry: PublicCatalogEntry) {
+  return entry.origin.kind === "bundled" ? entry.slug : entry.id;
 }
 
-export function getFeaturedPack(slug: string) {
-  return featuredPacks.find((pack) => pack.slug === slug);
+export function packHref(entry: PublicCatalogEntry) {
+  return `/packs/${packRouteId(entry)}`;
+}
+
+export function getPackShowcase(entry: PublicCatalogEntry) {
+  return getCorePackShowcase(entry.id);
 }
 
 export function getPublishedPack(idOrSlug: string) {
-  const exact = publicCatalog.find(({ id, pack }) => id === idOrSlug && publishedPacks.includes(pack));
-  if (exact) return exact.pack;
-  const matches = publishedPacks.filter((pack) => pack.slug === idOrSlug);
+  const exact = publishedPacks.find(({ id }) => id === idOrSlug);
+  if (exact) return exact;
+  const matches = publishedPacks.filter(({ slug }) => slug === idOrSlug);
   return matches.length === 1 ? matches[0] : undefined;
 }
 
 export function getRoutablePack(idOrSlug: string) {
-  const exact = publicCatalog.find(({ id }) => id === idOrSlug);
-  if (exact) return exact.pack;
-  const matches = routablePacks.filter((pack) => pack.slug === idOrSlug);
+  const exact = routablePacks.find(({ id }) => id === idOrSlug);
+  if (exact) return exact;
+  const matches = routablePacks.filter(({ slug }) => slug === idOrSlug);
   return matches.length === 1 ? matches[0] : undefined;
 }

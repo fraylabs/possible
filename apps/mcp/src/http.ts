@@ -55,9 +55,10 @@ export async function startHttpServer(
     });
 
     try {
-      // SDK v1's accessor declarations conflict with its Transport interface
-      // only when exactOptionalPropertyTypes is enabled; the runtime class
-      // implements the transport contract used here.
+      // SAFETY: SDK v1's accessor declarations conflict with its Transport interface
+      // only when exactOptionalPropertyTypes is enabled; this SDK-provided runtime
+      // class implements the transport contract consumed by the same SDK server.
+      // oxlint-disable-next-line anti-slop/no-chained-type-assertions -- Upstream SDK declaration mismatch; both values come from the same SDK version.
       await server.connect(transport as unknown as Transport);
       await transport.handleRequest(request, response, request.body);
     } catch (error) {
@@ -103,7 +104,7 @@ export async function startHttpServer(
 
   if (!options.quiet) {
     const address = httpServer.address();
-    const boundPort = typeof address === "object" && address !== null ? address.port : port;
+    const boundPort = address instanceof Object ? address.port : port;
     console.error(`Possible MCP listening at http://${host}:${boundPort}/mcp`);
   }
 

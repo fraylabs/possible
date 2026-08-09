@@ -1,146 +1,22 @@
 import { mkdir, writeFile } from "node:fs/promises";
-import { compilePack, publicCatalog } from "@possible/packs";
-
-const publishedEntries = publicCatalog;
-const publicationKey = (entry) => entry.origin.kind === "bundled" ? entry.pack.slug : entry.id;
-
-const evidenceManifest = {
-  schemaVersion: 1,
-  project: {
-    name: "Possible",
-    url: "https://possible.sh/",
-    repository: "https://github.com/fraylabs/possible",
-    package: "https://www.npmjs.com/package/@fraylabs/possible",
-    judgingPage: "https://possible.sh/judging/",
-  },
-  recordedComparison: {
-    name: "Robot Snake: /goal control versus Possible",
-    question: "What operational knowledge does a non-expert's rough robot-snake request cause the agent to include?",
-    protocol: {
-      model: "gpt-5.6-sol",
-      controlPrompt: "/goal I want to make a robot snake",
-      onlyFollowUp: "Simulation first. I do not have a fixed budget or access to a 3D printer.",
-      controlEnvironment: "Empty Git repository, fresh CODEX_HOME, and no Possible, Robot Prototype, robotics, CAD, or MuJoCo skill.",
-      evaluationContract: "The Robot Prototype Outcome Pack contract existed before the control run.",
-    },
-    observedResults: {
-      goalControl: "A browser simulator, firmware handoff, hardware planning, and 18 passing tests.",
-      possible: "CAD, URDF/SRDF, MuJoCo simulation, autonomous obstacle-avoidance evidence, Rerun telemetry, 12 tests, 186 interface checks, and three defects caught and repaired by fresh verification.",
-    },
-    interpretation: {
-      goal: "/goal provides dynamic pursuit and adapts execution as evidence changes.",
-      possible: "Possible provides the reviewed outcome contract: workstreams, safeguards, interfaces, evidence, and completion conditions.",
-      together: "Possible defines the multidisciplinary completion target; /goal can sustain and adapt its execution.",
-    },
-    evidence: [
-      {
-        label: "Control protocol and complete human input",
-        url: "https://github.com/fraylabs/possible/blob/main/apps/web/public/demo/robot-snake/CONTROL-RUN.md",
-      },
-      {
-        label: "Preserved control artifacts",
-        url: "https://possible.sh/demo/robot-snake/control/",
-      },
-      {
-        label: "Possible artifact manifest",
-        url: "https://possible.sh/demo/robot-snake/manifest.json",
-      },
-      {
-        label: "Possible completion report",
-        url: "https://github.com/fraylabs/possible/blob/main/apps/web/public/demo/robot-snake/evidence/outcome-receipt.md",
-      },
-    ],
-  },
-  judgingCriteria: [
-    {
-      criterion: "Technological Implementation",
-      claim: "JSON Outcome Packs coordinate execution and verification.",
-      implementationFact: "The compiler converts manifests into skill installs, owned workstreams, approval gates, and completion requirements.",
-      significance: "One contract governs the run from preparation through verification.",
-      evidence: {
-        label: "Outcome Pack compiler source",
-        url: "https://github.com/fraylabs/possible/blob/main/packages/packs/src/compiler.ts",
-      },
-    },
-    {
-      criterion: "Design",
-      claim: "Each example presents the outcome beside its proof.",
-      implementationFact: "The example gallery exposes five finished outcomes; each switches between outputs and an honest preserved-run or reference-build process.",
-      significance: "Judges can inspect the work and its process without navigating through another page hierarchy.",
-      evidence: {
-        label: "Example gallery",
-        url: "https://possible.sh/examples",
-      },
-    },
-    {
-      criterion: "Potential Impact",
-      claim: "Possible supplies work a novice did not know to request.",
-      implementationFact: "The Robot Prototype pack covers mechanical design, simulation, control, telemetry, safety, and review.",
-      significance: "One rough request can start multidisciplinary work outside existing expertise.",
-      evidence: {
-        label: "Robot Prototype pack",
-        url: "https://github.com/fraylabs/possible/blob/main/packages/packs/src/manifests/robot-prototype.json",
-      },
-    },
-    {
-      criterion: "Quality of the Idea",
-      claim: "Outcome Packs make operational judgment reusable.",
-      implementationFact: "The Robot Snake run begins with an ambition and ends with an inspectable completion report.",
-      significance: "The system transfers more than a single capability or instruction.",
-      evidence: {
-        label: "Robot Snake completion report",
-        url: "https://github.com/fraylabs/possible/blob/main/apps/web/public/demo/robot-snake/evidence/outcome-receipt.md",
-      },
-    },
-  ],
-  guidedEvidenceTrail: [
-    {
-      step: 1,
-      stage: "Intake",
-      fact: "The confirmed product brief records facts, constraints, required outputs and acceptance checks.",
-      url: "https://github.com/fraylabs/possible/blob/main/apps/web/public/demo/still/PRODUCT-BRIEF.md",
-    },
-    {
-      step: 2,
-      stage: "Compiled workstreams",
-      fact: "The generated run prompt assigns site, film and CAD ownership before execution.",
-      url: "https://github.com/fraylabs/possible/blob/main/apps/web/public/demo/still/CODEX-THREAD.md#run-prompt",
-    },
-    {
-      step: 3,
-      stage: "Verification failure",
-      fact: "The first browser trace preserves the integrated site's asset-path 404s.",
-      url: "https://github.com/fraylabs/possible/blob/main/apps/web/public/demo/still/verification/browser-results-initial-failure.json",
-    },
-    {
-      step: 4,
-      stage: "Repair",
-      fact: "The fresh-review receipt records the relative-base fix and mandatory rerun.",
-      url: "https://github.com/fraylabs/possible/blob/main/apps/web/public/demo/still/evidence/final-receipt.md#material-failure-found-and-repaired",
-    },
-    {
-      step: 5,
-      stage: "Passing completion",
-      fact: "The outcome receipt reports the post-repair browser pass, 58/58 artifact audit and remaining limitations.",
-      url: "https://github.com/fraylabs/possible/blob/main/apps/web/public/demo/still/OUTCOME-RECEIPT.md",
-    },
-  ],
-};
+import { compilePack, getPackShowcase, publicCatalog } from "@possible/packs";
 
 const outputRoot = new URL("../out/", import.meta.url);
 const json = (value) => `${JSON.stringify(value, null, 2)}\n`;
+const publicationKey = (entry) => entry.origin.kind === "bundled" ? entry.slug : entry.id;
 const write = async (relativePath, contents) => {
   const target = new URL(relativePath, outputRoot);
   await mkdir(new URL("./", target), { recursive: true });
   await writeFile(target, contents);
 };
 
-for (const entry of publishedEntries) {
+for (const entry of publicCatalog) {
   const { pack } = entry;
   const key = publicationKey(entry);
-  const compiled = pack.lifecycle === "draft" ? undefined : compilePack(pack);
+  const compiled = compilePack(pack);
   await write(`packs/${key}.json`, json({
-    ...(compiled ?? { pack, installCommands: [], runPrompt: null }),
+    ...compiled,
+    showcase: getPackShowcase(entry.slug) ?? null,
     catalog: {
       id: entry.id,
       status: entry.trust.status,
@@ -150,15 +26,13 @@ for (const entry of publishedEntries) {
       acceptedEvidenceSummary: entry.acceptedEvidenceSummary,
     },
   }));
-  if (compiled) {
-    await write(`packs/${key}/install.txt`, `${compiled.installCommands.join("\n")}\n`);
-    await write(`packs/${key}/run.txt`, `${compiled.runPrompt}\n`);
-  }
+  await write(`packs/${key}/install.txt`, `${compiled.installCommands.join("\n")}\n`);
+  await write(`packs/${key}/run.txt`, `${compiled.runPrompt}\n`);
 }
 
 await write("packs/index.json", json({
   schemaVersion: 1,
-  packs: publishedEntries.map((entry) => ({
+  packs: publicCatalog.map((entry) => ({
     id: entry.id,
     route: `/packs/${publicationKey(entry)}`,
     source: entry.sourceRecord,
@@ -166,57 +40,35 @@ await write("packs/index.json", json({
     trust: entry.trust,
     acceptedEvidenceCount: entry.acceptedEvidenceCount,
     acceptedEvidenceSummary: entry.acceptedEvidenceSummary,
-    packVersion: entry.pack.packVersion,
-    slug: entry.pack.slug,
-    visibility: entry.pack.visibility,
-    lifecycle: entry.pack.lifecycle,
-    lane: entry.pack.lane,
+    slug: entry.slug,
     name: entry.pack.name,
     promise: entry.pack.promise,
-    summary: entry.pack.summary,
-    reviewedAt: entry.pack.reviewedAt,
     status: entry.trust.status,
     contentHash: entry.sourceRecord.contentHash,
+    showcase: getPackShowcase(entry.slug) ?? null,
   })),
 }));
-
-await write("evidence.json", json(evidenceManifest));
 
 await write("llms.txt", [
   "# Possible",
   "",
-  "AI made execution accessible. Possible makes operational judgment accessible.",
+  "Agents can do far more than most people know to ask for. Possible is an open-source library of Outcome Packs that shows what is possible and gives an agent a proven starting contract for making it real.",
   "",
-  "Possible turns one rough idea into a coordinated, independently verified, multidisciplinary outcome.",
+  "Each Outcome Pack has two required authoring primitives: one structured prompt and an Expectations checklist. Specialized Skills are optional and use the standard Skills installer when present. The compiler appends the checklist plus one proportional-check rule without inventing a workflow or verification framework.",
   "",
-  "The Robot Snake run began with 'I want to make a robot snake.' It produced inspectable CAD, URDF/SRDF, MuJoCo control and simulation, simulated autonomous obstacle avoidance, and Rerun telemetry. Fresh verification caught three material defects; after repair, the independent suite passed 12/12 tests and 186/186 interface checks.",
-  "",
-  "Recorded comparison: a clean GPT-5.6 Sol /goal control received the same rough robot-snake ambition plus one non-expert preference. It produced a useful browser simulator, firmware handoff, hardware planning, and 18 passing tests. Possible supplied the reviewed Robot Prototype outcome contract and added CAD, URDF/SRDF, MuJoCo simulation, autonomous avoidance evidence, Rerun telemetry, interface checks, and fresh verification.",
-  "",
-  "/goal provides dynamic pursuit. Possible provides the reviewed outcome contract. Possible defines the multidisciplinary completion target; /goal can sustain and adapt its execution.",
-  "",
-  "Possible.sh is an open-source library of Outcome Packs for Codex. Each JSON specification has three authoring primitives: a Structured Prompt, reviewed Skills, and an Expectations checklist. The Structured Prompt is made from explicit manifest fields, and the compiler assembles those fields into a deterministic Run Prompt with selected capabilities, owned workstreams, approval boundaries, and evidence requirements.",
-  "Private packs stay project-local and are handled by the local CLI and Possible skill. MCP distributes public JSON manifests only.",
+  "Showcase media is optional and illustrative. Images, video, and CAD help a person understand the kind of outcome a pack can produce; they are not run evidence and do not make a pack verified.",
   "",
   "- Homepage: https://possible.sh/",
+  "- Outcome Pack library: /#packs",
   "- Human documentation: /docs/",
-  "- Judging evidence: /judging/",
-  "- Machine-readable evidence: /evidence.json",
-  "- Outcome examples: /examples/",
-  "- Robot Snake process: /examples/robot-snake/?view=process",
-  "- Recorded /goal comparison protocol: https://github.com/fraylabs/possible/blob/main/apps/web/public/demo/robot-snake/CONTROL-RUN.md",
-  "- Preserved /goal control artifacts: /demo/robot-snake/control/",
-  "- Possible artifact manifest: /demo/robot-snake/manifest.json",
-  "- Possible completion report: https://github.com/fraylabs/possible/blob/main/apps/web/public/demo/robot-snake/evidence/outcome-receipt.md",
-  "- Pack catalog: /#packs",
-  "- Pack index: /packs/index.json",
-  ...publishedEntries.flatMap((entry) => {
+  "- Machine-readable pack index: /packs/index.json",
+  ...publicCatalog.flatMap((entry) => {
     const key = publicationKey(entry);
     const links = [
       `- ${entry.pack.name} [${entry.trust.status}]: /packs/${key}.json`,
       `  - Outcome Pack page: /packs/${key}/`,
     ];
-    if (entry.pack.lifecycle !== "draft") links.push(`  - Install commands: /packs/${key}/install.txt`, `  - Compiled run prompt: /packs/${key}/run.txt`);
+    links.push(`  - Install commands: /packs/${key}/install.txt`, `  - Compiled run prompt: /packs/${key}/run.txt`);
     return links;
   }),
   "- GitHub: https://github.com/fraylabs/possible",

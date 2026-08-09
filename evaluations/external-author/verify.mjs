@@ -109,8 +109,8 @@ try {
     compilePack,
     context: exportedSourceEntry.id,
   });
-  assert.equal(validatedSubmission.pack.lifecycle, "reviewed");
-  assert.equal(validatedSubmission.compiled.pack.slug, "community-workshop-registration-site");
+  assert.equal(validatedSubmission.pack.name, "Community Workshop Registration Site");
+  assert.equal(validatedSubmission.compiled.pack, validatedSubmission.pack);
 
   const expectedRawUrl = [
     "https://raw.githubusercontent.com",
@@ -131,7 +131,7 @@ try {
   });
   assert.equal(requestedUrl, expectedRawUrl);
   assert.equal(submission.snapshot.contentHash, sourceEntry.contentHash);
-  assert.equal(submission.snapshot.pack.slug, "community-workshop-registration-site");
+  assert.equal(submission.snapshot.pack.name, "Community Workshop Registration Site");
 
   const registryRoot = join(temporaryRoot, "accepted-registry");
   const snapshotPath = await writeAcceptedPackSnapshot(submission, registryRoot);
@@ -180,11 +180,11 @@ try {
   const matchingCandidates = searchPublicPacks(queries.match, dependencies);
   const matchingDecision = selectCandidate(matchingCandidates);
   assert.equal(queries.match.expectedDecision, "select");
-  assert.equal(matchingDecision?.slug, submission.snapshot.pack.slug);
+  assert.equal(matchingDecision?.slug, catalogEntry.slug);
   assert.equal(matchingDecision.conflictingNotForSignals.length, 0);
 
   const conflictingCandidates = searchPublicPacks(queries.notForConflict, dependencies);
-  const conflictingPack = conflictingCandidates.find(({ slug }) => slug === submission.snapshot.pack.slug);
+  const conflictingPack = conflictingCandidates.find(({ slug }) => slug === catalogEntry.slug);
   assert.ok(conflictingPack);
   assert.ok(conflictingPack.conflictingNotForSignals.length > 0);
   assert.match(conflictingPack.conflictingNotForSignals[0].statement, /native mobile application/i);
@@ -202,11 +202,9 @@ try {
 
   const mcpServerSource = await readFile(join(repositoryRoot, "apps", "mcp", "src", "server.ts"), "utf8");
   const productionMcpStillUsesStaticManifestArray = /packs:\s*publicOutcomePacks/.test(mcpServerSource) || !/publicCatalog/.test(mcpServerSource);
-  const integrationGaps = [
-    ...(productionMcpStillUsesStaticManifestArray
-      ? ["The production MCP search still receives the bundled publicOutcomePacks array rather than the federated catalog built here."]
-      : []),
-  ];
+  const integrationGaps = productionMcpStillUsesStaticManifestArray
+    ? ["The production MCP search still receives a static manifest array rather than the federated catalog built here."]
+    : [];
 
   process.stdout.write(`${JSON.stringify({
     status: "passed",

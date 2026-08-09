@@ -10,8 +10,22 @@ coverage/
 .env.*
 !.env.example
 artifacts/runtime/
+apps/web/public/pack-media/
 
 # Local Skills CLI installs and generated site export artifacts.
 .agents/
 skills-lock.json
 possible-sites.tar.gz
+
+# Reproducible video intermediates. Keep composition source, final published
+# assets, and one contact sheet in version control.
+videos/possible-leverage-gap-launch/.media/
+videos/possible-leverage-gap-launch/.thumbnails/
+videos/possible-leverage-gap-launch/*.mp4
+videos/possible-leverage-gap-launch/assets/audio/*-raw.wav
+videos/possible-leverage-gap-launch/snapshots/frame-*.png
+videos/possible-leverage-gap-launch/snapshots/extended-ending/
+videos/possible-leverage-gap-launch/snapshots/penultimate-timing/
+videos/possible-html-css-motion-film/snapshots/frame-*.png
+videos/possible-html-css-motion-film/snapshots/render-*.png
+videos/possible-html-css-motion-film/snapshots/narrow-review.png

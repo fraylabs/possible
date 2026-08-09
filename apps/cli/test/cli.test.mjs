@@ -55,45 +55,85 @@ test("init exits non-zero and explains a conflict without overwriting it", async
   assert.equal(await readFile(conflict, "utf8"), "keep me\n");
 });
 
-test("pack init and validate create a private JSON authoring surface", async () => {
+test("bookmarks public packs locally without requiring an account", async () => {
   const project = await projectFixture();
-  const init = await execute(process.execPath, [cli, "pack", "init", "cat-house"], { cwd: project });
-  assert.match(init.stdout, /Created draft private pack/);
-  const manifestPath = join(project, ".possible", "packs", "cat-house", "pack.json");
-  const manifest = JSON.parse(await readFile(manifestPath, "utf8"));
-  assert.deepEqual({ visibility: manifest.visibility, lifecycle: manifest.lifecycle, slug: manifest.slug }, { visibility: "private", lifecycle: "draft", slug: "cat-house" });
+  const possibleHome = join(project, "possible-home");
+  const environment = { ...process.env, POSSIBLE_HOME: possibleHome };
 
-  const validation = await execute(process.execPath, [cli, "pack", "validate", "cat-house"], { cwd: project });
-  assert.match(validation.stdout, /"valid": true/);
+  const empty = await execute(process.execPath, [cli, "bookmark", "list"], { cwd: project, env: environment });
+  assert.equal(empty.stdout, "No bookmarked Outcome Packs.\n");
+
+  const added = await execute(process.execPath, [cli, "bookmark", "add", "playable-web-game"], { cwd: project, env: environment });
+  assert.equal(added.stdout, "Bookmarked fraylabs/possible/playable-web-game.\n");
+  const stored = JSON.parse(await readFile(join(possibleHome, "bookmarks.json"), "utf8"));
+  assert.equal(stored.schemaVersion, 1);
+  assert.deepEqual(stored.packs.map(({ id }) => id), ["fraylabs/possible/playable-web-game"]);
+  assert.ok(!Number.isNaN(Date.parse(stored.packs[0].savedAt)));
+
+  const duplicate = await execute(process.execPath, [cli, "bookmark", "add", "fraylabs/possible/playable-web-game"], { cwd: project, env: environment });
+  assert.equal(duplicate.stdout, "fraylabs/possible/playable-web-game is already bookmarked.\n");
+  const listed = await execute(process.execPath, [cli, "bookmark", "list"], { cwd: project, env: environment });
+  assert.match(listed.stdout, /^fraylabs\/possible\/playable-web-game\tPlayable Web Game$/m);
+
+  const removed = await execute(process.execPath, [cli, "bookmark", "remove", "playable-web-game"], { cwd: project, env: environment });
+  assert.equal(removed.stdout, "Removed bookmark fraylabs/possible/playable-web-game.\n");
+  assert.deepEqual(JSON.parse(await readFile(join(possibleHome, "bookmarks.json"), "utf8")).packs, []);
+});
+
+test("bookmark commands preserve malformed local data and reject missing packs", async () => {
+  const project = await projectFixture();
+  const possibleHome = join(project, "possible-home");
+  const environment = { ...process.env, POSSIBLE_HOME: possibleHome };
+  await mkdir(possibleHome, { recursive: true });
+  const bookmarkPath = join(possibleHome, "bookmarks.json");
+  await writeFile(bookmarkPath, "{ definitely not json\n");
+
   await assert.rejects(
-    execute(process.execPath, [cli, "pack", "compile", "cat-house"], { cwd: project }),
-    (error) => error.code === 1 && /must be reviewed before compilation/.test(error.stderr),
+    execute(process.execPath, [cli, "bookmark", "add", "playable-web-game"], { cwd: project, env: environment }),
+    (error) => error.code === 1 && /invalid JSON and were left unchanged/.test(error.stderr),
+  );
+  assert.equal(await readFile(bookmarkPath, "utf8"), "{ definitely not json\n");
+
+  await writeFile(bookmarkPath, `${JSON.stringify({ schemaVersion: 1, packs: [] }, null, 2)}\n`);
+  await assert.rejects(
+    execute(process.execPath, [cli, "bookmark", "add", "missing-pack"], { cwd: project, env: environment }),
+    (error) => error.code === 1 && /No public Outcome Pack matches missing-pack/.test(error.stderr),
   );
 });
 
-test("pack export creates a reviewed public contract without publishing it", async () => {
+test("pack init creates an intentionally incomplete minimal authoring surface", async () => {
   const project = await projectFixture();
-  const source = JSON.parse(await readFile(resolve(packageRoot, "..", "..", "packages", "packs", "src", "manifests", "playable-web-game.json"), "utf8"));
-  source.visibility = "private";
-  source.lifecycle = "reviewed";
+  const init = await execute(process.execPath, [cli, "pack", "init", "cat-house"], { cwd: project });
+  assert.match(init.stdout, /Created Outcome Pack draft/);
+  const manifestPath = join(project, ".possible", "packs", "cat-house", "pack.json");
+  const manifest = JSON.parse(await readFile(manifestPath, "utf8"));
+  assert.deepEqual(Object.keys(manifest), ["schemaVersion", "name", "promise", "prompt", "expectations"]);
+
+  await assert.rejects(
+    execute(process.execPath, [cli, "pack", "validate", "cat-house"], { cwd: project }),
+    (error) => error.code === 1 && /expectations must be a non-empty array/.test(error.stderr),
+  );
+});
+
+test("pack export creates a valid contract package without publishing it", async () => {
+  const project = await projectFixture();
+  const source = JSON.parse(await readFile(resolve(packageRoot, "..", "..", "packages", "packs", "src", "packs", "playable-web-game", "pack.json"), "utf8"));
+  delete source.skills;
   await mkdir(join(project, ".possible", "packs", "playable-web-game"), { recursive: true });
   await writeFile(join(project, ".possible", "packs", "playable-web-game", "pack.json"), `${JSON.stringify(source, null, 2)}\n`);
 
   const result = await execute(process.execPath, [cli, "pack", "export", "playable-web-game"], { cwd: project });
-  assert.match(result.stdout, /reviewed public contract/);
-  const exportDirectory = join(project, ".possible", "exports", "playable-web-game-1.0.0");
+  assert.match(result.stdout, /valid Outcome Pack/);
+  const exportDirectory = join(project, ".possible", "exports", "playable-web-game");
   const exported = JSON.parse(await readFile(join(exportDirectory, "pack.json"), "utf8"));
-  assert.deepEqual({ visibility: exported.visibility, lifecycle: exported.lifecycle }, { visibility: "public", lifecycle: "reviewed" });
-  assert.equal(exported.reviewedAt, source.reviewedAt);
+  assert.deepEqual(exported, source);
   assert.match(await readFile(join(exportDirectory, "source-entry.template.json"), "utf8"), /<full-git-commit>/);
   assert.match(await readFile(join(exportDirectory, "SUBMISSION.md"), "utf8"), /not PR-ready yet/);
 });
 
 test("pack export creates an exact PR-ready source package that the submission validator accepts", async () => {
   const project = await projectFixture();
-  const source = JSON.parse(await readFile(resolve(packageRoot, "..", "..", "packages", "packs", "src", "manifests", "playable-web-game.json"), "utf8"));
-  source.visibility = "public";
-  source.lifecycle = "reviewed";
+  const source = JSON.parse(await readFile(resolve(packageRoot, "..", "..", "packages", "packs", "src", "packs", "playable-web-game", "pack.json"), "utf8"));
   const sourcePath = join(project, "packs", "playable-web-game.json");
   await mkdir(dirname(sourcePath), { recursive: true });
   await writeFile(sourcePath, `${JSON.stringify(source, null, 2)}\n`);
@@ -135,7 +175,7 @@ test("pack export creates an exact PR-ready source package that the submission v
   assert.match(instructions, /Do not edit those files by hand/);
   assert.match(instructions, /No Possible account is required/);
   assert.match(instructions, /no submission database/i);
-  assert.match(instructions, /Only maintainers can assign experimental, verified, or archived trust/);
+  assert.match(instructions, /Only maintainers can assign experimental or verified trust/);
 
   const validator = resolve(packageRoot, "..", "..", "scripts", "validate-pack-submission.mjs");
   const validation = await execute(process.execPath, [validator, "--entry", entryPath, "--pack", packPath], { cwd: resolve(packageRoot, "..", "..") });
@@ -180,16 +220,15 @@ test("pack export creates an exact PR-ready source package that the submission v
   );
 });
 
-test("pack export refuses incomplete or unpinned public source metadata", async () => {
+test("pack export refuses incomplete or unpinned source metadata", async () => {
   const project = await projectFixture();
-  const source = JSON.parse(await readFile(resolve(packageRoot, "..", "..", "packages", "packs", "src", "manifests", "playable-web-game.json"), "utf8"));
-  source.visibility = "public";
-  source.lifecycle = "reviewed";
-  const sourcePath = join(project, "pack.json");
+  const source = JSON.parse(await readFile(resolve(packageRoot, "..", "..", "packages", "packs", "src", "packs", "playable-web-game", "pack.json"), "utf8"));
+  const sourcePath = join(project, "packs", "playable-web-game.json");
+  await mkdir(dirname(sourcePath), { recursive: true });
   await writeFile(sourcePath, `${JSON.stringify(source, null, 2)}\n`);
 
   await assert.rejects(
-    execute(process.execPath, [cli, "pack", "export", "pack.json", "--source", "https://github.com/example/outcome-packs"], { cwd: project }),
+    execute(process.execPath, [cli, "pack", "export", "packs/playable-web-game.json", "--source", "https://github.com/example/outcome-packs"], { cwd: project }),
     (error) => error.code === 1 && /requires --source, --revision, and --path together/.test(error.stderr),
   );
   await assert.rejects(
@@ -197,22 +236,22 @@ test("pack export refuses incomplete or unpinned public source metadata", async 
       cli,
       "pack",
       "export",
-      "pack.json",
+      "packs/playable-web-game.json",
       "--source",
       "https://github.com/example/outcome-packs",
       "--revision",
       "main",
       "--path",
-      "pack.json",
+      "packs/playable-web-game.json",
     ], { cwd: project }),
-    (error) => error.code === 1 && /full 40- or 64-character/.test(error.stderr),
+    (error) => error.code === 1 && /exact 40- or 64-character/.test(error.stderr),
   );
   await assert.rejects(
     execute(process.execPath, [
       cli,
       "pack",
       "export",
-      "pack.json",
+      "packs/playable-web-game.json",
       "--source",
       "https://github.com/example/outcome-packs",
       "--revision",
@@ -220,14 +259,12 @@ test("pack export refuses incomplete or unpinned public source metadata", async 
       "--path",
       "../pack.json",
     ], { cwd: project }),
-    (error) => error.code === 1 && /safe repository-relative JSON path/.test(error.stderr),
+    (error) => error.code === 1 && /safe repository-relative path/.test(error.stderr),
   );
-
-  source.lifecycle = "draft";
-  delete source.reviewedAt;
+  source.expectations = [];
   await writeFile(sourcePath, `${JSON.stringify(source, null, 2)}\n`);
   await assert.rejects(
-    execute(process.execPath, [cli, "pack", "export", "pack.json"], { cwd: project }),
-    (error) => error.code === 1 && /accepts a reviewed private or public pack/.test(error.stderr),
+    execute(process.execPath, [cli, "pack", "export", "packs/playable-web-game.json"], { cwd: project }),
+    (error) => error.code === 1 && /expectations must be a non-empty array/.test(error.stderr),
   );
 });

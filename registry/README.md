@@ -3,21 +3,15 @@
 Possible keeps the public catalog in Git. There is no submission database.
 
 - `entries/<owner>/<repository>/<slug>.json` records the author's public GitHub repository, exact commit, manifest path, and SHA-256 hash.
-- `snapshots/<sha256>.json` preserves the exact accepted manifest bytes so catalog builds and MCP remain offline and deterministic.
+- `snapshots/<sha256>.json` preserves the exact accepted `pack.json` bytes for deterministic offline builds.
 - `trust/<owner>/<repository>/<slug>.json` is optional maintainer-owned status and accepted evidence. Authors must not include it in a submission.
+- `bundled-trust.json` is the maintainer-owned trust source for Possible's bundled packs.
 
-A submission must point to a public `lifecycle: reviewed` contract so the accepted snapshot is compilable. It starts as `listed`: contract lifecycle is not Possible trust. `experimental` and `verified` require a separate maintainer trust record; `verified` also requires accepted run evidence. A pack contract never grants external authority.
-
-After copying an exported entry and snapshot into their paths, regenerate the browser-safe catalog and bundled skill reference:
+A submitted snapshot must pass the minimal Outcome Pack schema and compile. It starts as `listed`. `experimental` and `verified` require a separate maintainer trust record; `verified` also requires accepted run evidence. A pack never grants external authority.
 
 ```bash
 npm run registry:sync
-```
-
-Check that every registry file and generated artifact is current:
-
-```bash
 npm run registry:validate
 ```
 
-Do not edit `packages/packs/src/federated-catalog.json` or the bundled pack references by hand.
+Do not edit generated federated catalog data, generated bundled trust data, or bundled pack references by hand.

@@ -4,7 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "predev": "node ../../scripts/sync-pack-media.mjs",
     "dev": "next dev",
+    "prebuild": "node ../../scripts/sync-pack-media.mjs",
     "build": "next build && node scripts/emit-publications.mjs",
     "test": "vitest run src/App.test.tsx",
     "test:watch": "vitest src/App.test.tsx"

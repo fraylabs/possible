@@ -29,16 +29,14 @@ function federatedEntry({
   status: PackTrustStatus;
   hashCharacter: string;
 }): PackCatalogEntry {
-  const base = publicCatalog.find(({ pack }) => pack.slug === "web-presentation")?.pack;
+  const base = publicCatalog.find(({ slug: candidateSlug }) => candidateSlug === "web-presentation")?.pack;
   assert.ok(base);
   const id = formatPackIdentity(owner, repository, slug);
   const pack: OutcomePack = {
     ...structuredClone(base),
-    slug,
     name: "Federated Observability Handbook",
     promise: "Turn operational notes into a federated observability handbook.",
-    summary: "A searchable operational handbook with observable checks and a clear audience.",
-    useWhen: ["A team needs a federated observability handbook from rough operational notes."],
+    prompt: "Turn the supplied operational notes into a searchable handbook for the confirmed audience. Preserve observed facts, make unknowns explicit, and check the finished handbook against every expectation.",
     notFor: ["A PPTX-first sales deck."],
   };
   const contentHash = sha256(hashCharacter);
@@ -110,28 +108,26 @@ describe("Possible MCP", () => {
     assert.match(response.tools.find(({ name }) => name === "search_packs")?.description ?? "", /agent judgment/i);
   });
 
-  it("lists public packs with lifecycle and immutable content hashes", async () => {
+  it("lists catalog identity, trust, and immutable content hashes outside the manifest", async () => {
     const result = await client.callTool({ name: "list_packs", arguments: {} });
-    const envelope = result.structuredContent as { ok: boolean; data: { packs: Array<{ id: string; slug: string; visibility: string; lifecycle: string; contentHash: string; source: { contentHash: string }; trust: { status: string }; evidence: { acceptedCount: number; summaries: string[] } }> } };
+    const envelope = result.structuredContent as { ok: boolean; data: { packs: Array<{ id: string; slug: string; contentHash: string; source: { contentHash: string }; trust: { status: string }; evidence: { acceptedCount: number; summaries: string[] } }> } };
     assert.equal(envelope.ok, true);
     assert.equal(envelope.data.packs.length, publicCatalog.length);
-    assert.ok(envelope.data.packs.every((pack) => pack.visibility === "public"));
     assert.ok(envelope.data.packs.every((pack) => /^[a-f0-9]{64}$/.test(pack.contentHash)));
     assert.ok(envelope.data.packs.every((pack) => pack.id.endsWith(`/${pack.slug}`)));
     assert.ok(envelope.data.packs.every((pack) => /^sha256:[a-f0-9]{64}$/.test(pack.source.contentHash)));
-    assert.equal(envelope.data.packs.find(({ slug }) => slug === "hardware-launch")?.lifecycle, "archived");
   });
 
   it("fetches an exact JSON manifest without writing or making it executable", async () => {
     const result = await client.callTool({ name: "fetch_pack", arguments: { slug: "web-presentation" } });
-    const envelope = result.structuredContent as { ok: boolean; data: { manifest: { slug: string; packVersion: string; visibility: string; lifecycle: string }; metadata: { id: string; contentHash: string; immutableRef: string; catalogRef: string; source: { origin: string; snapshotRef: string }; trust: { status: string }; evidence: { acceptedCount: number } }; writesProjectFiles: boolean; executable: boolean } };
+    const envelope = result.structuredContent as { ok: boolean; data: { manifest: { name: string; prompt: string }; metadata: { id: string; slug: string; contentHash: string; immutableRef: string; catalogRef: string; source: { origin: string; snapshotRef: string }; trust: { status: string }; evidence: { acceptedCount: number } }; writesProjectFiles: boolean; executable: boolean } };
     assert.equal(envelope.ok, true);
-    assert.equal(envelope.data.manifest.slug, "web-presentation");
-    assert.equal(envelope.data.manifest.visibility, "public");
-    assert.equal(envelope.data.manifest.lifecycle, "reviewed");
-    assert.match(envelope.data.metadata.immutableRef, /^web-presentation@1\.0\.0#[a-f0-9]{64}$/);
+    assert.equal(envelope.data.manifest.name, "Web Presentation");
+    assert.ok(envelope.data.manifest.prompt.length > 100);
+    assert.equal(envelope.data.metadata.slug, "web-presentation");
+    assert.match(envelope.data.metadata.immutableRef, /^fraylabs\/possible\/web-presentation@sha256:[a-f0-9]{64}#[a-f0-9]{64}$/);
     assert.equal(envelope.data.metadata.id, "fraylabs/possible/web-presentation");
-    assert.match(envelope.data.metadata.catalogRef, /^fraylabs\/possible\/web-presentation@pack:1\.0\.0#sha256:[a-f0-9]{64}$/);
+    assert.match(envelope.data.metadata.catalogRef, /^fraylabs\/possible\/web-presentation@sha256:[a-f0-9]{64}#sha256:[a-f0-9]{64}$/);
     assert.equal(envelope.data.metadata.source.origin, "bundled");
     assert.equal(envelope.data.writesProjectFiles, false);
     assert.equal(envelope.data.executable, false);
@@ -175,25 +171,23 @@ describe("Possible MCP", () => {
     assert.equal(envelope.data.agentJudgmentRequired, true);
     assert.deepEqual(envelope.data.method, {
       type: "complete-active-catalog-with-lexical-hints",
-      searchedFields: ["name", "promise", "summary", "useWhen", "notFor", "expectations.statement"],
+      searchedFields: ["name", "promise", "summary", "publisher"],
       completeCatalog: true,
       lexicalHints: true,
       semanticRanking: false,
       embeddings: false,
       automaticRecommendation: false,
     });
-    const activeCatalogSize = publicCatalog.filter(({ pack, trust }) =>
-      pack.visibility === "public" && pack.lifecycle !== "archived" && trust.status !== "archived").length;
+    const activeCatalogSize = publicCatalog.length;
     assert.equal(envelope.data.candidates.length, activeCatalogSize, "Search must expose the complete active catalog");
     const candidate = envelope.data.candidates.find(({ slug }) => slug === "web-presentation");
     assert.ok(candidate);
-    assert.notEqual(candidate.status, "archived");
     assert.ok(candidate.matchingTerms.includes("presentation"));
     assert.ok(candidate.matchReasons.some((reason) => reason.startsWith("name matched:")));
     assert.equal(candidate.lexicalMatch, true);
     assert.ok(candidate.notFor.length > 0);
     assert.match(candidate.source.contentHash, /^sha256:[a-f0-9]{64}$/);
-    assert.match(candidate.source.manifestUrl, /web-presentation\.json$/);
+    assert.match(candidate.source.manifestUrl, /web-presentation\/pack\.json$/);
     assert.equal(candidate.trust.status, candidate.status);
     assert.equal(candidate.evidence.acceptedCount, candidate.evidence.summaries.length);
     assert.equal(candidate.agentJudgmentRequired, true);
@@ -208,15 +202,14 @@ describe("Possible MCP", () => {
       ok: boolean;
       data: { candidates: Array<{ lexicalMatch: boolean; matchScore: number }> };
     };
-    const activeCatalogSize = publicCatalog.filter(({ pack, trust }) =>
-      pack.visibility === "public" && pack.lifecycle !== "archived" && trust.status !== "archived").length;
+    const activeCatalogSize = publicCatalog.length;
 
     assert.equal(envelope.ok, true);
     assert.equal(envelope.data.candidates.length, activeCatalogSize);
     assert.ok(envelope.data.candidates.every(({ lexicalMatch, matchScore }) => !lexicalMatch && matchScore === 0));
   });
 
-  it("exposes complete notFor boundaries and never returns archived packs", async () => {
+  it("exposes complete notFor boundaries", async () => {
     const result = await client.callTool({
       name: "search_packs",
       arguments: {
@@ -236,7 +229,6 @@ describe("Possible MCP", () => {
     };
 
     assert.equal(envelope.ok, true);
-    assert.ok(envelope.data.candidates.every(({ slug }) => slug !== "hardware-launch"));
     const candidate = envelope.data.candidates.find(({ slug }) => slug === "web-presentation");
     assert.ok(candidate);
     assert.ok(candidate.notFor.some((statement) => /PPTX-first/i.test(statement)));

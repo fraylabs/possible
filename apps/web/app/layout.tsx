@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { siteDescription, siteUrl } from "./_metadata";
+import { possibleVersion } from "../src/public-content";
 import "../src/styles.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Possible — Complete a possible outcome",
+    default: "Possible — Browse Outcome Packs",
     template: "%s — Possible",
   },
   description: siteDescription,
@@ -54,7 +55,7 @@ const discoveryGraph = {
       downloadUrl: "https://www.npmjs.com/package/@fraylabs/possible",
       programmingLanguage: ["TypeScript", "JavaScript"],
       runtimePlatform: "Codex",
-      softwareVersion: "0.1.11",
+      softwareVersion: possibleVersion,
       license: "https://spdx.org/licenses/MIT.html",
       isAccessibleForFree: true,
       sameAs: [

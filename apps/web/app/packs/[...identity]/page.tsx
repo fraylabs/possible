@@ -1,27 +1,27 @@
 import { getRoutablePack, packHref, packRouteId, routablePacks } from "../../../src/public-content";
+import { PackDetailPage } from "../../../src/App";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import PossibleRoute from "../../_components/PossibleRoute";
 import { pageMetadata } from "../../_metadata";
 
 export const dynamicParams = false;
 
 export function generateStaticParams() {
-  return routablePacks.map((pack) => ({ identity: packRouteId(pack).split("/") }));
+  return routablePacks.map((entry) => ({ identity: packRouteId(entry).split("/") }));
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ identity: string[] }> }): Promise<Metadata> {
   const { identity } = await params;
-  const pack = getRoutablePack(identity.join("/"));
-  if (!pack) return {};
-  const path = packHref(pack);
+  const entry = getRoutablePack(identity.join("/"));
+  if (!entry) return {};
+  const path = packHref(entry);
   return pageMetadata({
-    title: pack.name,
-    description: pack.summary,
+    title: entry.pack.name,
+    description: entry.pack.promise,
     path,
     alternates: {
       "application/json": `${path}.json`,
-      ...(pack.lifecycle === "draft" ? {} : { "text/plain": `${path}/run.txt` }),
+      "text/plain": `${path}/run.txt`,
     },
   });
 }
@@ -29,6 +29,7 @@ export async function generateMetadata({ params }: { params: Promise<{ identity:
 export default async function PackPage({ params }: { params: Promise<{ identity: string[] }> }) {
   const { identity } = await params;
   const idOrSlug = identity.join("/");
-  if (!getRoutablePack(idOrSlug)) notFound();
-  return <PossibleRoute path={`/packs/${idOrSlug}`} />;
+  const pack = getRoutablePack(idOrSlug);
+  if (!pack) notFound();
+  return <PackDetailPage idOrSlug={idOrSlug} />;
 }

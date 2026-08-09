@@ -9,7 +9,7 @@ import { validateFederatedRegistryEntry } from "@possible/packs";
 import { computePackContentHash } from "@possible/packs/submission";
 
 const execute = promisify(execFile);
-const REQUIRED_PACK_ARRAYS = ["useWhen", "notFor", "skills", "workstreams", "outputs", "guardrails", "verification", "expectations"];
+const REQUIRED_PACK_ARRAYS = ["expectations"];
 
 export const sha256 = computePackContentHash;
 
@@ -29,12 +29,6 @@ export async function validatePackSubmission({ entry: entryInput, packSource, va
   const entry = validateSourceEntry(entryInput, `${context}.sourceEntry`);
   if (sha256(packSource) !== entry.contentHash) throw new Error(`${context}.contentHash does not match the exact pack bytes`);
   const pack = validatePackManifest(parsePackSource(packSource, `${context}.pack`), `${context}.pack`);
-  if (pack.visibility !== "public" || pack.lifecycle !== "reviewed") {
-    throw new Error(`${context}.pack must use visibility=public and lifecycle=reviewed so it is runnable; catalog trust is assigned separately by Possible maintainers`);
-  }
-  if (entry.id !== `${entry.source.slice("https://github.com/".length)}/${pack.slug}`) {
-    throw new Error(`${context}.sourceEntry.id must end with the submitted pack slug ${pack.slug}`);
-  }
   for (const field of REQUIRED_PACK_ARRAYS) {
     if (!Array.isArray(pack[field]) || pack[field].length === 0) throw new Error(`${context}.pack.${field} must be non-empty for public submission`);
   }

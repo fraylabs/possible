@@ -3,264 +3,120 @@
     "schemaVersion": 1,
     "id": "fraylabs/possible/cast-driven-product-story-animation",
     "source": "package:@possible/packs",
-    "revision": "pack:1.0.0",
-    "path": "manifests/cast-driven-product-story-animation.json",
-    "contentHash": "sha256:e272c35d588341d0b0218eb2e814e92432acd4e4280e142e255dc4a2a307622d"
-  },
-  "crowdfunding-campaign-readiness": {
-    "schemaVersion": 1,
-    "id": "fraylabs/possible/crowdfunding-campaign-readiness",
-    "source": "package:@possible/packs",
-    "revision": "pack:1.0.0",
-    "path": "manifests/crowdfunding-campaign-readiness.json",
-    "contentHash": "sha256:a53f876a9567567172672fd08ca5a66767bbdca36ae13960e2b82bf803150949"
-  },
-  "crowdfunding-fulfillment-operations": {
-    "schemaVersion": 1,
-    "id": "fraylabs/possible/crowdfunding-fulfillment-operations",
-    "source": "package:@possible/packs",
-    "revision": "pack:1.0.0",
-    "path": "manifests/crowdfunding-fulfillment-operations.json",
-    "contentHash": "sha256:5a236fb47b449035b8664959acb029896b2f7d17d2dd98dae86b3666aae9ee69"
-  },
-  "crowdfunding-funding-run": {
-    "schemaVersion": 1,
-    "id": "fraylabs/possible/crowdfunding-funding-run",
-    "source": "package:@possible/packs",
-    "revision": "pack:1.0.0",
-    "path": "manifests/crowdfunding-funding-run.json",
-    "contentHash": "sha256:cb13e9b2b74c09d4ce24673c3d9a198f0a1a194c416e5f89d4cc1ca5893af0f1"
-  },
-  "developer-adoption-readiness": {
-    "schemaVersion": 1,
-    "id": "fraylabs/possible/developer-adoption-readiness",
-    "source": "package:@possible/packs",
-    "revision": "pack:1.0.0",
-    "path": "manifests/developer-adoption-readiness.json",
-    "contentHash": "sha256:ac3c77d4e8ed8b71840310525f084a6ed5e6a2dc705e0668f13b89b69451c298"
+    "revision": "sha256:c78aae9b425ad14b6b53e7d0249073dfa60435ee5babb90c9afff6bbda6415b2",
+    "path": "packs/cast-driven-product-story-animation/pack.json",
+    "contentHash": "sha256:c78aae9b425ad14b6b53e7d0249073dfa60435ee5babb90c9afff6bbda6415b2"
   },
   "developer-product-readiness": {
     "schemaVersion": 1,
     "id": "fraylabs/possible/developer-product-readiness",
     "source": "package:@possible/packs",
-    "revision": "pack:1.0.0",
-    "path": "manifests/developer-product-readiness.json",
-    "contentHash": "sha256:dd04b69a4cb6d404852ff5678ede767950fb67858762dc8b89ad6954f77cab73"
-  },
-  "developer-project-launch": {
-    "schemaVersion": 1,
-    "id": "fraylabs/possible/developer-project-launch",
-    "source": "package:@possible/packs",
-    "revision": "pack:1.0.0",
-    "path": "manifests/developer-project-launch.json",
-    "contentHash": "sha256:4c59d06692fe0670b494adeb0914d25e5351ec8a7528ad683519666ca5aa6443"
+    "revision": "sha256:f5315c5617bbf6a5ee354e0383c41a119c7b0c7448ff0446ae944d1ea84f44ae",
+    "path": "packs/developer-product-readiness/pack.json",
+    "contentHash": "sha256:f5315c5617bbf6a5ee354e0383c41a119c7b0c7448ff0446ae944d1ea84f44ae"
   },
   "first-customer-sprint": {
     "schemaVersion": 1,
     "id": "fraylabs/possible/first-customer-sprint",
     "source": "package:@possible/packs",
-    "revision": "pack:1.0.0",
-    "path": "manifests/first-customer-sprint.json",
-    "contentHash": "sha256:5a0fcd5e258e6bd21fc441aa43162e7d8e9e6964bf05dd3a0c3bcbcafa197eb8"
+    "revision": "sha256:23b07007f5457bea7da3f2fd8951349fb6cce29673b30ef362ecd8149e90ce65",
+    "path": "packs/first-customer-sprint/pack.json",
+    "contentHash": "sha256:23b07007f5457bea7da3f2fd8951349fb6cce29673b30ef362ecd8149e90ce65"
   },
   "functional-hardware-prototype": {
     "schemaVersion": 1,
     "id": "fraylabs/possible/functional-hardware-prototype",
     "source": "package:@possible/packs",
-    "revision": "pack:1.0.0",
-    "path": "manifests/functional-hardware-prototype.json",
-    "contentHash": "sha256:9727fba0a7b3d47512a674124130ee7d3a3a68350320d35f52c8e9479e9dc13a"
-  },
-  "hardware-launch": {
-    "schemaVersion": 1,
-    "id": "fraylabs/possible/hardware-launch",
-    "source": "package:@possible/packs",
-    "revision": "pack:1.0.0",
-    "path": "manifests/hardware-launch.json",
-    "contentHash": "sha256:3e4df8a1569bc4642e5daf0a169338c4d5e6752010d2b42eb4131404622de67e"
+    "revision": "sha256:5fabc6d83d3e1f67cb2702073b575778c2f9bbcf99a07c296a10d54b1bfeb72b",
+    "path": "packs/functional-hardware-prototype/pack.json",
+    "contentHash": "sha256:5fabc6d83d3e1f67cb2702073b575778c2f9bbcf99a07c296a10d54b1bfeb72b"
   },
   "html-css-animated-product-launch-film": {
     "schemaVersion": 1,
     "id": "fraylabs/possible/html-css-animated-product-launch-film",
     "source": "package:@possible/packs",
-    "revision": "pack:1.0.0",
-    "path": "manifests/html-css-animated-product-launch-film.json",
-    "contentHash": "sha256:a797f42db05ee216e2aa0c1aa2d67dd2ea6351cefdfb7d3376ae345196dfeac9"
-  },
-  "kickstarter-fulfillment": {
-    "schemaVersion": 1,
-    "id": "fraylabs/possible/kickstarter-fulfillment",
-    "source": "package:@possible/packs",
-    "revision": "pack:1.0.0",
-    "path": "manifests/kickstarter-fulfillment.json",
-    "contentHash": "sha256:c101ef3be63e522a2308d746270393f6da987605e6621eec562c4e2e98931367"
-  },
-  "kickstarter-funding": {
-    "schemaVersion": 1,
-    "id": "fraylabs/possible/kickstarter-funding",
-    "source": "package:@possible/packs",
-    "revision": "pack:1.0.0",
-    "path": "manifests/kickstarter-funding.json",
-    "contentHash": "sha256:823233e6439f9a7403266bad571da6b383eb6ca25b408ebd4ebd0cd4635f8798"
-  },
-  "launch-content-campaign": {
-    "schemaVersion": 1,
-    "id": "fraylabs/possible/launch-content-campaign",
-    "source": "package:@possible/packs",
-    "revision": "pack:1.0.0",
-    "path": "manifests/launch-content-campaign.json",
-    "contentHash": "sha256:ed569036edda6a1045b0747bc1103ca992c45676ee1425ea4f5f0fbfb7424607"
-  },
-  "launch-content-package": {
-    "schemaVersion": 1,
-    "id": "fraylabs/possible/launch-content-package",
-    "source": "package:@possible/packs",
-    "revision": "pack:1.0.0",
-    "path": "manifests/launch-content-package.json",
-    "contentHash": "sha256:64dac666dac9276a88b939acee591cfab10aece659c2c14e03ce63159081bf34"
-  },
-  "manufacturing-readiness": {
-    "schemaVersion": 1,
-    "id": "fraylabs/possible/manufacturing-readiness",
-    "source": "package:@possible/packs",
-    "revision": "pack:1.0.0",
-    "path": "manifests/manufacturing-readiness.json",
-    "contentHash": "sha256:cf143dbe24d4dbdd4a40cf9169a185b9603463e790c06fd8afc104666a10a7f5"
-  },
-  "marketing-operations": {
-    "schemaVersion": 1,
-    "id": "fraylabs/possible/marketing-operations",
-    "source": "package:@possible/packs",
-    "revision": "pack:1.0.0",
-    "path": "manifests/marketing-operations.json",
-    "contentHash": "sha256:d2c3dd7cc0c28dc34fb2c5d5f7cf9faa7a9b134a0fb946f6adcbb392009dec9a"
+    "revision": "sha256:1f4a4c102deeb0be2ddd425b2428570f1d526aa7a2611c2f52e12e00bc6d0dfa",
+    "path": "packs/html-css-animated-product-launch-film/pack.json",
+    "contentHash": "sha256:1f4a4c102deeb0be2ddd425b2428570f1d526aa7a2611c2f52e12e00bc6d0dfa"
   },
   "mechanical-cad-review": {
     "schemaVersion": 1,
     "id": "fraylabs/possible/mechanical-cad-review",
     "source": "package:@possible/packs",
-    "revision": "pack:1.0.0",
-    "path": "manifests/mechanical-cad-review.json",
-    "contentHash": "sha256:61ff6d583f79d93f7ce2af106c960905a54660e885623429b520b265d4262714"
-  },
-  "open-source-release": {
-    "schemaVersion": 1,
-    "id": "fraylabs/possible/open-source-release",
-    "source": "package:@possible/packs",
-    "revision": "pack:1.0.0",
-    "path": "manifests/open-source-release.json",
-    "contentHash": "sha256:8c5fe0b53e603c11622777f3908a2e8581e4a174aa395d18e160a281553530c1"
+    "revision": "sha256:d2e52cd8ad2e5a774ad5df45acb5d884a66dafe63e49c1b158be2a26943f8c3a",
+    "path": "packs/mechanical-cad-review/pack.json",
+    "contentHash": "sha256:d2e52cd8ad2e5a774ad5df45acb5d884a66dafe63e49c1b158be2a26943f8c3a"
   },
   "original-strudel-soundtrack": {
     "schemaVersion": 1,
     "id": "fraylabs/possible/original-strudel-soundtrack",
     "source": "package:@possible/packs",
-    "revision": "pack:1.0.0",
-    "path": "manifests/original-strudel-soundtrack.json",
-    "contentHash": "sha256:e968a2c749bd34c151ff3b95a84cfea599ed640bedaf98dceb455ab5d79b9d4f"
+    "revision": "sha256:5cc0e578af119a03154231df28237ab6b038e47f001cf3b57517fc5172ed6ebf",
+    "path": "packs/original-strudel-soundtrack/pack.json",
+    "contentHash": "sha256:5cc0e578af119a03154231df28237ab6b038e47f001cf3b57517fc5172ed6ebf"
   },
   "playable-web-game": {
     "schemaVersion": 1,
     "id": "fraylabs/possible/playable-web-game",
     "source": "package:@possible/packs",
-    "revision": "pack:1.0.0",
-    "path": "manifests/playable-web-game.json",
-    "contentHash": "sha256:b0556d7c9d4111558365336795fe1c4001e419513367b8cd13b8fea560151f18"
+    "revision": "sha256:c314ed6e65c06ae66c2e3e23e220645eba7dc6cb1b91d47860368c0b31bde00a",
+    "path": "packs/playable-web-game/pack.json",
+    "contentHash": "sha256:c314ed6e65c06ae66c2e3e23e220645eba7dc6cb1b91d47860368c0b31bde00a"
+  },
+  "polished-editable-powerpoint-presentation": {
+    "schemaVersion": 1,
+    "id": "fraylabs/possible/polished-editable-powerpoint-presentation",
+    "source": "package:@possible/packs",
+    "revision": "sha256:e59975204a01be7874ffff106fcfcf0bfc38e6eb91dcc894109719cdc2a428e6",
+    "path": "packs/polished-editable-powerpoint-presentation/pack.json",
+    "contentHash": "sha256:e59975204a01be7874ffff106fcfcf0bfc38e6eb91dcc894109719cdc2a428e6"
+  },
+  "production-logo-system": {
+    "schemaVersion": 1,
+    "id": "fraylabs/possible/production-logo-system",
+    "source": "package:@possible/packs",
+    "revision": "sha256:91295c9a60a94553d051e4d07793b39bc11ec58860086fa8812fe00385aab25f",
+    "path": "packs/production-logo-system/pack.json",
+    "contentHash": "sha256:91295c9a60a94553d051e4d07793b39bc11ec58860086fa8812fe00385aab25f"
   },
   "production-readiness-decision": {
     "schemaVersion": 1,
     "id": "fraylabs/possible/production-readiness-decision",
     "source": "package:@possible/packs",
-    "revision": "pack:1.0.0",
-    "path": "manifests/production-readiness-decision.json",
-    "contentHash": "sha256:47b134796d217b31bf0cae0fe456187cf9c9aeb0e095f9bfe1773af4cdab12d4"
-  },
-  "production-web-release": {
-    "schemaVersion": 1,
-    "id": "fraylabs/possible/production-web-release",
-    "source": "package:@possible/packs",
-    "revision": "pack:1.0.0",
-    "path": "manifests/production-web-release.json",
-    "contentHash": "sha256:dfd3c6b619e0e3679514dbd1375a536f9c9cf267b1595ec8518e05640e301419"
-  },
-  "research-protocol-readiness": {
-    "schemaVersion": 1,
-    "id": "fraylabs/possible/research-protocol-readiness",
-    "source": "package:@possible/packs",
-    "revision": "pack:1.0.0",
-    "path": "manifests/research-protocol-readiness.json",
-    "contentHash": "sha256:07cef8caae30e7b695075b5a9fb5f7e3edd78668e593f8f7a872d5a424bf6d4b"
+    "revision": "sha256:f5b0c3352202791e3466e0931f0484ab061a87cbda95af854eaddab934d89322",
+    "path": "packs/production-readiness-decision/pack.json",
+    "contentHash": "sha256:f5b0c3352202791e3466e0931f0484ab061a87cbda95af854eaddab934d89322"
   },
   "robot-digital-prototype": {
     "schemaVersion": 1,
     "id": "fraylabs/possible/robot-digital-prototype",
     "source": "package:@possible/packs",
-    "revision": "pack:1.0.0",
-    "path": "manifests/robot-digital-prototype.json",
-    "contentHash": "sha256:a505e1d2c67b42abf651567c8b8fe243b5adf1a7b148c08a6b9754eab41bdf8c"
-  },
-  "robot-prototype": {
-    "schemaVersion": 1,
-    "id": "fraylabs/possible/robot-prototype",
-    "source": "package:@possible/packs",
-    "revision": "pack:1.0.0",
-    "path": "manifests/robot-prototype.json",
-    "contentHash": "sha256:e26709f7eee6a90504847e268ab00ce62291d734692adf91e16c1f5b0ab382c5"
-  },
-  "software-opportunity-discovery": {
-    "schemaVersion": 1,
-    "id": "fraylabs/possible/software-opportunity-discovery",
-    "source": "package:@possible/packs",
-    "revision": "pack:1.0.0",
-    "path": "manifests/software-opportunity-discovery.json",
-    "contentHash": "sha256:a6e6e05becf71dbbeab31c6f9cb1c3acc0460191a50b6cbce1c964226e3d433b"
-  },
-  "study-readiness": {
-    "schemaVersion": 1,
-    "id": "fraylabs/possible/study-readiness",
-    "source": "package:@possible/packs",
-    "revision": "pack:1.0.0",
-    "path": "manifests/study-readiness.json",
-    "contentHash": "sha256:c2b66a44555baaba84e8ea395678dbf7fa1c39155a467aabc75c1c33e0254103"
-  },
-  "web-app-operations": {
-    "schemaVersion": 1,
-    "id": "fraylabs/possible/web-app-operations",
-    "source": "package:@possible/packs",
-    "revision": "pack:1.0.0",
-    "path": "manifests/web-app-operations.json",
-    "contentHash": "sha256:53366f7156093d8d2d7dce1797f74de0705b542937d314bb7f0498baefc90e99"
+    "revision": "sha256:419323ac7d525cfd0728c0d4686c54bc1e9aa84c7d57c9fcf01b3ddc806b4871",
+    "path": "packs/robot-digital-prototype/pack.json",
+    "contentHash": "sha256:419323ac7d525cfd0728c0d4686c54bc1e9aa84c7d57c9fcf01b3ddc806b4871"
   },
   "web-presentation": {
     "schemaVersion": 1,
     "id": "fraylabs/possible/web-presentation",
     "source": "package:@possible/packs",
-    "revision": "pack:1.0.0",
-    "path": "manifests/web-presentation.json",
-    "contentHash": "sha256:3fc170ea23cab6452b26276643697cf7df101991427eafcccdab2a5c3d4bb2d8"
+    "revision": "sha256:199f17caeca467e0808198dd3ca2ca359ecfbc86cb3cdbe8679b37d95a6a264e",
+    "path": "packs/web-presentation/pack.json",
+    "contentHash": "sha256:199f17caeca467e0808198dd3ca2ca359ecfbc86cb3cdbe8679b37d95a6a264e"
   },
   "website-reference-reconstruction": {
     "schemaVersion": 1,
     "id": "fraylabs/possible/website-reference-reconstruction",
     "source": "package:@possible/packs",
-    "revision": "pack:1.0.0",
-    "path": "manifests/website-reference-reconstruction.json",
-    "contentHash": "sha256:8f7d8ce543d0851f8947d2cea8231cb7ba90398d04ec46f00c22117a81c87e7f"
-  },
-  "working-hardware-prototype": {
-    "schemaVersion": 1,
-    "id": "fraylabs/possible/working-hardware-prototype",
-    "source": "package:@possible/packs",
-    "revision": "pack:1.0.0",
-    "path": "manifests/working-hardware-prototype.json",
-    "contentHash": "sha256:7d8eba12132c3216172efcf7acade680d0cb2bff2b2c7d59946ad1a7b748e8e6"
+    "revision": "sha256:07c3121295b412351315b4020fb92914585018239a63abfc80a66ffd863c8c9a",
+    "path": "packs/website-reference-reconstruction/pack.json",
+    "contentHash": "sha256:07c3121295b412351315b4020fb92914585018239a63abfc80a66ffd863c8c9a"
   },
   "working-web-app": {
     "schemaVersion": 1,
     "id": "fraylabs/possible/working-web-app",
     "source": "package:@possible/packs",
-    "revision": "pack:1.0.0",
-    "path": "manifests/working-web-app.json",
-    "contentHash": "sha256:0ab1a3fc6fedc2b7f76e0da556ec74213bf0f24d29f6b5119a6a95c6bfe57c14"
+    "revision": "sha256:5fa9ac639a70e0c2e1079f75315704268cf2784ceb19bf436f3d4a3ebfc173d2",
+    "path": "packs/working-web-app/pack.json",
+    "contentHash": "sha256:5fa9ac639a70e0c2e1079f75315704268cf2784ceb19bf436f3d4a3ebfc173d2"
   }
 }

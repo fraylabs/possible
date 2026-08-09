@@ -1,16 +1,25 @@
 # Architecture
 
 ```text
-pack manifests ── registry
-                      │
-                      ├── compiler ── install commands + run prompt
-                      ├── possible.sh ── choose + describe + copy
-                      ├── static files ── index + per-pack JSON/text
-                      └── MCP ────────── list_packs + compile_pack
+packs/<slug>/pack.json
+        │
+        ├── compiler ── optional Skills install commands + executable prompt
+        ├── registry ── identity + immutable source + trust + evidence
+        ├── MCP ─────── search, inspect, and fetch the current catalog
+        ├── $possible ─ recommend one pack, ask permission, then run it
+        └── possible.sh / generated publications
 ```
 
-Each manifest records one finished outcome: reviewed skills, workstreams, outputs, guardrails, and verification, plus optional pack-specific contracts. The registry is the catalog. The deterministic compiler groups install commands by repository and renders a pack-specific lead workflow. Catalog status and the legacy lane field are internal discovery/compiler metadata; they are not user-facing workflow primitives, authorization, or a claim about the result.
+## Outcome Pack
 
-The runtime model is deliberately small: an Outcome is applied through one approved Run of an Outcome Pack; the run freezes Expectations, produces Outputs, preserves Evidence, and receives independent Verification. A Checkpoint records the changed reality after completion. Pack-specific modules add detail only when the outcome needs it, and an Outcome Journey is retrospective rather than a planned execution graph.
+An authored `pack.json` contains only a name, promise, structured prompt, expectations checklist, optional repository- and directory-identified Skills with each `lastReviewedCommit`, and optional `notFor` boundaries. The folder name supplies the bundled slug. The compiler derives standard Skills installer commands only when Skills are present, then appends the checklist plus one proportional-check rule; it does not invent workstreams, state files, receipts, schedules, verification frameworks, or an orchestration graph.
 
-The website, static publications, and MCP server consume the typed registry directly. The installable Codex skill carries a bundled reviewed pack reference so it can work without the MCP; that snapshot must be synchronized and may lag a newer source checkout or npm release. No surface treats a pack as authorization for external actions.
+## Catalog
+
+Authorship and trust are separate. The registry owns identity, immutable source revision, content hash, status, and accepted evidence. Bundled and federated packs enter one catalog consumed by the MCP, website, and generated references. Changing catalog data does not require changing `$possible`.
+
+## Discovery and execution
+
+MCP search provides lexical candidates and conflict signals, not an automatic recommendation. `$possible` compares the complete pack—including its structured prompt and checklist—then recommends one fitting pack. After user approval, it saves the selected JSON, installs any listed Skills with the standard installer, applies the prompt, and checks each expectation using the cheapest reliable method available.
+
+A pack is direction, never permission. External actions still require the authority demanded by the user, repository, tool, or environment.

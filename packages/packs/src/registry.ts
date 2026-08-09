@@ -17,12 +17,12 @@ export interface FederatedPackRegistryEntry extends FederatedPackSource {
   id: PackIdentity;
 }
 
-/** A deterministic package snapshot. `revision` is a pack version, not a source-control commit. */
+/** A deterministic package snapshot. Its content digest is the bundled revision. */
 export interface BundledPackSourceRecord {
   schemaVersion: 1;
   id: PackIdentity;
   source: `package:${string}`;
-  revision: `pack:${string}`;
+  revision: Sha256Digest;
   path: string;
   contentHash: Sha256Digest;
 }
@@ -67,6 +67,7 @@ export type CatalogPackOrigin =
 
 export interface PackCatalogEntry {
   id: PackIdentity;
+  slug: string;
   pack: OutcomePack;
   origin: CatalogPackOrigin;
   sourceRecord: PackSourceRecord;
@@ -74,6 +75,13 @@ export interface PackCatalogEntry {
   trust: PackTrustRecord;
   acceptedEvidenceCount: number;
   acceptedEvidenceSummary: string[];
+}
+
+export interface ParsedPackIdentity {
+  id: PackIdentity;
+  owner: string;
+  repository: string;
+  slug: string;
 }
 
 const SAFE_NAMESPACE = /^[A-Za-z0-9](?:[A-Za-z0-9._-]*[A-Za-z0-9])?$/;
@@ -106,7 +114,7 @@ const safeRelativePath = (value: unknown, context: string): string => {
   return path;
 };
 
-export function parsePackIdentity(value: unknown, context = "pack id"): { id: PackIdentity; owner: string; repository: string; slug: string } {
+export function parsePackIdentity(value: unknown, context = "pack id"): ParsedPackIdentity {
   const id = nonEmptyString(value, context);
   const segments = id.split("/");
   if (segments.length !== 3) throw new Error(`${context} must use owner/repository/slug`);
@@ -156,24 +164,52 @@ export function validateFederatedRegistryEntry(input: unknown, context = "regist
   return { schemaVersion: 1, id, ...source };
 }
 
-export function validateBundledPackSourceRecord(input: unknown, pack: OutcomePack, context = "bundled source"): BundledPackSourceRecord {
+export function createFederatedRegistryEntry(input: {
+  slug: string;
+  source: string;
+  revision: string;
+  path: string;
+  contentHash: Sha256Digest;
+}): FederatedPackRegistryEntry {
+  let parsed: URL;
+  try {
+    parsed = new URL(input.source);
+  } catch {
+    throw new Error("registry entry.source must be an https://github.com/owner/repository URL");
+  }
+  const segments = parsed.pathname.replace(/^\/+|\/+$/g, "").replace(/\.git$/, "").split("/");
+  if (segments.length !== 2 || !segments[0] || !segments[1]) {
+    throw new Error("registry entry.source must be an https://github.com/owner/repository URL");
+  }
+  return validateFederatedRegistryEntry({
+    schemaVersion: 1,
+    id: `${segments[0]}/${segments[1]}/${input.slug}`,
+    source: input.source,
+    revision: input.revision,
+    path: input.path,
+    contentHash: input.contentHash,
+  });
+}
+
+export function validateBundledPackSourceRecord(input: unknown, expectedSlug: string, context = "bundled source"): BundledPackSourceRecord {
   const record = asRecord(input, context);
   strictKeys(record, ["schemaVersion", "id", "source", "revision", "path", "contentHash"], context);
   if (record.schemaVersion !== 1) throw new Error(`${context}.schemaVersion must be 1`);
   const { id, slug } = parsePackIdentity(record.id, `${context}.id`);
-  if (slug !== pack.slug) throw new Error(`${context}.id must end with ${pack.slug}`);
+  if (slug !== expectedSlug) throw new Error(`${context}.id must end with ${expectedSlug}`);
   const source = nonEmptyString(record.source, `${context}.source`);
   if (!source.startsWith("package:") || source === "package:") throw new Error(`${context}.source must identify a package snapshot`);
   const revision = nonEmptyString(record.revision, `${context}.revision`);
-  if (revision !== `pack:${pack.packVersion}`) throw new Error(`${context}.revision must match pack:${pack.packVersion}`);
+  if (!SHA256.test(revision)) throw new Error(`${context}.revision must be the bundled content sha256 digest`);
   const path = safeRelativePath(record.path, `${context}.path`);
   const contentHash = nonEmptyString(record.contentHash, `${context}.contentHash`);
   if (!SHA256.test(contentHash)) throw new Error(`${context}.contentHash must be a sha256 digest`);
+  if (revision !== contentHash) throw new Error(`${context}.revision must match its contentHash`);
   return {
     schemaVersion: 1,
     id,
     source: source as `package:${string}`,
-    revision: revision as `pack:${string}`,
+    revision: revision as Sha256Digest,
     path,
     contentHash: contentHash as Sha256Digest,
   };
@@ -206,8 +242,8 @@ export function validatePackTrustRecord(input: unknown, expectedId?: PackIdentit
   if (record.schemaVersion !== 1) throw new Error(`${context}.schemaVersion must be 1`);
   const { id } = parsePackIdentity(record.id, `${context}.id`);
   if (expectedId !== undefined && id !== expectedId) throw new Error(`${context}.id must match ${expectedId}`);
-  if (record.status !== "listed" && record.status !== "experimental" && record.status !== "verified" && record.status !== "archived") {
-    throw new Error(`${context}.status must be listed, experimental, verified, or archived`);
+  if (record.status !== "listed" && record.status !== "experimental" && record.status !== "verified") {
+    throw new Error(`${context}.status must be listed, experimental, or verified`);
   }
   if (!Array.isArray(record.evidence)) throw new Error(`${context}.evidence must be a JSON array`);
   const evidence = record.evidence.map((item, index) => validateAcceptedEvidence(item, `${context}.evidence[${index}]`));
@@ -218,51 +254,43 @@ export function validatePackTrustRecord(input: unknown, expectedId?: PackIdentit
   const updatedAt = record.updatedAt === undefined ? undefined : nonEmptyString(record.updatedAt, `${context}.updatedAt`);
   if (updatedAt !== undefined && Number.isNaN(Date.parse(updatedAt))) throw new Error(`${context}.updatedAt must be an ISO date or date-time`);
   const reason = record.reason === undefined ? undefined : nonEmptyString(record.reason, `${context}.reason`);
-  return {
+  const trust: PackTrustRecord = {
     schemaVersion: 1,
     id,
     status: record.status,
     evidence,
-    ...(updatedAt === undefined ? {} : { updatedAt }),
-    ...(reason === undefined ? {} : { reason }),
   };
+  if (updatedAt !== undefined) trust.updatedAt = updatedAt;
+  if (reason !== undefined) trust.reason = reason;
+  return trust;
 }
 
-export function defaultPackTrust(id: PackIdentity, pack: OutcomePack): PackTrustRecord {
+export function defaultPackTrust(id: PackIdentity): PackTrustRecord {
   return {
     schemaVersion: 1,
     id,
-    status: pack.lifecycle === "archived" ? "archived" : "listed",
+    status: "listed",
     evidence: [],
   };
 }
 
-/** Enforce the boundary between an authored contract lifecycle and maintainer-owned trust. */
-export function validatePackTrustForManifest(trustInput: PackTrustRecord, pack: OutcomePack, context = "catalog trust"): PackTrustRecord {
-  const trust = validatePackTrustRecord(trustInput, trustInput.id, context);
-  if (pack.lifecycle === "draft" && trust.status !== "listed") throw new Error(`${context}: draft packs may only be listed`);
-  if ((trust.status === "experimental" || trust.status === "verified") && pack.lifecycle !== "reviewed") {
-    throw new Error(`${context}: ${trust.status} trust requires a reviewed pack contract`);
-  }
-  if (trust.status === "archived" && pack.lifecycle !== "archived") throw new Error(`${context}: archived trust requires an archived pack contract`);
-  if (pack.lifecycle === "archived" && trust.status !== "archived") throw new Error(`${context}: archived pack contracts must use archived trust`);
-  return trust;
+/** Authorship never assigns catalog trust; maintainers own this separate record. */
+export function validatePackTrustForManifest(trustInput: PackTrustRecord, _pack?: OutcomePack, context = "catalog trust"): PackTrustRecord {
+  return validatePackTrustRecord(trustInput, trustInput.id, context);
 }
 
 export function validateAcceptedPackSnapshot(input: unknown, context = "accepted snapshot"): AcceptedPackSnapshot {
   const snapshot = asRecord(input, context);
   strictKeys(snapshot, ["schemaVersion", "id", "source", "revision", "path", "contentHash", "pack"], context);
   if (snapshot.schemaVersion !== 1) throw new Error(`${context}.schemaVersion must be 1`);
-  const { id, slug } = parsePackIdentity(snapshot.id, `${context}.id`);
+  const { id } = parsePackIdentity(snapshot.id, `${context}.id`);
   const source = validateFederatedPackSource({ source: snapshot.source, revision: snapshot.revision, path: snapshot.path, contentHash: snapshot.contentHash }, id, context);
   const pack = validatePackManifest(snapshot.pack, `${context}.pack`);
-  if (pack.slug !== slug) throw new Error(`${context}.pack.slug must match ${id}`);
-  if (pack.visibility !== "public") throw new Error(`${context}.pack must use visibility=public`);
   return { schemaVersion: 1, id, ...source, pack };
 }
 
 export interface BuildPackCatalogInput {
-  bundledPacks?: readonly OutcomePack[];
+  bundledPacks?: readonly { slug: string; pack: OutcomePack }[];
   bundledSources?: Readonly<Record<string, BundledPackSourceRecord>>;
   acceptedSnapshots?: readonly AcceptedPackSnapshot[];
   trustRecords?: readonly PackTrustRecord[];
@@ -287,16 +315,19 @@ export function buildPackCatalog({
   }
 
   const entries: PackCatalogEntry[] = [];
-  for (const [index, packInput] of bundledPacks.entries()) {
-    const pack = validatePackManifest(packInput, `bundledPacks[${index}]`);
-    const id = formatPackIdentity(bundledOwner, bundledRepository, pack.slug);
-    const sourceInput = bundledSources[pack.slug];
-    if (sourceInput === undefined) throw new Error(`Bundled pack ${pack.slug} requires deterministic snapshot metadata`);
-    const sourceRecord = validateBundledPackSourceRecord(sourceInput, pack, `bundledSources.${pack.slug}`);
-    if (sourceRecord.id !== id) throw new Error(`bundledSources.${pack.slug}.id must match ${id}`);
-    const trust = validatePackTrustForManifest(trustById.get(id) ?? defaultPackTrust(id, pack), pack, `catalog trust for ${id}`);
+  for (const [index, bundled] of bundledPacks.entries()) {
+    if (!SAFE_SLUG.test(bundled.slug)) throw new Error(`bundledPacks[${index}].slug must be a lowercase hyphenated identifier`);
+    const slug = bundled.slug;
+    const pack = validatePackManifest(bundled.pack, `bundledPacks[${index}].pack`);
+    const id = formatPackIdentity(bundledOwner, bundledRepository, slug);
+    const sourceInput = bundledSources[slug];
+    if (sourceInput === undefined) throw new Error(`Bundled pack ${slug} requires deterministic snapshot metadata`);
+    const sourceRecord = validateBundledPackSourceRecord(sourceInput, slug, `bundledSources.${slug}`);
+    if (sourceRecord.id !== id) throw new Error(`bundledSources.${slug}.id must match ${id}`);
+    const trust = validatePackTrustForManifest(trustById.get(id) ?? defaultPackTrust(id), pack, `catalog trust for ${id}`);
     entries.push({
       id,
+      slug,
       pack,
       origin: { kind: "bundled", source: sourceRecord },
       sourceRecord,
@@ -308,13 +339,15 @@ export function buildPackCatalog({
   }
   for (const [index, snapshotInput] of acceptedSnapshots.entries()) {
     const snapshot = validateAcceptedPackSnapshot(snapshotInput, `acceptedSnapshots[${index}]`);
+    const { slug } = parsePackIdentity(snapshot.id);
     const trust = validatePackTrustForManifest(
-      trustById.get(snapshot.id) ?? defaultPackTrust(snapshot.id, snapshot.pack),
+      trustById.get(snapshot.id) ?? defaultPackTrust(snapshot.id),
       snapshot.pack,
       `catalog trust for ${snapshot.id}`,
     );
     entries.push({
       id: snapshot.id,
+      slug,
       pack: snapshot.pack,
       origin: {
         kind: "federated",

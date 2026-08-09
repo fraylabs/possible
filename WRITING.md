@@ -35,10 +35,12 @@ Use these terms consistently:
 - **Possible.sh:** the open-source library of Outcome Packs.
 - **`$possible`:** the installed agent skill that understands a request, recommends an Outcome Pack, and runs it.
 - **Outcome:** the finished result the user wants.
-- **Outcome Pack:** a reusable execution prompt, selected agent skills, sequencing, safeguards, and completion checks for one class of outcomes.
+- **Outcome Pack:** one structured prompt, exact source-pinned Skills, and an Expectations checklist for one class of finished results.
+- **Structured prompt:** the useful context, deliverables, constraints, and stopping boundary an Outcome Pack gives the agent.
 - **Agent skill:** a capability used while running an Outcome Pack.
 - **Run:** one Outcome Pack applied to one project.
-- **Verification:** the checks that determine whether an outcome is complete.
+- **Expectation:** one observable statement that must be true before the outcome is finished.
+- **Verification:** the cheapest reliable runtime check for whether an expectation is true; it is not an authored pack field.
 - **Completion report:** the artifacts, evidence, failures, limitations, and final status from a run.
 - **Artifact:** a produced file, system, or asset.
 - **Evidence:** proof that a claim is true.

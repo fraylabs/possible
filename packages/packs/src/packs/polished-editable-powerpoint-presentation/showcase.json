@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "description": "A restrained, fully editable investment-committee deck for an illustrative three-building community solar feasibility decision.",
+  "images": [
+    { "src": "media/solar-economics.png", "alt": "Editable presentation slide showing illustrative community solar capital, savings, generation, and simple payback", "caption": "Illustrative economics with explicit limitations", "cover": true },
+    { "src": "media/solar-pilot-structure.png", "alt": "Editable presentation slide diagramming three buildings within one community solar pilot", "caption": "One programme, three separately assessable sites" },
+    { "src": "media/solar-decision.png", "alt": "Community Solar Pilot title slide framing the decision to proceed to detailed feasibility", "caption": "Decision-led opening" },
+    { "src": "media/solar-recommendation.png", "alt": "Recommendation slide authorizing analysis only and listing three feasibility workstreams", "caption": "A bounded next-gate recommendation" }
+  ]
+}

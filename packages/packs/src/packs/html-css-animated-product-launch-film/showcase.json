@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "description": "A complete launch film made as standalone HTML and CSS, then rendered with its original Codex-produced soundtrack.",
+  "video": {
+    "src": "media/possible-launch-film.mp4",
+    "poster": "media/possible-launch-film-poster.jpg",
+    "caption": "Possible launch film — from a world of unknown Codex capabilities to one outcome you can run."
+  }
+}
