@@ -16,6 +16,7 @@
     "manifests:validate": "node scripts/validate-pack-manifests.mjs",
     "html:validate": "node scripts/validate-static-html.mjs",
     "discovery:validate": "node scripts/validate-discovery.mjs",
+    "discovery:evaluate": "npm run build -w @possible/packs && npm exec -- tsx evaluations/discovery/verify.mjs",
     "evaluation:verify": "node evaluations/robot-snake/verify.mjs",
     "external-author:verify": "npm run build -w @possible/packs && npm exec -- tsx evaluations/external-author/verify.mjs",
     "journey-example:verify": "node examples/patchproof-chain/verify-example.mjs",
@@ -24,7 +25,7 @@
     "registry:validate": "npm run build -w @possible/packs && node scripts/sync-registry-catalog.mjs --check && node scripts/validate-pack-reference.mjs",
     "packs:check": "npm run build -w @possible/packs && npm run test -w @possible/packs && npm run manifests:validate && node scripts/sync-registry-catalog.mjs --check && npm run pack-reference:validate",
     "pack-reference:validate": "node scripts/validate-pack-reference.mjs",
-    "check": "npm run skill:validate && npm run demo:validate && npm run routes:validate && npm run submission:validate && npm run evaluation:verify && npm run journey-example:verify && npm run test && npm run manifests:validate && node scripts/sync-registry-catalog.mjs --check && npm run pack-reference:validate && npm exec -- tsx evaluations/external-author/verify.mjs && npm run build && npm run publications:validate && npm run html:validate && npm run discovery:validate",
+    "check": "npm run skill:validate && npm run demo:validate && npm run routes:validate && npm run submission:validate && npm run evaluation:verify && npm run journey-example:verify && npm run test && npm run manifests:validate && node scripts/sync-registry-catalog.mjs --check && npm run pack-reference:validate && npm exec -- tsx evaluations/external-author/verify.mjs && npm run discovery:evaluate -- --enforce && npm run build && npm run publications:validate && npm run html:validate && npm run discovery:validate",
     "dev:web": "npm run build -w @possible/packs && npm run dev -w @possible/web",
     "dev:mcp": "npm run build -w @possible/packs && npm run dev -w @possible/mcp"
   },

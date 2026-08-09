@@ -12,7 +12,7 @@ import {
 import { searchPublicPacks } from "./search.js";
 
 export const POSSIBLE_TOOL_NAMES = ["list_packs", "fetch_pack", "search_packs"] as const;
-export const POSSIBLE_SERVER_INSTRUCTIONS = "Possible MCP is a read-only public Outcome Pack distributor. It lists, searches, and fetches exact public catalog snapshots with source, maintainer-owned trust, accepted-evidence summaries, and content hashes. A listed pack is a valid source submission, not a Possible-maintainer endorsement or verification. Search returns transparent text-overlap candidates, not an automatic recommendation; an agent must judge fit, conflicts, trust, and evidence. It never writes project files, discovers private packs, compiles or executes packs, approves work, validates checkpoints, or grants authority. The Possible skill and local CLI own project-local pack handling and execution.";
+export const POSSIBLE_SERVER_INSTRUCTIONS = "Possible MCP is a read-only public Outcome Pack distributor. It lists, searches, and fetches exact public catalog snapshots with source, maintainer-owned trust, accepted-evidence summaries, and content hashes. A listed pack is a valid source submission, not a Possible-maintainer endorsement or verification. Search returns the complete active catalog with transparent lexical hints; lexical order is not semantic rank or an automatic recommendation. An agent must judge promise, fit, notFor, expectations, trust, and evidence across the returned catalog. It never writes project files, discovers private packs, compiles or executes packs, approves work, validates checkpoints, or grants authority. The Possible skill and local CLI own project-local pack handling and execution.";
 const READ_ONLY = { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false } as const;
 
 const reviewUrl = (entry: McpCatalogEntry): string => `https://possible.sh/packs/${entry.origin.kind === "bundled" ? entry.pack.slug : entry.id}`;
@@ -98,7 +98,7 @@ export async function createPossibleServer(options: PossibleServerOptions = {}):
   });
   server.registerTool("search_packs", {
     title: "Search public Possible outcome packs",
-    description: "Find plausible active packs by transparent text overlap across catalog metadata and expectations. Results expose notFor conflicts and require agent judgment; this is not semantic ranking or an automatic recommendation.",
+    description: "Return the complete active catalog with transparent lexical hints across metadata and expectations. Every candidate includes its full notFor boundary and requires semantic agent judgment; lexical order is not an automatic recommendation.",
     inputSchema: {
       outcome: z.string().trim().min(1),
       currentReality: z.string().trim().min(1).optional(),
@@ -122,8 +122,10 @@ export async function createPossibleServer(options: PossibleServerOptions = {}):
       },
     ),
     method: {
-      type: "deterministic-text-overlap",
+      type: "complete-active-catalog-with-lexical-hints",
       searchedFields: ["name", "promise", "summary", "useWhen", "notFor", "expectations.statement"],
+      completeCatalog: true,
+      lexicalHints: true,
       semanticRanking: false,
       embeddings: false,
       automaticRecommendation: false,

@@ -39,7 +39,7 @@ During the brainstorm:
 
 ## Recommend one primary Outcome Pack
 
-After the walkthrough, search the complete current catalog. Prefer `search_packs` when available and pass the desired outcome, current reality, and material constraints. Use `fetch_pack` to inspect the strongest candidates. Otherwise read the generated offline snapshot in [references/packs.md](references/packs.md). MCP only distributes accepted public catalog snapshots; it never writes project files, handles private packs, executes a pack, or grants authority.
+After the walkthrough, search the complete current catalog. Prefer `search_packs` when available and pass the desired outcome, current reality, and material constraints. It returns every active pack with lexical hints; `matchScore`, order, and conflict signals are not semantic conclusions. Compare the complete set yourself, including zero-score candidates, then use `fetch_pack` to inspect the strongest semantic fits. Otherwise read the generated offline snapshot in [references/packs.md](references/packs.md). MCP only distributes accepted public catalog snapshots; it never writes project files, handles private packs, executes a pack, or grants authority.
 
 Recommend one primary Outcome Pack for the next independently valuable result. Do not preselect, sequence, or promise future Outcome Packs. When the ambition spans several possible outcomes, choose the nearest outcome that resolves the most important present uncertainty or creates the evidence needed for a later decision. Explain that Possible will reassess what should happen next only after this outcome is verified.
 

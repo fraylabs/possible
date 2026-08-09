@@ -105,7 +105,7 @@ describe("Possible MCP", () => {
     for (const tool of response.tools) assert.equal(tool.annotations?.readOnlyHint, true);
     assert.equal(client.getInstructions(), POSSIBLE_SERVER_INSTRUCTIONS);
     assert.match(client.getInstructions() ?? "", /never writes project files/i);
-    assert.match(client.getInstructions() ?? "", /not an automatic recommendation/i);
+    assert.match(client.getInstructions() ?? "", /not semantic rank or an automatic recommendation/i);
     assert.match(client.getInstructions() ?? "", /listed pack is a valid source submission, not a Possible-maintainer endorsement or verification/i);
     assert.match(response.tools.find(({ name }) => name === "search_packs")?.description ?? "", /agent judgment/i);
   });
@@ -155,12 +155,14 @@ describe("Possible MCP", () => {
       ok: boolean;
       data: {
         agentJudgmentRequired: boolean;
-        method: { type: string; semanticRanking: boolean; embeddings: boolean; automaticRecommendation: boolean };
+        method: { type: string; completeCatalog: boolean; lexicalHints: boolean; semanticRanking: boolean; embeddings: boolean; automaticRecommendation: boolean };
         candidates: Array<{
           slug: string;
           status: string;
           matchingTerms: string[];
           matchReasons: string[];
+          lexicalMatch: boolean;
+          notFor: string[];
           source: { contentHash: string; manifestUrl: string };
           trust: { status: string };
           evidence: { acceptedCount: number; summaries: string[] };
@@ -172,17 +174,24 @@ describe("Possible MCP", () => {
     assert.equal(envelope.ok, true);
     assert.equal(envelope.data.agentJudgmentRequired, true);
     assert.deepEqual(envelope.data.method, {
-      type: "deterministic-text-overlap",
+      type: "complete-active-catalog-with-lexical-hints",
       searchedFields: ["name", "promise", "summary", "useWhen", "notFor", "expectations.statement"],
+      completeCatalog: true,
+      lexicalHints: true,
       semanticRanking: false,
       embeddings: false,
       automaticRecommendation: false,
     });
+    const activeCatalogSize = publicCatalog.filter(({ pack, trust }) =>
+      pack.visibility === "public" && pack.lifecycle !== "archived" && trust.status !== "archived").length;
+    assert.equal(envelope.data.candidates.length, activeCatalogSize, "Search must expose the complete active catalog");
     const candidate = envelope.data.candidates.find(({ slug }) => slug === "web-presentation");
     assert.ok(candidate);
     assert.notEqual(candidate.status, "archived");
     assert.ok(candidate.matchingTerms.includes("presentation"));
     assert.ok(candidate.matchReasons.some((reason) => reason.startsWith("name matched:")));
+    assert.equal(candidate.lexicalMatch, true);
+    assert.ok(candidate.notFor.length > 0);
     assert.match(candidate.source.contentHash, /^sha256:[a-f0-9]{64}$/);
     assert.match(candidate.source.manifestUrl, /web-presentation\.json$/);
     assert.equal(candidate.trust.status, candidate.status);
@@ -190,12 +199,29 @@ describe("Possible MCP", () => {
     assert.equal(candidate.agentJudgmentRequired, true);
   });
 
-  it("reports notFor conflicts and never returns archived packs", async () => {
+  it("keeps zero-overlap packs visible for semantic inspection", async () => {
+    const result = await client.callTool({
+      name: "search_packs",
+      arguments: { outcome: "zyxquux florbnar glimbosity" },
+    });
+    const envelope = result.structuredContent as {
+      ok: boolean;
+      data: { candidates: Array<{ lexicalMatch: boolean; matchScore: number }> };
+    };
+    const activeCatalogSize = publicCatalog.filter(({ pack, trust }) =>
+      pack.visibility === "public" && pack.lifecycle !== "archived" && trust.status !== "archived").length;
+
+    assert.equal(envelope.ok, true);
+    assert.equal(envelope.data.candidates.length, activeCatalogSize);
+    assert.ok(envelope.data.candidates.every(({ lexicalMatch, matchScore }) => !lexicalMatch && matchScore === 0));
+  });
+
+  it("exposes complete notFor boundaries and never returns archived packs", async () => {
     const result = await client.callTool({
       name: "search_packs",
       arguments: {
         outcome: "Create an editable browser presentation",
-        constraints: "The required deliverable is PPTX-first",
+        constraints: "The result also needs keyboard controls",
       },
     });
     const envelope = result.structuredContent as {
@@ -203,6 +229,7 @@ describe("Possible MCP", () => {
       data: {
         candidates: Array<{
           slug: string;
+          notFor: string[];
           conflictingNotForSignals: Array<{ statement: string; matchingTerms: string[] }>;
         }>;
       };
@@ -212,7 +239,8 @@ describe("Possible MCP", () => {
     assert.ok(envelope.data.candidates.every(({ slug }) => slug !== "hardware-launch"));
     const candidate = envelope.data.candidates.find(({ slug }) => slug === "web-presentation");
     assert.ok(candidate);
-    assert.ok(candidate.conflictingNotForSignals.some(({ matchingTerms }) => matchingTerms.includes("pptx")));
+    assert.ok(candidate.notFor.some((statement) => /PPTX-first/i.test(statement)));
+    assert.equal(candidate.conflictingNotForSignals.length, 0, "A shared generic word must not be presented as a semantic conflict");
   });
 
   it("requires a non-empty outcome search input", async () => {
