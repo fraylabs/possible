@@ -182,10 +182,10 @@ nav { height: 74px; padding: 0 3.5vw; border-bottom: 1px solid #aaa59a; display:
   transform: translate(-5px, -5px);
   box-shadow: 10px 10px 0 #151411;
 }
-.home-pack-gallery .pack-card--playable-web-game,
-.home-pack-gallery .pack-card--web-presentation,
-.home-pack-gallery .pack-card--software-opportunity-discovery,
-.home-pack-gallery .pack-card--first-customer-sprint { grid-column: auto; }
+.home-pack-gallery-grid > .pack-card {
+  grid-column: auto;
+  grid-row: auto;
+}
 .pack-card-preview {
   aspect-ratio: 1 / 1.08;
   padding: 10px;
