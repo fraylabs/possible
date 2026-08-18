@@ -6,7 +6,7 @@
   "packageManager": "npm@11.6.2",
   "workspaces": ["apps/*", "packages/*"],
   "scripts": {
-    "build": "npm run build -w @possible/packs && npm run build:consumers",
+    "build": "npm run build -w @possible/packs && npm run build:consumers && node scripts/prepare-sites-dist.mjs",
     "build:consumers": "npm run build -w @fraylabs/possible && npm run build -w @possible/mcp && npm run build -w @possible/web",
     "lint": "oxlint --config oxlint.config.json .",
     "test": "npm run test -w @possible/packs && npm run test -w @fraylabs/possible && npm run test -w @possible/mcp && npm run test -w @possible/web",
