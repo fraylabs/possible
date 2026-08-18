@@ -50,7 +50,7 @@ assert.match(imageShowcase, /private-pack-offer\.png/);
 
 for (const product of productCatalog) {
   const markup = await html(`products/${product.id}/index.html`);
-  for (const phrase of [product.name, product.company.name, "Access", "never authorize spending", "What agents can create"]) {
+  for (const phrase of [product.name, product.company.name, "Make more with", "never authorizes spending", "What agents can do"]) {
     assert.match(markup, new RegExp(escape(phrase), "i"));
   }
   const linkedOutcomes = publicCatalog.filter((entry) => entry.products.some(({ id }) => id === product.id));

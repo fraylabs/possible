@@ -164,11 +164,13 @@ describe("Possible website", () => {
     const product = publishedProducts[0];
     expect(product).toBeDefined();
     const { container } = renderRoute(productHref(product!));
-    expect(screen.getByRole("heading", { name: "HyperFrames", level: 1 })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /HeyGen/i })).toHaveAttribute("href", "https://www.heygen.com");
-    expect(screen.getByText("Free")).toBeInTheDocument();
-    expect(screen.getByText("No checkout required")).toBeInTheDocument();
-    expect(screen.getByText(/never authorize spending/i)).toBeInTheDocument();
+    expect(screen.getAllByRole("link", { name: /HeyGen/i })).toHaveLength(2);
+    expect(screen.getAllByRole("link", { name: /HeyGen/i })[0]).toHaveAttribute("href", "https://www.heygen.com");
+    expect(screen.getAllByText("Free to use").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("No checkout").length).toBeGreaterThan(0);
+    expect(screen.getByRole("heading", { name: /Make more with HyperFrames/i, level: 1 })).toBeInTheDocument();
+    expect(container.querySelector(".product-hero-proof video source")).toHaveAttribute("src", "/pack-media/html-css-animated-product-launch-film/media/possible-launch-film.mp4");
+    expect(screen.getByText(/never authorizes spending/i)).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /HTML\/CSS Animated Product Launch Film/i })).toHaveAttribute("href", "/packs/html-css-animated-product-launch-film");
     expect(await axe(container)).toHaveNoViolations();
   });

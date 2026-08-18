@@ -44,6 +44,16 @@ export function getProductOutcomes(id: string) {
   return publishedPacks.filter((entry) => entry.products.some((product) => product.id === id));
 }
 
+export function getProductFeature(id: string) {
+  const outcomes = getProductOutcomes(id);
+  const featured = outcomes.find((entry) => {
+    const showcase = getCorePackShowcase(entry.id);
+    return Boolean(showcase?.video || showcase?.images?.length || showcase?.cad?.poster);
+  }) ?? outcomes[0];
+  if (!featured) return undefined;
+  return { entry: featured, showcase: getCorePackShowcase(featured.id) };
+}
+
 export function getPackShowcase(entry: PublicCatalogEntry) {
   return getCorePackShowcase(entry.id);
 }

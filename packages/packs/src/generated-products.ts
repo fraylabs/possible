@@ -15,7 +15,7 @@ export const rawProducts: ProductRecord[] = [
     "id": "heygen/hyperframes",
     "name": "HyperFrames",
     "company": "heygen",
-    "summary": "An open-source framework for agents to create and render video from HTML.",
+    "summary": "Create motion graphics, explainers, and launch films from the same HTML and CSS agents already know.",
     "website": "https://github.com/heygen-com/hyperframes",
     "docsUrl": "https://hyperframes.heygen.com",
     "commerce": {

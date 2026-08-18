@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ProductDetailPage } from "../../../../src/App";
-import { getPublishedProduct, productHref, publishedProducts } from "../../../../src/public-content";
-import { pageMetadata } from "../../../_metadata";
+import { getProductFeature, getPublishedProduct, productHref, publishedProducts } from "../../../../src/public-content";
+import { pageMetadata, siteUrl } from "../../../_metadata";
 
 export const dynamicParams = false;
 
@@ -17,11 +17,15 @@ export async function generateMetadata({ params }: { params: Promise<{ company: 
   const { company, product } = await params;
   const record = getPublishedProduct(`${company}/${product}`);
   if (!record) return {};
+  const feature = getProductFeature(record.id);
+  const image = feature?.showcase?.images?.find(({ cover }) => cover) ?? feature?.showcase?.images?.[0];
+  const socialSource = image?.src ?? feature?.showcase?.video?.poster ?? feature?.showcase?.cad?.poster;
+  const socialUrl = socialSource?.startsWith("https://") ? socialSource : socialSource ? `${siteUrl}${socialSource}` : undefined;
   return pageMetadata({
     title: record.name,
     description: record.summary,
     path: productHref(record),
-    socialImage: null,
+    socialImage: socialUrl ? { url: socialUrl, alt: image?.alt ?? `${record.name} outcome preview` } : null,
   });
 }
 
