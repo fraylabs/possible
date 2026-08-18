@@ -164,23 +164,24 @@ describe("Possible website", () => {
     const product = publishedProducts[0];
     expect(product).toBeDefined();
     const { container } = renderRoute(productHref(product!));
-    expect(screen.getAllByRole("link", { name: /HeyGen/i })).toHaveLength(2);
+    expect(screen.getAllByRole("link", { name: /HeyGen/i })).toHaveLength(1);
     expect(screen.getAllByRole("link", { name: /HeyGen/i })[0]).toHaveAttribute("href", "https://www.heygen.com");
     expect(screen.getAllByText("Free to use").length).toBeGreaterThan(0);
     expect(screen.getAllByText("No checkout").length).toBeGreaterThan(0);
-    expect(screen.getByRole("heading", { name: /Make more with HyperFrames/i, level: 1 })).toBeInTheDocument();
-    expect(container.querySelector(".product-hero-proof video source")).toHaveAttribute("src", "/pack-media/html-css-animated-product-launch-film/media/possible-launch-film.mp4");
-    expect(screen.getByText(/never authorizes spending/i)).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "HyperFrames", level: 1 })).toBeInTheDocument();
+    expect(container.querySelector(".product-header > img")).toHaveAttribute("src", product!.logoUrl);
+    expect(container.querySelector(".product-hero-proof")).toBeNull();
     expect(screen.getByRole("link", { name: /HTML\/CSS Animated Product Launch Film/i })).toHaveAttribute("href", "/packs/html-css-animated-product-launch-film");
     expect(await axe(container)).toHaveNoViolations();
   });
 
-  it("renders a marketing-led Product directory", async () => {
+  it("renders a compact Product directory with official logos", async () => {
     const { container } = render(<ProductsPage />);
-    expect(screen.getByRole("heading", { name: /Products that make.*more possible/i, level: 1 })).toBeInTheDocument();
-    expect(screen.getByText(/Discover products through what agents can make with them/i)).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Products", level: 1 })).toBeInTheDocument();
+    expect(screen.getByText("Products behind Outcome Packs.")).toBeInTheDocument();
     for (const product of publishedProducts) {
       expect(screen.getByRole("link", { name: new RegExp(product.name, "i") })).toHaveAttribute("href", productHref(product));
+      expect(container.querySelector(`a[href="${productHref(product)}"] img`)).toHaveAttribute("src", product.logoUrl);
     }
     expect(await axe(container)).toHaveNoViolations();
   });

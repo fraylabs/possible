@@ -50,20 +50,22 @@ assert.match(imageShowcase, /private-pack-offer\.png/);
 
 for (const product of productCatalog) {
   const markup = await html(`products/${product.id}/index.html`);
-  for (const phrase of [product.name, product.company.name, "Make more with", "never authorizes spending", "What agents can do"]) {
+  for (const phrase of [product.name, product.company.name, "What agents can make", "Product links"]) {
     assert.match(markup, new RegExp(escape(phrase), "i"));
   }
+  assert.match(markup, new RegExp(escape(product.logoUrl)));
   const linkedOutcomes = publicCatalog.filter((entry) => entry.products.some(({ id }) => id === product.id));
   assert.ok(linkedOutcomes.length > 0, `${product.id} must link at least one Outcome Pack`);
   for (const entry of linkedOutcomes) assert.match(markup, new RegExp(escape(entry.pack.name)));
 }
 
 const products = await html("products/index.html");
-assert.match(products, /Products that make[\s\S]*more possible/i);
-assert.match(products, /Discover products through what agents can make with them/i);
+assert.match(products, /Products behind Outcome Packs/i);
+assert.doesNotMatch(products, /products-hero|Products that make[\s\S]*more possible/i);
 for (const product of productCatalog) {
   assert.match(products, new RegExp(escape(product.name)));
   assert.match(products, new RegExp(`href="${escape(`/products/${product.id}`)}"`));
+  assert.match(products, new RegExp(escape(product.logoUrl)));
 }
 
 for (const path of ["docs/index.html", "docs/how-to-use/index.html", "docs/outcome-packs/index.html", "docs/expectations/index.html", "docs/authoring/index.html", "docs/reference/index.html", "docs/glossary/index.html"]) {
@@ -79,4 +81,4 @@ for (const retired of ["examples/index.html", "demo/index.html", "judging/index.
 const appSource = await readFile(new URL("../apps/web/src/App.tsx", import.meta.url), "utf8");
 assert.doesNotMatch(appSource, /ExamplesPage|JudgingPage|RobotSnakeComparisonPage|\/examples|\/demo/);
 
-console.log("The public site contains only the pack library, product details, and documentation surfaces.");
+console.log("The public site contains the pack library, Product directory and details, and documentation surfaces.");

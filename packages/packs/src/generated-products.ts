@@ -16,6 +16,7 @@ export const rawProducts: ProductRecord[] = [
     "name": "HyperFrames",
     "company": "heygen",
     "summary": "Create motion graphics, explainers, and launch films from the same HTML and CSS agents already know.",
+    "logoUrl": "https://raw.githubusercontent.com/heygen-com/hyperframes/3e4b08cdc18642d468d53f34c2fb64ab437807ae/docs/logo/symbol-light.svg",
     "website": "https://github.com/heygen-com/hyperframes",
     "docsUrl": "https://hyperframes.heygen.com",
     "commerce": {

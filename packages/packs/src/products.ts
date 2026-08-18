@@ -92,6 +92,7 @@ export function validateProductRecord(product: ProductRecord, context = "product
     name: nonEmptyString(product.name, `${context}.name`),
     company,
     summary: nonEmptyString(product.summary, `${context}.summary`),
+    logoUrl: httpsUrl(product.logoUrl, `${context}.logoUrl`),
     website: httpsUrl(product.website, `${context}.website`),
     docsUrl: httpsUrl(product.docsUrl, `${context}.docsUrl`),
     commerce: validateCommerce(product.commerce, `${context}.commerce`),
