@@ -204,9 +204,9 @@ npx skills@1.5.22 add github/awesome-copilot/skills/create-technical-spike --age
 - Public page: https://possible.sh/packs/html-css-animated-product-launch-film/
 - Origin: `bundled`
 - Source: package:@possible/packs
-- Revision: `sha256:1f4a4c102deeb0be2ddd425b2428570f1d526aa7a2611c2f52e12e00bc6d0dfa`
+- Revision: `sha256:03244d104a69ec430a21c50ac1fa1abd4593cc77ccd8728d3c91544800ba7af8`
 - Manifest path: `packs/html-css-animated-product-launch-film/pack.json`
-- Content hash: `sha256:1f4a4c102deeb0be2ddd425b2428570f1d526aa7a2611c2f52e12e00bc6d0dfa`
+- Content hash: `sha256:03244d104a69ec430a21c50ac1fa1abd4593cc77ccd8728d3c91544800ba7af8`
 - Accepted snapshot: `packs/html-css-animated-product-launch-film/pack.json`
 - Accepted evidence: none
 - Promise: Produce a marketing-first product launch film as standalone HTML and CSS, with one audience insight, one visual argument, and a final video export.

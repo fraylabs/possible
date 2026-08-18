@@ -11,9 +11,10 @@ export type { PackCatalogSearchInput, PackCatalogSearchResult } from "./search.j
 export { bundledOutcomePacks, validatePackManifest } from "./manifest.js";
 export type { BundledOutcomePack } from "./manifest.js";
 export { bundledPackShowcases } from "./generated-showcases.js";
+export { companies, getProduct, productCatalog, products, resolveProducts, validateCompanyId, validateCompanyRecord, validateProductId, validateProductRecord } from "./products.js";
 export { buildPackCatalog, createFederatedRegistryEntry, defaultPackTrust, formatPackIdentity, parsePackIdentity, validateAcceptedPackSnapshot, validateBundledPackSourceRecord, validateFederatedPackSource, validateFederatedRegistryEntry, validatePackTrustForManifest, validatePackTrustRecord } from "./registry.js";
 export type { AcceptedPackEvidence, AcceptedPackSnapshot, BuildPackCatalogInput, BundledPackSourceRecord, CatalogPackOrigin, FederatedPackRegistryEntry, FederatedPackSource, PackCatalogEntry, PackIdentity, PackSourceRecord, PackTrustRecord, Sha256Digest } from "./registry.js";
-export type { CompiledPack, OutcomePack, PackShowcase, PackShowcaseCad, PackShowcaseCadDownload, PackShowcaseImage, PackShowcaseVideo, PackStatus, PackTrustStatus, SkillReference } from "./types.js";
+export type { AgentCheckoutSupport, CompanyId, CompanyRecord, CompiledPack, OutcomePack, PackShowcase, PackShowcaseCad, PackShowcaseCadDownload, PackShowcaseImage, PackShowcaseVideo, PackStatus, PackTrustStatus, ProductAvailability, ProductCommerce, ProductId, ProductRecord, ResolvedProduct, SkillReference } from "./types.js";
 
 export const activePackCatalog = publicCatalog;
 export const listedOutcomePacks = publicCatalog.filter(({ trust }) => trust.status === "listed").map(({ pack }) => pack);

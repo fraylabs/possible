@@ -3,7 +3,7 @@
 import { lazy, Suspense, useState } from "react";
 import { compilePack, skillNameFromReference, skillPageUrl } from "@possible/packs";
 import type { PackShowcase } from "@possible/packs";
-import { getPackShowcase, getRoutablePack, githubUrl, installCommand, packHref, packPublisher } from "./public-content";
+import { getPackShowcase, getRoutablePack, githubUrl, installCommand, packHref, packPublisher, productHref } from "./public-content";
 import { CopyButton, NotFoundPage, SiteFooter, SiteNav, statusLabel } from "./shared";
 
 const PackCadViewer = lazy(() => import("./PackCadViewer"));
@@ -66,6 +66,10 @@ export function PackDetailPage({ idOrSlug }: { idOrSlug: string }) {
           <nav className="pack-detail-breadcrumb" aria-label="Breadcrumb"><a href="/#packs">Packs</a><span>/</span><span>{pack.name}</span></nav>
           <h1>{pack.name}</h1>
           <p>{pack.promise}</p>
+          {catalogEntry.products.length ? <div className="pack-product-attribution">
+            <span>FOR</span>
+            {catalogEntry.products.map((product) => <a aria-label={`${product.name} by ${product.company.name}`} href={productHref(product)} key={product.id}><strong>{product.name}</strong><small>by {product.company.name}</small></a>)}
+          </div> : null}
         </header>
 
         <div className="pack-detail-layout">

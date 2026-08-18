@@ -2,9 +2,9 @@ import { cleanup, render, screen, waitFor, within } from "@testing-library/react
 import userEvent from "@testing-library/user-event";
 import { axe } from "vitest-axe";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import App, { AuthoringDocsPage, DocsGlossaryPage, DocsPage, DocsReferencePage, ExpectationsDocsPage, HowToUsePage, NotFoundPage, OutcomePacksDocsPage, PackDetailPage, PacksPage } from "./App";
+import App, { AuthoringDocsPage, DocsGlossaryPage, DocsPage, DocsReferencePage, ExpectationsDocsPage, HowToUsePage, NotFoundPage, OutcomePacksDocsPage, PackDetailPage, PacksPage, ProductDetailPage } from "./App";
 import { commonSearches } from "./catalog";
-import { getRoutablePack, installCommand, packHref, publishedPacks, routablePacks, searchPublishedPacks } from "./public-content";
+import { getPublishedProduct, getRoutablePack, installCommand, packHref, productHref, publishedPacks, publishedProducts, routablePacks, searchPublishedPacks } from "./public-content";
 
 vi.mock("./PackCadViewer", () => ({ default: () => <div data-testid="cad-viewer" /> }));
 
@@ -26,6 +26,10 @@ function renderRoute(path: string) {
   if (path.startsWith("/packs/")) {
     const id = path.slice("/packs/".length);
     return render(getRoutablePack(id) ? <PackDetailPage idOrSlug={id} /> : <NotFoundPage />);
+  }
+  if (path.startsWith("/products/")) {
+    const id = path.slice("/products/".length);
+    return render(getPublishedProduct(id) ? <ProductDetailPage id={id} /> : <NotFoundPage />);
   }
   return render(<NotFoundPage />);
 }
@@ -87,6 +91,14 @@ describe("Possible website", () => {
     expect(await axe(container)).toHaveNoViolations();
   });
 
+  it("uses Product attribution as a discovery hint without hiding the Outcome", async () => {
+    const { container } = renderRoute("/");
+    await userEvent.type(screen.getByRole("searchbox", { name: "Search what agents can do" }), "HyperFrames");
+    const result = screen.getByRole("heading", { name: "HTML/CSS Animated Product Launch Film", level: 3 }).closest("a");
+    expect(result).toHaveTextContent("For HyperFrames by HeyGen");
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
   it("restores a shared search from the URL and exposes source-derived attribution", async () => {
     window.history.pushState({}, "", "/?q=browser+game");
     const { container } = render(<PacksPage />);
@@ -138,6 +150,7 @@ describe("Possible website", () => {
 
     const film = renderRoute("/packs/html-css-animated-product-launch-film");
     expect(film.container.querySelector(".pack-showcase video source")).toHaveAttribute("src", "/pack-media/html-css-animated-product-launch-film/media/possible-launch-film.mp4");
+    expect(screen.getByRole("link", { name: /HyperFrames by HeyGen/i })).toHaveAttribute("href", "/products/heygen/hyperframes");
     expect(film.container).toHaveTextContent(/showcase media is not verification/i);
     film.unmount();
 
@@ -145,6 +158,19 @@ describe("Possible website", () => {
     expect(screen.getByRole("group", { name: "Choose showcase media" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /CAD/i })).toBeInTheDocument();
     expect(cad.container.querySelectorAll(".pack-showcase-picker button")).toHaveLength(4);
+  });
+
+  it("renders concise Product attribution, access, and related Outcomes", async () => {
+    const product = publishedProducts[0];
+    expect(product).toBeDefined();
+    const { container } = renderRoute(productHref(product!));
+    expect(screen.getByRole("heading", { name: "HyperFrames", level: 1 })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /HeyGen/i })).toHaveAttribute("href", "https://www.heygen.com");
+    expect(screen.getByText("Free")).toBeInTheDocument();
+    expect(screen.getByText("No checkout required")).toBeInTheDocument();
+    expect(screen.getByText(/never authorize spending/i)).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /HTML\/CSS Animated Product Launch Film/i })).toHaveAttribute("href", "/packs/html-css-animated-product-launch-film");
+    expect(await axe(container)).toHaveNoViolations();
   });
 
   it("renders every catalog pack on its canonical details route", () => {

@@ -171,7 +171,7 @@ describe("Possible MCP", () => {
     assert.equal(envelope.data.agentJudgmentRequired, true);
     assert.deepEqual(envelope.data.method, {
       type: "complete-active-catalog-with-lexical-hints",
-      searchedFields: ["name", "promise", "summary", "publisher"],
+      searchedFields: ["name", "promise", "summary", "product", "publisher"],
       completeCatalog: true,
       lexicalHints: true,
       semanticRanking: false,
@@ -191,6 +191,38 @@ describe("Possible MCP", () => {
     assert.equal(candidate.trust.status, candidate.status);
     assert.equal(candidate.evidence.acceptedCount, candidate.evidence.summaries.length);
     assert.equal(candidate.agentJudgmentRequired, true);
+  });
+
+  it("discovers Product-linked outcomes without duplicating Skill execution data", async () => {
+    const result = await client.callTool({
+      name: "search_packs",
+      arguments: { outcome: "Use HyperFrames to make a product launch film" },
+    });
+    const envelope = result.structuredContent as {
+      ok: boolean;
+      data: { candidates: Array<{ slug: string; matchReasons: string[]; products: Array<{ id: string; name: string; company: { name: string }; commerce: { availability: string } }> }> };
+    };
+    assert.equal(envelope.ok, true);
+    const candidate = envelope.data.candidates.find(({ slug }) => slug === "html-css-animated-product-launch-film");
+    assert.ok(candidate);
+    assert.ok(candidate.matchReasons.some((reason) => reason.startsWith("product matched:")));
+    assert.equal(candidate.products.length, 1);
+    assert.equal(candidate.products[0]?.id, "heygen/hyperframes");
+    assert.equal(candidate.products[0]?.company.name, "HeyGen");
+    assert.equal(candidate.products[0]?.commerce.availability, "free");
+    assert.equal("skills" in candidate.products[0]!, false);
+    assert.equal("prompt" in candidate.products[0]!, false);
+    assert.ok(JSON.stringify(candidate.products).length < 1_000);
+
+    const fetched = await client.callTool({ name: "fetch_pack", arguments: { slug: candidate.slug } });
+    const fetchedEnvelope = fetched.structuredContent as {
+      ok: boolean;
+      data: { products: unknown[]; manifest: { skills?: unknown[]; products?: string[] } };
+    };
+    assert.equal(fetchedEnvelope.ok, true);
+    assert.equal(fetchedEnvelope.data.products.length, 1);
+    assert.deepEqual(fetchedEnvelope.data.manifest.products, ["heygen/hyperframes"]);
+    assert.ok((fetchedEnvelope.data.manifest.skills ?? []).length > 0);
   });
 
   it("keeps zero-overlap packs visible for semantic inspection", async () => {

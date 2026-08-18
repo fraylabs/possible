@@ -18,6 +18,8 @@ The JSON Schema owns the complete authoring surface. Identity, release, source, 
 
 - `skills` — Optional. Add only the smallest set of specialized agent Skills the outcome needs, identified by GitHub repository and directory with the last reviewed commit recorded for provenance. Omit this field when the agent needs no additional Skills.
 
+- `products` — Optional Product attribution. Reference registered Products used by this outcome. Product metadata never replaces Skills or execution instructions.
+
 - `notFor` — Optional nearby requests this pack should not be selected for. Add only boundaries that materially prevent a bad recommendation.
 
 ## Skill

@@ -1,5 +1,6 @@
 import { rawBundledPacks } from "./generated-manifests.js";
 import outcomePackSchema from "./outcome-pack.schema.json" with { type: "json" };
+import { validateProductId } from "./products.js";
 import type { OutcomePack } from "./types.js";
 
 export interface BundledOutcomePack {
@@ -66,6 +67,9 @@ export function validatePackManifest(input: unknown, context = "pack"): OutcomeP
     }
   }
   stringArray(pack, "expectations", context);
+  const products = stringArray(pack, "products", context, true);
+  products.forEach((product, index) => validateProductId(product, `${context}.products[${index}]`));
+  if (new Set(products).size !== products.length) throw new Error(`${context}.products contains duplicates`);
   stringArray(pack, "notFor", context, true);
   return input as OutcomePack;
 }

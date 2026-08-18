@@ -12,9 +12,10 @@ Use the [JSON Schema](packages/packs/src/outcome-pack.schema.json). The authored
 - `prompt` — the complete structured execution brief; organize the necessary context, deliverables, constraints, and finish boundary without treating length as quality;
 - `expectations` — plain-language checklist items that must be true at completion, never commands for how to verify them;
 - optional `skills` — only when specialized capabilities are needed; identify each by GitHub `repository`, repository-relative `directory` containing `SKILL.md`, and the exact `lastReviewedCommit` inspected by the author;
+- optional `products` — registered `company/product` identifiers for Products used by the outcome; attribution and access metadata only, never execution instructions or permission to buy;
 - optional `notFor` — only the nearby requests that materially prevent a bad recommendation.
 
-Identity, slug, release revision, source hash, catalog status, trust, accepted evidence, discovery fixtures, and showcase media are not authoring fields. Do not add workstreams, plugin registries, schedules, prerequisites, lifecycle objects, domain-specific schemas, or compiler branches.
+Identity, slug, release revision, source hash, catalog status, trust, accepted evidence, discovery fixtures, and showcase media are not authoring fields. Do not add workstreams, plugin registries, schedules, prerequisites, lifecycle objects, Product commerce objects, domain-specific schemas, or compiler branches.
 
 Use the [Playable Web Game pack](packages/packs/src/packs/playable-web-game/pack.json) as a complete example.
 

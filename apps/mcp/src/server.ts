@@ -7,6 +7,7 @@ import {
   lookupCatalogEntry,
   type McpCatalogEntry,
   normalizeCatalogMetadata,
+  normalizeProductMetadata,
   unprefixedSha256,
 } from "./catalog.js";
 import { searchPublicPacks, type PackSearchInput } from "./search.js";
@@ -39,6 +40,7 @@ export async function createPossibleServer(options: PossibleServerOptions = {}):
         slug: entry.slug,
         name: pack.name,
         promise: pack.promise,
+        products: entry.products.map(normalizeProductMetadata),
         status: metadata.trust.status,
         contentHash: digest,
         sourceUrl: metadata.source.manifestUrl,
@@ -70,6 +72,7 @@ export async function createPossibleServer(options: PossibleServerOptions = {}):
     const digest = unprefixedSha256(metadata.source.contentHash);
     return successResult({
       manifest: pack,
+      products: entry.products.map(normalizeProductMetadata),
       metadata: {
         id: entry.id,
         slug: entry.slug,
@@ -89,7 +92,7 @@ export async function createPossibleServer(options: PossibleServerOptions = {}):
   });
   server.registerTool("search_packs", {
     title: "Search public Possible outcome packs",
-    description: "Return the complete active catalog with transparent lexical hints across each pack's name, promise, concise opening summary, and publisher. Every candidate includes its full notFor boundary and requires semantic agent judgment; lexical order is not an automatic recommendation.",
+    description: "Return the complete active catalog with transparent lexical hints across each pack's name, promise, concise opening summary, linked Products, and publisher. Every candidate includes its full notFor boundary and requires semantic agent judgment; lexical order is not an automatic recommendation.",
     inputSchema: {
       outcome: z.string().trim().min(1),
       currentReality: z.string().trim().min(1).optional(),
@@ -105,7 +108,7 @@ export async function createPossibleServer(options: PossibleServerOptions = {}):
       candidates: searchPublicPacks(query, { catalog }),
       method: {
         type: "complete-active-catalog-with-lexical-hints",
-        searchedFields: ["name", "promise", "summary", "publisher"],
+        searchedFields: ["name", "promise", "summary", "product", "publisher"],
         completeCatalog: true,
         lexicalHints: true,
         semanticRanking: false,

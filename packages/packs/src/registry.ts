@@ -1,5 +1,5 @@
 import { validatePackManifest } from "./manifest.js";
-import type { OutcomePack, PackTrustStatus } from "./types.js";
+import type { OutcomePack, PackTrustStatus, ProductId, ResolvedProduct } from "./types.js";
 
 export type PackIdentity = `${string}/${string}/${string}`;
 export type Sha256Digest = `sha256:${string}`;
@@ -69,6 +69,7 @@ export interface PackCatalogEntry {
   id: PackIdentity;
   slug: string;
   pack: OutcomePack;
+  products: ResolvedProduct[];
   origin: CatalogPackOrigin;
   sourceRecord: PackSourceRecord;
   snapshotRef: string;
@@ -294,6 +295,7 @@ export interface BuildPackCatalogInput {
   bundledSources?: Readonly<Record<string, BundledPackSourceRecord>>;
   acceptedSnapshots?: readonly AcceptedPackSnapshot[];
   trustRecords?: readonly PackTrustRecord[];
+  products?: readonly ResolvedProduct[];
   bundledOwner?: string;
   bundledRepository?: string;
 }
@@ -304,9 +306,17 @@ export function buildPackCatalog({
   bundledSources = {},
   acceptedSnapshots = [],
   trustRecords = [],
+  products = [],
   bundledOwner = "fraylabs",
   bundledRepository = "possible",
 }: BuildPackCatalogInput): PackCatalogEntry[] {
+  const productById = new Map(products.map((product) => [product.id, product]));
+  if (productById.size !== products.length) throw new Error("Catalog products must have unique ids");
+  const resolveCatalogProducts = (pack: OutcomePack, context: string): ResolvedProduct[] => (pack.products ?? []).map((id: ProductId) => {
+    const product = productById.get(id);
+    if (product === undefined) throw new Error(`${context} references missing product ${id}`);
+    return product;
+  });
   const trustById = new Map<PackIdentity, PackTrustRecord>();
   for (const trustInput of trustRecords) {
     const trust = validatePackTrustRecord(trustInput);
@@ -329,6 +339,7 @@ export function buildPackCatalog({
       id,
       slug,
       pack,
+      products: resolveCatalogProducts(pack, `bundled pack ${id}`),
       origin: { kind: "bundled", source: sourceRecord },
       sourceRecord,
       snapshotRef: sourceRecord.path,
@@ -349,6 +360,7 @@ export function buildPackCatalog({
       id: snapshot.id,
       slug,
       pack: snapshot.pack,
+      products: resolveCatalogProducts(snapshot.pack, `federated pack ${snapshot.id}`),
       origin: {
         kind: "federated",
         source: {

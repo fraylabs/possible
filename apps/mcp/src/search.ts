@@ -8,10 +8,12 @@ import {
 } from "@possible/packs";
 import {
   type CatalogEvidenceMetadata,
+  type CatalogProductMetadata,
   type CatalogSourceMetadata,
   type CatalogTrustMetadata,
   type McpCatalogEntry,
   normalizeCatalogMetadata,
+  normalizeProductMetadata,
 } from "./catalog.js";
 
 export interface PackSearchInput {
@@ -36,6 +38,7 @@ export interface PackSearchCandidate {
     matchingTerms: string[];
   }>;
   expectations: string[];
+  products: CatalogProductMetadata[];
   source: CatalogSourceMetadata;
   trust: CatalogTrustMetadata;
   evidence: CatalogEvidenceMetadata;
@@ -93,6 +96,7 @@ export function searchPublicPacks(
         notFor: [...(pack.notFor ?? [])],
         conflictingNotForSignals,
         expectations: [...pack.expectations],
+        products: entry.products.map(normalizeProductMetadata),
         source: metadata.source,
         trust: metadata.trust,
         evidence: metadata.evidence,

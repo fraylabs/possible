@@ -35,9 +35,9 @@
     "schemaVersion": 1,
     "id": "fraylabs/possible/html-css-animated-product-launch-film",
     "source": "package:@possible/packs",
-    "revision": "sha256:1f4a4c102deeb0be2ddd425b2428570f1d526aa7a2611c2f52e12e00bc6d0dfa",
+    "revision": "sha256:03244d104a69ec430a21c50ac1fa1abd4593cc77ccd8728d3c91544800ba7af8",
     "path": "packs/html-css-animated-product-launch-film/pack.json",
-    "contentHash": "sha256:1f4a4c102deeb0be2ddd425b2428570f1d526aa7a2611c2f52e12e00bc6d0dfa"
+    "contentHash": "sha256:03244d104a69ec430a21c50ac1fa1abd4593cc77ccd8728d3c91544800ba7af8"
   },
   "mechanical-cad-review": {
     "schemaVersion": 1,

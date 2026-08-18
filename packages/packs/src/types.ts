@@ -4,6 +4,41 @@ export interface SkillReference {
   directory: string;
 }
 
+export type CompanyId = string;
+export type ProductId = `${string}/${string}`;
+
+export interface CompanyRecord {
+  schemaVersion: 1;
+  id: CompanyId;
+  name: string;
+  website: string;
+}
+
+export type ProductAvailability = "free" | "paid" | "contact-sales" | "unavailable" | "unknown";
+export type AgentCheckoutSupport = "not-required" | "supported" | "manual-only" | "not-supported" | "unknown";
+
+export interface ProductCommerce {
+  availability: ProductAvailability;
+  agentCheckout: AgentCheckoutSupport;
+  methods: string[];
+  pricingUrl: string | null;
+}
+
+export interface ProductRecord {
+  schemaVersion: 1;
+  id: ProductId;
+  name: string;
+  company: CompanyId;
+  summary: string;
+  website: string;
+  docsUrl: string;
+  commerce: ProductCommerce;
+}
+
+export interface ResolvedProduct extends Omit<ProductRecord, "company"> {
+  company: CompanyRecord;
+}
+
 export interface PackShowcaseImage {
   src: string;
   alt: string;
@@ -53,6 +88,7 @@ export interface OutcomePack {
   prompt: string;
   expectations: string[];
   skills?: SkillReference[];
+  products?: ProductId[];
   notFor?: string[];
 }
 

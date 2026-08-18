@@ -12,6 +12,7 @@ const SEARCH_FIELDS = [
   { key: "name", label: "name", weight: 5 },
   { key: "promise", label: "promise", weight: 4 },
   { key: "summary", label: "summary", weight: 3 },
+  { key: "products", label: "product", weight: 2 },
   { key: "publisher", label: "publisher", weight: 1 },
 ] as const;
 
@@ -85,6 +86,7 @@ export function searchPackCatalog<TEntry extends PackCatalogEntry>(
         name: entry.pack.name,
         promise: entry.pack.promise,
         summary,
+        products: entry.products.map(({ name, company }) => `${name} ${company.name}`).join(" "),
         publisher,
       };
       const fieldMatches = SEARCH_FIELDS.map((field) => ({

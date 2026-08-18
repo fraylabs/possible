@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://possible.sh/schemas/outcome-pack.schema.json",
   "title": "Possible Outcome Pack",
-  "description": "One structured prompt, a plain-language checklist for what finished means, and optional agent Skills when the outcome needs specialized capabilities.",
+  "description": "One structured prompt, a plain-language checklist for what finished means, optional agent Skills, and optional Product attribution.",
   "$comment": "Identity, source, release, trust, evidence, discovery fixtures, and showcase media are registry or presentation metadata. They do not belong in the authored pack.",
   "type": "object",
   "additionalProperties": false,
@@ -44,6 +44,16 @@
       "minItems": 1,
       "description": "Optional. Add only the smallest set of specialized agent Skills the outcome needs, identified by GitHub repository and directory with the last reviewed commit recorded for provenance. Omit this field when the agent needs no additional Skills.",
       "items": { "$ref": "#/$defs/skill" }
+    },
+    "products": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "description": "Optional Product attribution. Reference registered Products used by this outcome. Product metadata never replaces Skills or execution instructions.",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z0-9][a-z0-9-]*/[a-z0-9][a-z0-9-]*$"
+      }
     },
     "notFor": {
       "type": "array",

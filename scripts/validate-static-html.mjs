@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
-import { getPackShowcase, publicCatalog } from "../packages/packs/dist/index.js";
+import { getPackShowcase, productCatalog, publicCatalog } from "../packages/packs/dist/index.js";
 
 const output = new URL("../apps/web/out/", import.meta.url);
 const html = (path) => readFile(new URL(path, output), "utf8");
@@ -47,6 +47,16 @@ for (const value of ["robot-snake-iso.png", "Choose showcase media", "CAD", "SHO
 const imageShowcase = await html("packs/first-customer-sprint/index.html");
 assert.match(imageShowcase, /class="pack-showcase"/);
 assert.match(imageShowcase, /private-pack-offer\.png/);
+
+for (const product of productCatalog) {
+  const markup = await html(`products/${product.id}/index.html`);
+  for (const phrase of [product.name, product.company.name, "Access", "never authorize spending", "What agents can create"]) {
+    assert.match(markup, new RegExp(escape(phrase), "i"));
+  }
+  const linkedOutcomes = publicCatalog.filter((entry) => entry.products.some(({ id }) => id === product.id));
+  assert.ok(linkedOutcomes.length > 0, `${product.id} must link at least one Outcome Pack`);
+  for (const entry of linkedOutcomes) assert.match(markup, new RegExp(escape(entry.pack.name)));
+}
 
 for (const path of ["docs/index.html", "docs/how-to-use/index.html", "docs/outcome-packs/index.html", "docs/expectations/index.html", "docs/authoring/index.html", "docs/reference/index.html", "docs/glossary/index.html"]) {
   const markup = await html(path);

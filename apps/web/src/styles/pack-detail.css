@@ -101,6 +101,12 @@
 .pack-detail-header .pack-detail-breadcrumb span:last-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .pack-detail-header h1 { max-width: 820px; margin: 0; font-size: clamp(38px, 4vw, 58px); font-weight: 550; line-height: 1.02; letter-spacing: -.055em; }
 .pack-detail-header > p { max-width: 760px; margin: 16px 0 0; color: #b7b6b0; font-size: clamp(17px, 1.55vw, 21px); line-height: 1.5; letter-spacing: -.015em; }
+.pack-product-attribution { margin-top: 24px; display: flex; flex-wrap: wrap; gap: 8px; align-items: stretch; }
+.pack-product-attribution > span { padding: 11px 4px 0 0; color: #777772; font: 8px "DM Mono", monospace; letter-spacing: .06em; }
+.pack-product-attribution a { min-height: 42px; padding: 8px 12px; border: 1px solid #3b3b38; border-radius: 6px; display: grid; gap: 2px; background: #151514; }
+.pack-product-attribution a:hover { border-color: #a8ff52; }
+.pack-product-attribution strong { color: #a8ff52; font-size: 11px; font-weight: 550; }
+.pack-product-attribution small { color: #85857f; font-size: 9px; }
 .pack-detail-layout { padding: 36px 0 56px; }
 .pack-detail-main { min-width: 0; }
 .pack-use-panel { margin-bottom: 6px; }

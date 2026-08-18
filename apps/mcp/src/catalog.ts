@@ -1,4 +1,4 @@
-import type { PackCatalogEntry, PackTrustStatus } from "@possible/packs";
+import type { PackCatalogEntry, PackTrustStatus, ResolvedProduct } from "@possible/packs";
 
 export type McpCatalogEntry = PackCatalogEntry & { catalogNumber?: number };
 
@@ -28,6 +28,28 @@ export interface NormalizedCatalogMetadata {
   source: CatalogSourceMetadata;
   trust: CatalogTrustMetadata;
   evidence: CatalogEvidenceMetadata;
+}
+
+export interface CatalogProductMetadata {
+  id: string;
+  name: string;
+  company: { id: string; name: string };
+  summary: string;
+  website: string;
+  docsUrl: string;
+  commerce: ResolvedProduct["commerce"];
+}
+
+export function normalizeProductMetadata(product: ResolvedProduct): CatalogProductMetadata {
+  return {
+    id: product.id,
+    name: product.name,
+    company: { id: product.company.id, name: product.company.name },
+    summary: product.summary,
+    website: product.website,
+    docsUrl: product.docsUrl,
+    commerce: product.commerce,
+  };
 }
 
 const bundledManifestUrl = (path: string): string =>

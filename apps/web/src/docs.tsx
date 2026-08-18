@@ -49,7 +49,9 @@ const glossaryTerms = [
   ["Task", "One action taken toward an outcome. A task describes work; it does not define success."],
   ["Possible.sh", "The open-source Outcome Pack library, catalog search, documentation, and generated pack details."],
   ["$possible", "The installed agent skill that understands a request, recommends an Outcome Pack, and runs it after approval."],
-  ["Outcome Pack", "A structured prompt and Expectations checklist for one class of finished results, plus optional Skills when specialized capabilities are needed. It never becomes permission for external action."],
+  ["Outcome Pack", "A structured prompt and Expectations checklist for one class of finished results, plus optional Skills and Product attribution. It never becomes permission for external action."],
+  ["Company", "The organization responsible for a Product listed by Possible."],
+  ["Product", "A capability, service, framework, or API referenced by an Outcome Pack. Its record contains attribution, official links, and access information—not execution instructions or spending authority."],
   ["Structured prompt", "The organized reusable brief an Outcome Pack gives the agent. It holds only the useful context, deliverables, constraints, and stopping boundary; length is not a quality target."],
   ["Compiled prompt", "The deterministic prompt assembled from one approved Outcome Pack and frozen outcome brief."],
   ["Skill reference", "The GitHub repository and directory containing an optional specialized Skill, plus the exact commit last reviewed by the pack author."],
@@ -448,6 +450,7 @@ export function OutcomePacksDocsPage() {
         <div role="row"><code role="cell">Promise</code><span role="cell">The finished result the pack claims it can help produce.</span></div>
         <div role="row"><code role="cell">Prompt</code><span role="cell">The complete structured brief the agent will follow.</span></div>
         <div role="row"><code role="cell">Skills</code><span role="cell">Optional specialized capabilities, their install sources, and the commits last reviewed by the pack author.</span></div>
+        <div role="row"><code role="cell">Products</code><span role="cell">Optional attribution and access metadata for Products used by the outcome. Products never replace Skills or authorize a purchase.</span></div>
         <div role="row"><code role="cell">Expectations</code><span role="cell">The checklist used to decide whether the result is finished.</span></div>
         <div role="row"><code role="cell">Not for</code><span role="cell">Optional nearby requests that should select another pack.</span></div>
       </div>
@@ -500,7 +503,7 @@ export function AuthoringDocsPage() {
       <h2>Minimal shape</h2>
       <p>Use strict JSON. The local validator checks the schema and semantic relationships before the compiler sees the pack.</p>
       <pre className="docs-code-block"><code>{draftPackExample}</code></pre>
-      <p>Fill the two required primitives: write the structured prompt and state each expectation as a sentence a reviewer can mark true or unresolved. Add Skills only when the outcome needs specialized capabilities.</p>
+      <p>Fill the two required primitives: write the structured prompt and state each expectation as a sentence a reviewer can mark true or unresolved. Add Skills only when the outcome needs specialized capabilities. Reference a Product only when attribution or access information helps the user understand the outcome.</p>
     </section>
 
     <section id="fields">
@@ -530,6 +533,7 @@ export function AuthoringDocsPage() {
         <li><strong>Name the result</strong><span>Write a specific name and one-sentence promise that a person can understand without knowing Possible.</span></li>
         <li><strong>Write the structured prompt</strong><span>Organize only the context, deliverables, constraints, and stopping boundary the agent actually needs. Avoid verbosity targets and orchestration boilerplate.</span></li>
         <li><strong>Add Skills only when needed</strong><span>If the outcome needs specialized capabilities, choose the smallest necessary set and record each GitHub repository, repository-relative directory containing <code>SKILL.md</code>, and exact commit you last reviewed.</span></li>
+        <li><strong>Credit Products when useful</strong><span>Reference registered <code>company/product</code> identifiers only for attribution, official links, and access information. Keep execution in the prompt and Skills.</span></li>
         <li><strong>Write the checklist</strong><span>Make every expectation an observable sentence about the finished result, not an implementation task.</span></li>
         <li><strong>Validate and compile</strong><span>Run <code>possible pack validate my-pack</code>, then <code>possible pack compile my-pack</code> to inspect exactly what the agent receives.</span></li>
         <li><strong>Export for public review</strong><span><code>possible pack export my-pack</code> prepares the valid contract without publishing or granting Possible trust.</span></li>
@@ -552,7 +556,7 @@ export function AuthoringDocsPage() {
     <section id="review">
       <h2>Trust stays outside the pack</h2>
       <div className="docs-card-grid docs-card-grid--two" aria-label="Pack source and trust">
-        <article><span>AUTHOR</span><strong>Owns the contract</strong><p>The author owns the prompt, expectations, optional Skills, and optional non-scope in their Git repository.</p></article>
+        <article><span>AUTHOR</span><strong>Owns the contract</strong><p>The author owns the prompt, expectations, optional Skills, Product references, and optional non-scope in their Git repository.</p></article>
         <article><span>POSSIBLE</span><strong>Owns catalog trust</strong><p>The registry records identity, exact revision, content hash, status, and accepted evidence separately.</p></article>
       </div>
       <p>Export preserves the exact source provenance and content hash. It never silently publishes the pack or lets an author assign their own trust.</p>
@@ -676,25 +680,25 @@ export function DocsGlossaryPage() {
     <section id="core">
       <h2>Core terms</h2>
       <dl className="docs-glossary">
-        {glossaryTerms.slice(0, 10).map(([term, definition]) => <div key={term}><dt>{term}</dt><dd>{definition}</dd></div>)}
+        {glossaryTerms.slice(0, 12).map(([term, definition]) => <div key={term}><dt>{term}</dt><dd>{definition}</dd></div>)}
       </dl>
     </section>
     <section id="run">
       <h2>Run terms</h2>
       <dl className="docs-glossary">
-        {glossaryTerms.slice(10, 16).map(([term, definition]) => <div key={term}><dt>{term}</dt><dd>{definition}</dd></div>)}
+        {glossaryTerms.slice(12, 18).map(([term, definition]) => <div key={term}><dt>{term}</dt><dd>{definition}</dd></div>)}
       </dl>
     </section>
     <section id="proof">
       <h2>Proof terms</h2>
       <dl className="docs-glossary">
-        {glossaryTerms.slice(16, 22).map(([term, definition]) => <div key={term}><dt>{term}</dt><dd>{definition}</dd></div>)}
+        {glossaryTerms.slice(18, 24).map(([term, definition]) => <div key={term}><dt>{term}</dt><dd>{definition}</dd></div>)}
       </dl>
     </section>
     <section id="boundary">
       <h2>Boundary term</h2>
       <dl className="docs-glossary">
-        {glossaryTerms.slice(22).map(([term, definition]) => <div key={term}><dt>{term}</dt><dd>{definition}</dd></div>)}
+        {glossaryTerms.slice(24).map(([term, definition]) => <div key={term}><dt>{term}</dt><dd>{definition}</dd></div>)}
       </dl>
       <aside className="docs-callout docs-callout--warning">
         <strong>WHEN IN DOUBT</strong>

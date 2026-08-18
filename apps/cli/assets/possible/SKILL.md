@@ -10,6 +10,7 @@ Possible is an open-source library of Outcome Packs. Each pack contains only:
 - one structured prompt;
 - a checklist of expectations for what finished means;
 - optionally, the repository and directory for each specialized agent Skill it needs, plus the exact commit last reviewed by the pack author;
+- optionally, registered Products used by the outcome, for attribution and access information only;
 - optionally, nearby requests the pack is not for.
 
 Use the pack to enhance the agent with proven direction and capabilities. Do not turn it into a project-management framework.
@@ -45,7 +46,8 @@ Judge fit in this order:
 3. Does any `notFor` statement reject this use?
 4. Do the `expectations` describe the result the user would actually call finished?
 5. If the pack lists Skills, are they usable in this project?
-6. What trust and accepted evidence support the pack?
+6. If it references Products, do those Products fit the request and are any access or payment limits material?
+7. What trust and accepted evidence support the pack?
 
 Use trust honestly:
 
@@ -63,7 +65,7 @@ Show two to five plausible packs when the catalog contains meaningfully differen
 2. **Why it may fit** — the finish line and material assumption it covers.
 3. **Boundary** — the most relevant `notFor` statement or external action that remains unauthorized.
 
-Let the user choose. After selection, show the chosen pack's expectations and any listed Skills, then ask:
+Let the user choose. After selection, show the chosen pack's expectations, any listed Skills, and any Product access or payment limitation that matters, then ask:
 
 > Want me to proceed with this Outcome Pack? If you say yes, I’ll install any listed Skills in this project and use its prompt and expectations. I won’t take external action without separate approval.
 
@@ -109,13 +111,14 @@ possible pack inspect [<slug-or-path>]
 possible pack export <slug-or-path> [output-path]
 ```
 
-For authoring, read [references/authoring-fields.md](references/authoring-fields.md). Do not add fields for identity, release, lifecycle, trust, evidence, discovery tests, showcase media, workstreams, plugins, schedules, prerequisites, verification procedures, or domain-specific contract objects. Put useful structured execution direction in `prompt`; put observable completion conditions—not testing instructions—in `expectations`.
+For authoring, read [references/authoring-fields.md](references/authoring-fields.md). Do not add fields for identity, release, lifecycle, trust, evidence, discovery tests, showcase media, workstreams, plugins, schedules, prerequisites, verification procedures, Product commerce, or domain-specific contract objects. Put useful structured execution direction in `prompt`; put observable completion conditions—not testing instructions—in `expectations`. Reference a registered Product only for attribution and access metadata; do not move Skill instructions into it.
 
 Public authors keep the canonical JSON in their own GitHub repository. The catalog identity is `owner/repository/slug`. An export pins the repository, exact commit, path, and SHA-256 content hash for a GitHub pull request. A merged submission starts as `listed`. Authors cannot assign Possible trust or verification to themselves.
 
 ## Boundaries
 
 - A pack is direction, not permission.
+- Product availability and checkout metadata describe compatibility; they never authorize spending.
 - Deployment, publishing, outreach, spending, fabrication, account access, credentials, production changes, and other external actions require separate explicit approval.
 - Never invent capabilities, evidence, users, metrics, demand, safety, certification, performance, or completion.
 - Preserve unrelated user work and obey higher-priority user and repository instructions.

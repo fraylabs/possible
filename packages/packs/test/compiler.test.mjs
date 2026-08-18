@@ -9,7 +9,7 @@ import {
   skillSourceUrl,
 } from "../dist/index.js";
 
-const standardKeys = new Set(["schemaVersion", "name", "promise", "prompt", "skills", "expectations", "notFor"]);
+const standardKeys = new Set(["schemaVersion", "name", "promise", "prompt", "skills", "products", "expectations", "notFor"]);
 
 test("all bundled packs are structured prompt + checklist expectations + optional Skills", () => {
   assert.ok(bundledOutcomePacks.length > 0);
@@ -52,4 +52,16 @@ test("compileInstallCommands targets the Skill directory through the standard in
   assert.ok(pack);
   const compiled = compilePack(pack);
   assert.ok(compiled.installCommands.some((command) => command.includes("heygen-com/hyperframes/skills/hyperframes --agent codex")));
+});
+
+test("Product attribution never changes or duplicates Skill installation", () => {
+  const source = bundledOutcomePacks.find(({ slug }) => slug === "html-css-animated-product-launch-film")?.pack;
+  assert.ok(source);
+  const withProduct = compilePack(source);
+  const withoutProduct = structuredClone(source);
+  delete withoutProduct.products;
+  const withoutProductMetadata = compilePack(withoutProduct);
+  assert.deepEqual(withProduct.installCommands, withoutProductMetadata.installCommands);
+  assert.equal(withProduct.runPrompt, withoutProductMetadata.runPrompt);
+  assert.doesNotMatch(withProduct.runPrompt, /HeyGen|HyperFrames product/i);
 });

@@ -20,6 +20,9 @@
       "directory": "skills/humanizer"
     }
   ],
+  "products": [
+    "heygen/hyperframes"
+  ],
   "expectations": [
     "Before production, the film states one identifiable audience, its current belief or problem, the useful truth being revealed, why that truth matters, the product's precise role, and one next action.",
     "The film makes the audience problem or missed opportunity and the product promise understandable before showing implementation details, framework terms, or internal product mechanics.",

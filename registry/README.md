@@ -2,6 +2,8 @@
 
 Possible keeps the public catalog in Git. There is no submission database.
 
+Company and Product records live alongside the pack catalog as small generated inputs. Products carry attribution, official links, availability, and agent-checkout compatibility; Outcome Packs may reference them, but execution still comes only from the pack prompt and Skills.
+
 - `entries/<owner>/<repository>/<slug>.json` records the author's public GitHub repository, exact commit, manifest path, and SHA-256 hash.
 - `snapshots/<sha256>.json` preserves the exact accepted `pack.json` bytes for deterministic offline builds.
 - `trust/<owner>/<repository>/<slug>.json` is optional maintainer-owned status and accepted evidence. Authors must not include it in a submission.

@@ -19,6 +19,7 @@ function LibraryPackCard({ entry, priority = false }: { entry: PublicCatalogEntr
       {poster ? <div className="library-pack-visual" aria-hidden="true"><img className="library-pack-cover" src={poster.src} alt="" loading={priority ? "eager" : "lazy"} decoding="async" /></div> : null}
       <div className="library-pack-copy">
         <header><span>{String(entry.catalogNumber).padStart(2, "0")}</span><span>{mediaLabels.length ? mediaLabels.join(" + ") : "OUTCOME"}</span><i>↗</i></header>
+        {entry.products.length ? <div className="library-pack-product">FOR {entry.products.map(({ name }) => name).join(" + ")}</div> : null}
         <h3>{pack.name}</h3>
         <p>{pack.promise}</p>
         <div className="library-pack-fit"><strong>FINISHED WHEN</strong><span>{pack.expectations[0]}</span></div>
@@ -41,6 +42,7 @@ function PackSearchResult({ result }: { result: PublishedPackSearchResult }) {
       </div>
       <h3>{entry.pack.name}</h3>
       <p>{entry.pack.promise}</p>
+      {entry.products.length ? <div className="pack-search-product">For {entry.products.map(({ name, company }) => `${name} by ${company.name}`).join(" · ")}</div> : null}
       <div className="pack-search-fit"><strong>Finished when</strong><span>{entry.pack.expectations[0]}</span></div>
     </a>
   );

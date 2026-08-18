@@ -53,3 +53,17 @@ test("validation rejects extra framework fields and invalid Skill review commits
   unsafeDirectory.skills[0].directory = "../skills/example";
   assert.throws(() => validatePackManifest(unsafeDirectory), /safe repository-relative directory/i);
 });
+
+test("Product attribution is optional, namespaced, and unique", () => {
+  const valid = structuredClone(bundledOutcomePacks[0].pack);
+  valid.products = ["heygen/hyperframes"];
+  assert.equal(validatePackManifest(valid), valid);
+
+  const duplicate = structuredClone(valid);
+  duplicate.products.push("heygen/hyperframes");
+  assert.throws(() => validatePackManifest(duplicate), /products contains duplicates/i);
+
+  const invalid = structuredClone(valid);
+  invalid.products = ["hyperframes"];
+  assert.throws(() => validatePackManifest(invalid), /company\/product/i);
+});

@@ -1,8 +1,8 @@
-import { getRoutablePack, packHref, packRouteId, routablePacks } from "../../../src/public-content";
+import { getPackShowcase, getRoutablePack, packHref, packRouteId, routablePacks } from "../../../src/public-content";
 import { PackDetailPage } from "../../../src/App";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { pageMetadata } from "../../_metadata";
+import { pageMetadata, siteUrl } from "../../_metadata";
 
 export const dynamicParams = false;
 
@@ -15,6 +15,10 @@ export async function generateMetadata({ params }: { params: Promise<{ identity:
   const entry = getRoutablePack(identity.join("/"));
   if (!entry) return {};
   const path = packHref(entry);
+  const showcase = getPackShowcase(entry);
+  const image = showcase?.images?.find(({ cover }) => cover) ?? showcase?.images?.[0];
+  const socialSource = image?.src ?? showcase?.video?.poster ?? showcase?.cad?.poster;
+  const socialUrl = socialSource?.startsWith("https://") ? socialSource : socialSource ? `${siteUrl}${socialSource}` : undefined;
   return pageMetadata({
     title: entry.pack.name,
     description: entry.pack.promise,
@@ -23,6 +27,7 @@ export async function generateMetadata({ params }: { params: Promise<{ identity:
       "application/json": `${path}.json`,
       "text/plain": `${path}/run.txt`,
     },
+    socialImage: socialUrl ? { url: socialUrl, alt: image?.alt ?? `${entry.pack.name} outcome preview` } : null,
   });
 }
 

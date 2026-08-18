@@ -7,11 +7,12 @@ Every Outcome Pack contains only:
 - one structured `prompt`;
 - an `expectations` checklist for what finished means;
 - optional `skills` when specialized capabilities are needed, with the source and last-reviewed commit recorded;
+- optional `products` that credit the Products and Companies used by the outcome without changing how it runs;
 - an optional `notFor` boundary that prevents bad recommendations.
 
 The `$possible` skill understands a rough request, searches locally saved packs and the current catalog, shows fitting choices, and waits for selection and approval. A new catalog entry becomes discoverable without editing the skill.
 
-[Browse Outcome Packs](https://possible.sh) · [Read the docs](https://possible.sh/docs) · [View the pack library](https://possible.sh/packs)
+[Browse Outcome Packs](https://possible.sh) · [Read the docs](https://possible.sh/docs)
 
 ## Install
 
@@ -42,7 +43,7 @@ possible bookmark remove fraylabs/possible/playable-web-game
 
 ```text
 packages/packs/src/packs/<slug>/
-  pack.json          # prompt + Skills + expectations
+  pack.json          # prompt + Skills + expectations + optional Product references
   discovery.json     # ordinary-language selection cases
   showcase.json      # optional presentation metadata
   media/             # optional images, video, or CAD
@@ -53,6 +54,8 @@ The folder name supplies the slug. The registry supplies source identity, revisi
 Showcase media is optional and illustrative, not verification. It may include up to five images, one video, and one CAD group with a GLB preview and STEP/STL/3MF downloads.
 
 Everything downstream is generated from the pack folders: the runtime catalog, immutable bundled snapshots, website, MCP, discovery evaluation, offline reference, and CLI skill snapshot.
+
+Companies and Products have their own small records under `packages/packs/src/companies/` and `packages/packs/src/products/`. A Product records attribution, official links, availability, and checkout compatibility. It never duplicates a Skill or grants permission to spend.
 
 ## Author a local pack
 

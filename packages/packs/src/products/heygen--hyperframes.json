@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "id": "heygen/hyperframes",
+  "name": "HyperFrames",
+  "company": "heygen",
+  "summary": "An open-source framework for agents to create and render video from HTML.",
+  "website": "https://github.com/heygen-com/hyperframes",
+  "docsUrl": "https://hyperframes.heygen.com",
+  "commerce": {
+    "availability": "free",
+    "agentCheckout": "not-required",
+    "methods": [],
+    "pricingUrl": null
+  }
+}

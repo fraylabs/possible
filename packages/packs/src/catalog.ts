@@ -2,6 +2,7 @@ import bundledSnapshotRecords from "./bundled-snapshots.json" with { type: "json
 import bundledTrustRecords from "./bundled-trust.json" with { type: "json" };
 import federatedCatalogRecords from "./federated-catalog.json" with { type: "json" };
 import { bundledOutcomePacks } from "./manifest.js";
+import { productCatalog } from "./products.js";
 import {
   buildPackCatalog,
   validateAcceptedPackSnapshot,
@@ -35,6 +36,7 @@ export const publicCatalog: PublicCatalogEntry[] = buildPackCatalog({
   bundledSources,
   acceptedSnapshots,
   trustRecords,
+  products: productCatalog,
 }).map((entry, index) => ({
   ...entry,
   catalogNumber: index + 1,

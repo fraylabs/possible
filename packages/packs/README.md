@@ -36,9 +36,11 @@ The canonical schema is [`src/outcome-pack.schema.json`](src/outcome-pack.schema
 
 `skills` is optional. Add only the smallest necessary set using the GitHub `repository`, repository-relative `directory` containing `SKILL.md`, and exact `lastReviewedCommit` inspected by the author. Omit it when the agent needs no specialized capability.
 
+`products` is optional. Use registered `company/product` identifiers to credit Products used by the outcome and expose their official links and access information. Product metadata never replaces a Skill, changes compilation, or authorizes a purchase.
+
 `notFor` is optional. Add it only when a nearby request could otherwise select this pack incorrectly.
 
-That is the entire pack. Do not add slug, version, visibility, lifecycle, category, source, trust, evidence, showcase, workstreams, outputs, guardrails, verification objects, plugins, schedules, prerequisites, or domain-specific contract keys. Useful instructions belong in `prompt`. Observable completion conditions belong in `expectations`.
+That is the entire pack. Do not add slug, version, visibility, lifecycle, category, source, trust, evidence, showcase, workstreams, outputs, guardrails, verification objects, plugins, schedules, prerequisites, commerce objects, or domain-specific contract keys. Useful instructions belong in `prompt`. Observable completion conditions belong in `expectations`. Company, link, and commerce data belong in the referenced Product record.
 
 The compiler does only two things:
 
