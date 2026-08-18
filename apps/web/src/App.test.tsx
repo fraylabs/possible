@@ -2,7 +2,7 @@ import { cleanup, render, screen, waitFor, within } from "@testing-library/react
 import userEvent from "@testing-library/user-event";
 import { axe } from "vitest-axe";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import App, { AuthoringDocsPage, DocsGlossaryPage, DocsPage, DocsReferencePage, ExpectationsDocsPage, HowToUsePage, NotFoundPage, OutcomePacksDocsPage, PackDetailPage, PacksPage, ProductDetailPage } from "./App";
+import App, { AuthoringDocsPage, DocsGlossaryPage, DocsPage, DocsReferencePage, ExpectationsDocsPage, HowToUsePage, NotFoundPage, OutcomePacksDocsPage, PackDetailPage, PacksPage, ProductDetailPage, ProductsPage } from "./App";
 import { commonSearches } from "./catalog";
 import { getPublishedProduct, getRoutablePack, installCommand, packHref, productHref, publishedPacks, publishedProducts, routablePacks, searchPublishedPacks } from "./public-content";
 
@@ -39,7 +39,7 @@ describe("Possible website", () => {
     const { container } = render(<App />);
     expect(screen.getByRole("heading", { name: /Anything is possible/, level: 1 })).toBeInTheDocument();
     expect(screen.getByText("Discover what agents can do.")).toBeInTheDocument();
-    expect(Array.from(container.querySelectorAll(".nav-links a")).map((link) => link.textContent)).toEqual(["PACKS", "DOCS", "GITHUB ↗"]);
+    expect(Array.from(container.querySelectorAll(".nav-links a")).map((link) => link.textContent)).toEqual(["PACKS", "PRODUCTS", "DOCS", "GITHUB ↗"]);
     const gallery = screen.getByRole("region", { name: "Active Outcome Pack catalog" });
     expect(within(gallery).getAllByRole("link")).toHaveLength(6);
     expect(gallery.querySelector(".library-pack-card.has-media .library-pack-visual")).toBeInTheDocument();
@@ -67,7 +67,7 @@ describe("Possible website", () => {
   it("opens and closes the compact mobile navigation", async () => {
     render(<App />);
     await userEvent.click(screen.getByRole("button", { name: "MENU" }));
-    expect(within(screen.getByRole("dialog", { name: "Mobile navigation" })).getAllByRole("link")).toHaveLength(3);
+    expect(within(screen.getByRole("dialog", { name: "Mobile navigation" })).getAllByRole("link")).toHaveLength(4);
     await userEvent.keyboard("{Escape}");
     expect(screen.queryByRole("dialog", { name: "Mobile navigation" })).not.toBeInTheDocument();
   });
@@ -172,6 +172,16 @@ describe("Possible website", () => {
     expect(container.querySelector(".product-hero-proof video source")).toHaveAttribute("src", "/pack-media/html-css-animated-product-launch-film/media/possible-launch-film.mp4");
     expect(screen.getByText(/never authorizes spending/i)).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /HTML\/CSS Animated Product Launch Film/i })).toHaveAttribute("href", "/packs/html-css-animated-product-launch-film");
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("renders a marketing-led Product directory", async () => {
+    const { container } = render(<ProductsPage />);
+    expect(screen.getByRole("heading", { name: /Products that make.*more possible/i, level: 1 })).toBeInTheDocument();
+    expect(screen.getByText(/Discover products through what agents can make with them/i)).toBeInTheDocument();
+    for (const product of publishedProducts) {
+      expect(screen.getByRole("link", { name: new RegExp(product.name, "i") })).toHaveAttribute("href", productHref(product));
+    }
     expect(await axe(container)).toHaveNoViolations();
   });
 

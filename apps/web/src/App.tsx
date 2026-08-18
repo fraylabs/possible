@@ -1,6 +1,7 @@
 export { PacksPage } from "./catalog";
 export { PackDetailPage } from "./pack-detail";
 export { ProductDetailPage } from "./product-detail";
+export { ProductsPage } from "./product-directory";
 export {
   AuthoringDocsPage,
   DocsGlossaryPage,

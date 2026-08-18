@@ -6,6 +6,7 @@ const siteUpdatedAt = "2026-08-12";
 export const dynamic = "force-static";
 const staticPaths = [
   "/",
+  "/products/",
   "/docs/",
   "/docs/how-to-use/",
   "/docs/outcome-packs/",

@@ -15,6 +15,7 @@ export const statusLabel = (status: keyof typeof statusLabels) => statusLabels[s
 export const packStatusLabel = (entry: PublicCatalogEntry) => statusLabel(entry.trust.status);
 const navigationItems = [
   { label: "PACKS", href: "/#packs", external: false },
+  { label: "PRODUCTS", href: "/products", external: false },
   { label: "DOCS", href: "/docs", external: false },
   { label: "GITHUB", href: githubUrl, external: true },
 ] as const;

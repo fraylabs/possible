@@ -11,8 +11,8 @@ const installCommand = `npx @fraylabs/possible@${cliPackage.version} init`;
 
 const home = await html("index.html");
 const headerLinks = home.match(/<div class="nav-links">([\s\S]*?)<\/div>/)?.[1] ?? "";
-assert.equal((headerLinks.match(/<a\b/g) ?? []).length, 3);
-for (const [href, label] of [["/#packs", "PACKS"], ["/docs", "DOCS"], ["https://github.com/fraylabs/possible", "GITHUB"]]) assert.match(headerLinks, new RegExp(`href="${escape(href)}"[^>]*>${label}`));
+assert.equal((headerLinks.match(/<a\b/g) ?? []).length, 4);
+for (const [href, label] of [["/#packs", "PACKS"], ["/products", "PRODUCTS"], ["/docs", "DOCS"], ["https://github.com/fraylabs/possible", "GITHUB"]]) assert.match(headerLinks, new RegExp(`href="${escape(href)}"[^>]*>${label}`));
 
 for (const markup of [home]) {
   assert.match(markup, /Anything is\s*(?:<[^>]+>)*possible/i);
@@ -56,6 +56,14 @@ for (const product of productCatalog) {
   const linkedOutcomes = publicCatalog.filter((entry) => entry.products.some(({ id }) => id === product.id));
   assert.ok(linkedOutcomes.length > 0, `${product.id} must link at least one Outcome Pack`);
   for (const entry of linkedOutcomes) assert.match(markup, new RegExp(escape(entry.pack.name)));
+}
+
+const products = await html("products/index.html");
+assert.match(products, /Products that make[\s\S]*more possible/i);
+assert.match(products, /Discover products through what agents can make with them/i);
+for (const product of productCatalog) {
+  assert.match(products, new RegExp(escape(product.name)));
+  assert.match(products, new RegExp(`href="${escape(`/products/${product.id}`)}"`));
 }
 
 for (const path of ["docs/index.html", "docs/how-to-use/index.html", "docs/outcome-packs/index.html", "docs/expectations/index.html", "docs/authoring/index.html", "docs/reference/index.html", "docs/glossary/index.html"]) {
