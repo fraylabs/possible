@@ -1,9 +1,0 @@
-{
-  "schemaVersion": 1,
-  "description": "An identity-safe reconstruction of a licensed open-source portfolio across desktop, dark mode, and a responsive mobile drawer.",
-  "images": [
-    { "src": "media/night-orbit-light.png", "alt": "Side-by-side light-mode comparison of a licensed portfolio reference and the Night Orbit reconstruction", "caption": "Desktop light-mode comparison", "cover": true },
-    { "src": "media/night-orbit-mobile.png", "alt": "Side-by-side mobile drawer comparison of the licensed reference and reconstructed portfolio", "caption": "Responsive navigation comparison" },
-    { "src": "media/night-orbit-dark.png", "alt": "Side-by-side dark-mode comparison of the licensed portfolio reference and reconstruction", "caption": "Desktop dark-mode comparison" }
-  ]
-}

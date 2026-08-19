@@ -7,7 +7,7 @@ import "../src/styles.css";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Possible — Browse Outcome Packs",
+    default: "Possible — Discover what agents can do",
     template: "%s — Possible",
   },
   description: siteDescription,
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   creator: "Fray Labs",
   publisher: "Fray Labs",
   category: "developer tools",
-  keywords: ["Codex", "AI agents", "agent skills", "Outcome Packs", "developer tools", "independent verification"],
+  keywords: ["Codex", "AI agents", "prompts", "AI outcomes", "agent skills", "developer tools"],
   robots: {
     index: true,
     follow: true,

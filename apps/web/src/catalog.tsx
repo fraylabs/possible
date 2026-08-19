@@ -2,27 +2,27 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { RefObject } from "react";
-import { getPackShowcase, getPublishedPack, githubUrl, installCommand, packHref, publishedPacks, searchPublishedPacks } from "./public-content";
-import type { PublishedPackSearchResult } from "./public-content";
-import { LibraryPackCard } from "./library-pack-card";
+import { getPublishedOutcome, githubUrl, installCommand, outcomeHref, publishedOutcomes, searchPublishedOutcomes } from "./public-content";
+import type { PublishedOutcomeSearchResult } from "./public-content";
+import { OutcomeCard } from "./outcome-card";
 import { SiteShell } from "./shared";
 
-function PackSearchResult({ result }: { result: PublishedPackSearchResult }) {
-  const { entry, publisher, repository } = result;
+function OutcomeSearchResult({ result }: { result: PublishedOutcomeSearchResult }) {
+  const { entry } = result;
 
   return (
-    <a className="pack-search-result" href={packHref(entry)}>
+    <a className="pack-search-result" href={outcomeHref(entry)}>
       <div className="pack-search-source">
         <span className="pack-search-favicon" aria-hidden="true">P</span>
         <span className="pack-search-source-copy">
-          <span className="pack-search-source-title"><strong>{publisher}</strong></span>
-          <small>possible.sh <i>›</i> {publisher} <i>›</i> {repository} <i>›</i> {entry.slug}</small>
+          <span className="pack-search-source-title"><strong>{entry.outcome.author.name}</strong></span>
+          <small>possible.sh <i>›</i> outcomes <i>›</i> {entry.slug}</small>
         </span>
       </div>
-      <h3>{entry.pack.name}</h3>
-      <p>{entry.pack.promise}</p>
-      {entry.products.length ? <div className="pack-search-product">For {entry.products.map(({ name, company }) => `${name} by ${company.name}`).join(" · ")}</div> : null}
-      <div className="pack-search-fit"><strong>{entry.pack.expectations?.length ? "Finished when" : "Direct outcome"}</strong><span>{entry.pack.expectations?.[0] ?? "One exact prompt, ready to copy and run."}</span></div>
+      <h3>{entry.outcome.title}</h3>
+      <p>{entry.outcome.summary}</p>
+      {entry.products.length ? <div className="pack-search-product">Uses {entry.products.map(({ name, company }) => `${name} by ${company.name}`).join(" · ")}</div> : null}
+      <div className="pack-search-fit"><strong>Exact prompt</strong><span>Copy it, adapt the details, and give it to your agent.</span></div>
     </a>
   );
 }
@@ -62,20 +62,20 @@ function PackSearchBox({ query, inputRef, onChange, compact = false }: {
   );
 }
 
-export function PacksPage() {
+export function OutcomesPage() {
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
   const [introOpen, setIntroOpen] = useState(false);
   const searchRef = useRef<HTMLInputElement>(null);
   const introVideoRef = useRef<HTMLVideoElement>(null);
-  const launchFilmPack = getPublishedPack("html-css-animated-product-launch-film");
-  const launchFilm = launchFilmPack ? getPackShowcase(launchFilmPack)?.video : undefined;
+  const launchFilmOutcome = getPublishedOutcome("html-css-animated-product-launch-film");
+  const launchFilm = launchFilmOutcome?.outcome.preview?.video;
   const normalizedQuery = query.trim();
-  const searchResults = normalizedQuery ? searchPublishedPacks(normalizedQuery) : [];
-  const pageCount = Math.max(1, Math.ceil(publishedPacks.length / packsPerPage));
+  const searchResults = normalizedQuery ? searchPublishedOutcomes(normalizedQuery) : [];
+  const pageCount = Math.max(1, Math.ceil(publishedOutcomes.length / packsPerPage));
   const currentPage = Math.min(page, pageCount);
   const pageStart = (currentPage - 1) * packsPerPage;
-  const visiblePacks = publishedPacks.slice(pageStart, pageStart + packsPerPage);
+  const visibleOutcomes = publishedOutcomes.slice(pageStart, pageStart + packsPerPage);
   function updateQuery(nextQuery: string) {
     setQuery(nextQuery);
     setPage(1);
@@ -93,7 +93,7 @@ export function PacksPage() {
     if (boundedPage === 1) url.searchParams.delete("page");
     else url.searchParams.set("page", String(boundedPage));
     window.history.pushState(window.history.state, "", `${url.pathname}${url.search}${url.hash}`);
-    window.requestAnimationFrame(() => document.getElementById("packs")?.scrollIntoView?.({ behavior: "smooth", block: "start" }));
+    window.requestAnimationFrame(() => document.getElementById("outcomes")?.scrollIntoView?.({ behavior: "smooth", block: "start" }));
   }
   function resetFilters() {
     updateQuery("");
@@ -168,7 +168,7 @@ export function PacksPage() {
               <div className="packs-intro-content">
                 <div className="packs-intro-copy">
                   <p><strong>See more of what your agent can do</strong>AI agents can build websites, videos, CAD, presentations, games, and much more. The hard part is knowing what to ask for and how to guide them there.</p>
-                  <p>Possible.sh is an open-source library of Outcome Packs. Each pack turns those capabilities into something you can search and choose, with a structured prompt, a checklist for what finished means, and specialized skills when needed.</p>
+                  <p>Possible.sh is an open-source directory of exact prompts. Browse something worth making, copy the prompt behind it, and adapt the details for your own project.</p>
                   <div className="packs-intro-steps">
                     <article>
                       <span>01 / INSTALL</span>
@@ -200,26 +200,26 @@ export function PacksPage() {
               </div>
             </section>
           </div>
-        </div></> : <h1 className="sr-only" id="packs-library-heading">Outcome Pack search results for {normalizedQuery}</h1>}
+        </div></> : <h1 className="sr-only" id="packs-library-heading">Outcome search results for {normalizedQuery}</h1>}
         <PackSearchBox query={query} inputRef={searchRef} onChange={updateQuery} compact={Boolean(normalizedQuery)} />
         {!normalizedQuery ? <div className="packs-search-examples"><span>COMMON SEARCHES</span>{commonSearches.map((example) => <button type="button" onClick={() => updateQuery(example)} key={example}>{example}</button>)}</div> : null}
       </section>
 
-      <section className={`packs-results${normalizedQuery ? " is-search-results" : ""}`} id="packs" aria-labelledby="packs-results-heading">
+      <section className={`packs-results${normalizedQuery ? " is-search-results" : ""}`} id="outcomes" aria-labelledby="packs-results-heading">
         {normalizedQuery ? <header className="packs-search-summary">
           <h2 className="sr-only" id="packs-results-heading">Results for {normalizedQuery}</h2>
           <p>{searchResults.length} {searchResults.length === 1 ? "result" : "results"} for <strong>“{normalizedQuery}”</strong></p>
         </header> : <header className="packs-results-bar">
-          <div><h2 id="packs-results-heading">What agents can do</h2><span>{publishedPacks.length} {publishedPacks.length === 1 ? "OUTCOME" : "OUTCOMES"}</span></div>
-          <span>CURATED BY POSSIBLE / SOURCE-PINNED</span>
+          <div><h2 id="packs-results-heading">What agents can do</h2><span>{publishedOutcomes.length} {publishedOutcomes.length === 1 ? "OUTCOME" : "OUTCOMES"}</span></div>
+          <span>EXACT PROMPTS / REAL PREVIEWS</span>
         </header>}
         {normalizedQuery && searchResults.length ? (
           <div className="packs-search-list" role="region" aria-label="Agent outcome search results">
-            {searchResults.map((result) => <PackSearchResult result={result} key={result.entry.id} />)}
+            {searchResults.map((result) => <OutcomeSearchResult result={result} key={result.entry.slug} />)}
           </div>
         ) : !normalizedQuery ? (
-          <div className="packs-results-grid" role="region" aria-label="Active Outcome Pack catalog">
-            {visiblePacks.map((entry, index) => <LibraryPackCard entry={entry} priority={index < 3} key={entry.id} />)}
+          <div className="packs-results-grid" role="region" aria-label="Outcome prompt directory">
+            {visibleOutcomes.map((entry, index) => <OutcomeCard entry={entry} priority={index < 3} key={entry.slug} />)}
           </div>
         ) : (
           <div className="packs-empty">
@@ -229,7 +229,7 @@ export function PacksPage() {
             <button type="button" onClick={resetFilters}>Show all outcomes</button>
           </div>
         )}
-        {!normalizedQuery && pageCount > 1 ? <div className="packs-pagination" role="navigation" aria-label="Outcome Pack pages">
+        {!normalizedQuery && pageCount > 1 ? <div className="packs-pagination" role="navigation" aria-label="Outcome pages">
           <button type="button" onClick={() => updatePage(currentPage - 1)} disabled={currentPage === 1}>← PREVIOUS</button>
           <div>{Array.from({ length: pageCount }, (_, index) => index + 1).map((pageNumber) => <button
             type="button"
@@ -239,13 +239,13 @@ export function PacksPage() {
             key={pageNumber}
           >{String(pageNumber).padStart(2, "0")}</button>)}</div>
           <button type="button" onClick={() => updatePage(currentPage + 1)} disabled={currentPage === pageCount}>NEXT →</button>
-          <span aria-live="polite">PAGE {currentPage} OF {pageCount} / SHOWING {pageStart + 1}–{pageStart + visiblePacks.length}</span>
+          <span aria-live="polite">PAGE {currentPage} OF {pageCount} / SHOWING {pageStart + 1}–{pageStart + visibleOutcomes.length}</span>
         </div> : null}
       </section>
 
       {!normalizedQuery ? <section className="packs-library-note">
-        <p><strong>Can’t find the outcome?</strong> Possible is an open library. Authors keep packs in their own GitHub repositories and submit immutable, source-pinned contracts for review.</p>
-        <a href={`${githubUrl}/blob/main/CONTRIBUTING.md`} target="_blank" rel="noreferrer">Author an Outcome Pack <span>↗</span></a>
+        <p><strong>Made something worth sharing?</strong> Publish the exact prompt, a clear summary, and an optional preview.</p>
+        <a href={`${githubUrl}/blob/main/CONTRIBUTING.md`} target="_blank" rel="noreferrer">Share an Outcome <span>↗</span></a>
       </section> : null}
 
     </SiteShell>
@@ -253,4 +253,4 @@ export function PacksPage() {
 }
 
 
-export default PacksPage;
+export default OutcomesPage;

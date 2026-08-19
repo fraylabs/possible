@@ -1,0 +1,142 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://possible.sh/schemas/outcome.schema.json",
+  "title": "Possible Outcome",
+  "description": "One exact prompt for one concrete result, with visible authorship and optional Products, Skills, and preview media.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "title", "summary", "prompt", "author"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "description": "A specific, human-readable name for the result."
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1,
+      "description": "One plain-language sentence describing what the prompt produces."
+    },
+    "prompt": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The exact prompt copied into an agent. Possible never rewrites or compiles it."
+    },
+    "author": { "$ref": "#/$defs/author" },
+    "skills": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/skill" }
+    },
+    "products": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z0-9][a-z0-9-]*/[a-z0-9][a-z0-9-]*$"
+      }
+    },
+    "preview": { "$ref": "#/$defs/preview" }
+  },
+  "$defs": {
+    "author": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "url"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "url": { "type": "string", "format": "uri", "pattern": "^https://" }
+      }
+    },
+    "skill": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository", "lastReviewedCommit", "directory"],
+      "properties": {
+        "repository": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$"
+        },
+        "lastReviewedCommit": {
+          "type": "string",
+          "pattern": "^(?:[0-9a-f]{40}|[0-9a-f]{64})$"
+        },
+        "directory": {
+          "type": "string",
+          "pattern": "^(?:\\.|(?!.*(?:^|/)\\.\\.?($|/))[a-z0-9._-]+(?:/[a-z0-9._-]+)*)$"
+        }
+      }
+    },
+    "image": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["src", "alt"],
+      "properties": {
+        "src": { "type": "string", "minLength": 1 },
+        "alt": { "type": "string" },
+        "caption": { "type": "string", "minLength": 1 },
+        "cover": { "type": "boolean" }
+      }
+    },
+    "video": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["src", "poster"],
+      "properties": {
+        "src": { "type": "string", "minLength": 1 },
+        "poster": { "type": "string", "minLength": 1 },
+        "caption": { "type": "string", "minLength": 1 }
+      }
+    },
+    "audio": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["src"],
+      "properties": {
+        "src": { "type": "string", "minLength": 1 },
+        "poster": { "type": "string", "minLength": 1 },
+        "caption": { "type": "string", "minLength": 1 }
+      }
+    },
+    "cadDownload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["src", "format"],
+      "properties": {
+        "src": { "type": "string", "minLength": 1 },
+        "format": { "enum": ["step", "stl", "3mf"] },
+        "label": { "type": "string", "minLength": 1 }
+      }
+    },
+    "cad": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "preview": { "type": "string", "minLength": 1 },
+        "poster": { "type": "string", "minLength": 1 },
+        "caption": { "type": "string", "minLength": 1 },
+        "downloads": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/cadDownload" }
+        }
+      }
+    },
+    "preview": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "description": { "type": "string", "minLength": 1 },
+        "images": {
+          "type": "array",
+          "maxItems": 5,
+          "items": { "$ref": "#/$defs/image" }
+        },
+        "video": { "$ref": "#/$defs/video" },
+        "audio": { "$ref": "#/$defs/audio" },
+        "cad": { "$ref": "#/$defs/cad" }
+      }
+    }
+  }
+}

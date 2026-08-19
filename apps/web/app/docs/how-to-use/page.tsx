@@ -3,7 +3,7 @@ import { pageMetadata } from "../../_metadata";
 
 export const metadata = pageMetadata({
   title: "How to use Possible",
-  description: "Learn what the human decides, what Possible coordinates, and how approval and verification work together.",
+  description: "Browse Outcomes on possible.sh or use the optional Codex discovery skill.",
   path: "/docs/how-to-use",
 });
 

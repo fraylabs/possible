@@ -30,14 +30,11 @@ test("installs the complete Possible skill repo-locally without disturbing other
 
   assert.deepEqual(result, {
     changed: true,
-    filesWritten: 4,
+    filesWritten: 2,
     installPath: join(".agents", "skills", "possible"),
   });
   assert.match(await readFile(join(project, result.installPath, "SKILL.md"), "utf8"), /name: possible/);
-  assert.match(await readFile(join(project, result.installPath, "references", "packs.md"), "utf8"), /functional-hardware-prototype/);
-  assert.match(await readFile(join(project, result.installPath, "references", "packs.md"), "utf8"), /working-web-app/);
-  assert.match(await readFile(join(project, result.installPath, "references", "packs.md"), "utf8"), /original-strudel-soundtrack/);
-  assert.match(await readFile(join(project, result.installPath, "references", "authoring-fields.md"), "utf8"), /Pack.*promise/s);
+  assert.match(await readFile(join(project, result.installPath, "SKILL.md"), "utf8"), /directory of exact prompts/);
   assert.equal(await readFile(existingSkill, "utf8"), "user-owned\n");
 });
 

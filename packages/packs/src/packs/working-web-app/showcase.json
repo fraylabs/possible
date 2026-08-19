@@ -1,9 +1,0 @@
-{
-  "schemaVersion": 1,
-  "description": "Marketboard is a local-first weekend-market organizer with constraint-aware filtering, vendor editing, stage movement, and persistent state.",
-  "images": [
-    { "src": "media/marketboard-overview.png", "alt": "Marketboard web app showing weekend market metrics, search filters, and vendor planning columns", "caption": "Complete local planning workspace", "cover": true },
-    { "src": "media/marketboard-filter.png", "alt": "Marketboard filtered to vendors whose setup requires mains power", "caption": "Constraint-aware planning filter" },
-    { "src": "media/marketboard-edit.png", "alt": "Marketboard vendor-editing dialog with status, stall, arrival, category, and operational needs", "caption": "Clear vendor editing flow" }
-  ]
-}

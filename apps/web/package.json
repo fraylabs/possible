@@ -4,15 +4,15 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "predev": "node ../../scripts/sync-pack-media.mjs",
+    "predev": "node ../../scripts/sync-outcome-media.mjs",
     "dev": "next dev",
-    "prebuild": "node ../../scripts/sync-pack-media.mjs",
+    "prebuild": "node ../../scripts/sync-outcome-media.mjs",
     "build": "next build && node scripts/emit-publications.mjs",
     "test": "vitest run src/App.test.tsx",
     "test:watch": "vitest src/App.test.tsx"
   },
   "dependencies": {
-    "@possible/packs": "0.1.0",
+    "@possible/catalog": "0.1.0",
     "next": "16.2.11",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",

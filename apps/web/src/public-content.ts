@@ -1,43 +1,32 @@
-import { getPackShowcase as getCorePackShowcase, parsePackIdentity, productCatalog, publicCatalog, searchPackCatalog } from "@possible/packs";
-import type { PackCatalogSearchResult, PublicCatalogEntry, ResolvedProduct } from "@possible/packs";
+import { outcomeCatalog, productCatalog, searchOutcomes } from "@possible/catalog";
+import type { OutcomeCatalogEntry, OutcomeSearchResult, ResolvedProduct } from "@possible/catalog";
 import cliPackage from "../../cli/package.json" with { type: "json" };
 
 export const possibleVersion = cliPackage.version;
 export const installCommand = `npx @fraylabs/possible@${possibleVersion} init`;
 export const githubUrl = "https://github.com/fraylabs/possible";
 
-export const publishedPacks = publicCatalog;
-export const routablePacks = publicCatalog;
+export const publishedOutcomes = outcomeCatalog;
 export const publishedProducts = productCatalog;
 const publishedProductSlugs = publishedProducts.map((product) => product.id.split("/").at(-1));
-if (new Set(publishedProductSlugs).size !== publishedProductSlugs.length) {
-  throw new Error("Published Product slugs must be unique");
+if (new Set(publishedProductSlugs).size !== publishedProductSlugs.length) throw new Error("Published Product slugs must be unique");
+
+export type PublishedOutcomeSearchResult = OutcomeSearchResult;
+
+export function searchPublishedOutcomes(query: string): PublishedOutcomeSearchResult[] {
+  return searchOutcomes(publishedOutcomes, { query });
 }
 
-export type PublishedPackSearchResult = PackCatalogSearchResult<PublicCatalogEntry>;
-
-export function packPublisher(entry: PublicCatalogEntry) {
-  return parsePackIdentity(entry.id).owner;
-}
-
-export function searchPublishedPacks(query: string): PublishedPackSearchResult[] {
-  return searchPackCatalog({
-    query,
-    minimumMatchingTerms: 2,
-    minimumScoreRatio: 0.5,
-  }, publishedPacks);
-}
-
-export function packRouteId(entry: PublicCatalogEntry) {
-  return entry.origin.kind === "bundled" ? entry.slug : entry.id;
-}
-
-export function packHref(entry: PublicCatalogEntry) {
-  return `/packs/${packRouteId(entry)}`;
+export function outcomeHref(entry: OutcomeCatalogEntry) {
+  return `/outcomes/${entry.slug}`;
 }
 
 export function productHref(product: ResolvedProduct) {
   return `/products/${product.id.split("/").at(-1)}`;
+}
+
+export function getPublishedOutcome(slug: string) {
+  return publishedOutcomes.find((entry) => entry.slug === slug);
 }
 
 export function getPublishedProduct(idOrSlug: string) {
@@ -48,33 +37,11 @@ export function getPublishedProduct(idOrSlug: string) {
 }
 
 export function getProductOutcomes(id: string) {
-  return publishedPacks.filter((entry) => entry.products.some((product) => product.id === id));
+  return publishedOutcomes.filter((entry) => entry.products.some((product) => product.id === id));
 }
 
 export function getProductFeature(id: string) {
   const outcomes = getProductOutcomes(id);
-  const featured = outcomes.find((entry) => {
-    const showcase = getCorePackShowcase(entry.id);
-    return Boolean(showcase?.video || showcase?.images?.length || showcase?.cad?.poster);
-  }) ?? outcomes[0];
-  if (!featured) return undefined;
-  return { entry: featured, showcase: getCorePackShowcase(featured.id) };
-}
-
-export function getPackShowcase(entry: PublicCatalogEntry) {
-  return getCorePackShowcase(entry.id);
-}
-
-export function getPublishedPack(idOrSlug: string) {
-  const exact = publishedPacks.find(({ id }) => id === idOrSlug);
-  if (exact) return exact;
-  const matches = publishedPacks.filter(({ slug }) => slug === idOrSlug);
-  return matches.length === 1 ? matches[0] : undefined;
-}
-
-export function getRoutablePack(idOrSlug: string) {
-  const exact = routablePacks.find(({ id }) => id === idOrSlug);
-  if (exact) return exact;
-  const matches = routablePacks.filter(({ slug }) => slug === idOrSlug);
-  return matches.length === 1 ? matches[0] : undefined;
+  const entry = outcomes.find(({ outcome }) => outcome.preview?.video || outcome.preview?.images?.length || outcome.preview?.cad?.poster) ?? outcomes[0];
+  return entry ? { entry, preview: entry.outcome.preview } : undefined;
 }

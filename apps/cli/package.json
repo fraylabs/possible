@@ -1,14 +1,14 @@
 {
   "name": "@fraylabs/possible",
   "version": "0.1.11",
-  "description": "Install the Possible Outcome Pack skill for Codex",
+  "description": "Install the optional Possible prompt-discovery skill for Codex",
   "keywords": [
     "codex",
     "ai-agents",
     "agent-skills",
-    "outcome-packs",
-    "developer-tools",
-    "verification"
+    "prompts",
+    "ai-outcomes",
+    "developer-tools"
   ],
   "homepage": "https://possible.sh",
   "repository": {
@@ -25,14 +25,13 @@
   },
   "files": [
     "assets/possible",
-    "src",
-    "runtime"
+    "src"
   ],
   "scripts": {
-    "build": "node scripts/sync-runtime.mjs && node scripts/verify-snapshot.mjs",
-    "test": "node --test test/*.test.mjs && node scripts/verify-snapshot.mjs",
+    "build": "node scripts/sync-skill.mjs",
+    "test": "node --test test/*.test.mjs",
     "sync:skill": "node scripts/sync-skill.mjs",
-    "prepack": "node scripts/sync-runtime.mjs && node scripts/verify-snapshot.mjs --quiet"
+    "prepack": "node scripts/sync-skill.mjs"
   },
   "engines": {
     "node": ">=22"

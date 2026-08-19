@@ -1,4 +1,4 @@
-import { packHref, productHref, publishedProducts, routablePacks } from "../src/public-content";
+import { outcomeHref, productHref, publishedOutcomes, publishedProducts } from "../src/public-content";
 import type { MetadataRoute } from "next";
 
 const baseUrl = "https://possible.sh";
@@ -9,11 +9,8 @@ const staticPaths = [
   "/products/",
   "/docs/",
   "/docs/how-to-use/",
-  "/docs/outcome-packs/",
-  "/docs/expectations/",
   "/docs/authoring/",
   "/docs/reference/",
-  "/docs/glossary/",
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -23,8 +20,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: siteUpdatedAt,
       changeFrequency: "weekly" as const,
     })),
-    ...routablePacks.map((entry) => ({
-      url: `${baseUrl}${packHref(entry)}/`,
+    ...publishedOutcomes.map((entry) => ({
+      url: `${baseUrl}${outcomeHref(entry)}/`,
       lastModified: siteUpdatedAt,
       changeFrequency: "weekly" as const,
     })),

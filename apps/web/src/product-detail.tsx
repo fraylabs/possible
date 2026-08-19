@@ -1,25 +1,8 @@
 "use client";
 
-import { LibraryPackCard } from "./library-pack-card";
+import { OutcomeCard } from "./outcome-card";
 import { getProductOutcomes, getPublishedProduct } from "./public-content";
 import { SiteShell } from "./shared";
-
-const commerceLabel = (availability: string) => ({
-  free: "Free to use",
-  paid: "Paid",
-  "contact-sales": "Contact sales",
-  "free-and-paid": "Free + paid",
-  unavailable: "Unavailable",
-  unknown: "Pricing unknown",
-}[availability] ?? availability);
-
-const checkoutLabel = (checkout: string) => ({
-  "not-required": "No checkout",
-  supported: "Agent checkout",
-  "manual-only": "Manual checkout",
-  "not-supported": "No agent checkout",
-  unknown: "Checkout unknown",
-}[checkout] ?? checkout);
 
 export function ProductDetailPage({ id }: { id: string }) {
   const product = getPublishedProduct(id);
@@ -45,13 +28,9 @@ export function ProductDetailPage({ id }: { id: string }) {
             <nav className="product-profile-links" aria-label={`${product.name} links`}>
               <a href={product.website} target="_blank" rel="noreferrer">Website <span>↗</span></a>
               {product.docsUrl !== product.website ? <a href={product.docsUrl} target="_blank" rel="noreferrer">Documentation <span>↗</span></a> : null}
-              {product.commerce.pricingUrl ? <a href={product.commerce.pricingUrl} target="_blank" rel="noreferrer">Pricing <span>↗</span></a> : null}
             </nav>
             <div className="product-access-note" aria-label="Product access">
               <span>{product.category}</span>
-              <span>{commerceLabel(product.commerce.availability)}</span>
-              <span>{checkoutLabel(product.commerce.agentCheckout)}</span>
-              {product.commerce.methods.map((method) => <span key={method}>{method}</span>)}
             </div>
           </div>
         </header>
@@ -61,7 +40,7 @@ export function ProductDetailPage({ id }: { id: string }) {
             <h2 id="product-outcomes-heading">COMMUNITY</h2>
           </header>
           <div className="product-community-grid">
-            {outcomes.map((entry, index) => <LibraryPackCard entry={entry} priority={index < 2} key={entry.id} />)}
+            {outcomes.map((entry, index) => <OutcomeCard entry={entry} priority={index < 2} key={entry.slug} />)}
             {outcomes.length === 0 ? <p className="product-outcomes-empty">No published Outcomes use this product yet.</p> : null}
           </div>
         </section>

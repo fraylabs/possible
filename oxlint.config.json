@@ -46,8 +46,8 @@
   "overrides": [
     {
       "files": [
-        "packages/packs/src/manifest.ts",
-        "packages/packs/src/registry.ts"
+        "packages/catalog/src/outcomes.ts",
+        "packages/catalog/src/products.ts"
       ],
       "rules": {
         "anti-slop/no-runtime-typeof": "off",
@@ -60,8 +60,7 @@
       "files": [
         "apps/cli/src/bookmarks.mjs",
         "evaluations/discovery/verify.mjs",
-        "scripts/lib/pack-folders.mjs",
-        "scripts/validate-pack-submission.mjs"
+        "scripts/lib/outcome-folders.mjs"
       ],
       "rules": {
         "anti-slop/no-runtime-typeof": "off"
@@ -71,7 +70,7 @@
       "files": [
         "apps/mcp/test/server.test.ts",
         "apps/web/src/App.test.tsx",
-        "packages/packs/test/compiler.test.mjs"
+        "packages/catalog/test/catalog.test.mjs"
       ],
       "rules": {
         "anti-slop/no-module-mocking": "off",

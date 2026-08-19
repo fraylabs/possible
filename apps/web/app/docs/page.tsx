@@ -3,7 +3,7 @@ import { pageMetadata } from "../_metadata";
 
 export const metadata = pageMetadata({
   title: "Documentation",
-  description: "Install Possible, brainstorm an outcome with Codex, approve a reviewed pack, and understand every safety boundary.",
+  description: "Learn how to browse real AI outcomes, copy their exact prompts, and publish your own.",
   path: "/docs",
 });
 

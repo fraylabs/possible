@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "title": "Robot Digital Prototype",
+  "summary": "Prove one robot behavior in a deterministic digital prototype and expose the sim-to-real gap.",
+  "prompt": "A bounded behavior contract, the minimum active robot modules, deterministic scenario evidence, falsification, and an honest digital-only assessment.\n\n## Deliverables\n- Behavior contract\n- Executable digital prototype\n- Deterministic scenario suite\n- Sim-to-real gap report\n- Digital prototype decision with supporting evidence\n\n## Execution guidance\n- Define one observable behavior, environment, success threshold, failing scenarios, assumptions, and digital boundary.\n- Build only the geometry, dynamics, controller, interfaces, and scenarios needed by the behavior and active modules.\n- Repeat nominal and failing scenarios, inspect the model, quantify uncertainty, and publish the sim-to-real gap.\n\n## Boundaries\n- Do not claim physical safety, durability, manufacturability, calibration, or real-world performance from simulation.\n- Do not add subsystems merely to resemble a complete robot.\n- Do not command physical equipment or deploy robot software without separate approval.\n- Preserve units, frames, solver settings, seeds, and asset provenance.\n- Digitally proven means the contracted behavior passes reproducibly in the declared model; it never means a physical robot is safe, buildable, or commissioned.",
+  "author": {
+    "name": "Fray Labs",
+    "url": "https://github.com/fraylabs"
+  },
+  "products": [
+    "google-deepmind/mujoco"
+  ],
+  "skills": [
+    {
+      "repository": "fraylabs/possible",
+      "lastReviewedCommit": "9adb697c211d2cebc07164554d7a9f859e7f763d",
+      "directory": "skills/mujoco-robotics"
+    },
+    {
+      "repository": "earthtojake/text-to-cad",
+      "lastReviewedCommit": "fdbb4b4fb62d95ae298cfe9a46fdc7092bdaf423",
+      "directory": "skills/cad"
+    },
+    {
+      "repository": "earthtojake/text-to-cad",
+      "lastReviewedCommit": "fdbb4b4fb62d95ae298cfe9a46fdc7092bdaf423",
+      "directory": "skills/cad-viewer"
+    },
+    {
+      "repository": "arpitg1304/robotics-agent-skills",
+      "lastReviewedCommit": "54f7b578f3dc269d29c0beb623b3f2611fd3a430",
+      "directory": "skills/robotics-design-patterns"
+    },
+    {
+      "repository": "arpitg1304/robotics-agent-skills",
+      "lastReviewedCommit": "54f7b578f3dc269d29c0beb623b3f2611fd3a430",
+      "directory": "skills/robotics-testing"
+    }
+  ],
+  "preview": {
+    "description": "A ten-link robot-snake digital prototype with an inspectable browser model and engineering source file.",
+    "images": [
+      {
+        "src": "media/robot-snake-iso.png",
+        "alt": "Isometric view of a ten-link robot snake CAD assembly",
+        "caption": "Complete articulated assembly",
+        "cover": true
+      },
+      {
+        "src": "media/robot-snake-iso-opposite.png",
+        "alt": "Opposite isometric view of the robot snake CAD assembly",
+        "caption": "Opposite assembly view"
+      },
+      {
+        "src": "media/robot-snake-top.png",
+        "alt": "Top view of the robot snake CAD assembly",
+        "caption": "Top view and link spacing"
+      }
+    ],
+    "cad": {
+      "preview": "media/robot-snake.glb",
+      "poster": "media/robot-snake-iso.png",
+      "caption": "Rotate and inspect the complete linked assembly in the browser.",
+      "downloads": [
+        {
+          "src": "media/robot-snake.step",
+          "format": "step",
+          "label": "Download STEP assembly"
+        }
+      ]
+    }
+  }
+}

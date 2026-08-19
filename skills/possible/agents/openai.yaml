@@ -1,4 +1,4 @@
 interface:
   display_name: "Possible"
-  short_description: "Find and run Outcome Packs"
-  default_prompt: "Use $possible to search my saved packs and the public catalog, show me fitting choices, and run the Outcome Pack I select."
+  short_description: "Discover exact prompts for agent outcomes"
+  default_prompt: "Use $possible to find examples of what agents can do and show me the exact prompt behind the Outcome I choose."

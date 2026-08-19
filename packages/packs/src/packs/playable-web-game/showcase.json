@@ -1,9 +1,0 @@
-{
-  "schemaVersion": 1,
-  "description": "Orbit Courier is a polished Three.js gravity-routing game where one thrust control bends a predicted trajectory through three delivery routes.",
-  "images": [
-    { "src": "media/orbit-courier-active.png", "alt": "Orbit Courier gameplay with a spacecraft, gravity wells, targets, and a live predicted route", "caption": "Live gravity-routing gameplay", "cover": true },
-    { "src": "media/orbit-courier-opening.png", "alt": "Orbit Courier opening screen introducing the single-thrust control and first route", "caption": "Immediate, legible first-play state" },
-    { "src": "media/orbit-courier-complete.png", "alt": "Orbit Courier route-complete screen with delivery result and next-route action", "caption": "Complete route and progression state" }
-  ]
-}

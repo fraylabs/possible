@@ -1,0 +1,80 @@
+"use client";
+
+import { lazy, Suspense, useState } from "react";
+import { skillPageUrl } from "@possible/catalog";
+import type { OutcomePreview } from "@possible/catalog";
+import { getPublishedOutcome, productHref } from "./public-content";
+import { CopyButton, NotFoundPage, SiteShell } from "./shared";
+
+const OutcomeCadViewer = lazy(() => import("./OutcomeCadViewer"));
+type PreviewSelection = { id: string; kind: "image" | "video" | "audio" | "cad"; imageIndex?: number };
+
+function OutcomePreviewView({ preview, title }: { preview: OutcomePreview; title: string }) {
+  const items: PreviewSelection[] = [
+    ...(preview.images ?? []).map((_, index) => ({ id: `image-${index}`, kind: "image" as const, imageIndex: index })),
+    ...(preview.video ? [{ id: "video", kind: "video" as const }] : []),
+    ...(preview.audio ? [{ id: "audio", kind: "audio" as const }] : []),
+    ...(preview.cad ? [{ id: "cad", kind: "cad" as const }] : []),
+  ];
+  const [selectedId, setSelectedId] = useState(items[0]?.id);
+  const selected = items.find(({ id }) => id === selectedId) ?? items[0];
+  if (!selected) return preview.description ? <p className="pack-showcase-description">{preview.description}</p> : null;
+  const image = selected.kind === "image" ? preview.images?.[selected.imageIndex ?? 0] : undefined;
+  const cadPosterAlt = preview.images?.find(({ src }) => src === preview.cad?.poster)?.alt ?? `${title} CAD preview`;
+
+  return (
+    <section className="pack-showcase" aria-label="Outcome preview">
+      {preview.description ? <header><span>PREVIEW</span><p>{preview.description}</p></header> : null}
+      <div className="pack-showcase-stage">
+        {image ? <figure><img src={image.src} alt={image.alt} /><figcaption>{image.caption}</figcaption></figure> : null}
+        {selected.kind === "video" && preview.video ? <figure><video controls playsInline preload="metadata" poster={preview.video.poster}><source src={preview.video.src} /><a href={preview.video.src}>Open video</a></video><figcaption>{preview.video.caption}</figcaption></figure> : null}
+        {selected.kind === "audio" && preview.audio ? <figure>{preview.audio.poster ? <img src={preview.audio.poster} alt="" /> : null}<audio controls preload="metadata"><source src={preview.audio.src} /></audio><figcaption>{preview.audio.caption}</figcaption></figure> : null}
+        {selected.kind === "cad" && preview.cad ? <figure>
+          {preview.cad.preview && preview.cad.poster ? <Suspense fallback={<img src={preview.cad.poster} alt={cadPosterAlt} />}><OutcomeCadViewer modelSrc={preview.cad.preview} posterSrc={preview.cad.poster} alt={cadPosterAlt} /></Suspense> : preview.cad.poster ? <img src={preview.cad.poster} alt={cadPosterAlt} /> : <div className="pack-cad-download-only"><span>CAD FILES</span><strong>Download the editable files below.</strong></div>}
+          <figcaption>{preview.cad.caption}</figcaption>
+        </figure> : null}
+      </div>
+      {items.length > 1 ? <div className="pack-showcase-picker" role="group" aria-label="Choose preview media">{items.map((item, index) => <button type="button" aria-pressed={item.id === selected.id} onClick={() => setSelectedId(item.id)} key={item.id}><span>{String(index + 1).padStart(2, "0")}</span>{item.kind}</button>)}</div> : null}
+      {selected.kind === "cad" && preview.cad?.downloads?.length ? <div className="pack-cad-downloads">{preview.cad.downloads.map((download) => <a href={download.src} download key={download.src}><span>{download.format.toUpperCase()}</span>{download.label ?? `Download ${download.format.toUpperCase()}`} <b>↓</b></a>)}</div> : null}
+    </section>
+  );
+}
+
+export function OutcomeDetailPage({ slug }: { slug: string }) {
+  const entry = getPublishedOutcome(slug);
+  if (!entry) return <NotFoundPage />;
+  const { outcome } = entry;
+
+  return (
+    <SiteShell className="pack-detail-page">
+      <article className="pack-detail-document">
+        <header className="pack-detail-header">
+          <nav className="pack-detail-breadcrumb" aria-label="Breadcrumb"><a href="/#outcomes">Outcomes</a><span>/</span><span>{outcome.title}</span></nav>
+          <h1>{outcome.title}</h1>
+          <p>{outcome.summary}</p>
+          <p className="outcome-author">By <a href={outcome.author.url} target="_blank" rel="noreferrer">{outcome.author.name} ↗</a></p>
+          {entry.products.length ? <div className="pack-product-attribution"><span>USES</span>{entry.products.map((product) => <a href={productHref(product)} key={product.id}><strong>{product.name}</strong><small>by {product.company.name}</small></a>)}</div> : null}
+        </header>
+
+        <div className="pack-detail-layout"><div className="pack-detail-main">
+          {outcome.preview ? <section className="pack-readable-section pack-readable-section--first" aria-labelledby="outcome-preview-heading"><h2 id="outcome-preview-heading">What it can make</h2><OutcomePreviewView preview={outcome.preview} title={outcome.title} /></section> : null}
+
+          <section className="pack-use-panel" aria-labelledby="outcome-prompt-heading">
+            <h2 id="outcome-prompt-heading">Exact prompt</h2>
+            <div className="pack-use-content pack-use-content--direct"><pre className="is-long"><code>{outcome.prompt}</code></pre><CopyButton label="Copy prompt" value={outcome.prompt} /></div>
+          </section>
+
+          {outcome.skills?.length ? <section className="pack-readable-section" aria-labelledby="outcome-skills-heading">
+            <h2 id="outcome-skills-heading">Skills</h2>
+            <ul className="pack-skill-list">{outcome.skills.map((skill) => {
+              const name = skill.directory.split("/").filter(Boolean).at(-1) ?? skill.repository;
+              return <li key={`${skill.repository}/${skill.directory}`}><a href={skillPageUrl(skill)} target="_blank" rel="noreferrer"><strong>{name}</strong><span>{skill.repository}/{skill.directory} · reviewed at {skill.lastReviewedCommit.slice(0, 8)}</span><i>↗</i></a></li>;
+            })}</ul>
+          </section> : null}
+
+          <footer className="outcome-source"><span>Published by <a href={outcome.author.url} target="_blank" rel="noreferrer">{outcome.author.name}</a></span><a href={entry.sourceUrl} target="_blank" rel="noreferrer">View source ↗</a></footer>
+        </div></div>
+      </article>
+    </SiteShell>
+  );
+}

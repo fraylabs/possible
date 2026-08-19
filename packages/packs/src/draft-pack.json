@@ -1,7 +1,0 @@
-{
-  "schemaVersion": 1,
-  "name": "My Outcome",
-  "promise": "Describe what the user will have when this outcome succeeds.",
-  "prompt": "Describe the complete work, important context, constraints, deliverables, and where this outcome stops.",
-  "expectations": []
-}

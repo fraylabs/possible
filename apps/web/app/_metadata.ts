@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const siteUrl = "https://possible.sh";
 export const siteName = "Possible";
-export const siteDescription = "Possible helps you discover what agents can do and gives each outcome a structured prompt, a checklist for what finished means, and optional specialized Skills.";
+export const siteDescription = "Discover what AI agents can do, inspect real outcomes, and copy the exact prompts behind them.";
 
 type PageMetadataInput = {
   title: string;
@@ -26,7 +26,7 @@ export function pageMetadata({ title, description, path, alternates = {}, social
       canonical,
       types: {
         "text/plain": `${siteUrl}/llms.txt`,
-        "application/json": `${siteUrl}/packs/index.json`,
+        "application/json": `${siteUrl}/outcomes/index.json`,
         ...alternates,
       },
     },

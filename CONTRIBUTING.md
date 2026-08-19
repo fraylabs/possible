@@ -1,70 +1,51 @@
 # Contributing to Possible
 
-Possible accepts Outcome Packs whose source stays in the author's own public GitHub repository. Git is the source of truth; there is no Possible account, hosted editor, or submission database.
+Possible accepts exact prompts with clear authorship and, optionally, media showing what they produced. Contributions use ordinary GitHub pull requests; there is no account system or separate submission registry.
 
-## The complete pack contract
+## Add an Outcome
 
-Use the [JSON Schema](packages/packs/src/outcome-pack.schema.json). The authored `pack.json` contains only:
-
-- `schemaVersion` — currently `1`;
-- `name` — the specific finished outcome;
-- `promise` — one plain-language sentence saying what success produces;
-- `prompt` — the complete structured execution brief; organize the necessary context, deliverables, constraints, and finish boundary without treating length as quality;
-- `expectations` — plain-language checklist items that must be true at completion, never commands for how to verify them;
-- optional `skills` — only when specialized capabilities are needed; identify each by GitHub `repository`, repository-relative `directory` containing `SKILL.md`, and the exact `lastReviewedCommit` inspected by the author;
-- optional `products` — registered `company/product` identifiers for Products used by the outcome; attribution and access metadata only, never execution instructions or permission to buy;
-- optional `notFor` — only the nearby requests that materially prevent a bad recommendation.
-
-Identity, slug, release revision, source hash, catalog status, trust, accepted evidence, discovery fixtures, and showcase media are not authoring fields. Do not add workstreams, plugin registries, schedules, prerequisites, lifecycle objects, Product commerce objects, domain-specific schemas, or compiler branches.
-
-Use the [Playable Web Game pack](packages/packs/src/packs/playable-web-game/pack.json) as a complete example.
-
-## Author locally
-
-```bash
-npx @fraylabs/possible pack init my-pack
-npx @fraylabs/possible pack validate my-pack
-npx @fraylabs/possible pack inspect my-pack
-npx @fraylabs/possible pack compile my-pack
-```
-
-`init` creates an intentionally incomplete local template. Validation succeeds after the structured prompt and expectations are complete. Compilation returns standard install commands for any listed Skills and the prompt with its checklist plus one proportional-check rule appended.
-
-Export the valid contract:
-
-```bash
-npx @fraylabs/possible pack export my-pack
-```
-
-Commit that `pack.json` at a stable path in your public GitHub repository. Then create a PR-ready export pinned to the exact commit:
-
-```bash
-npx @fraylabs/possible pack export packs/my-pack.json submission/my-pack \
-  --source https://github.com/OWNER/REPOSITORY \
-  --revision FULL_COMMIT_SHA \
-  --path packs/my-pack.json
-```
-
-Branches and tags are not accepted. The command writes:
+Create:
 
 ```text
-submission/my-pack/
-  pack.json
-  source-entry.json
-  SUBMISSION.md
+packages/catalog/src/outcomes/<slug>/
+  outcome.json
+  media/          # optional
 ```
 
-## Open the pull request
+Use a lowercase hyphenated slug. The required record is:
 
-1. Fork `fraylabs/possible` and create a branch.
-2. Copy `source-entry.json` to the registry path named in `SUBMISSION.md`.
-3. Copy `pack.json` unchanged to `registry/snapshots/<sha256-without-prefix>.json`.
-4. Run the focused validation command from `SUBMISSION.md`.
-5. Run `npm run registry:sync` and commit the generated catalog and offline references.
-6. Open a pull request explaining the outcome, why the prompt is reusable, why each listed Skill is necessary, and what the expectations make observable.
+```json
+{
+  "schemaVersion": 1,
+  "title": "A clear, specific result",
+  "summary": "One sentence explaining what the prompt makes.",
+  "prompt": "The exact prompt people will copy.",
+  "author": {
+    "name": "Your name",
+    "url": "https://example.com"
+  }
+}
+```
 
-Submission CI fetches the pinned public commit, proves the remote and snapshot bytes match, checks the hash and minimal schema, and compiles the pack. A submission cannot add its own trust or evidence record.
+Optional fields:
 
-A merged valid submission becomes **listed**. Possible maintainers may later assign **experimental** or **verified** status separately. Verified requires accepted run evidence; authors cannot self-award it. Updates use a new exact commit and content hash.
+- `products` — registered `company/product` identifiers meaningfully involved in the outcome;
+- `skills` — a GitHub repository, directory containing `SKILL.md`, and the commit the author reviewed;
+- `preview` — a description plus optional images, video, audio, or CAD.
 
-Bundled packs may also include optional `showcase.json` and `media/`. Showcase images, video, and CAD illustrate the possible result; they are never run evidence or verification.
+See [outcome.schema.json](packages/catalog/src/outcome.schema.json) and any existing Outcome folder for the complete JSON shape.
+
+Do not add expectations, workstreams, lifecycle, trust, evidence, snapshots, verification instructions, commerce metadata, or compiler fields. If an instruction matters to the result, write it directly in the prompt.
+
+## Preview media
+
+Local media must be a direct child of the Outcome's `media/` folder and referenced by `outcome.json`. Unreferenced files fail generation. Images are limited to five; video, audio, and CAD are optional.
+
+## Open a pull request
+
+1. Add the Outcome folder.
+2. Run `npm run outcomes:generate`.
+3. Run `npm run check`.
+4. Open a pull request explaining what the prompt makes and confirming you have the right to publish the prompt and media.
+
+The maintainer reviews the prompt, authorship, links, media rights, and whether the result is useful enough to list.

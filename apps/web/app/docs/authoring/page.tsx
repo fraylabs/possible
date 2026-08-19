@@ -2,8 +2,8 @@ import { AuthoringDocsPage as AuthoringDocsContent } from "../../../src/App";
 import { pageMetadata } from "../../_metadata";
 
 export const metadata = pageMetadata({
-  title: "Author an Outcome Pack",
-  description: "Create, validate, review, and maintain a private JSON Outcome Pack with Possible's local CLI.",
+  title: "Publish an Outcome",
+  description: "Share one exact prompt, its author, and optional preview media, Products, and Skills.",
   path: "/docs/authoring",
 });
 

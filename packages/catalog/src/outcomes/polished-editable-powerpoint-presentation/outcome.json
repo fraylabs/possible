@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "title": "Polished Editable PowerPoint Presentation",
+  "summary": "Turn rough material into a polished, fully editable PowerPoint deck that is ready to present, revise, and share.",
+  "prompt": "Create a polished PowerPoint presentation from the user's rough material, source documents, data, or existing deck. The finished result must be a native, editable `.pptx` with a clear communication structure and a visual system suited to its actual audience—not a collection of screenshots or generic title-and-bullet slides.\n\n## Shape the presentation\n- Establish the audience, purpose, presentation setting, desired response, available time, source material, and any required brand or template. Ask only questions that materially change the deck; otherwise make restrained defaults and state them.\n- Give every slide one specific communication job and arrange the slides in the clearest useful order. Use a narrative arc only when the subject and brief genuinely call for one. Do not manufacture a story around factual, legal, financial, technical, or structural material.\n- Remove content that does not help the audience understand, decide, or act. Put useful speaking context in speaker notes rather than exposing planning language on the canvas.\n- Trace every non-trivial claim, number, quotation, and externally sourced visual to its source. Never invent evidence, customers, metrics, citations, product capabilities, ownership, status, or conclusions to make the presentation sound stronger.\n\n## Write with precision\n- Default to factual, neutral, professional language. Do not introduce hype, drama, humour, conversational phrasing, rhetorical flourishes, or marketing language unless the brief explicitly calls for them.\n- Make every slide title self-explanatory. Prefer a precise subject label or a directly supported conclusion over a storytelling headline. For example, use `Existing Ownership Structure` rather than inventing a sentence about the people shown.\n- A subtitle must add information that is not already clear from the title or visual; otherwise remove it. Do not narrate, paraphrase, or repeat facts that are already prominently visible in the diagram, table, or chart.\n- Preserve the user's exact entity names and domain terminology. Display decisive facts—such as percentages, dates, statuses, units, and ownership relationships—where the audience can see them without relying on speaker notes.\n- Mark unresolved information as `TBC`, `TBD`, or an explicit open point. Never silently fill a gap. Check arithmetic, percentages, totals, dates, labels, and structural relationships for internal consistency before presentation.\n- Every slide must be understandable without the presenter explaining what its title or labels mean.\n\n## Design and build the deck\n- If the user provides a template or existing deck, preserve its masters, layouts, typography, brand treatment, and editable structure unless they explicitly request a redesign. If no direction exists, choose one content-specific visual concept and apply it consistently.\n- Make the deck feel composed rather than templated: use clear hierarchy, meaningful visual contrast, varied but related slide silhouettes, generous spacing, and visuals that clarify the point. Avoid repetitive card grids, decorative filler, tiny text, and the same layout on every slide.\n- Keep text, shapes, tables, simple diagrams, and PowerPoint-supported charts as native editable objects. Use raster images only for photographs, illustrations, or visual material that cannot be represented honestly as native objects. Never flatten an entire slide into an image merely to make it look finished.\n- Preserve supplied data faithfully. Label chart units and time periods, keep totals and comparisons internally consistent, and disclose material transformations or assumptions.\n- Include speaker notes when they improve delivery, and place source references in notes or unobtrusive slide citations where appropriate. Do not expose private notes, confidential material, or credentials in the deck.",
+  "author": {
+    "name": "Fray Labs",
+    "url": "https://github.com/fraylabs"
+  },
+  "skills": [
+    {
+      "repository": "MiniMax-AI/skills",
+      "lastReviewedCommit": "60aaae52bb2af8162732751a4332f62a5fef518b",
+      "directory": "skills/pptx-generator"
+    }
+  ],
+  "preview": {
+    "description": "A restrained, fully editable investment-committee deck for an illustrative three-building community solar feasibility decision.",
+    "images": [
+      {
+        "src": "media/solar-economics.png",
+        "alt": "Editable presentation slide showing illustrative community solar capital, savings, generation, and simple payback",
+        "caption": "Illustrative economics with explicit limitations",
+        "cover": true
+      },
+      {
+        "src": "media/solar-pilot-structure.png",
+        "alt": "Editable presentation slide diagramming three buildings within one community solar pilot",
+        "caption": "One programme, three separately assessable sites"
+      },
+      {
+        "src": "media/solar-decision.png",
+        "alt": "Community Solar Pilot title slide framing the decision to proceed to detailed feasibility",
+        "caption": "Decision-led opening"
+      },
+      {
+        "src": "media/solar-recommendation.png",
+        "alt": "Recommendation slide authorizing analysis only and listing three feasibility workstreams",
+        "caption": "A bounded next-gate recommendation"
+      }
+    ]
+  }
+}

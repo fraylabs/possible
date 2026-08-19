@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "id": "bytedance/seedance",
+  "name": "Seedance 2.0",
+  "company": "bytedance",
+  "category": "video",
+  "summary": "Seedance 2.0 adopts a unified multimodal audio-video joint generation architecture that supports text, image, audio, and video inputs, leading to the most comprehensive multimodal content reference and editing capabilities in the industry.",
+  "summarySourceUrl": "https://seed.bytedance.com/en/seedance2_0",
+  "logoUrl": "https://lf3-static.bytednsdoc.com/obj/eden-cn/lapzild-tss/ljhwZthlaukjlkulzlp/favicon_1/favicon.ico",
+  "website": "https://seed.bytedance.com/en/seedance2_0",
+  "docsUrl": "https://seed.bytedance.com/en/seedance2_0"
+}

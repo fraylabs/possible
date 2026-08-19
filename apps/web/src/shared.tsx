@@ -1,20 +1,11 @@
 "use client";
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import type { PublicCatalogEntry } from "@possible/packs";
 import { githubUrl } from "./public-content";
 
 export type CopyState = "idle" | "copied" | "failed";
-export const approvalDisclosure = "Saying yes authorizes the disclosed repo-local outcome work and any listed Skill installation. External actions still require separate approval.";
-const statusLabels = {
-  listed: "Listed",
-  experimental: "Experimental",
-  verified: "Verified",
-} as const;
-export const statusLabel = (status: keyof typeof statusLabels) => statusLabels[status];
-export const packStatusLabel = (entry: PublicCatalogEntry) => statusLabel(entry.trust.status);
 const navigationItems = [
-  { label: "PACKS", href: "/#packs", external: false },
+  { label: "OUTCOMES", href: "/#outcomes", external: false },
   { label: "PRODUCTS", href: "/products", external: false },
   { label: "DOCS", href: "/docs", external: false },
   { label: "GITHUB", href: githubUrl, external: true },
@@ -121,7 +112,7 @@ export function SiteFooter() {
     <footer className="site-footer">
       <a className="wordmark" href="/">possible<span>.sh</span></a>
       <div className="site-footer-links">
-        <a href="/#packs">Packs</a>
+        <a href="/#outcomes">Outcomes</a>
         <a href="/products">Products</a>
         <a href="/docs">Docs</a>
         <a href={githubUrl} target="_blank" rel="noreferrer">GitHub ↗</a>
@@ -147,7 +138,7 @@ export function NotFoundPage() {
       <section className="not-found">
         <p className="eyebrow">404 / OUTCOME NOT FOUND</p>
         <h1>This outcome is<br /><em>not here.</em></h1>
-        <a className="button-link" href="/#packs">Browse Outcome Packs <span>→</span></a>
+        <a className="button-link" href="/#outcomes">Browse Outcomes <span>→</span></a>
       </section>
     </SiteShell>
   );

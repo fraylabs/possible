@@ -1,18 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import type { ProductCategory } from "@possible/packs";
+import type { ProductCategory } from "@possible/catalog";
 import { getProductOutcomes, productHref, publishedProducts } from "./public-content";
 import { SiteShell } from "./shared";
-
-const availabilityLabel = (availability: string) => ({
-  free: "Free",
-  paid: "Paid",
-  "contact-sales": "Contact sales",
-  "free-and-paid": "Free + paid",
-  unavailable: "Unavailable",
-  unknown: "Pricing unknown",
-}[availability] ?? availability);
 
 const categories: Array<{ id: "all" | ProductCategory; label: string }> = [
   { id: "all", label: "All" },
@@ -48,7 +39,7 @@ export function ProductsPage() {
               <a className="product-directory-card" href={productHref(product)} key={product.id}>
                 <header><img src={product.logoUrl} alt="" /><div><h2>{product.name}</h2><span>By {product.company.name}</span></div><i>↗</i></header>
                 <p>{product.summary}</p>
-                <div className="product-directory-meta"><span>{availabilityLabel(product.commerce.availability)}</span><span>{outcomes.length ? `${outcomes.length} ${outcomes.length === 1 ? "Outcome" : "Outcomes"}` : "No outcomes yet"}</span></div>
+                <div className="product-directory-meta"><span>{product.category}</span><span>{outcomes.length ? `${outcomes.length} ${outcomes.length === 1 ? "Outcome" : "Outcomes"}` : "No outcomes yet"}</span></div>
               </a>
             );
           })}

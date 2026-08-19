@@ -15,8 +15,8 @@ export async function generateMetadata({ params }: { params: Promise<{ product: 
   const record = getPublishedProduct(product);
   if (!record) return {};
   const feature = getProductFeature(record.id);
-  const image = feature?.showcase?.images?.find(({ cover }) => cover) ?? feature?.showcase?.images?.[0];
-  const socialSource = image?.src ?? feature?.showcase?.video?.poster ?? feature?.showcase?.cad?.poster;
+  const image = feature?.preview?.images?.find(({ cover }) => cover) ?? feature?.preview?.images?.[0];
+  const socialSource = image?.src ?? feature?.preview?.video?.poster ?? feature?.preview?.cad?.poster;
   const socialUrl = socialSource?.startsWith("https://") ? socialSource : socialSource ? `${siteUrl}${socialSource}` : undefined;
   return pageMetadata({
     title: record.name,

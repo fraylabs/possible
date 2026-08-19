@@ -2,7 +2,7 @@
 .text-link { display: inline-block; margin-top: 32px; color: #ff4d00; font: 500 10px "DM Mono", monospace; text-transform: uppercase; letter-spacing: .06em; }
 .copy-button { width: 100%; padding: 17px 20px; border: 0; display: flex; justify-content: space-between; align-items: center; background: #f3f0e8; cursor: pointer; font: 500 11px "DM Mono", monospace; text-transform: uppercase; }
 
-/* Outcome Pack library: v0-inspired browsing, expressed in Possible's own system. */
+/* Outcome prompt directory. */
 .packs-library-page {
   min-height: 100vh;
   display: flex;
@@ -278,15 +278,14 @@
 .packs-category-preview i[data-variant="3"] { background: #a8ff52; }
 .packs-category-preview i span { max-width: 100%; overflow: hidden; font: 600 7px/1.1 "DM Mono", monospace; text-overflow: ellipsis; text-transform: uppercase; white-space: nowrap; }
 
-.library-pack-card { --card-accent: #ffd75a; min-width: 0; border: 1px solid #343432; border-radius: 10px; display: flex; flex-direction: column; overflow: hidden; background: #151514; transition: border-color .18s ease, transform .18s ease; }
+.library-pack-card { --card-accent: #ffd75a; min-width: 0; height: 100%; border: 1px solid #343432; border-radius: 10px; display: flex; flex-direction: column; overflow: hidden; background: #151514; transition: border-color .18s ease, transform .18s ease; }
 .library-pack-card:hover { border-color: #777772; transform: translateY(-3px); }
 .library-pack-card[data-variant="1"] { --card-accent: #78d9ff; }
 .library-pack-card[data-variant="2"] { --card-accent: #ffc7e5; }
 .library-pack-card[data-variant="3"] { --card-accent: #a8ff52; }
-.library-pack-card.is-text-only { border-top: 5px solid var(--card-accent); }
 .library-pack-visual { aspect-ratio: 16 / 9; overflow: hidden; border-bottom: 5px solid var(--card-accent); background: color-mix(in srgb, var(--card-accent) 18%, #0d0d0c); }
 .library-pack-cover { width: 100%; height: 100%; display: block; object-fit: cover; }
-.library-pack-copy { padding: 19px; display: flex; flex: 1; flex-direction: column; }
+.library-pack-copy { min-height: 250px; padding: 19px; display: flex; flex: 1; flex-direction: column; }
 .library-pack-copy > header { margin-bottom: 19px; display: grid; grid-template-columns: auto 1fr auto; gap: 12px; color: #8b8a84; font: 7px "DM Mono", monospace; letter-spacing: .05em; }
 .library-pack-copy > header span:first-child, .library-pack-copy > header i { color: var(--card-accent); }
 .library-pack-copy > header span:nth-child(2) { justify-self: center; }
@@ -303,7 +302,7 @@
 .packs-results-bar > div { display: flex; gap: 14px; align-items: baseline; }
 .packs-results-bar h2 { margin: 0; font-size: 18px; font-weight: 500; }
 .packs-results-bar span { color: #777772; font: 7px "DM Mono", monospace; letter-spacing: .05em; }
-.packs-results-grid { padding-top: 18px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; align-items: start; }
+.packs-results-grid { padding-top: 18px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; align-items: stretch; }
 .packs-pagination {
   margin-top: 26px;
   padding-top: 20px;
