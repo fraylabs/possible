@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import type { PublicCatalogEntry } from "@possible/packs";
 import { githubUrl } from "./public-content";
 
@@ -72,7 +72,7 @@ export function SiteNav() {
 
   return (
     <>
-      <nav aria-label="Primary">
+      <nav className="site-nav" aria-label="Primary">
         <a className="wordmark" href="/">possible<span>.sh</span></a>
         <div className="nav-links">
           {navigationItems.map((item) => (
@@ -118,23 +118,37 @@ export function SiteNav() {
 
 export function SiteFooter() {
   return (
-    <footer>
+    <footer className="site-footer">
       <a className="wordmark" href="/">possible<span>.sh</span></a>
-      <strong>AGENT SKILLS PROVIDE CAPABILITIES.<br />OUTCOME PACKS COORDINATE COMPLETE RESULTS.</strong>
+      <div className="site-footer-links">
+        <a href="/#packs">Packs</a>
+        <a href="/products">Products</a>
+        <a href="/docs">Docs</a>
+        <a href={githubUrl} target="_blank" rel="noreferrer">GitHub ↗</a>
+      </div>
       <span>OPEN SOURCE / 2026</span>
     </footer>
   );
 }
+
+export function SiteShell({ children, className }: { children: ReactNode; className: string }) {
+  return (
+    <main className={`site-shell ${className}`}>
+      <SiteNav />
+      {children}
+      <SiteFooter />
+    </main>
+  );
+}
+
 export function NotFoundPage() {
   return (
-    <main>
-      <SiteNav />
+    <SiteShell className="not-found-page">
       <section className="not-found">
         <p className="eyebrow">404 / OUTCOME NOT FOUND</p>
         <h1>This outcome is<br /><em>not here.</em></h1>
         <a className="button-link" href="/#packs">Browse Outcome Packs <span>→</span></a>
       </section>
-      <SiteFooter />
-    </main>
+    </SiteShell>
   );
 }

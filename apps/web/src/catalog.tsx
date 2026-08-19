@@ -5,7 +5,7 @@ import type { RefObject } from "react";
 import type { PublicCatalogEntry } from "@possible/packs";
 import { getPackShowcase, getPublishedPack, githubUrl, installCommand, packHref, publishedPacks, searchPublishedPacks } from "./public-content";
 import type { PublishedPackSearchResult } from "./public-content";
-import { SiteFooter, SiteNav } from "./shared";
+import { SiteShell } from "./shared";
 
 function LibraryPackCard({ entry, priority = false }: { entry: PublicCatalogEntry; priority?: boolean }) {
   const { pack } = entry;
@@ -158,8 +158,7 @@ export function PacksPage() {
   }, [pageCount]);
 
   return (
-    <main className={`packs-library-page${normalizedQuery ? " is-searching" : ""}`}>
-      <SiteNav />
+    <SiteShell className={`packs-library-page${normalizedQuery ? " is-searching" : ""}`}>
 
       <section className="packs-library-hero" aria-labelledby="packs-library-heading">
         {!normalizedQuery ? <><h1 id="packs-library-heading">Anything is <em>possible</em></h1>
@@ -270,8 +269,7 @@ export function PacksPage() {
         <a href={`${githubUrl}/blob/main/CONTRIBUTING.md`} target="_blank" rel="noreferrer">Author an Outcome Pack <span>↗</span></a>
       </section> : null}
 
-      <SiteFooter />
-    </main>
+    </SiteShell>
   );
 }
 

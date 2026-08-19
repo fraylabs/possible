@@ -4,7 +4,7 @@ import { lazy, Suspense, useState } from "react";
 import { compilePack, skillNameFromReference, skillPageUrl } from "@possible/packs";
 import type { PackShowcase } from "@possible/packs";
 import { getPackShowcase, getRoutablePack, githubUrl, installCommand, packHref, packPublisher, productHref } from "./public-content";
-import { CopyButton, NotFoundPage, SiteFooter, SiteNav, statusLabel } from "./shared";
+import { CopyButton, NotFoundPage, SiteShell, statusLabel } from "./shared";
 
 const PackCadViewer = lazy(() => import("./PackCadViewer"));
 
@@ -61,8 +61,7 @@ export function PackDetailPage({ idOrSlug }: { idOrSlug: string }) {
   const revision = catalogEntry.sourceRecord.revision.replace(/^sha256:/, "").slice(0, 12);
 
   return (
-    <main className="pack-detail-page">
-      <SiteNav />
+    <SiteShell className="pack-detail-page">
       <article className="pack-detail-document">
         <header className="pack-detail-header">
           <nav className="pack-detail-breadcrumb" aria-label="Breadcrumb"><a href="/#packs">Packs</a><span>/</span><span>{pack.name}</span></nav>
@@ -118,7 +117,6 @@ export function PackDetailPage({ idOrSlug }: { idOrSlug: string }) {
           </div>
         </div>
       </article>
-      <SiteFooter />
-    </main>
+    </SiteShell>
   );
 }

@@ -14,7 +14,7 @@ export interface CompanyRecord {
   website: string;
 }
 
-export type ProductAvailability = "free" | "paid" | "contact-sales" | "unavailable" | "unknown";
+export type ProductAvailability = "free" | "free-and-paid" | "paid" | "contact-sales" | "unavailable" | "unknown";
 export type AgentCheckoutSupport = "not-required" | "supported" | "manual-only" | "not-supported" | "unknown";
 
 export interface ProductCommerce {

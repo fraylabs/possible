@@ -13,9 +13,9 @@ Trust is maintained separately from authorship: `listed` is a valid source submi
 - Public page: https://possible.sh/packs/cast-driven-product-story-animation/
 - Origin: `bundled`
 - Source: package:@possible/packs
-- Revision: `sha256:c78aae9b425ad14b6b53e7d0249073dfa60435ee5babb90c9afff6bbda6415b2`
+- Revision: `sha256:9f63cf3b5a430b7f2f9a5af7f94c3f9971c544ea016287fa2214c54d8fd22c3e`
 - Manifest path: `packs/cast-driven-product-story-animation/pack.json`
-- Content hash: `sha256:c78aae9b425ad14b6b53e7d0249073dfa60435ee5babb90c9afff6bbda6415b2`
+- Content hash: `sha256:9f63cf3b5a430b7f2f9a5af7f94c3f9971c544ea016287fa2214c54d8fd22c3e`
 - Accepted snapshot: `packs/cast-driven-product-story-animation/pack.json`
 - Accepted evidence: none
 - Promise: Turn one product claim or real-world inspiration into a compact cast-driven website animation that makes its value understandable in a single loop.
@@ -243,9 +243,9 @@ npx skills@1.5.22 add arpitg1304/robotics-agent-skills/skills/robotics-design-pa
 - Public page: https://possible.sh/packs/original-strudel-soundtrack/
 - Origin: `bundled`
 - Source: package:@possible/packs
-- Revision: `sha256:5cc0e578af119a03154231df28237ab6b038e47f001cf3b57517fc5172ed6ebf`
+- Revision: `sha256:4a78ed3b3032c3bdee91b5e812f1df4034273f6931ed12e8a7fa6533d605445e`
 - Manifest path: `packs/original-strudel-soundtrack/pack.json`
-- Content hash: `sha256:5cc0e578af119a03154231df28237ab6b038e47f001cf3b57517fc5172ed6ebf`
+- Content hash: `sha256:4a78ed3b3032c3bdee91b5e812f1df4034273f6931ed12e8a7fa6533d605445e`
 - Accepted snapshot: `packs/original-strudel-soundtrack/pack.json`
 - Accepted evidence: none
 - Promise: Compose one complete original soundtrack in the official Strudel runtime and deliver editable Strudel source, an official WAV export, a listening master, and evidence that the music works technically and for its intended listener.
@@ -292,9 +292,9 @@ npx skills@1.5.22 add vanities/toaster-strudel/skills/skills/strudel-test --agen
 - Public page: https://possible.sh/packs/playable-web-game/
 - Origin: `bundled`
 - Source: package:@possible/packs
-- Revision: `sha256:c314ed6e65c06ae66c2e3e23e220645eba7dc6cb1b91d47860368c0b31bde00a`
+- Revision: `sha256:a422a1ee88570835b15732877795e7e02961c0d7ee9e116972418ef5e0b2fe4a`
 - Manifest path: `packs/playable-web-game/pack.json`
-- Content hash: `sha256:c314ed6e65c06ae66c2e3e23e220645eba7dc6cb1b91d47860368c0b31bde00a`
+- Content hash: `sha256:a422a1ee88570835b15732877795e7e02961c0d7ee9e116972418ef5e0b2fe4a`
 - Accepted snapshot: `packs/playable-web-game/pack.json`
 - Accepted evidence: none
 - Promise: Turn one strange game idea into a polished browser game people can play.
@@ -362,9 +362,9 @@ npx skills@1.5.22 add MiniMax-AI/skills/skills/pptx-generator --agent codex
 - Public page: https://possible.sh/packs/html-css-animated-product-launch-film/
 - Origin: `bundled`
 - Source: package:@possible/packs
-- Revision: `sha256:b32a943904c15c39c8024a26b3edb25d0ee216453f312d0fec3f77e6249638fe`
+- Revision: `sha256:6237668c4bdc3aa1501a7521ace120ac80390d99c0fadc1a6a670220e74d4130`
 - Manifest path: `packs/html-css-animated-product-launch-film/pack.json`
-- Content hash: `sha256:b32a943904c15c39c8024a26b3edb25d0ee216453f312d0fec3f77e6249638fe`
+- Content hash: `sha256:6237668c4bdc3aa1501a7521ace120ac80390d99c0fadc1a6a670220e74d4130`
 - Accepted snapshot: `packs/html-css-animated-product-launch-film/pack.json`
 - Accepted evidence: none
 - Promise: Create and render the 55-second Possible.sh launch film that shows how much more Codex can make when people know what to ask for.
@@ -478,9 +478,9 @@ npx skills@1.5.22 add github/awesome-copilot/skills/create-technical-spike --age
 - Public page: https://possible.sh/packs/robot-digital-prototype/
 - Origin: `bundled`
 - Source: package:@possible/packs
-- Revision: `sha256:419323ac7d525cfd0728c0d4686c54bc1e9aa84c7d57c9fcf01b3ddc806b4871`
+- Revision: `sha256:63b75a28720994a4b6fc1f551475aa4fc28f166a51521e2470ce108c36b09128`
 - Manifest path: `packs/robot-digital-prototype/pack.json`
-- Content hash: `sha256:419323ac7d525cfd0728c0d4686c54bc1e9aa84c7d57c9fcf01b3ddc806b4871`
+- Content hash: `sha256:63b75a28720994a4b6fc1f551475aa4fc28f166a51521e2470ce108c36b09128`
 - Accepted snapshot: `packs/robot-digital-prototype/pack.json`
 - Accepted evidence: none
 - Promise: Prove one robot behavior in a deterministic digital prototype and expose the sim-to-real gap.

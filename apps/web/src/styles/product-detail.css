@@ -3,7 +3,6 @@
 .product-detail-page > nav .wordmark span { color: #ff5a1f; }
 .product-detail-page > nav .nav-links { color: #aaa9a4; }
 .product-detail-page :where(a, button):focus-visible { outline: 2px solid #ff5a1f; outline-offset: 3px; }
-.product-detail-page > footer { background: #ff5a1f; color: #151411; }
 
 .product-profile { width: min(780px, calc(100% - 48px)); margin: 0 auto; padding: 38px 0 88px; }
 .product-back-link { display: inline-flex; gap: 10px; align-items: center; color: #87867f; font: 8px "DM Mono", monospace; text-transform: uppercase; letter-spacing: .05em; }
@@ -40,6 +39,7 @@
 .product-outcome-list small { color: #777772; font: 7px "DM Mono", monospace; letter-spacing: .06em; }
 .product-outcome-list h3 { margin: 18px 0 8px; font-size: clamp(22px, 3vw, 30px); font-weight: 520; line-height: 1.05; letter-spacing: -.045em; }
 .product-outcome-list p { max-width: 620px; margin: 0; color: #8f8e88; font-size: 11px; line-height: 1.55; }
+.product-outcomes-empty { margin: 0; padding: 26px 0; border-top: 1px solid #2f2f2d; border-bottom: 1px solid #2f2f2d; color: #777772; font-size: 13px; }
 
 @media (max-width: 720px) {
   .product-profile { width: calc(100% - 32px); padding: 30px 0 68px; }

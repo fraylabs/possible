@@ -31,5 +31,8 @@
     "Decorative motion with no causal product story, a generic feature carousel, a screenshot montage, or a conventional dashboard walkthrough.",
     "Reenacting uncertain allegations as fact, teaching operational wrongdoing, copying protected characters or franchise designs, or using a real person's likeness without rights.",
     "Deploying, publishing, changing production configuration, or making external claims without separate approval."
+  ],
+  "products": [
+    "heygen/hyperframes"
   ]
 }

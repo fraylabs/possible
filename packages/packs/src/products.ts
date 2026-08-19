@@ -12,7 +12,7 @@ import type {
 const SAFE_ID = /^[a-z0-9][a-z0-9-]*$/;
 const PRODUCT_ID = /^([a-z0-9][a-z0-9-]*)\/([a-z0-9][a-z0-9-]*)$/;
 const PAYMENT_METHOD = /^[a-z][a-z0-9-]*:[a-z0-9][a-z0-9.-]*$/;
-const PRODUCT_AVAILABILITY = new Set<ProductAvailability>(["free", "paid", "contact-sales", "unavailable", "unknown"]);
+const PRODUCT_AVAILABILITY = new Set<ProductAvailability>(["free", "free-and-paid", "paid", "contact-sales", "unavailable", "unknown"]);
 const AGENT_CHECKOUT = new Set<AgentCheckoutSupport>(["not-required", "supported", "manual-only", "not-supported", "unknown"]);
 
 const nonEmptyString = (value: string, context: string): string => {

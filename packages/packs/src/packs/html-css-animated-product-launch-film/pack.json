@@ -26,6 +26,7 @@
     }
   ],
   "products": [
-    "heygen/hyperframes"
+    "heygen/hyperframes",
+    "uzu/strudel"
   ]
 }

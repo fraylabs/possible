@@ -3,6 +3,9 @@
   "name": "Robot Digital Prototype",
   "promise": "Prove one robot behavior in a deterministic digital prototype and expose the sim-to-real gap.",
   "prompt": "A bounded behavior contract, the minimum active robot modules, deterministic scenario evidence, falsification, and an honest digital-only assessment.\n\n## Deliverables\n- Behavior contract\n- Executable digital prototype\n- Deterministic scenario suite\n- Sim-to-real gap report\n- Digital prototype decision with supporting evidence\n\n## Execution guidance\n- Define one observable behavior, environment, success threshold, failing scenarios, assumptions, and digital boundary.\n- Build only the geometry, dynamics, controller, interfaces, and scenarios needed by the behavior and active modules.\n- Repeat nominal and failing scenarios, inspect the model, quantify uncertainty, and publish the sim-to-real gap.\n\n## Boundaries\n- Do not claim physical safety, durability, manufacturability, calibration, or real-world performance from simulation.\n- Do not add subsystems merely to resemble a complete robot.\n- Do not command physical equipment or deploy robot software without separate approval.\n- Preserve units, frames, solver settings, seeds, and asset provenance.\n- Digitally proven means the contracted behavior passes reproducibly in the declared model; it never means a physical robot is safe, buildable, or commissioned.",
+  "products": [
+    "google-deepmind/mujoco"
+  ],
   "skills": [
     {
       "repository": "fraylabs/possible",

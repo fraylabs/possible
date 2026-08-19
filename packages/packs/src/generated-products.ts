@@ -4,12 +4,76 @@ import type { CompanyRecord, ProductRecord } from "./types.js";
 export const rawCompanies: CompanyRecord[] = [
   {
     "schemaVersion": 1,
+    "id": "bytedance",
+    "name": "ByteDance",
+    "website": "https://seed.bytedance.com/"
+  },
+  {
+    "schemaVersion": 1,
+    "id": "google-deepmind",
+    "name": "Google DeepMind",
+    "website": "https://deepmind.google/"
+  },
+  {
+    "schemaVersion": 1,
     "id": "heygen",
     "name": "HeyGen",
     "website": "https://www.heygen.com"
+  },
+  {
+    "schemaVersion": 1,
+    "id": "remotion",
+    "name": "Remotion",
+    "website": "https://www.remotion.dev/"
+  },
+  {
+    "schemaVersion": 1,
+    "id": "three-js",
+    "name": "Three.js",
+    "website": "https://threejs.org/"
+  },
+  {
+    "schemaVersion": 1,
+    "id": "uzu",
+    "name": "Uzu",
+    "website": "https://strudel.cc/"
   }
 ];
 export const rawProducts: ProductRecord[] = [
+  {
+    "schemaVersion": 1,
+    "id": "bytedance/seedance",
+    "name": "Seedance 2.0",
+    "company": "bytedance",
+    "summary": "Seedance 2.0 adopts a unified multimodal audio-video joint generation architecture that supports text, image, audio, and video inputs, leading to the most comprehensive multimodal content reference and editing capabilities in the industry.",
+    "summarySourceUrl": "https://seed.bytedance.com/en/seedance2_0",
+    "logoUrl": "https://lf3-static.bytednsdoc.com/obj/eden-cn/lapzild-tss/ljhwZthlaukjlkulzlp/favicon_1/favicon.ico",
+    "website": "https://seed.bytedance.com/en/seedance2_0",
+    "docsUrl": "https://seed.bytedance.com/en/seedance2_0",
+    "commerce": {
+      "availability": "unknown",
+      "agentCheckout": "unknown",
+      "methods": [],
+      "pricingUrl": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "id": "google-deepmind/mujoco",
+    "name": "MuJoCo",
+    "company": "google-deepmind",
+    "summary": "MuJoCo is a free and open source physics engine that aims to facilitate research and development in robotics, biomechanics, graphics and animation, and other areas where fast and accurate simulation is needed.",
+    "summarySourceUrl": "https://mujoco.org/",
+    "logoUrl": "https://mujoco.org/frontend/assets/favicon/favicon-32x32.png",
+    "website": "https://mujoco.org/",
+    "docsUrl": "https://mujoco.readthedocs.io/en/stable/overview.html",
+    "commerce": {
+      "availability": "free",
+      "agentCheckout": "not-required",
+      "methods": [],
+      "pricingUrl": null
+    }
+  },
   {
     "schemaVersion": 1,
     "id": "heygen/hyperframes",
@@ -20,6 +84,57 @@ export const rawProducts: ProductRecord[] = [
     "logoUrl": "https://raw.githubusercontent.com/heygen-com/hyperframes/3e4b08cdc18642d468d53f34c2fb64ab437807ae/docs/logo/symbol-light.svg",
     "website": "https://github.com/heygen-com/hyperframes",
     "docsUrl": "https://hyperframes.heygen.com",
+    "commerce": {
+      "availability": "free",
+      "agentCheckout": "not-required",
+      "methods": [],
+      "pricingUrl": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "id": "remotion/remotion",
+    "name": "Remotion",
+    "company": "remotion",
+    "summary": "Create real MP4 videos with React. Use coding agents, build apps and render in bulk.",
+    "summarySourceUrl": "https://www.remotion.dev/",
+    "logoUrl": "https://www.remotion.dev/img/favicon.png",
+    "website": "https://www.remotion.dev/",
+    "docsUrl": "https://www.remotion.dev/docs/",
+    "commerce": {
+      "availability": "free-and-paid",
+      "agentCheckout": "manual-only",
+      "methods": [],
+      "pricingUrl": "https://www.remotion.dev/pricing"
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "id": "three-js/three-js",
+    "name": "Three.js",
+    "company": "three-js",
+    "summary": "Three.js is a 3D library that tries to make it as easy as possible to get 3D content on a webpage.",
+    "summarySourceUrl": "https://threejs.org/manual/en/fundamentals.html",
+    "logoUrl": "https://threejs.org/files/favicon_white.ico",
+    "website": "https://threejs.org/",
+    "docsUrl": "https://threejs.org/docs/",
+    "commerce": {
+      "availability": "free",
+      "agentCheckout": "not-required",
+      "methods": [],
+      "pricingUrl": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "id": "uzu/strudel",
+    "name": "Strudel",
+    "company": "uzu",
+    "summary": "Strudel is a web-based live coding environment that implements the Tidal Cycles algorithmic pattern language.",
+    "summarySourceUrl": "https://strudel.cc/learn/getting-started/",
+    "logoUrl": "https://strudel.cc/icons/apple-icon-180.png",
+    "website": "https://strudel.cc/",
+    "docsUrl": "https://strudel.cc/learn/",
     "commerce": {
       "availability": "free",
       "agentCheckout": "not-required",

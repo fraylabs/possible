@@ -63,8 +63,8 @@ for (const product of productCatalog) {
   assert.match(markup, new RegExp(escape(product.logoUrl)));
   assert.doesNotMatch(markup, /What agents can make|Product links|About HyperFrames/i);
   const linkedOutcomes = publicCatalog.filter((entry) => entry.products.some(({ id }) => id === product.id));
-  assert.ok(linkedOutcomes.length > 0, `${product.id} must link at least one Outcome Pack`);
   for (const entry of linkedOutcomes) assert.match(markup, new RegExp(escape(entry.pack.name)));
+  if (linkedOutcomes.length === 0) assert.match(markup, /No published Outcomes use this product yet\./);
   await assert.rejects(html(`products/${product.id}/index.html`), { code: "ENOENT" }, "internal Product ids must not leak into public routes");
 }
 

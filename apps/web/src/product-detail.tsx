@@ -1,12 +1,13 @@
 "use client";
 
 import { getProductOutcomes, getPublishedProduct, packHref } from "./public-content";
-import { SiteFooter, SiteNav } from "./shared";
+import { SiteShell } from "./shared";
 
 const commerceLabel = (availability: string) => ({
   free: "Free to use",
   paid: "Paid",
   "contact-sales": "Contact sales",
+  "free-and-paid": "Free + paid",
   unavailable: "Unavailable",
   unknown: "Pricing unknown",
 }[availability] ?? availability);
@@ -25,8 +26,7 @@ export function ProductDetailPage({ id }: { id: string }) {
   const outcomes = getProductOutcomes(product.id);
 
   return (
-    <main className="product-detail-page">
-      <SiteNav />
+    <SiteShell className="product-detail-page">
       <article className="product-profile">
         <a className="product-back-link" href="/products"><span aria-hidden="true">←</span> All products</a>
 
@@ -45,7 +45,7 @@ export function ProductDetailPage({ id }: { id: string }) {
 
         <nav className="product-profile-links" aria-label={`${product.name} links`}>
           <a href={product.website} target="_blank" rel="noreferrer">Website <span>↗</span></a>
-          <a href={product.docsUrl} target="_blank" rel="noreferrer">Documentation <span>↗</span></a>
+          {product.docsUrl !== product.website ? <a href={product.docsUrl} target="_blank" rel="noreferrer">Documentation <span>↗</span></a> : null}
           {product.commerce.pricingUrl ? <a href={product.commerce.pricingUrl} target="_blank" rel="noreferrer">Pricing <span>↗</span></a> : null}
         </nav>
 
@@ -69,10 +69,10 @@ export function ProductDetailPage({ id }: { id: string }) {
               </div>
               <span aria-hidden="true">↗</span>
             </a>)}
+            {outcomes.length === 0 ? <p className="product-outcomes-empty">No published Outcomes use this product yet.</p> : null}
           </div>
         </section>
       </article>
-      <SiteFooter />
-    </main>
+    </SiteShell>
   );
 }

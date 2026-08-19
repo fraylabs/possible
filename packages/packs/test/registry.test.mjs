@@ -27,6 +27,7 @@ import {
 const externalManifest = () => {
   const pack = structuredClone(bundledOutcomePacks[0].pack);
   pack.name = "External Launch Film";
+  delete pack.products;
   return pack;
 };
 

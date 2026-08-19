@@ -2,11 +2,6 @@
 .text-link { display: inline-block; margin-top: 32px; color: #ff4d00; font: 500 10px "DM Mono", monospace; text-transform: uppercase; letter-spacing: .06em; }
 .copy-button { width: 100%; padding: 17px 20px; border: 0; display: flex; justify-content: space-between; align-items: center; background: #f3f0e8; cursor: pointer; font: 500 11px "DM Mono", monospace; text-transform: uppercase; }
 
-footer { padding: 35px 3.5vw; background: #ff4d00; display: grid; grid-template-columns: 1fr 1fr 1fr; align-items: end; }
-footer strong { font-size: 12px; line-height: 1.5; }
-footer > span { justify-self: end; font: 10px "DM Mono", monospace; }
-footer .wordmark span { color: #151411; }
-
 /* Outcome Pack library: v0-inspired browsing, expressed in Possible's own system. */
 .packs-library-page {
   min-height: 100vh;
@@ -401,7 +396,6 @@ footer .wordmark span { color: #151411; }
 .packs-library-note p { max-width: 810px; margin: 0; color: #aaa9a4; font-size: 14px; line-height: 1.65; }
 .packs-library-note p strong { color: #f2efe8; font-weight: 600; }
 .packs-library-note a { flex: none; color: #a8ff52; font: 9px "DM Mono", monospace; letter-spacing: .04em; }
-.packs-library-page > footer { background: #ff5a1f; color: #151411; }
 
 @media (min-width: 1101px) {
   .packs-library-page.is-searching .packs-library-hero {
@@ -457,10 +451,6 @@ footer .wordmark span { color: #151411; }
   .packs-results.is-search-results { padding: 18px 18px 80px; }
   .pack-search-result { padding: 18px 0 12px; }
   .pack-search-result h3 { font-size: 19px; }
-  .packs-library-page > footer { grid-template-columns: 1fr auto; gap: 14px 20px; }
-  .packs-library-page > footer strong { grid-column: 1 / -1; grid-row: 1; }
-  .packs-library-page > footer .wordmark { grid-row: 2; }
-  .packs-library-page > footer > span { grid-row: 2; }
   .library-pack-visual { aspect-ratio: 16 / 9; }
   .packs-results-bar { align-items: flex-start; flex-direction: column; padding-bottom: 14px; }
   .packs-results-bar > span { display: none; }

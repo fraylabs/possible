@@ -26,14 +26,16 @@ test("Product records resolve their Company without owning execution", () => {
 test("Outcome Packs can reference Products while Skills remain the execution source", () => {
   const entry = publicCatalog.find(({ slug }) => slug === "html-css-animated-product-launch-film");
   assert.ok(entry);
-  assert.deepEqual(entry.products.map(({ id }) => id), ["heygen/hyperframes"]);
+  assert.deepEqual(entry.products.map(({ id }) => id), ["heygen/hyperframes", "uzu/strudel"]);
   assert.ok(entry.pack.skills?.some(({ directory }) => directory === "skills/hyperframes"));
-  assert.equal(productCatalog.length, 1);
+  assert.equal(productCatalog.length, 6);
+  assert.ok(productCatalog.every(({ summarySourceUrl }) => summarySourceUrl.startsWith("https://")));
   assert.throws(() => resolveProducts(["missing/product"]), /missing product/i);
 });
 
 test("Product commerce rejects contradictory free checkout metadata", () => {
-  const product = structuredClone(productCatalog[0]);
+  const product = structuredClone(getProduct("heygen/hyperframes"));
+  assert.ok(product);
   product.company = product.company.id;
   product.commerce.agentCheckout = "supported";
   assert.throws(() => validateProductRecord(product), /must be not-required when availability is free/i);

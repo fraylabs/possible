@@ -1,6 +1,6 @@
 .docs-page { background: #fff; color: #202123; }
-.docs-page > nav { height: 64px; padding: 0 24px; position: sticky; top: 0; z-index: 20; border-bottom-color: #e5e7eb; background: #fff; }
-.docs-page > nav .wordmark { font-size: 20px; }
+.docs-page > .site-nav { height: 64px; padding: 0 24px; position: sticky; top: 0; z-index: 20; border-bottom-color: #e5e7eb; background: #fff; }
+.docs-page > .site-nav .wordmark { font-size: 20px; }
 .docs-context-nav { height: 48px; padding: 0; position: sticky; top: 64px; z-index: 19; border-bottom: 1px solid #e5e7eb; display: block; overflow-x: auto; background: #f8f9fa; }
 .docs-context-nav-inner { width: min(1500px, 100%); min-width: max-content; height: 100%; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; gap: 3px; }
 .docs-context-nav-inner > span { margin-right: 14px; color: #6b7280; font: 500 9px "DM Mono", monospace; letter-spacing: .08em; }
@@ -139,4 +139,3 @@
 .docs-status-dot--experimental { color: #a33600; }
 .docs-status-dot--verified { color: #31822e; }
 .docs-concept-steps { margin-top: 30px !important; }
-

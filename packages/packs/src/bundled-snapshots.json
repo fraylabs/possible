@@ -3,9 +3,9 @@
     "schemaVersion": 1,
     "id": "fraylabs/possible/cast-driven-product-story-animation",
     "source": "package:@possible/packs",
-    "revision": "sha256:c78aae9b425ad14b6b53e7d0249073dfa60435ee5babb90c9afff6bbda6415b2",
+    "revision": "sha256:9f63cf3b5a430b7f2f9a5af7f94c3f9971c544ea016287fa2214c54d8fd22c3e",
     "path": "packs/cast-driven-product-story-animation/pack.json",
-    "contentHash": "sha256:c78aae9b425ad14b6b53e7d0249073dfa60435ee5babb90c9afff6bbda6415b2"
+    "contentHash": "sha256:9f63cf3b5a430b7f2f9a5af7f94c3f9971c544ea016287fa2214c54d8fd22c3e"
   },
   "developer-product-readiness": {
     "schemaVersion": 1,
@@ -43,17 +43,17 @@
     "schemaVersion": 1,
     "id": "fraylabs/possible/original-strudel-soundtrack",
     "source": "package:@possible/packs",
-    "revision": "sha256:5cc0e578af119a03154231df28237ab6b038e47f001cf3b57517fc5172ed6ebf",
+    "revision": "sha256:4a78ed3b3032c3bdee91b5e812f1df4034273f6931ed12e8a7fa6533d605445e",
     "path": "packs/original-strudel-soundtrack/pack.json",
-    "contentHash": "sha256:5cc0e578af119a03154231df28237ab6b038e47f001cf3b57517fc5172ed6ebf"
+    "contentHash": "sha256:4a78ed3b3032c3bdee91b5e812f1df4034273f6931ed12e8a7fa6533d605445e"
   },
   "playable-web-game": {
     "schemaVersion": 1,
     "id": "fraylabs/possible/playable-web-game",
     "source": "package:@possible/packs",
-    "revision": "sha256:c314ed6e65c06ae66c2e3e23e220645eba7dc6cb1b91d47860368c0b31bde00a",
+    "revision": "sha256:a422a1ee88570835b15732877795e7e02961c0d7ee9e116972418ef5e0b2fe4a",
     "path": "packs/playable-web-game/pack.json",
-    "contentHash": "sha256:c314ed6e65c06ae66c2e3e23e220645eba7dc6cb1b91d47860368c0b31bde00a"
+    "contentHash": "sha256:a422a1ee88570835b15732877795e7e02961c0d7ee9e116972418ef5e0b2fe4a"
   },
   "polished-editable-powerpoint-presentation": {
     "schemaVersion": 1,
@@ -67,9 +67,9 @@
     "schemaVersion": 1,
     "id": "fraylabs/possible/html-css-animated-product-launch-film",
     "source": "package:@possible/packs",
-    "revision": "sha256:b32a943904c15c39c8024a26b3edb25d0ee216453f312d0fec3f77e6249638fe",
+    "revision": "sha256:6237668c4bdc3aa1501a7521ace120ac80390d99c0fadc1a6a670220e74d4130",
     "path": "packs/html-css-animated-product-launch-film/pack.json",
-    "contentHash": "sha256:b32a943904c15c39c8024a26b3edb25d0ee216453f312d0fec3f77e6249638fe"
+    "contentHash": "sha256:6237668c4bdc3aa1501a7521ace120ac80390d99c0fadc1a6a670220e74d4130"
   },
   "production-logo-system": {
     "schemaVersion": 1,
@@ -91,9 +91,9 @@
     "schemaVersion": 1,
     "id": "fraylabs/possible/robot-digital-prototype",
     "source": "package:@possible/packs",
-    "revision": "sha256:419323ac7d525cfd0728c0d4686c54bc1e9aa84c7d57c9fcf01b3ddc806b4871",
+    "revision": "sha256:63b75a28720994a4b6fc1f551475aa4fc28f166a51521e2470ce108c36b09128",
     "path": "packs/robot-digital-prototype/pack.json",
-    "contentHash": "sha256:419323ac7d525cfd0728c0d4686c54bc1e9aa84c7d57c9fcf01b3ddc806b4871"
+    "contentHash": "sha256:63b75a28720994a4b6fc1f551475aa4fc28f166a51521e2470ce108c36b09128"
   },
   "web-presentation": {
     "schemaVersion": 1,

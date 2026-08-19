@@ -206,13 +206,12 @@ describe("Possible MCP", () => {
     const candidate = envelope.data.candidates.find(({ slug }) => slug === "html-css-animated-product-launch-film");
     assert.ok(candidate);
     assert.ok(candidate.matchReasons.some((reason) => reason.startsWith("product matched:")));
-    assert.equal(candidate.products.length, 1);
-    assert.equal(candidate.products[0]?.id, "heygen/hyperframes");
-    assert.equal(candidate.products[0]?.company.name, "HeyGen");
-    assert.equal(candidate.products[0]?.commerce.availability, "free");
-    assert.equal("skills" in candidate.products[0]!, false);
-    assert.equal("prompt" in candidate.products[0]!, false);
-    assert.ok(JSON.stringify(candidate.products).length < 1_000);
+    assert.equal(candidate.products.length, 2);
+    const hyperframes = candidate.products.find(({ id }) => id === "heygen/hyperframes");
+    assert.ok(hyperframes);
+    assert.equal(hyperframes.company.name, "HeyGen");
+    assert.equal(hyperframes.commerce.availability, "free");
+    assert.ok(candidate.products.every((product) => !("skills" in product) && !("prompt" in product)));
 
     const fetched = await client.callTool({ name: "fetch_pack", arguments: { slug: candidate.slug } });
     const fetchedEnvelope = fetched.structuredContent as {
@@ -220,8 +219,8 @@ describe("Possible MCP", () => {
       data: { products: unknown[]; manifest: { skills?: unknown[]; products?: string[] } };
     };
     assert.equal(fetchedEnvelope.ok, true);
-    assert.equal(fetchedEnvelope.data.products.length, 1);
-    assert.deepEqual(fetchedEnvelope.data.manifest.products, ["heygen/hyperframes"]);
+    assert.equal(fetchedEnvelope.data.products.length, 2);
+    assert.deepEqual(fetchedEnvelope.data.manifest.products, ["heygen/hyperframes", "uzu/strudel"]);
     assert.ok((fetchedEnvelope.data.manifest.skills ?? []).length > 0);
   });
 

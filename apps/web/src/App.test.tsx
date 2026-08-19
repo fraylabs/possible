@@ -164,7 +164,7 @@ describe("Possible website", () => {
   });
 
   it("renders concise Product attribution, access, and related Outcomes", async () => {
-    const product = publishedProducts[0];
+    const product = publishedProducts.find(({ id }) => id === "heygen/hyperframes");
     expect(product).toBeDefined();
     const { container } = renderRoute(productHref(product!));
     expect(screen.getAllByRole("link", { name: /HeyGen/i })).toHaveLength(1);
@@ -190,7 +190,16 @@ describe("Possible website", () => {
       expect(container.querySelector(`a[href="${productHref(product)}"] img`)).toHaveAttribute("src", product.logoUrl);
       expect(container.querySelector(`a[href="${productHref(product)}"] .product-directory-meta`)).toBeInTheDocument();
     }
+    expect(publishedProducts).toHaveLength(6);
+    expect(screen.getByRole("link", { name: /Seedance 2\.0/i })).toHaveAttribute("href", "/products/seedance");
     expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("keeps Products without published Outcomes honest", () => {
+    renderRoute("/products/seedance");
+    expect(screen.getByRole("heading", { name: "Seedance 2.0", level: 1 })).toBeInTheDocument();
+    expect(screen.getByText("No published Outcomes use this product yet.")).toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: /Outcome Pack/i })).not.toBeInTheDocument();
   });
 
   it("renders every catalog pack on its canonical details route", () => {

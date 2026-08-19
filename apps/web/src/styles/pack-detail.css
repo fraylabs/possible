@@ -4,7 +4,6 @@
 .pack-detail-page > nav .wordmark span { color: #ff5a1f; }
 .pack-detail-page > nav .nav-links { color: #aaa9a4; }
 .pack-detail-page :where(a, button, summary):focus-visible { outline: 2px solid #a8ff52; outline-offset: 3px; }
-.pack-detail-page > footer { background: #ff5a1f; color: #151411; }
 .pack-detail-breadcrumb { display: flex; gap: 9px; color: #777772; font: 8px "DM Mono", monospace; letter-spacing: .06em; }
 .pack-detail-breadcrumb a, .pack-detail-breadcrumb strong { color: #ff7040; }
 
@@ -45,12 +44,12 @@
 .not-found h1 { margin: 35px 0 60px; font-size: clamp(65px, 9vw, 145px); font-weight: 500; line-height: .87; letter-spacing: -.075em; }
 
 @media (max-width: 560px) {
-  nav { height: 64px; }
+  .site-nav { height: 64px; }
   .nav-menu-trigger { min-height: 38px; }
   .mobile-nav-panel > header { min-height: 64px; padding-inline: 18px; }
   .mobile-nav-panel li a { min-height: 82px; padding-inline: 18px; }
   .mobile-nav-panel > footer { padding-inline: 18px; }
-  .docs-page > nav { padding-inline: 18px; }
+  .docs-page > .site-nav { padding-inline: 18px; }
   .docs-context-nav { top: 64px; }
   .docs-context-nav-inner { padding-inline: 18px; }
   .docs-shell { display: block; padding-inline: 18px; }
@@ -88,9 +87,6 @@
   .docs-status-list > div { grid-template-columns: 1fr; gap: 5px; }
   .docs-table > div { grid-template-columns: 1fr; }
   .docs-table span { border-top: 1px solid #e5e7eb; border-left: 0; }
-  footer { grid-template-columns: 1fr auto; }
-  footer strong { display: none; }
-  .packs-library-page > footer strong { display: block; }
 }
 
 /* Readable Outcome Pack record */

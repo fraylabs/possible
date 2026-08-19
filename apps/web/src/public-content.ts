@@ -9,6 +9,10 @@ export const githubUrl = "https://github.com/fraylabs/possible";
 export const publishedPacks = publicCatalog;
 export const routablePacks = publicCatalog;
 export const publishedProducts = productCatalog;
+const publishedProductSlugs = publishedProducts.map((product) => product.id.split("/").at(-1));
+if (new Set(publishedProductSlugs).size !== publishedProductSlugs.length) {
+  throw new Error("Published Product slugs must be unique");
+}
 
 export type PublishedPackSearchResult = PackCatalogSearchResult<PublicCatalogEntry>;
 

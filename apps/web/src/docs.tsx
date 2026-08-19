@@ -4,7 +4,7 @@ import { useState } from "react";
 import type { ReactNode } from "react";
 import { draftPackExample, packFieldDemands } from "./authoring-content";
 import { installCommand } from "./public-content";
-import { approvalDisclosure, CopyButton, type CopyState, SiteFooter, SiteNav } from "./shared";
+import { approvalDisclosure, CopyButton, type CopyState, SiteShell } from "./shared";
 
 type DocsPageKey = "overview" | "how-to-use" | "outcome-packs" | "expectations" | "authoring" | "reference" | "glossary";
 type DocsNavGroup = { label: string; links: Array<{ label: string; href: string; active?: DocsPageKey }> };
@@ -141,8 +141,7 @@ function DocsCopyPageButton() {
 
 export function DocsPage() {
   return (
-    <main className="docs-page">
-      <SiteNav />
+    <SiteShell className="docs-page">
       <DocsContextNav active="overview" />
 
       <div className="docs-shell">
@@ -225,15 +224,13 @@ export function DocsPage() {
           <a href="#next">What happens next</a>
         </aside>
       </div>
-      <SiteFooter />
-    </main>
+    </SiteShell>
   );
 }
 
 export function HowToUsePage() {
   return (
-    <main className="docs-page">
-      <SiteNav />
+    <SiteShell className="docs-page">
       <DocsContextNav active="how-to-use" />
 
       <div className="docs-shell">
@@ -363,8 +360,7 @@ possible bookmark remove fraylabs/possible/playable-web-game`}</code></pre>
           <a href="#approval">Approval boundary</a>
         </aside>
       </div>
-      <SiteFooter />
-    </main>
+    </SiteShell>
   );
 }
 
@@ -390,8 +386,7 @@ function DocsSimplePage({
   children: ReactNode;
 }) {
   return (
-    <main className="docs-page">
-      <SiteNav />
+    <SiteShell className="docs-page">
       <DocsContextNav active={active} />
       <div className="docs-shell">
         <DocsSidebar active={active} />
@@ -413,8 +408,7 @@ function DocsSimplePage({
           {toc.map((item) => <a key={item.href} href={item.href}>{item.label}</a>)}
         </aside>
       </div>
-      <SiteFooter />
-    </main>
+    </SiteShell>
   );
 }
 
