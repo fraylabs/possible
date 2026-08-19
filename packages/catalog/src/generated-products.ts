@@ -84,15 +84,15 @@ export const rawProducts: ProductRecord[] = [
   },
   {
     "schemaVersion": 1,
-    "id": "minimax/hailuo-02",
-    "name": "MiniMax Hailuo 02",
+    "id": "minimax/hailuo-ai",
+    "name": "Hailuo AI",
     "company": "minimax",
     "category": "video",
-    "summary": "Video generation model supporting higher resolution (1080P), longer duration (10s), and stronger adherence to prompts.",
-    "summarySourceUrl": "https://platform.minimax.io/docs/api-reference/api-overview",
-    "logoUrl": "https://www.minimax.io/favicon.ico",
-    "website": "https://www.minimax.io/news/minimax-hailuo-02",
-    "docsUrl": "https://platform.minimax.io/docs/api-reference/video-generation-fl2v"
+    "summary": "Create AI videos and images from text or photos with Hailuo AI. Explore video, image, and meme tools built for creators and social content online.",
+    "summarySourceUrl": "https://hailuoai.video/",
+    "logoUrl": "https://cdn.hailuoai.video/open-hailuo-video-web/public_assets/favicon.png",
+    "website": "https://hailuoai.video/",
+    "docsUrl": "https://platform.minimax.io/docs/api-reference/api-overview"
   },
   {
     "schemaVersion": 1,

@@ -64,6 +64,8 @@ export function OutcomeDetailPage({ slug }: { slug: string }) {
   const entry = getPublishedOutcome(slug);
   if (!entry) return <NotFoundPage />;
   const { outcome } = entry;
+  const officialSource = outcome.source?.type === "official-gallery" || outcome.source?.type === "official-example";
+  const authorLabel = outcome.source?.type === "official-gallery" ? "Official gallery result by" : outcome.source?.type === "official-example" ? "Official example by" : "By";
 
   return (
     <SiteShell className="pack-detail-page">
@@ -72,7 +74,7 @@ export function OutcomeDetailPage({ slug }: { slug: string }) {
           <nav className="pack-detail-breadcrumb" aria-label="Breadcrumb"><a href="/#outcomes">Outcomes</a><span>/</span><span>{outcome.title}</span></nav>
           <h1>{outcome.title}</h1>
           <p>{outcome.summary}</p>
-          <p className="outcome-author">{outcome.source?.type === "official-example" ? "Official example by" : "By"} <a href={outcome.author.url} target="_blank" rel="noreferrer">{outcome.author.name} ↗</a></p>
+          <p className="outcome-author">{authorLabel} <a href={outcome.author.url} target="_blank" rel="noreferrer">{outcome.author.name} ↗</a></p>
           {entry.products.length ? <div className="pack-product-attribution"><span>USES</span>{entry.products.map((product) => <a href={productHref(product)} key={product.id}><strong>{product.name}</strong><small>by {product.company.name}</small></a>)}</div> : null}
         </header>
 
@@ -108,7 +110,7 @@ export function OutcomeDetailPage({ slug }: { slug: string }) {
             })}</ul>
           </section> : null}
 
-          <footer className="outcome-source"><span>{outcome.source?.type === "official-example" ? "Sourced from" : "Published by"} <a href={outcome.author.url} target="_blank" rel="noreferrer">{outcome.author.name}</a></span><a href={entry.sourceUrl} target="_blank" rel="noreferrer">{outcome.source ? "View original" : "View source"} ↗</a></footer>
+          <footer className="outcome-source"><span>{officialSource ? "Sourced from" : "Published by"} <a href={outcome.author.url} target="_blank" rel="noreferrer">{outcome.author.name}</a></span><a href={entry.sourceUrl} target="_blank" rel="noreferrer">{outcome.source ? "View original" : "View source"} ↗</a></footer>
         </div></div>
       </article>
     </SiteShell>

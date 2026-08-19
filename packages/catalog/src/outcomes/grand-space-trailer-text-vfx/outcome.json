@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 2,
+  "title": "Grand Space Trailer: Dynamic Text & VFX",
+  "summary": "A fast space-trailer sequence built from hard cuts, bridge shake, light flashes, blackouts, warp jumps, and animated wide-spaced lettering.",
+  "executionPrompt": "A faster pace, grand yet not drawn out. Quick hard cuts, bridge shaking, intense light flashes, short blackouts, and warp jumps. The text design resembles the wide-spaced lettering of a movie trailer, avoiding plain white but featuring a restrained glow and textured finish with subtle edge highlights. The text animation includes emerging from the deep void of space, illuminated by starlight sweeps, expanding letter spacing, afterimages, subtle glowing, and flashes of blackouts.",
+  "execution": {
+    "provider": "MiniMax",
+    "model": "MiniMax H3"
+  },
+  "author": {
+    "name": "Hailuo AI",
+    "url": "https://hailuoai.video/"
+  },
+  "source": {
+    "type": "official-gallery",
+    "url": "https://hailuoai.video/generate/ai-video/ai-video-sci-fi-text-animation-warp/539456745708085256",
+    "publishedAt": "2026-08-07"
+  },
+  "products": [
+    "minimax/hailuo-ai"
+  ],
+  "preview": {
+    "description": "The result and exact prompt published in Hailuo AI's public gallery.",
+    "video": {
+      "src": "https://cdn.hailuoai.video/moss/prod/2026-07-31-12/official/pgc_bot_avatar/1785472608730065138-电影大片1.mp4",
+      "poster": "https://cdn.hailuoai.video/moss/prod/2026-07-31-12/video_cover/1785472655384761774-.jpg?x-oss-process=image/resize,w_540/format,webp",
+      "caption": "Official Hailuo AI gallery result generated with MiniMax H3."
+    }
+  }
+}

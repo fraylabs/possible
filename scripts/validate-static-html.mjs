@@ -5,6 +5,12 @@ import { outcomeCatalog, productCatalog } from "../packages/catalog/dist/index.j
 const output = new URL("../apps/web/out/", import.meta.url);
 const html = (path) => readFile(new URL(path, output), "utf8");
 const escape = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+const htmlText = (value) => value
+  .replaceAll("&", "&amp;")
+  .replaceAll("<", "&lt;")
+  .replaceAll(">", "&gt;")
+  .replaceAll('"', "&quot;")
+  .replaceAll("'", "&#x27;");
 
 const home = await html("index.html");
 assert.match(home, /Anything is/);
@@ -15,22 +21,22 @@ assert.doesNotMatch(home, /Outcome Pack|expectations checklist|structured prompt
 
 for (const entry of outcomeCatalog) {
   const markup = await html(`outcomes/${entry.slug}/index.html`);
-  assert.match(markup, new RegExp(escape(entry.outcome.title)));
+  assert.match(markup, new RegExp(escape(htmlText(entry.outcome.title))));
   if (entry.outcome.originalPrompt) assert.match(markup, /Original request/);
   else assert.doesNotMatch(markup, /Original request/);
   assert.match(markup, />Prompt</);
   assert.match(markup, /Remix this prompt/);
   assert.match(markup, /Made with/);
-  assert.match(markup, new RegExp(escape(entry.outcome.author.name)));
+  assert.match(markup, new RegExp(escape(htmlText(entry.outcome.author.name))));
   assert.doesNotMatch(markup, /trust status|accepted evidence|compiled prompt|verification framework/i);
 }
 
 const products = await html("products/index.html");
 for (const product of productCatalog) {
-  assert.match(products, new RegExp(escape(product.name)));
+  assert.match(products, new RegExp(escape(htmlText(product.name))));
   const slug = product.id.split("/").at(-1);
   const detail = await html(`products/${slug}/index.html`);
-  assert.match(detail, new RegExp(escape(product.summary)));
+  assert.match(detail, new RegExp(escape(htmlText(product.summary))));
   assert.doesNotMatch(detail, /checkout|pricing unknown|agent wallet/i);
 }
 

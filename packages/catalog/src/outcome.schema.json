@@ -64,7 +64,7 @@
       "additionalProperties": false,
       "required": ["type", "url"],
       "properties": {
-        "type": { "enum": ["official-example", "community"] },
+        "type": { "enum": ["official-gallery", "official-example", "community"] },
         "url": { "type": "string", "format": "uri", "pattern": "^https://" },
         "publishedAt": { "type": "string", "format": "date" }
       }

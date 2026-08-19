@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 2,
+  "title": "Raw, Animated Night Laundromat Visions",
+  "summary": "A 15-second nighttime laundromat scene that mixes shaky phone footage with hand-drawn glowing animation.",
+  "executionPrompt": "A 15-second, 16:9 horizontal short video. A live-action nighttime laundromat scene blended with hand-drawn glowing animations. The setting is a small self-service laundromat with faintly flickering fluorescent lights. Inside are running washing machines, plastic laundry baskets, an old bench, and a single sock discarded on the floor. The overall space feels quiet, carrying a subtle sense of nostalgia.\nFilmed with a handheld phone in single-hand grip, the footage has noticeable shakiness; the white fluorescent lighting causes fluctuating exposure; surface reflections are visible on the glass panels; and the focus lags slightly when the camera gets close to objects. The visuals should not look polished or meticulous like a commercial ad. The overall texture should resemble a candid, spontaneous recording—like stumbling into the laundromat late at night and instinctively capturing surreal visions with a raw documentary feel.",
+  "execution": {
+    "provider": "MiniMax",
+    "model": "MiniMax H3"
+  },
+  "author": {
+    "name": "Hailuo AI",
+    "url": "https://hailuoai.video/"
+  },
+  "source": {
+    "type": "official-gallery",
+    "url": "https://hailuoai.video/generate/ai-video/ai-video-laundromat-night-shaky-glowing-animation/539456786413842434",
+    "publishedAt": "2026-08-07"
+  },
+  "products": [
+    "minimax/hailuo-ai"
+  ],
+  "preview": {
+    "description": "The result and exact prompt published in Hailuo AI's public gallery.",
+    "video": {
+      "src": "https://cdn.hailuoai.video/moss/prod/2026-07-31-12/official/pgc_bot_avatar/1785472636347017675-飞书20260728-175157.mp4",
+      "poster": "https://cdn.hailuoai.video/moss/prod/2026-07-31-12/video_cover/1785472665079057926-.jpg?x-oss-process=image/resize,w_540/format,webp",
+      "caption": "Official Hailuo AI gallery result generated with MiniMax H3."
+    }
+  }
+}

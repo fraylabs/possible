@@ -48,13 +48,13 @@ describe("Possible MCP", () => {
     assert.equal(envelope.data.author.name, source.outcome.author.name);
   });
 
-  it("preserves an official example without inventing a prior request", async () => {
-    const result = await client.callTool({ name: "fetch_outcome", arguments: { slug: "architectural-drawing-rises-from-paper" } });
+  it("preserves an official gallery result without inventing a prior request", async () => {
+    const result = await client.callTool({ name: "fetch_outcome", arguments: { slug: "raw-animated-night-laundromat" } });
     const data = (result.structuredContent as { data: { originalPrompt?: string; prompt: string; source: { type: string; url: string }; execution: { model: string; agent?: string } } }).data;
     assert.equal(data.originalPrompt, undefined);
-    assert.match(data.prompt, /^A blank sheet of paper/);
-    assert.equal(data.source.type, "official-example");
-    assert.equal(data.execution.model, "MiniMax-Hailuo-02");
+    assert.match(data.prompt, /^A 15-second, 16:9 horizontal short video/);
+    assert.equal(data.source.type, "official-gallery");
+    assert.equal(data.execution.model, "MiniMax H3");
     assert.equal(data.execution.agent, undefined);
   });
 

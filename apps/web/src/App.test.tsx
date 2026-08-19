@@ -18,7 +18,8 @@ describe("Possible website", () => {
     const gallery = screen.getByRole("region", { name: "Outcome directory" });
     expect(within(gallery).getAllByRole("link")).toHaveLength(6);
     expect(gallery.querySelector(".library-pack-card.has-media .library-pack-visual")).toBeInTheDocument();
-    expect(screen.queryByRole("navigation", { name: "Outcome pages" })).not.toBeInTheDocument();
+    const pagination = screen.getByRole("navigation", { name: "Outcome pages" });
+    expect(within(pagination).getByRole("button", { name: "Page 2" })).toBeInTheDocument();
     expect(await axe(container)).toHaveNoViolations();
   });
 

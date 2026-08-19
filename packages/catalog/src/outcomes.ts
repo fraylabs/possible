@@ -93,7 +93,7 @@ const validateSource = (value: unknown, context: string): void => {
   const source = asRecord(value, context);
   const allowed = new Set(["type", "url", "publishedAt"]);
   for (const key of Object.keys(source)) if (!allowed.has(key)) throw new Error(`${context}.${key} is unsupported`);
-  if (source.type !== "official-example" && source.type !== "community") throw new Error(`${context}.type is unsupported`);
+  if (source.type !== "official-gallery" && source.type !== "official-example" && source.type !== "community") throw new Error(`${context}.type is unsupported`);
   validateHttpsUrl(source.url, `${context}.url`);
   if (source.publishedAt !== undefined) {
     const publishedAt = requiredString(source.publishedAt, `${context}.publishedAt`);

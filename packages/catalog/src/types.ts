@@ -17,7 +17,7 @@ export interface OutcomeExecution {
 }
 
 export interface OutcomeSource {
-  type: "official-example" | "community";
+  type: "official-gallery" | "official-example" | "community";
   url: string;
   publishedAt?: string;
 }

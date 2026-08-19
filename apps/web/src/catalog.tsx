@@ -9,6 +9,11 @@ import { SiteShell } from "./shared";
 
 function OutcomeSearchResult({ result }: { result: PublishedOutcomeSearchResult }) {
   const { entry } = result;
+  const fit = entry.outcome.source?.type === "official-gallery"
+    ? "Official gallery result, prompt, and source available to remix."
+    : entry.outcome.source?.type === "official-example"
+      ? "Official result and source available to remix."
+      : "Result, provenance, and prompt available to remix.";
 
   return (
     <a className="pack-search-result" href={outcomeHref(entry)}>
@@ -22,7 +27,7 @@ function OutcomeSearchResult({ result }: { result: PublishedOutcomeSearchResult 
       <h3>{entry.outcome.title}</h3>
       <p>{entry.outcome.summary}</p>
       {entry.products.length ? <div className="pack-search-product">Uses {entry.products.map(({ name, company }) => `${name} by ${company.name}`).join(" · ")}</div> : null}
-      <div className="pack-search-fit"><strong>Exact prompt</strong><span>{entry.outcome.source?.type === "official-example" ? "Official result and source available to remix." : "Result, provenance, and prompt available to remix."}</span></div>
+      <div className="pack-search-fit"><strong>Exact prompt</strong><span>{fit}</span></div>
     </a>
   );
 }
@@ -33,7 +38,7 @@ export const commonSearches = [
   "Make a product launch film",
   "Compose a quiet Strudel soundtrack",
   "Model a ten-link robot snake",
-  "Animate an architectural drawing",
+  "Make a retro jazz crime opening",
 ];
 const packsPerPage = 6;
 
