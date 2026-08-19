@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Read-only MCP interface for the Possible prompt directory",
+  "description": "Read-only MCP interface for Possible Outcomes and execution prompts",
   "bin": { "possible-mcp": "./dist/stdio.js" },
   "exports": { ".": "./dist/index.js", "./http": "./dist/http.js", "./stdio": "./dist/stdio.js" },
   "scripts": {

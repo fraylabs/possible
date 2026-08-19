@@ -9,6 +9,13 @@ export interface OutcomeAuthor {
   url: string;
 }
 
+export interface OutcomeExecution {
+  provider: string;
+  agent: string;
+  model: string;
+  timestamp: string;
+}
+
 export type CompanyId = string;
 export type ProductId = `${string}/${string}`;
 
@@ -79,10 +86,12 @@ export interface OutcomePreview {
 }
 
 export interface Outcome {
-  schemaVersion: 1;
+  schemaVersion: 2;
   title: string;
   summary: string;
-  prompt: string;
+  originalPrompt: string;
+  executionPrompt: string;
+  execution: OutcomeExecution;
   author: OutcomeAuthor;
   skills?: SkillReference[];
   products?: ProductId[];

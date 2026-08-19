@@ -16,7 +16,7 @@ export function OutcomeCard({ entry, priority = false }: { entry: OutcomeCatalog
         {entry.products.length ? <div className="library-pack-product">USES {entry.products.map(({ name }) => name).join(" + ")}</div> : null}
         <h3>{outcome.title}</h3>
         <p>{outcome.summary}</p>
-        <div className="library-pack-fit"><strong>EXACT PROMPT</strong><span>Copy it, adapt the details, and give it to your agent.</span></div>
+        <div className="library-pack-fit"><strong>FULL PROMPT</strong><span>See the rough request and complete agent assignment.</span></div>
       </div>
     </a>
   );

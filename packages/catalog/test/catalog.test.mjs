@@ -11,12 +11,14 @@ import {
   validateOutcome,
 } from "../dist/index.js";
 
-test("the catalog is made from one exact Outcome record per folder", () => {
+test("the catalog is made from one request-to-result record per folder", () => {
   assert.equal(outcomeCatalog.length, 5);
   assert.equal(bundledOutcomes.length, outcomeCatalog.length);
   const film = getOutcome("html-css-animated-product-launch-film");
   assert.ok(film);
-  assert.match(film.outcome.prompt, /^Use \$hyperframes/);
+  assert.equal(film.outcome.originalPrompt, "nono just to explain what possible is");
+  assert.match(film.outcome.executionPrompt, /^Use \$hyperframes/);
+  assert.equal(film.outcome.execution.model, "GPT-5.6");
   assert.deepEqual(film.products.map(({ id }) => id), ["heygen/hyperframes", "uzu/strudel"]);
   assert.match(film.outcome.preview.video.src, /^\/outcome-media\//);
   for (const forbidden of ["expectations", "notFor", "workstreams", "verification", "trust", "lifecycle"]) {
@@ -24,11 +26,14 @@ test("the catalog is made from one exact Outcome record per folder", () => {
   }
 });
 
-test("Outcome validation keeps the prompt exact and rejects framework fields", () => {
+test("Outcome validation keeps both prompts exact and rejects framework fields", () => {
   const valid = structuredClone(outcomeCatalog[0].outcome);
-  assert.equal(validateOutcome(valid).prompt, valid.prompt);
+  assert.equal(validateOutcome(valid).originalPrompt, valid.originalPrompt);
+  assert.equal(validateOutcome(valid).executionPrompt, valid.executionPrompt);
   assert.throws(() => validateOutcome({ ...valid, expectations: [] }), /not part of the Outcome contract/);
-  assert.throws(() => validateOutcome({ ...valid, prompt: ` ${valid.prompt}` }), /leading or trailing whitespace/);
+  assert.throws(() => validateOutcome({ ...valid, originalPrompt: ` ${valid.originalPrompt}` }), /leading or trailing whitespace/);
+  assert.throws(() => validateOutcome({ ...valid, executionPrompt: `${valid.executionPrompt} ` }), /leading or trailing whitespace/);
+  assert.throws(() => validateOutcome({ ...valid, execution: { ...valid.execution, timestamp: "yesterday" } }), /ISO 8601/);
 });
 
 test("Product records contain only official directory information", () => {
@@ -37,7 +42,7 @@ test("Product records contain only official directory information", () => {
   assert.equal(product.company.name, "HeyGen");
   assert.equal(product.category, "video");
   assert.match(product.summarySourceUrl, /^https:\/\//);
-  for (const forbidden of ["commerce", "checkout", "skills", "prompt", "expectations"]) {
+  for (const forbidden of ["commerce", "checkout", "skills", "prompt", "executionPrompt", "expectations"]) {
     assert.equal(forbidden in product, false);
   }
   assert.equal(productCatalog.length, 6);

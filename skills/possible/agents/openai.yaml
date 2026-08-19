@@ -1,4 +1,4 @@
 interface:
   display_name: "Possible"
-  short_description: "Discover exact prompts for agent outcomes"
-  default_prompt: "Use $possible to find examples of what agents can do and show me the exact prompt behind the Outcome I choose."
+  short_description: "Prepare complete prompts for fresh agents"
+  default_prompt: "Use $possible to turn my rough request into a complete execution prompt for a fresh agent."

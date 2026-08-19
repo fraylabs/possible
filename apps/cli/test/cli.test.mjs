@@ -18,21 +18,21 @@ const fixture = async () => {
 };
 afterEach(async () => Promise.all(temporaryDirectories.splice(0).map((directory) => rm(directory, { recursive: true, force: true }))));
 
-test("the CLI exposes only discovery installation and local bookmarks", async () => {
+test("the CLI exposes only skill installation and local bookmarks", async () => {
   const { stdout } = await execute(process.execPath, [cli, "--help"]);
   assert.match(stdout, /possible init/);
   assert.match(stdout, /possible bookmark/);
   assert.doesNotMatch(stdout, /possible pack|compile|validate|export/);
 });
 
-test("init installs the small optional discovery skill", async () => {
+test("init installs the small optional prompt-preparation skill", async () => {
   const project = await fixture();
   const { stdout, stderr } = await execute(process.execPath, [cli, "init"], { cwd: project });
   assert.equal(stderr, "");
   assert.match(stdout, /Possible installed/);
   const skill = await readFile(join(project, ".agents", "skills", "possible", "SKILL.md"), "utf8");
-  assert.match(skill, /directory of exact prompts/);
-  assert.doesNotMatch(skill, /Outcome Pack|expectations|workstreams/);
+  assert.match(skill, /complete execution prompt for a fresh agent/);
+  assert.doesNotMatch(skill, /Outcome Pack|authored expectations|workstreams/);
 });
 
 test("bookmarks store Outcome slugs locally without an account", async () => {

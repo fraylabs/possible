@@ -27,14 +27,16 @@ export function searchOutcomes(catalog: readonly OutcomeCatalogEntry[], input: O
     .map((entry) => {
       const title = tokenizeOutcomeSearch(entry.outcome.title);
       const summary = tokenizeOutcomeSearch(entry.outcome.summary);
-      const prompt = tokenizeOutcomeSearch(entry.outcome.prompt);
+      const originalPrompt = tokenizeOutcomeSearch(entry.outcome.originalPrompt);
+      const executionPrompt = tokenizeOutcomeSearch(entry.outcome.executionPrompt);
       const productNames = tokenizeOutcomeSearch(entry.products.map(({ name }) => name).join(" "));
-      const matchedTerms = terms.filter((term) => title.includes(term) || summary.includes(term) || prompt.includes(term) || productNames.includes(term));
+      const matchedTerms = terms.filter((term) => title.includes(term) || summary.includes(term) || originalPrompt.includes(term) || executionPrompt.includes(term) || productNames.includes(term));
       const score = matchedTerms.reduce((total, term) => total
         + (title.includes(term) ? 8 : 0)
         + (summary.includes(term) ? 4 : 0)
         + (productNames.includes(term) ? 3 : 0)
-        + (prompt.includes(term) ? 1 : 0), 0);
+        + (originalPrompt.includes(term) ? 2 : 0)
+        + (executionPrompt.includes(term) ? 1 : 0), 0);
       return { entry, score, matchedTerms };
     })
     .filter(({ score }) => score > 0)

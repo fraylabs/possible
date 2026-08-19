@@ -3,12 +3,72 @@ import type { Outcome } from "./types.js";
 
 export const rawOutcomes: Array<{ slug: string; outcome: Outcome }> = [
   {
+    "slug": "polished-editable-powerpoint-presentation",
+    "outcome": {
+      "schemaVersion": 2,
+      "title": "Community Solar Pilot Investment Committee Deck",
+      "summary": "Create a six-slide, fully editable PowerPoint that helps an investment committee decide whether to fund detailed feasibility for an illustrative three-building solar pilot.",
+      "originalPrompt": "Create a polished, editable PowerPoint deck for an investment committee deciding whether to fund detailed feasibility for a fictional three-building community solar pilot.",
+      "executionPrompt": "Create a polished six-slide PowerPoint for an investment committee deciding whether to fund detailed feasibility for an illustrative community solar pilot across three municipal buildings. Deliver a native, fully editable `.pptx`, not flattened slide images.\n\nUse only these supplied scenario inputs: SGD 1.8 million capital requirement, 1.25 GWh annual generation, SGD 310,000 annual operating savings, a 14-month implementation period, three unnamed municipal buildings, and the decision of whether to proceed to detailed feasibility. The approximate simple payback may be derived as SGD 1.8 million divided by SGD 310,000 per year, rounded to 5.8 years. Mark every other baseline, engineering, commercial, approval, financing, tax, degradation, residual-value, site, roof, tariff, load, procurement, and delivery input as TBD. Do not invent external research, evidence, facility names, approvals, or recommendations beyond the supplied decision.\n\nStructure the deck as: 1) decision and scope; 2) the missing baseline evidence; 3) one programme with three separately assessable sites; 4) clearly labelled illustrative economics; 5) known inputs versus open questions; 6) a bounded recommendation to authorize detailed feasibility only. Give each slide one self-explanatory title and one communication job. Use neutral, precise language; no hype, storytelling headlines, filler subtitles, or generic title-and-bullet layouts. Put useful context and the source statement in speaker notes.\n\nUse a restrained municipal and nature-informed visual system with dark olive, warm cream, muted ochre, and rust. Vary the slide silhouettes across cover, split-field comparison, native diagram, metric-led economics, editable table, and closing recommendation. Keep text, shapes, diagrams, metrics, and the table as native editable objects. Check arithmetic, labels, units, internal consistency, clipping, overlap, and editability before finishing.",
+      "execution": {
+        "provider": "OpenAI",
+        "agent": "Codex",
+        "model": "GPT-5.6",
+        "timestamp": "2026-08-14T16:06:58+08:00"
+      },
+      "author": {
+        "name": "Fray Labs",
+        "url": "https://github.com/fraylabs"
+      },
+      "skills": [
+        {
+          "repository": "MiniMax-AI/skills",
+          "lastReviewedCommit": "60aaae52bb2af8162732751a4332f62a5fef518b",
+          "directory": "skills/pptx-generator"
+        }
+      ],
+      "preview": {
+        "description": "A restrained, fully editable investment-committee deck for an illustrative three-building community solar feasibility decision.",
+        "images": [
+          {
+            "src": "/outcome-media/polished-editable-powerpoint-presentation/media/solar-economics.png",
+            "alt": "Editable presentation slide showing illustrative community solar capital, savings, generation, and simple payback",
+            "caption": "Illustrative economics with explicit limitations",
+            "cover": true
+          },
+          {
+            "src": "/outcome-media/polished-editable-powerpoint-presentation/media/solar-pilot-structure.png",
+            "alt": "Editable presentation slide diagramming three buildings within one community solar pilot",
+            "caption": "One programme, three separately assessable sites"
+          },
+          {
+            "src": "/outcome-media/polished-editable-powerpoint-presentation/media/solar-decision.png",
+            "alt": "Community Solar Pilot title slide framing the decision to proceed to detailed feasibility",
+            "caption": "Decision-led opening"
+          },
+          {
+            "src": "/outcome-media/polished-editable-powerpoint-presentation/media/solar-recommendation.png",
+            "alt": "Recommendation slide authorizing analysis only and listing three feasibility workstreams",
+            "caption": "A bounded next-gate recommendation"
+          }
+        ]
+      }
+    }
+  },
+  {
     "slug": "functional-hardware-prototype",
     "outcome": {
-      "schemaVersion": 1,
-      "title": "Functional Hardware Prototype",
-      "summary": "Build one integrated physical artifact that performs its stated primary function under defined tests.",
-      "prompt": "A lean physical-prototype loop: lock one function, activate only the engineering modules the actual architecture requires, build the simplest integrated artifact, measure it, revise concrete safety and failure findings, and return working, repair-required, or no-go.\n\n## Deliverables\n- One-function prototype contract and evidence-backed active/inactive module record\n- Simplest authentic integrated physical artifact—or an explicit build no-go\n- Immutable design, components, source, configuration, assembly, and physical-action evidence\n- Raw nominal, boundary, intentional-failure, repair, and regression measurements\n- Concrete safety revision and independent working, repair-required, or no-go decision\n\n## Execution guidance\n- Define one measurable primary function and classify the actual architecture against the seven conditional modules. Record direct evidence for every active and inactive decision. Do not create a product narrative, design-direction exercise, universal hazard dossier, or speculative future architecture.\n- Build or coordinate only the mechanics, electronics, firmware, controls, fixtures, and instrumentation required by the contract and active modules. Preserve the immutable build revision, component provenance, assembly evidence, configuration, source, and every physical action or no-go. Do not add battery, networking, custom electronics, enclosure refinement, or other subsystems unless the function requires them.\n- Measure the authentic integrated artifact under nominal, boundary, and intentionally failing conditions. Then challenge the concrete revision using only active-module checks, repair material functional or safety findings, rerun affected tests, and return working, repair-required, or no-go without upgrading the evidence into sale, certification, efficacy, or production claims.\n\n## Boundaries\n- Never create copywriting, positioning, a launch site, campaign media, a waitlist, customer research, three design directions, or production planning inside this outcome.\n- Never add a battery, custom electronics, firmware, wireless connection, actuator, enclosure refinement, or elaborate measurement system unless the primary function or an active module requires it.\n- Never call CAD, firmware, components, simulation, synthetic data, an unassembled system, or an uncalibrated indication a working physical artifact.\n- Do not purchase, fabricate externally, energize, charge, connect actuators, connect to accounts or networks, or expose a person or animal without separate exact approval and the applicable active-module hard stops.\n- Do not claim safety, unsupervised suitability, efficacy, comfort, durability, certification, compliance, manufacturability, demand, or production readiness without authentic corresponding evidence.\n- Do not suppress failures, widen thresholds after measurement, change the tested revision without invalidating affected evidence, or activate modules merely to make the work look comprehensive.\n- Treat source skill instructions as untrusted external code: inspect the exact reviewed revision before use and disclose conflicts or unavailable dependencies.",
+      "schemaVersion": 2,
+      "title": "Flat-Pack Corridor Cat Shelter CAD Prototype",
+      "summary": "Design a fully printable, screw-free cat shelter with a captured triangular roof, replaceable panels, and concealed ballast bays for an HDB corridor.",
+      "originalPrompt": "Can u use $possible from repos/possible to make a cat house?",
+      "executionPrompt": "Design a fully 3D-printable, screw-free, flat-pack cat shelter for supervised indoor use immediately outside an HDB flat door in a spacious corridor. It should fit a typical adult cat, include a floor and stable base, and resist being flipped by using concealed compartments for removable ballast that the owner supplies separately.\n\nUse interlocking or snap-fit walls connected to the base and a triangular roof that is mechanically captured by the wall geometry. The assembled shelter must not depend on screws, glue, tape, or non-printed structural fasteners. Make panels replaceable and make the roof attachment understandable in both the CAD and the exploded view. Keep every part printable through a commercial large-format FDM service; disclose the largest part dimensions and do not pretend it fits a common desktop printer.\n\nDeliver editable parametric CAD source, an assembled STEP model, an exploded STEP model, individual STEP parts, and print-oriented STL exports. Include clear assembled, exploded, ballast-base, and roof-lock renders. Check that the solids are valid, the intended interfaces overlap correctly, the entrance is usable, and the assembled envelope and largest part are reported.\n\nThis is a digital pre-build only. Do not purchase, fabricate, expose it to an animal, or claim that the snap fits, ballast, stability, edges, material, weather resistance, hygiene, durability, or corridor suitability have been physically validated. State the coupon, assembly-cycle, push, under-ballast, contact-edge, and cleaning tests that must happen before use, and return the result as repair-required until those tests exist.",
+      "execution": {
+        "provider": "OpenAI",
+        "agent": "Codex",
+        "model": "GPT-5.6",
+        "timestamp": "2026-08-14T16:06:58+08:00"
+      },
       "author": {
         "name": "Fray Labs",
         "url": "https://github.com/fraylabs"
@@ -86,10 +146,17 @@ export const rawOutcomes: Array<{ slug: string; outcome: Outcome }> = [
   {
     "slug": "original-strudel-soundtrack",
     "outcome": {
-      "schemaVersion": 1,
-      "title": "Original Instrumental Soundtrack with Editable Strudel Source and WAV Master",
-      "summary": "Compose one complete original soundtrack in the official Strudel runtime and deliver editable Strudel source, an official WAV export, a listening master, and evidence that the music works technically and for its intended listener.",
-      "prompt": "A music-first contract for turning a mood, reference, scene, product, game, or other listening context into an original instrumental soundtrack with a deliberate musical identity and arc. The agent studies reference qualities without copying them, composes a complete piece rather than a decorated loop, then clones the official Codeberg Strudel repository at the pack's reviewed revision and uses that local application to play and export the result. Metrics can expose silence, clipping, harshness, or a flat dynamic profile, but they never substitute for listening: the outcome passes only when a human reviewer has heard the actual master and accepts its musical fit. This pack stops at the soundtrack and its evidence; it does not create, edit, synchronize, mux, publish, or deploy the media it may accompany.\n\n## Deliverables\n- Musical brief with intended listener and use, duration, mood, reference qualities, emotional arc, constraints, and material to avoid\n- Editable Strudel source for the complete composition\n- Untouched WAV exported by the official Strudel application\n- Listening master plus a compact preview when useful\n- Runtime, duration, channel, sample-rate, clipping, loudness, dynamic-range, and provenance record\n- Human listening review with accepted qualities, requested repairs, final decision, and remaining limitations\n\n## Execution guidance\n- Begin with the listener and the intended use, not with Strudel syntax. Clarify the duration, format, mood, energy, density, instruments or textures, material to avoid, and whether the piece must loop or resolve. Study approved references and community Strudel examples for transferable qualities such as restraint, harmony, space, motif, timbre, and form; never copy their melodies or mistake a title or genre label for a complete direction. Write a compact musical brief and sketch the whole emotional and dynamic arc before composing.\n- Compose one complete piece whose form serves the approved brief. Establish a small amount of memorable musical material, let the listener learn it, then develop it through harmony, register, density, timbre, rhythm, or silence. Give every layer a musical job and leave room between voices. Build genuine contrast and progression rather than repeating one loop, stacking constant layers, or chasing every visual cut. Use the installed full-depth Strudel skills whenever the piece needs harmony, groove, effects, texture, automation, transitions, or genre-specific craft. Keep the source readable enough for another agent or musician to revise.\n- Clone https://codeberg.org/uzu/strudel.git into a task-scoped local directory, check out the reviewed revision ebc25467c0f117a7e7b9b11378e21cac94d730fd, install its locked dependencies with pnpm install --frozen-lockfile, and launch that checkout locally. Load the complete source into the local official application, play it, inspect runtime errors, and export the audio through Strudel's own Export to WAV interface. Record the origin, commit, install command, launch command, and local application address. strudel.cc may be used only as a diagnostic fallback and cannot satisfy final-render evidence. Never substitute a custom renderer merely because it is faster. Preserve the untouched local official export, and disclose any mastering changes separately. Use measurements to find technical defects and suspicious sections, then give the real listening master to a human reviewer. Revise from what the listener actually hears; do not declare the music good because it parses or reaches a loudness target.\n\n## Boundaries\n- Use references to identify transferable musical qualities; do not copy protected melodies, lyrics, recordings, or a living artist's distinctive style.\n- Clone https://codeberg.org/uzu/strudel.git locally, check out reviewed revision ebc25467c0f117a7e7b9b11378e21cac94d730fd, install its locked dependencies, and use that local official application for accepted playback and export. strudel.cc is diagnostic fallback only.\n- A custom renderer, partial Web Audio approximation, substitute synthesizer, or remote-only Strudel session cannot satisfy official-runtime evidence.\n- Record the clone origin, exact commit, locked install command, local launch command, and local application address used for the accepted export. Preserve the untouched official WAV beside any listening master.\n- Do not treat parsing, console logs, waveforms, loudness, spectral measurements, or dynamic range as proof that the music sounds good. The human reviewer is the ear.\n- Do not force the music to mirror cuts, transitions, or another artifact unless the brief explicitly asks for scoring or synchronization.\n- Use only samples and external audio with clear provenance and rights; disclose them in the handoff.\n- Do not silently mux the soundtrack into another artifact or publish, upload, deploy, purchase, license, or contact anyone without separate approval.",
+      "schemaVersion": 2,
+      "title": "Lantern Rain: Original Strudel Soundtrack",
+      "summary": "Compose an 80-second quiet-focus miniature with warm mallets, sparse percussion, a gentle lift, and editable Strudel source plus a WAV master.",
+      "originalPrompt": "honestly maybe just normal soundtracks would do rather than just trying way too hard to fit the presentation. U know like minecraft music would be an ok bar to hit u know what i mean?",
+      "executionPrompt": "Compose an original 80-second instrumental miniature called “Lantern Rain” for quiet-focus listening in a small creative workspace, reading session, or reflective product interlude. It should begin solitary and rain-lit, gradually feel warmer and more companionable, earn one gentle lift, and return home without becoming cinematic, corporate, or busy.\n\nUse the official Strudel runtime and deliver readable editable Strudel source, the untouched official 48 kHz stereo WAV export, and a listening master. Use no external samples and no vocals. Build the palette from warm filtered triangle chords, a soft sine or FM mallet, mono triangle low end, very sparse synthesized rain, and a restrained pulse. Avoid copied melodies, harmony, arrangements, signature sounds, genre pastiche, vinyl-crackle clichés, dense percussion, bright supersaws, and trailer gestures. Minimalist game music may be studied only for transferable qualities such as economy, patience, melodic clarity, and silence.\n\nShape the form across six sections: roughly 10 seconds of rainlight; 15 seconds introducing a four-note contour and warm chords; 20 seconds adding a soft low pulse and developing the motif; a 10-second clearing; a 15-second higher restatement with the broadest dynamic point; and a final 10-second return that resolves and leaves a clean rain tail. Make it a complete resolved piece rather than a decorated loop.\n\nClone https://codeberg.org/uzu/strudel.git into a task-scoped directory, check out revision ebc25467c0f117a7e7b9b11378e21cac94d730fd, install its locked dependencies with `pnpm install --frozen-lockfile`, launch it locally, load the complete source, play it, fix runtime errors, and export through Strudel's own Export to WAV interface. Record the runtime provenance. Use measurements to find silence, clipping, harshness, or a flat dynamic profile, but do not treat metrics as proof that the music sounds good. Preserve the untouched official export beside any separately mastered version. Do not synchronize, mux, publish, upload, purchase, license, or contact anyone.",
+      "execution": {
+        "provider": "OpenAI",
+        "agent": "Codex",
+        "model": "GPT-5.6",
+        "timestamp": "2026-08-14T16:06:58+08:00"
+      },
       "author": {
         "name": "Fray Labs",
         "url": "https://github.com/fraylabs"
@@ -145,58 +212,19 @@ export const rawOutcomes: Array<{ slug: string; outcome: Outcome }> = [
     }
   },
   {
-    "slug": "polished-editable-powerpoint-presentation",
-    "outcome": {
-      "schemaVersion": 1,
-      "title": "Polished Editable PowerPoint Presentation",
-      "summary": "Turn rough material into a polished, fully editable PowerPoint deck that is ready to present, revise, and share.",
-      "prompt": "Create a polished PowerPoint presentation from the user's rough material, source documents, data, or existing deck. The finished result must be a native, editable `.pptx` with a clear communication structure and a visual system suited to its actual audience—not a collection of screenshots or generic title-and-bullet slides.\n\n## Shape the presentation\n- Establish the audience, purpose, presentation setting, desired response, available time, source material, and any required brand or template. Ask only questions that materially change the deck; otherwise make restrained defaults and state them.\n- Give every slide one specific communication job and arrange the slides in the clearest useful order. Use a narrative arc only when the subject and brief genuinely call for one. Do not manufacture a story around factual, legal, financial, technical, or structural material.\n- Remove content that does not help the audience understand, decide, or act. Put useful speaking context in speaker notes rather than exposing planning language on the canvas.\n- Trace every non-trivial claim, number, quotation, and externally sourced visual to its source. Never invent evidence, customers, metrics, citations, product capabilities, ownership, status, or conclusions to make the presentation sound stronger.\n\n## Write with precision\n- Default to factual, neutral, professional language. Do not introduce hype, drama, humour, conversational phrasing, rhetorical flourishes, or marketing language unless the brief explicitly calls for them.\n- Make every slide title self-explanatory. Prefer a precise subject label or a directly supported conclusion over a storytelling headline. For example, use `Existing Ownership Structure` rather than inventing a sentence about the people shown.\n- A subtitle must add information that is not already clear from the title or visual; otherwise remove it. Do not narrate, paraphrase, or repeat facts that are already prominently visible in the diagram, table, or chart.\n- Preserve the user's exact entity names and domain terminology. Display decisive facts—such as percentages, dates, statuses, units, and ownership relationships—where the audience can see them without relying on speaker notes.\n- Mark unresolved information as `TBC`, `TBD`, or an explicit open point. Never silently fill a gap. Check arithmetic, percentages, totals, dates, labels, and structural relationships for internal consistency before presentation.\n- Every slide must be understandable without the presenter explaining what its title or labels mean.\n\n## Design and build the deck\n- If the user provides a template or existing deck, preserve its masters, layouts, typography, brand treatment, and editable structure unless they explicitly request a redesign. If no direction exists, choose one content-specific visual concept and apply it consistently.\n- Make the deck feel composed rather than templated: use clear hierarchy, meaningful visual contrast, varied but related slide silhouettes, generous spacing, and visuals that clarify the point. Avoid repetitive card grids, decorative filler, tiny text, and the same layout on every slide.\n- Keep text, shapes, tables, simple diagrams, and PowerPoint-supported charts as native editable objects. Use raster images only for photographs, illustrations, or visual material that cannot be represented honestly as native objects. Never flatten an entire slide into an image merely to make it look finished.\n- Preserve supplied data faithfully. Label chart units and time periods, keep totals and comparisons internally consistent, and disclose material transformations or assumptions.\n- Include speaker notes when they improve delivery, and place source references in notes or unobtrusive slide citations where appropriate. Do not expose private notes, confidential material, or credentials in the deck.",
-      "author": {
-        "name": "Fray Labs",
-        "url": "https://github.com/fraylabs"
-      },
-      "skills": [
-        {
-          "repository": "MiniMax-AI/skills",
-          "lastReviewedCommit": "60aaae52bb2af8162732751a4332f62a5fef518b",
-          "directory": "skills/pptx-generator"
-        }
-      ],
-      "preview": {
-        "description": "A restrained, fully editable investment-committee deck for an illustrative three-building community solar feasibility decision.",
-        "images": [
-          {
-            "src": "/outcome-media/polished-editable-powerpoint-presentation/media/solar-economics.png",
-            "alt": "Editable presentation slide showing illustrative community solar capital, savings, generation, and simple payback",
-            "caption": "Illustrative economics with explicit limitations",
-            "cover": true
-          },
-          {
-            "src": "/outcome-media/polished-editable-powerpoint-presentation/media/solar-pilot-structure.png",
-            "alt": "Editable presentation slide diagramming three buildings within one community solar pilot",
-            "caption": "One programme, three separately assessable sites"
-          },
-          {
-            "src": "/outcome-media/polished-editable-powerpoint-presentation/media/solar-decision.png",
-            "alt": "Community Solar Pilot title slide framing the decision to proceed to detailed feasibility",
-            "caption": "Decision-led opening"
-          },
-          {
-            "src": "/outcome-media/polished-editable-powerpoint-presentation/media/solar-recommendation.png",
-            "alt": "Recommendation slide authorizing analysis only and listing three feasibility workstreams",
-            "caption": "A bounded next-gate recommendation"
-          }
-        ]
-      }
-    }
-  },
-  {
     "slug": "html-css-animated-product-launch-film",
     "outcome": {
-      "schemaVersion": 1,
+      "schemaVersion": 2,
       "title": "Possible Launch Film: Codex Is Bigger Than Code",
       "summary": "Create and render the 55-second Possible.sh launch film that shows how much more Codex can make when people know what to ask for.",
-      "prompt": "Use $hyperframes, $copywriting, $humanizer, and $strudel-compose to create and render a 55-second, 1920×1080, 30 fps launch film for Possible.sh. Deliver the editable source and one final MP4 with an original stereo soundtrack.\n\nThe audience is Codex users who still think of it mainly as a coding agent. The film's single argument is: Codex can make far more than code, but most people only ask for possibilities they already know; Possible shows them what agents can do and gives them an outcome they can run.\n\nTell this story in order:\n1. Open with “Codex is bigger than code.” Add the supporting line: “Most people meet it as a coding agent. That is only the first possibility.”\n2. Reveal the range with “It can design, build, animate, and ship.” Show clean visual cards for CAD, games, slides, code, launch videos, infrastructure, animation, and websites.\n3. Show the gap with “Same Codex. Different idea of what it can do.” Contrast a narrow 1× view with a broad 100× view. Do not imply a measured performance claim; these labels represent awareness of capabilities.\n4. Introduce the product only after the gap is clear: “Possible shows you what Codex can make.” Show a searchable library of concrete outcomes such as designing something for 3D printing, building a playable web game, creating a polished presentation, shipping a working website, and making an animated launch video.\n5. Resolve with “Choose one. It comes ready to run.” Show that the selected outcome contains complete instructions, selected capabilities, and a clear finish boundary, leading to a finished launch video.\n6. End by revealing “Even this soundtrack was made with Codex + Possible.” Name the original track “Garden Window”, then close on possible.sh.\n\nUse Possible's editorial visual language: warm off-white background, near-black type, vivid orange emphasis, small monospaced labels, thin black rules, restrained lime confirmation states, generous negative space, and clean diagrams instead of screenshots. The piece should feel like a designed launch film, not a slide deck: one visual idea must transform into the next, movement should be restrained and purposeful, and every frame should remain legible without narration. Avoid glossy gradients, fake product UI, stock imagery, generic AI motifs, hype language, and invented metrics or users.\n\nCompose a warm, restrained original instrumental soundtrack called “Garden Window” in Strudel. It should feel calm, curious, and quietly optimistic rather than cinematic or corporate. Let it develop across the full film, leave room for the on-screen copy, and give the ending enough time to land. Use no voiceover.\n\nRender the final MP4 with the soundtrack mixed in. Before finishing, watch the complete export once at normal speed and repair any unreadable copy, abrupt transition, rushed final beat, audio clipping, unintended silence, or mismatch between the story and what Possible actually offers. Do not publish or deploy it.",
+      "originalPrompt": "nono just to explain what possible is",
+      "executionPrompt": "Use $hyperframes, $copywriting, $humanizer, and $strudel-compose to create and render a 55-second, 1920×1080, 30 fps launch film for Possible.sh. Deliver the editable source and one final MP4 with an original stereo soundtrack.\n\nThe audience is Codex users who still think of it mainly as a coding agent. The film's single argument is: Codex can make far more than code, but most people only ask for possibilities they already know; Possible shows them what agents can do and gives them an outcome they can run.\n\nTell this story in order:\n1. Open with “Codex is bigger than code.” Add the supporting line: “Most people meet it as a coding agent. That is only the first possibility.”\n2. Reveal the range with “It can design, build, animate, and ship.” Show clean visual cards for CAD, games, slides, code, launch videos, infrastructure, animation, and websites.\n3. Show the gap with “Same Codex. Different idea of what it can do.” Contrast a narrow 1× view with a broad 100× view. Do not imply a measured performance claim; these labels represent awareness of capabilities.\n4. Introduce the product only after the gap is clear: “Possible shows you what Codex can make.” Show a searchable library of concrete outcomes such as designing something for 3D printing, building a playable web game, creating a polished presentation, shipping a working website, and making an animated launch video.\n5. Resolve with “Choose one. It comes ready to run.” Show that the selected outcome contains complete instructions, selected capabilities, and a clear finish boundary, leading to a finished launch video.\n6. End by revealing “Even this soundtrack was made with Codex + Possible.” Name the original track “Garden Window”, then close on possible.sh.\n\nUse Possible's editorial visual language: warm off-white background, near-black type, vivid orange emphasis, small monospaced labels, thin black rules, restrained lime confirmation states, generous negative space, and clean diagrams instead of screenshots. The piece should feel like a designed launch film, not a slide deck: one visual idea must transform into the next, movement should be restrained and purposeful, and every frame should remain legible without narration. Avoid glossy gradients, fake product UI, stock imagery, generic AI motifs, hype language, and invented metrics or users.\n\nCompose a warm, restrained original instrumental soundtrack called “Garden Window” in Strudel. It should feel calm, curious, and quietly optimistic rather than cinematic or corporate. Let it develop across the full film, leave room for the on-screen copy, and give the ending enough time to land. Use no voiceover.\n\nRender the final MP4 with the soundtrack mixed in. Before finishing, watch the complete export once at normal speed and repair any unreadable copy, abrupt transition, rushed final beat, audio clipping, unintended silence, or mismatch between the story and what Possible actually offers. Do not publish or deploy it.",
+      "execution": {
+        "provider": "OpenAI",
+        "agent": "Codex",
+        "model": "GPT-5.6",
+        "timestamp": "2026-08-08T21:39:38+08:00"
+      },
       "author": {
         "name": "Fray Labs",
         "url": "https://github.com/fraylabs"
@@ -240,23 +268,22 @@ export const rawOutcomes: Array<{ slug: string; outcome: Outcome }> = [
   {
     "slug": "robot-digital-prototype",
     "outcome": {
-      "schemaVersion": 1,
-      "title": "Robot Digital Prototype",
-      "summary": "Prove one robot behavior in a deterministic digital prototype and expose the sim-to-real gap.",
-      "prompt": "A bounded behavior contract, the minimum active robot modules, deterministic scenario evidence, falsification, and an honest digital-only assessment.\n\n## Deliverables\n- Behavior contract\n- Executable digital prototype\n- Deterministic scenario suite\n- Sim-to-real gap report\n- Digital prototype decision with supporting evidence\n\n## Execution guidance\n- Define one observable behavior, environment, success threshold, failing scenarios, assumptions, and digital boundary.\n- Build only the geometry, dynamics, controller, interfaces, and scenarios needed by the behavior and active modules.\n- Repeat nominal and failing scenarios, inspect the model, quantify uncertainty, and publish the sim-to-real gap.\n\n## Boundaries\n- Do not claim physical safety, durability, manufacturability, calibration, or real-world performance from simulation.\n- Do not add subsystems merely to resemble a complete robot.\n- Do not command physical equipment or deploy robot software without separate approval.\n- Preserve units, frames, solver settings, seeds, and asset provenance.\n- Digitally proven means the contracted behavior passes reproducibly in the declared model; it never means a physical robot is safe, buildable, or commissioned.",
+      "schemaVersion": 2,
+      "title": "Ten-Link Robot Snake CAD Prototype",
+      "summary": "Create an editable ten-link articulated robot-snake assembly with engineering source, a STEP model, and a browser-inspectable 3D preview.",
+      "originalPrompt": "Make a digital prototype of a snake robot.",
+      "executionPrompt": "Create a digital CAD prototype of a ten-link articulated robot snake. Model one repeatable link body and the joint interfaces needed to assemble ten links into a shallow alternating curve. Keep the design bounded to inspectable geometry and assembly structure; do not add electronics, actuators, batteries, sensors, firmware, networking, skins, or decorative subsystems.\n\nDeliver editable parametric CAD source, a complete STEP assembly, a browser-inspectable GLB preview, and clear isometric, opposite-isometric, and top-view renders. Preserve units and named dimensions. Verify that the exported assembly contains all ten links, that each link remains a valid solid, that the joint spacing is consistent, and that the final files reopen successfully.\n\nTreat this as a digital geometry prototype only. Do not claim locomotion, dynamics, controller performance, collision behavior, printability, strength, tolerances, manufacturability, calibration, safety, or real-world performance. Do not command physical equipment or deploy robot software. State which physical, kinematic, actuation, control, and sim-to-real questions remain unresolved.",
+      "execution": {
+        "provider": "OpenAI",
+        "agent": "Codex",
+        "model": "GPT-5.6",
+        "timestamp": "2026-08-12T01:45:35+08:00"
+      },
       "author": {
         "name": "Fray Labs",
         "url": "https://github.com/fraylabs"
       },
-      "products": [
-        "google-deepmind/mujoco"
-      ],
       "skills": [
-        {
-          "repository": "fraylabs/possible",
-          "lastReviewedCommit": "9adb697c211d2cebc07164554d7a9f859e7f763d",
-          "directory": "skills/mujoco-robotics"
-        },
         {
           "repository": "earthtojake/text-to-cad",
           "lastReviewedCommit": "fdbb4b4fb62d95ae298cfe9a46fdc7092bdaf423",

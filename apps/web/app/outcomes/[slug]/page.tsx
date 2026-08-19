@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     title: outcome.title,
     description: outcome.summary,
     path: outcomeHref(entry),
-    alternates: { "application/json": `${outcomeHref(entry)}.json`, "text/plain": `${outcomeHref(entry)}/prompt.txt` },
+    alternates: { "application/json": `${outcomeHref(entry)}.json`, "text/plain": `${outcomeHref(entry)}/execution-prompt.txt` },
     socialImage: socialUrl ? { url: socialUrl, alt: image?.alt ?? `${outcome.title} preview` } : null,
   });
 }

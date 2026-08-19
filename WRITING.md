@@ -10,11 +10,19 @@ Name the concrete result. Prefer “Editable investment-committee PowerPoint” 
 
 Use one plain sentence that says what the prompt produces. Do not add hype, process narration, or claims the preview cannot support.
 
-## Prompt
+## Original prompt
 
-Publish the exact prompt that produced the intended result. It may be short or long. Keep the specificity that makes it useful, including audience, inputs, constraints, deliverables, taste, and checks when those matter.
+Preserve what the human initially asked verbatim, including its roughness. Do not improve it after the fact.
 
-Do not split the prompt into framework fields or add generic rules merely to make it look rigorous. If the prompt depends on project-specific facts, make those facts easy to replace.
+## Execution prompt
+
+Publish the complete prompt that was actually sent to the working agent. It may be short or long. Keep the specificity that made it useful, including audience, inputs, constraints, deliverables, taste, and checks when those mattered.
+
+Do not split the execution prompt into framework fields or add generic rules merely to make it look rigorous. Do not reconstruct a better prompt after seeing the result and claim that it produced the work.
+
+## Execution provenance
+
+Record the provider, agent, model, and timestamp from the actual run. These describe where the result came from; they are not a compatibility restriction.
 
 ## Preview
 

@@ -22,17 +22,17 @@ function OutcomeSearchResult({ result }: { result: PublishedOutcomeSearchResult 
       <h3>{entry.outcome.title}</h3>
       <p>{entry.outcome.summary}</p>
       {entry.products.length ? <div className="pack-search-product">Uses {entry.products.map(({ name, company }) => `${name} by ${company.name}`).join(" · ")}</div> : null}
-      <div className="pack-search-fit"><strong>Exact prompt</strong><span>Copy it, adapt the details, and give it to your agent.</span></div>
+      <div className="pack-search-fit"><strong>Execution prompt</strong><span>See how the rough request became a complete assignment.</span></div>
     </a>
   );
 }
 
 export const commonSearches = [
-  "Build a functional hardware prototype",
-  "Create an editable PowerPoint presentation",
+  "Design a 3D-printable cat shelter",
+  "Create a community solar PowerPoint",
   "Make a product launch film",
-  "Compose an original soundtrack",
-  "Prototype a robot digitally",
+  "Compose a quiet Strudel soundtrack",
+  "Model a ten-link robot snake",
 ];
 const packsPerPage = 6;
 
@@ -165,7 +165,7 @@ export function OutcomesPage() {
               <div className="packs-intro-content">
                 <div className="packs-intro-copy">
                   <p><strong>See more of what your agent can do</strong>AI agents can build websites, videos, CAD, presentations, games, and much more. The hard part is knowing what to ask for and how to guide them there.</p>
-                  <p>Possible.sh is an open-source directory of exact prompts. Browse something worth making, copy the prompt behind it, and adapt the details for your own project.</p>
+                  <p>Possible.sh connects rough requests, the full prompts given to agents, and the outcomes they produced. Browse what worked, then use $possible to prepare your own execution prompt.</p>
                   <div className="packs-intro-steps">
                     <article>
                       <span>01 / INSTALL</span>
@@ -208,14 +208,14 @@ export function OutcomesPage() {
           <p>{searchResults.length} {searchResults.length === 1 ? "result" : "results"} for <strong>“{normalizedQuery}”</strong></p>
         </header> : <header className="packs-results-bar">
           <div><h2 id="packs-results-heading">What agents can do</h2><span>{publishedOutcomes.length} {publishedOutcomes.length === 1 ? "OUTCOME" : "OUTCOMES"}</span></div>
-          <span>EXACT PROMPTS / REAL PREVIEWS</span>
+          <span>ROUGH REQUESTS / FULL PROMPTS / REAL PREVIEWS</span>
         </header>}
         {normalizedQuery && searchResults.length ? (
           <div className="packs-search-list" role="region" aria-label="Agent outcome search results">
             {searchResults.map((result) => <OutcomeSearchResult result={result} key={result.entry.slug} />)}
           </div>
         ) : !normalizedQuery ? (
-          <div className="packs-results-grid" role="region" aria-label="Outcome prompt directory">
+          <div className="packs-results-grid" role="region" aria-label="Outcome directory">
             {visibleOutcomes.map((entry, index) => <OutcomeCard entry={entry} priority={index < 3} key={entry.slug} />)}
           </div>
         ) : (
@@ -241,7 +241,7 @@ export function OutcomesPage() {
       </section>
 
       {!normalizedQuery ? <section className="packs-library-note">
-        <p><strong>Made something worth sharing?</strong> Publish the exact prompt, a clear summary, and an optional preview.</p>
+        <p><strong>Made something worth sharing?</strong> Publish the original request, the full execution prompt, and an optional preview of the result.</p>
         <a href={`${githubUrl}/blob/main/CONTRIBUTING.md`} target="_blank" rel="noreferrer">Share an Outcome <span>↗</span></a>
       </section> : null}
 

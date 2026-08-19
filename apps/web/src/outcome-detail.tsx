@@ -59,9 +59,24 @@ export function OutcomeDetailPage({ slug }: { slug: string }) {
         <div className="pack-detail-layout"><div className="pack-detail-main">
           {outcome.preview ? <section className="pack-readable-section pack-readable-section--first" aria-labelledby="outcome-preview-heading"><h2 id="outcome-preview-heading">What it can make</h2><OutcomePreviewView preview={outcome.preview} title={outcome.title} /></section> : null}
 
+          <section className="pack-readable-section" aria-labelledby="outcome-original-prompt-heading">
+            <h2 id="outcome-original-prompt-heading">Original request</h2>
+            <blockquote className="outcome-original-prompt">{outcome.originalPrompt}</blockquote>
+          </section>
+
           <section className="pack-use-panel" aria-labelledby="outcome-prompt-heading">
-            <h2 id="outcome-prompt-heading">Exact prompt</h2>
-            <div className="pack-use-content pack-use-content--direct"><pre className="is-long"><code>{outcome.prompt}</code></pre><CopyButton label="Copy prompt" value={outcome.prompt} /></div>
+            <h2 id="outcome-prompt-heading">Full execution prompt</h2>
+            <div className="pack-use-content pack-use-content--direct"><pre className="is-long"><code>{outcome.executionPrompt}</code></pre><CopyButton label="Copy execution prompt" value={outcome.executionPrompt} /></div>
+          </section>
+
+          <section className="pack-readable-section" aria-labelledby="outcome-execution-heading">
+            <h2 id="outcome-execution-heading">Made with</h2>
+            <dl className="outcome-execution">
+              <div><dt>Provider</dt><dd>{outcome.execution.provider}</dd></div>
+              <div><dt>Agent</dt><dd>{outcome.execution.agent}</dd></div>
+              <div><dt>Model</dt><dd>{outcome.execution.model}</dd></div>
+              <div><dt>Timestamp</dt><dd><time dateTime={outcome.execution.timestamp}>{outcome.execution.timestamp}</time></dd></div>
+            </dl>
           </section>
 
           {outcome.skills?.length ? <section className="pack-readable-section" aria-labelledby="outcome-skills-heading">

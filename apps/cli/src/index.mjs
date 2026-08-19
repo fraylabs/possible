@@ -11,7 +11,7 @@ Usage:
   possible bookmark <command>
 
 Commands:
-  init      Install the optional Possible discovery skill into this project
+  init      Install the optional Possible prompt-preparation skill into this project
   bookmark  add | list | remove locally saved Outcome slugs
 `;
 

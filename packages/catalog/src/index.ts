@@ -19,6 +19,7 @@ export type {
   Outcome,
   OutcomeAuthor,
   OutcomeCatalogEntry,
+  OutcomeExecution,
   OutcomePreview,
   OutcomePreviewAudio,
   OutcomePreviewCad,

@@ -1,6 +1,6 @@
 # Possible
 
-Discover what AI agents can do, inspect real outcomes, and copy the exact prompts behind them.
+Discover what AI agents can do, see what people originally asked, and inspect the complete prompts their agents received.
 
 [Browse Outcomes](https://possible.sh) · [Read the docs](https://possible.sh/docs)
 
@@ -10,14 +10,16 @@ Every Outcome has:
 
 - a clear title;
 - a one-sentence summary;
-- the exact prompt;
+- the original prompt;
+- the full execution prompt;
+- the provider, agent, model, and timestamp;
 - its author.
 
 An Outcome may also name the Products and agent Skills it uses and include up to five images, one video, one audio preview, and CAD files.
 
-There is no prompt compiler, execution framework, trust lifecycle, or hidden orchestration layer. The prompt shown on the page is the prompt people copy.
+There is no hidden pack compiler, trust lifecycle, or authored workflow schema. Published execution prompts remain visible and unchanged. The optional `$possible` skill prepares a new prompt at run time from the user's request, relevant Outcomes, and current information.
 
-## Optional Codex discovery skill
+## Optional $possible skill
 
 Possible works directly on the web. To search it from Codex:
 
@@ -31,7 +33,7 @@ Then ask:
 $possible What can agents do with CAD?
 ```
 
-The skill searches the directory and returns the exact prompt you choose. It does not run the prompt unless you explicitly ask.
+The skill searches prior Outcomes, gathers current primary information, asks only consequential questions, and prepares a self-contained execution prompt for a fresh agent. It hands work off only after you approve the prompt.
 
 Local bookmarks do not require an account:
 
@@ -57,7 +59,7 @@ The same generated catalog powers the website, static JSON publications, and MCP
 - `apps/web` — visual directory, Outcome pages, Products, and docs
 - `apps/mcp` — read-only list, search, and fetch tools
 - `apps/cli` — optional discovery-skill installer and local bookmarks
-- `skills/possible` — generic discovery skill
+- `skills/possible` — request research and execution-prompt preparation
 
 ## Verify
 

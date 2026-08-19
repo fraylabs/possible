@@ -9,14 +9,16 @@ const escape = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 const home = await html("index.html");
 assert.match(home, /Anything is/);
 assert.match(home, /Discover what agents can do/);
-assert.match(home, /aria-label="Outcome prompt directory"/);
+assert.match(home, /aria-label="Outcome directory"/);
 assert.match(home, />OUTCOMES</);
 assert.doesNotMatch(home, /Outcome Pack|expectations checklist|structured prompt/);
 
 for (const entry of outcomeCatalog) {
   const markup = await html(`outcomes/${entry.slug}/index.html`);
   assert.match(markup, new RegExp(escape(entry.outcome.title)));
-  assert.match(markup, /Exact prompt/);
+  assert.match(markup, /Original request/);
+  assert.match(markup, /Full execution prompt/);
+  assert.match(markup, /Made with/);
   assert.match(markup, new RegExp(escape(entry.outcome.author.name)));
   assert.doesNotMatch(markup, /trust status|accepted evidence|compiled prompt|verification framework/i);
 }

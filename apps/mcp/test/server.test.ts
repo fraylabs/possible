@@ -27,7 +27,7 @@ describe("Possible MCP", () => {
     assert.deepEqual(response.tools.map(({ name }) => name).sort(), [...POSSIBLE_TOOL_NAMES].sort());
     assert.ok(response.tools.every((tool) => tool.annotations?.readOnlyHint));
     assert.equal(client.getInstructions(), POSSIBLE_SERVER_INSTRUCTIONS);
-    assert.doesNotMatch(client.getInstructions() ?? "", /compile|trust|verification|execution framework/i);
+    assert.doesNotMatch(client.getInstructions() ?? "", /trust|verification|execution framework/i);
   });
 
   it("lists the same Outcomes as the generated catalog", async () => {
@@ -37,12 +37,14 @@ describe("Possible MCP", () => {
     assert.deepEqual(envelope.data.outcomes.map(({ slug }) => slug), outcomeCatalog.map(({ slug }) => slug));
   });
 
-  it("fetches one exact prompt", async () => {
+  it("fetches the original and full execution prompts", async () => {
     const result = await client.callTool({ name: "fetch_outcome", arguments: { slug: "robot-digital-prototype" } });
-    const envelope = result.structuredContent as { ok: boolean; data: { prompt: string; author: { name: string } } };
+    const envelope = result.structuredContent as { ok: boolean; data: { originalPrompt: string; executionPrompt: string; execution: { model: string }; author: { name: string } } };
     const source = outcomeCatalog.find(({ slug }) => slug === "robot-digital-prototype");
     assert.ok(source);
-    assert.equal(envelope.data.prompt, source.outcome.prompt);
+    assert.equal(envelope.data.originalPrompt, source.outcome.originalPrompt);
+    assert.equal(envelope.data.executionPrompt, source.outcome.executionPrompt);
+    assert.equal(envelope.data.execution.model, source.outcome.execution.model);
     assert.equal(envelope.data.author.name, source.outcome.author.name);
   });
 

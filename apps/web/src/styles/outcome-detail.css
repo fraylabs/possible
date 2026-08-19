@@ -105,6 +105,13 @@
 .pack-readable-section > .pack-showcase .pack-showcase-stage { aspect-ratio: 16 / 9; }
 .pack-readable-section > .pack-showcase .pack-cad-viewer { min-height: 300px; }
 .pack-showcase-description { margin: 0; color: #aaa9a4; font-size: 13px; line-height: 1.7; }
+.outcome-original-prompt { margin: 0; padding: 20px 22px; border-left: 3px solid #ff5a1f; border-radius: 0 8px 8px 0; background: #151514; color: #f2efe8; font-size: clamp(18px, 2.2vw, 26px); line-height: 1.45; letter-spacing: -.025em; }
+.outcome-execution { margin: 0; border-top: 1px solid #343432; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.outcome-execution > div { min-width: 0; padding: 14px 0; border-bottom: 1px solid #343432; display: grid; grid-template-columns: 90px 1fr; gap: 14px; }
+.outcome-execution > div:nth-child(odd) { padding-right: 22px; }
+.outcome-execution > div:nth-child(even) { padding-left: 22px; border-left: 1px solid #343432; }
+.outcome-execution dt { color: #777772; font: 8px "DM Mono", monospace; letter-spacing: .05em; text-transform: uppercase; }
+.outcome-execution dd { min-width: 0; margin: 0; color: #d8d6d0; font-size: 11px; overflow-wrap: anywhere; }
 
 .pack-inside-block + .pack-inside-block { margin-top: 32px; }
 .pack-inside-block h3 { margin: 0 0 10px; color: #d8d6d0; font-size: 13px; font-weight: 550; }
@@ -152,6 +159,8 @@
   .pack-detail-header > p { font-size: 16px; }
   .pack-detail-layout { padding-top: 26px; }
   .pack-use-content pre { font-size: 9px; }
+  .outcome-execution { grid-template-columns: 1fr; }
+  .outcome-execution > div:nth-child(odd), .outcome-execution > div:nth-child(even) { padding-inline: 0; border-left: 0; }
   .pack-skill-list a { grid-template-columns: 1fr auto; gap: 6px 14px; }
   .pack-skill-list span { grid-column: 1 / -1; }
   .pack-related > div { grid-template-columns: 1fr; }

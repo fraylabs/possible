@@ -3,73 +3,73 @@
   "cases": [
     {
       "id": "hardware-01",
-      "outcome": "build one physical prototype that performs its main function under a real test",
+      "outcome": "design a fully 3D-printable cat shelter with a stable weighted base",
       "decision": "select",
       "intended": ["functional-hardware-prototype"]
     },
     {
       "id": "hardware-02",
-      "outcome": "integrate the electronics, enclosure and mechanism into something I can actually handle and test",
+      "outcome": "make a screw-free flat-pack house for a cat outside my HDB door",
       "decision": "select",
       "intended": ["functional-hardware-prototype"]
     },
     {
       "id": "hardware-03",
-      "outcome": "I need a working bench prototype, not just CAD renders and a parts list",
+      "outcome": "create CAD for a cat house whose walls and triangle roof snap onto the base",
       "decision": "select",
       "intended": ["functional-hardware-prototype"]
     },
     {
       "id": "hardware-04",
-      "outcome": "make the first real artifact and measure whether its claimed core behavior works",
+      "outcome": "design a printable corridor cat shelter with concealed ballast bays so it cannot flip easily",
       "decision": "select",
       "intended": ["functional-hardware-prototype"]
     },
     {
       "id": "music-01",
-      "outcome": "compose an original instrumental soundtrack and give me both the editable code and a WAV",
+      "outcome": "compose a quiet original instrumental and give me editable Strudel code plus a WAV",
       "decision": "select",
       "intended": ["original-strudel-soundtrack"]
     },
     {
       "id": "music-02",
-      "outcome": "make background music for this project in Strudel and render a proper listening master",
+      "outcome": "make warm rain-lit background music in Strudel and render a proper listening master",
       "decision": "select",
       "intended": ["original-strudel-soundtrack"]
     },
     {
       "id": "music-03",
-      "outcome": "I need a complete score with sections and an emotional arc, not random generated beeps",
+      "outcome": "I need an 80-second minimalist soundtrack with a gentle lift, not random generated beeps",
       "decision": "select",
       "intended": ["original-strudel-soundtrack"]
     },
     {
       "id": "music-04",
-      "outcome": "write a reusable coded track, verify it in the official runtime and export the audio",
+      "outcome": "write a reusable coded track called Lantern Rain in the official Strudel runtime",
       "decision": "select",
       "intended": ["original-strudel-soundtrack"]
     },
     {
       "id": "powerpoint-01",
-      "outcome": "turn these messy notes into a polished PowerPoint I can actually present and edit afterward",
+      "outcome": "turn this community solar scenario into an editable investment committee PowerPoint",
       "decision": "select",
       "intended": ["polished-editable-powerpoint-presentation"]
     },
     {
       "id": "powerpoint-02",
-      "outcome": "make a native pptx from this report with editable charts, speaker notes, and a strong story",
+      "outcome": "make a native pptx showing the decision, pilot structure, economics, and open questions",
       "decision": "select",
       "intended": ["polished-editable-powerpoint-presentation"]
     },
     {
       "id": "powerpoint-03",
-      "outcome": "redesign my existing PowerPoint but preserve the company template and keep everything editable",
+      "outcome": "create a six-slide solar feasibility deck with native shapes, an editable table, and speaker notes",
       "decision": "select",
       "intended": ["polished-editable-powerpoint-presentation"]
     },
     {
       "id": "powerpoint-04",
-      "outcome": "I need a board presentation as a real editable PowerPoint file that opens in Microsoft PowerPoint",
+      "outcome": "I need an investment committee deck about whether to fund detailed solar feasibility",
       "decision": "select",
       "intended": ["polished-editable-powerpoint-presentation"]
     },
@@ -99,25 +99,25 @@
     },
     {
       "id": "robotsim-01",
-      "outcome": "prove this robot behavior in simulation before we touch hardware",
+      "outcome": "make an editable digital CAD prototype of a ten-link robot snake",
       "decision": "select",
       "intended": ["robot-digital-prototype"]
     },
     {
       "id": "robotsim-02",
-      "outcome": "build a deterministic digital model of the robot and show the gap to the real world",
+      "outcome": "build a browser-inspectable 3D model of an articulated snake robot",
       "decision": "select",
       "intended": ["robot-digital-prototype"]
     },
     {
       "id": "robotsim-03",
-      "outcome": "I need repeatable simulated trials for this controller, not a physical prototype yet",
+      "outcome": "give me STEP and GLB files for a ten-link snake robot assembly",
       "decision": "select",
       "intended": ["robot-digital-prototype"]
     },
     {
       "id": "robotsim-04",
-      "outcome": "test obstacle avoidance in a digital environment with fixed seeds and measurable results",
+      "outcome": "model one repeatable robot-snake link and assemble ten links in a shallow curve",
       "decision": "select",
       "intended": ["robot-digital-prototype"]
     }

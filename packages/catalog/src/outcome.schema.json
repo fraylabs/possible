@@ -2,12 +2,12 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://possible.sh/schemas/outcome.schema.json",
   "title": "Possible Outcome",
-  "description": "One exact prompt for one concrete result, with visible authorship and optional Products, Skills, and preview media.",
+  "description": "One concrete result with the human's original request, the full prompt sent to the working agent, execution provenance, and optional Products, Skills, and preview media.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schemaVersion", "title", "summary", "prompt", "author"],
+  "required": ["schemaVersion", "title", "summary", "originalPrompt", "executionPrompt", "execution", "author"],
   "properties": {
-    "schemaVersion": { "const": 1 },
+    "schemaVersion": { "const": 2 },
     "title": {
       "type": "string",
       "minLength": 1,
@@ -18,11 +18,17 @@
       "minLength": 1,
       "description": "One plain-language sentence describing what the prompt produces."
     },
-    "prompt": {
+    "originalPrompt": {
       "type": "string",
       "minLength": 1,
-      "description": "The exact prompt copied into an agent. Possible never rewrites or compiles it."
+      "description": "The human's original request, preserved verbatim."
     },
+    "executionPrompt": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The complete one-shot prompt sent to the working agent."
+    },
+    "execution": { "$ref": "#/$defs/execution" },
     "author": { "$ref": "#/$defs/author" },
     "skills": {
       "type": "array",
@@ -41,6 +47,17 @@
     "preview": { "$ref": "#/$defs/preview" }
   },
   "$defs": {
+    "execution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["provider", "agent", "model", "timestamp"],
+      "properties": {
+        "provider": { "type": "string", "minLength": 1 },
+        "agent": { "type": "string", "minLength": 1 },
+        "model": { "type": "string", "minLength": 1 },
+        "timestamp": { "type": "string", "format": "date-time" }
+      }
+    },
     "author": {
       "type": "object",
       "additionalProperties": false,

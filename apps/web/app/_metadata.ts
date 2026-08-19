@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const siteUrl = "https://possible.sh";
 export const siteName = "Possible";
-export const siteDescription = "Discover what AI agents can do, inspect real outcomes, and copy the exact prompts behind them.";
+export const siteDescription = "Discover what AI agents can do, see the rough requests, and inspect the full execution prompts behind real outcomes.";
 
 type PageMetadataInput = {
   title: string;

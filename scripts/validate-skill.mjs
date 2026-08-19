@@ -17,14 +17,14 @@ if (frontmatter) {
   const keys = [...frontmatter[1].matchAll(/^([a-z]+):/gm)].map((match) => match[1]).sort();
   check(JSON.stringify(keys) === JSON.stringify(["description", "name"]), "frontmatter must contain only name and description");
 }
-for (const phrase of ["search_outcomes", "fetch_outcome", "exact prompt", "Do not silently rewrite", "possible bookmark add"]) {
+for (const phrase of ["search_outcomes", "fetch_outcome", "original prompt", "execution prompt", "fresh subagent", "official sources", "possible bookmark add"]) {
   check(skill.toLowerCase().includes(phrase.toLowerCase()), `SKILL.md must include '${phrase}'`);
 }
-for (const forbidden of ["Outcome Pack", "expectations", "compile", "trust status", "workstreams"]) {
+for (const forbidden of ["Outcome Pack", "authored expectations", "trust status", "workstreams"]) {
   check(!skill.toLowerCase().includes(forbidden.toLowerCase()), `SKILL.md must not include '${forbidden}'`);
 }
-check(/short_description: "Discover exact prompts for agent outcomes"/.test(metadata), "metadata must state the discovery promise");
+check(/short_description: "Prepare complete prompts for fresh agents"/.test(metadata), "metadata must state the prompt-preparation promise");
 check(metadata.includes("$possible"), "default prompt must mention $possible");
 check(entries.every((entry) => ["SKILL.md", "agents"].includes(entry)), "skill directory contains unexpected top-level files");
 if (errors.length) throw new Error(`Possible skill validation failed:\n- ${errors.join("\n- ")}`);
-console.log("The Possible discovery skill is valid.");
+console.log("The Possible prompt-preparation skill is valid.");

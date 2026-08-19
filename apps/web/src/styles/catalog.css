@@ -2,7 +2,7 @@
 .text-link { display: inline-block; margin-top: 32px; color: #ff4d00; font: 500 10px "DM Mono", monospace; text-transform: uppercase; letter-spacing: .06em; }
 .copy-button { width: 100%; padding: 17px 20px; border: 0; display: flex; justify-content: space-between; align-items: center; background: #f3f0e8; cursor: pointer; font: 500 11px "DM Mono", monospace; text-transform: uppercase; }
 
-/* Outcome prompt directory. */
+/* Outcome directory. */
 .packs-library-page {
   min-height: 100vh;
   display: flex;
