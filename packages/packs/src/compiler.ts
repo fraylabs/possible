@@ -23,6 +23,8 @@ export function compileInstallCommands(pack: OutcomePack): string[] {
 }
 
 export function compileRunPrompt(pack: OutcomePack): string {
+  const expectations = pack.expectations ?? [];
+  if (expectations.length === 0) return pack.prompt.trim();
   const skills = pack.skills ?? [];
   const skillsSection = skills.length > 0
     ? `\n\nSKILLS\n${skills.map((skill) => `- $${skillNameFromReference(skill)}`).join("\n")}`
@@ -30,7 +32,7 @@ export function compileRunPrompt(pack: OutcomePack): string {
   return `${pack.prompt.trim()}${skillsSection}
 
 EXPECTATIONS
-${pack.expectations.map((expectation) => `- [ ] ${expectation}`).join("\n")}
+${expectations.map((expectation) => `- [ ] ${expectation}`).join("\n")}
 
 Before finishing, check each expectation using the cheapest reliable method available. Repair material failures. Do not create extra verification artifacts unless an expectation, the risk, or the user explicitly requires them. Report anything unmet or unverified instead of claiming the outcome is complete.`;
 }

@@ -94,7 +94,7 @@ describe("Possible website", () => {
   it("uses Product attribution as a discovery hint without hiding the Outcome", async () => {
     const { container } = renderRoute("/");
     await userEvent.type(screen.getByRole("searchbox", { name: "Search what agents can do" }), "HyperFrames");
-    const result = screen.getByRole("heading", { name: "HTML/CSS Animated Product Launch Film", level: 3 }).closest("a");
+    const result = screen.getByRole("heading", { name: "Possible Launch Film: Codex Is Bigger Than Code", level: 3 }).closest("a");
     expect(result).toHaveTextContent("For HyperFrames by HeyGen");
     expect(await axe(container)).toHaveNoViolations();
   });
@@ -151,6 +151,9 @@ describe("Possible website", () => {
     const film = renderRoute("/packs/html-css-animated-product-launch-film");
     expect(film.container.querySelector(".pack-showcase video source")).toHaveAttribute("src", "/pack-media/html-css-animated-product-launch-film/media/possible-launch-film.mp4");
     expect(screen.getByRole("link", { name: /HyperFrames by HeyGen/i })).toHaveAttribute("href", "/products/heygen/hyperframes");
+    expect(screen.getByRole("heading", { name: "Copy the exact prompt", level: 2 })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Copy exact prompt" })).toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "Expectations" })).not.toBeInTheDocument();
     expect(film.container).toHaveTextContent(/showcase media is not verification/i);
     film.unmount();
 
@@ -171,7 +174,7 @@ describe("Possible website", () => {
     expect(screen.getByRole("heading", { name: "HyperFrames", level: 1 })).toBeInTheDocument();
     expect(container.querySelector(".product-header > img")).toHaveAttribute("src", product!.logoUrl);
     expect(container.querySelector(".product-hero-proof")).toBeNull();
-    expect(screen.getByRole("link", { name: /HTML\/CSS Animated Product Launch Film/i })).toHaveAttribute("href", "/packs/html-css-animated-product-launch-film");
+    expect(screen.getByRole("link", { name: /Possible Launch Film: Codex Is Bigger Than Code/i })).toHaveAttribute("href", "/packs/html-css-animated-product-launch-film");
     expect(await axe(container)).toHaveNoViolations();
   });
 
@@ -191,8 +194,13 @@ describe("Possible website", () => {
       const route = renderRoute(packHref(entry));
       expect(screen.getByRole("heading", { name: entry.pack.name, level: 1 })).toBeInTheDocument();
       expect(screen.getByText("Publisher").nextElementSibling).toHaveTextContent("fraylabs");
-      expect(screen.getByRole("heading", { name: "What’s inside", level: 2 })).toBeInTheDocument();
-      expect(screen.getByRole("tab", { name: "Possible" })).toHaveAttribute("aria-selected", "true");
+      if (entry.pack.expectations?.length) {
+        expect(screen.getByRole("heading", { name: "What’s inside", level: 2 })).toBeInTheDocument();
+        expect(screen.getByRole("tab", { name: "Possible" })).toHaveAttribute("aria-selected", "true");
+      } else {
+        expect(screen.getByRole("heading", { name: "What it uses", level: 2 })).toBeInTheDocument();
+        expect(screen.getByRole("button", { name: "Copy exact prompt" })).toBeInTheDocument();
+      }
       route.unmount();
     }
   });

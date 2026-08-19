@@ -13,10 +13,12 @@ test("bundled manifests contain only the minimal authored contract", () => {
   }
 });
 
-test("the starter is intentionally incomplete until the author supplies expectations", () => {
+test("an empty expectations array is invalid while a direct prompt may omit it", () => {
   const draft = createDraftPack();
   assert.equal("skills" in draft, false);
   assert.throws(() => validatePackManifest(draft), /expectations must be a non-empty array/i);
+  delete draft.expectations;
+  assert.equal(validatePackManifest(draft), draft);
 });
 
 test("Skills are optional but must be complete when supplied", () => {

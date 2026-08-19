@@ -196,48 +196,6 @@ npx skills@1.5.22 add arpitg1304/robotics-agent-skills/skills/robotics-testing -
 npx skills@1.5.22 add github/awesome-copilot/skills/create-technical-spike --agent codex
 ```
 
-## HTML/CSS Animated Product Launch Film
-
-- Identity: `fraylabs/possible/html-css-animated-product-launch-film`
-- Slug: `html-css-animated-product-launch-film`
-- Status: `experimental`
-- Public page: https://possible.sh/packs/html-css-animated-product-launch-film/
-- Origin: `bundled`
-- Source: package:@possible/packs
-- Revision: `sha256:03244d104a69ec430a21c50ac1fa1abd4593cc77ccd8728d3c91544800ba7af8`
-- Manifest path: `packs/html-css-animated-product-launch-film/pack.json`
-- Content hash: `sha256:03244d104a69ec430a21c50ac1fa1abd4593cc77ccd8728d3c91544800ba7af8`
-- Accepted snapshot: `packs/html-css-animated-product-launch-film/pack.json`
-- Accepted evidence: none
-- Promise: Produce a marketing-first product launch film as standalone HTML and CSS, with one audience insight, one visual argument, and a final video export.
-- Not for:
-  - A general motion study, decorative animation, presentation deck, screenshot montage, or technical walkthrough with no launch-marketing objective.
-  - A product whose verified website or application interface should be captured and shown as-is; use Product Launch Video.
-  - A complete web application, browser game, interactive product flow, or stateful experience.
-  - Authored JavaScript animation, React, canvas, WebGL, Remotion, or a framework-dependent delivered source.
-  - Inventing product behavior, capabilities, users, metrics, testimonials, evidence, or audience response.
-  - Publishing, uploading, deploying, or contacting an audience without separate approval.
-- Expectations:
-  - Before production, the film states one identifiable audience, its current belief or problem, the useful truth being revealed, why that truth matters, the product's precise role, and one next action.
-  - The film makes the audience problem or missed opportunity and the product promise understandable before showing implementation details, framework terms, or internal product mechanics.
-  - After one viewing, a person without prior product knowledge can explain what is being missed or solved, what the product does about it, and what action the film invites next.
-  - The motion carries one developing visual argument with a clear hook, reveal, product turn, proof, and payoff rather than decorating a slideshow, dashboard tour, or generic explainer.
-  - The delivered animation is portable HTML and CSS that communicates offline without authored JavaScript, React, canvas, WebGL, Remotion, network-only assets, or a framework runtime; production and rendering tools do not become delivery dependencies.
-  - The film starts from a known state, replays consistently, remains readable at the declared format, and preserves its meaning under reduced motion.
-  - Every material product claim and capability is supported by the supplied brief or source evidence, and illustrative diagrams never pretend to be observed product behavior or proof.
-  - The film is explicitly silent unless audio was separately requested and approved, and the editable source, final export, review result, limitations, and publication boundary are handed off together.
-- Skills:
-  - [hyperframes](https://skills.sh/heygen-com/hyperframes/hyperframes) — heygen-com/hyperframes/skills/hyperframes; last reviewed at `b08cefea631b2c13697b6cb31075bf5a9b7c738d`
-  - [copywriting](https://skills.sh/coreyhaines31/marketingskills/copywriting) — coreyhaines31/marketingskills/skills/copywriting; last reviewed at `67264763cb107d61749f418d081c56e5bcbc0209`
-  - [humanizer](https://skills.sh/andreaskonopka/humanizer/humanizer) — andreaskonopka/humanizer/skills/humanizer; last reviewed at `862609a2caf3cadb63b9bef78576e6f5a1ed4e19`
-- Install:
-
-```bash
-npx skills@1.5.22 add heygen-com/hyperframes/skills/hyperframes --agent codex
-npx skills@1.5.22 add coreyhaines31/marketingskills/skills/copywriting --agent codex
-npx skills@1.5.22 add andreaskonopka/humanizer/skills/humanizer --agent codex
-```
-
 ## Mechanical CAD Review
 
 - Identity: `fraylabs/possible/mechanical-cad-review`
@@ -394,6 +352,37 @@ npx skills@1.5.22 add anthropics/skills/skills/webapp-testing --agent codex
 
 ```bash
 npx skills@1.5.22 add MiniMax-AI/skills/skills/pptx-generator --agent codex
+```
+
+## Possible Launch Film: Codex Is Bigger Than Code
+
+- Identity: `fraylabs/possible/html-css-animated-product-launch-film`
+- Slug: `html-css-animated-product-launch-film`
+- Status: `experimental`
+- Public page: https://possible.sh/packs/html-css-animated-product-launch-film/
+- Origin: `bundled`
+- Source: package:@possible/packs
+- Revision: `sha256:b32a943904c15c39c8024a26b3edb25d0ee216453f312d0fec3f77e6249638fe`
+- Manifest path: `packs/html-css-animated-product-launch-film/pack.json`
+- Content hash: `sha256:b32a943904c15c39c8024a26b3edb25d0ee216453f312d0fec3f77e6249638fe`
+- Accepted snapshot: `packs/html-css-animated-product-launch-film/pack.json`
+- Accepted evidence: none
+- Promise: Create and render the 55-second Possible.sh launch film that shows how much more Codex can make when people know what to ask for.
+- Not for:
+  - No additional selection boundary supplied.
+- Expectations: none; the direct prompt contains the finish boundary
+- Skills:
+  - [hyperframes](https://skills.sh/heygen-com/hyperframes/hyperframes) — heygen-com/hyperframes/skills/hyperframes; last reviewed at `b08cefea631b2c13697b6cb31075bf5a9b7c738d`
+  - [copywriting](https://skills.sh/coreyhaines31/marketingskills/copywriting) — coreyhaines31/marketingskills/skills/copywriting; last reviewed at `67264763cb107d61749f418d081c56e5bcbc0209`
+  - [humanizer](https://skills.sh/andreaskonopka/humanizer/humanizer) — andreaskonopka/humanizer/skills/humanizer; last reviewed at `862609a2caf3cadb63b9bef78576e6f5a1ed4e19`
+  - [strudel-compose](https://skills.sh/vanities/toaster-strudel/strudel-compose) — vanities/toaster-strudel/skills/skills/strudel-compose; last reviewed at `1b53c590b1d84e9eff2904cdd29dae1e719c7014`
+- Install:
+
+```bash
+npx skills@1.5.22 add heygen-com/hyperframes/skills/hyperframes --agent codex
+npx skills@1.5.22 add coreyhaines31/marketingskills/skills/copywriting --agent codex
+npx skills@1.5.22 add andreaskonopka/humanizer/skills/humanizer --agent codex
+npx skills@1.5.22 add vanities/toaster-strudel/skills/skills/strudel-compose --agent codex
 ```
 
 ## Production Logo System

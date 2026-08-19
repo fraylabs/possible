@@ -117,15 +117,6 @@ export const bundledPackShowcases = definePackShowcases({
       ]
     }
   },
-  "html-css-animated-product-launch-film": {
-    "schemaVersion": 1,
-    "description": "A complete launch film made as standalone HTML and CSS, then rendered with its original Codex-produced soundtrack.",
-    "video": {
-      "src": "/pack-media/html-css-animated-product-launch-film/media/possible-launch-film.mp4",
-      "poster": "/pack-media/html-css-animated-product-launch-film/media/possible-launch-film-poster.jpg",
-      "caption": "Possible launch film — from a world of unknown Codex capabilities to one outcome you can run."
-    }
-  },
   "mechanical-cad-review": {
     "schemaVersion": 1,
     "description": "A mechanical review that catches an 8.9 mm usable passage in a nominal 12.8 mm cable clip and turns the failure into a repair plan.",
@@ -220,6 +211,15 @@ export const bundledPackShowcases = definePackShowcases({
         "caption": "A bounded next-gate recommendation"
       }
     ]
+  },
+  "html-css-animated-product-launch-film": {
+    "schemaVersion": 1,
+    "description": "A complete launch film made as standalone HTML and CSS, then rendered with its original Codex-produced soundtrack.",
+    "video": {
+      "src": "/pack-media/html-css-animated-product-launch-film/media/possible-launch-film.mp4",
+      "poster": "/pack-media/html-css-animated-product-launch-film/media/possible-launch-film-poster.jpg",
+      "caption": "Possible launch film — from a world of unknown Codex capabilities to one outcome you can run."
+    }
   },
   "production-logo-system": {
     "schemaVersion": 1,

@@ -95,7 +95,7 @@ export function searchPublicPacks(
         matchReasons,
         notFor: [...(pack.notFor ?? [])],
         conflictingNotForSignals,
-        expectations: [...pack.expectations],
+        expectations: [...(pack.expectations ?? [])],
         products: entry.products.map(normalizeProductMetadata),
         source: metadata.source,
         trust: metadata.trust,

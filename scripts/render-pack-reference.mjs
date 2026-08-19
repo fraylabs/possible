@@ -35,8 +35,7 @@ const renderEntry = (entry) => {
     `- Promise: ${pack.promise}`,
     "- Not for:",
     bulletList(pack.notFor ?? ["No additional selection boundary supplied."]),
-    "- Expectations:",
-    bulletList(pack.expectations),
+    ...(pack.expectations?.length ? ["- Expectations:", bulletList(pack.expectations)] : ["- Expectations: none; the direct prompt contains the finish boundary"]),
     ...(skills.length > 0 ? [
       "- Skills:",
       bulletList(skills.map((skill) => `[${skillNameFromReference(skill)}](${skillPageUrl(skill)}) — ${skill.repository}/${skill.directory}; last reviewed at \`${skill.lastReviewedCommit}\``)),

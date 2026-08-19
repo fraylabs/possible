@@ -166,7 +166,7 @@ export async function runPackCommand(args, projectDirectory = process.cwd()) {
     const results = [];
     for (const target of targets) {
       const pack = runtime.validatePackManifest(await readJson(target), target);
-      results.push({ path: target, slug: slugForPackPath(target), name: pack.name, promise: pack.promise, skills: pack.skills?.length ?? 0, expectations: pack.expectations.length });
+      results.push({ path: target, slug: slugForPackPath(target), name: pack.name, promise: pack.promise, skills: pack.skills?.length ?? 0, expectations: pack.expectations?.length ?? 0 });
     }
     process.stdout.write(`${JSON.stringify(results, null, 2)}\n`);
     return null;

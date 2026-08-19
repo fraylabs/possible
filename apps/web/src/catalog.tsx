@@ -22,7 +22,7 @@ function LibraryPackCard({ entry, priority = false }: { entry: PublicCatalogEntr
         {entry.products.length ? <div className="library-pack-product">FOR {entry.products.map(({ name }) => name).join(" + ")}</div> : null}
         <h3>{pack.name}</h3>
         <p>{pack.promise}</p>
-        <div className="library-pack-fit"><strong>FINISHED WHEN</strong><span>{pack.expectations[0]}</span></div>
+        <div className="library-pack-fit"><strong>{pack.expectations?.length ? "FINISHED WHEN" : "DIRECT OUTCOME"}</strong><span>{pack.expectations?.[0] ?? "One exact prompt, ready to copy and run."}</span></div>
       </div>
     </a>
   );
@@ -43,7 +43,7 @@ function PackSearchResult({ result }: { result: PublishedPackSearchResult }) {
       <h3>{entry.pack.name}</h3>
       <p>{entry.pack.promise}</p>
       {entry.products.length ? <div className="pack-search-product">For {entry.products.map(({ name, company }) => `${name} by ${company.name}`).join(" · ")}</div> : null}
-      <div className="pack-search-fit"><strong>Finished when</strong><span>{entry.pack.expectations[0]}</span></div>
+      <div className="pack-search-fit"><strong>{entry.pack.expectations?.length ? "Finished when" : "Direct outcome"}</strong><span>{entry.pack.expectations?.[0] ?? "One exact prompt, ready to copy and run."}</span></div>
     </a>
   );
 }

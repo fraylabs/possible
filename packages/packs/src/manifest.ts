@@ -39,7 +39,7 @@ const stringArray = (record: Record<string, unknown>, key: string, context: stri
   return value.map((item, index) => requiredStringValue(item, `${context}.${key}[${index}]`));
 };
 
-/** Validate the complete authored surface: prompt, expectations, and optional Skills. */
+/** Validate one direct prompt plus optional expectations, Skills, Products, and selection boundaries. */
 export function validatePackManifest(input: unknown, context = "pack"): OutcomePack {
   const pack = asRecord(input, context);
   for (const key of Object.keys(pack)) if (!PACK_KEYS.has(key)) throw new Error(`${context}.${key} is not part of the Outcome Pack contract`);
@@ -66,7 +66,7 @@ export function validatePackManifest(input: unknown, context = "pack"): OutcomeP
       skillKeys.add(identity);
     }
   }
-  stringArray(pack, "expectations", context);
+  stringArray(pack, "expectations", context, true);
   const products = stringArray(pack, "products", context, true);
   products.forEach((product, index) => validateProductId(product, `${context}.products[${index}]`));
   if (new Set(products).size !== products.length) throw new Error(`${context}.products contains duplicates`);

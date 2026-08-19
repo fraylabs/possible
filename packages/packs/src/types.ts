@@ -87,7 +87,7 @@ export interface OutcomePack {
   name: string;
   promise: string;
   prompt: string;
-  expectations: string[];
+  expectations?: string[];
   skills?: SkillReference[];
   products?: ProductId[];
   notFor?: string[];

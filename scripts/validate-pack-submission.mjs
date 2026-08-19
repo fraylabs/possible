@@ -9,8 +9,6 @@ import { validateFederatedRegistryEntry } from "@possible/packs";
 import { computePackContentHash } from "@possible/packs/submission";
 
 const execute = promisify(execFile);
-const REQUIRED_PACK_ARRAYS = ["expectations"];
-
 export const sha256 = computePackContentHash;
 
 export function validateSourceEntry(input, context = "source entry") {
@@ -29,9 +27,6 @@ export async function validatePackSubmission({ entry: entryInput, packSource, va
   const entry = validateSourceEntry(entryInput, `${context}.sourceEntry`);
   if (sha256(packSource) !== entry.contentHash) throw new Error(`${context}.contentHash does not match the exact pack bytes`);
   const pack = validatePackManifest(parsePackSource(packSource, `${context}.pack`), `${context}.pack`);
-  for (const field of REQUIRED_PACK_ARRAYS) {
-    if (!Array.isArray(pack[field]) || pack[field].length === 0) throw new Error(`${context}.pack.${field} must be non-empty for public submission`);
-  }
   const compiled = compilePack(pack);
   return { entry, pack, compiled };
 }

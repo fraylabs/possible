@@ -46,6 +46,8 @@ export function PackDetailPage({ idOrSlug }: { idOrSlug: string }) {
   if (!catalogEntry) return <NotFoundPage />;
   const { pack } = catalogEntry;
   const skills = pack.skills ?? [];
+  const expectations = pack.expectations ?? [];
+  const isDirectOutcome = expectations.length === 0;
   const compiled = compilePack(pack);
   const showcase = getPackShowcase(catalogEntry);
   const status = catalogEntry.trust.status;
@@ -64,6 +66,7 @@ export function PackDetailPage({ idOrSlug }: { idOrSlug: string }) {
       <article className="pack-detail-document">
         <header className="pack-detail-header">
           <nav className="pack-detail-breadcrumb" aria-label="Breadcrumb"><a href="/#packs">Packs</a><span>/</span><span>{pack.name}</span></nav>
+          {isDirectOutcome ? <span className="pack-direct-label">DIRECT OUTCOME</span> : null}
           <h1>{pack.name}</h1>
           <p>{pack.promise}</p>
           {catalogEntry.products.length ? <div className="pack-product-attribution">
@@ -74,21 +77,27 @@ export function PackDetailPage({ idOrSlug }: { idOrSlug: string }) {
 
         <div className="pack-detail-layout">
           <div className="pack-detail-main">
+            {isDirectOutcome && showcase ? <section className="pack-readable-section pack-readable-section--first" aria-labelledby="pack-preview-heading"><h2 id="pack-preview-heading">Example result</h2><PackShowcaseView showcase={showcase} packName={pack.name} /></section> : null}
+
             <section className="pack-use-panel" aria-labelledby="use-pack-heading">
-              <h2 id="use-pack-heading">Use this pack</h2>
-              <div className="pack-use-tabs" role="tablist" aria-label="Pack usage options">
+              <h2 id="use-pack-heading">{isDirectOutcome ? "Copy the exact prompt" : "Use this pack"}</h2>
+              {!isDirectOutcome ? <div className="pack-use-tabs" role="tablist" aria-label="Pack usage options">
                 <button id="pack-use-possible-tab" type="button" role="tab" aria-controls="pack-use-possible-panel" aria-selected={useMode === "possible"} onClick={() => setUseMode("possible")}>Possible</button>
                 <button id="pack-use-prompt-tab" type="button" role="tab" aria-controls="pack-use-prompt-panel" aria-selected={useMode === "prompt"} onClick={() => setUseMode("prompt")}>Full prompt</button>
-              </div>
-              {useMode === "possible" ? <div id="pack-use-possible-panel" className="pack-use-content" role="tabpanel" aria-labelledby="pack-use-possible-tab"><p>Ask Codex to use this exact outcome.</p><pre><code>{possibleInstruction}</code></pre><CopyButton label="Copy Codex instruction" value={possibleInstruction} /><small>New to Possible? Install it with <code>{installCommand}</code></small></div> : <div id="pack-use-prompt-panel" className="pack-use-content" role="tabpanel" aria-labelledby="pack-use-prompt-tab"><p>Use the complete compiled structured prompt directly.</p><pre className="is-long"><code>{compiled.runPrompt}</code></pre><CopyButton label="Copy full run prompt" value={compiled.runPrompt} /></div>}
+              </div> : null}
+              {isDirectOutcome
+                ? <div className="pack-use-content pack-use-content--direct"><p>This is the complete request behind the example above. Copy it as-is, or change the concrete details you want changed.</p><pre className="is-long"><code>{pack.prompt}</code></pre><CopyButton label="Copy exact prompt" value={pack.prompt} /></div>
+                : useMode === "possible"
+                  ? <div id="pack-use-possible-panel" className="pack-use-content" role="tabpanel" aria-labelledby="pack-use-possible-tab"><p>Ask Codex to use this exact outcome.</p><pre><code>{possibleInstruction}</code></pre><CopyButton label="Copy Codex instruction" value={possibleInstruction} /><small>New to Possible? Install it with <code>{installCommand}</code></small></div>
+                  : <div id="pack-use-prompt-panel" className="pack-use-content" role="tabpanel" aria-labelledby="pack-use-prompt-tab"><p>Use the complete compiled prompt directly.</p><pre className="is-long"><code>{compiled.runPrompt}</code></pre><CopyButton label="Copy full run prompt" value={compiled.runPrompt} /></div>}
             </section>
 
-            {showcase ? <section className="pack-readable-section" aria-labelledby="pack-preview-heading"><h2 id="pack-preview-heading">Outcome preview</h2><PackShowcaseView showcase={showcase} packName={pack.name} /></section> : null}
+            {!isDirectOutcome && showcase ? <section className="pack-readable-section" aria-labelledby="pack-preview-heading"><h2 id="pack-preview-heading">Outcome preview</h2><PackShowcaseView showcase={showcase} packName={pack.name} /></section> : null}
 
             <section className="pack-readable-section" aria-labelledby="pack-contents-heading">
-              <h2 id="pack-contents-heading">What’s inside</h2>
-              <p className="pack-section-intro">The structured prompt tells the agent what to make. Expectations define what finished means.{skills.length > 0 ? ` This pack also uses ${skills.length} specialist ${skills.length === 1 ? "Skill" : "Skills"}.` : ""}</p>
-              <div className="pack-inside-block"><h3>Expectations</h3><ol className="pack-expectation-list">{pack.expectations.map((expectation) => <li key={expectation}><span>✓</span><p>{expectation}</p></li>)}</ol></div>
+              <h2 id="pack-contents-heading">{isDirectOutcome ? "What it uses" : "What’s inside"}</h2>
+              <p className="pack-section-intro">{isDirectOutcome ? `One self-contained prompt for one concrete result.${skills.length > 0 ? ` It uses ${skills.length} specialist ${skills.length === 1 ? "Skill" : "Skills"}.` : ""}` : `The prompt tells the agent what to make. Expectations define what finished means.${skills.length > 0 ? ` This pack also uses ${skills.length} specialist ${skills.length === 1 ? "Skill" : "Skills"}.` : ""}`}</p>
+              {expectations.length > 0 ? <div className="pack-inside-block"><h3>Expectations</h3><ol className="pack-expectation-list">{expectations.map((expectation) => <li key={expectation}><span>✓</span><p>{expectation}</p></li>)}</ol></div> : null}
               {skills.length > 0 ? <div className="pack-inside-block"><h3>Skills</h3><ul className="pack-skill-list">{skills.map((skill) => <li key={`${skill.repository}/${skill.directory}`}><a href={skillPageUrl(skill)} target="_blank" rel="noreferrer"><strong>{skillNameFromReference(skill)}</strong><span>{skill.repository}/{skill.directory} · last reviewed {skill.lastReviewedCommit.slice(0, 8)}</span><i>↗</i></a></li>)}</ul></div> : null}
               {pack.notFor?.length ? <details className="pack-fit-simple"><summary>When this pack is not a fit</summary><ul className="pack-readable-list is-negative">{pack.notFor.map((item) => <li key={item}>{item}</li>)}</ul></details> : null}
             </section>

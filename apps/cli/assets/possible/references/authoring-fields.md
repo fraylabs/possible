@@ -12,9 +12,9 @@ The JSON Schema owns the complete authoring surface. Identity, release, source, 
 
 - `promise` (required) — One plain-language sentence saying what the user can expect to have when the pack succeeds.
 
-- `prompt` (required) — The complete structured execution brief. Organize only the context, deliverables, important constraints, and finish boundary the agent needs; length is not a quality target and orchestration machinery does not belong here.
+- `prompt` (required) — The exact, self-contained prompt that asks an agent to produce this concrete outcome. Include the real inputs, deliverables, creative direction, constraints, and finish boundary in the prompt itself; do not turn it into a reusable workflow for a broad class of work.
 
-- `expectations` (required) — A short checklist of observable statements that must be true before the outcome is called finished. State the result, not the procedure used to verify it.
+- `expectations` — Optional. Add only a short checklist of observable acceptance criteria that materially clarify this exact prompt. Omit it when the prompt already says what finished means.
 
 - `skills` — Optional. Add only the smallest set of specialized agent Skills the outcome needs, identified by GitHub repository and directory with the last reviewed commit recorded for provenance. Omit this field when the agent needs no additional Skills.
 

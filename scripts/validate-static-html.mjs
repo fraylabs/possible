@@ -31,7 +31,11 @@ await assert.rejects(html("packs/index.html"), { code: "ENOENT" }, "the duplicat
 for (const entry of publicCatalog) {
   const markup = await html(`packs/${routeId(entry)}/index.html`);
   assert.match(markup, new RegExp(escape(entry.pack.name)));
-  for (const phrase of ["Use this pack", "What’s inside", "Expectations", "View contract JSON"]) assert.match(markup, new RegExp(phrase));
+  const expectations = entry.pack.expectations ?? [];
+  const phrases = expectations.length > 0
+    ? ["Use this pack", "What’s inside", "Expectations", "View contract JSON"]
+    : ["Copy the exact prompt", "What it uses", "DIRECT OUTCOME", "View contract JSON"];
+  for (const phrase of phrases) assert.match(markup, new RegExp(phrase));
   assert.match(markup, /class="pack-detail-technical"/);
   assert.doesNotMatch(markup, /class="pack-detail-sidebar"|class="nav-meta"/);
   assert.doesNotMatch(markup, /SCHEDULABLE|OPTIONAL SCHEDULE/);

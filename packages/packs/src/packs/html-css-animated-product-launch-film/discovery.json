@@ -3,7 +3,7 @@
   "cases": [
     {
       "id": "film-01",
-      "outcome": "make a clean marketing launch video using HTML and CSS animation, then export the final movie",
+      "outcome": "make the 55-second Possible.sh launch film showing that Codex is bigger than code",
       "decision": "select",
       "intended": [
         "html-css-animated-product-launch-film"
@@ -11,7 +11,7 @@
     },
     {
       "id": "film-02",
-      "outcome": "explain why this product matters in a tasteful motion piece, not a slide deck",
+      "outcome": "show Codex users that the agent can also make CAD, games, slides, websites, animation, and launch videos",
       "decision": "select",
       "intended": [
         "html-css-animated-product-launch-film"
@@ -22,7 +22,7 @@
     },
     {
       "id": "film-03",
-      "outcome": "turn the product story into a short animated promo with a rendered video deliverable",
+      "outcome": "create the Possible promo where a narrow 1x view expands into a 100x world of agent capabilities",
       "decision": "select",
       "intended": [
         "html-css-animated-product-launch-film"
@@ -30,7 +30,7 @@
     },
     {
       "id": "film-04",
-      "outcome": "I want a standalone launch film whose visuals are authored in the browser and synced to audio",
+      "outcome": "render the Possible launch film with the original Garden Window soundtrack and possible.sh ending",
       "decision": "select",
       "intended": [
         "html-css-animated-product-launch-film"

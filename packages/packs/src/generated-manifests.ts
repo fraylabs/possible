@@ -3,11 +3,11 @@ import pack0 from "./packs/cast-driven-product-story-animation/pack.json" with {
 import pack1 from "./packs/developer-product-readiness/pack.json" with { type: "json" };
 import pack2 from "./packs/first-customer-sprint/pack.json" with { type: "json" };
 import pack3 from "./packs/functional-hardware-prototype/pack.json" with { type: "json" };
-import pack4 from "./packs/html-css-animated-product-launch-film/pack.json" with { type: "json" };
-import pack5 from "./packs/mechanical-cad-review/pack.json" with { type: "json" };
-import pack6 from "./packs/original-strudel-soundtrack/pack.json" with { type: "json" };
-import pack7 from "./packs/playable-web-game/pack.json" with { type: "json" };
-import pack8 from "./packs/polished-editable-powerpoint-presentation/pack.json" with { type: "json" };
+import pack4 from "./packs/mechanical-cad-review/pack.json" with { type: "json" };
+import pack5 from "./packs/original-strudel-soundtrack/pack.json" with { type: "json" };
+import pack6 from "./packs/playable-web-game/pack.json" with { type: "json" };
+import pack7 from "./packs/polished-editable-powerpoint-presentation/pack.json" with { type: "json" };
+import pack8 from "./packs/html-css-animated-product-launch-film/pack.json" with { type: "json" };
 import pack9 from "./packs/production-logo-system/pack.json" with { type: "json" };
 import pack10 from "./packs/production-readiness-decision/pack.json" with { type: "json" };
 import pack11 from "./packs/robot-digital-prototype/pack.json" with { type: "json" };
@@ -15,4 +15,4 @@ import pack12 from "./packs/web-presentation/pack.json" with { type: "json" };
 import pack13 from "./packs/website-reference-reconstruction/pack.json" with { type: "json" };
 import pack14 from "./packs/working-web-app/pack.json" with { type: "json" };
 
-export const rawBundledPacks: Array<{ slug: string; pack: unknown }> = [{ slug: "cast-driven-product-story-animation", pack: pack0 }, { slug: "developer-product-readiness", pack: pack1 }, { slug: "first-customer-sprint", pack: pack2 }, { slug: "functional-hardware-prototype", pack: pack3 }, { slug: "html-css-animated-product-launch-film", pack: pack4 }, { slug: "mechanical-cad-review", pack: pack5 }, { slug: "original-strudel-soundtrack", pack: pack6 }, { slug: "playable-web-game", pack: pack7 }, { slug: "polished-editable-powerpoint-presentation", pack: pack8 }, { slug: "production-logo-system", pack: pack9 }, { slug: "production-readiness-decision", pack: pack10 }, { slug: "robot-digital-prototype", pack: pack11 }, { slug: "web-presentation", pack: pack12 }, { slug: "website-reference-reconstruction", pack: pack13 }, { slug: "working-web-app", pack: pack14 }];
+export const rawBundledPacks: Array<{ slug: string; pack: unknown }> = [{ slug: "cast-driven-product-story-animation", pack: pack0 }, { slug: "developer-product-readiness", pack: pack1 }, { slug: "first-customer-sprint", pack: pack2 }, { slug: "functional-hardware-prototype", pack: pack3 }, { slug: "mechanical-cad-review", pack: pack4 }, { slug: "original-strudel-soundtrack", pack: pack5 }, { slug: "playable-web-game", pack: pack6 }, { slug: "polished-editable-powerpoint-presentation", pack: pack7 }, { slug: "html-css-animated-product-launch-film", pack: pack8 }, { slug: "production-logo-system", pack: pack9 }, { slug: "production-readiness-decision", pack: pack10 }, { slug: "robot-digital-prototype", pack: pack11 }, { slug: "web-presentation", pack: pack12 }, { slug: "website-reference-reconstruction", pack: pack13 }, { slug: "working-web-app", pack: pack14 }];

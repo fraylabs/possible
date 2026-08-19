@@ -8,6 +8,7 @@ test("catalog search shares concise outcome retrieval without searching implemen
   assert.equal(searchPackCatalog({ query: "sell to real customers" }, publicCatalog)[0]?.entry.slug, "first-customer-sprint");
 
   const fixture = structuredClone(publicCatalog[0]);
+  fixture.pack.expectations ??= [];
   fixture.pack.expectations.push("Contains the unique marker quuxleflorp.");
   assert.deepEqual(searchPackCatalog({ query: "quuxleflorp" }, [fixture]), []);
 });

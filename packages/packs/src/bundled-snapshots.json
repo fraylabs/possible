@@ -31,14 +31,6 @@
     "path": "packs/functional-hardware-prototype/pack.json",
     "contentHash": "sha256:5fabc6d83d3e1f67cb2702073b575778c2f9bbcf99a07c296a10d54b1bfeb72b"
   },
-  "html-css-animated-product-launch-film": {
-    "schemaVersion": 1,
-    "id": "fraylabs/possible/html-css-animated-product-launch-film",
-    "source": "package:@possible/packs",
-    "revision": "sha256:03244d104a69ec430a21c50ac1fa1abd4593cc77ccd8728d3c91544800ba7af8",
-    "path": "packs/html-css-animated-product-launch-film/pack.json",
-    "contentHash": "sha256:03244d104a69ec430a21c50ac1fa1abd4593cc77ccd8728d3c91544800ba7af8"
-  },
   "mechanical-cad-review": {
     "schemaVersion": 1,
     "id": "fraylabs/possible/mechanical-cad-review",
@@ -70,6 +62,14 @@
     "revision": "sha256:e59975204a01be7874ffff106fcfcf0bfc38e6eb91dcc894109719cdc2a428e6",
     "path": "packs/polished-editable-powerpoint-presentation/pack.json",
     "contentHash": "sha256:e59975204a01be7874ffff106fcfcf0bfc38e6eb91dcc894109719cdc2a428e6"
+  },
+  "html-css-animated-product-launch-film": {
+    "schemaVersion": 1,
+    "id": "fraylabs/possible/html-css-animated-product-launch-film",
+    "source": "package:@possible/packs",
+    "revision": "sha256:b32a943904c15c39c8024a26b3edb25d0ee216453f312d0fec3f77e6249638fe",
+    "path": "packs/html-css-animated-product-launch-film/pack.json",
+    "contentHash": "sha256:b32a943904c15c39c8024a26b3edb25d0ee216453f312d0fec3f77e6249638fe"
   },
   "production-logo-system": {
     "schemaVersion": 1,

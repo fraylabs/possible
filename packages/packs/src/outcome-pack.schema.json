@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://possible.sh/schemas/outcome-pack.schema.json",
   "title": "Possible Outcome Pack",
-  "description": "One structured prompt, a plain-language checklist for what finished means, optional agent Skills, and optional Product attribution.",
+  "description": "One direct prompt for one concrete outcome, with optional agent Skills, Product attribution, expectations, and selection boundaries.",
   "$comment": "Identity, source, release, trust, evidence, discovery fixtures, and showcase media are registry or presentation metadata. They do not belong in the authored pack.",
   "type": "object",
   "additionalProperties": false,
@@ -10,8 +10,7 @@
     "schemaVersion",
     "name",
     "promise",
-    "prompt",
-    "expectations"
+    "prompt"
   ],
   "properties": {
     "schemaVersion": {
@@ -31,12 +30,12 @@
     "prompt": {
       "type": "string",
       "minLength": 1,
-      "description": "The complete structured execution brief. Organize only the context, deliverables, important constraints, and finish boundary the agent needs; length is not a quality target and orchestration machinery does not belong here."
+      "description": "The exact, self-contained prompt that asks an agent to produce this concrete outcome. Include the real inputs, deliverables, creative direction, constraints, and finish boundary in the prompt itself; do not turn it into a reusable workflow for a broad class of work."
     },
     "expectations": {
       "type": "array",
       "minItems": 1,
-      "description": "A short checklist of observable statements that must be true before the outcome is called finished. State the result, not the procedure used to verify it.",
+      "description": "Optional. Add only a short checklist of observable acceptance criteria that materially clarify this exact prompt. Omit it when the prompt already says what finished means.",
       "items": { "type": "string", "minLength": 1 }
     },
     "skills": {

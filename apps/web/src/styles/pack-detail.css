@@ -99,6 +99,7 @@
 .pack-detail-header .pack-detail-breadcrumb { margin-bottom: 22px; color: #73736f; font-size: 10px; text-transform: none; }
 .pack-detail-header .pack-detail-breadcrumb a { color: #a4a49e; }
 .pack-detail-header .pack-detail-breadcrumb span:last-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pack-direct-label { margin-bottom: 13px; display: inline-block; color: #a8ff52; font: 8px "DM Mono", monospace; letter-spacing: .08em; }
 .pack-detail-header h1 { max-width: 820px; margin: 0; font-size: clamp(38px, 4vw, 58px); font-weight: 550; line-height: 1.02; letter-spacing: -.055em; }
 .pack-detail-header > p { max-width: 760px; margin: 16px 0 0; color: #b7b6b0; font-size: clamp(17px, 1.55vw, 21px); line-height: 1.5; letter-spacing: -.015em; }
 .pack-product-attribution { margin-top: 24px; display: flex; flex-wrap: wrap; gap: 8px; align-items: stretch; }
@@ -115,6 +116,7 @@
 .pack-use-tabs button { min-height: 36px; padding: 0 14px; border: 1px solid transparent; border-bottom: 0; border-radius: 7px 7px 0 0; background: transparent; color: #7f7f7a; cursor: pointer; font: 9px "DM Mono", monospace; }
 .pack-use-tabs button[aria-selected="true"] { border-color: #393936; background: #151514; color: #f2efe8; }
 .pack-use-content { border: 1px solid #393936; border-radius: 0 9px 9px 9px; overflow: hidden; background: #151514; }
+.pack-use-content--direct { border-radius: 9px; }
 .pack-use-content > p { margin: 0; padding: 15px 17px 0; color: #999892; font-size: 12px; line-height: 1.55; }
 .pack-use-content pre { max-height: 360px; margin: 0; padding: 18px 17px; overflow: auto; color: #f2efe8; font: 11px/1.65 "DM Mono", monospace; white-space: pre-wrap; }
 .pack-use-content pre:not(.is-long) { color: #ff8a5f; }
@@ -123,6 +125,8 @@
 .pack-use-content > small code { color: #b9b8b2; font: 9px "DM Mono", monospace; }
 
 .pack-readable-section { padding: 34px 0; border-top: 1px solid #2f2f2d; }
+.pack-readable-section--first { padding-top: 0; border-top: 0; }
+.pack-readable-section--first + .pack-use-panel { margin-top: 38px; }
 .pack-use-panel + .pack-readable-section { margin-top: 38px; }
 .pack-readable-lead, .pack-section-intro { margin: 0; color: #b2b1ab; font-size: 15px; line-height: 1.75; }
 .pack-section-intro { margin-bottom: 28px; font-size: 13px; }
