@@ -195,6 +195,16 @@ describe("Possible website", () => {
     expect(await axe(container)).toHaveNoViolations();
   });
 
+  it("filters Products through the top categories header", async () => {
+    render(<ProductsPage />);
+    expect(screen.getByText("TOP CATEGORIES")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "All" })).toHaveAttribute("aria-pressed", "true");
+    await userEvent.click(screen.getByRole("button", { name: "Video" }));
+    expect(screen.getByRole("button", { name: "Video" })).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getAllByRole("link", { name: /By (?:ByteDance|HeyGen|Remotion)/i })).toHaveLength(3);
+    expect(screen.queryByRole("link", { name: /Strudel/i })).not.toBeInTheDocument();
+  });
+
   it("keeps Products without published Outcomes honest", () => {
     renderRoute("/products/seedance");
     expect(screen.getByRole("heading", { name: "Seedance 2.0", level: 1 })).toBeInTheDocument();

@@ -3,6 +3,7 @@
   "id": "remotion/remotion",
   "name": "Remotion",
   "company": "remotion",
+  "category": "video",
   "summary": "Create real MP4 videos with React. Use coding agents, build apps and render in bulk.",
   "summarySourceUrl": "https://www.remotion.dev/",
   "logoUrl": "https://www.remotion.dev/img/favicon.png",

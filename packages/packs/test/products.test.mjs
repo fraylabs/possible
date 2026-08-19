@@ -17,6 +17,7 @@ test("Product records resolve their Company without owning execution", () => {
   assert.deepEqual(product.commerce.methods, []);
   assert.match(product.logoUrl, /^https:\/\//);
   assert.match(product.summarySourceUrl, /^https:\/\/github\.com\/heygen-com\/hyperframes\/blob\/[0-9a-f]{40}\/README\.md/);
+  assert.equal(product.category, "video");
   for (const forbidden of ["skills", "installCommands", "prompt", "expectations", "instructions"]) {
     assert.equal(forbidden in product, false);
   }
@@ -30,6 +31,7 @@ test("Outcome Packs can reference Products while Skills remain the execution sou
   assert.ok(entry.pack.skills?.some(({ directory }) => directory === "skills/hyperframes"));
   assert.equal(productCatalog.length, 6);
   assert.ok(productCatalog.every(({ summarySourceUrl }) => summarySourceUrl.startsWith("https://")));
+  assert.deepEqual(new Set(productCatalog.map(({ category }) => category)), new Set(["video", "audio", "3d", "robotics"]));
   assert.throws(() => resolveProducts(["missing/product"]), /missing product/i);
 });
 

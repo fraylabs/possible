@@ -3,6 +3,7 @@ import type {
   AgentCheckoutSupport,
   CompanyRecord,
   ProductAvailability,
+  ProductCategory,
   ProductCommerce,
   ProductId,
   ProductRecord,
@@ -14,6 +15,7 @@ const PRODUCT_ID = /^([a-z0-9][a-z0-9-]*)\/([a-z0-9][a-z0-9-]*)$/;
 const PAYMENT_METHOD = /^[a-z][a-z0-9-]*:[a-z0-9][a-z0-9.-]*$/;
 const PRODUCT_AVAILABILITY = new Set<ProductAvailability>(["free", "free-and-paid", "paid", "contact-sales", "unavailable", "unknown"]);
 const AGENT_CHECKOUT = new Set<AgentCheckoutSupport>(["not-required", "supported", "manual-only", "not-supported", "unknown"]);
+const PRODUCT_CATEGORIES = new Set<ProductCategory>(["video", "audio", "3d", "robotics"]);
 
 const nonEmptyString = (value: string, context: string): string => {
   if (value.trim().length === 0) throw new Error(`${context} must be a non-empty string`);
@@ -86,11 +88,13 @@ export function validateProductRecord(product: ProductRecord, context = "product
   const id = validateProductId(product.id, `${context}.id`);
   const company = validateCompanyId(product.company, `${context}.company`);
   if (!id.startsWith(`${company}/`)) throw new Error(`${context}.id must be namespaced by company ${company}`);
+  if (!PRODUCT_CATEGORIES.has(product.category)) throw new Error(`${context}.category is unsupported`);
   return {
     schemaVersion: 1,
     id,
     name: nonEmptyString(product.name, `${context}.name`),
     company,
+    category: product.category,
     summary: nonEmptyString(product.summary, `${context}.summary`),
     summarySourceUrl: httpsUrl(product.summarySourceUrl, `${context}.summarySourceUrl`),
     logoUrl: httpsUrl(product.logoUrl, `${context}.logoUrl`),

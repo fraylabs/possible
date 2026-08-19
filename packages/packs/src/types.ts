@@ -16,6 +16,7 @@ export interface CompanyRecord {
 
 export type ProductAvailability = "free" | "free-and-paid" | "paid" | "contact-sales" | "unavailable" | "unknown";
 export type AgentCheckoutSupport = "not-required" | "supported" | "manual-only" | "not-supported" | "unknown";
+export type ProductCategory = "video" | "audio" | "3d" | "robotics";
 
 export interface ProductCommerce {
   availability: ProductAvailability;
@@ -29,6 +30,7 @@ export interface ProductRecord {
   id: ProductId;
   name: string;
   company: CompanyId;
+  category: ProductCategory;
   summary: string;
   summarySourceUrl: string;
   logoUrl: string;
