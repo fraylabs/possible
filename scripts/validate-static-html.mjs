@@ -53,14 +53,19 @@ assert.match(imageShowcase, /class="pack-showcase"/);
 assert.match(imageShowcase, /private-pack-offer\.png/);
 
 for (const product of productCatalog) {
-  const markup = await html(`products/${product.id}/index.html`);
-  for (const phrase of [product.name, product.company.name, "What agents can make", "Product links"]) {
+  const productSlug = product.id.split("/").at(-1);
+  const markup = await html(`products/${productSlug}/index.html`);
+  for (const phrase of [product.name, product.company.name, "Official description", "Made with"]) {
     assert.match(markup, new RegExp(escape(phrase), "i"));
   }
+  assert.match(markup, new RegExp(escape(product.summary)));
+  assert.match(markup, new RegExp(escape(product.summarySourceUrl)));
   assert.match(markup, new RegExp(escape(product.logoUrl)));
+  assert.doesNotMatch(markup, /What agents can make|Product links|About HyperFrames/i);
   const linkedOutcomes = publicCatalog.filter((entry) => entry.products.some(({ id }) => id === product.id));
   assert.ok(linkedOutcomes.length > 0, `${product.id} must link at least one Outcome Pack`);
   for (const entry of linkedOutcomes) assert.match(markup, new RegExp(escape(entry.pack.name)));
+  await assert.rejects(html(`products/${product.id}/index.html`), { code: "ENOENT" }, "internal Product ids must not leak into public routes");
 }
 
 const products = await html("products/index.html");
@@ -69,7 +74,7 @@ assert.match(products, /class="product-directory-meta"/);
 assert.doesNotMatch(products, /products-page-header|products-hero|Products behind Outcome Packs|Products that make[\s\S]*more possible/i);
 for (const product of productCatalog) {
   assert.match(products, new RegExp(escape(product.name)));
-  assert.match(products, new RegExp(`href="${escape(`/products/${product.id}`)}"`));
+  assert.match(products, new RegExp(`href="${escape(`/products/${product.id.split("/").at(-1)}`)}"`));
   assert.match(products, new RegExp(escape(product.logoUrl)));
 }
 

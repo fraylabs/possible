@@ -5,52 +5,50 @@
 .product-detail-page :where(a, button):focus-visible { outline: 2px solid #ff5a1f; outline-offset: 3px; }
 .product-detail-page > footer { background: #ff5a1f; color: #151411; }
 
-.product-detail-document { width: min(1040px, calc(100% - 48px)); margin: 0 auto; padding: 42px 0 88px; }
-.product-breadcrumb { margin-bottom: 42px; display: flex; gap: 9px; color: #676762; font: 8px "DM Mono", monospace; text-transform: uppercase; }
-.product-breadcrumb a { color: #aaa9a4; }
+.product-profile { width: min(780px, calc(100% - 48px)); margin: 0 auto; padding: 38px 0 88px; }
+.product-back-link { display: inline-flex; gap: 10px; align-items: center; color: #87867f; font: 8px "DM Mono", monospace; text-transform: uppercase; letter-spacing: .05em; }
+.product-back-link:hover { color: #f2efe8; }
 
-.product-header { padding: 0 0 52px; border-bottom: 1px solid #343432; display: grid; grid-template-columns: 72px 1fr auto; gap: 22px; align-items: start; }
-.product-header > img { width: 72px; height: 72px; border: 1px solid #41413d; border-radius: 14px; display: block; object-fit: cover; background: #fff; }
-.product-header-copy > p { margin: 2px 0 11px; color: #777772; font: 8px "DM Mono", monospace; letter-spacing: .07em; }
-.product-header-copy > p a { color: #ff7040; }
-.product-header-copy h1 { margin: 0; font-size: clamp(44px, 5.5vw, 68px); font-weight: 520; line-height: .95; letter-spacing: -.06em; }
-.product-detail-summary { max-width: 620px; margin-top: 18px; color: #aaa9a4; font-size: 15px; line-height: 1.55; }
-.product-primary-link { min-height: 42px; padding: 0 13px; border: 1px solid #ff5a1f; border-radius: 7px; display: flex; gap: 28px; align-items: center; background: #ff5a1f; color: #151411; font: 8px "DM Mono", monospace; }
-.product-primary-link:hover { background: #ff7040; }
+.product-profile-header { margin-top: 44px; display: grid; grid-template-columns: 72px 1fr; gap: 22px; align-items: center; }
+.product-profile-header > img { width: 72px; height: 72px; border: 1px solid #41413d; border-radius: 15px; display: block; object-fit: cover; background: #fff; }
+.product-profile-header p { margin: 0 0 10px; color: #777772; font: 8px "DM Mono", monospace; letter-spacing: .07em; }
+.product-profile-header p a { color: #ff7040; }
+.product-profile-header h1 { margin: 0; font-size: clamp(44px, 6.5vw, 64px); font-weight: 520; line-height: .95; letter-spacing: -.06em; }
 
-.product-outcomes { padding: 58px 0 68px; border-bottom: 1px solid #343432; }
-.product-outcomes > header { margin-bottom: 25px; display: flex; justify-content: space-between; gap: 30px; align-items: end; }
-.product-outcomes > header span, .product-source > div > span { color: #ff7040; font: 8px "DM Mono", monospace; letter-spacing: .08em; }
-.product-outcomes > header h2 { margin: 9px 0 0; font-size: clamp(28px, 4vw, 42px); font-weight: 520; letter-spacing: -.05em; }
-.product-outcomes > header > p { margin: 0; color: #777772; font-size: 11px; }
-.product-outcome-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
-.product-outcome-list a { min-height: 238px; padding: 22px; border: 1px solid #373735; border-radius: 9px; display: flex; flex-direction: column; background: #151514; transition: border-color .16s ease, background .16s ease; }
+.product-official-description { margin: 32px 0 0 94px; padding-bottom: 30px; border-bottom: 1px solid #343432; }
+.product-official-description p { max-width: 650px; margin: 0; color: #bbb9b2; font-size: 18px; line-height: 1.55; letter-spacing: -.012em; }
+.product-official-description a { margin-top: 16px; display: inline-flex; gap: 9px; color: #777772; font: 8px "DM Mono", monospace; text-transform: uppercase; }
+.product-official-description a:hover { color: #ff7040; }
+
+.product-profile-links { margin: 22px 0 0 94px; display: flex; flex-wrap: wrap; gap: 8px; }
+.product-profile-links a { min-height: 38px; padding: 0 12px; border: 1px solid #383835; border-radius: 7px; display: inline-flex; gap: 26px; align-items: center; color: #d2d0c9; font: 8px "DM Mono", monospace; }
+.product-profile-links a span { color: #ff7040; }
+.product-profile-links a:hover { border-color: #68675f; background: #151514; }
+
+.product-access-note { margin: 15px 0 0 94px; display: flex; flex-wrap: wrap; gap: 7px; }
+.product-access-note span { padding: 6px 8px; border: 1px solid #343432; border-radius: 999px; color: #777772; font: 7px "DM Mono", monospace; text-transform: uppercase; }
+
+.product-outcomes { margin-top: 64px; padding-top: 32px; border-top: 1px solid #343432; }
+.product-outcomes > header { margin-bottom: 18px; display: flex; justify-content: space-between; gap: 24px; align-items: end; }
+.product-outcomes > header span { color: #ff7040; font: 8px "DM Mono", monospace; letter-spacing: .08em; }
+.product-outcomes > header h2 { margin: 9px 0 0; font-size: clamp(28px, 4vw, 38px); font-weight: 520; letter-spacing: -.05em; }
+.product-outcomes > header > strong { width: 30px; height: 30px; border: 1px solid #383835; border-radius: 999px; display: grid; place-items: center; color: #8f8e88; font: 8px "DM Mono", monospace; font-weight: 500; }
+.product-outcome-list { display: grid; gap: 8px; }
+.product-outcome-list a { min-height: 132px; padding: 20px; border: 1px solid #373735; border-radius: 9px; display: grid; grid-template-columns: 1fr auto; gap: 24px; background: #151514; transition: border-color .16s ease, background .16s ease; }
 .product-outcome-list a:hover { border-color: #66655f; background: #191918; }
+.product-outcome-list a > span { color: #ff7040; font: 12px "DM Mono", monospace; }
 .product-outcome-list small { color: #777772; font: 7px "DM Mono", monospace; letter-spacing: .06em; }
-.product-outcome-list h3 { margin: 34px 0 12px; font-size: clamp(25px, 3vw, 35px); font-weight: 520; line-height: 1; letter-spacing: -.05em; }
-.product-outcome-list p { margin: 0; color: #8f8e88; font-size: 11px; line-height: 1.55; }
-.product-outcome-list strong { margin-top: auto; padding-top: 24px; color: #ff7040; font: 8px "DM Mono", monospace; font-weight: 500; }
-.product-outcome-list strong span { margin-left: 10px; }
-
-.product-source { padding: 52px 0 0; display: grid; grid-template-columns: 1fr auto; gap: 24px 52px; align-items: end; }
-.product-source h2 { margin: 9px 0 0; font-size: 30px; font-weight: 520; letter-spacing: -.045em; }
-.product-source > nav { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 7px; }
-.product-source > nav a { min-height: 38px; padding: 0 11px; border: 1px solid #383835; border-radius: 6px; display: flex; gap: 18px; align-items: center; color: #c7c5be; font: 8px "DM Mono", monospace; }
-.product-source > nav a:hover { border-color: #ff7040; }
-.product-source > nav span { color: #ff7040; }
-.product-access-note { padding-top: 20px; border-top: 1px solid #2e2e2c; grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 7px; }
-.product-access-note span { padding: 6px 8px; border: 1px solid #343432; border-radius: 999px; color: #8f8e88; font: 7px "DM Mono", monospace; text-transform: uppercase; }
+.product-outcome-list h3 { margin: 18px 0 8px; font-size: clamp(22px, 3vw, 30px); font-weight: 520; line-height: 1.05; letter-spacing: -.045em; }
+.product-outcome-list p { max-width: 620px; margin: 0; color: #8f8e88; font-size: 11px; line-height: 1.55; }
 
 @media (max-width: 720px) {
-  .product-detail-document { width: calc(100% - 32px); padding-top: 32px; }
-  .product-breadcrumb { margin-bottom: 30px; }
-  .product-header { grid-template-columns: 58px 1fr; }
-  .product-header > img { width: 58px; height: 58px; border-radius: 11px; }
-  .product-header-copy h1 { font-size: 44px; }
-  .product-primary-link { grid-column: 1 / -1; justify-content: space-between; }
-  .product-outcomes > header { display: grid; gap: 12px; }
-  .product-outcome-list { grid-template-columns: 1fr; }
-  .product-source { grid-template-columns: 1fr; }
-  .product-source > nav { justify-content: flex-start; }
-  .product-access-note { grid-column: 1; }
+  .product-profile { width: calc(100% - 32px); padding: 30px 0 68px; }
+  .product-profile-header { margin-top: 34px; grid-template-columns: 58px 1fr; gap: 16px; }
+  .product-profile-header > img { width: 58px; height: 58px; border-radius: 12px; }
+  .product-profile-header h1 { font-size: 42px; }
+  .product-official-description { margin: 28px 0 0; padding-bottom: 26px; }
+  .product-official-description p { font-size: 16px; }
+  .product-profile-links, .product-access-note { margin-left: 0; }
+  .product-outcomes { margin-top: 50px; }
+  .product-outcome-list a { min-height: 0; }
 }

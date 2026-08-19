@@ -30,6 +30,7 @@ export interface ProductRecord {
   name: string;
   company: CompanyId;
   summary: string;
+  summarySourceUrl: string;
   logoUrl: string;
   website: string;
   docsUrl: string;

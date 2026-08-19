@@ -33,11 +33,14 @@ export function packHref(entry: PublicCatalogEntry) {
 }
 
 export function productHref(product: ResolvedProduct) {
-  return `/products/${product.id}`;
+  return `/products/${product.id.split("/").at(-1)}`;
 }
 
-export function getPublishedProduct(id: string) {
-  return publishedProducts.find((product) => product.id === id);
+export function getPublishedProduct(idOrSlug: string) {
+  const exact = publishedProducts.find((product) => product.id === idOrSlug);
+  if (exact) return exact;
+  const matches = publishedProducts.filter((product) => product.id.split("/").at(-1) === idOrSlug);
+  return matches.length === 1 ? matches[0] : undefined;
 }
 
 export function getProductOutcomes(id: string) {

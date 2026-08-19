@@ -16,6 +16,7 @@ test("Product records resolve their Company without owning execution", () => {
   assert.equal(product.commerce.agentCheckout, "not-required");
   assert.deepEqual(product.commerce.methods, []);
   assert.match(product.logoUrl, /^https:\/\//);
+  assert.match(product.summarySourceUrl, /^https:\/\/github\.com\/heygen-com\/hyperframes\/blob\/[0-9a-f]{40}\/README\.md/);
   for (const forbidden of ["skills", "installCommands", "prompt", "expectations", "instructions"]) {
     assert.equal(forbidden in product, false);
   }

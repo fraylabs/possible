@@ -27,42 +27,48 @@ export function ProductDetailPage({ id }: { id: string }) {
   return (
     <main className="product-detail-page">
       <SiteNav />
-      <article className="product-detail-document">
-        <nav className="product-breadcrumb" aria-label="Breadcrumb"><a href="/products">Products</a><span>/</span><span>{product.name}</span></nav>
+      <article className="product-profile">
+        <a className="product-back-link" href="/products"><span aria-hidden="true">←</span> All products</a>
 
-        <header className="product-header">
+        <header className="product-profile-header">
           <img src={product.logoUrl} alt={`${product.name} logo`} />
-          <div className="product-header-copy">
-            <p>BY <a href={product.company.website} target="_blank" rel="noreferrer">{product.company.name.toUpperCase()} ↗</a></p>
+          <div>
+            <p>BY <a href={product.company.website} target="_blank" rel="noreferrer">{product.company.name} ↗</a></p>
             <h1>{product.name}</h1>
-            <div className="product-detail-summary">{product.summary}</div>
           </div>
-          <a className="product-primary-link" href={product.website} target="_blank" rel="noreferrer">Visit {product.name} <span>↗</span></a>
         </header>
 
+        <div className="product-official-description">
+          <p>{product.summary}</p>
+          <a href={product.summarySourceUrl} target="_blank" rel="noreferrer">Official description <span>↗</span></a>
+        </div>
+
+        <nav className="product-profile-links" aria-label={`${product.name} links`}>
+          <a href={product.website} target="_blank" rel="noreferrer">Website <span>↗</span></a>
+          <a href={product.docsUrl} target="_blank" rel="noreferrer">Documentation <span>↗</span></a>
+          {product.commerce.pricingUrl ? <a href={product.commerce.pricingUrl} target="_blank" rel="noreferrer">Pricing <span>↗</span></a> : null}
+        </nav>
+
+        <div className="product-access-note" aria-label="Product access">
+          <span>{commerceLabel(product.commerce.availability)}</span>
+          <span>{checkoutLabel(product.commerce.agentCheckout)}</span>
+          {product.commerce.methods.map((method) => <span key={method}>{method}</span>)}
+        </div>
+
         <section className="product-outcomes" id="outcomes" aria-labelledby="product-outcomes-heading">
-          <header><div><span>OUTCOME PACKS</span><h2 id="product-outcomes-heading">What agents can make</h2></div><p>Complete outcomes that use {product.name}.</p></header>
+          <header>
+            <div><span>OUTCOMES</span><h2 id="product-outcomes-heading">Made with {product.name}</h2></div>
+            <strong>{outcomes.length}</strong>
+          </header>
           <div className="product-outcome-list">
             {outcomes.map((entry, index) => <a href={packHref(entry)} key={entry.id}>
-              <small>{String(index + 1).padStart(2, "0")} / OUTCOME PACK</small>
-              <h3>{entry.pack.name}</h3>
-              <p>{entry.pack.promise}</p>
-              <strong>View Outcome Pack <span>↗</span></strong>
+              <div>
+                <small>{String(index + 1).padStart(2, "0")} / OUTCOME</small>
+                <h3>{entry.pack.name}</h3>
+                <p>{entry.pack.promise}</p>
+              </div>
+              <span aria-hidden="true">↗</span>
             </a>)}
-          </div>
-        </section>
-
-        <section className="product-source" aria-labelledby="product-source-heading">
-          <div><span>PRODUCT LINKS</span><h2 id="product-source-heading">About {product.name}</h2></div>
-          <nav aria-label={`${product.name} links`}>
-            <a href={product.website} target="_blank" rel="noreferrer">Website <span>↗</span></a>
-            <a href={product.docsUrl} target="_blank" rel="noreferrer">Documentation <span>↗</span></a>
-            {product.commerce.pricingUrl ? <a href={product.commerce.pricingUrl} target="_blank" rel="noreferrer">Pricing <span>↗</span></a> : null}
-          </nav>
-          <div className="product-access-note">
-            <span>{commerceLabel(product.commerce.availability)}</span>
-            <span>{checkoutLabel(product.commerce.agentCheckout)}</span>
-            {product.commerce.methods.map((method) => <span key={method}>{method}</span>)}
           </div>
         </section>
       </article>
