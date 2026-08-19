@@ -181,10 +181,11 @@ describe("Possible website", () => {
   it("renders a compact Product directory with official logos", async () => {
     const { container } = render(<ProductsPage />);
     expect(screen.getByRole("heading", { name: "Products", level: 1 })).toBeInTheDocument();
-    expect(screen.getByText("Products behind Outcome Packs.")).toBeInTheDocument();
+    expect(container.querySelector(".products-page-header")).toBeNull();
     for (const product of publishedProducts) {
       expect(screen.getByRole("link", { name: new RegExp(product.name, "i") })).toHaveAttribute("href", productHref(product));
       expect(container.querySelector(`a[href="${productHref(product)}"] img`)).toHaveAttribute("src", product.logoUrl);
+      expect(container.querySelector(`a[href="${productHref(product)}"] .product-directory-meta`)).toBeInTheDocument();
     }
     expect(await axe(container)).toHaveNoViolations();
   });

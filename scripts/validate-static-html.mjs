@@ -64,8 +64,9 @@ for (const product of productCatalog) {
 }
 
 const products = await html("products/index.html");
-assert.match(products, /Products behind Outcome Packs/i);
-assert.doesNotMatch(products, /products-hero|Products that make[\s\S]*more possible/i);
+assert.match(products, /class="products-grid"/);
+assert.match(products, /class="product-directory-meta"/);
+assert.doesNotMatch(products, /products-page-header|products-hero|Products behind Outcome Packs|Products that make[\s\S]*more possible/i);
 for (const product of productCatalog) {
   assert.match(products, new RegExp(escape(product.name)));
   assert.match(products, new RegExp(`href="${escape(`/products/${product.id}`)}"`));
