@@ -38,9 +38,9 @@ describe("Possible MCP", () => {
   });
 
   it("fetches one exact prompt", async () => {
-    const result = await client.callTool({ name: "fetch_outcome", arguments: { slug: "web-presentation" } });
+    const result = await client.callTool({ name: "fetch_outcome", arguments: { slug: "robot-digital-prototype" } });
     const envelope = result.structuredContent as { ok: boolean; data: { prompt: string; author: { name: string } } };
-    const source = outcomeCatalog.find(({ slug }) => slug === "web-presentation");
+    const source = outcomeCatalog.find(({ slug }) => slug === "robot-digital-prototype");
     assert.ok(source);
     assert.equal(envelope.data.prompt, source.outcome.prompt);
     assert.equal(envelope.data.author.name, source.outcome.author.name);

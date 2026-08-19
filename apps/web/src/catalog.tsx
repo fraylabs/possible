@@ -28,13 +28,10 @@ function OutcomeSearchResult({ result }: { result: PublishedOutcomeSearchResult 
 }
 
 export const commonSearches = [
-  "Review a mechanical CAD design",
-  "Build me a working web app",
+  "Build a functional hardware prototype",
   "Create an editable PowerPoint presentation",
   "Make a product launch film",
-  "Prototype a browser game",
   "Compose an original soundtrack",
-  "Find my first customer",
   "Prototype a robot digitally",
 ];
 const packsPerPage = 6;

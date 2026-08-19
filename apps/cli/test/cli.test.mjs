@@ -40,11 +40,11 @@ test("bookmarks store Outcome slugs locally without an account", async () => {
   const possibleHome = join(project, "possible-home");
   const environment = { ...process.env, POSSIBLE_HOME: possibleHome };
   assert.equal((await execute(process.execPath, [cli, "bookmark", "list"], { cwd: project, env: environment })).stdout, "No bookmarked Outcomes.\n");
-  assert.equal((await execute(process.execPath, [cli, "bookmark", "add", "playable-web-game"], { cwd: project, env: environment })).stdout, "Bookmarked playable-web-game.\n");
+  assert.equal((await execute(process.execPath, [cli, "bookmark", "add", "robot-digital-prototype"], { cwd: project, env: environment })).stdout, "Bookmarked robot-digital-prototype.\n");
   const stored = JSON.parse(await readFile(join(possibleHome, "bookmarks.json"), "utf8"));
-  assert.deepEqual(stored.outcomes.map(({ slug }) => slug), ["playable-web-game"]);
-  assert.equal((await execute(process.execPath, [cli, "bookmark", "list"], { cwd: project, env: environment })).stdout, "playable-web-game\n");
-  assert.equal((await execute(process.execPath, [cli, "bookmark", "remove", "playable-web-game"], { cwd: project, env: environment })).stdout, "Removed bookmark playable-web-game.\n");
+  assert.deepEqual(stored.outcomes.map(({ slug }) => slug), ["robot-digital-prototype"]);
+  assert.equal((await execute(process.execPath, [cli, "bookmark", "list"], { cwd: project, env: environment })).stdout, "robot-digital-prototype\n");
+  assert.equal((await execute(process.execPath, [cli, "bookmark", "remove", "robot-digital-prototype"], { cwd: project, env: environment })).stdout, "Removed bookmark robot-digital-prototype.\n");
 });
 
 test("bookmark commands preserve malformed local data", async () => {
@@ -54,7 +54,7 @@ test("bookmark commands preserve malformed local data", async () => {
   const bookmarkPath = join(possibleHome, "bookmarks.json");
   await writeFile(bookmarkPath, "{ broken\n");
   await assert.rejects(
-    execute(process.execPath, [cli, "bookmark", "add", "playable-web-game"], { cwd: project, env: { ...process.env, POSSIBLE_HOME: possibleHome } }),
+    execute(process.execPath, [cli, "bookmark", "add", "robot-digital-prototype"], { cwd: project, env: { ...process.env, POSSIBLE_HOME: possibleHome } }),
     (error) => error.code === 1 && /invalid JSON and were left unchanged/.test(error.stderr),
   );
   assert.equal(await readFile(bookmarkPath, "utf8"), "{ broken\n");

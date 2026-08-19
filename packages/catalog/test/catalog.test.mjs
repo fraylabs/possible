@@ -12,7 +12,7 @@ import {
 } from "../dist/index.js";
 
 test("the catalog is made from one exact Outcome record per folder", () => {
-  assert.equal(outcomeCatalog.length, 15);
+  assert.equal(outcomeCatalog.length, 5);
   assert.equal(bundledOutcomes.length, outcomeCatalog.length);
   const film = getOutcome("html-css-animated-product-launch-film");
   assert.ok(film);
@@ -45,7 +45,7 @@ test("Product records contain only official directory information", () => {
 });
 
 test("search uses the human-facing Outcome and Product text", () => {
-  assert.equal(searchOutcomes(outcomeCatalog, { query: "polished browser game" })[0]?.entry.slug, "playable-web-game");
+  assert.equal(searchOutcomes(outcomeCatalog, { query: "digital robot simulation" })[0]?.entry.slug, "robot-digital-prototype");
   assert.equal(searchOutcomes(outcomeCatalog, { query: "editable PowerPoint deck" })[0]?.entry.slug, "polished-editable-powerpoint-presentation");
   assert.deepEqual(searchOutcomes(outcomeCatalog, { query: "zyxquux" }), []);
   assert.equal(searchOutcomes(outcomeCatalog, { query: "" }).length, outcomeCatalog.length);

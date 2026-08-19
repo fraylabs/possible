@@ -36,9 +36,9 @@ The skill searches the directory and returns the exact prompt you choose. It doe
 Local bookmarks do not require an account:
 
 ```bash
-possible bookmark add playable-web-game
+possible bookmark add robot-digital-prototype
 possible bookmark list
-possible bookmark remove playable-web-game
+possible bookmark remove robot-digital-prototype
 ```
 
 ## One folder per Outcome

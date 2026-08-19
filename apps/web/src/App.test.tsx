@@ -4,7 +4,7 @@ import { axe } from "vitest-axe";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import App, { AuthoringDocsPage, DocsPage, OutcomeDetailPage, ProductDetailPage, ProductsPage } from "./App";
 import { commonSearches } from "./catalog";
-import { getPublishedOutcome, publishedOutcomes, searchPublishedOutcomes } from "./public-content";
+import { getPublishedOutcome, searchPublishedOutcomes } from "./public-content";
 
 vi.mock("./OutcomeCadViewer", () => ({ default: () => <div data-testid="cad-viewer" /> }));
 afterEach(() => { cleanup(); window.history.pushState({}, "", "/"); });
@@ -16,9 +16,9 @@ describe("Possible website", () => {
     expect(screen.getByText("Discover what agents can do.")).toBeInTheDocument();
     expect(Array.from(container.querySelectorAll(".nav-links a")).map((link) => link.textContent)).toEqual(["OUTCOMES", "PRODUCTS", "DOCS", "GITHUB ↗"]);
     const gallery = screen.getByRole("region", { name: "Outcome prompt directory" });
-    expect(within(gallery).getAllByRole("link")).toHaveLength(6);
+    expect(within(gallery).getAllByRole("link")).toHaveLength(5);
     expect(gallery.querySelector(".library-pack-card.has-media .library-pack-visual")).toBeInTheDocument();
-    expect(screen.getByRole("navigation", { name: "Outcome pages" })).toHaveTextContent(`PAGE 1 OF ${Math.ceil(publishedOutcomes.length / 6)}`);
+    expect(screen.queryByRole("navigation", { name: "Outcome pages" })).not.toBeInTheDocument();
     expect(await axe(container)).toHaveNoViolations();
   });
 
