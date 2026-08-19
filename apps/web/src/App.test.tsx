@@ -172,11 +172,14 @@ describe("Possible website", () => {
     expect(screen.getAllByText("Free to use").length).toBeGreaterThan(0);
     expect(screen.getAllByText("No checkout").length).toBeGreaterThan(0);
     expect(screen.getByRole("heading", { name: "HyperFrames", level: 1 })).toBeInTheDocument();
-    expect(container.querySelector(".product-profile-header > img")).toHaveAttribute("src", product!.logoUrl);
-    expect(screen.getByRole("link", { name: /Official description/i })).toHaveAttribute("href", product!.summarySourceUrl);
+    expect(container.querySelector(".product-profile-identity > img")).toHaveAttribute("src", product!.logoUrl);
+    expect(container.querySelector(".product-summary-source")).toHaveAttribute("href", product!.summarySourceUrl);
     expect(screen.queryByText(/Create motion graphics, explainers/i)).not.toBeInTheDocument();
     expect(container.querySelector(".product-hero-proof")).toBeNull();
     expect(container.querySelector(".product-source")).toBeNull();
+    expect(screen.getByRole("heading", { name: "COMMUNITY", level: 2 })).toBeInTheDocument();
+    expect(container.querySelectorAll(".product-community-grid .library-pack-card")).toHaveLength(2);
+    expect(container.querySelector(".product-community-grid .library-pack-card.has-media .library-pack-visual")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /Possible Launch Film: Codex Is Bigger Than Code/i })).toHaveAttribute("href", "/packs/html-css-animated-product-launch-film");
     expect(await axe(container)).toHaveNoViolations();
   });

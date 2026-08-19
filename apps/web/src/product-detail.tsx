@@ -1,6 +1,7 @@
 "use client";
 
-import { getProductOutcomes, getPublishedProduct, packHref } from "./public-content";
+import { LibraryPackCard } from "./library-pack-card";
+import { getProductOutcomes, getPublishedProduct } from "./public-content";
 import { SiteShell } from "./shared";
 
 const commerceLabel = (availability: string) => ({
@@ -31,44 +32,36 @@ export function ProductDetailPage({ id }: { id: string }) {
         <a className="product-back-link" href="/products"><span aria-hidden="true">←</span> All products</a>
 
         <header className="product-profile-header">
-          <img src={product.logoUrl} alt={`${product.name} logo`} />
-          <div>
-            <p>BY <a href={product.company.website} target="_blank" rel="noreferrer">{product.company.name} ↗</a></p>
-            <h1>{product.name}</h1>
+          <div className="product-profile-identity">
+            <img src={product.logoUrl} alt={`${product.name} logo`} />
+            <div>
+              <p>BY <a href={product.company.website} target="_blank" rel="noreferrer">{product.company.name} ↗</a></p>
+              <h1>{product.name}</h1>
+            </div>
+          </div>
+          <div className="product-profile-information">
+            <p>{product.summary}</p>
+            <a className="product-summary-source" href={product.summarySourceUrl} target="_blank" rel="noreferrer">Source <span>↗</span></a>
+            <nav className="product-profile-links" aria-label={`${product.name} links`}>
+              <a href={product.website} target="_blank" rel="noreferrer">Website <span>↗</span></a>
+              {product.docsUrl !== product.website ? <a href={product.docsUrl} target="_blank" rel="noreferrer">Documentation <span>↗</span></a> : null}
+              {product.commerce.pricingUrl ? <a href={product.commerce.pricingUrl} target="_blank" rel="noreferrer">Pricing <span>↗</span></a> : null}
+            </nav>
+            <div className="product-access-note" aria-label="Product access">
+              <span>{product.category}</span>
+              <span>{commerceLabel(product.commerce.availability)}</span>
+              <span>{checkoutLabel(product.commerce.agentCheckout)}</span>
+              {product.commerce.methods.map((method) => <span key={method}>{method}</span>)}
+            </div>
           </div>
         </header>
 
-        <div className="product-official-description">
-          <p>{product.summary}</p>
-          <a href={product.summarySourceUrl} target="_blank" rel="noreferrer">Official description <span>↗</span></a>
-        </div>
-
-        <nav className="product-profile-links" aria-label={`${product.name} links`}>
-          <a href={product.website} target="_blank" rel="noreferrer">Website <span>↗</span></a>
-          {product.docsUrl !== product.website ? <a href={product.docsUrl} target="_blank" rel="noreferrer">Documentation <span>↗</span></a> : null}
-          {product.commerce.pricingUrl ? <a href={product.commerce.pricingUrl} target="_blank" rel="noreferrer">Pricing <span>↗</span></a> : null}
-        </nav>
-
-        <div className="product-access-note" aria-label="Product access">
-          <span>{commerceLabel(product.commerce.availability)}</span>
-          <span>{checkoutLabel(product.commerce.agentCheckout)}</span>
-          {product.commerce.methods.map((method) => <span key={method}>{method}</span>)}
-        </div>
-
         <section className="product-outcomes" id="outcomes" aria-labelledby="product-outcomes-heading">
           <header>
-            <div><span>OUTCOMES</span><h2 id="product-outcomes-heading">Made with {product.name}</h2></div>
-            <strong>{outcomes.length}</strong>
+            <h2 id="product-outcomes-heading">COMMUNITY</h2>
           </header>
-          <div className="product-outcome-list">
-            {outcomes.map((entry, index) => <a href={packHref(entry)} key={entry.id}>
-              <div>
-                <small>{String(index + 1).padStart(2, "0")} / OUTCOME</small>
-                <h3>{entry.pack.name}</h3>
-                <p>{entry.pack.promise}</p>
-              </div>
-              <span aria-hidden="true">↗</span>
-            </a>)}
+          <div className="product-community-grid">
+            {outcomes.map((entry, index) => <LibraryPackCard entry={entry} priority={index < 2} key={entry.id} />)}
             {outcomes.length === 0 ? <p className="product-outcomes-empty">No published Outcomes use this product yet.</p> : null}
           </div>
         </section>

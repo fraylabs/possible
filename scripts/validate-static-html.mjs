@@ -55,7 +55,7 @@ assert.match(imageShowcase, /private-pack-offer\.png/);
 for (const product of productCatalog) {
   const productSlug = product.id.split("/").at(-1);
   const markup = await html(`products/${productSlug}/index.html`);
-  for (const phrase of [product.name, product.company.name, "Official description", "Made with"]) {
+  for (const phrase of [product.name, product.company.name, "Source", "COMMUNITY"]) {
     assert.match(markup, new RegExp(escape(phrase), "i"));
   }
   assert.match(markup, new RegExp(escape(product.summary)));
@@ -63,7 +63,10 @@ for (const product of productCatalog) {
   assert.match(markup, new RegExp(escape(product.logoUrl)));
   assert.doesNotMatch(markup, /What agents can make|Product links|About HyperFrames/i);
   const linkedOutcomes = publicCatalog.filter((entry) => entry.products.some(({ id }) => id === product.id));
-  for (const entry of linkedOutcomes) assert.match(markup, new RegExp(escape(entry.pack.name)));
+  for (const entry of linkedOutcomes) {
+    assert.match(markup, new RegExp(escape(entry.pack.name)));
+    assert.match(markup, /class="library-pack-card/);
+  }
   if (linkedOutcomes.length === 0) assert.match(markup, /No published Outcomes use this product yet\./);
   await assert.rejects(html(`products/${product.id}/index.html`), { code: "ENOENT" }, "internal Product ids must not leak into public routes");
 }
