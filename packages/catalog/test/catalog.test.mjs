@@ -11,8 +11,8 @@ import {
   validateOutcome,
 } from "../dist/index.js";
 
-test("the catalog is made from one request-to-result record per folder", () => {
-  assert.equal(outcomeCatalog.length, 5);
+test("the catalog is made from one prompt-to-result record per folder", () => {
+  assert.equal(outcomeCatalog.length, 6);
   assert.equal(bundledOutcomes.length, outcomeCatalog.length);
   const film = getOutcome("html-css-animated-product-launch-film");
   assert.ok(film);
@@ -24,10 +24,19 @@ test("the catalog is made from one request-to-result record per folder", () => {
   for (const forbidden of ["expectations", "notFor", "workstreams", "verification", "trust", "lifecycle"]) {
     assert.equal(forbidden in film.outcome, false);
   }
+
+  const sourced = getOutcome("architectural-drawing-rises-from-paper");
+  assert.ok(sourced);
+  assert.equal(sourced.outcome.originalPrompt, undefined);
+  assert.equal(sourced.outcome.source?.type, "official-example");
+  assert.equal(sourced.outcome.source?.publishedAt, "2025-08-28");
+  assert.equal(sourced.sourceUrl, sourced.outcome.source?.url);
+  assert.equal(sourced.outcome.execution.model, "MiniMax-Hailuo-02");
+  assert.match(sourced.outcome.preview?.video?.src ?? "", /^https:\/\/filecdn\.minimax\.chat\//);
 });
 
 test("Outcome validation keeps both prompts exact and rejects framework fields", () => {
-  const valid = structuredClone(outcomeCatalog[0].outcome);
+  const valid = structuredClone(getOutcome("html-css-animated-product-launch-film").outcome);
   assert.equal(validateOutcome(valid).originalPrompt, valid.originalPrompt);
   assert.equal(validateOutcome(valid).executionPrompt, valid.executionPrompt);
   assert.throws(() => validateOutcome({ ...valid, expectations: [] }), /not part of the Outcome contract/);
@@ -45,13 +54,14 @@ test("Product records contain only official directory information", () => {
   for (const forbidden of ["commerce", "checkout", "skills", "prompt", "executionPrompt", "expectations"]) {
     assert.equal(forbidden in product, false);
   }
-  assert.equal(productCatalog.length, 6);
+  assert.equal(productCatalog.length, 7);
   assert.throws(() => resolveProducts(["missing/product"]), /missing product/i);
 });
 
 test("search uses the human-facing Outcome and Product text", () => {
   assert.equal(searchOutcomes(outcomeCatalog, { query: "digital robot simulation" })[0]?.entry.slug, "robot-digital-prototype");
   assert.equal(searchOutcomes(outcomeCatalog, { query: "editable PowerPoint deck" })[0]?.entry.slug, "polished-editable-powerpoint-presentation");
+  assert.equal(searchOutcomes(outcomeCatalog, { query: "architectural drawing animation" })[0]?.entry.slug, "architectural-drawing-rises-from-paper");
   assert.deepEqual(searchOutcomes(outcomeCatalog, { query: "zyxquux" }), []);
   assert.equal(searchOutcomes(outcomeCatalog, { query: "" }).length, outcomeCatalog.length);
 });

@@ -2,10 +2,10 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://possible.sh/schemas/outcome.schema.json",
   "title": "Possible Outcome",
-  "description": "One concrete result with the human's original request, the full prompt sent to the working agent, execution provenance, and optional Products, Skills, and preview media.",
+  "description": "One concrete result with the exact prompt that produced it, available provenance, and optional Products, Skills, and preview media.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schemaVersion", "title", "summary", "originalPrompt", "executionPrompt", "execution", "author"],
+  "required": ["schemaVersion", "title", "summary", "executionPrompt", "execution", "author"],
   "properties": {
     "schemaVersion": { "const": 2 },
     "title": {
@@ -30,6 +30,7 @@
     },
     "execution": { "$ref": "#/$defs/execution" },
     "author": { "$ref": "#/$defs/author" },
+    "source": { "$ref": "#/$defs/source" },
     "skills": {
       "type": "array",
       "minItems": 1,
@@ -50,12 +51,22 @@
     "execution": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["provider", "agent", "model", "timestamp"],
+      "required": ["provider", "model"],
       "properties": {
         "provider": { "type": "string", "minLength": 1 },
         "agent": { "type": "string", "minLength": 1 },
         "model": { "type": "string", "minLength": 1 },
         "timestamp": { "type": "string", "format": "date-time" }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "url"],
+      "properties": {
+        "type": { "enum": ["official-example", "community"] },
+        "url": { "type": "string", "format": "uri", "pattern": "^https://" },
+        "publishedAt": { "type": "string", "format": "date" }
       }
     },
     "author": {
@@ -100,7 +111,7 @@
     "video": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["src", "poster"],
+      "required": ["src"],
       "properties": {
         "src": { "type": "string", "minLength": 1 },
         "poster": { "type": "string", "minLength": 1 },

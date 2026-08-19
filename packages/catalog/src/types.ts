@@ -11,9 +11,15 @@ export interface OutcomeAuthor {
 
 export interface OutcomeExecution {
   provider: string;
-  agent: string;
   model: string;
-  timestamp: string;
+  agent?: string;
+  timestamp?: string;
+}
+
+export interface OutcomeSource {
+  type: "official-example" | "community";
+  url: string;
+  publishedAt?: string;
 }
 
 export type CompanyId = string;
@@ -54,7 +60,7 @@ export interface OutcomePreviewImage {
 
 export interface OutcomePreviewVideo {
   src: string;
-  poster: string;
+  poster?: string;
   caption?: string;
 }
 
@@ -89,10 +95,11 @@ export interface Outcome {
   schemaVersion: 2;
   title: string;
   summary: string;
-  originalPrompt: string;
+  originalPrompt?: string;
   executionPrompt: string;
   execution: OutcomeExecution;
   author: OutcomeAuthor;
+  source?: OutcomeSource;
   skills?: SkillReference[];
   products?: ProductId[];
   preview?: OutcomePreview;

@@ -16,8 +16,10 @@ assert.doesNotMatch(home, /Outcome Pack|expectations checklist|structured prompt
 for (const entry of outcomeCatalog) {
   const markup = await html(`outcomes/${entry.slug}/index.html`);
   assert.match(markup, new RegExp(escape(entry.outcome.title)));
-  assert.match(markup, /Original request/);
-  assert.match(markup, /Full execution prompt/);
+  if (entry.outcome.originalPrompt) assert.match(markup, /Original request/);
+  else assert.doesNotMatch(markup, /Original request/);
+  assert.match(markup, />Prompt</);
+  assert.match(markup, /Remix this prompt/);
   assert.match(markup, /Made with/);
   assert.match(markup, new RegExp(escape(entry.outcome.author.name)));
   assert.doesNotMatch(markup, /trust status|accepted evidence|compiled prompt|verification framework/i);

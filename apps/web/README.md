@@ -1,7 +1,7 @@
 # Possible web
 
 - `/` — searchable, paginated Outcome directory
-- `/outcomes/<slug>` — preview, original request, full execution prompt, provenance, author, Products, and Skills
+- `/outcomes/<slug>` — result preview, exact prompt, provenance, source, author, Products, and Skills
 - `/products` and `/products/<slug>` — official Product information and related Outcomes
 - `/docs` — use, publishing, and format reference
 

@@ -22,6 +22,12 @@ export const rawCompanies: CompanyRecord[] = [
   },
   {
     "schemaVersion": 1,
+    "id": "minimax",
+    "name": "MiniMax",
+    "website": "https://www.minimax.io/"
+  },
+  {
+    "schemaVersion": 1,
     "id": "remotion",
     "name": "Remotion",
     "website": "https://www.remotion.dev/"
@@ -75,6 +81,18 @@ export const rawProducts: ProductRecord[] = [
     "logoUrl": "https://raw.githubusercontent.com/heygen-com/hyperframes/3e4b08cdc18642d468d53f34c2fb64ab437807ae/docs/logo/symbol-light.svg",
     "website": "https://github.com/heygen-com/hyperframes",
     "docsUrl": "https://hyperframes.heygen.com"
+  },
+  {
+    "schemaVersion": 1,
+    "id": "minimax/hailuo-02",
+    "name": "MiniMax Hailuo 02",
+    "company": "minimax",
+    "category": "video",
+    "summary": "Video generation model supporting higher resolution (1080P), longer duration (10s), and stronger adherence to prompts.",
+    "summarySourceUrl": "https://platform.minimax.io/docs/api-reference/api-overview",
+    "logoUrl": "https://www.minimax.io/favicon.ico",
+    "website": "https://www.minimax.io/news/minimax-hailuo-02",
+    "docsUrl": "https://platform.minimax.io/docs/api-reference/video-generation-fl2v"
   },
   {
     "schemaVersion": 1,

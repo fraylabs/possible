@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 2,
+  "title": "Architectural Drawing Rises from a Blank Page",
+  "summary": "Lines and color converge across a sheet of paper until a completed architectural drawing appears.",
+  "executionPrompt": "A blank sheet of paper lies flat on a tabletop. The camera executes a rapid push-in from a wide shot, then immediately begins to orbit around the paper. Lines emerge and intertwine across the page like nimble sprites, as colors gradually bloom and spread. As the camera slowly rises, the lines and colors continuously converge and combine, making the silhouette of a building gradually clear. The final shot freezes on the completed architectural drawing, showcasing the magnificent building, perfectly rendered as if it has risen straight from the paper itself.",
+  "execution": {
+    "provider": "MiniMax",
+    "model": "MiniMax-Hailuo-02"
+  },
+  "author": {
+    "name": "MiniMax",
+    "url": "https://www.minimax.io/"
+  },
+  "source": {
+    "type": "official-example",
+    "url": "https://www.minimax.io/news/minimax-hailuo-02-start-end-frames-feature-is-now-live",
+    "publishedAt": "2025-08-28"
+  },
+  "products": [
+    "minimax/hailuo-02"
+  ],
+  "preview": {
+    "description": "The result published by MiniMax alongside this exact prompt.",
+    "video": {
+      "src": "https://filecdn.minimax.chat/public/0aed4b89-ea8d-489e-b041-80ffed7b8459.mp4",
+      "caption": "Official MiniMax-Hailuo-02 example."
+    }
+  }
+}

@@ -3,7 +3,7 @@ import { pageMetadata } from "./_metadata";
 
 export const metadata = pageMetadata({
   title: "Possible — Discover what agents can do",
-  description: "Browse real outcomes, compare rough requests with full execution prompts, and discover what AI agents can do.",
+  description: "See what AI can make, find the exact prompt, and remix it.",
   path: "/",
 });
 

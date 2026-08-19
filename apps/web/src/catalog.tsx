@@ -13,7 +13,7 @@ function OutcomeSearchResult({ result }: { result: PublishedOutcomeSearchResult 
   return (
     <a className="pack-search-result" href={outcomeHref(entry)}>
       <div className="pack-search-source">
-        <span className="pack-search-favicon" aria-hidden="true">P</span>
+        <span className="pack-search-favicon" aria-hidden="true">{entry.outcome.author.name.slice(0, 1)}</span>
         <span className="pack-search-source-copy">
           <span className="pack-search-source-title"><strong>{entry.outcome.author.name}</strong></span>
           <small>possible.sh <i>›</i> outcomes <i>›</i> {entry.slug}</small>
@@ -22,7 +22,7 @@ function OutcomeSearchResult({ result }: { result: PublishedOutcomeSearchResult 
       <h3>{entry.outcome.title}</h3>
       <p>{entry.outcome.summary}</p>
       {entry.products.length ? <div className="pack-search-product">Uses {entry.products.map(({ name, company }) => `${name} by ${company.name}`).join(" · ")}</div> : null}
-      <div className="pack-search-fit"><strong>Execution prompt</strong><span>See how the rough request became a complete assignment.</span></div>
+      <div className="pack-search-fit"><strong>Exact prompt</strong><span>{entry.outcome.source?.type === "official-example" ? "Official result and source available to remix." : "Result, provenance, and prompt available to remix."}</span></div>
     </a>
   );
 }
@@ -33,6 +33,7 @@ export const commonSearches = [
   "Make a product launch film",
   "Compose a quiet Strudel soundtrack",
   "Model a ten-link robot snake",
+  "Animate an architectural drawing",
 ];
 const packsPerPage = 6;
 
@@ -208,7 +209,7 @@ export function OutcomesPage() {
           <p>{searchResults.length} {searchResults.length === 1 ? "result" : "results"} for <strong>“{normalizedQuery}”</strong></p>
         </header> : <header className="packs-results-bar">
           <div><h2 id="packs-results-heading">What agents can do</h2><span>{publishedOutcomes.length} {publishedOutcomes.length === 1 ? "OUTCOME" : "OUTCOMES"}</span></div>
-          <span>ROUGH REQUESTS / FULL PROMPTS / REAL PREVIEWS</span>
+          <span>RESULTS / EXACT PROMPTS / SOURCES</span>
         </header>}
         {normalizedQuery && searchResults.length ? (
           <div className="packs-search-list" role="region" aria-label="Agent outcome search results">
@@ -241,7 +242,7 @@ export function OutcomesPage() {
       </section>
 
       {!normalizedQuery ? <section className="packs-library-note">
-        <p><strong>Made something worth sharing?</strong> Publish the original request, the full execution prompt, and an optional preview of the result.</p>
+        <p><strong>Made something worth sharing?</strong> Publish the result, the exact prompt, and a source people can inspect.</p>
         <a href={`${githubUrl}/blob/main/CONTRIBUTING.md`} target="_blank" rel="noreferrer">Share an Outcome <span>↗</span></a>
       </section> : null}
 

@@ -285,6 +285,7 @@
 .library-pack-card[data-variant="3"] { --card-accent: #a8ff52; }
 .library-pack-visual { aspect-ratio: 16 / 9; overflow: hidden; border-bottom: 5px solid var(--card-accent); background: color-mix(in srgb, var(--card-accent) 18%, #0d0d0c); }
 .library-pack-cover { width: 100%; height: 100%; display: block; object-fit: cover; }
+.library-pack-visual video { pointer-events: none; }
 .library-pack-copy { min-height: 250px; padding: 19px; display: flex; flex: 1; flex-direction: column; }
 .library-pack-copy > header { margin-bottom: 19px; display: grid; grid-template-columns: auto 1fr auto; gap: 12px; color: #8b8a84; font: 7px "DM Mono", monospace; letter-spacing: .05em; }
 .library-pack-copy > header span:first-child, .library-pack-copy > header i { color: var(--card-accent); }

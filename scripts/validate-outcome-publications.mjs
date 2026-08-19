@@ -14,8 +14,9 @@ for (const entry of outcomeCatalog) {
   assert.equal(publication.originalPrompt, entry.outcome.originalPrompt);
   assert.equal(publication.executionPrompt, entry.outcome.executionPrompt);
   assert.deepEqual(publication.execution, entry.outcome.execution);
-  assert.equal(await text(`outcomes/${entry.slug}/original-prompt.txt`), `${entry.outcome.originalPrompt}\n`);
-  assert.equal(await text(`outcomes/${entry.slug}/execution-prompt.txt`), `${entry.outcome.executionPrompt}\n`);
+  assert.deepEqual(publication.source, entry.outcome.source);
+  if (entry.outcome.originalPrompt) assert.equal(await text(`outcomes/${entry.slug}/request.txt`), `${entry.outcome.originalPrompt}\n`);
+  assert.equal(await text(`outcomes/${entry.slug}/prompt.txt`), `${entry.outcome.executionPrompt}\n`);
   const preview = entry.outcome.preview;
   for (const path of [
     ...(preview?.images ?? []).map(({ src }) => src),
@@ -30,8 +31,8 @@ for (const entry of outcomeCatalog) {
 }
 
 const llms = await text("llms.txt");
-assert.match(llms, /original prompts, full execution prompts/i);
-assert.match(llms, /published records remain unchanged/i);
+assert.match(llms, /results, exact prompts, and inspectable sources/i);
+assert.match(llms, /published prompts remain unchanged/i);
 assert.doesNotMatch(llms, /Outcome Pack|expectations|trust status|snapshot/);
 for (const entry of outcomeCatalog) assert.match(llms, new RegExp(`/outcomes/${entry.slug}\\.json`));
 console.log("All public Outcome publications and media are valid.");

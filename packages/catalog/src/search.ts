@@ -27,7 +27,7 @@ export function searchOutcomes(catalog: readonly OutcomeCatalogEntry[], input: O
     .map((entry) => {
       const title = tokenizeOutcomeSearch(entry.outcome.title);
       const summary = tokenizeOutcomeSearch(entry.outcome.summary);
-      const originalPrompt = tokenizeOutcomeSearch(entry.outcome.originalPrompt);
+      const originalPrompt = tokenizeOutcomeSearch(entry.outcome.originalPrompt ?? "");
       const executionPrompt = tokenizeOutcomeSearch(entry.outcome.executionPrompt);
       const productNames = tokenizeOutcomeSearch(entry.products.map(({ name }) => name).join(" "));
       const matchedTerms = terms.filter((term) => title.includes(term) || summary.includes(term) || originalPrompt.includes(term) || executionPrompt.includes(term) || productNames.includes(term));

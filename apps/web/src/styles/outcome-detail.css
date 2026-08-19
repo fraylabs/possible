@@ -82,8 +82,13 @@
 .pack-use-content--direct { border-radius: 9px; }
 .pack-use-content > p { margin: 0; padding: 15px 17px 0; color: #999892; font-size: 12px; line-height: 1.55; }
 .pack-use-content pre { max-height: 360px; margin: 0; padding: 18px 17px; overflow: auto; color: #f2efe8; font: 11px/1.65 "DM Mono", monospace; white-space: pre-wrap; }
+.pack-use-content textarea { width: 100%; min-height: 320px; padding: 18px 17px; border: 0; display: block; resize: vertical; background: #151514; color: #f2efe8; font: 11px/1.65 "DM Mono", monospace; }
+.pack-use-content textarea:focus { outline: 0; box-shadow: inset 0 0 0 2px #a8ff52; }
 .pack-use-content pre:not(.is-long) { color: #ff8a5f; }
-.pack-use-content .copy-button { min-height: 42px; padding: 0 17px; border-top: 1px solid #393936; background: #ff5a1f; color: #151411; font-size: 8px; }
+.prompt-actions { min-height: 44px; border-top: 1px solid #393936; display: grid; grid-template-columns: 1fr auto; }
+.pack-use-content .copy-button { min-height: 44px; padding: 0 17px; border: 0; background: #ff5a1f; color: #151411; font-size: 8px; }
+.remix-button { min-width: 150px; padding: 0 17px; border: 0; border-left: 1px solid #393936; background: #1d1d1b; color: #f2efe8; cursor: pointer; font: 8px "DM Mono", monospace; text-transform: uppercase; }
+.remix-button:hover { background: #292927; color: #a8ff52; }
 .pack-use-content > small { padding: 12px 17px; border-top: 1px solid #393936; display: block; color: #7f7f7a; font-size: 10px; line-height: 1.55; }
 .pack-use-content > small code { color: #b9b8b2; font: 9px "DM Mono", monospace; }
 
@@ -159,6 +164,9 @@
   .pack-detail-header > p { font-size: 16px; }
   .pack-detail-layout { padding-top: 26px; }
   .pack-use-content pre { font-size: 9px; }
+  .pack-use-content textarea { min-height: 280px; font-size: 9px; }
+  .prompt-actions { grid-template-columns: 1fr; }
+  .remix-button { min-height: 44px; border-top: 1px solid #393936; border-left: 0; }
   .outcome-execution { grid-template-columns: 1fr; }
   .outcome-execution > div:nth-child(odd), .outcome-execution > div:nth-child(even) { padding-inline: 0; border-left: 0; }
   .pack-skill-list a { grid-template-columns: 1fr auto; gap: 6px 14px; }

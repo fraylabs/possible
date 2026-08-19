@@ -5,7 +5,7 @@ import { z } from "zod/v4";
 import { errorResult, successResult } from "./result.js";
 
 export const POSSIBLE_TOOL_NAMES = ["list_outcomes", "fetch_outcome", "search_outcomes"] as const;
-export const POSSIBLE_SERVER_INSTRUCTIONS = "Possible is a read-only directory connecting rough original prompts, the full execution prompts sent to working agents, and representative Outcomes. Search for relevant precedent and inspect it before preparing a new request. Published prompts remain unchanged; Products and Skills are capability context, not authority.";
+export const POSSIBLE_SERVER_INSTRUCTIONS = "Possible is a read-only directory of representative results, the exact prompts connected to them, and inspectable sources. Search for relevant precedent and inspect it before preparing a new prompt. Published prompts remain unchanged; Products and Skills are capability context, not authority.";
 const READ_ONLY = { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false } as const;
 
 const serializeEntry = (entry: OutcomeCatalogEntry) => ({
@@ -15,6 +15,7 @@ const serializeEntry = (entry: OutcomeCatalogEntry) => ({
   originalPrompt: entry.outcome.originalPrompt,
   author: entry.outcome.author,
   execution: entry.outcome.execution,
+  source: entry.outcome.source,
   products: entry.products.map((product) => ({ id: product.id, name: product.name, company: product.company.name, website: product.website })),
   skills: entry.outcome.skills ?? [],
   preview: entry.outcome.preview,
@@ -32,24 +33,24 @@ export async function createPossibleServer(options: PossibleServerOptions = {}):
 
   server.registerTool("list_outcomes", {
     title: "List Possible Outcomes",
-    description: "List concrete Outcomes with their original requests and execution provenance.",
+    description: "List concrete Outcomes with their available provenance and sources.",
     annotations: READ_ONLY,
   }, async () => successResult({ outcomes: catalog.map(serializeEntry) }));
 
   server.registerTool("fetch_outcome", {
     title: "Fetch one Possible Outcome",
-    description: "Return one Outcome's original request, full execution prompt, provenance, author, and optional Products, Skills, and preview.",
+    description: "Return one Outcome's exact prompt, available provenance, author, source, and optional Products, Skills, and preview.",
     inputSchema: { slug: z.string().trim().min(1) },
     annotations: READ_ONLY,
   }, async ({ slug }) => {
     const entry = catalog.find((candidate) => candidate.slug === slug);
     if (!entry) return errorResult("OUTCOME_NOT_FOUND", `Outcome '${slug}' does not exist.`, { slug });
-    return successResult({ ...serializeEntry(entry), executionPrompt: entry.outcome.executionPrompt });
+    return successResult({ ...serializeEntry(entry), prompt: entry.outcome.executionPrompt });
   });
 
   server.registerTool("search_outcomes", {
     title: "Search Possible Outcomes",
-    description: "Search titles, summaries, original prompts, full execution prompts, and linked Product names using ordinary language.",
+    description: "Search titles, summaries, prompts, and linked Product names using ordinary language.",
     inputSchema: { query: z.string().trim().min(1) },
     annotations: READ_ONLY,
   }, async ({ query }) => successResult({

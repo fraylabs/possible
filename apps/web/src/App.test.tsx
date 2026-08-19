@@ -16,7 +16,7 @@ describe("Possible website", () => {
     expect(screen.getByText("Discover what agents can do.")).toBeInTheDocument();
     expect(Array.from(container.querySelectorAll(".nav-links a")).map((link) => link.textContent)).toEqual(["OUTCOMES", "PRODUCTS", "DOCS", "GITHUB ↗"]);
     const gallery = screen.getByRole("region", { name: "Outcome directory" });
-    expect(within(gallery).getAllByRole("link")).toHaveLength(5);
+    expect(within(gallery).getAllByRole("link")).toHaveLength(6);
     expect(gallery.querySelector(".library-pack-card.has-media .library-pack-visual")).toBeInTheDocument();
     expect(screen.queryByRole("navigation", { name: "Outcome pages" })).not.toBeInTheDocument();
     expect(await axe(container)).toHaveNoViolations();
@@ -29,19 +29,20 @@ describe("Possible website", () => {
     expect(screen.getByRole("searchbox", { name: "Search what agents can do" })).toHaveValue("Compose a quiet Strudel soundtrack");
     const results = screen.getByRole("region", { name: "Agent outcome search results" });
     expect(within(results).getByRole("heading", { name: /Lantern Rain: Original Strudel Soundtrack/i })).toBeInTheDocument();
-    expect(within(results).getAllByText("Execution prompt").length).toBeGreaterThan(0);
+    expect(within(results).getAllByText("Exact prompt").length).toBeGreaterThan(0);
   });
 
-  it("shows the preview, original request, full execution prompt, provenance, author, Products, and optional Skills", async () => {
+  it("shows the preview, exact prompt, provenance, author, Products, and optional Skills", async () => {
     const entry = getPublishedOutcome("html-css-animated-product-launch-film");
     expect(entry).toBeDefined();
     const { container } = render(<OutcomeDetailPage slug="html-css-animated-product-launch-film" />);
     expect(screen.getByRole("heading", { name: entry?.outcome.title, level: 1 })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "What it can make" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Original request" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Full execution prompt" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Prompt" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Made with" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Copy execution prompt" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Copy prompt" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Remix this prompt" })).toBeInTheDocument();
     expect(container).not.toHaveTextContent(/workstreams|trust|verification framework/i);
     expect(await axe(container)).toHaveNoViolations();
   });
@@ -59,11 +60,11 @@ describe("Possible website", () => {
 
   it("documents the same small public contract", () => {
     render(<DocsPage />);
-    expect(screen.getByRole("heading", { name: "Possible connects requests, prompts, and outcomes" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Possible connects results, prompts, and sources" })).toBeInTheDocument();
     cleanup();
     render(<AuthoringDocsPage />);
     expect(screen.getByRole("heading", { name: "Share an Outcome" })).toBeInTheDocument();
-    expect(screen.getByText(/The two prompts, provenance, title, summary, and author are required/)).toBeInTheDocument();
+    expect(screen.getByText(/The prompt, provider, model, title, summary, and author are required/)).toBeInTheDocument();
     expect(screen.queryByText(/trust status|expectations checklist|compiler/i)).not.toBeInTheDocument();
   });
 });

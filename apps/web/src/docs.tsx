@@ -25,24 +25,24 @@ function DocsLayout({ active, eyebrow, title, description, children }: { active:
 }
 
 export function DocsPage() {
-  return <DocsLayout active="overview" eyebrow="OVERVIEW" title="Possible connects requests, prompts, and outcomes" description="See what somebody asked, inspect the complete prompt their agent received, and judge the result it produced.">
-    <aside className="docs-callout docs-callout--info"><strong>THE SHORT VERSION</strong><p>Outcome = original prompt + full execution prompt + execution provenance + the resulting work.</p></aside>
-    <section><h2>What Possible does</h2><ol><li><strong>Preserves the rough request</strong><span>The original prompt shows where the work actually began.</span></li><li><strong>Shows the full assignment</strong><span>The execution prompt is the complete one-shot prompt sent to the working agent, not a retrospective summary.</span></li><li><strong>Shows what happened</strong><span>Images, video, audio, or CAD let people inspect the resulting Outcome and see which agent, model, and timestamp produced it.</span></li></ol></section>
+  return <DocsLayout active="overview" eyebrow="OVERVIEW" title="Possible connects results, prompts, and sources" description="See what AI made, inspect the exact prompt connected to it, and remix the parts worth reusing.">
+    <aside className="docs-callout docs-callout--info"><strong>THE SHORT VERSION</strong><p>Outcome = result + exact prompt + available provenance + original source.</p></aside>
+    <section><h2>What Possible does</h2><ol><li><strong>Shows the result first</strong><span>Images, video, audio, or CAD make each possibility concrete.</span></li><li><strong>Preserves the prompt</strong><span>The prompt is published unchanged, not replaced with a retrospective recipe.</span></li><li><strong>Links the source</strong><span>Creator, product, model, date, and the canonical publication are shown whenever they are known.</span></li></ol></section>
     <section><h2>Optional $possible skill</h2><p>The website shows prior work. The skill uses those Outcomes as precedent, gathers current information, asks only consequential questions, and prepares a new execution prompt for a fresh agent.</p><div className="docs-command"><header><strong>INSTALL</strong></header><pre><code>{installCommand}</code></pre><CopyButton label="Copy install command" value={installCommand} /></div></section>
     <nav className="docs-next"><span>NEXT</span><a href="/docs/how-to-use">How to use Possible <b>→</b></a></nav>
   </DocsLayout>;
 }
 
 export function HowToUsePage() {
-  return <DocsLayout active="how-to-use" eyebrow="HOW TO USE" title="Start rough. Hand off complete." description="Browse prior Outcomes directly or let $possible turn a rough request into a self-contained prompt for a fresh agent.">
-    <section><h2>On possible.sh</h2><ol><li><strong>Search in ordinary language</strong><span>Try “make a launch video,” “design a cat shelter,” or “create an editable deck.”</span></li><li><strong>Open an Outcome</strong><span>Compare the rough original request, full execution prompt, execution provenance, and visible result.</span></li><li><strong>Reuse good precedent</strong><span>Copy the execution prompt when it already fits, or give the Outcome to $possible as a starting point.</span></li></ol></section>
+  return <DocsLayout active="how-to-use" eyebrow="HOW TO USE" title="Find something good. Remix the prompt." description="Browse prior Outcomes directly or let $possible adapt useful precedent to a new request.">
+    <section><h2>On possible.sh</h2><ol><li><strong>Search in ordinary language</strong><span>Try “make a launch video,” “design a cat shelter,” or “animate an architectural drawing.”</span></li><li><strong>Open an Outcome</strong><span>Judge the visible result, then inspect its prompt, provenance, and original source.</span></li><li><strong>Remix the prompt</strong><span>Edit what should change and copy the result into the product or agent you want to use.</span></li></ol></section>
     <section><h2>With $possible</h2><p>Give <code>$possible</code> your rough request. It finds relevant Outcomes, checks current primary sources, asks only questions that materially change the work, and shows you a new execution prompt. After you approve it, that complete prompt can be sent to a fresh subagent without hidden conversation history.</p></section>
     <nav className="docs-next"><span>NEXT</span><a href="/docs/authoring">Publish an Outcome <b>→</b></a></nav>
   </DocsLayout>;
 }
 
 export function AuthoringDocsPage() {
-  return <DocsLayout active="authoring" eyebrow="PUBLISH" title="Share an Outcome" description="Publish a real request, the complete prompt the working agent received, its execution provenance, and optional media showing the result.">
+  return <DocsLayout active="authoring" eyebrow="PUBLISH" title="Share an Outcome" description="Publish a real result, its exact prompt, available provenance, and an inspectable source.">
     <section><h2>Folder shape</h2><pre className="docs-code-block"><code>{`packages/catalog/src/outcomes/my-outcome/
   outcome.json
   media/          # optional`}</code></pre></section>
@@ -50,7 +50,6 @@ export function AuthoringDocsPage() {
   "schemaVersion": 2,
   "title": "A clear, specific result",
   "summary": "One sentence explaining the resulting work.",
-  "originalPrompt": "The human's rough request, verbatim.",
   "executionPrompt": "The full prompt sent to the working agent.",
   "execution": {
     "provider": "OpenAI",
@@ -62,15 +61,15 @@ export function AuthoringDocsPage() {
   "products": [],
   "skills": [],
   "preview": {}
-}`}</code></pre><p>The two prompts, provenance, title, summary, and author are required. Products, Skills, and preview media are optional.</p></section>
+}`}</code></pre><p>The prompt, provider, model, title, summary, and author are required. A prior request, agent, timestamp, source, Products, Skills, and preview media are optional. External examples must link their original publication.</p></section>
     <section><h2>Submit it</h2><ol><li><strong>Start from a real run</strong><span>Do not publish a hypothetical prompt as though it produced an Outcome.</span></li><li><strong>Create the folder</strong><span>Use a lowercase hyphenated slug.</span></li><li><strong>Add optional preview media</strong><span>Up to five images, one video, one audio file, and CAD files may be referenced from <code>media/</code>.</span></li><li><strong>Run the checks</strong><span>Run <code>npm run outcomes:generate</code> and <code>npm run check</code>.</span></li><li><strong>Open a pull request</strong><span>No account system, export step, or separate submission record is required.</span></li></ol></section>
   </DocsLayout>;
 }
 
 export function DocsReferencePage() {
-  return <DocsLayout active="reference" eyebrow="REFERENCE" title="Outcome reference" description="The public format keeps the complete request-to-result record small enough to inspect and reuse.">
-    <section><h2>Required fields</h2><div className="docs-table"><div><code>title</code><span>The self-explanatory name of the result.</span></div><div><code>summary</code><span>A concise explanation of the resulting work.</span></div><div><code>originalPrompt</code><span>The human's original request, preserved verbatim.</span></div><div><code>executionPrompt</code><span>The complete one-shot prompt sent to the working agent.</span></div><div><code>execution</code><span>The provider, agent, model, and ISO 8601 timestamp for that run.</span></div><div><code>author</code><span>The author's display name and HTTPS link.</span></div></div></section>
-    <section><h2>Optional fields</h2><div className="docs-table"><div><code>products</code><span>Official Products meaningfully involved in the outcome.</span></div><div><code>skills</code><span>GitHub Skill references the author reviewed.</span></div><div><code>preview</code><span>Representative images, video, audio, or CAD.</span></div></div></section>
-    <section><h2>Machine interfaces</h2><ul><li><code>/outcomes/index.json</code> lists the directory.</li><li><code>/outcomes/&lt;slug&gt;.json</code> returns one Outcome.</li><li><code>/outcomes/&lt;slug&gt;/original-prompt.txt</code> returns the rough request.</li><li><code>/outcomes/&lt;slug&gt;/execution-prompt.txt</code> returns the full agent assignment.</li><li>The MCP exposes <code>list_outcomes</code>, <code>search_outcomes</code>, and <code>fetch_outcome</code>.</li></ul></section>
+  return <DocsLayout active="reference" eyebrow="REFERENCE" title="Outcome reference" description="The public format keeps each prompt-to-result record small enough to inspect and reuse.">
+    <section><h2>Required fields</h2><div className="docs-table"><div><code>title</code><span>The self-explanatory name of the result.</span></div><div><code>summary</code><span>A concise explanation of the resulting work.</span></div><div><code>executionPrompt</code><span>The exact prompt connected to the result.</span></div><div><code>execution</code><span>The provider and model; agent and timestamp may be added when known.</span></div><div><code>author</code><span>The creator or publisher's display name and HTTPS link.</span></div></div></section>
+    <section><h2>Optional fields</h2><div className="docs-table"><div><code>originalPrompt</code><span>The prior rough request, preserved verbatim when one exists.</span></div><div><code>source</code><span>The canonical official or community publication and date.</span></div><div><code>products</code><span>Official Products meaningfully involved in the outcome.</span></div><div><code>skills</code><span>GitHub Skill references the author reviewed.</span></div><div><code>preview</code><span>Representative images, video, audio, or CAD.</span></div></div></section>
+    <section><h2>Machine interfaces</h2><ul><li><code>/outcomes/index.json</code> lists the directory.</li><li><code>/outcomes/&lt;slug&gt;.json</code> returns one Outcome.</li><li><code>/outcomes/&lt;slug&gt;/prompt.txt</code> returns the exact prompt.</li><li><code>/outcomes/&lt;slug&gt;/request.txt</code> returns the prior rough request when one exists.</li><li>The MCP exposes <code>list_outcomes</code>, <code>search_outcomes</code>, and <code>fetch_outcome</code>.</li></ul></section>
   </DocsLayout>;
 }

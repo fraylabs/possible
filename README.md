@@ -1,6 +1,6 @@
 # Possible
 
-Discover what AI agents can do, see what people originally asked, and inspect the complete prompts their agents received.
+See what AI can make, find the exact prompt, and remix it.
 
 [Browse Outcomes](https://possible.sh) · [Read the docs](https://possible.sh/docs)
 
@@ -13,14 +13,13 @@ Every Outcome has:
 
 - a clear title;
 - a one-sentence summary;
-- the original prompt;
-- the full execution prompt;
-- the provider, agent, model, and timestamp;
+- the exact prompt connected to the result;
+- the provider and model;
 - its author.
 
-An Outcome may also name the Products and agent Skills it uses and include up to five images, one video, one audio preview, and CAD files.
+An Outcome may also preserve the prior rough request, link the original source and publication date, name the Products and agent Skills it uses, and include up to five images, one video, one audio preview, and CAD files.
 
-There is no hidden pack compiler, trust lifecycle, or authored workflow schema. Published execution prompts remain visible and unchanged. The optional `$possible` skill prepares a new prompt at run time from the user's request, relevant Outcomes, and current information.
+There is no hidden pack compiler, trust lifecycle, or authored workflow schema. Published prompts remain visible and unchanged. The optional `$possible` skill prepares a new prompt at run time from the user's request, relevant Outcomes, and current information.
 
 ## Optional $possible skill
 

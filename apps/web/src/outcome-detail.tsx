@@ -9,6 +9,26 @@ import { CopyButton, NotFoundPage, SiteShell } from "./shared";
 const OutcomeCadViewer = lazy(() => import("./OutcomeCadViewer"));
 type PreviewSelection = { id: string; kind: "image" | "video" | "audio" | "cad"; imageIndex?: number };
 
+function PromptPanel({ prompt }: { prompt: string }) {
+  const [remixing, setRemixing] = useState(false);
+  const [draft, setDraft] = useState(prompt);
+
+  function reset() {
+    setDraft(prompt);
+    setRemixing(false);
+  }
+
+  return (
+    <div className={`pack-use-content pack-use-content--direct${remixing ? " is-remixing" : ""}`}>
+      {remixing ? <textarea aria-label="Remix prompt" value={draft} onChange={(event) => setDraft(event.target.value)} /> : <pre className="is-long"><code>{prompt}</code></pre>}
+      <div className="prompt-actions">
+        <CopyButton label={remixing ? "Copy remixed prompt" : "Copy prompt"} value={draft} />
+        {remixing ? <button className="remix-button" type="button" onClick={reset}>Reset</button> : <button className="remix-button" type="button" onClick={() => setRemixing(true)}>Remix this prompt</button>}
+      </div>
+    </div>
+  );
+}
+
 function OutcomePreviewView({ preview, title }: { preview: OutcomePreview; title: string }) {
   const items: PreviewSelection[] = [
     ...(preview.images ?? []).map((_, index) => ({ id: `image-${index}`, kind: "image" as const, imageIndex: index })),
@@ -27,7 +47,7 @@ function OutcomePreviewView({ preview, title }: { preview: OutcomePreview; title
       {preview.description ? <header><span>PREVIEW</span><p>{preview.description}</p></header> : null}
       <div className="pack-showcase-stage">
         {image ? <figure><img src={image.src} alt={image.alt} /><figcaption>{image.caption}</figcaption></figure> : null}
-        {selected.kind === "video" && preview.video ? <figure><video controls playsInline preload="metadata" poster={preview.video.poster}><source src={preview.video.src} /><a href={preview.video.src}>Open video</a></video><figcaption>{preview.video.caption}</figcaption></figure> : null}
+        {selected.kind === "video" && preview.video ? <figure><video autoPlay muted loop controls playsInline preload="metadata" poster={preview.video.poster}><source src={preview.video.src} /><a href={preview.video.src}>Open video</a></video><figcaption>{preview.video.caption}</figcaption></figure> : null}
         {selected.kind === "audio" && preview.audio ? <figure>{preview.audio.poster ? <img src={preview.audio.poster} alt="" /> : null}<audio controls preload="metadata"><source src={preview.audio.src} /></audio><figcaption>{preview.audio.caption}</figcaption></figure> : null}
         {selected.kind === "cad" && preview.cad ? <figure>
           {preview.cad.preview && preview.cad.poster ? <Suspense fallback={<img src={preview.cad.poster} alt={cadPosterAlt} />}><OutcomeCadViewer modelSrc={preview.cad.preview} posterSrc={preview.cad.poster} alt={cadPosterAlt} /></Suspense> : preview.cad.poster ? <img src={preview.cad.poster} alt={cadPosterAlt} /> : <div className="pack-cad-download-only"><span>CAD FILES</span><strong>Download the editable files below.</strong></div>}
@@ -52,30 +72,31 @@ export function OutcomeDetailPage({ slug }: { slug: string }) {
           <nav className="pack-detail-breadcrumb" aria-label="Breadcrumb"><a href="/#outcomes">Outcomes</a><span>/</span><span>{outcome.title}</span></nav>
           <h1>{outcome.title}</h1>
           <p>{outcome.summary}</p>
-          <p className="outcome-author">By <a href={outcome.author.url} target="_blank" rel="noreferrer">{outcome.author.name} ↗</a></p>
+          <p className="outcome-author">{outcome.source?.type === "official-example" ? "Official example by" : "By"} <a href={outcome.author.url} target="_blank" rel="noreferrer">{outcome.author.name} ↗</a></p>
           {entry.products.length ? <div className="pack-product-attribution"><span>USES</span>{entry.products.map((product) => <a href={productHref(product)} key={product.id}><strong>{product.name}</strong><small>by {product.company.name}</small></a>)}</div> : null}
         </header>
 
         <div className="pack-detail-layout"><div className="pack-detail-main">
           {outcome.preview ? <section className="pack-readable-section pack-readable-section--first" aria-labelledby="outcome-preview-heading"><h2 id="outcome-preview-heading">What it can make</h2><OutcomePreviewView preview={outcome.preview} title={outcome.title} /></section> : null}
 
-          <section className="pack-readable-section" aria-labelledby="outcome-original-prompt-heading">
+          {outcome.originalPrompt ? <section className="pack-readable-section" aria-labelledby="outcome-original-prompt-heading">
             <h2 id="outcome-original-prompt-heading">Original request</h2>
             <blockquote className="outcome-original-prompt">{outcome.originalPrompt}</blockquote>
-          </section>
+          </section> : null}
 
           <section className="pack-use-panel" aria-labelledby="outcome-prompt-heading">
-            <h2 id="outcome-prompt-heading">Full execution prompt</h2>
-            <div className="pack-use-content pack-use-content--direct"><pre className="is-long"><code>{outcome.executionPrompt}</code></pre><CopyButton label="Copy execution prompt" value={outcome.executionPrompt} /></div>
+            <h2 id="outcome-prompt-heading">Prompt</h2>
+            <PromptPanel prompt={outcome.executionPrompt} />
           </section>
 
           <section className="pack-readable-section" aria-labelledby="outcome-execution-heading">
             <h2 id="outcome-execution-heading">Made with</h2>
             <dl className="outcome-execution">
               <div><dt>Provider</dt><dd>{outcome.execution.provider}</dd></div>
-              <div><dt>Agent</dt><dd>{outcome.execution.agent}</dd></div>
               <div><dt>Model</dt><dd>{outcome.execution.model}</dd></div>
-              <div><dt>Timestamp</dt><dd><time dateTime={outcome.execution.timestamp}>{outcome.execution.timestamp}</time></dd></div>
+              {outcome.execution.agent ? <div><dt>Agent</dt><dd>{outcome.execution.agent}</dd></div> : null}
+              {outcome.execution.timestamp ? <div><dt>Created</dt><dd><time dateTime={outcome.execution.timestamp}>{outcome.execution.timestamp}</time></dd></div> : null}
+              {outcome.source?.publishedAt ? <div><dt>Published</dt><dd><time dateTime={outcome.source.publishedAt}>{outcome.source.publishedAt}</time></dd></div> : null}
             </dl>
           </section>
 
@@ -87,7 +108,7 @@ export function OutcomeDetailPage({ slug }: { slug: string }) {
             })}</ul>
           </section> : null}
 
-          <footer className="outcome-source"><span>Published by <a href={outcome.author.url} target="_blank" rel="noreferrer">{outcome.author.name}</a></span><a href={entry.sourceUrl} target="_blank" rel="noreferrer">View source ↗</a></footer>
+          <footer className="outcome-source"><span>{outcome.source?.type === "official-example" ? "Sourced from" : "Published by"} <a href={outcome.author.url} target="_blank" rel="noreferrer">{outcome.author.name}</a></span><a href={entry.sourceUrl} target="_blank" rel="noreferrer">{outcome.source ? "View original" : "View source"} ↗</a></footer>
         </div></div>
       </article>
     </SiteShell>

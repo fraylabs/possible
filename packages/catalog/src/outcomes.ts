@@ -78,26 +78,46 @@ const validateExecution = (value: unknown, context: string): void => {
   const allowed = new Set(["provider", "agent", "model", "timestamp"]);
   for (const key of Object.keys(execution)) if (!allowed.has(key)) throw new Error(`${context}.${key} is unsupported`);
   requiredString(execution.provider, `${context}.provider`);
-  requiredString(execution.agent, `${context}.agent`);
+  if (execution.agent !== undefined) requiredString(execution.agent, `${context}.agent`);
   requiredString(execution.model, `${context}.model`);
-  const timestamp = requiredString(execution.timestamp, `${context}.timestamp`);
-  if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3})?(?:Z|[+-]\d{2}:\d{2})$/.test(timestamp) || Number.isNaN(Date.parse(timestamp))) {
-    throw new Error(`${context}.timestamp must be an ISO 8601 timestamp with a timezone`);
+  if (execution.timestamp !== undefined) {
+    const timestamp = requiredString(execution.timestamp, `${context}.timestamp`);
+    if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3})?(?:Z|[+-]\d{2}:\d{2})$/.test(timestamp) || Number.isNaN(Date.parse(timestamp))) {
+      throw new Error(`${context}.timestamp must be an ISO 8601 timestamp with a timezone`);
+    }
   }
 };
 
-/** Validate one original request, its full execution prompt, and directory metadata without rewriting either prompt. */
+const validateSource = (value: unknown, context: string): void => {
+  if (value === undefined) return;
+  const source = asRecord(value, context);
+  const allowed = new Set(["type", "url", "publishedAt"]);
+  for (const key of Object.keys(source)) if (!allowed.has(key)) throw new Error(`${context}.${key} is unsupported`);
+  if (source.type !== "official-example" && source.type !== "community") throw new Error(`${context}.type is unsupported`);
+  validateHttpsUrl(source.url, `${context}.url`);
+  if (source.publishedAt !== undefined) {
+    const publishedAt = requiredString(source.publishedAt, `${context}.publishedAt`);
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(publishedAt) || Number.isNaN(Date.parse(`${publishedAt}T00:00:00Z`))) {
+      throw new Error(`${context}.publishedAt must be an ISO 8601 date`);
+    }
+  }
+};
+
+/** Validate one exact prompt, its available provenance, and directory metadata without rewriting the prompt. */
 export function validateOutcome(input: unknown, context = "outcome"): Outcome {
   const outcome = asRecord(input, context);
   for (const key of Object.keys(outcome)) if (!OUTCOME_KEYS.has(key)) throw new Error(`${context}.${key} is not part of the Outcome contract`);
   if (outcome.schemaVersion !== 2) throw new Error(`${context}.schemaVersion must be 2`);
   requiredString(outcome.title, `${context}.title`);
   requiredString(outcome.summary, `${context}.summary`);
-  const originalPrompt = requiredString(outcome.originalPrompt, `${context}.originalPrompt`);
-  if (originalPrompt !== originalPrompt.trim()) throw new Error(`${context}.originalPrompt must not contain leading or trailing whitespace`);
+  if (outcome.originalPrompt !== undefined) {
+    const originalPrompt = requiredString(outcome.originalPrompt, `${context}.originalPrompt`);
+    if (originalPrompt !== originalPrompt.trim()) throw new Error(`${context}.originalPrompt must not contain leading or trailing whitespace`);
+  }
   const executionPrompt = requiredString(outcome.executionPrompt, `${context}.executionPrompt`);
   if (executionPrompt !== executionPrompt.trim()) throw new Error(`${context}.executionPrompt must not contain leading or trailing whitespace`);
   validateExecution(outcome.execution, `${context}.execution`);
+  validateSource(outcome.source, `${context}.source`);
 
   const author = asRecord(outcome.author, `${context}.author`);
   for (const key of Object.keys(author)) if (key !== "name" && key !== "url") throw new Error(`${context}.author.${key} is unsupported`);

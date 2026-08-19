@@ -5,18 +5,19 @@ export function OutcomeCard({ entry, priority = false }: { entry: OutcomeCatalog
   const { outcome } = entry;
   const preview = outcome.preview;
   const cover = preview?.images?.find((image) => image.cover) ?? preview?.images?.[0];
-  const poster = cover ?? (preview?.video ? { src: preview.video.poster, alt: preview.video.caption ?? `${outcome.title} video poster` } : undefined) ?? (preview?.cad?.poster ? { src: preview.cad.poster, alt: preview.cad.caption ?? `${outcome.title} CAD preview` } : undefined);
+  const poster = cover ?? (preview?.video?.poster ? { src: preview.video.poster, alt: preview.video.caption ?? `${outcome.title} video poster` } : undefined) ?? (preview?.cad?.poster ? { src: preview.cad.poster, alt: preview.cad.caption ?? `${outcome.title} CAD preview` } : undefined);
+  const hasVisual = Boolean(preview?.video || poster);
   const mediaLabels = [preview?.video ? "VIDEO" : undefined, preview?.cad ? "CAD" : undefined].filter(Boolean);
 
   return (
-    <a className={`library-pack-card ${poster ? "has-media" : "is-text-only"}`} data-variant={entry.catalogNumber % 4} href={outcomeHref(entry)}>
-      <div className="library-pack-visual" aria-hidden="true">{poster ? <img className="library-pack-cover" src={poster.src} alt="" loading={priority ? "eager" : "lazy"} decoding="async" /> : null}</div>
+    <a className={`library-pack-card ${hasVisual ? "has-media" : "is-text-only"}`} data-variant={entry.catalogNumber % 4} href={outcomeHref(entry)}>
+      <div className="library-pack-visual" aria-hidden="true">{preview?.video ? <video className="library-pack-cover" autoPlay muted loop playsInline preload="metadata" poster={preview.video.poster}><source src={preview.video.src} /></video> : poster ? <img className="library-pack-cover" src={poster.src} alt="" loading={priority ? "eager" : "lazy"} decoding="async" /> : null}</div>
       <div className="library-pack-copy">
         <header><span>{String(entry.catalogNumber).padStart(2, "0")}</span><span>{mediaLabels.length ? mediaLabels.join(" + ") : "PROMPT"}</span><i>↗</i></header>
         {entry.products.length ? <div className="library-pack-product">USES {entry.products.map(({ name }) => name).join(" + ")}</div> : null}
         <h3>{outcome.title}</h3>
         <p>{outcome.summary}</p>
-        <div className="library-pack-fit"><strong>FULL PROMPT</strong><span>See the rough request and complete agent assignment.</span></div>
+        <div className="library-pack-fit"><strong>EXACT PROMPT</strong><span>See the result, source, and a prompt you can remix.</span></div>
       </div>
     </a>
   );

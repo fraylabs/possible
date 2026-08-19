@@ -37,15 +37,25 @@ describe("Possible MCP", () => {
     assert.deepEqual(envelope.data.outcomes.map(({ slug }) => slug), outcomeCatalog.map(({ slug }) => slug));
   });
 
-  it("fetches the original and full execution prompts", async () => {
+  it("fetches the prior request and exact prompt when both exist", async () => {
     const result = await client.callTool({ name: "fetch_outcome", arguments: { slug: "robot-digital-prototype" } });
-    const envelope = result.structuredContent as { ok: boolean; data: { originalPrompt: string; executionPrompt: string; execution: { model: string }; author: { name: string } } };
+    const envelope = result.structuredContent as { ok: boolean; data: { originalPrompt: string; prompt: string; execution: { model: string }; author: { name: string } } };
     const source = outcomeCatalog.find(({ slug }) => slug === "robot-digital-prototype");
     assert.ok(source);
     assert.equal(envelope.data.originalPrompt, source.outcome.originalPrompt);
-    assert.equal(envelope.data.executionPrompt, source.outcome.executionPrompt);
+    assert.equal(envelope.data.prompt, source.outcome.executionPrompt);
     assert.equal(envelope.data.execution.model, source.outcome.execution.model);
     assert.equal(envelope.data.author.name, source.outcome.author.name);
+  });
+
+  it("preserves an official example without inventing a prior request", async () => {
+    const result = await client.callTool({ name: "fetch_outcome", arguments: { slug: "architectural-drawing-rises-from-paper" } });
+    const data = (result.structuredContent as { data: { originalPrompt?: string; prompt: string; source: { type: string; url: string }; execution: { model: string; agent?: string } } }).data;
+    assert.equal(data.originalPrompt, undefined);
+    assert.match(data.prompt, /^A blank sheet of paper/);
+    assert.equal(data.source.type, "official-example");
+    assert.equal(data.execution.model, "MiniMax-Hailuo-02");
+    assert.equal(data.execution.agent, undefined);
   });
 
   it("searches ordinary language and returns no invented candidate", async () => {

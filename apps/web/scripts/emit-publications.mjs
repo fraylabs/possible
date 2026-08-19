@@ -11,8 +11,8 @@ const write = async (relativePath, contents) => {
 
 for (const entry of outcomeCatalog) {
   await write(`outcomes/${entry.slug}.json`, json({ slug: entry.slug, ...entry.outcome, products: entry.products }));
-  await write(`outcomes/${entry.slug}/original-prompt.txt`, `${entry.outcome.originalPrompt}\n`);
-  await write(`outcomes/${entry.slug}/execution-prompt.txt`, `${entry.outcome.executionPrompt}\n`);
+  if (entry.outcome.originalPrompt) await write(`outcomes/${entry.slug}/request.txt`, `${entry.outcome.originalPrompt}\n`);
+  await write(`outcomes/${entry.slug}/prompt.txt`, `${entry.outcome.executionPrompt}\n`);
 }
 
 await write("outcomes/index.json", json({
@@ -24,6 +24,7 @@ await write("outcomes/index.json", json({
     summary: entry.outcome.summary,
     originalPrompt: entry.outcome.originalPrompt,
     execution: entry.outcome.execution,
+    source: entry.outcome.source,
     author: entry.outcome.author,
     products: entry.products.map(({ id, name, company }) => ({ id, name, company: company.name })),
     skills: entry.outcome.skills ?? [],
@@ -34,9 +35,9 @@ await write("outcomes/index.json", json({
 await write("llms.txt", [
   "# Possible",
   "",
-  "Possible is an open-source directory connecting rough original prompts, full execution prompts, execution provenance, and representative outcomes.",
+  "Possible is an open-source directory of results, exact prompts, and inspectable sources from across AI products.",
   "",
-  "Every Outcome has a title, summary, original prompt, full execution prompt, execution provenance, and author. Products, Skills, images, video, audio, and CAD are optional context. Published records remain unchanged.",
+  "Every Outcome has a title, summary, exact prompt, available provenance, and author. A prior rough request, Products, Skills, images, video, audio, and CAD are optional context. Published prompts remain unchanged.",
   "",
   "- Homepage and Outcome directory: https://possible.sh/",
   "- Human documentation: /docs/",
@@ -44,8 +45,8 @@ await write("llms.txt", [
   ...outcomeCatalog.flatMap((entry) => [
     `- ${entry.outcome.title}: /outcomes/${entry.slug}.json`,
     `  - Web page: /outcomes/${entry.slug}/`,
-    `  - Original prompt: /outcomes/${entry.slug}/original-prompt.txt`,
-    `  - Execution prompt: /outcomes/${entry.slug}/execution-prompt.txt`,
+    ...(entry.outcome.originalPrompt ? [`  - Original request: /outcomes/${entry.slug}/request.txt`] : []),
+    `  - Prompt: /outcomes/${entry.slug}/prompt.txt`,
   ]),
   "- Products: /products/",
   "- GitHub: https://github.com/fraylabs/possible",

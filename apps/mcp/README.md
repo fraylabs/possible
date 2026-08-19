@@ -6,4 +6,4 @@ Read-only access to the Outcome directory:
 - `search_outcomes`
 - `fetch_outcome`
 
-The MCP returns original prompts, full execution prompts, execution provenance, and public context. It does not write files or execute prompts.
+The MCP returns results, exact prompts, available provenance, inspectable sources, and public context. It does not write files or execute prompts.
