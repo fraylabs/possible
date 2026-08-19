@@ -4,6 +4,9 @@ Discover what AI agents can do, see what people originally asked, and inspect th
 
 [Browse Outcomes](https://possible.sh) · [Read the docs](https://possible.sh/docs)
 
+The long-term product and scaling plan is recorded in
+[PRODUCT_DIRECTION.md](./PRODUCT_DIRECTION.md).
+
 ## What an Outcome contains
 
 Every Outcome has:
