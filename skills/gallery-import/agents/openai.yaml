@@ -1,0 +1,4 @@
+interface:
+  display_name: "Gallery Import"
+  short_description: "Extract source-backed Outcomes from galleries"
+  default_prompt: "Use $gallery-import to inspect this public gallery URL and prepare exact Outcome records for review."

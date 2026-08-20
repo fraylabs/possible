@@ -1,6 +1,6 @@
 # Supabase
 
-Possible uses hosted Supabase for publisher accounts, products, gallery sources,
+Possible uses hosted Supabase for company accounts, products, gallery sources,
 and imported Outcomes. Development does not require Docker or a local Supabase
 stack.
 
@@ -29,7 +29,13 @@ npm run db:lint
 npm run db:test
 ```
 
-The initial schema keeps source-owned gallery data separate from publisher
-overrides, enforces publisher/product ownership boundaries, prevents incomplete
-Outcomes from being published, and exposes public data through row-level
-security.
+The private `/publish` route lets the first authenticated maintainer claim the
+administrator slot, create any number of companies and products, and connect one
+public gallery URL per product. It is intentionally absent from public
+navigation and search indexing.
+
+Use `$gallery-import` on a connected public URL. The skill produces a local
+`gallery-import.json`; upload that file beside the source in `/publish` to create
+or refresh private Outcome drafts. Imports cannot publish. Source fields remain
+separate from editorial overrides, and an Outcome cannot be published without a
+title, exact prompt, and result media URL.

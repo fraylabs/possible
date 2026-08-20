@@ -2,7 +2,7 @@ import { cleanup, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { axe } from "vitest-axe";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import App, { AuthoringDocsPage, DocsPage, OutcomeDetailPage, ProductDetailPage, ProductsPage } from "./App";
+import App, { AuthoringDocsPage, DocsPage, OutcomeDetailPage, ProductDetailPage, ProductsPage, PublishPage } from "./App";
 import { commonSearches } from "./catalog";
 import { getPublishedOutcome, searchPublishedOutcomes } from "./public-content";
 
@@ -67,5 +67,12 @@ describe("Possible website", () => {
     expect(screen.getByRole("heading", { name: "Share an Outcome" })).toBeInTheDocument();
     expect(screen.getByText(/The prompt, provider, model, title, summary, and author are required/)).toBeInTheDocument();
     expect(screen.queryByText(/trust status|expectations checklist|compiler/i)).not.toBeInTheDocument();
+  });
+
+  it("keeps the publisher workspace private and explicit when it is not configured", () => {
+    render(<PublishPage />);
+    expect(screen.getByRole("heading", { name: "Publisher workspace" })).toBeInTheDocument();
+    expect(screen.getByText(/ignored workspace environment file/i)).toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: /publish/i })).not.toBeInTheDocument();
   });
 });
