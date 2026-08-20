@@ -17,6 +17,9 @@
     "discovery:evaluate": "npm run build -w @possible/catalog && npm exec -- tsx evaluations/discovery/verify.mjs",
     "outcomes:generate": "node scripts/generate-outcome-artifacts.mjs && node apps/cli/scripts/sync-skill.mjs",
     "outcomes:check": "node scripts/generate-outcome-artifacts.mjs --check && npm run test -w @possible/catalog",
+    "db:push": "supabase db push --linked",
+    "db:lint": "supabase db lint --linked --schema public --level warning --fail-on error",
+    "db:test": "supabase db query --linked --file supabase/tests/publisher_gallery_foundation.sql",
     "check": "npm run lint && npm run outcomes:check && npm run skill:validate && npm run routes:validate && npm run test && npm exec -- tsx evaluations/discovery/verify.mjs --enforce && npm run build:consumers && npm run publications:validate && npm run html:validate",
     "dev:web": "npm run build -w @possible/catalog && npm run dev -w @possible/web",
     "dev:mcp": "npm run build -w @possible/catalog && npm run dev -w @possible/mcp"
