@@ -9,6 +9,11 @@ organisation, hosted in Singapore. Its project reference is
 `abutwsaahahtbtlopczi`. Database passwords and service-role keys must never be
 committed.
 
+Account-level CLI authentication comes from `SUPABASE_ACCESS_TOKEN` in the
+maintainer's shell profile. Project-specific values live in the ignored root
+`.env.local`; the database scripts load that file automatically. Copy
+`.env.example` when setting up another checkout.
+
 Link an authorised checkout once:
 
 ```bash
