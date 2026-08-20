@@ -109,6 +109,7 @@ function ProductForm({ companies, onCreate, busy }: { companies: Company[]; onCr
   return (
     <form className="publish-form" onSubmit={(event) => {
       event.preventDefault();
+      const form = event.currentTarget;
       const data = new FormData(event.currentTarget);
       void onCreate({
         company_id: String(data.get("company_id")),
@@ -118,7 +119,7 @@ function ProductForm({ companies, onCreate, busy }: { companies: Company[]; onCr
         website_url: String(data.get("website_url")),
         logo_url: String(data.get("logo_url")) || null,
         documentation_url: String(data.get("documentation_url")) || null,
-      }).then(() => { setName(""); setSlug(""); event.currentTarget.reset(); });
+      }).then(() => { setName(""); setSlug(""); form.reset(); });
     }}>
       <label>Company<select name="company_id" required defaultValue=""><option value="" disabled>Select company</option>{companies.map((company) => <option key={company.id} value={company.id}>{company.name}</option>)}</select></label>
       <label>Product name<input required value={name} onChange={(event) => setName(event.target.value)} placeholder="Hailuo AI" /></label>
@@ -137,8 +138,9 @@ function GalleryForm({ products, sources, onCreate, busy }: { products: Product[
   return (
     <form className="publish-form compact" onSubmit={(event) => {
       event.preventDefault();
+      const form = event.currentTarget;
       const data = new FormData(event.currentTarget);
-      void onCreate(String(data.get("product_id")), String(data.get("source_url"))).then(() => event.currentTarget.reset());
+      void onCreate(String(data.get("product_id")), String(data.get("source_url"))).then(() => form.reset());
     }}>
       <label>Product<select name="product_id" required defaultValue=""><option value="" disabled>Select product</option>{availableProducts.map((product) => <option key={product.id} value={product.id}>{product.name}</option>)}</select></label>
       <label className="wide">Public gallery URL<input name="source_url" type="url" required placeholder="https://…/gallery" /></label>
