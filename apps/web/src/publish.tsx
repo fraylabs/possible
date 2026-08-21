@@ -570,7 +570,6 @@ export function PublishPage() {
               <div>
                 {selectedSource ? <label className="publish-import-button">Import JSON<input type="file" accept="application/json,.json" disabled={busy} onChange={(event) => { const file = event.currentTarget.files?.[0]; if (file) void importGallery(file, selectedSource); event.currentTarget.value = ""; }} /></label> : null}
                 <button type="button" className={selecting ? "active" : ""} onClick={() => { setSelecting((value) => !value); setSelected({}); }}>{selecting ? "Cancel" : "Select"}</button>
-                {selectedOutcomes.length ? <button className="publish-primary-button publish-inline-action" type="button" disabled={busy || selectedHasIncomplete} title={selectedHasIncomplete ? "Complete missing information before publishing" : `Publish ${selectedOutcomes.length} selected Outcome${selectedOutcomes.length === 1 ? "" : "s"}`} onClick={() => void changePublication(true, selectedOutcomes)}>Publish</button> : null}
               </div>
             </header>
 
@@ -593,6 +592,7 @@ export function PublishPage() {
         )}
       </section>
 
+      {selecting ? <div className="publish-selection-bar" aria-live="polite"><strong>{selectedOutcomes.length} selected</strong><button type="button" disabled={!outcomes.length} onClick={() => setSelected(selectedOutcomes.length === outcomes.length ? {} : Object.fromEntries(outcomes.map((outcome) => [outcome.id, outcome])))}>{selectedOutcomes.length === outcomes.length && outcomes.length ? "Clear" : "Select loaded"}</button><span /><button type="button" disabled={!selectedOutcomes.length || busy} onClick={() => requestPublication(false, selectedOutcomes)}>Unpublish</button><button className="publish-primary-button" type="button" disabled={!selectedOutcomes.length || busy || selectedHasIncomplete} title={selectedHasIncomplete ? "Complete missing information before publishing" : undefined} onClick={() => void changePublication(true, selectedOutcomes)}>Publish</button></div> : null}
       {openOutcome ? <OutcomeDrawer outcome={openOutcome} busy={busy} onClose={() => setOpenOutcome(null)} onSave={(values) => saveOutcome(openOutcome, values)} onPublication={(makePublic) => requestPublication(makePublic, [openOutcome])} /> : null}
       {confirmation ? <ConfirmationDialog makePublic={confirmation.makePublic} outcomes={confirmation.outcomes} publishedCount={counts.published} busy={busy} onCancel={() => setConfirmation(null)} onConfirm={() => void confirmPublication()} /> : null}
       {importReceipt ? <div className="publish-dialog-layer"><button className="publish-drawer-backdrop" type="button" aria-label="Close import receipt" onClick={() => setImportReceipt(null)} /><ImportReceiptPanel receipt={importReceipt} onClose={() => setImportReceipt(null)} onReviewMissing={() => { setImportReceipt(null); setWorkspaceTab("outcomes"); setFilter("missing"); }} /></div> : null}
