@@ -150,7 +150,10 @@
 .publish-table-title small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .publish-table-title strong { color: #e4e1da; font-size: 11px; }
 .publish-table-title small { color: #696863; font-size: 9px; }
-.publish-pagination { margin: 30px auto 0; display: flex; justify-content: center; align-items: center; gap: 14px; }
+.publish-page-position { min-height: 48px; margin: -5px 0 15px; border-bottom: 1px solid #272725; display: flex; justify-content: space-between; align-items: flex-start; gap: 18px; }
+.publish-page-position > span { color: #777671; font: 8px "DM Mono", monospace; text-transform: uppercase; }
+.publish-page-position > span strong { color: #f2efe8; font-weight: 600; }
+.publish-pagination { display: flex; justify-content: center; align-items: center; gap: 14px; }
 .publish-pagination button { min-width: 84px; }
 .publish-pagination span { color: #777671; font: 8px "DM Mono", monospace; text-transform: uppercase; }
 .publish-pagination strong { color: #f2efe8; font-weight: 600; }
@@ -265,6 +268,7 @@
   .publish-review-heading h1 { font-size: 44px; }
   .publish-review-heading > div:last-child { padding-top: 3px; }
   .publish-review-toolbar { top: 0; grid-template-columns: 1fr auto; }
+  .publish-page-position { align-items: center; }
   .publish-gallery { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px 7px; }
   .publish-tile-copy strong { font-size: 9px; }
   .publish-tile-copy small { font-size: 6px; }
@@ -293,6 +297,7 @@
   .publish-review-toolbar { margin-top: 18px; }
   .publish-filters { margin-right: -14px; padding-right: 14px; }
   .publish-filters button { white-space: nowrap; }
+  .publish-page-position { min-height: 74px; align-items: flex-start; flex-direction: column; justify-content: flex-start; gap: 8px; }
   .publish-gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .publish-drawer { padding: 18px 16px; }
   .publish-drawer-pair { grid-template-columns: 1fr; }

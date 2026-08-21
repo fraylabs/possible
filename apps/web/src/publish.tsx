@@ -567,6 +567,8 @@ export function PublishPage() {
   if (access !== "granted") return <SiteShell className="publish-page" showFooter={false}><section className="publish-access-card"><span className="publish-kicker">{access === "loading" ? "CHECKING ACCESS" : "ACCESS DENIED"}</span><h1>{access === "loading" ? "Opening workspace…" : "This workspace is private"}</h1><NoticeLine notice={notice} /><button type="button" onClick={() => void client.auth.signOut()}>Sign out</button></section></SiteShell>;
 
   const pageCount = Math.max(1, Math.ceil(filteredTotal / PAGE_SIZE));
+  const firstVisibleOutcome = filteredTotal ? (page - 1) * PAGE_SIZE + 1 : 0;
+  const lastVisibleOutcome = Math.min(page * PAGE_SIZE, filteredTotal);
   return (
     <SiteShell className="publish-page" showFooter={false}>
       <section className="publish-workspace">
@@ -596,8 +598,8 @@ export function PublishPage() {
               <div className="publish-view-toggle" role="group" aria-label="Outcome view"><button type="button" className={viewMode === "grid" ? "active" : ""} aria-label="Gallery view" onClick={() => setView("grid")}>▦</button><button type="button" className={viewMode === "table" ? "active" : ""} aria-label="Table view" onClick={() => setView("table")}>☷</button></div>
             </div>
 
+            {filteredTotal ? <div className="publish-page-position"><span>Showing <strong>{firstVisibleOutcome}–{lastVisibleOutcome}</strong> of {filteredTotal}</span><nav className="publish-pagination" aria-label="Outcome pages"><button type="button" disabled={page === 1 || loadingOutcomes} onClick={() => setPage((value) => Math.max(1, value - 1))}>Previous</button><span>Page <strong>{page}</strong> of {pageCount}</span><button type="button" disabled={page === pageCount || loadingOutcomes} onClick={() => setPage((value) => Math.min(pageCount, value + 1))}>Next</button></nav></div> : null}
             {outcomes.length ? viewMode === "grid" ? <OutcomeGrid outcomes={outcomes} selecting={selecting} selected={selected} onActivate={activateOutcome} /> : <OutcomeTable outcomes={outcomes} selecting={selecting} selected={selected} onActivate={activateOutcome} /> : <div className="publish-empty"><strong>{loadingOutcomes ? "Loading Outcomes…" : "No Outcomes found."}</strong><span>{search || filter !== "all" ? "Try another search or filter." : "Connect a gallery and import its extracted JSON."}</span></div>}
-            {filteredTotal > PAGE_SIZE ? <nav className="publish-pagination" aria-label="Outcome pages"><button type="button" disabled={page === 1 || loadingOutcomes} onClick={() => setPage((value) => Math.max(1, value - 1))}>Previous</button><span>Page <strong>{page}</strong> of {pageCount}</span><button type="button" disabled={page === pageCount || loadingOutcomes} onClick={() => setPage((value) => Math.min(pageCount, value + 1))}>Next</button></nav> : null}
           </section>
         ) : (
           <section className="publish-settings">
