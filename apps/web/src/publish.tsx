@@ -54,11 +54,13 @@ export type OutcomeReview = {
   has_editorial_edits: boolean;
 };
 
-type OutcomeFilter = "all" | "published" | "unpublished" | "missing";
+type SelectedOutcome = Pick<OutcomeReview, "id" | "is_published" | "is_publishable">;
+
+type OutcomeFilter = "all" | "published" | "unpublished" | "publishable" | "missing";
 type WorkspaceTab = "outcomes" | "settings";
 type ViewMode = "grid" | "table";
 type Notice = { tone: "success" | "error" | "neutral"; text: string } | null;
-type Counts = { all: number; published: number; unpublished: number; missing: number };
+type Counts = { all: number; published: number; unpublished: number; publishable: number; missing: number };
 
 type GalleryImportItem = {
   sourceKey: string;
@@ -81,7 +83,7 @@ export type ImportReceipt = {
 };
 
 const PAGE_SIZE = 50;
-const EMPTY_COUNTS: Counts = { all: 0, published: 0, unpublished: 0, missing: 0 };
+const EMPTY_COUNTS: Counts = { all: 0, published: 0, unpublished: 0, publishable: 0, missing: 0 };
 
 function slugify(value: string) {
   return value.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
@@ -220,7 +222,7 @@ function SelectionMark({ selected }: { selected: boolean }) {
 function OutcomeGrid({ outcomes, selecting, selected, onActivate }: {
   outcomes: OutcomeReview[];
   selecting: boolean;
-  selected: Record<string, OutcomeReview>;
+  selected: Record<string, SelectedOutcome>;
   onActivate: (outcome: OutcomeReview) => void;
 }) {
   return (
@@ -244,7 +246,7 @@ function OutcomeGrid({ outcomes, selecting, selected, onActivate }: {
 function OutcomeTable({ outcomes, selecting, selected, onActivate }: {
   outcomes: OutcomeReview[];
   selecting: boolean;
-  selected: Record<string, OutcomeReview>;
+  selected: Record<string, SelectedOutcome>;
   onActivate: (outcome: OutcomeReview) => void;
 }) {
   return (
@@ -314,7 +316,7 @@ function OutcomeDrawer({ outcome, busy, onClose, onSave, onPublication }: {
 
 function ConfirmationDialog({ makePublic, outcomes, publishedCount, busy, onCancel, onConfirm }: {
   makePublic: boolean;
-  outcomes: OutcomeReview[];
+  outcomes: SelectedOutcome[];
   publishedCount: number;
   busy: boolean;
   onCancel: () => void;
@@ -370,9 +372,10 @@ export function PublishPage() {
   const [page, setPage] = useState(1);
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
   const [selecting, setSelecting] = useState(false);
-  const [selected, setSelected] = useState<Record<string, OutcomeReview>>({});
+  const [selectingAll, setSelectingAll] = useState(false);
+  const [selected, setSelected] = useState<Record<string, SelectedOutcome>>({});
   const [openOutcome, setOpenOutcome] = useState<OutcomeReview | null>(null);
-  const [confirmation, setConfirmation] = useState<{ makePublic: boolean; outcomes: OutcomeReview[] } | null>(null);
+  const [confirmation, setConfirmation] = useState<{ makePublic: boolean; outcomes: SelectedOutcome[] } | null>(null);
   const [importReceipt, setImportReceipt] = useState<ImportReceipt | null>(null);
 
   const selectedProduct = products.find(({ id }) => id === selectedProductId) ?? null;
@@ -380,6 +383,7 @@ export function PublishPage() {
   const selectedOutcomes = Object.values(selected);
   const selectedHasIncomplete = selectedOutcomes.some((outcome) => !outcome.is_publishable);
   const allPageOutcomesSelected = outcomes.length > 0 && outcomes.every((outcome) => Boolean(selected[outcome.id]));
+  const allMatchingOutcomesSelected = filteredTotal > 0 && selectedOutcomes.length === filteredTotal;
 
   const refreshMetadata = useCallback(async () => {
     if (!client || !session) return;
@@ -410,16 +414,17 @@ export function PublishPage() {
     setLoadingOutcomes(true);
     try {
       const baseCount = () => client.from("outcome_review").select("id", { count: "exact", head: true }).eq("product_id", selectedProductId);
-      const [allResult, publishedResult, unpublishedResult, missingResult] = await Promise.all([
-        baseCount(), baseCount().eq("is_published", true), baseCount().eq("is_published", false), baseCount().eq("is_publishable", false),
+      const [allResult, publishedResult, unpublishedResult, publishableResult, missingResult] = await Promise.all([
+        baseCount(), baseCount().eq("is_published", true), baseCount().eq("is_published", false), baseCount().eq("is_publishable", true), baseCount().eq("is_publishable", false),
       ]);
-      const countError = [allResult, publishedResult, unpublishedResult, missingResult].find(({ error }) => error)?.error;
+      const countError = [allResult, publishedResult, unpublishedResult, publishableResult, missingResult].find(({ error }) => error)?.error;
       if (countError) throw countError;
-      setCounts({ all: allResult.count ?? 0, published: publishedResult.count ?? 0, unpublished: unpublishedResult.count ?? 0, missing: missingResult.count ?? 0 });
+      setCounts({ all: allResult.count ?? 0, published: publishedResult.count ?? 0, unpublished: unpublishedResult.count ?? 0, publishable: publishableResult.count ?? 0, missing: missingResult.count ?? 0 });
 
       let query = client.from("outcome_review").select("id,product_id,gallery_source_id,source_key,source_url,title,prompt,result_media_url,poster_url,model,author_name,author_url,status,is_published,is_publishable,missing_fields,discovered_at,has_editorial_edits", { count: "exact" }).eq("product_id", selectedProductId);
       if (filter === "published") query = query.eq("is_published", true);
       if (filter === "unpublished") query = query.eq("is_published", false);
+      if (filter === "publishable") query = query.eq("is_publishable", true);
       if (filter === "missing") query = query.eq("is_publishable", false);
       const safeSearch = sanitizeSearch(search);
       if (safeSearch) query = query.or(`title.ilike.%${safeSearch}%,prompt.ilike.%${safeSearch}%,author_name.ilike.%${safeSearch}%,model.ilike.%${safeSearch}%`);
@@ -508,7 +513,35 @@ export function PublishPage() {
     });
   }
 
-  function requestPublication(makePublic: boolean, chosen = selectedOutcomes) {
+  async function selectAllMatchingOutcomes() {
+    if (!client || !session || !selectedProductId || !filteredTotal) return;
+    setSelectingAll(true);
+    setNotice(null);
+    try {
+      const matching: SelectedOutcome[] = [];
+      const batchSize = 1000;
+      for (let offset = 0; offset < filteredTotal; offset += batchSize) {
+        let query = client.from("outcome_review").select("id,is_published,is_publishable").eq("product_id", selectedProductId);
+        if (filter === "published") query = query.eq("is_published", true);
+        if (filter === "unpublished") query = query.eq("is_published", false);
+        if (filter === "publishable") query = query.eq("is_publishable", true);
+        if (filter === "missing") query = query.eq("is_publishable", false);
+        const safeSearch = sanitizeSearch(search);
+        if (safeSearch) query = query.or(`title.ilike.%${safeSearch}%,prompt.ilike.%${safeSearch}%,author_name.ilike.%${safeSearch}%,model.ilike.%${safeSearch}%`);
+        const result = await query.order("id").range(offset, offset + batchSize - 1);
+        if (result.error) throw result.error;
+        // SAFETY: the explicit select list matches the three fields in SelectedOutcome.
+        matching.push(...((result.data ?? []) as SelectedOutcome[]));
+      }
+      setSelected(Object.fromEntries(matching.map((outcome) => [outcome.id, outcome])));
+    } catch (error) {
+      setNotice({ tone: "error", text: error instanceof Error ? error.message : String(error) });
+    } finally {
+      setSelectingAll(false);
+    }
+  }
+
+  function requestPublication(makePublic: boolean, chosen: SelectedOutcome[] = selectedOutcomes) {
     if (!chosen.length) return;
     if (makePublic && chosen.some((outcome) => !outcome.is_publishable)) {
       setNotice({ tone: "error", text: "Complete the missing title, prompt, or result media before publishing." });
@@ -518,7 +551,7 @@ export function PublishPage() {
     setConfirmation({ makePublic: false, outcomes: chosen });
   }
 
-  async function changePublication(makePublic: boolean, chosen: OutcomeReview[]) {
+  async function changePublication(makePublic: boolean, chosen: SelectedOutcome[]) {
     if (!client || !selectedProductId) return;
     const changed = await run(async () => {
       const { error } = await client.rpc("set_outcome_publication", { target_product_id: selectedProductId, target_outcome_ids: chosen.map(({ id }) => id), make_public: makePublic });
@@ -594,7 +627,7 @@ export function PublishPage() {
 
             <div className="publish-review-toolbar">
               <label className="publish-search"><span aria-hidden="true">⌕</span><input type="search" value={searchInput} onChange={(event) => setSearchInput(event.target.value)} placeholder="Search title, prompt, creator, or model" aria-label="Search imported Outcomes" /></label>
-              <div className="publish-filters" role="group" aria-label="Filter Outcomes">{(["all", "published", "unpublished", "missing"] as const).map((value) => <button key={value} type="button" className={filter === value ? "active" : ""} onClick={() => { setFilter(value); setPage(1); }}>{value === "all" ? "All" : value === "missing" ? "Missing info" : value}<span>{counts[value]}</span></button>)}</div>
+              <div className="publish-filters" role="group" aria-label="Filter Outcomes">{(["all", "published", "unpublished", "publishable", "missing"] as const).map((value) => <button key={value} type="button" className={filter === value ? "active" : ""} onClick={() => { setFilter(value); setPage(1); }}>{value === "all" ? "All" : value === "missing" ? "Missing info" : value}<span>{counts[value]}</span></button>)}</div>
               <div className="publish-view-toggle" role="group" aria-label="Outcome view"><button type="button" className={viewMode === "grid" ? "active" : ""} aria-label="Gallery view" onClick={() => setView("grid")}>▦</button><button type="button" className={viewMode === "table" ? "active" : ""} aria-label="Table view" onClick={() => setView("table")}>☷</button></div>
             </div>
 
@@ -611,7 +644,7 @@ export function PublishPage() {
         )}
       </section>
 
-      {selecting ? <div className="publish-selection-bar" aria-live="polite"><strong>{selectedOutcomes.length} selected</strong><button type="button" disabled={!outcomes.length} onClick={toggleCurrentPageSelection}>{allPageOutcomesSelected ? "Clear page" : "Select all"}</button><span /><button type="button" disabled={!selectedOutcomes.length || busy} onClick={() => requestPublication(false, selectedOutcomes)}>Unpublish</button><button className="publish-primary-button" type="button" disabled={!selectedOutcomes.length || busy || selectedHasIncomplete} title={selectedHasIncomplete ? "Complete missing information before publishing" : undefined} onClick={() => void changePublication(true, selectedOutcomes)}>Publish</button></div> : null}
+      {selecting ? <div className="publish-selection-bar" aria-live="polite"><strong>{selectedOutcomes.length} selected</strong><button type="button" disabled={!outcomes.length || selectingAll} onClick={toggleCurrentPageSelection}>{allPageOutcomesSelected ? "Clear page" : "Select page"}</button><button type="button" disabled={!filteredTotal || selectingAll} onClick={() => { if (allMatchingOutcomesSelected) setSelected({}); else void selectAllMatchingOutcomes(); }}>{selectingAll ? "Selecting…" : allMatchingOutcomesSelected ? "Clear all" : "Select all"}</button><span /><button type="button" disabled={!selectedOutcomes.length || busy || selectingAll} onClick={() => requestPublication(false, selectedOutcomes)}>Unpublish</button><button className="publish-primary-button" type="button" disabled={!selectedOutcomes.length || busy || selectingAll || selectedHasIncomplete} title={selectedHasIncomplete ? "Complete missing information before publishing" : undefined} onClick={() => void changePublication(true, selectedOutcomes)}>Publish</button></div> : null}
       {openOutcome ? <OutcomeDrawer outcome={openOutcome} busy={busy} onClose={() => setOpenOutcome(null)} onSave={(values) => saveOutcome(openOutcome, values)} onPublication={(makePublic) => requestPublication(makePublic, [openOutcome])} /> : null}
       {confirmation ? <ConfirmationDialog makePublic={confirmation.makePublic} outcomes={confirmation.outcomes} publishedCount={counts.published} busy={busy} onCancel={() => setConfirmation(null)} onConfirm={() => void confirmPublication()} /> : null}
       {importReceipt ? <div className="publish-dialog-layer"><button className="publish-drawer-backdrop" type="button" aria-label="Close import receipt" onClick={() => setImportReceipt(null)} /><ImportReceiptPanel receipt={importReceipt} onClose={() => setImportReceipt(null)} onReviewMissing={() => { setImportReceipt(null); setWorkspaceTab("outcomes"); setFilter("missing"); }} /></div> : null}

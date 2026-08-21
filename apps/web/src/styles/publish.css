@@ -162,7 +162,7 @@
 .publish-empty span { font-size: 11px; }
 
 .publish-selection-bar {
-  width: min(680px, calc(100% - 32px));
+  width: min(800px, calc(100% - 32px));
   min-height: 62px;
   padding: 10px 12px 10px 18px;
   position: fixed;
@@ -173,7 +173,7 @@
   border: 1px solid #5a5954;
   border-radius: 14px;
   display: grid;
-  grid-template-columns: auto auto 1fr auto auto;
+  grid-template-columns: auto auto auto 1fr auto auto;
   align-items: center;
   gap: 8px;
   background: #1b1b19;
@@ -278,9 +278,8 @@
   .publish-table-row > :nth-child(3),
   .publish-table-row > :nth-child(4) { display: none; }
   .publish-table-row > :last-child { max-width: 88px; text-align: right; }
-  .publish-selection-bar { bottom: max(10px, env(safe-area-inset-bottom)); grid-template-columns: auto 1fr auto auto; }
+  .publish-selection-bar { bottom: max(10px, env(safe-area-inset-bottom)); grid-template-columns: auto auto auto 1fr auto auto; }
   .publish-selection-bar > span { display: none; }
-  .publish-selection-bar > button:nth-of-type(1) { display: none; }
   .publish-form,
   .publish-form.compact { grid-template-columns: 1fr; }
   .publish-form label.wide { grid-column: 1; }
@@ -301,9 +300,9 @@
   .publish-gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .publish-drawer { padding: 18px 16px; }
   .publish-drawer-pair { grid-template-columns: 1fr; }
-  .publish-selection-bar { min-height: 56px; padding-left: 12px; }
-  .publish-selection-bar strong { min-width: 58px; font-size: 10px; }
-  .publish-selection-bar button { min-height: 34px; padding: 0 10px; }
+  .publish-selection-bar { width: calc(100% - 16px); min-height: 56px; padding: 8px; gap: 4px; }
+  .publish-selection-bar strong { min-width: 42px; font-size: 9px; }
+  .publish-selection-bar button { min-height: 34px; padding: 0 6px; font-size: 7px; }
   .publish-import-receipt dl { grid-template-columns: repeat(3, 1fr); }
   .publish-import-receipt dl div + div { border-left: 1px solid #343431; }
   .publish-import-receipt dl div:nth-child(4) { border-left: 0; border-top: 1px solid #343431; }
