@@ -17,10 +17,9 @@ describe("Possible website", () => {
     expect(screen.getByText("Discover what agents can do.")).toBeInTheDocument();
     expect(Array.from(container.querySelectorAll(".nav-links a")).map((link) => link.textContent)).toEqual(["OUTCOMES", "PRODUCTS", "DOCS", "GITHUB ↗"]);
     const gallery = screen.getByRole("region", { name: "Outcome directory" });
-    expect(within(gallery).getAllByRole("link")).toHaveLength(6);
+    expect(within(gallery).getAllByRole("link")).toHaveLength(5);
     expect(gallery.querySelector(".library-pack-card.has-media .library-pack-visual")).toBeInTheDocument();
-    const pagination = screen.getByRole("navigation", { name: "Outcome pages" });
-    expect(within(pagination).getByRole("button", { name: "Page 2" })).toBeInTheDocument();
+    expect(screen.queryByRole("navigation", { name: "Outcome pages" })).not.toBeInTheDocument();
     expect(await axe(container)).toHaveNoViolations();
   });
 

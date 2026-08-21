@@ -48,16 +48,6 @@ describe("Possible MCP", () => {
     assert.equal(envelope.data.author.name, source.outcome.author.name);
   });
 
-  it("preserves an official gallery result without inventing a prior request", async () => {
-    const result = await client.callTool({ name: "fetch_outcome", arguments: { slug: "raw-animated-night-laundromat" } });
-    const data = (result.structuredContent as { data: { originalPrompt?: string; prompt: string; source: { type: string; url: string }; execution: { model: string; agent?: string } } }).data;
-    assert.equal(data.originalPrompt, undefined);
-    assert.match(data.prompt, /^A 15-second, 16:9 horizontal short video/);
-    assert.equal(data.source.type, "official-gallery");
-    assert.equal(data.execution.model, "MiniMax H3");
-    assert.equal(data.execution.agent, undefined);
-  });
-
   it("searches ordinary language and returns no invented candidate", async () => {
     const result = await client.callTool({ name: "search_outcomes", arguments: { query: "editable PowerPoint deck" } });
     const envelope = result.structuredContent as { data: { outcomes: Array<{ slug: string }> } };

@@ -144,39 +144,6 @@ export const rawOutcomes: Array<{ slug: string; outcome: Outcome }> = [
     }
   },
   {
-    "slug": "grand-space-trailer-text-vfx",
-    "outcome": {
-      "schemaVersion": 2,
-      "title": "Grand Space Trailer: Dynamic Text & VFX",
-      "summary": "A fast space-trailer sequence built from hard cuts, bridge shake, light flashes, blackouts, warp jumps, and animated wide-spaced lettering.",
-      "executionPrompt": "A faster pace, grand yet not drawn out. Quick hard cuts, bridge shaking, intense light flashes, short blackouts, and warp jumps. The text design resembles the wide-spaced lettering of a movie trailer, avoiding plain white but featuring a restrained glow and textured finish with subtle edge highlights. The text animation includes emerging from the deep void of space, illuminated by starlight sweeps, expanding letter spacing, afterimages, subtle glowing, and flashes of blackouts.",
-      "execution": {
-        "provider": "MiniMax",
-        "model": "MiniMax H3"
-      },
-      "author": {
-        "name": "Hailuo AI",
-        "url": "https://hailuoai.video/"
-      },
-      "source": {
-        "type": "official-gallery",
-        "url": "https://hailuoai.video/generate/ai-video/ai-video-sci-fi-text-animation-warp/539456745708085256",
-        "publishedAt": "2026-08-07"
-      },
-      "products": [
-        "minimax/hailuo-ai"
-      ],
-      "preview": {
-        "description": "The result and exact prompt published in Hailuo AI's public gallery.",
-        "video": {
-          "src": "https://cdn.hailuoai.video/moss/prod/2026-07-31-12/official/pgc_bot_avatar/1785472608730065138-电影大片1.mp4",
-          "poster": "https://cdn.hailuoai.video/moss/prod/2026-07-31-12/video_cover/1785472655384761774-.jpg?x-oss-process=image/resize,w_540/format,webp",
-          "caption": "Official Hailuo AI gallery result generated with MiniMax H3."
-        }
-      }
-    }
-  },
-  {
     "slug": "original-strudel-soundtrack",
     "outcome": {
       "schemaVersion": 2,
@@ -294,72 +261,6 @@ export const rawOutcomes: Array<{ slug: string; outcome: Outcome }> = [
           "src": "/outcome-media/html-css-animated-product-launch-film/media/possible-launch-film.mp4",
           "poster": "/outcome-media/html-css-animated-product-launch-film/media/possible-launch-film-poster.jpg",
           "caption": "Possible launch film — from a world of unknown Codex capabilities to one outcome you can run."
-        }
-      }
-    }
-  },
-  {
-    "slug": "raw-animated-night-laundromat",
-    "outcome": {
-      "schemaVersion": 2,
-      "title": "Raw, Animated Night Laundromat Visions",
-      "summary": "A 15-second nighttime laundromat scene that mixes shaky phone footage with hand-drawn glowing animation.",
-      "executionPrompt": "A 15-second, 16:9 horizontal short video. A live-action nighttime laundromat scene blended with hand-drawn glowing animations. The setting is a small self-service laundromat with faintly flickering fluorescent lights. Inside are running washing machines, plastic laundry baskets, an old bench, and a single sock discarded on the floor. The overall space feels quiet, carrying a subtle sense of nostalgia.\nFilmed with a handheld phone in single-hand grip, the footage has noticeable shakiness; the white fluorescent lighting causes fluctuating exposure; surface reflections are visible on the glass panels; and the focus lags slightly when the camera gets close to objects. The visuals should not look polished or meticulous like a commercial ad. The overall texture should resemble a candid, spontaneous recording—like stumbling into the laundromat late at night and instinctively capturing surreal visions with a raw documentary feel.",
-      "execution": {
-        "provider": "MiniMax",
-        "model": "MiniMax H3"
-      },
-      "author": {
-        "name": "Hailuo AI",
-        "url": "https://hailuoai.video/"
-      },
-      "source": {
-        "type": "official-gallery",
-        "url": "https://hailuoai.video/generate/ai-video/ai-video-laundromat-night-shaky-glowing-animation/539456786413842434",
-        "publishedAt": "2026-08-07"
-      },
-      "products": [
-        "minimax/hailuo-ai"
-      ],
-      "preview": {
-        "description": "The result and exact prompt published in Hailuo AI's public gallery.",
-        "video": {
-          "src": "https://cdn.hailuoai.video/moss/prod/2026-07-31-12/official/pgc_bot_avatar/1785472636347017675-飞书20260728-175157.mp4",
-          "poster": "https://cdn.hailuoai.video/moss/prod/2026-07-31-12/video_cover/1785472665079057926-.jpg?x-oss-process=image/resize,w_540/format,webp",
-          "caption": "Official Hailuo AI gallery result generated with MiniMax H3."
-        }
-      }
-    }
-  },
-  {
-    "slug": "retro-jazz-crime-opening",
-    "outcome": {
-      "schemaVersion": 2,
-      "title": "Retro Jazz Crime: Urban Beat Collage",
-      "summary": "A 15-second retro-anime crime opening built from silhouettes, split screens, geometric color blocks, credits, and beat-synced collage transitions.",
-      "executionPrompt": "Generate a 15-second, 16:9 widescreen light suspense crime film opening sequence. The overall style should reference the visual language of these concepts: retro Japanese anime openings, hard-edged silhouettes, comic-style collage, asymmetrical split screens, strong geometric color blocks, English title credits, minimal Japanese katakana for decoration, and a jazz-crime vibe. The atmosphere should be 60% suspense and 40% jazz: mysterious, cool, agile, with an urban crime feel—neither scary nor heavy, and definitely not a joyful jazz music video. The motion effects of the opening should feel like animated graphic collages: a black-lined frame appears first, split-screen borders are quickly drawn out, color blocks and frames are pasted in piece by piece; silhouettes of characters, close-ups of props, and English title credits slide in, bounce out, or are revealed through masking along with the drum beats. Avoid realistic narrative animations—this should have the polished feel of an opening sequence. The English credits should be legible, with animated effects allowed: thin line frames can first be drawn out, names slide into the frame, with letters appearing one at a time and revealed by moving color blocks, before pausing briefly at the end. Do not add Chinese text, avoid garbled text, and ensure no misspelled English names. Rules for the sequence: Every English credit and title should only appear once. Do not repeat the same title, do not repeat the same name, and do not assign multiple roles to the same individual. Transitions must be varied: circular vinyl record masks, vertical cuts through car doors, character shadows acting as wipes, red-line cuts, large English letter masking, split-frame border reorganizations, hard geometric color-block cuts, and individual frame-by-frame collage reveals. All transitions should sync with the drum beats—precise, suspenseful, agile, and with a comic-collage vibe. Avoid soft dissolves and fluid transitions. BGM: Create an original BGM.",
-      "execution": {
-        "provider": "MiniMax",
-        "model": "MiniMax H3"
-      },
-      "author": {
-        "name": "Hailuo AI",
-        "url": "https://hailuoai.video/"
-      },
-      "source": {
-        "type": "official-gallery",
-        "url": "https://hailuoai.video/generate/ai-video/retro-anime-crime-graphic-collage-intro/539453050492715008",
-        "publishedAt": "2026-08-07"
-      },
-      "products": [
-        "minimax/hailuo-ai"
-      ],
-      "preview": {
-        "description": "The result and exact prompt published in Hailuo AI's public gallery.",
-        "video": {
-          "src": "https://cdn.hailuoai.video/moss/prod/2026-07-31-12/official/pgc_bot_avatar/1785471686067445860-海螺_视频_生成一支15秒16__538490398432550923.mp4",
-          "poster": "https://cdn.hailuoai.video/moss/prod/2026-07-31-12/official/pgc_bot_avatar/1785471804855992118-Clipboard_Screenshot_1785317360.png?x-oss-process=image/resize,w_540/format,webp",
-          "caption": "Official Hailuo AI gallery result generated with MiniMax H3."
         }
       }
     }

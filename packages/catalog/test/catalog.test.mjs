@@ -12,7 +12,7 @@ import {
 } from "../dist/index.js";
 
 test("the catalog is made from one prompt-to-result record per folder", () => {
-  assert.equal(outcomeCatalog.length, 8);
+  assert.equal(outcomeCatalog.length, 5);
   assert.equal(bundledOutcomes.length, outcomeCatalog.length);
   const film = getOutcome("html-css-animated-product-launch-film");
   assert.ok(film);
@@ -25,14 +25,6 @@ test("the catalog is made from one prompt-to-result record per folder", () => {
     assert.equal(forbidden in film.outcome, false);
   }
 
-  const sourced = getOutcome("raw-animated-night-laundromat");
-  assert.ok(sourced);
-  assert.equal(sourced.outcome.originalPrompt, undefined);
-  assert.equal(sourced.outcome.source?.type, "official-gallery");
-  assert.equal(sourced.outcome.source?.publishedAt, "2026-08-07");
-  assert.equal(sourced.sourceUrl, sourced.outcome.source?.url);
-  assert.equal(sourced.outcome.execution.model, "MiniMax H3");
-  assert.match(sourced.outcome.preview?.video?.src ?? "", /^https:\/\/cdn\.hailuoai\.video\//);
 });
 
 test("Outcome validation keeps both prompts exact and rejects framework fields", () => {
@@ -61,7 +53,7 @@ test("Product records contain only official directory information", () => {
 test("search uses the human-facing Outcome and Product text", () => {
   assert.equal(searchOutcomes(outcomeCatalog, { query: "digital robot simulation" })[0]?.entry.slug, "robot-digital-prototype");
   assert.equal(searchOutcomes(outcomeCatalog, { query: "editable PowerPoint deck" })[0]?.entry.slug, "polished-editable-powerpoint-presentation");
-  assert.equal(searchOutcomes(outcomeCatalog, { query: "retro jazz crime opening" })[0]?.entry.slug, "retro-jazz-crime-opening");
+  assert.equal(searchOutcomes(outcomeCatalog, { query: "original instrumental soundtrack" })[0]?.entry.slug, "original-strudel-soundtrack");
   assert.deepEqual(searchOutcomes(outcomeCatalog, { query: "zyxquux" }), []);
   assert.equal(searchOutcomes(outcomeCatalog, { query: "" }).length, outcomeCatalog.length);
 });

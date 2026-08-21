@@ -38,7 +38,6 @@ export const commonSearches = [
   "Make a product launch film",
   "Compose a quiet Strudel soundtrack",
   "Model a ten-link robot snake",
-  "Make a retro jazz crime opening",
 ];
 const packsPerPage = 6;
 
