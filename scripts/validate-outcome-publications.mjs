@@ -15,6 +15,8 @@ for (const entry of outcomeCatalog) {
   assert.equal(publication.executionPrompt, entry.outcome.executionPrompt);
   assert.deepEqual(publication.execution, entry.outcome.execution);
   assert.deepEqual(publication.source, entry.outcome.source);
+  assert.deepEqual(publication.inputs, entry.outcome.inputs);
+  assert.deepEqual(publication.artifacts, entry.outcome.artifacts);
   if (entry.outcome.originalPrompt) assert.equal(await text(`outcomes/${entry.slug}/request.txt`), `${entry.outcome.originalPrompt}\n`);
   assert.equal(await text(`outcomes/${entry.slug}/prompt.txt`), `${entry.outcome.executionPrompt}\n`);
   const preview = entry.outcome.preview;
@@ -27,6 +29,8 @@ for (const entry of outcomeCatalog) {
     preview?.cad?.preview,
     preview?.cad?.poster,
     ...(preview?.cad?.downloads ?? []).map(({ src }) => src),
+    ...(entry.outcome.inputs ?? []).map(({ src }) => src),
+    ...(entry.outcome.artifacts ?? []).map(({ src }) => src),
   ].filter((value) => value?.startsWith("/outcome-media/"))) await access(new URL(path.slice(1), webDist));
 }
 

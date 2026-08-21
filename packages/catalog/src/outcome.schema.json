@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://possible.sh/schemas/outcome.schema.json",
   "title": "Possible Outcome",
-  "description": "One concrete result with the exact prompt that produced it, available provenance, and optional Products, Skills, and preview media.",
+  "description": "One concrete result with the exact prompt that produced it, available provenance, and optional inputs, artifacts, Products, Skills, and preview media.",
   "type": "object",
   "additionalProperties": false,
   "required": ["schemaVersion", "title", "summary", "executionPrompt", "execution", "author"],
@@ -44,6 +44,16 @@
         "type": "string",
         "pattern": "^[a-z0-9][a-z0-9-]*/[a-z0-9][a-z0-9-]*$"
       }
+    },
+    "inputs": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/file" }
+    },
+    "artifacts": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/file" }
     },
     "preview": { "$ref": "#/$defs/preview" }
   },
@@ -95,6 +105,17 @@
           "type": "string",
           "pattern": "^(?:\\.|(?!.*(?:^|/)\\.\\.?($|/))[a-z0-9._-]+(?:/[a-z0-9._-]+)*)$"
         }
+      }
+    },
+    "file": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "src", "label"],
+      "properties": {
+        "type": { "enum": ["image", "video", "audio", "cad", "document", "data", "source", "archive", "other"] },
+        "src": { "type": "string", "minLength": 1 },
+        "label": { "type": "string", "minLength": 1 },
+        "format": { "type": "string", "minLength": 1 }
       }
     },
     "image": {

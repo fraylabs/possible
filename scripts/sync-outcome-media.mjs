@@ -8,9 +8,11 @@ const publicRoot = join(repositoryRoot, "apps/web/public/outcome-media");
 await rm(publicRoot, { recursive: true, force: true });
 await mkdir(publicRoot, { recursive: true });
 for (const { slug } of await readOutcomeFolders(repositoryRoot)) {
-  const source = join(repositoryRoot, "packages/catalog/src/outcomes", slug, "media");
-  await cp(source, join(publicRoot, slug, "media"), { recursive: true, force: true }).catch((error) => {
-    if (error?.code !== "ENOENT") throw error;
-  });
+  for (const directory of ["artifacts", "inputs", "media"]) {
+    const source = join(repositoryRoot, "packages/catalog/src/outcomes", slug, directory);
+    await cp(source, join(publicRoot, slug, directory), { recursive: true, force: true }).catch((error) => {
+      if (error?.code !== "ENOENT") throw error;
+    });
+  }
 }
-console.log("Synced Outcome media.");
+console.log("Synced Outcome files.");

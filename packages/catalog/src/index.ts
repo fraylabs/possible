@@ -20,6 +20,8 @@ export type {
   OutcomeAuthor,
   OutcomeCatalogEntry,
   OutcomeExecution,
+  OutcomeFile,
+  OutcomeFileType,
   OutcomeSource,
   OutcomePreview,
   OutcomePreviewAudio,

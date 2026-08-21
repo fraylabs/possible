@@ -18,6 +18,8 @@ const serializeEntry = (entry: OutcomeCatalogEntry) => ({
   source: entry.outcome.source,
   products: entry.products.map((product) => ({ id: product.id, name: product.name, company: product.company.name, website: product.website })),
   skills: entry.outcome.skills ?? [],
+  inputs: entry.outcome.inputs ?? [],
+  artifacts: entry.outcome.artifacts ?? [],
   preview: entry.outcome.preview,
   sourceUrl: entry.sourceUrl,
   pageUrl: `https://possible.sh/outcomes/${entry.slug}`,

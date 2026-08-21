@@ -91,6 +91,15 @@ export interface OutcomePreview {
   cad?: OutcomePreviewCad;
 }
 
+export type OutcomeFileType = "image" | "video" | "audio" | "cad" | "document" | "data" | "source" | "archive" | "other";
+
+export interface OutcomeFile {
+  type: OutcomeFileType;
+  src: string;
+  label: string;
+  format?: string;
+}
+
 export interface Outcome {
   schemaVersion: 2;
   title: string;
@@ -102,6 +111,8 @@ export interface Outcome {
   source?: OutcomeSource;
   skills?: SkillReference[];
   products?: ProductId[];
+  inputs?: OutcomeFile[];
+  artifacts?: OutcomeFile[];
   preview?: OutcomePreview;
 }
 

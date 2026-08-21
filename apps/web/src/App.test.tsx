@@ -17,7 +17,7 @@ describe("Possible website", () => {
     expect(screen.getByText("Discover what agents can do.")).toBeInTheDocument();
     expect(Array.from(container.querySelectorAll(".nav-links a")).map((link) => link.textContent)).toEqual(["OUTCOMES", "DISCOVER", "DOCS", "GITHUB ↗"]);
     const gallery = screen.getByRole("region", { name: "Outcome directory" });
-    expect(within(gallery).getAllByRole("link")).toHaveLength(5);
+    expect(within(gallery).getAllByRole("link")).toHaveLength(6);
     expect(gallery.querySelector(".library-pack-card.has-media .library-pack-visual")).toBeInTheDocument();
     expect(screen.queryByRole("navigation", { name: "Outcome pages" })).not.toBeInTheDocument();
     expect(await axe(container)).toHaveNoViolations();
@@ -101,7 +101,7 @@ describe("Possible website", () => {
   it("presents an account as Outcomes first, with linked Products and Skills", async () => {
     render(<AccountProfilePage handle="fray-labs" />);
     expect(screen.getByRole("heading", { name: "Fray Labs", level: 1 })).toBeInTheDocument();
-    expect(within(screen.getByRole("region", { name: "Fray Labs Outcomes" })).getAllByRole("link")).toHaveLength(5);
+    expect(within(screen.getByRole("region", { name: "Fray Labs Outcomes" })).getAllByRole("link")).toHaveLength(6);
     await userEvent.click(screen.getByRole("button", { name: /products\s*2/i }));
     expect(within(screen.getByRole("region", { name: "Fray Labs Products" })).getAllByRole("link")).toHaveLength(2);
     await userEvent.click(screen.getByRole("button", { name: /skills\s*17/i }));

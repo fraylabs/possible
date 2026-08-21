@@ -2,8 +2,9 @@ import { lstat, readFile, readdir, writeFile } from "node:fs/promises";
 import { dirname, extname, join, relative, resolve } from "node:path";
 
 const SAFE_SLUG = /^[a-z0-9][a-z0-9-]*$/;
-const ALLOWED_ENTRIES = new Set(["media", "outcome.json"]);
+const ALLOWED_ENTRIES = new Set(["artifacts", "inputs", "media", "outcome.json"]);
 const MEDIA_EXTENSIONS = new Set([".3mf", ".avif", ".glb", ".jpeg", ".jpg", ".mp3", ".mp4", ".ogg", ".png", ".step", ".stl", ".wav", ".webm", ".webp"]);
+const FILE_EXTENSIONS = new Set([...MEDIA_EXTENSIONS, ".css", ".csv", ".docx", ".html", ".js", ".json", ".md", ".pdf", ".pptx", ".py", ".txt", ".ts", ".tsx", ".xlsx", ".zip"]);
 
 const parseJson = async (path) => JSON.parse(await readFile(path, "utf8"));
 
@@ -21,6 +22,28 @@ const visitMedia = (preview, callback) => {
   for (const download of preview?.cad?.downloads ?? []) callback(download, "src");
 };
 
+const visitFiles = (files, callback) => {
+  for (const file of files ?? []) callback(file, "src");
+};
+
+async function validateDirectoryFiles(folder, slug, directory, referenced, allowedExtensions) {
+  const root = join(folder, directory);
+  const files = await readdir(root, { withFileTypes: true }).catch((error) => error?.code === "ENOENT" ? [] : Promise.reject(error));
+  for (const entry of files) {
+    const path = join(root, entry.name);
+    if (!entry.isFile() || entry.isSymbolicLink()) throw new Error(`${relative(folder, path)} must be a regular file`);
+    if (!allowedExtensions.has(extname(entry.name).toLowerCase())) throw new Error(`${slug}/${directory}/${entry.name} uses an unsupported format`);
+    if (!referenced.has(`${directory}/${entry.name}`)) throw new Error(`${slug}/${directory}/${entry.name} is not referenced by outcome.json`);
+  }
+  for (const source of referenced) {
+    if (!source.startsWith(`${directory}/`) || source.includes("\\")) throw new Error(`${slug} ${directory} paths must be HTTPS URLs or direct ${directory}/ children`);
+    const target = resolve(folder, source);
+    if (dirname(target) !== root) throw new Error(`${slug} ${directory} paths must be direct ${directory}/ children`);
+    const stats = await lstat(target).catch(() => undefined);
+    if (!stats?.isFile() || stats.isSymbolicLink()) throw new Error(`${slug}/${source} is missing or unsupported`);
+  }
+}
+
 async function validateAndResolveMedia(folder, slug, outcome) {
   const referenced = new Set();
   visitMedia(outcome.preview, (media, key) => {
@@ -30,20 +53,17 @@ async function validateAndResolveMedia(folder, slug, outcome) {
     media[key] = publicMediaPath(slug, source);
   });
 
-  const mediaRoot = join(folder, "media");
-  const media = await readdir(mediaRoot, { withFileTypes: true }).catch((error) => error?.code === "ENOENT" ? [] : Promise.reject(error));
-  for (const entry of media) {
-    const path = join(mediaRoot, entry.name);
-    if (!entry.isFile() || entry.isSymbolicLink()) throw new Error(`${relative(folder, path)} must be a regular file`);
-    if (!MEDIA_EXTENSIONS.has(extname(entry.name).toLowerCase())) throw new Error(`${slug}/media/${entry.name} uses an unsupported format`);
-    if (!referenced.has(`media/${entry.name}`)) throw new Error(`${slug}/media/${entry.name} is not referenced by outcome.json`);
-  }
-  for (const source of referenced) {
-    if (!source.startsWith("media/") || source.includes("\\")) throw new Error(`${slug} preview paths must be HTTPS URLs or direct media/ children`);
-    const target = resolve(folder, source);
-    if (dirname(target) !== mediaRoot) throw new Error(`${slug} preview paths must be direct media/ children`);
-    const stats = await lstat(target).catch(() => undefined);
-    if (!stats?.isFile() || stats.isSymbolicLink()) throw new Error(`${slug}/${source} is missing or unsupported`);
+  await validateDirectoryFiles(folder, slug, "media", referenced, MEDIA_EXTENSIONS);
+
+  for (const directory of ["inputs", "artifacts"]) {
+    const files = new Set();
+    visitFiles(outcome[directory], (file, key) => {
+      const source = file[key];
+      if (typeof source !== "string" || source.trim().length === 0) throw new Error(`${slug} has an invalid ${directory} path`);
+      if (!source.startsWith("https://")) files.add(source);
+      file[key] = publicMediaPath(slug, source);
+    });
+    await validateDirectoryFiles(folder, slug, directory, files, FILE_EXTENSIONS);
   }
 }
 
@@ -68,7 +88,7 @@ export async function readOutcomeFolders(repositoryRoot) {
     const children = await readdir(folder, { withFileTypes: true });
     for (const child of children) {
       if (!ALLOWED_ENTRIES.has(child.name)) throw new Error(`${relative(repositoryRoot, join(folder, child.name))} is not part of an Outcome`);
-      if (child.name === "media" ? !child.isDirectory() : !child.isFile()) throw new Error(`${entry.name}/${child.name} has the wrong type`);
+      if (["artifacts", "inputs", "media"].includes(child.name) ? !child.isDirectory() : !child.isFile()) throw new Error(`${entry.name}/${child.name} has the wrong type`);
     }
     if (!children.some(({ name }) => name === "outcome.json")) throw new Error(`${entry.name} requires outcome.json`);
     const outcome = await parseJson(join(folder, "outcome.json"));

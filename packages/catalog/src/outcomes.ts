@@ -1,7 +1,7 @@
 import { rawOutcomes } from "./generated-outcomes.js";
 import outcomeSchema from "./outcome.schema.json" with { type: "json" };
 import { validateProductId } from "./products.js";
-import type { Outcome, OutcomePreview, SkillReference } from "./types.js";
+import type { Outcome, OutcomeFile, OutcomePreview, SkillReference } from "./types.js";
 
 export interface BundledOutcome {
   slug: string;
@@ -57,6 +57,29 @@ const validateSkills = (value: unknown, context: string): SkillReference[] | und
     if (identities.has(identity)) throw new Error(`${context} contains duplicate Skill ${identity}`);
     identities.add(identity);
     return { repository, lastReviewedCommit, directory };
+  });
+};
+
+const FILE_TYPES = new Set(["image", "video", "audio", "cad", "document", "data", "source", "archive", "other"]);
+
+const validateFiles = (value: unknown, context: string): OutcomeFile[] | undefined => {
+  if (value === undefined) return undefined;
+  if (!Array.isArray(value) || value.length === 0) throw new Error(`${context} must be omitted or a non-empty array`);
+  const sources = new Set<string>();
+  return value.map((item, index) => {
+    const file = asRecord(item, `${context}[${index}]`);
+    const allowed = new Set(["type", "src", "label", "format"]);
+    for (const key of Object.keys(file)) if (!allowed.has(key)) throw new Error(`${context}[${index}].${key} is unsupported`);
+    const type = requiredString(file.type, `${context}[${index}].type`);
+    const src = requiredString(file.src, `${context}[${index}].src`);
+    const label = requiredString(file.label, `${context}[${index}].label`);
+    if (!FILE_TYPES.has(type)) throw new Error(`${context}[${index}].type is unsupported`);
+    const format = file.format === undefined ? undefined : requiredString(file.format, `${context}[${index}].format`);
+    if (sources.has(src)) throw new Error(`${context} contains duplicate source ${src}`);
+    sources.add(src);
+    const validated = { type, src, label } as OutcomeFile;
+    if (format !== undefined) validated.format = format;
+    return validated;
   });
 };
 
@@ -124,6 +147,8 @@ export function validateOutcome(input: unknown, context = "outcome"): Outcome {
   requiredString(author.name, `${context}.author.name`);
   validateHttpsUrl(author.url, `${context}.author.url`);
   validateSkills(outcome.skills, `${context}.skills`);
+  validateFiles(outcome.inputs, `${context}.inputs`);
+  validateFiles(outcome.artifacts, `${context}.artifacts`);
 
   if (outcome.products !== undefined) {
     if (!Array.isArray(outcome.products) || outcome.products.length === 0) throw new Error(`${context}.products must be omitted or a non-empty array`);

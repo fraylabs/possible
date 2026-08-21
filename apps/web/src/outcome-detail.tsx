@@ -2,7 +2,7 @@
 
 import { lazy, Suspense, useState } from "react";
 import { skillPageUrl } from "@possible/catalog";
-import type { OutcomePreview } from "@possible/catalog";
+import type { OutcomeFile, OutcomePreview } from "@possible/catalog";
 import { getPublishedOutcome, productHref } from "./public-content";
 import { CopyButton, NotFoundPage, SiteShell } from "./shared";
 
@@ -60,6 +60,10 @@ function OutcomePreviewView({ preview, title }: { preview: OutcomePreview; title
   );
 }
 
+function OutcomeFiles({ files }: { files: OutcomeFile[] }) {
+  return <ul className="outcome-file-list">{files.map((file) => <li key={file.src}><a href={file.src} download><span>{file.type}</span><strong>{file.label}</strong><small>{file.format ?? file.src.split(".").at(-1)?.toUpperCase()}</small><i>↓</i></a></li>)}</ul>;
+}
+
 export function OutcomeDetailPage({ slug }: { slug: string }) {
   const entry = getPublishedOutcome(slug);
   if (!entry) return <NotFoundPage />;
@@ -80,6 +84,10 @@ export function OutcomeDetailPage({ slug }: { slug: string }) {
 
         <div className="pack-detail-layout"><div className="pack-detail-main">
           {outcome.preview ? <section className="pack-readable-section pack-readable-section--first" aria-labelledby="outcome-preview-heading"><h2 id="outcome-preview-heading">What it can make</h2><OutcomePreviewView preview={outcome.preview} title={outcome.title} /></section> : null}
+
+          {outcome.inputs?.length ? <section className="pack-readable-section" aria-labelledby="outcome-inputs-heading"><h2 id="outcome-inputs-heading">Inputs used</h2><OutcomeFiles files={outcome.inputs} /></section> : null}
+
+          {outcome.artifacts?.length ? <section className="pack-readable-section" aria-labelledby="outcome-artifacts-heading"><h2 id="outcome-artifacts-heading">Download the result</h2><OutcomeFiles files={outcome.artifacts} /></section> : null}
 
           {outcome.originalPrompt ? <section className="pack-readable-section" aria-labelledby="outcome-original-prompt-heading">
             <h2 id="outcome-original-prompt-heading">Original request</h2>

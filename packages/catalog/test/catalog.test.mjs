@@ -12,7 +12,7 @@ import {
 } from "../dist/index.js";
 
 test("the catalog is made from one prompt-to-result record per folder", () => {
-  assert.equal(outcomeCatalog.length, 5);
+  assert.equal(outcomeCatalog.length, 6);
   assert.equal(bundledOutcomes.length, outcomeCatalog.length);
   const film = getOutcome("html-css-animated-product-launch-film");
   assert.ok(film);
@@ -25,6 +25,15 @@ test("the catalog is made from one prompt-to-result record per folder", () => {
     assert.equal(forbidden in film.outcome, false);
   }
 
+});
+
+test("Outcome inputs and artifacts are concrete optional files", () => {
+  const headrest = getOutcome("split-vibrotactile-headrest-cad-package");
+  assert.ok(headrest);
+  assert.equal(headrest.outcome.inputs, undefined);
+  assert.equal(headrest.outcome.artifacts.length, 6);
+  assert.match(headrest.outcome.artifacts[0].src, /^\/outcome-media\//);
+  assert.throws(() => validateOutcome({ ...headrest.outcome, artifacts: [{ type: "wish", src: "artifacts/nope", label: "Nope" }] }), /type is unsupported/);
 });
 
 test("Outcome validation keeps both prompts exact and rejects framework fields", () => {

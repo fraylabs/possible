@@ -28,6 +28,8 @@ await write("outcomes/index.json", json({
     author: entry.outcome.author,
     products: entry.products.map(({ id, name, company }) => ({ id, name, company: company.name })),
     skills: entry.outcome.skills ?? [],
+    inputs: entry.outcome.inputs ?? [],
+    artifacts: entry.outcome.artifacts ?? [],
     preview: entry.outcome.preview,
   })),
 }));
@@ -37,7 +39,7 @@ await write("llms.txt", [
   "",
   "Possible is an open-source directory of results, exact prompts, and inspectable sources from across AI products.",
   "",
-  "Every Outcome has a title, summary, exact prompt, available provenance, and author. A prior rough request, Products, Skills, images, video, audio, and CAD are optional context. Published prompts remain unchanged.",
+  "Every Outcome has a title, summary, exact prompt, available provenance, and author. A prior rough request, inputs, downloadable artifacts, Products, Skills, images, video, audio, and CAD are optional context. Published prompts remain unchanged.",
   "",
   "- Homepage and Outcome directory: https://possible.sh/",
   "- Human documentation: /docs/",
