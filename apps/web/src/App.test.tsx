@@ -2,7 +2,7 @@ import { cleanup, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { axe } from "vitest-axe";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import App, { AccountProfilePage, AuthoringDocsPage, DocsPage, OutcomeDetailPage, ProductDetailPage, ProductsPage, PublishPage, SkillDetailPage, SkillsPage } from "./App";
+import App, { AccountProfilePage, AuthoringDocsPage, DiscoverPage, DocsPage, OutcomeDetailPage, ProductDetailPage, ProductsPage, PublishPage, SkillDetailPage, SkillsPage } from "./App";
 import { commonSearches } from "./catalog";
 import { getPublishedOutcome, searchPublishedOutcomes } from "./public-content";
 import { getOutcomeState, summarizeGalleryImport } from "./publish";
@@ -15,7 +15,7 @@ describe("Possible website", () => {
     const { container } = render(<App />);
     expect(screen.getByRole("heading", { name: /Anything is possible/, level: 1 })).toBeInTheDocument();
     expect(screen.getByText("Discover what agents can do.")).toBeInTheDocument();
-    expect(Array.from(container.querySelectorAll(".nav-links a")).map((link) => link.textContent)).toEqual(["OUTCOMES", "PRODUCTS", "SKILLS", "DOCS", "GITHUB ↗"]);
+    expect(Array.from(container.querySelectorAll(".nav-links a")).map((link) => link.textContent)).toEqual(["OUTCOMES", "DISCOVER", "DOCS", "GITHUB ↗"]);
     const gallery = screen.getByRole("region", { name: "Outcome directory" });
     expect(within(gallery).getAllByRole("link")).toHaveLength(5);
     expect(gallery.querySelector(".library-pack-card.has-media .library-pack-visual")).toBeInTheDocument();
@@ -60,9 +60,19 @@ describe("Possible website", () => {
     expect(screen.queryByText(/checkout|pricing unknown/i)).not.toBeInTheDocument();
   });
 
+  it("discovers Products and Skills in one searchable directory", async () => {
+    const { container } = render(<DiscoverPage />);
+    const directory = screen.getByRole("region", { name: "Discover Products and Skills" });
+    expect(directory.querySelector('a[href="/products/hyperframes"]')).toBeInTheDocument();
+    expect(directory.querySelector('a[href^="/skills/"]')).toBeInTheDocument();
+    await userEvent.type(screen.getByRole("searchbox", { name: "Search products and skills" }), "pptx");
+    expect(screen.getByRole("link", { name: /Pptx Generator/i })).toBeInTheDocument();
+    expect(container.querySelector('a[href="/products/hyperframes"]')).not.toBeInTheDocument();
+  });
+
   it("uses the same gallery-first structure for Skills", () => {
     render(<SkillsPage />);
-    expect(screen.getByRole("region", { name: "SKILLS" })).toBeInTheDocument();
+    expect(screen.getByRole("region", { name: "Skills" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /Strudel Compose/i })).toBeInTheDocument();
     cleanup();
     render(<SkillDetailPage id="MiniMax-AI/skills/skills/pptx-generator" />);

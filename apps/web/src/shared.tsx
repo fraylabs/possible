@@ -6,8 +6,7 @@ import { githubUrl } from "./public-content";
 export type CopyState = "idle" | "copied" | "failed";
 const navigationItems = [
   { label: "OUTCOMES", href: "/#outcomes", external: false },
-  { label: "PRODUCTS", href: "/products", external: false },
-  { label: "SKILLS", href: "/skills", external: false },
+  { label: "DISCOVER", href: "/discover", external: false },
   { label: "DOCS", href: "/docs", external: false },
   { label: "GITHUB", href: githubUrl, external: true },
 ] as const;
@@ -114,8 +113,7 @@ export function SiteFooter() {
       <a className="wordmark" href="/">possible<span>.sh</span></a>
       <div className="site-footer-links">
         <a href="/#outcomes">Outcomes</a>
-        <a href="/products">Products</a>
-        <a href="/skills">Skills</a>
+        <a href="/discover">Discover</a>
         <a href="/docs">Docs</a>
         <a href={githubUrl} target="_blank" rel="noreferrer">GitHub ↗</a>
       </div>
