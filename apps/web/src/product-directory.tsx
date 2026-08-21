@@ -15,14 +15,23 @@ const categories: Array<{ id: "all" | ProductCategory; label: string }> = [
 
 export function ProductsPage() {
   const [category, setCategory] = useState<"all" | ProductCategory>("all");
-  const products = category === "all" ? publishedProducts : publishedProducts.filter((product) => product.category === category);
+  const [query, setQuery] = useState("");
+  const normalizedQuery = query.trim().toLowerCase();
+  const products = publishedProducts.filter((product) => {
+    if (category !== "all" && product.category !== category) return false;
+    if (!normalizedQuery) return true;
+    return [product.name, product.company.name, product.summary, product.category]
+      .join(" ")
+      .toLowerCase()
+      .includes(normalizedQuery);
+  });
 
   return (
     <SiteShell className="products-page">
       <section className="products-directory" aria-labelledby="products-directory-heading">
         <h1 className="sr-only" id="products-directory-heading">Products</h1>
         <header className="product-categories">
-          <span>TOP CATEGORIES</span>
+          <span>PRODUCTS</span>
           <nav aria-label="Product categories">
             {categories.map((item) => <button
               type="button"
@@ -32,6 +41,17 @@ export function ProductsPage() {
             >{item.label}</button>)}
           </nav>
         </header>
+        <label className="product-directory-search">
+          <span aria-hidden="true">⌕</span>
+          <input
+            type="search"
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder="Search products"
+            aria-label="Search products"
+          />
+          <small>{products.length} RESULT{products.length === 1 ? "" : "S"}</small>
+        </label>
         <div className="products-grid" aria-live="polite">
           {products.map((product) => {
             const outcomes = getProductOutcomes(product.id);
@@ -44,6 +64,7 @@ export function ProductsPage() {
             );
           })}
         </div>
+        {!products.length ? <p className="products-empty">No products match this search.</p> : null}
       </section>
 
     </SiteShell>

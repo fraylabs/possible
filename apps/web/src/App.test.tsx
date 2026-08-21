@@ -2,7 +2,7 @@ import { cleanup, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { axe } from "vitest-axe";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import App, { AccountProfilePage, AuthoringDocsPage, DocsPage, OutcomeDetailPage, ProductDetailPage, ProductsPage, PublishPage } from "./App";
+import App, { AccountProfilePage, AuthoringDocsPage, DocsPage, OutcomeDetailPage, ProductDetailPage, ProductsPage, PublishPage, SkillDetailPage, SkillsPage } from "./App";
 import { commonSearches } from "./catalog";
 import { getPublishedOutcome, searchPublishedOutcomes } from "./public-content";
 import { getOutcomeState, summarizeGalleryImport } from "./publish";
@@ -15,7 +15,7 @@ describe("Possible website", () => {
     const { container } = render(<App />);
     expect(screen.getByRole("heading", { name: /Anything is possible/, level: 1 })).toBeInTheDocument();
     expect(screen.getByText("Discover what agents can do.")).toBeInTheDocument();
-    expect(Array.from(container.querySelectorAll(".nav-links a")).map((link) => link.textContent)).toEqual(["OUTCOMES", "PRODUCTS", "DOCS", "GITHUB ↗"]);
+    expect(Array.from(container.querySelectorAll(".nav-links a")).map((link) => link.textContent)).toEqual(["OUTCOMES", "PRODUCTS", "SKILLS", "DOCS", "GITHUB ↗"]);
     const gallery = screen.getByRole("region", { name: "Outcome directory" });
     expect(within(gallery).getAllByRole("link")).toHaveLength(5);
     expect(gallery.querySelector(".library-pack-card.has-media .library-pack-visual")).toBeInTheDocument();
@@ -55,8 +55,19 @@ describe("Possible website", () => {
     cleanup();
     render(<ProductDetailPage id="heygen/hyperframes" />);
     expect(screen.getByRole("heading", { name: "HyperFrames", level: 1 })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "COMMUNITY" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Outcomes" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Community 1" })).toBeInTheDocument();
     expect(screen.queryByText(/checkout|pricing unknown/i)).not.toBeInTheDocument();
+  });
+
+  it("uses the same gallery-first structure for Skills", () => {
+    render(<SkillsPage />);
+    expect(screen.getByRole("region", { name: "SKILLS" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Strudel Compose/i })).toBeInTheDocument();
+    cleanup();
+    render(<SkillDetailPage id="MiniMax-AI/skills/skills/pptx-generator" />);
+    expect(screen.getByRole("heading", { name: "Pptx Generator", level: 1 })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Community/ })).toBeInTheDocument();
   });
 
   it("documents the same small public contract", () => {

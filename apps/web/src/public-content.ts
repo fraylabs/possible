@@ -1,5 +1,5 @@
 import { outcomeCatalog, productCatalog, searchOutcomes } from "@possible/catalog";
-import type { OutcomeCatalogEntry, OutcomeSearchResult, ResolvedProduct } from "@possible/catalog";
+import type { OutcomeCatalogEntry, OutcomeSearchResult, ResolvedProduct, SkillReference } from "@possible/catalog";
 import cliPackage from "../../cli/package.json" with { type: "json" };
 
 export const possibleVersion = cliPackage.version;
@@ -13,6 +13,41 @@ if (new Set(publishedProductSlugs).size !== publishedProductSlugs.length) throw 
 
 export type PublishedOutcomeSearchResult = OutcomeSearchResult;
 
+export interface PublishedSkill extends SkillReference {
+  id: string;
+  slug: string;
+  name: string;
+  sourceUrl: string;
+}
+
+function skillName(directory: string) {
+  return (directory.split("/").at(-1) ?? directory)
+    .split("-")
+    .map((part) => part ? `${part[0]?.toUpperCase()}${part.slice(1)}` : part)
+    .join(" ");
+}
+
+function skillSlug(repository: string, directory: string) {
+  return `${repository}/${directory}`.replaceAll("/", "--");
+}
+
+const skillMap = new Map<string, PublishedSkill>();
+for (const entry of publishedOutcomes) {
+  for (const skill of entry.outcome.skills ?? []) {
+    const id = `${skill.repository}/${skill.directory}`;
+    if (skillMap.has(id)) continue;
+    skillMap.set(id, {
+      ...skill,
+      id,
+      slug: skillSlug(skill.repository, skill.directory),
+      name: skillName(skill.directory),
+      sourceUrl: `https://github.com/${skill.repository}/tree/${skill.lastReviewedCommit}/${skill.directory}`,
+    });
+  }
+}
+
+export const publishedSkills = [...skillMap.values()].sort((a, b) => a.name.localeCompare(b.name));
+
 export function searchPublishedOutcomes(query: string): PublishedOutcomeSearchResult[] {
   return searchOutcomes(publishedOutcomes, { query });
 }
@@ -23,6 +58,10 @@ export function outcomeHref(entry: OutcomeCatalogEntry) {
 
 export function productHref(product: ResolvedProduct) {
   return `/products/${product.id.split("/").at(-1)}`;
+}
+
+export function skillHref(skill: PublishedSkill) {
+  return `/skills/${skill.slug}`;
 }
 
 export function getPublishedOutcome(slug: string) {
@@ -38,6 +77,14 @@ export function getPublishedProduct(idOrSlug: string) {
 
 export function getProductOutcomes(id: string) {
   return publishedOutcomes.filter((entry) => entry.products.some((product) => product.id === id));
+}
+
+export function getPublishedSkill(idOrSlug: string) {
+  return publishedSkills.find((skill) => skill.id === idOrSlug || skill.slug === idOrSlug);
+}
+
+export function getSkillOutcomes(id: string) {
+  return publishedOutcomes.filter((entry) => entry.outcome.skills?.some((skill) => `${skill.repository}/${skill.directory}` === id));
 }
 
 export function getProductFeature(id: string) {

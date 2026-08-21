@@ -7,6 +7,7 @@ export type CopyState = "idle" | "copied" | "failed";
 const navigationItems = [
   { label: "OUTCOMES", href: "/#outcomes", external: false },
   { label: "PRODUCTS", href: "/products", external: false },
+  { label: "SKILLS", href: "/skills", external: false },
   { label: "DOCS", href: "/docs", external: false },
   { label: "GITHUB", href: githubUrl, external: true },
 ] as const;
@@ -114,6 +115,7 @@ export function SiteFooter() {
       <div className="site-footer-links">
         <a href="/#outcomes">Outcomes</a>
         <a href="/products">Products</a>
+        <a href="/skills">Skills</a>
         <a href="/docs">Docs</a>
         <a href={githubUrl} target="_blank" rel="noreferrer">GitHub ↗</a>
       </div>

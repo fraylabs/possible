@@ -1,4 +1,4 @@
-import { outcomeHref, productHref, publishedOutcomes, publishedProducts } from "../src/public-content";
+import { outcomeHref, productHref, publishedOutcomes, publishedProducts, publishedSkills, skillHref } from "../src/public-content";
 import type { MetadataRoute } from "next";
 
 const baseUrl = "https://possible.sh";
@@ -7,6 +7,7 @@ export const dynamic = "force-static";
 const staticPaths = [
   "/",
   "/products/",
+  "/skills/",
   "/fray-labs/",
   "/docs/",
   "/docs/how-to-use/",
@@ -28,6 +29,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     })),
     ...publishedProducts.map((product) => ({
       url: `${baseUrl}${productHref(product)}/`,
+      lastModified: siteUpdatedAt,
+      changeFrequency: "weekly" as const,
+    })),
+    ...publishedSkills.map((skill) => ({
+      url: `${baseUrl}${skillHref(skill)}/`,
       lastModified: siteUpdatedAt,
       changeFrequency: "weekly" as const,
     })),

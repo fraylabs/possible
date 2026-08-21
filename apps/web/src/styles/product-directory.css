@@ -3,18 +3,24 @@
 .products-page > nav .wordmark span { color: #ff5a1f; }
 .products-page > nav .nav-links { color: #aaa9a4; }
 .products-page :where(a, button):focus-visible { outline: 2px solid #ff5a1f; outline-offset: 3px; }
-.products-directory { width: min(1180px, calc(100% - 48px)); margin: 0 auto; padding: 54px 0 88px; }
+.products-directory { width: min(1180px, calc(100% - 48px)); margin: 0 auto; padding: 38px 0 88px; }
 .product-categories { margin-bottom: 24px; padding-bottom: 18px; border-bottom: 1px solid #2d2d2b; display: flex; justify-content: space-between; gap: 24px; align-items: center; }
 .product-categories > span { color: #777772; font: 8px "DM Mono", monospace; letter-spacing: .08em; }
+.product-categories > p { margin: 0; color: #777772; font-size: 10px; }
 .product-categories nav { display: flex; flex-wrap: wrap; gap: 6px; }
 .product-categories button { min-height: 34px; padding: 0 13px; border: 1px solid #363634; border-radius: 999px; background: transparent; color: #8f8e88; cursor: pointer; font: 8px "DM Mono", monospace; text-transform: uppercase; }
 .product-categories button:hover { border-color: #66655f; color: #f2efe8; }
 .product-categories button[aria-pressed="true"] { border-color: #ff5a1f; background: #ff5a1f; color: #151411; }
+.product-directory-search { min-height: 48px; margin-bottom: 18px; padding: 0 15px; border: 1px solid #373735; border-radius: 10px; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 10px; background: #151514; color: #777772; }
+.product-directory-search input { width: 100%; min-width: 0; border: 0; outline: 0; background: transparent; color: #f2efe8; font: 12px Manrope, sans-serif; }
+.product-directory-search input::placeholder { color: #777772; }
+.product-directory-search small { color: #777772; font: 7px "DM Mono", monospace; }
 .products-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
 .product-directory-card { min-height: 200px; padding: 18px; border: 1px solid #373735; border-radius: 12px; display: flex; flex-direction: column; background: #151514; transition: border-color .16s ease, background .16s ease, transform .16s ease; }
 .product-directory-card:hover { border-color: #686761; background: #191918; transform: translateY(-2px); }
 .product-directory-card > header { display: grid; grid-template-columns: 48px 1fr auto; gap: 14px; align-items: center; }
 .product-directory-card > header img { width: 48px; height: 48px; border: 1px solid #42423e; border-radius: 11px; display: block; object-fit: cover; background: #fff; }
+.skill-directory-mark { width: 48px; height: 48px; border: 1px solid #42423e; border-radius: 11px; display: grid; place-items: center; background: #242421; color: #ff7040 !important; font: 9px "DM Mono", monospace !important; }
 .product-directory-card > header h2 { margin: 0 0 4px; color: #f2efe8; font-size: 17px; font-weight: 560; letter-spacing: -.025em; }
 .product-directory-card > header span { color: #85847e; font-size: 10px; }
 .product-directory-card > header i { align-self: start; color: #777772; font: 10px "DM Mono", monospace; font-style: normal; }
@@ -23,6 +29,8 @@
 .product-directory-meta span { color: #85847e; font: 7px "DM Mono", monospace; letter-spacing: .04em; text-transform: uppercase; }
 .product-directory-meta span:first-child { color: #ff8054; }
 .product-directory-meta span + span::before { content: "·"; margin-right: 14px; color: #4f4f4b; }
+.products-empty { margin: 0; padding: 48px 0; border-top: 1px solid #2d2d2b; color: #85847e; font-size: 13px; }
+.skill-directory-card > p { overflow-wrap: anywhere; font-family: "DM Mono", monospace; font-size: 9px; }
 
 @media (max-width: 900px) {
   .products-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -38,4 +46,5 @@
   .product-directory-card > header { grid-template-columns: 50px 1fr auto; }
   .product-directory-card > header img { width: 50px; height: 50px; }
   .product-directory-card > p { margin: 16px 0 18px; font-size: 12px; }
+  .product-directory-search small { display: none; }
 }

@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { Session } from "@supabase/supabase-js";
-import { SiteShell } from "./shared";
+import { CopyButton, SiteShell } from "./shared";
 import { getSupabaseBrowserClient } from "./supabase";
 
 type Account = {
@@ -75,8 +75,45 @@ type AccountSkill = {
   outcome_count: number;
 };
 
+type ListingClaim = {
+  id: string;
+  account_id: string;
+  account_handle: string;
+  account_name: string;
+  target_type: "company" | "skill";
+  company_id: string | null;
+  company_name: string | null;
+  skill_id: string | null;
+  skill_name: string | null;
+  proof_method: "dns_txt" | "github_file" | "manual";
+  proof_location: string;
+  status: "pending" | "claimed";
+  token_expires_at: string | null;
+  verified_at: string | null;
+};
+
+type ClaimChallenge = {
+  claimId: string;
+  targetType: "company" | "skill";
+  proofMethod: "dns_txt" | "github_file";
+  proofLocation: string;
+  proofValue: string;
+  expiresAt: string;
+};
+
+type ClaimTransfer = {
+  id: string;
+  claim_id: string;
+  from_account_id: string;
+  to_account_id: string;
+  status: "pending" | "accepted" | "cancelled";
+  created_at: string;
+};
+
+type EndorsementOption = { claim: ListingClaim; endorsed: boolean };
+
 type OutcomeFilter = "all" | "published" | "unpublished" | "publishable" | "missing";
-type WorkspaceTab = "outcomes" | "products" | "skills" | "sources" | "account";
+type WorkspaceTab = "outcomes" | "products" | "skills" | "sources" | "claims" | "account";
 type ViewMode = "grid" | "table";
 type Notice = { tone: "success" | "error" | "neutral"; text: string } | null;
 type Counts = { all: number; published: number; unpublished: number; publishable: number; missing: number };
@@ -103,6 +140,11 @@ export type ImportReceipt = {
 
 const PAGE_SIZE = 50;
 const EMPTY_COUNTS: Counts = { all: 0, published: 0, unpublished: 0, publishable: 0, missing: 0 };
+const workspaceTabs: WorkspaceTab[] = ["outcomes", "products", "skills", "sources", "claims", "account"];
+
+function isWorkspaceTab(value: string): value is WorkspaceTab {
+  return workspaceTabs.some((tab) => tab === value);
+}
 
 function slugify(value: string) {
   return value.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
@@ -286,12 +328,14 @@ function OutcomeTable({ outcomes, selecting, selected, onActivate }: {
   );
 }
 
-function OutcomeDrawer({ outcome, busy, onClose, onSave, onPublication }: {
+function OutcomeDrawer({ outcome, busy, endorsementOptions, onClose, onSave, onPublication, onOfficial }: {
   outcome: OutcomeReview;
   busy: boolean;
+  endorsementOptions: EndorsementOption[];
   onClose: () => void;
   onSave: (values: Record<string, string | null>) => Promise<void>;
   onPublication: (makePublic: boolean) => void;
+  onOfficial: (claimId: string, makeOfficial: boolean) => Promise<void>;
 }) {
   const closeRef = useRef<HTMLButtonElement>(null);
   useEffect(() => {
@@ -310,6 +354,7 @@ function OutcomeDrawer({ outcome, busy, onClose, onSave, onPublication }: {
         <header><div><span className="publish-kicker">OUTCOME</span><h2 id="outcome-drawer-title">{outcome.title || "Untitled Outcome"}</h2></div><button ref={closeRef} type="button" aria-label="Close Outcome editor" onClick={onClose}>×</button></header>
         <div className="publish-drawer-preview"><OutcomeMedia outcome={outcome} /></div>
         <div className="publish-drawer-meta"><span className={outcome.is_publishable ? "" : "missing"}>{getOutcomeState(outcome)}</span>{outcome.has_editorial_edits ? <span>Edited</span> : null}<a href={outcome.source_url} target="_blank" rel="noreferrer">Open source ↗</a></div>
+        {endorsementOptions.length ? <section className="publish-official-controls"><strong>Publisher approval</strong>{endorsementOptions.map(({ claim, endorsed }) => <div key={claim.id}><span>{claim.company_name ?? claim.skill_name}</span><button type="button" disabled={busy} onClick={() => void onOfficial(claim.id, !endorsed)}>{endorsed ? "Remove official" : "Approve as official"}</button></div>)}</section> : null}
         {!outcome.is_publishable ? <p className="publish-missing-note">Add {outcome.missing_fields.join(", ")} before publishing.</p> : null}
         <form className="publish-drawer-form" onSubmit={(event) => {
           event.preventDefault();
@@ -370,6 +415,89 @@ function sanitizeSearch(search: string) {
   return search.trim().replace(/[^\p{L}\p{N}\s'-]/gu, " ").replace(/\s+/g, " ");
 }
 
+function ClaimTransferForm({ claim, busy, onTransfer }: { claim: ListingClaim; busy: boolean; onTransfer: (claimId: string, handle: string) => Promise<void> }) {
+  const [open, setOpen] = useState(false);
+  const [handle, setHandle] = useState("");
+  if (!open) return <button type="button" onClick={() => setOpen(true)}>Transfer</button>;
+  return (
+    <form className="claim-transfer-form" onSubmit={(event) => { event.preventDefault(); void onTransfer(claim.id, handle).then(() => { setHandle(""); setOpen(false); }); }}>
+      <input required value={handle} onChange={(event) => setHandle(event.target.value)} placeholder="Receiving account handle" aria-label="Receiving account handle" />
+      <button type="submit" disabled={busy}>Send</button>
+      <button type="button" onClick={() => setOpen(false)}>Cancel</button>
+    </form>
+  );
+}
+
+function ClaimsPanel({ account, companies, skills, claims, transfers, challenge, requestedTarget, busy, onRequest, onVerify, onTransfer, onAcceptTransfer }: {
+  account: Account | null;
+  companies: Company[];
+  skills: AccountSkill[];
+  claims: ListingClaim[];
+  transfers: ClaimTransfer[];
+  challenge: ClaimChallenge | null;
+  requestedTarget: string | null;
+  busy: boolean;
+  onRequest: (targetType: "company" | "skill", targetId: string) => Promise<void>;
+  onVerify: (claimId: string) => Promise<void>;
+  onTransfer: (claimId: string, handle: string) => Promise<void>;
+  onAcceptTransfer: (transferId: string) => Promise<void>;
+}) {
+  const [targetType, setTargetType] = useState<"company" | "skill">("company");
+  const [targetId, setTargetId] = useState("");
+  const options = targetType === "company" ? companies : skills;
+  const managedClaims = claims.filter((claim) => claim.account_id === account?.id);
+
+  useEffect(() => {
+    if (!requestedTarget) return;
+    if (requestedTarget.startsWith("company:")) {
+      const company = companies.find(({ slug }) => slug === requestedTarget.slice("company:".length));
+      if (company) { setTargetType("company"); setTargetId(company.id); }
+      return;
+    }
+    if (requestedTarget.startsWith("skill:")) {
+      const source = requestedTarget.slice("skill:".length);
+      const skill = skills.find((item) => `${item.repository}/${item.directory}` === source);
+      if (skill) { setTargetType("skill"); setTargetId(skill.id); }
+    }
+  }, [companies, requestedTarget, skills]);
+
+  return (
+    <section className="publish-settings claims-settings">
+      <header><span className="publish-kicker">CLAIMS</span><h1>Claims</h1><p>Prove that this account manages a company or Skill. A claim never grants control over anyone else’s Outcomes.</p></header>
+      {transfers.some((transfer) => transfer.to_account_id === account?.id && transfer.status === "pending") ? <section className="claim-incoming">
+        <strong>Incoming transfers</strong>
+        {transfers.filter((transfer) => transfer.to_account_id === account?.id && transfer.status === "pending").map((transfer) => {
+          const claim = claims.find(({ id }) => id === transfer.claim_id);
+          return <div key={transfer.id}><span>{claim?.company_name ?? claim?.skill_name ?? "Claim"}</span><button type="button" disabled={busy} onClick={() => void onAcceptTransfer(transfer.id)}>Accept</button></div>;
+        })}
+      </section> : null}
+      <form className="claim-request-form" onSubmit={(event) => { event.preventDefault(); if (targetId) void onRequest(targetType, targetId); }}>
+        <label>Type<select value={targetType} onChange={(event) => { setTargetType(event.target.value === "skill" ? "skill" : "company"); setTargetId(""); }}><option value="company">Company</option><option value="skill">Skill</option></select></label>
+        <label>{targetType === "company" ? "Company" : "Skill"}<select required value={targetId} onChange={(event) => setTargetId(event.target.value)}><option value="" disabled>Select {targetType}</option>{options.map((option) => <option value={option.id} key={option.id}>{option.name}</option>)}</select></label>
+        <button type="submit" disabled={busy || !targetId}>Start claim</button>
+      </form>
+
+      {challenge ? <section className="claim-challenge" aria-labelledby="claim-challenge-heading">
+        <header><div><span className="publish-kicker">VERIFY OWNERSHIP</span><h2 id="claim-challenge-heading">Add one verification record</h2></div><span>EXPIRES {new Date(challenge.expiresAt).toLocaleDateString()}</span></header>
+        <div><small>{challenge.proofMethod === "dns_txt" ? "DNS TXT NAME" : "FILE LOCATION"}</small><code>{challenge.proofLocation}</code><CopyButton label="Copy location" value={challenge.proofLocation} /></div>
+        <div><small>{challenge.proofMethod === "dns_txt" ? "DNS TXT VALUE" : "FILE CONTENT"}</small><code>{challenge.proofValue}</code><CopyButton label="Copy verification value" value={challenge.proofValue} /></div>
+        <footer><p>{challenge.proofMethod === "dns_txt" ? "Add the TXT record at the company’s official domain." : "Commit the file inside the exact Skill directory on the repository’s default branch."}</p><button type="button" disabled={busy} onClick={() => void onVerify(challenge.claimId)}>Verify now</button></footer>
+      </section> : null}
+
+      <div className="claims-list">
+        <header><span>Listing</span><span>Proof</span><span>Status</span><span /></header>
+        {managedClaims.map((claim) => <article key={claim.id}>
+          <div><strong>{claim.company_name ?? claim.skill_name}</strong><small>{claim.target_type}</small></div>
+          <code>{claim.proof_location}</code>
+          <span className={`claim-status is-${claim.status}`}>{claim.status}</span>
+          <div>{claim.status === "pending" ? <button type="button" disabled={busy} onClick={() => void onVerify(claim.id)}>Verify</button> : <ClaimTransferForm claim={claim} busy={busy} onTransfer={onTransfer} />}</div>
+        </article>)}
+        {!managedClaims.length ? <p>No claims yet.</p> : null}
+      </div>
+    </section>
+  );
+}
+
 export function DashboardPage() {
   const client = useMemo(() => getSupabaseBrowserClient(), []);
   const [session, setSession] = useState<Session | null | undefined>();
@@ -383,6 +511,10 @@ export function DashboardPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [sources, setSources] = useState<GallerySource[]>([]);
   const [skills, setSkills] = useState<AccountSkill[]>([]);
+  const [claims, setClaims] = useState<ListingClaim[]>([]);
+  const [claimTransfers, setClaimTransfers] = useState<ClaimTransfer[]>([]);
+  const [claimChallenge, setClaimChallenge] = useState<ClaimChallenge | null>(null);
+  const [requestedClaimTarget, setRequestedClaimTarget] = useState<string | null>(null);
   const [selectedProductId, setSelectedProductId] = useState("");
   const [outcomes, setOutcomes] = useState<OutcomeReview[]>([]);
   const [counts, setCounts] = useState<Counts>(EMPTY_COUNTS);
@@ -397,6 +529,7 @@ export function DashboardPage() {
   const [selectingAll, setSelectingAll] = useState(false);
   const [selected, setSelected] = useState<Record<string, SelectedOutcome>>({});
   const [openOutcome, setOpenOutcome] = useState<OutcomeReview | null>(null);
+  const [endorsementOptions, setEndorsementOptions] = useState<EndorsementOption[]>([]);
   const [confirmation, setConfirmation] = useState<{ makePublic: boolean; outcomes: SelectedOutcome[] } | null>(null);
   const [importReceipt, setImportReceipt] = useState<ImportReceipt | null>(null);
 
@@ -451,6 +584,21 @@ export function DashboardPage() {
       if (skillResult.error) throw skillResult.error;
       // SAFETY: the explicit account_skill_directory select list matches AccountSkill.
       setSkills((skillResult.data ?? []) as AccountSkill[]);
+    }
+
+    if (!nextAccountId) { setClaims([]); setClaimTransfers([]); }
+    else {
+      const claimResult = await client.from("listing_claim_directory").select("id,account_id,account_handle,account_name,target_type,company_id,company_name,skill_id,skill_name,proof_method,proof_location,status,token_expires_at,verified_at").or(`account_id.eq.${nextAccountId},status.eq.claimed`).order("created_at", { ascending: false });
+      // The UI remains compatible until the additive claims migration is deployed.
+      if (!claimResult.error) {
+        // SAFETY: the explicit listing_claim_directory select list matches ListingClaim.
+        setClaims((claimResult.data ?? []) as ListingClaim[]);
+      }
+      const transferResult = await client.from("claim_transfers").select("id,claim_id,from_account_id,to_account_id,status,created_at").or(`from_account_id.eq.${nextAccountId},to_account_id.eq.${nextAccountId}`).eq("status", "pending").order("created_at", { ascending: false });
+      if (!transferResult.error) {
+        // SAFETY: the explicit claim_transfers select list matches ClaimTransfer.
+        setClaimTransfers((transferResult.data ?? []) as ClaimTransfer[]);
+      }
     }
   }, [client, selectedAccountId, session]);
 
@@ -526,8 +674,37 @@ export function DashboardPage() {
   useEffect(() => { if (access === "granted") void refreshOutcomes().catch((error: Error) => setNotice({ tone: "error", text: error.message })); }, [access, refreshOutcomes]);
   useEffect(() => { const timer = window.setTimeout(() => { setPage(1); setSearch(searchInput); }, 250); return () => window.clearTimeout(timer); }, [searchInput]);
   useEffect(() => { const saved = window.localStorage?.getItem("possible-publish-view"); if (saved === "table") setViewMode("table"); }, []);
+  useEffect(() => {
+    const parameters = new URL(window.location.href).searchParams;
+    const requestedTab = parameters.get("tab");
+    setRequestedClaimTarget(parameters.get("target"));
+    if (requestedTab && isWorkspaceTab(requestedTab)) setWorkspaceTab(requestedTab);
+  }, []);
   useEffect(() => { setSelected({}); setSelecting(false); setOpenOutcome(null); setPage(1); }, [selectedAccountId, selectedProductId]);
   useEffect(() => { setSelected({}); }, [filter, search]);
+  useEffect(() => {
+    if (!client || !openOutcome || !selectedAccountId) { setEndorsementOptions([]); return; }
+    let cancelled = false;
+    void (async () => {
+      const managedClaims = claims.filter((claim) => claim.account_id === selectedAccountId && claim.status === "claimed");
+      if (!managedClaims.length) { setEndorsementOptions([]); return; }
+      const [productLinks, skillLinks] = await Promise.all([
+        client.from("outcome_products").select("product_id").eq("outcome_id", openOutcome.id),
+        client.from("outcome_skills").select("skill_id").eq("outcome_id", openOutcome.id),
+      ]);
+      if (productLinks.error || skillLinks.error || cancelled) return;
+      const linkedProductIds = (productLinks.data ?? []).map(({ product_id }: { product_id: string }) => product_id);
+      const linkedCompanyIds = new Set(products.filter(({ id }) => linkedProductIds.includes(id)).map(({ company_id }) => company_id));
+      const linkedSkillIds = new Set((skillLinks.data ?? []).map(({ skill_id }: { skill_id: string }) => skill_id));
+      const eligible = managedClaims.filter((claim) => claim.company_id ? linkedCompanyIds.has(claim.company_id) : claim.skill_id ? linkedSkillIds.has(claim.skill_id) : false);
+      if (!eligible.length) { setEndorsementOptions([]); return; }
+      const endorsementResult = await client.from("outcome_endorsements").select("claim_id").eq("outcome_id", openOutcome.id).in("claim_id", eligible.map(({ id }) => id));
+      if (endorsementResult.error || cancelled) return;
+      const endorsed = new Set((endorsementResult.data ?? []).map(({ claim_id }: { claim_id: string }) => claim_id));
+      setEndorsementOptions(eligible.map((claim) => ({ claim, endorsed: endorsed.has(claim.id) })));
+    })();
+    return () => { cancelled = true; };
+  }, [claims, client, openOutcome, products, selectedAccountId]);
 
   async function run(action: () => Promise<void>, success: string, refreshReview = false) {
     setBusy(true); setNotice(null);
@@ -645,6 +822,58 @@ export function DashboardPage() {
     if (saved) setOpenOutcome(null);
   }
 
+  async function requestListingClaim(targetType: "company" | "skill", targetId: string) {
+    if (!client || !selectedAccountId) return;
+    setBusy(true); setNotice(null);
+    const { data, error } = await client.rpc("request_listing_claim", { target_account_id: selectedAccountId, requested_target_type: targetType, requested_target_id: targetId });
+    if (error) setNotice({ tone: "error", text: error.message });
+    else {
+      // SAFETY: request_listing_claim returns the ClaimChallenge JSON contract defined by the migration.
+      setClaimChallenge(data as ClaimChallenge);
+      await refreshMetadata();
+      setNotice({ tone: "success", text: "Verification record created." });
+    }
+    setBusy(false);
+  }
+
+  async function verifyListingClaim(claimId: string) {
+    if (!client) return;
+    setBusy(true); setNotice(null);
+    const { data, error } = await client.functions.invoke("verify-listing-claim", { body: { claimId } });
+    if (error || !data?.verified) setNotice({ tone: "error", text: data?.error ?? error?.message ?? "The verification record was not found yet." });
+    else {
+      setClaimChallenge(null);
+      await refreshMetadata();
+      setNotice({ tone: "success", text: "Ownership verified." });
+    }
+    setBusy(false);
+  }
+
+  async function transferListingClaim(claimId: string, handle: string) {
+    if (!client) return;
+    await run(async () => {
+      const { error } = await client.rpc("request_claim_transfer", { target_claim_id: claimId, recipient_handle: handle });
+      if (error) throw error;
+    }, `Transfer sent to @${handle}.`);
+  }
+
+  async function acceptClaimTransfer(transferId: string) {
+    if (!client) return;
+    await run(async () => {
+      const { error } = await client.rpc("accept_claim_transfer", { target_transfer_id: transferId });
+      if (error) throw error;
+    }, "Claim transfer accepted.");
+  }
+
+  async function setOutcomeOfficial(claimId: string, makeOfficial: boolean) {
+    if (!client || !openOutcome) return;
+    const changed = await run(async () => {
+      const { error } = await client.rpc("set_outcome_official", { target_outcome_id: openOutcome.id, target_claim_id: claimId, make_official: makeOfficial });
+      if (error) throw error;
+    }, makeOfficial ? "Outcome approved as official." : "Official approval removed.");
+    if (changed) setEndorsementOptions((current) => current.map((option) => option.claim.id === claimId ? { ...option, endorsed: makeOfficial } : option));
+  }
+
   async function importGallery(file: File, source: GallerySource) {
     if (!client) return;
     setBusy(true); setNotice(null);
@@ -681,7 +910,7 @@ export function DashboardPage() {
             {selectedAccount?.avatar_url ? <img src={selectedAccount.avatar_url} alt="" /> : <span>{selectedAccount?.name.slice(0, 1) ?? "P"}</span>}
             <label><small>ACCOUNT</small><select value={selectedAccountId} onChange={(event) => setSelectedAccountId(event.target.value)} aria-label="Account workspace">{accounts.length ? accounts.map((account) => <option key={account.id} value={account.id}>{account.name}</option>) : <option value="">No accounts</option>}</select></label>
           </div>
-          <nav className="publish-workspace-tabs" aria-label="Publisher workspace">{(["outcomes", "products", "skills", "sources", "account"] as const).map((tab) => <button className={workspaceTab === tab ? "active" : ""} type="button" onClick={() => setWorkspaceTab(tab)} key={tab}>{tab}</button>)}</nav>
+          <nav className="publish-workspace-tabs" aria-label="Publisher workspace">{(["outcomes", "products", "skills", "sources", "claims", "account"] as const).map((tab) => <button className={workspaceTab === tab ? "active" : ""} type="button" onClick={() => { setWorkspaceTab(tab); const url = new URL(window.location.href); url.searchParams.set("tab", tab); window.history.replaceState(window.history.state, "", url); }} key={tab}>{tab}</button>)}</nav>
           <button className="publish-signout" type="button" onClick={() => void client.auth.signOut()}>Sign out</button>
         </header>
         <NoticeLine notice={notice} />
@@ -723,6 +952,8 @@ export function DashboardPage() {
             <GalleryForm products={products} sources={sources} busy={busy} onCreate={(productId, sourceUrl) => run(async () => { const { error } = await client.from("gallery_sources").insert({ account_id: selectedAccountId, product_id: productId, source_url: sourceUrl }); if (error) throw error; }, "Gallery connected.")} />
             <div className="publish-settings-records">{sources.map((source) => <span key={source.id}><strong>{products.find(({ id }) => id === source.product_id)?.name}</strong><a href={source.source_url} target="_blank" rel="noreferrer">{source.source_url} ↗</a></span>)}</div>
           </section>
+        ) : workspaceTab === "claims" ? (
+          <ClaimsPanel account={selectedAccount} companies={companies} skills={skills} claims={claims} transfers={claimTransfers} challenge={claimChallenge} requestedTarget={requestedClaimTarget} busy={busy} onRequest={requestListingClaim} onVerify={verifyListingClaim} onTransfer={transferListingClaim} onAcceptTransfer={acceptClaimTransfer} />
         ) : (
           <section className="publish-settings">
             <header><span className="publish-kicker">ACCOUNT</span><h1>{selectedAccount?.name ?? "Account"}</h1><p>This public identity owns the Outcomes in this workspace. Products and Skills remain linked attribution.</p></header>
@@ -738,7 +969,7 @@ export function DashboardPage() {
       </section>
 
       {workspaceTab === "outcomes" && selecting ? <div className="publish-selection-bar" aria-live="polite"><strong>{selectedOutcomes.length} selected</strong><button type="button" disabled={!outcomes.length || selectingAll} onClick={toggleCurrentPageSelection}>{allPageOutcomesSelected ? "Clear page" : "Select page"}</button><button type="button" disabled={!filteredTotal || selectingAll} onClick={() => { if (allMatchingOutcomesSelected) setSelected({}); else void selectAllMatchingOutcomes(); }}>{selectingAll ? "Selecting…" : allMatchingOutcomesSelected ? "Clear all" : "Select all"}</button><span /><button type="button" disabled={!selectedOutcomes.length || busy || selectingAll} onClick={() => requestPublication(false, selectedOutcomes)}>Unpublish</button><button className="publish-primary-button" type="button" disabled={!selectedOutcomes.length || busy || selectingAll || selectedHasIncomplete} title={selectedHasIncomplete ? "Complete missing information before publishing" : undefined} onClick={() => void changePublication(true, selectedOutcomes)}>Publish</button></div> : null}
-      {openOutcome ? <OutcomeDrawer outcome={openOutcome} busy={busy} onClose={() => setOpenOutcome(null)} onSave={(values) => saveOutcome(openOutcome, values)} onPublication={(makePublic) => requestPublication(makePublic, [openOutcome])} /> : null}
+      {openOutcome ? <OutcomeDrawer outcome={openOutcome} busy={busy} endorsementOptions={endorsementOptions} onClose={() => setOpenOutcome(null)} onSave={(values) => saveOutcome(openOutcome, values)} onPublication={(makePublic) => requestPublication(makePublic, [openOutcome])} onOfficial={setOutcomeOfficial} /> : null}
       {confirmation ? <ConfirmationDialog makePublic={confirmation.makePublic} outcomes={confirmation.outcomes} publishedCount={counts.published} busy={busy} onCancel={() => setConfirmation(null)} onConfirm={() => void confirmPublication()} /> : null}
       {importReceipt ? <div className="publish-dialog-layer"><button className="publish-drawer-backdrop" type="button" aria-label="Close import receipt" onClick={() => setImportReceipt(null)} /><ImportReceiptPanel receipt={importReceipt} onClose={() => setImportReceipt(null)} onReviewMissing={() => { setImportReceipt(null); setWorkspaceTab("outcomes"); setFilter("missing"); }} /></div> : null}
     </SiteShell>
