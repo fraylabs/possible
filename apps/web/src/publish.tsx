@@ -367,7 +367,7 @@ export function PublishPage() {
   const [filter, setFilter] = useState<OutcomeFilter>("all");
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
-  const [limit, setLimit] = useState(PAGE_SIZE);
+  const [page, setPage] = useState(1);
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
   const [selecting, setSelecting] = useState(false);
   const [selected, setSelected] = useState<Record<string, OutcomeReview>>({});
@@ -379,6 +379,7 @@ export function PublishPage() {
   const selectedSource = sources.find(({ product_id }) => product_id === selectedProductId) ?? null;
   const selectedOutcomes = Object.values(selected);
   const selectedHasIncomplete = selectedOutcomes.some((outcome) => !outcome.is_publishable);
+  const allPageOutcomesSelected = outcomes.length > 0 && outcomes.every((outcome) => Boolean(selected[outcome.id]));
 
   const refreshMetadata = useCallback(async () => {
     if (!client || !session) return;
@@ -422,15 +423,19 @@ export function PublishPage() {
       if (filter === "missing") query = query.eq("is_publishable", false);
       const safeSearch = sanitizeSearch(search);
       if (safeSearch) query = query.or(`title.ilike.%${safeSearch}%,prompt.ilike.%${safeSearch}%,author_name.ilike.%${safeSearch}%,model.ilike.%${safeSearch}%`);
-      const result = await query.order("discovered_at", { ascending: false }).range(0, limit - 1);
+      const pageStart = (page - 1) * PAGE_SIZE;
+      const result = await query.order("discovered_at", { ascending: false }).range(pageStart, pageStart + PAGE_SIZE - 1);
       if (result.error) throw result.error;
-      setFilteredTotal(result.count ?? 0);
+      const nextTotal = result.count ?? 0;
+      const nextPageCount = Math.max(1, Math.ceil(nextTotal / PAGE_SIZE));
+      setFilteredTotal(nextTotal);
+      if (page > nextPageCount) { setPage(nextPageCount); return; }
       // SAFETY: the explicit outcome_review select list matches OutcomeReview.
       setOutcomes((result.data ?? []) as OutcomeReview[]);
     } finally {
       setLoadingOutcomes(false);
     }
-  }, [client, filter, limit, search, selectedProductId, session]);
+  }, [client, filter, page, search, selectedProductId, session]);
 
   useEffect(() => {
     if (!client) { setSession(null); return; }
@@ -450,9 +455,10 @@ export function PublishPage() {
   }, [client, refreshMetadata, session]);
 
   useEffect(() => { if (access === "granted") void refreshOutcomes().catch((error: Error) => setNotice({ tone: "error", text: error.message })); }, [access, refreshOutcomes]);
-  useEffect(() => { const timer = window.setTimeout(() => { setLimit(PAGE_SIZE); setSearch(searchInput); }, 250); return () => window.clearTimeout(timer); }, [searchInput]);
+  useEffect(() => { const timer = window.setTimeout(() => { setPage(1); setSearch(searchInput); }, 250); return () => window.clearTimeout(timer); }, [searchInput]);
   useEffect(() => { const saved = window.localStorage?.getItem("possible-publish-view"); if (saved === "table") setViewMode("table"); }, []);
-  useEffect(() => { setSelected({}); setSelecting(false); setOpenOutcome(null); setLimit(PAGE_SIZE); }, [selectedProductId]);
+  useEffect(() => { setSelected({}); setSelecting(false); setOpenOutcome(null); setPage(1); }, [selectedProductId]);
+  useEffect(() => { setSelected({}); }, [filter, search]);
 
   async function run(action: () => Promise<void>, success: string, refreshReview = false) {
     setBusy(true); setNotice(null);
@@ -487,6 +493,17 @@ export function PublishPage() {
     setSelected((current) => {
       const next = { ...current };
       if (next[outcome.id]) delete next[outcome.id]; else next[outcome.id] = outcome;
+      return next;
+    });
+  }
+
+  function toggleCurrentPageSelection() {
+    setSelected((current) => {
+      const next = { ...current };
+      for (const outcome of outcomes) {
+        if (allPageOutcomesSelected) delete next[outcome.id];
+        else next[outcome.id] = outcome;
+      }
       return next;
     });
   }
@@ -549,7 +566,7 @@ export function PublishPage() {
   if (!session) return <SiteShell className="publish-page" showFooter={false}><SignInPanel onSubmit={signIn} busy={busy} notice={notice} /></SiteShell>;
   if (access !== "granted") return <SiteShell className="publish-page" showFooter={false}><section className="publish-access-card"><span className="publish-kicker">{access === "loading" ? "CHECKING ACCESS" : "ACCESS DENIED"}</span><h1>{access === "loading" ? "Opening workspace…" : "This workspace is private"}</h1><NoticeLine notice={notice} /><button type="button" onClick={() => void client.auth.signOut()}>Sign out</button></section></SiteShell>;
 
-  const visibleTotal = filteredTotal;
+  const pageCount = Math.max(1, Math.ceil(filteredTotal / PAGE_SIZE));
   return (
     <SiteShell className="publish-page" showFooter={false}>
       <section className="publish-workspace">
@@ -575,12 +592,12 @@ export function PublishPage() {
 
             <div className="publish-review-toolbar">
               <label className="publish-search"><span aria-hidden="true">⌕</span><input type="search" value={searchInput} onChange={(event) => setSearchInput(event.target.value)} placeholder="Search title, prompt, creator, or model" aria-label="Search imported Outcomes" /></label>
-              <div className="publish-filters" role="group" aria-label="Filter Outcomes">{(["all", "published", "unpublished", "missing"] as const).map((value) => <button key={value} type="button" className={filter === value ? "active" : ""} onClick={() => { setFilter(value); setLimit(PAGE_SIZE); }}>{value === "all" ? "All" : value === "missing" ? "Missing info" : value}<span>{counts[value]}</span></button>)}</div>
+              <div className="publish-filters" role="group" aria-label="Filter Outcomes">{(["all", "published", "unpublished", "missing"] as const).map((value) => <button key={value} type="button" className={filter === value ? "active" : ""} onClick={() => { setFilter(value); setPage(1); }}>{value === "all" ? "All" : value === "missing" ? "Missing info" : value}<span>{counts[value]}</span></button>)}</div>
               <div className="publish-view-toggle" role="group" aria-label="Outcome view"><button type="button" className={viewMode === "grid" ? "active" : ""} aria-label="Gallery view" onClick={() => setView("grid")}>▦</button><button type="button" className={viewMode === "table" ? "active" : ""} aria-label="Table view" onClick={() => setView("table")}>☷</button></div>
             </div>
 
             {outcomes.length ? viewMode === "grid" ? <OutcomeGrid outcomes={outcomes} selecting={selecting} selected={selected} onActivate={activateOutcome} /> : <OutcomeTable outcomes={outcomes} selecting={selecting} selected={selected} onActivate={activateOutcome} /> : <div className="publish-empty"><strong>{loadingOutcomes ? "Loading Outcomes…" : "No Outcomes found."}</strong><span>{search || filter !== "all" ? "Try another search or filter." : "Connect a gallery and import its extracted JSON."}</span></div>}
-            {outcomes.length < visibleTotal ? <button className="publish-load-more" type="button" disabled={loadingOutcomes} onClick={() => setLimit((value) => value + PAGE_SIZE)}>{loadingOutcomes ? "Loading…" : `Load ${Math.min(PAGE_SIZE, visibleTotal - outcomes.length)} more`}</button> : null}
+            {filteredTotal > PAGE_SIZE ? <nav className="publish-pagination" aria-label="Outcome pages"><button type="button" disabled={page === 1 || loadingOutcomes} onClick={() => setPage((value) => Math.max(1, value - 1))}>Previous</button><span>Page <strong>{page}</strong> of {pageCount}</span><button type="button" disabled={page === pageCount || loadingOutcomes} onClick={() => setPage((value) => Math.min(pageCount, value + 1))}>Next</button></nav> : null}
           </section>
         ) : (
           <section className="publish-settings">
@@ -592,7 +609,7 @@ export function PublishPage() {
         )}
       </section>
 
-      {selecting ? <div className="publish-selection-bar" aria-live="polite"><strong>{selectedOutcomes.length} selected</strong><button type="button" disabled={!outcomes.length} onClick={() => setSelected(selectedOutcomes.length === outcomes.length ? {} : Object.fromEntries(outcomes.map((outcome) => [outcome.id, outcome])))}>{selectedOutcomes.length === outcomes.length && outcomes.length ? "Clear" : "Select loaded"}</button><span /><button type="button" disabled={!selectedOutcomes.length || busy} onClick={() => requestPublication(false, selectedOutcomes)}>Unpublish</button><button className="publish-primary-button" type="button" disabled={!selectedOutcomes.length || busy || selectedHasIncomplete} title={selectedHasIncomplete ? "Complete missing information before publishing" : undefined} onClick={() => void changePublication(true, selectedOutcomes)}>Publish</button></div> : null}
+      {selecting ? <div className="publish-selection-bar" aria-live="polite"><strong>{selectedOutcomes.length} selected</strong><button type="button" disabled={!outcomes.length} onClick={toggleCurrentPageSelection}>{allPageOutcomesSelected ? "Clear page" : "Select all"}</button><span /><button type="button" disabled={!selectedOutcomes.length || busy} onClick={() => requestPublication(false, selectedOutcomes)}>Unpublish</button><button className="publish-primary-button" type="button" disabled={!selectedOutcomes.length || busy || selectedHasIncomplete} title={selectedHasIncomplete ? "Complete missing information before publishing" : undefined} onClick={() => void changePublication(true, selectedOutcomes)}>Publish</button></div> : null}
       {openOutcome ? <OutcomeDrawer outcome={openOutcome} busy={busy} onClose={() => setOpenOutcome(null)} onSave={(values) => saveOutcome(openOutcome, values)} onPublication={(makePublic) => requestPublication(makePublic, [openOutcome])} /> : null}
       {confirmation ? <ConfirmationDialog makePublic={confirmation.makePublic} outcomes={confirmation.outcomes} publishedCount={counts.published} busy={busy} onCancel={() => setConfirmation(null)} onConfirm={() => void confirmPublication()} /> : null}
       {importReceipt ? <div className="publish-dialog-layer"><button className="publish-drawer-backdrop" type="button" aria-label="Close import receipt" onClick={() => setImportReceipt(null)} /><ImportReceiptPanel receipt={importReceipt} onClose={() => setImportReceipt(null)} onReviewMissing={() => { setImportReceipt(null); setWorkspaceTab("outcomes"); setFilter("missing"); }} /></div> : null}

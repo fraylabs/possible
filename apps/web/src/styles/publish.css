@@ -67,7 +67,7 @@
 .publish-review-heading > div:last-child { display: flex; align-items: center; gap: 8px; }
 .publish-review-heading button,
 .publish-import-button,
-.publish-load-more,
+.publish-pagination button,
 .publish-selection-bar button,
 .publish-dialog button,
 .publish-import-receipt button,
@@ -150,7 +150,10 @@
 .publish-table-title small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .publish-table-title strong { color: #e4e1da; font-size: 11px; }
 .publish-table-title small { color: #696863; font-size: 9px; }
-.publish-load-more { margin: 28px auto 0; display: flex; }
+.publish-pagination { margin: 30px auto 0; display: flex; justify-content: center; align-items: center; gap: 14px; }
+.publish-pagination button { min-width: 84px; }
+.publish-pagination span { color: #777671; font: 8px "DM Mono", monospace; text-transform: uppercase; }
+.publish-pagination strong { color: #f2efe8; font-weight: 600; }
 .publish-empty { min-height: 220px; border: 1px dashed #343431; border-radius: 10px; display: grid; place-content: center; gap: 7px; text-align: center; color: #7f7e79; }
 .publish-empty strong { color: #d3d0ca; font-size: 14px; }
 .publish-empty span { font-size: 11px; }
