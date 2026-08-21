@@ -68,7 +68,6 @@
 .publish-review-heading button,
 .publish-import-button,
 .publish-load-more,
-.publish-selection-bar button,
 .publish-dialog button,
 .publish-import-receipt button,
 .publish-drawer-action button {
@@ -88,6 +87,7 @@
 .publish-review-heading button:hover,
 .publish-import-button:hover,
 .publish-review-heading button.active { border-color: #ff5a1f; color: #ff7a4b; }
+.publish-review-heading .publish-primary-button { min-height: 38px; border-color: #ff5a1f; background: #ff5a1f; color: #151411 !important; }
 .publish-import-button input { width: 1px; height: 1px; position: absolute; overflow: hidden; clip: rect(0, 0, 0, 0); }
 
 .publish-review-toolbar {
@@ -154,27 +154,6 @@
 .publish-empty { min-height: 220px; border: 1px dashed #343431; border-radius: 10px; display: grid; place-content: center; gap: 7px; text-align: center; color: #7f7e79; }
 .publish-empty strong { color: #d3d0ca; font-size: 14px; }
 .publish-empty span { font-size: 11px; }
-
-.publish-selection-bar {
-  width: min(680px, calc(100% - 32px));
-  min-height: 62px;
-  padding: 10px 12px 10px 18px;
-  position: fixed;
-  z-index: 12;
-  left: 50%;
-  bottom: 20px;
-  transform: translateX(-50%);
-  border: 1px solid #464541;
-  border-radius: 14px;
-  display: grid;
-  grid-template-columns: auto auto 1fr auto auto;
-  align-items: center;
-  gap: 8px;
-  background: #1b1b19;
-  box-shadow: 0 18px 60px rgba(0, 0, 0, .5);
-}
-.publish-selection-bar strong { font-size: 12px; }
-.publish-selection-bar button { min-height: 36px; }
 
 .publish-drawer-layer,
 .publish-dialog-layer { position: fixed; z-index: 30; inset: 0; display: flex; justify-content: flex-end; }
@@ -270,9 +249,6 @@
   .publish-table-row > :nth-child(3),
   .publish-table-row > :nth-child(4) { display: none; }
   .publish-table-row > :last-child { max-width: 88px; text-align: right; }
-  .publish-selection-bar { bottom: 10px; grid-template-columns: auto 1fr auto auto; }
-  .publish-selection-bar > span { display: none; }
-  .publish-selection-bar > button:nth-of-type(1) { display: none; }
   .publish-form,
   .publish-form.compact { grid-template-columns: 1fr; }
   .publish-form label.wide { grid-column: 1; }
@@ -292,9 +268,6 @@
   .publish-gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .publish-drawer { padding: 18px 16px; }
   .publish-drawer-pair { grid-template-columns: 1fr; }
-  .publish-selection-bar { min-height: 56px; padding-left: 12px; }
-  .publish-selection-bar strong { font-size: 10px; }
-  .publish-selection-bar button { min-height: 34px; padding: 0 10px; }
   .publish-import-receipt dl { grid-template-columns: repeat(3, 1fr); }
   .publish-import-receipt dl div + div { border-left: 1px solid #343431; }
   .publish-import-receipt dl div:nth-child(4) { border-left: 0; border-top: 1px solid #343431; }
