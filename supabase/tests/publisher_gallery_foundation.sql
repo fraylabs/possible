@@ -1,5 +1,7 @@
 begin;
 
+delete from public.platform_admins;
+
 insert into auth.users (id, email, created_at, updated_at)
 values
   ('00000000-0000-0000-0000-000000000901', 'admin@example.com', now(), now()),
@@ -214,9 +216,172 @@ values
     'Hidden outcome',
     'Make the hidden outcome.',
     'https://example.com/draft/outcome.mp4',
-    'published'
+    'draft'
   );
 
+set local role authenticated;
+select set_config('request.jwt.claim.sub', '00000000-0000-0000-0000-000000000902', true);
+
+do $$
+begin
+  begin
+    perform public.set_outcome_publication(
+      '00000000-0000-0000-0000-000000000101',
+      array['00000000-0000-0000-0000-000000000301']::uuid[],
+      true
+    );
+    raise exception 'A non-member published another company Outcome';
+  exception
+    when raise_exception then
+      if sqlerrm <> 'Product editor access is required' then
+        raise;
+      end if;
+  end;
+end;
+$$;
+
+reset role;
+set local role authenticated;
+select set_config('request.jwt.claim.sub', '00000000-0000-0000-0000-000000000901', true);
+
+do $$
+begin
+  begin
+    perform public.set_outcome_publication(
+      '00000000-0000-0000-0000-000000000101',
+      array['00000000-0000-0000-0000-000000000302']::uuid[],
+      true
+    );
+    raise exception 'A cross-product Outcome was published';
+  exception
+    when raise_exception then
+      if sqlerrm <> 'Selected Outcomes must belong to the requested product' then
+        raise;
+      end if;
+  end;
+
+  begin
+    perform public.set_outcome_publication(
+      '00000000-0000-0000-0000-000000000101',
+      array[(
+        select id from public.outcomes
+        where gallery_source_id = '00000000-0000-0000-0000-000000000201'
+          and source_key = 'imported-draft'
+      )]::uuid[],
+      true
+    );
+    raise exception 'An incomplete Outcome was published';
+  exception
+    when raise_exception then
+      if sqlerrm <> 'Selected Outcomes require a title, prompt, and result media URL' then
+        raise;
+      end if;
+  end;
+end;
+$$;
+
+select public.set_outcome_publication(
+  '00000000-0000-0000-0000-000000000102',
+  array['00000000-0000-0000-0000-000000000302']::uuid[],
+  true
+);
+
+do $$
+begin
+  if (
+    select count(*)
+    from public.outcome_publication_events
+    where product_id = '00000000-0000-0000-0000-000000000102'
+      and actor_id = '00000000-0000-0000-0000-000000000901'
+      and action = 'publish'
+      and changed_count = 1
+  ) <> 1 then
+    raise exception 'Successful publication did not emit exactly one audit event';
+  end if;
+  if exists (
+    select 1
+    from public.outcome_publication_events
+    where product_id = '00000000-0000-0000-0000-000000000101'
+      and actor_id = '00000000-0000-0000-0000-000000000902'
+  ) then
+    raise exception 'Denied publication emitted a success audit event';
+  end if;
+end;
+$$;
+
+do $$
+begin
+  if not exists (
+    select 1 from public.outcomes
+    where id = '00000000-0000-0000-0000-000000000302'
+      and status = 'published'
+  ) or not exists (
+    select 1 from public.products
+    where id = '00000000-0000-0000-0000-000000000102'
+      and status = 'published'
+  ) then
+    raise exception 'Publishing did not expose the selected Outcome and product';
+  end if;
+end;
+$$;
+
+select public.set_outcome_publication(
+  '00000000-0000-0000-0000-000000000102',
+  array['00000000-0000-0000-0000-000000000302']::uuid[],
+  false
+);
+
+do $$
+begin
+  if (
+    select count(*)
+    from public.outcome_publication_events
+    where product_id = '00000000-0000-0000-0000-000000000102'
+      and actor_id = '00000000-0000-0000-0000-000000000901'
+      and action = 'unpublish'
+      and changed_count = 1
+  ) <> 1 then
+    raise exception 'Successful unpublication did not emit exactly one audit event';
+  end if;
+end;
+$$;
+
+do $$
+begin
+  if not exists (
+    select 1 from public.outcomes
+    where id = '00000000-0000-0000-0000-000000000302'
+      and status = 'draft'
+  ) or not exists (
+    select 1 from public.products
+    where id = '00000000-0000-0000-0000-000000000102'
+      and status = 'draft'
+  ) then
+    raise exception 'Unpublishing the final Outcome did not hide the product';
+  end if;
+end;
+$$;
+
+do $$
+declare
+  review_row record;
+begin
+  select * into review_row
+  from public.outcome_review
+  where id = '00000000-0000-0000-0000-000000000301';
+
+  if review_row.title <> 'Public outcome'
+    or not review_row.is_publishable
+    or not review_row.is_published
+    or cardinality(review_row.missing_fields) <> 0
+  then
+    raise exception 'Outcome review projection is inconsistent';
+  end if;
+end;
+$$;
+
+reset role;
+select set_config('request.jwt.claim.sub', '', true);
 set local role anon;
 
 do $$

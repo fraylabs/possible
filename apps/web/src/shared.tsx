@@ -122,12 +122,12 @@ export function SiteFooter() {
   );
 }
 
-export function SiteShell({ children, className }: { children: ReactNode; className: string }) {
+export function SiteShell({ children, className, showFooter = true }: { children: ReactNode; className: string; showFooter?: boolean }) {
   return (
     <main className={`site-shell ${className}`}>
       <SiteNav />
       {children}
-      <SiteFooter />
+      {showFooter ? <SiteFooter /> : null}
     </main>
   );
 }

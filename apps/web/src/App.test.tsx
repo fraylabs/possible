@@ -5,6 +5,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import App, { AuthoringDocsPage, DocsPage, OutcomeDetailPage, ProductDetailPage, ProductsPage, PublishPage } from "./App";
 import { commonSearches } from "./catalog";
 import { getPublishedOutcome, searchPublishedOutcomes } from "./public-content";
+import { getOutcomeState, summarizeGalleryImport } from "./publish";
 
 vi.mock("./OutcomeCadViewer", () => ({ default: () => <div data-testid="cad-viewer" /> }));
 afterEach(() => { cleanup(); window.history.pushState({}, "", "/"); });
@@ -74,5 +75,19 @@ describe("Possible website", () => {
     expect(screen.getByRole("heading", { name: "Publisher workspace" })).toBeInTheDocument();
     expect(screen.getByText(/ignored workspace environment file/i)).toBeInTheDocument();
     expect(screen.queryByRole("link", { name: /publish/i })).not.toBeInTheDocument();
+    expect(screen.queryByText("OPEN SOURCE / 2026")).not.toBeInTheDocument();
+  });
+
+  it("reduces publication to three human states and reports import changes", () => {
+    expect(getOutcomeState({ is_published: true, is_publishable: true })).toBe("Published");
+    expect(getOutcomeState({ is_published: false, is_publishable: true })).toBe("Unpublished");
+    expect(getOutcomeState({ is_published: false, is_publishable: false })).toBe("Missing information");
+    expect(summarizeGalleryImport({
+      items: [
+        { sourceKey: "new", title: "New", prompt: "Make it", resultMediaUrl: "https://example.com/new.mp4" },
+        { sourceKey: "existing", title: "Existing", prompt: null, resultMediaUrl: "https://example.com/existing.mp4" },
+      ],
+      warnings: [{ message: "Prompt is not public." }],
+    }, new Set(["existing"]))).toEqual({ received: 2, added: 1, updated: 1, incomplete: 1, warnings: 1 });
   });
 });
