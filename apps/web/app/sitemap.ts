@@ -2,11 +2,12 @@ import { outcomeHref, productHref, publishedOutcomes, publishedProducts } from "
 import type { MetadataRoute } from "next";
 
 const baseUrl = "https://possible.sh";
-const siteUpdatedAt = "2026-08-12";
+const siteUpdatedAt = "2026-08-21";
 export const dynamic = "force-static";
 const staticPaths = [
   "/",
   "/products/",
+  "/fray-labs/",
   "/docs/",
   "/docs/how-to-use/",
   "/docs/authoring/",

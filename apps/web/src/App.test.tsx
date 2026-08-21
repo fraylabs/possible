@@ -2,7 +2,7 @@ import { cleanup, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { axe } from "vitest-axe";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import App, { AuthoringDocsPage, DocsPage, OutcomeDetailPage, ProductDetailPage, ProductsPage, PublishPage } from "./App";
+import App, { AccountProfilePage, AuthoringDocsPage, DocsPage, OutcomeDetailPage, ProductDetailPage, ProductsPage, PublishPage } from "./App";
 import { commonSearches } from "./catalog";
 import { getPublishedOutcome, searchPublishedOutcomes } from "./public-content";
 import { getOutcomeState, summarizeGalleryImport } from "./publish";
@@ -75,6 +75,16 @@ describe("Possible website", () => {
     expect(screen.getByText(/ignored workspace environment file/i)).toBeInTheDocument();
     expect(screen.queryByRole("link", { name: /publish/i })).not.toBeInTheDocument();
     expect(screen.queryByText("OPEN SOURCE / 2026")).not.toBeInTheDocument();
+  });
+
+  it("presents an account as Outcomes first, with linked Products and Skills", async () => {
+    render(<AccountProfilePage handle="fray-labs" />);
+    expect(screen.getByRole("heading", { name: "Fray Labs", level: 1 })).toBeInTheDocument();
+    expect(within(screen.getByRole("region", { name: "Fray Labs Outcomes" })).getAllByRole("link")).toHaveLength(5);
+    await userEvent.click(screen.getByRole("button", { name: /products\s*2/i }));
+    expect(within(screen.getByRole("region", { name: "Fray Labs Products" })).getAllByRole("link")).toHaveLength(2);
+    await userEvent.click(screen.getByRole("button", { name: /skills\s*17/i }));
+    expect(within(screen.getByRole("region", { name: "Fray Labs Skills" })).getAllByRole("link")).toHaveLength(17);
   });
 
   it("reduces publication to three human states and reports import changes", () => {

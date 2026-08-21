@@ -41,7 +41,7 @@ type DirectoryOutcomeRow = {
   model: string | null;
   author_name: string | null;
   author_url: string | null;
-  company_name: string;
+  linked_company_name: string;
 };
 
 type DirectoryPage = {
@@ -90,7 +90,7 @@ function fromDirectoryRow(row: DirectoryOutcomeRow, productCategory: string): Pr
     title: row.title,
     prompt: row.prompt,
     sourceUrl: row.source_url,
-    provider: row.company_name,
+    provider: row.linked_company_name,
     model: row.model ?? undefined,
     authorName: row.author_name ?? undefined,
     authorUrl: row.author_url ?? undefined,
@@ -190,7 +190,7 @@ function ProductDetailContent({ id }: { id: string }) {
     queryFn: async () => {
       if (!client || !product) throw new Error("The public Outcome directory is unavailable.");
       const productSlug = product.id.split("/").at(-1);
-      const { count, error } = await client.from("outcome_directory").select("id", { count: "exact", head: true }).eq("product_slug", productSlug);
+      const { count, error } = await client.from("product_outcome_directory").select("id", { count: "exact", head: true }).eq("linked_product_slug", productSlug);
       if (error) throw new Error(error.message);
       return count ?? 0;
     },
@@ -203,12 +203,12 @@ function ProductDetailContent({ id }: { id: string }) {
     queryFn: async ({ pageParam }): Promise<DirectoryPage> => {
       if (!client || !product) throw new Error("The public Outcome directory is unavailable.");
       const productSlug = product.id.split("/").at(-1);
-      let request = client.from("outcome_directory").select("id,source_url,title,prompt,result_media_url,poster_url,model,author_name,author_url,company_name", { count: "exact" }).eq("product_slug", productSlug);
+      let request = client.from("product_outcome_directory").select("id,source_url,title,prompt,result_media_url,poster_url,model,author_name,author_url,linked_company_name", { count: "exact" }).eq("linked_product_slug", productSlug);
       const safeSearch = sanitizeDirectorySearch(directoryQuery);
       if (safeSearch) request = request.or(`title.ilike.%${safeSearch}%,prompt.ilike.%${safeSearch}%,model.ilike.%${safeSearch}%,author_name.ilike.%${safeSearch}%`);
       const { data, count, error } = await request.order("source_published_at", { ascending: false, nullsFirst: false }).order("id").range(pageParam, pageParam + pageSize - 1);
       if (error) throw new Error(error.message);
-      // SAFETY: the explicit outcome_directory select list matches DirectoryOutcomeRow.
+      // SAFETY: the explicit product_outcome_directory select list matches DirectoryOutcomeRow.
       const rows = (data ?? []) as DirectoryOutcomeRow[];
       const total = count ?? 0;
       const nextOffset = pageParam + rows.length;
@@ -263,9 +263,9 @@ function ProductDetailContent({ id }: { id: string }) {
     }
     let cancelled = false;
     const productSlug = product.id.split("/").at(-1);
-    void client.from("outcome_directory").select("id,source_url,title,prompt,result_media_url,poster_url,model,author_name,author_url,company_name").eq("product_slug", productSlug).eq("id", selectedId).maybeSingle().then(({ data, error }) => {
+    void client.from("product_outcome_directory").select("id,source_url,title,prompt,result_media_url,poster_url,model,author_name,author_url,linked_company_name").eq("linked_product_slug", productSlug).eq("id", selectedId).maybeSingle().then(({ data, error }) => {
       if (cancelled || error || !data) return;
-      // SAFETY: the explicit outcome_directory select list matches DirectoryOutcomeRow.
+      // SAFETY: the explicit product_outcome_directory select list matches DirectoryOutcomeRow.
       setSelectedFromDirectory(fromDirectoryRow(data as DirectoryOutcomeRow, product.category));
     });
     return () => { cancelled = true; };

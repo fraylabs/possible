@@ -20,6 +20,7 @@
     "db:push": "node --env-file-if-exists=.env.local scripts/run-supabase.mjs db push --linked",
     "db:lint": "node --env-file-if-exists=.env.local scripts/run-supabase.mjs db lint --linked --schema public --level warning --fail-on error",
     "db:test": "node --env-file-if-exists=.env.local scripts/run-supabase.mjs db query --linked --file supabase/tests/publisher_gallery_foundation.sql",
+    "account-outcomes:sync": "node --env-file-if-exists=.env.local scripts/sync-account-outcomes.mjs",
     "check": "npm run lint && npm run outcomes:check && npm run skill:validate && npm run routes:validate && npm run test && npm exec -- tsx evaluations/discovery/verify.mjs --enforce && npm run build:consumers && npm run publications:validate && npm run html:validate",
     "dev:web": "npm run build -w @possible/catalog && npm run dev -w @possible/web",
     "dev:mcp": "npm run build -w @possible/catalog && npm run dev -w @possible/mcp"

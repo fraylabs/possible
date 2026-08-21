@@ -48,10 +48,11 @@ public work, not quietly claim or permanently mirror it.
 The long-term supply model is publisher-owned galleries connected through a
 neutral Possible index.
 
-A provider or creator may eventually claim a page, connect an official feed,
-correct its metadata, choose which owned results are remixable, remove owned
-listings, and inspect referral and remix activity. Possible continues to own
-search, categorisation, deduplication, and organic ranking.
+A provider or creator has an account-owned page and may connect public sources,
+correct account-owned metadata, choose which owned results are public, and link
+the Products and Skills behind each result. Possible continues to own search,
+categorisation, deduplication, and organic ranking. Ownership of an Outcome is
+separate from Product and Skill attribution.
 
 Publishers cannot self-award ranking, claim work they do not own, rewrite source
 history, remove independent third-party work, or disguise paid placement as an
@@ -162,9 +163,10 @@ through attractive media.
 Advance when most useful additions can enter through extraction and lightweight
 review rather than hand-authored JSON.
 
-### Phase 3: let publishers maintain supply
+### Phase 3: mature publisher-maintained supply
 
-- Introduce creator and provider claims only when ownership changes are needed.
+- Add creator and provider claims when ownership must move beyond the current
+  maintainer-managed accounts.
 - Verify ownership through the canonical domain or connected source account.
 - Publish a small, optional gallery-feed format.
 - Add corrections, removals, and publisher analytics.
@@ -187,7 +189,7 @@ judgment alone.
 ## Do not build yet
 
 - A schema-heavy authoring system
-- Accounts or browser bookmarks
+- Browser accounts or browser bookmarks
 - Social feeds, comments, follows, or voting
 - Provider payments, wallets, or checkout
 - Hosted model execution
@@ -214,5 +216,7 @@ MiniMax official example
   -> manual remix
 ```
 
-Do not add publisher accounts, automated crawling, or feed infrastructure until
-that path is clearly more useful than visiting the original gallery alone.
+Do not add public self-service claiming, automated crawling, or feed
+infrastructure until that path is clearly more useful than visiting the
+original gallery alone. The current maintainer-managed account model is enough
+to establish ownership and attribution meanwhile.

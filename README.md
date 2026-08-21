@@ -19,6 +19,11 @@ Every Outcome has:
 
 An Outcome may also preserve the prior rough request, link the original source and publication date, name the Products and agent Skills it uses, and include up to five images, one video, one audio preview, and CAD files.
 
+Public accounts own Outcomes. Products and Skills are linked attribution: an
+Outcome may use several of either without transferring ownership to them. Fray
+Labs' public account is available at [possible.sh/fray-labs](https://possible.sh/fray-labs),
+and maintainers manage it through the private `/dashboard` route.
+
 There is no hidden pack compiler, trust lifecycle, or authored workflow schema. Published prompts remain visible and unchanged. The optional `$possible` skill prepares a new prompt at run time from the user's request, relevant Outcomes, and current information.
 
 ## Optional $possible skill

@@ -2,7 +2,8 @@ export { OutcomesPage } from "./catalog";
 export { OutcomeDetailPage } from "./outcome-detail";
 export { ProductDetailPage } from "./product-detail";
 export { ProductsPage } from "./product-directory";
-export { PublishPage } from "./publish";
+export { DashboardPage, PublishPage } from "./publish";
+export { AccountProfilePage } from "./account-profile";
 export {
   AuthoringDocsPage,
   DocsPage,

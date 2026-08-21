@@ -5,6 +5,14 @@ import type { Session } from "@supabase/supabase-js";
 import { SiteShell } from "./shared";
 import { getSupabaseBrowserClient } from "./supabase";
 
+type Account = {
+  id: string;
+  handle: string;
+  name: string;
+  website_url: string | null;
+  avatar_url: string | null;
+};
+
 type Company = {
   id: string;
   name: string;
@@ -27,6 +35,7 @@ type Product = {
 
 type GallerySource = {
   id: string;
+  account_id: string;
   product_id: string;
   source_url: string;
   status: "draft" | "scanning" | "review" | "active" | "paused" | "error" | "disconnected";
@@ -35,8 +44,9 @@ type GallerySource = {
 
 export type OutcomeReview = {
   id: string;
-  product_id: string;
-  gallery_source_id: string;
+  account_id: string;
+  product_id: string | null;
+  gallery_source_id: string | null;
   source_key: string;
   source_url: string;
   title: string | null;
@@ -56,8 +66,17 @@ export type OutcomeReview = {
 
 type SelectedOutcome = Pick<OutcomeReview, "id" | "is_published" | "is_publishable">;
 
+type AccountSkill = {
+  id: string;
+  account_id: string;
+  name: string;
+  repository: string;
+  directory: string;
+  outcome_count: number;
+};
+
 type OutcomeFilter = "all" | "published" | "unpublished" | "publishable" | "missing";
-type WorkspaceTab = "outcomes" | "settings";
+type WorkspaceTab = "outcomes" | "products" | "skills" | "sources" | "account";
 type ViewMode = "grid" | "table";
 type Notice = { tone: "success" | "error" | "neutral"; text: string } | null;
 type Counts = { all: number; published: number; unpublished: number; publishable: number; missing: number };
@@ -351,16 +370,19 @@ function sanitizeSearch(search: string) {
   return search.trim().replace(/[^\p{L}\p{N}\s'-]/gu, " ").replace(/\s+/g, " ");
 }
 
-export function PublishPage() {
+export function DashboardPage() {
   const client = useMemo(() => getSupabaseBrowserClient(), []);
   const [session, setSession] = useState<Session | null | undefined>();
   const [access, setAccess] = useState<"loading" | "granted" | "denied">("loading");
   const [busy, setBusy] = useState(false);
   const [loadingOutcomes, setLoadingOutcomes] = useState(false);
   const [notice, setNotice] = useState<Notice>(null);
+  const [accounts, setAccounts] = useState<Account[]>([]);
+  const [selectedAccountId, setSelectedAccountId] = useState("");
   const [companies, setCompanies] = useState<Company[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [sources, setSources] = useState<GallerySource[]>([]);
+  const [skills, setSkills] = useState<AccountSkill[]>([]);
   const [selectedProductId, setSelectedProductId] = useState("");
   const [outcomes, setOutcomes] = useState<OutcomeReview[]>([]);
   const [counts, setCounts] = useState<Counts>(EMPTY_COUNTS);
@@ -378,7 +400,7 @@ export function PublishPage() {
   const [confirmation, setConfirmation] = useState<{ makePublic: boolean; outcomes: SelectedOutcome[] } | null>(null);
   const [importReceipt, setImportReceipt] = useState<ImportReceipt | null>(null);
 
-  const selectedProduct = products.find(({ id }) => id === selectedProductId) ?? null;
+  const selectedAccount = accounts.find(({ id }) => id === selectedAccountId) ?? null;
   const selectedSource = sources.find(({ product_id }) => product_id === selectedProductId) ?? null;
   const selectedOutcomes = Object.values(selected);
   const selectedHasIncomplete = selectedOutcomes.some((outcome) => !outcome.is_publishable);
@@ -387,6 +409,19 @@ export function PublishPage() {
 
   const refreshMetadata = useCallback(async () => {
     if (!client || !session) return;
+    const membershipResult = await client.from("account_members").select("account_id").eq("user_id", session.user.id);
+    if (membershipResult.error) throw membershipResult.error;
+    const accountIds = (membershipResult.data ?? []).map(({ account_id }: { account_id: string }) => account_id);
+    const accountResult = accountIds.length
+      ? await client.from("accounts").select("id,handle,name,website_url,avatar_url").in("id", accountIds).order("name")
+      : { data: [], error: null };
+    if (accountResult.error) throw accountResult.error;
+    // SAFETY: the explicit accounts select list matches the Account record.
+    const nextAccounts = (accountResult.data ?? []) as Account[];
+    setAccounts(nextAccounts);
+    const nextAccountId = selectedAccountId && nextAccounts.some(({ id }) => id === selectedAccountId) ? selectedAccountId : nextAccounts[0]?.id ?? "";
+    setSelectedAccountId(nextAccountId);
+
     const companyResult = await client.from("companies").select("id,name,slug,website_url,verification_status").order("name");
     if (companyResult.error) throw companyResult.error;
     // SAFETY: the explicit select list matches the Company record above.
@@ -400,20 +435,43 @@ export function PublishPage() {
     // SAFETY: the explicit select list matches the Product record above.
     const nextProducts = (productResult.data ?? []) as Product[];
     setProducts(nextProducts);
-    setSelectedProductId((current) => current && nextProducts.some(({ id }) => id === current) ? current : nextProducts[0]?.id ?? "");
+    setSelectedProductId((current) => current && nextProducts.some(({ id }) => id === current) ? current : "");
     const productIds = nextProducts.map(({ id }) => id);
-    if (!productIds.length) { setSources([]); return; }
-    const sourceResult = await client.from("gallery_sources").select("id,product_id,source_url,status,last_error").in("product_id", productIds).order("created_at");
-    if (sourceResult.error) throw sourceResult.error;
-    // SAFETY: the explicit select list matches the GallerySource record above.
-    setSources((sourceResult.data ?? []) as GallerySource[]);
-  }, [client, session]);
+    if (!productIds.length || !nextAccountId) setSources([]);
+    else {
+      const sourceResult = await client.from("gallery_sources").select("id,account_id,product_id,source_url,status,last_error").eq("account_id", nextAccountId).in("product_id", productIds).order("created_at");
+      if (sourceResult.error) throw sourceResult.error;
+      // SAFETY: the explicit gallery_sources select list matches GallerySource.
+      setSources((sourceResult.data ?? []) as GallerySource[]);
+    }
+
+    if (!nextAccountId) setSkills([]);
+    else {
+      const skillResult = await client.from("account_skill_directory").select("id,account_id,name,repository,directory,outcome_count").eq("account_id", nextAccountId).order("name");
+      if (skillResult.error) throw skillResult.error;
+      // SAFETY: the explicit account_skill_directory select list matches AccountSkill.
+      setSkills((skillResult.data ?? []) as AccountSkill[]);
+    }
+  }, [client, selectedAccountId, session]);
 
   const refreshOutcomes = useCallback(async () => {
-    if (!client || !session || !selectedProductId) { setOutcomes([]); setCounts(EMPTY_COUNTS); setFilteredTotal(0); return; }
+    if (!client || !session || !selectedAccountId) { setOutcomes([]); setCounts(EMPTY_COUNTS); setFilteredTotal(0); return; }
     setLoadingOutcomes(true);
     try {
-      const baseCount = () => client.from("outcome_review").select("id", { count: "exact", head: true }).eq("product_id", selectedProductId);
+      let productOutcomeIds: string[] | null = null;
+      if (selectedProductId) {
+        const linkResult = await client.from("outcome_products").select("outcome_id").eq("product_id", selectedProductId);
+        if (linkResult.error) throw linkResult.error;
+        productOutcomeIds = (linkResult.data ?? []).map(({ outcome_id }: { outcome_id: string }) => outcome_id);
+        if (!productOutcomeIds.length) {
+          setOutcomes([]); setCounts(EMPTY_COUNTS); setFilteredTotal(0); return;
+        }
+      }
+      const baseCount = () => {
+        let query = client.from("outcome_review").select("id", { count: "exact", head: true }).eq("account_id", selectedAccountId);
+        if (productOutcomeIds) query = query.in("id", productOutcomeIds);
+        return query;
+      };
       const [allResult, publishedResult, unpublishedResult, publishableResult, missingResult] = await Promise.all([
         baseCount(), baseCount().eq("is_published", true), baseCount().eq("is_published", false), baseCount().eq("is_publishable", true), baseCount().eq("is_publishable", false),
       ]);
@@ -421,7 +479,8 @@ export function PublishPage() {
       if (countError) throw countError;
       setCounts({ all: allResult.count ?? 0, published: publishedResult.count ?? 0, unpublished: unpublishedResult.count ?? 0, publishable: publishableResult.count ?? 0, missing: missingResult.count ?? 0 });
 
-      let query = client.from("outcome_review").select("id,product_id,gallery_source_id,source_key,source_url,title,prompt,result_media_url,poster_url,model,author_name,author_url,status,is_published,is_publishable,missing_fields,discovered_at,has_editorial_edits", { count: "exact" }).eq("product_id", selectedProductId);
+      let query = client.from("outcome_review").select("id,account_id,product_id,gallery_source_id,source_key,source_url,title,prompt,result_media_url,poster_url,model,author_name,author_url,status,is_published,is_publishable,missing_fields,discovered_at,has_editorial_edits", { count: "exact" }).eq("account_id", selectedAccountId);
+      if (productOutcomeIds) query = query.in("id", productOutcomeIds);
       if (filter === "published") query = query.eq("is_published", true);
       if (filter === "unpublished") query = query.eq("is_published", false);
       if (filter === "publishable") query = query.eq("is_publishable", true);
@@ -440,7 +499,7 @@ export function PublishPage() {
     } finally {
       setLoadingOutcomes(false);
     }
-  }, [client, filter, page, search, selectedProductId, session]);
+  }, [client, filter, page, search, selectedAccountId, selectedProductId, session]);
 
   useEffect(() => {
     if (!client) { setSession(null); return; }
@@ -452,17 +511,22 @@ export function PublishPage() {
   useEffect(() => {
     if (!client || !session) return;
     setAccess("loading");
-    void client.rpc("claim_first_platform_admin").then(async ({ error }) => {
-      if (error) { setAccess("denied"); setNotice({ tone: "error", text: error.message }); return; }
+    void (async () => {
+      const membershipResult = await client.from("account_members").select("account_id", { count: "exact", head: true }).eq("user_id", session.user.id);
+      if (membershipResult.error) { setAccess("denied"); setNotice({ tone: "error", text: membershipResult.error.message }); return; }
+      if ((membershipResult.count ?? 0) === 0) {
+        const claimResult = await client.rpc("claim_first_platform_admin");
+        if (claimResult.error) { setAccess("denied"); setNotice({ tone: "error", text: "This sign-in does not belong to a Possible account." }); return; }
+      }
       setAccess("granted");
       try { await refreshMetadata(); } catch (loadError) { setNotice({ tone: "error", text: loadError instanceof Error ? loadError.message : String(loadError) }); }
-    });
+    })();
   }, [client, refreshMetadata, session]);
 
   useEffect(() => { if (access === "granted") void refreshOutcomes().catch((error: Error) => setNotice({ tone: "error", text: error.message })); }, [access, refreshOutcomes]);
   useEffect(() => { const timer = window.setTimeout(() => { setPage(1); setSearch(searchInput); }, 250); return () => window.clearTimeout(timer); }, [searchInput]);
   useEffect(() => { const saved = window.localStorage?.getItem("possible-publish-view"); if (saved === "table") setViewMode("table"); }, []);
-  useEffect(() => { setSelected({}); setSelecting(false); setOpenOutcome(null); setPage(1); }, [selectedProductId]);
+  useEffect(() => { setSelected({}); setSelecting(false); setOpenOutcome(null); setPage(1); }, [selectedAccountId, selectedProductId]);
   useEffect(() => { setSelected({}); }, [filter, search]);
 
   async function run(action: () => Promise<void>, success: string, refreshReview = false) {
@@ -482,7 +546,7 @@ export function PublishPage() {
   async function signIn(email: string) {
     if (!client) return;
     setBusy(true); setNotice(null);
-    const redirectTo = `${window.location.origin}/publish/`;
+    const redirectTo = `${window.location.origin}/dashboard/`;
     const { error } = await client.auth.signInWithOtp({ email, options: { emailRedirectTo: redirectTo } });
     setBusy(false);
     setNotice(error ? { tone: "error", text: error.message } : { tone: "success", text: "Check your email for the private sign-in link." });
@@ -514,14 +578,21 @@ export function PublishPage() {
   }
 
   async function selectAllMatchingOutcomes() {
-    if (!client || !session || !selectedProductId || !filteredTotal) return;
+    if (!client || !session || !selectedAccountId || !filteredTotal) return;
     setSelectingAll(true);
     setNotice(null);
     try {
+      let productOutcomeIds: string[] | null = null;
+      if (selectedProductId) {
+        const linkResult = await client.from("outcome_products").select("outcome_id").eq("product_id", selectedProductId);
+        if (linkResult.error) throw linkResult.error;
+        productOutcomeIds = (linkResult.data ?? []).map(({ outcome_id }: { outcome_id: string }) => outcome_id);
+      }
       const matching: SelectedOutcome[] = [];
       const batchSize = 1000;
       for (let offset = 0; offset < filteredTotal; offset += batchSize) {
-        let query = client.from("outcome_review").select("id,is_published,is_publishable").eq("product_id", selectedProductId);
+        let query = client.from("outcome_review").select("id,is_published,is_publishable").eq("account_id", selectedAccountId);
+        if (productOutcomeIds) query = query.in("id", productOutcomeIds);
         if (filter === "published") query = query.eq("is_published", true);
         if (filter === "unpublished") query = query.eq("is_published", false);
         if (filter === "publishable") query = query.eq("is_publishable", true);
@@ -552,9 +623,9 @@ export function PublishPage() {
   }
 
   async function changePublication(makePublic: boolean, chosen: SelectedOutcome[]) {
-    if (!client || !selectedProductId) return;
+    if (!client || !selectedAccountId) return;
     const changed = await run(async () => {
-      const { error } = await client.rpc("set_outcome_publication", { target_product_id: selectedProductId, target_outcome_ids: chosen.map(({ id }) => id), make_public: makePublic });
+      const { error } = await client.rpc("set_account_outcome_publication", { target_account_id: selectedAccountId, target_outcome_ids: chosen.map(({ id }) => id), make_public: makePublic });
       if (error) throw error;
     }, `${chosen.length} Outcome${chosen.length === 1 ? "" : "s"} ${makePublic ? "published" : "unpublished"}.`, true);
     if (changed) { setConfirmation(null); setSelected({}); setSelecting(false); setOpenOutcome(null); }
@@ -607,10 +678,10 @@ export function PublishPage() {
       <section className="publish-workspace">
         <header className="publish-workspace-header">
           <div className="publish-product-switcher">
-            {selectedProduct?.logo_url ? <img src={selectedProduct.logo_url} alt="" /> : <span>{selectedProduct?.name.slice(0, 1) ?? "P"}</span>}
-            <label><small>CURATING</small><select value={selectedProductId} onChange={(event) => setSelectedProductId(event.target.value)} aria-label="Product to curate">{products.length ? products.map((product) => <option key={product.id} value={product.id}>{product.name}</option>) : <option value="">No products</option>}</select></label>
+            {selectedAccount?.avatar_url ? <img src={selectedAccount.avatar_url} alt="" /> : <span>{selectedAccount?.name.slice(0, 1) ?? "P"}</span>}
+            <label><small>ACCOUNT</small><select value={selectedAccountId} onChange={(event) => setSelectedAccountId(event.target.value)} aria-label="Account workspace">{accounts.length ? accounts.map((account) => <option key={account.id} value={account.id}>{account.name}</option>) : <option value="">No accounts</option>}</select></label>
           </div>
-          <nav className="publish-workspace-tabs" aria-label="Publisher workspace"><button className={workspaceTab === "outcomes" ? "active" : ""} type="button" onClick={() => setWorkspaceTab("outcomes")}>Outcomes</button><button className={workspaceTab === "settings" ? "active" : ""} type="button" onClick={() => setWorkspaceTab("settings")}>Products &amp; sources</button></nav>
+          <nav className="publish-workspace-tabs" aria-label="Publisher workspace">{(["outcomes", "products", "skills", "sources", "account"] as const).map((tab) => <button className={workspaceTab === tab ? "active" : ""} type="button" onClick={() => setWorkspaceTab(tab)} key={tab}>{tab}</button>)}</nav>
           <button className="publish-signout" type="button" onClick={() => void client.auth.signOut()}>Sign out</button>
         </header>
         <NoticeLine notice={notice} />
@@ -620,6 +691,7 @@ export function PublishPage() {
             <header className="publish-review-heading">
               <div><h1>Outcomes</h1><p>{counts.all.toLocaleString()} imported · {counts.published.toLocaleString()} published</p></div>
               <div>
+                <label className="publish-product-filter"><span>PRODUCT</span><select value={selectedProductId} onChange={(event) => setSelectedProductId(event.target.value)} aria-label="Filter Outcomes by Product"><option value="">All Outcomes</option>{products.map((product) => <option key={product.id} value={product.id}>{product.name}</option>)}</select></label>
                 {selectedSource ? <label className="publish-import-button">Import JSON<input type="file" accept="application/json,.json" disabled={busy} onChange={(event) => { const file = event.currentTarget.files?.[0]; if (file) void importGallery(file, selectedSource); event.currentTarget.value = ""; }} /></label> : null}
                 <button type="button" className={selecting ? "active" : ""} onClick={() => { setSelecting((value) => !value); setSelected({}); }}>{selecting ? "Cancel" : "Select"}</button>
               </div>
@@ -634,20 +706,43 @@ export function PublishPage() {
             {filteredTotal ? <div className="publish-page-position"><span>Showing <strong>{firstVisibleOutcome}–{lastVisibleOutcome}</strong> of {filteredTotal}</span><nav className="publish-pagination" aria-label="Outcome pages"><button type="button" disabled={page === 1 || loadingOutcomes} onClick={() => setPage((value) => Math.max(1, value - 1))}>Previous</button><span>Page <strong>{page}</strong> of {pageCount}</span><button type="button" disabled={page === pageCount || loadingOutcomes} onClick={() => setPage((value) => Math.min(pageCount, value + 1))}>Next</button></nav></div> : null}
             {outcomes.length ? viewMode === "grid" ? <OutcomeGrid outcomes={outcomes} selecting={selecting} selected={selected} onActivate={activateOutcome} /> : <OutcomeTable outcomes={outcomes} selecting={selecting} selected={selected} onActivate={activateOutcome} /> : <div className="publish-empty"><strong>{loadingOutcomes ? "Loading Outcomes…" : "No Outcomes found."}</strong><span>{search || filter !== "all" ? "Try another search or filter." : "Connect a gallery and import its extracted JSON."}</span></div>}
           </section>
-        ) : (
+        ) : workspaceTab === "products" ? (
           <section className="publish-settings">
-            <header><span className="publish-kicker">WORKSPACE SETTINGS</span><h1>Products &amp; sources</h1><p>Create publisher records and connect each product to its public gallery. Publication is controlled from the Outcomes tab.</p></header>
+            <header><span className="publish-kicker">PRODUCTS</span><h1>Products</h1><p>Manage the companies and official Products that Outcomes can reference.</p></header>
             <details><summary><span><strong>Companies</strong><small>{companies.length} connected</small></span><i>+</i></summary><div><CompanyForm busy={busy} onCreate={(input) => run(async () => { const { error } = await client.rpc("create_company", { company_name: input.name, company_slug: input.slug, company_website_url: input.websiteUrl }); if (error) throw error; }, "Company added.")} /><div className="publish-settings-records">{companies.map((company) => <span key={company.id}><strong>{company.name}</strong><small>{company.website_url ?? company.slug}</small></span>)}</div></div></details>
             <details><summary><span><strong>Products</strong><small>{products.length} connected</small></span><i>+</i></summary><div><ProductForm companies={companies} busy={busy} onCreate={(input) => run(async () => { const { error } = await client.from("products").insert(input); if (error) throw error; }, "Product added.")} /><div className="publish-settings-records">{products.map((product) => <span key={product.id}><strong>{product.name}</strong><small>{companies.find(({ id }) => id === product.company_id)?.name} · {product.status === "published" ? "Public" : "Private"}</small></span>)}</div></div></details>
-            <details><summary><span><strong>Gallery sources</strong><small>{sources.length} connected</small></span><i>+</i></summary><div><GalleryForm products={products} sources={sources} busy={busy} onCreate={(productId, sourceUrl) => run(async () => { const { error } = await client.from("gallery_sources").insert({ product_id: productId, source_url: sourceUrl }); if (error) throw error; }, "Gallery connected.")} /><div className="publish-settings-records">{sources.map((source) => <span key={source.id}><strong>{products.find(({ id }) => id === source.product_id)?.name}</strong><a href={source.source_url} target="_blank" rel="noreferrer">{source.source_url} ↗</a></span>)}</div></div></details>
+          </section>
+        ) : workspaceTab === "skills" ? (
+          <section className="publish-settings">
+            <header><span className="publish-kicker">SKILLS</span><h1>Skills</h1><p>Skills are linked capabilities, not Outcome owners. This list is derived from the published Outcomes in this account.</p></header>
+            <div className="publish-directory-list">{skills.map((skill) => <a href={`https://github.com/${skill.repository}/tree/HEAD/${skill.directory}`} target="_blank" rel="noreferrer" key={skill.id}><span><strong>{skill.name}</strong><small>{skill.repository}/{skill.directory}</small></span><em>{skill.outcome_count} {skill.outcome_count === 1 ? "Outcome" : "Outcomes"} ↗</em></a>)}</div>
+          </section>
+        ) : workspaceTab === "sources" ? (
+          <section className="publish-settings">
+            <header><span className="publish-kicker">SOURCES</span><h1>Gallery sources</h1><p>Connect a Product’s public gallery, then import extracted results into this account for review.</p></header>
+            <GalleryForm products={products} sources={sources} busy={busy} onCreate={(productId, sourceUrl) => run(async () => { const { error } = await client.from("gallery_sources").insert({ account_id: selectedAccountId, product_id: productId, source_url: sourceUrl }); if (error) throw error; }, "Gallery connected.")} />
+            <div className="publish-settings-records">{sources.map((source) => <span key={source.id}><strong>{products.find(({ id }) => id === source.product_id)?.name}</strong><a href={source.source_url} target="_blank" rel="noreferrer">{source.source_url} ↗</a></span>)}</div>
+          </section>
+        ) : (
+          <section className="publish-settings">
+            <header><span className="publish-kicker">ACCOUNT</span><h1>{selectedAccount?.name ?? "Account"}</h1><p>This public identity owns the Outcomes in this workspace. Products and Skills remain linked attribution.</p></header>
+            {selectedAccount ? <form className="publish-form" key={selectedAccount.id} onSubmit={(event) => { event.preventDefault(); const data = new FormData(event.currentTarget); void run(async () => { const { error } = await client.from("accounts").update({ name: String(data.get("name")), handle: String(data.get("handle")), website_url: String(data.get("website_url")) || null }).eq("id", selectedAccount.id); if (error) throw error; }, "Account updated."); }}>
+              <label>Public name<input name="name" required defaultValue={selectedAccount.name} /></label>
+              <label>Handle<input name="handle" required defaultValue={selectedAccount.handle} /></label>
+              <label>Website<input name="website_url" type="url" defaultValue={selectedAccount.website_url ?? ""} /></label>
+              <button type="submit" disabled={busy}>Save account</button>
+            </form> : null}
+            {selectedAccount ? <a className="publish-public-profile" href={`/${selectedAccount.handle}`}>Open public profile <span>↗</span></a> : null}
           </section>
         )}
       </section>
 
-      {selecting ? <div className="publish-selection-bar" aria-live="polite"><strong>{selectedOutcomes.length} selected</strong><button type="button" disabled={!outcomes.length || selectingAll} onClick={toggleCurrentPageSelection}>{allPageOutcomesSelected ? "Clear page" : "Select page"}</button><button type="button" disabled={!filteredTotal || selectingAll} onClick={() => { if (allMatchingOutcomesSelected) setSelected({}); else void selectAllMatchingOutcomes(); }}>{selectingAll ? "Selecting…" : allMatchingOutcomesSelected ? "Clear all" : "Select all"}</button><span /><button type="button" disabled={!selectedOutcomes.length || busy || selectingAll} onClick={() => requestPublication(false, selectedOutcomes)}>Unpublish</button><button className="publish-primary-button" type="button" disabled={!selectedOutcomes.length || busy || selectingAll || selectedHasIncomplete} title={selectedHasIncomplete ? "Complete missing information before publishing" : undefined} onClick={() => void changePublication(true, selectedOutcomes)}>Publish</button></div> : null}
+      {workspaceTab === "outcomes" && selecting ? <div className="publish-selection-bar" aria-live="polite"><strong>{selectedOutcomes.length} selected</strong><button type="button" disabled={!outcomes.length || selectingAll} onClick={toggleCurrentPageSelection}>{allPageOutcomesSelected ? "Clear page" : "Select page"}</button><button type="button" disabled={!filteredTotal || selectingAll} onClick={() => { if (allMatchingOutcomesSelected) setSelected({}); else void selectAllMatchingOutcomes(); }}>{selectingAll ? "Selecting…" : allMatchingOutcomesSelected ? "Clear all" : "Select all"}</button><span /><button type="button" disabled={!selectedOutcomes.length || busy || selectingAll} onClick={() => requestPublication(false, selectedOutcomes)}>Unpublish</button><button className="publish-primary-button" type="button" disabled={!selectedOutcomes.length || busy || selectingAll || selectedHasIncomplete} title={selectedHasIncomplete ? "Complete missing information before publishing" : undefined} onClick={() => void changePublication(true, selectedOutcomes)}>Publish</button></div> : null}
       {openOutcome ? <OutcomeDrawer outcome={openOutcome} busy={busy} onClose={() => setOpenOutcome(null)} onSave={(values) => saveOutcome(openOutcome, values)} onPublication={(makePublic) => requestPublication(makePublic, [openOutcome])} /> : null}
       {confirmation ? <ConfirmationDialog makePublic={confirmation.makePublic} outcomes={confirmation.outcomes} publishedCount={counts.published} busy={busy} onCancel={() => setConfirmation(null)} onConfirm={() => void confirmPublication()} /> : null}
       {importReceipt ? <div className="publish-dialog-layer"><button className="publish-drawer-backdrop" type="button" aria-label="Close import receipt" onClick={() => setImportReceipt(null)} /><ImportReceiptPanel receipt={importReceipt} onClose={() => setImportReceipt(null)} onReviewMissing={() => { setImportReceipt(null); setWorkspaceTab("outcomes"); setFilter("missing"); }} /></div> : null}
     </SiteShell>
   );
 }
+
+export const PublishPage = DashboardPage;

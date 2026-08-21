@@ -55,8 +55,9 @@
 .publish-product-switcher label { min-width: 0; display: grid; gap: 2px; }
 .publish-product-switcher small { color: #74736f; font: 7px "DM Mono", monospace; letter-spacing: .08em; }
 .publish-product-switcher select { max-width: 260px; padding: 0 22px 0 0; border: 0; background: transparent; color: #f2efe8; font-size: 14px; font-weight: 700; appearance: auto; }
-.publish-workspace-tabs { padding: 3px; border: 1px solid #343432; border-radius: 10px; display: flex; background: #151514; }
+.publish-workspace-tabs { max-width: 100%; padding: 3px; border: 1px solid #343432; border-radius: 10px; display: flex; overflow-x: auto; background: #151514; }
 .publish-workspace-tabs button { min-height: 34px; padding: 0 14px; border: 0; border-radius: 7px; background: transparent; color: #8f8e88; cursor: pointer; font-size: 11px; }
+.publish-workspace-tabs button { text-transform: capitalize; white-space: nowrap; }
 .publish-workspace-tabs button.active { background: #2a2927; color: #f2efe8; }
 .publish-signout { justify-self: end; border: 0; background: transparent; color: #777671 !important; cursor: pointer; font: 8px "DM Mono", monospace !important; text-transform: uppercase; }
 
@@ -65,6 +66,9 @@
 .publish-review-heading h1 { margin: 0; font-size: clamp(42px, 5vw, 68px); line-height: .95; letter-spacing: -.065em; }
 .publish-review-heading p { margin: 8px 0 0; color: #85847f; font-size: 12px; }
 .publish-review-heading > div:last-child { display: flex; align-items: center; gap: 8px; }
+.publish-product-filter { min-height: 38px; padding: 5px 10px; border: 1px solid #3c3c39; border-radius: 8px; display: grid; gap: 1px; background: #151514; }
+.publish-product-filter span { color: #6f6e69; font: 6px "DM Mono", monospace; }
+.publish-product-filter select { max-width: 180px; border: 0; background: transparent; color: #ddd9d1; font-size: 10px; }
 .publish-review-heading button,
 .publish-import-button,
 .publish-pagination button,
@@ -245,6 +249,14 @@
 .publish-settings-records > span + span { border-top: 1px solid #2b2b29; }
 .publish-settings-records strong { font-size: 11px; }
 .publish-settings-records :where(small, a) { max-width: 62%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #777671; font: 8px "DM Mono", monospace; }
+.publish-directory-list { border-top: 1px solid #353532; }
+.publish-directory-list > a { min-height: 76px; padding: 14px 4px; border-bottom: 1px solid #353532; display: flex; justify-content: space-between; align-items: center; gap: 20px; color: #f2efe8; }
+.publish-directory-list > a span { min-width: 0; display: grid; gap: 5px; }
+.publish-directory-list strong { font-size: 14px; }
+.publish-directory-list small { overflow: hidden; text-overflow: ellipsis; color: #777671; font: 8px "DM Mono", monospace; }
+.publish-directory-list em { color: #ff7040; font: 8px "DM Mono", monospace; font-style: normal; white-space: nowrap; }
+.publish-public-profile { margin-top: 18px; min-height: 48px; padding: 0 16px; border: 1px solid #3c3c39; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; color: #f2efe8; font: 9px "DM Mono", monospace; text-transform: uppercase; }
+.publish-public-profile span { color: #ff7040; }
 
 @media (max-width: 1100px) {
   .publish-gallery { grid-template-columns: repeat(4, minmax(0, 1fr)); }

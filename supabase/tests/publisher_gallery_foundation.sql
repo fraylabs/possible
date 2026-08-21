@@ -10,6 +10,7 @@ values
 set local role authenticated;
 select set_config('request.jwt.claim.sub', '00000000-0000-0000-0000-000000000901', true);
 select public.claim_first_platform_admin();
+select public.create_account('Admin Account', 'admin-account', 'https://example.com/account');
 select public.create_company('Admin Company One', 'admin-company-one', 'https://example.com/one');
 select public.create_company('Admin Company Two', 'admin-company-two', 'https://example.com/two');
 
@@ -17,7 +18,9 @@ do $$
 declare
   owned_companies integer;
 begin
-  select count(*) into owned_companies from public.companies;
+  select count(*) into owned_companies
+  from public.company_members
+  where user_id = '00000000-0000-0000-0000-000000000901';
   if owned_companies <> 2 then
     raise exception 'Expected the administrator to own 2 companies, found %', owned_companies;
   end if;
@@ -80,15 +83,17 @@ values
     'draft'
   );
 
-insert into public.gallery_sources (id, product_id, source_url)
+insert into public.gallery_sources (id, account_id, product_id, source_url)
 values
   (
     '00000000-0000-0000-0000-000000000201',
+    (select id from public.accounts where handle = 'admin-account'),
     '00000000-0000-0000-0000-000000000101',
     'https://example.com/public/gallery'
   ),
   (
     '00000000-0000-0000-0000-000000000202',
+    (select id from public.accounts where handle = 'admin-account'),
     '00000000-0000-0000-0000-000000000102',
     'https://example.com/draft/gallery'
   );
@@ -145,11 +150,13 @@ do $$
 begin
   begin
     insert into public.outcomes (
+      account_id,
       product_id,
       gallery_source_id,
       source_key,
       source_url
     ) values (
+      (select id from public.accounts where handle = 'admin-account'),
       '00000000-0000-0000-0000-000000000102',
       '00000000-0000-0000-0000-000000000201',
       'wrong-product',
@@ -162,12 +169,14 @@ begin
 
   begin
     insert into public.outcomes (
+      account_id,
       product_id,
       gallery_source_id,
       source_key,
       source_url,
       status
     ) values (
+      (select id from public.accounts where handle = 'admin-account'),
       '00000000-0000-0000-0000-000000000101',
       '00000000-0000-0000-0000-000000000201',
       'incomplete',
@@ -186,6 +195,7 @@ $$;
 
 insert into public.outcomes (
   id,
+  account_id,
   product_id,
   gallery_source_id,
   source_key,
@@ -198,6 +208,7 @@ insert into public.outcomes (
 values
   (
     '00000000-0000-0000-0000-000000000301',
+    (select id from public.accounts where handle = 'admin-account'),
     '00000000-0000-0000-0000-000000000101',
     '00000000-0000-0000-0000-000000000201',
     'public-outcome',
@@ -209,6 +220,7 @@ values
   ),
   (
     '00000000-0000-0000-0000-000000000302',
+    (select id from public.accounts where handle = 'admin-account'),
     '00000000-0000-0000-0000-000000000102',
     '00000000-0000-0000-0000-000000000202',
     'hidden-outcome',
@@ -218,6 +230,45 @@ values
     'https://example.com/draft/outcome.mp4',
     'draft'
   );
+
+insert into public.outcomes (
+  id,
+  account_id,
+  source_key,
+  source_url,
+  slug,
+  title,
+  prompt,
+  result_media_url,
+  origin_type,
+  attribution_type,
+  status
+) values (
+  '00000000-0000-0000-0000-000000000303',
+  (select id from public.accounts where handle = 'admin-account'),
+  'account-outcome',
+  'https://example.com/account/outcome',
+  'account-outcome',
+  'Account outcome',
+  'Make the account outcome.',
+  'https://example.com/account/outcome.mp4',
+  'account',
+  'account',
+  'draft'
+);
+
+insert into public.outcome_products (outcome_id, product_id)
+values ('00000000-0000-0000-0000-000000000303', '00000000-0000-0000-0000-000000000101');
+
+insert into public.skills (id, name, repository, directory)
+values ('00000000-0000-0000-0000-000000000401', 'Test Skill', 'test-publisher/test-skill', 'skills/test-skill');
+
+insert into public.outcome_skills (outcome_id, skill_id, last_reviewed_commit)
+values (
+  '00000000-0000-0000-0000-000000000303',
+  '00000000-0000-0000-0000-000000000401',
+  '0000000000000000000000000000000000000000'
+);
 
 set local role authenticated;
 select set_config('request.jwt.claim.sub', '00000000-0000-0000-0000-000000000902', true);
@@ -240,9 +291,33 @@ begin
 end;
 $$;
 
+do $$
+begin
+  begin
+    perform public.set_account_outcome_publication(
+      (select id from public.accounts where handle = 'admin-account'),
+      array['00000000-0000-0000-0000-000000000303']::uuid[],
+      true
+    );
+    raise exception 'A non-member published another account Outcome';
+  exception
+    when raise_exception then
+      if sqlerrm <> 'Account editor access is required' then
+        raise;
+      end if;
+  end;
+end;
+$$;
+
 reset role;
 set local role authenticated;
 select set_config('request.jwt.claim.sub', '00000000-0000-0000-0000-000000000901', true);
+
+select public.set_account_outcome_publication(
+  (select id from public.accounts where handle = 'admin-account'),
+  array['00000000-0000-0000-0000-000000000303']::uuid[],
+  true
+);
 
 do $$
 begin
@@ -305,6 +380,17 @@ begin
       and actor_id = '00000000-0000-0000-0000-000000000902'
   ) then
     raise exception 'Denied publication emitted a success audit event';
+  end if;
+  if (
+    select count(*)
+    from public.account_outcome_publication_events
+    where account_id = (select id from public.accounts where handle = 'admin-account')
+      and actor_id = '00000000-0000-0000-0000-000000000901'
+      and action = 'publish'
+      and changed_count = 1
+      and outcome_ids = array['00000000-0000-0000-0000-000000000303']::uuid[]
+  ) <> 1 then
+    raise exception 'Account publication did not emit exactly one audit event';
   end if;
 end;
 $$;
@@ -389,10 +475,19 @@ declare
   visible_products integer;
   visible_outcomes integer;
   visible_directory_entries integer;
+  visible_account_products integer;
+  visible_account_skills integer;
 begin
-  select count(*) into visible_products from public.products;
-  select count(*) into visible_outcomes from public.outcomes;
-  select count(*) into visible_directory_entries from public.outcome_directory;
+  select count(*) into visible_products from public.products
+  where id in ('00000000-0000-0000-0000-000000000101', '00000000-0000-0000-0000-000000000102');
+  select count(*) into visible_outcomes from public.outcomes
+  where id in ('00000000-0000-0000-0000-000000000301', '00000000-0000-0000-0000-000000000302');
+  select count(*) into visible_directory_entries from public.outcome_directory
+  where id in ('00000000-0000-0000-0000-000000000301', '00000000-0000-0000-0000-000000000302', '00000000-0000-0000-0000-000000000303');
+  select count(*) into visible_account_products from public.account_product_directory
+  where account_handle = 'admin-account' and id = '00000000-0000-0000-0000-000000000101';
+  select count(*) into visible_account_skills from public.account_skill_directory
+  where account_handle = 'admin-account' and id = '00000000-0000-0000-0000-000000000401';
 
   if visible_products <> 1 then
     raise exception 'Expected 1 public product, found %', visible_products;
@@ -400,8 +495,14 @@ begin
   if visible_outcomes <> 1 then
     raise exception 'Expected 1 public outcome, found %', visible_outcomes;
   end if;
-  if visible_directory_entries <> 1 then
-    raise exception 'Expected 1 public directory entry, found %', visible_directory_entries;
+  if visible_directory_entries <> 2 then
+    raise exception 'Expected 2 public directory entries, found %', visible_directory_entries;
+  end if;
+  if visible_account_products <> 1 then
+    raise exception 'Expected 1 public account Product link, found %', visible_account_products;
+  end if;
+  if visible_account_skills <> 1 then
+    raise exception 'Expected 1 public account Skill link, found %', visible_account_skills;
   end if;
 end;
 $$;
