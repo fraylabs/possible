@@ -168,7 +168,7 @@ export function AccountProfilePage({ handle }: { handle: string }) {
 
   return (
     <SiteShell className="account-profile-page">
-      <section className="account-profile">
+      <section className="account-profile layout-wide">
         <header className="account-profile-header">
           <span className="account-avatar">{profile.account.avatar_url ? <img src={profile.account.avatar_url} alt="" /> : profile.account.name.slice(0, 1)}</span>
           <div><h1>{profile.account.name}</h1><p>@{profile.account.handle}</p></div>

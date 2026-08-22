@@ -13,7 +13,7 @@ const links = [
 ] as const;
 
 function DocsContextNavigation({ active }: { active: DocsPageKey }) {
-  return <nav className="docs-context-nav" aria-label="Documentation sections"><div className="docs-context-nav-inner"><span>DOCS</span>{links.map((link) => <a className={link.active === active ? "is-active" : undefined} href={link.href} key={link.href}>{link.label}</a>)}</div></nav>;
+  return <nav className="docs-context-nav" aria-label="Documentation sections"><div className="docs-context-nav-inner layout-wide"><span>DOCS</span>{links.map((link) => <a className={link.active === active ? "is-active" : undefined} href={link.href} key={link.href}>{link.label}</a>)}</div></nav>;
 }
 
 function DocsSidebar({ active }: { active: DocsPageKey }) {
@@ -21,7 +21,7 @@ function DocsSidebar({ active }: { active: DocsPageKey }) {
 }
 
 function DocsLayout({ active, eyebrow, title, description, children }: { active: DocsPageKey; eyebrow: string; title: string; description: string; children: ReactNode }) {
-  return <SiteShell className="docs-page"><DocsContextNavigation active={active} /><div className="docs-shell"><DocsSidebar active={active} /><article className="docs-article"><div className="docs-breadcrumb"><a href="/docs">DOCS</a><span>/</span><strong>{eyebrow}</strong></div><header className="docs-title"><div className="docs-title-copy"><p className="eyebrow">{eyebrow}</p><h1>{title}</h1><p>{description}</p></div></header>{children}</article></div></SiteShell>;
+  return <SiteShell className="docs-page"><DocsContextNavigation active={active} /><div className="docs-shell layout-wide"><DocsSidebar active={active} /><article className="docs-article"><div className="docs-breadcrumb"><a href="/docs">DOCS</a><span>/</span><strong>{eyebrow}</strong></div><header className="docs-title"><div className="docs-title-copy"><p className="eyebrow">{eyebrow}</p><h1>{title}</h1><p>{description}</p></div></header>{children}</article></div></SiteShell>;
 }
 
 export function DocsPage() {

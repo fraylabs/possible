@@ -70,7 +70,7 @@ export function DiscoverPage({ initialType = "all" }: { initialType?: DiscoveryT
 
   return (
     <SiteShell className="products-page">
-      <section className="products-directory" aria-labelledby="discover-directory-heading">
+      <section className="products-directory layout-standard" aria-labelledby="discover-directory-heading">
         <h1 className="sr-only" id="discover-directory-heading">{heading}</h1>
         <header className="product-categories">
           <span>DISCOVER</span>

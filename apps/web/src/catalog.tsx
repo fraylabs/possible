@@ -141,7 +141,7 @@ export function OutcomesPage() {
   return (
     <SiteShell className={`packs-library-page${normalizedQuery ? " is-searching" : ""}`}>
 
-      <section className="packs-library-hero" aria-labelledby="packs-library-heading">
+      <section className={`packs-library-hero${normalizedQuery ? "" : " layout-standard"}`} aria-labelledby="packs-library-heading">
         {!normalizedQuery ? <><h1 id="packs-library-heading">Anything is <em>possible</em></h1>
         <p className="packs-library-subtitle">Discover what agents can do.</p>
         <button
@@ -207,7 +207,7 @@ export function OutcomesPage() {
         {!normalizedQuery ? <div className="packs-search-examples"><span>COMMON SEARCHES</span>{commonSearches.map((example) => <button type="button" onClick={() => updateQuery(example)} key={example}>{example}</button>)}</div> : null}
       </section>
 
-      <section className={`packs-results${normalizedQuery ? " is-search-results" : ""}`} id="outcomes" aria-labelledby="packs-results-heading">
+      <section className={`packs-results${normalizedQuery ? " is-search-results" : " layout-wide"}`} id="outcomes" aria-labelledby="packs-results-heading">
         {normalizedQuery ? <header className="packs-search-summary">
           <h2 className="sr-only" id="packs-results-heading">Results for {normalizedQuery}</h2>
           <p>{searchResults.length} {searchResults.length === 1 ? "result" : "results"} for <strong>“{normalizedQuery}”</strong></p>
@@ -245,7 +245,7 @@ export function OutcomesPage() {
         </div> : null}
       </section>
 
-      {!normalizedQuery ? <section className="packs-library-note">
+      {!normalizedQuery ? <section className="packs-library-note layout-wide">
         <p><strong>Made something worth sharing?</strong> Publish the result, the exact prompt, and a source people can inspect.</p>
         <a href={`${githubUrl}/blob/main/CONTRIBUTING.md`} target="_blank" rel="noreferrer">Share an Outcome <span>↗</span></a>
       </section> : null}

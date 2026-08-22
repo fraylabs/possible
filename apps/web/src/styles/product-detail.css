@@ -1,10 +1,7 @@
 .product-detail-page { min-height: 100vh; background: #0d0d0c; color: #f2efe8; }
-.product-detail-page > nav { border-bottom-color: #2d2d2b; background: #0d0d0c; }
-.product-detail-page > nav .wordmark span { color: #ff5a1f; }
-.product-detail-page > nav .nav-links { color: #aaa9a4; }
 .product-detail-page :where(a, button, input):focus-visible { outline: 2px solid #ff5a1f; outline-offset: 3px; }
 
-.product-profile { width: min(1240px, calc(100% - 48px)); margin: 0 auto; padding: 30px 0 88px; }
+.product-profile { padding: 30px 0 88px; }
 .product-back-link { display: inline-flex; gap: 10px; align-items: center; color: #777671; font: 8px "DM Mono", monospace; text-transform: uppercase; letter-spacing: .05em; }
 .product-back-link:hover { color: #f2efe8; }
 
@@ -107,7 +104,7 @@
 }
 
 @media (max-width: 760px) {
-  .product-profile { width: calc(100% - 28px); padding: 24px 0 62px; }
+  .product-profile { padding: 24px 0 62px; }
   .product-profile-header { margin-top: 22px; padding: 22px 0 24px; grid-template-columns: 1fr; gap: 18px; }
   .product-profile-identity > img { width: 54px; height: 54px; border-radius: 11px; }
   .product-profile-skill-mark { width: 54px; height: 54px; border-radius: 11px; }

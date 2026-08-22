@@ -1,0 +1,12 @@
+/* Shared page templates. Route styles own content; this file owns geometry. */
+.layout-reading,
+.layout-standard,
+.layout-wide {
+  width: calc(100% - (var(--site-gutter) * 2));
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.layout-reading { max-width: var(--layout-reading); }
+.layout-standard { max-width: var(--layout-standard); }
+.layout-wide { max-width: var(--layout-wide); }

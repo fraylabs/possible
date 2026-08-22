@@ -381,7 +381,7 @@ function ListingDetailContent({ id, kind }: { id: string; kind: ListingKind }) {
 
   return (
     <SiteShell className="product-detail-page">
-      <article className="product-profile">
+      <article className="product-profile layout-standard">
         <a className="product-back-link" href={kind === "product" ? "/products" : "/skills"}><span aria-hidden="true">←</span> All {kind === "product" ? "products" : "skills"}</a>
 
         <header className="product-profile-header">

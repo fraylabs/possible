@@ -1,8 +1,5 @@
 /* Product-facing Outcome details */
 .pack-detail-page { min-height: 100vh; background: #0d0d0c; color: #f2efe8; }
-.pack-detail-page > nav { border-bottom-color: #2d2d2b; background: #0d0d0c; }
-.pack-detail-page > nav .wordmark span { color: #ff5a1f; }
-.pack-detail-page > nav .nav-links { color: #aaa9a4; }
 .pack-detail-page :where(a, button, summary):focus-visible { outline: 2px solid #a8ff52; outline-offset: 3px; }
 .pack-detail-breadcrumb { display: flex; gap: 9px; color: #777772; font: 8px "DM Mono", monospace; letter-spacing: .06em; }
 .pack-detail-breadcrumb a, .pack-detail-breadcrumb strong { color: #ff7040; }
@@ -43,21 +40,13 @@
 .not-found { min-height: calc(100vh - 74px); padding: 10vw 3.5vw; display: flex; flex-direction: column; justify-content: center; }
 .not-found h1 { margin: 35px 0 60px; font-size: clamp(65px, 9vw, 145px); font-weight: 500; line-height: .87; letter-spacing: -.075em; }
 
-@media (max-width: 560px) {
-  .site-nav { height: 64px; }
-  .nav-menu-trigger { min-height: 38px; }
-  .mobile-nav-panel > header { min-height: 64px; padding-inline: 18px; }
-  .mobile-nav-panel li a { min-height: 82px; padding-inline: 18px; }
-  .mobile-nav-panel > footer { padding-inline: 18px; }
-}
-
 /* Readable Outcome record */
 
 .outcome-author { margin: 18px 0 0; color: #777772; font: 9px "DM Mono", monospace; }
 .outcome-author a { color: #ff7040; }
 .outcome-source { min-height: 64px; padding-top: 24px; border-top: 1px solid #2f2f2d; display: flex; justify-content: space-between; gap: 20px; color: #85857f; font: 9px "DM Mono", monospace; }
 .outcome-source a { color: #ff7040; }
-.pack-detail-document { width: min(920px, calc(100% - 40px)); margin: 0 auto; padding-bottom: 88px; }
+.pack-detail-document { padding-bottom: 88px; }
 .pack-detail-header { padding: 42px 0 34px; border-bottom: 1px solid #2f2f2d; }
 .pack-detail-header .pack-detail-breadcrumb { margin-bottom: 22px; color: #73736f; font-size: 10px; text-transform: none; }
 .pack-detail-header .pack-detail-breadcrumb a { color: #a4a49e; }
@@ -164,7 +153,7 @@
 .pack-related i { position: absolute; top: 18px; right: 16px; color: #ff7040; font: normal 10px "DM Mono", monospace; }
 
 @media (max-width: 620px) {
-  .pack-detail-document { width: calc(100% - 36px); padding-bottom: 64px; }
+  .pack-detail-document { padding-bottom: 64px; }
   .pack-detail-header { padding: 34px 0 28px; }
   .pack-detail-header h1 { font-size: 38px; }
   .pack-detail-header > p { font-size: 16px; }

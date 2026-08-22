@@ -1,9 +1,5 @@
-.account-profile-page { min-height: 100vh; display: flex; flex-direction: column; background: #0d0d0c; color: #f2efe8; }
-.account-profile-page > nav { border-bottom-color: #2d2d2b; background: #0d0d0c; }
-.account-profile-page > nav .wordmark span { color: #ff5a1f; }
-.account-profile-page > nav .nav-links { color: #aaa9a4; }
-.account-profile-page .site-footer { margin-top: auto; }
-.account-profile { width: min(1440px, calc(100% - 7vw)); margin: 0 auto; padding: clamp(58px, 6vw, 98px) 0 110px; }
+.account-profile-page { min-height: 100vh; background: #0d0d0c; color: #f2efe8; }
+.account-profile { padding: clamp(58px, 6vw, 98px) 0 110px; }
 .account-profile-header { min-height: 118px; padding-bottom: 38px; border-bottom: 1px solid #343432; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 22px; align-items: center; }
 .account-avatar { width: 80px; height: 80px; border: 1px solid #494946; border-radius: 18px; display: grid; place-items: center; overflow: hidden; background: #ff5a1f; color: #121211; font-size: 36px; font-weight: 650; }
 .account-avatar img { width: 100%; height: 100%; object-fit: cover; }
@@ -35,7 +31,7 @@
 .account-reference-grid em { color: #777772; font: normal 8px "DM Mono", monospace; white-space: nowrap; }
 @media (max-width: 940px) { .account-outcome-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 700px) {
-  .account-profile { width: calc(100% - 32px); padding-top: 42px; }
+  .account-profile { padding-top: 42px; }
   .account-profile-header { grid-template-columns: auto minmax(0, 1fr); }
   .account-profile-header > a { grid-column: 1 / -1; width: fit-content; }
   .account-avatar { width: 58px; height: 58px; border-radius: 13px; font-size: 26px; }

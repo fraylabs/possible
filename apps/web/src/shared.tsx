@@ -64,22 +64,24 @@ export function SiteNav() {
   return (
     <>
       <nav className="site-nav" aria-label="Primary">
-        <a className="wordmark" href="/">possible<span>.sh</span></a>
-        <div className="nav-links">
-          {navigationItems.map((item) => (
-            <a key={item.href} href={item.href} target={item.external ? "_blank" : undefined} rel={item.external ? "noreferrer" : undefined}>{item.label}{item.external ? " ↗" : ""}</a>
-          ))}
+        <div className="site-nav-inner layout-wide">
+          <a className="wordmark" href="/">possible<span>.sh</span></a>
+          <div className="nav-links">
+            {navigationItems.map((item) => (
+              <a key={item.href} href={item.href} target={item.external ? "_blank" : undefined} rel={item.external ? "noreferrer" : undefined}>{item.label}{item.external ? " ↗" : ""}</a>
+            ))}
+          </div>
+          <button
+            ref={triggerRef}
+            className="nav-menu-trigger"
+            type="button"
+            aria-expanded={menuOpen}
+            aria-controls="mobile-navigation"
+            onClick={() => setMenuOpen(true)}
+          >
+            <span>MENU</span><i aria-hidden="true" />
+          </button>
         </div>
-        <button
-          ref={triggerRef}
-          className="nav-menu-trigger"
-          type="button"
-          aria-expanded={menuOpen}
-          aria-controls="mobile-navigation"
-          onClick={() => setMenuOpen(true)}
-        >
-          <span>MENU</span><i aria-hidden="true" />
-        </button>
       </nav>
 
       {menuOpen ? (
@@ -110,14 +112,16 @@ export function SiteNav() {
 export function SiteFooter() {
   return (
     <footer className="site-footer">
-      <a className="wordmark" href="/">possible<span>.sh</span></a>
-      <div className="site-footer-links">
-        <a href="/#outcomes">Outcomes</a>
-        <a href="/discover">Discover</a>
-        <a href="/docs">Docs</a>
-        <a href={githubUrl} target="_blank" rel="noreferrer">GitHub ↗</a>
+      <div className="site-footer-inner layout-wide">
+        <a className="wordmark" href="/">possible<span>.sh</span></a>
+        <div className="site-footer-links">
+          <a href="/#outcomes">Outcomes</a>
+          <a href="/discover">Discover</a>
+          <a href="/docs">Docs</a>
+          <a href={githubUrl} target="_blank" rel="noreferrer">GitHub ↗</a>
+        </div>
+        <span>OPEN SOURCE / 2026</span>
       </div>
-      <span>OPEN SOURCE / 2026</span>
     </footer>
   );
 }
@@ -126,7 +130,7 @@ export function SiteShell({ children, className, showFooter = true }: { children
   return (
     <main className={`site-shell ${className}`}>
       <SiteNav />
-      {children}
+      <div className="site-shell-body">{children}</div>
       {showFooter ? <SiteFooter /> : null}
     </main>
   );

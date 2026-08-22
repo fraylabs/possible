@@ -73,7 +73,7 @@ export function OutcomeDetailPage({ slug }: { slug: string }) {
 
   return (
     <SiteShell className="pack-detail-page">
-      <article className="pack-detail-document">
+      <article className="pack-detail-document layout-reading">
         <header className="pack-detail-header">
           <nav className="pack-detail-breadcrumb" aria-label="Breadcrumb"><a href="/#outcomes">Outcomes</a><span>/</span><span>{outcome.title}</span></nav>
           <h1>{outcome.title}</h1>

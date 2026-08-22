@@ -16,6 +16,9 @@ describe("Possible website", () => {
     expect(screen.getByRole("heading", { name: /Anything is possible/, level: 1 })).toBeInTheDocument();
     expect(screen.getByText("Discover what agents can do.")).toBeInTheDocument();
     expect(Array.from(container.querySelectorAll(".nav-links a")).map((link) => link.textContent)).toEqual(["OUTCOMES", "DISCOVER", "DOCS", "GITHUB ↗"]);
+    expect(container.querySelector(".site-shell > .site-nav > .site-nav-inner.layout-wide")).toBeInTheDocument();
+    expect(container.querySelector(".site-shell > .site-shell-body")).toContainElement(screen.getByRole("region", { name: "Outcome directory" }));
+    expect(container.querySelector(".site-shell > .site-footer > .site-footer-inner.layout-wide")).toBeInTheDocument();
     const gallery = screen.getByRole("region", { name: "Outcome directory" });
     expect(within(gallery).getAllByRole("link")).toHaveLength(6);
     expect(gallery.querySelector(".library-pack-card.has-media .library-pack-visual")).toBeInTheDocument();

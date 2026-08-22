@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     },
   },
   other: {
-    "theme-color": "#f1eee7",
+    "theme-color": "#0d0d0c",
   },
 };
 

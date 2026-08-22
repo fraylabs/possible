@@ -1,17 +1,15 @@
 .docs-page { background: #fff; color: #202123; }
-.docs-page > .site-nav { height: 64px; padding: 0 24px; position: sticky; top: 0; z-index: 20; border-bottom-color: #e5e7eb; background: #fff; }
-.docs-page > .site-nav .wordmark { font-size: 20px; }
 
-.docs-context-nav { height: 48px; position: sticky; top: 64px; z-index: 19; overflow-x: auto; border-bottom: 1px solid #e5e7eb; background: #f8f9fa; scrollbar-width: none; }
+.docs-context-nav { height: 48px; position: sticky; top: 0; z-index: 19; overflow-x: auto; border-bottom: 1px solid #e5e7eb; background: #f8f9fa; scrollbar-width: none; }
 .docs-context-nav::-webkit-scrollbar { display: none; }
-.docs-context-nav-inner { width: min(1500px, 100%); min-width: max-content; height: 100%; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; gap: 3px; }
+.docs-context-nav-inner { min-width: max-content; height: 100%; display: flex; align-items: center; gap: 3px; }
 .docs-context-nav-inner > span { margin-right: 14px; color: #6b7280; font: 500 9px "DM Mono", monospace; letter-spacing: .08em; }
 .docs-context-nav a { padding: 7px 11px; border-radius: 6px; color: #5f6368; font-size: 12px; white-space: nowrap; }
 .docs-context-nav a:hover, .docs-context-nav a:focus-visible { background: #eef0f2; color: #202123; }
 .docs-context-nav a.is-active { background: #e5e7eb; color: #202123; font-weight: 600; }
 
-.docs-shell { width: min(1500px, 100%); min-height: calc(100vh - 112px); margin: 0 auto; padding: 0 24px; display: grid; grid-template-columns: minmax(190px, 220px) minmax(0, 872px) minmax(170px, 200px); justify-content: center; gap: 48px; }
-.docs-sidebar { height: calc(100vh - 112px); padding: 32px 20px 32px 0; position: sticky; top: 112px; align-self: start; overflow-y: auto; border-right: 1px solid #e5e7eb; }
+.docs-shell { min-height: calc(100vh - var(--site-header-height) - 48px); padding: 0; display: grid; grid-template-columns: minmax(190px, 220px) minmax(0, 872px) minmax(170px, 200px); justify-content: center; gap: 48px; }
+.docs-sidebar { height: calc(100vh - 48px); padding: 32px 20px 32px 0; position: sticky; top: 48px; align-self: start; overflow-y: auto; border-right: 1px solid #e5e7eb; }
 .docs-sidebar-title { margin-bottom: 28px; display: flex; justify-content: space-between; align-items: baseline; }
 .docs-sidebar-title strong { font-size: 16px; }
 .docs-sidebar-title span, .docs-sidebar nav > span { color: #6b7280; font: 500 8px "DM Mono", monospace; letter-spacing: .08em; }
@@ -62,9 +60,7 @@
 .docs-next a:hover, .docs-next a:focus-visible { background: #f3f4f6; }
 
 @media (max-width: 560px) {
-  .docs-page > .site-nav { padding-inline: 18px; }
-  .docs-context-nav-inner { padding-inline: 18px; }
-  .docs-shell { display: block; padding-inline: 18px; }
+  .docs-shell { display: block; }
   .docs-sidebar { height: auto; padding: 20px 0; position: static; border-right: 0; border-bottom: 1px solid #e5e7eb; }
   .docs-sidebar-title { margin: 0; }
   .docs-sidebar nav { display: none; }

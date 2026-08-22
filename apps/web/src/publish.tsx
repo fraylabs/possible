@@ -895,7 +895,7 @@ export function DashboardPage() {
   }
 
   if (!client) return <SiteShell className="publish-page" showFooter={false}><section className="publish-access-card"><span className="publish-kicker">SETUP REQUIRED</span><h1>Publisher workspace</h1><p>Add the public Supabase URL and publishable key to the ignored workspace environment file.</p></section></SiteShell>;
-  if (session === undefined) return <SiteShell className="publish-page" showFooter={false}><p className="publish-loading">Loading publisher workspace…</p></SiteShell>;
+  if (session === undefined) return <SiteShell className="publish-page" showFooter={false}><p className="publish-loading layout-wide">Loading publisher workspace…</p></SiteShell>;
   if (!session) return <SiteShell className="publish-page" showFooter={false}><SignInPanel onSubmit={signIn} busy={busy} notice={notice} /></SiteShell>;
   if (access !== "granted") return <SiteShell className="publish-page" showFooter={false}><section className="publish-access-card"><span className="publish-kicker">{access === "loading" ? "CHECKING ACCESS" : "ACCESS DENIED"}</span><h1>{access === "loading" ? "Opening workspace…" : "This workspace is private"}</h1><NoticeLine notice={notice} /><button type="button" onClick={() => void client.auth.signOut()}>Sign out</button></section></SiteShell>;
 
@@ -904,7 +904,7 @@ export function DashboardPage() {
   const lastVisibleOutcome = Math.min(page * PAGE_SIZE, filteredTotal);
   return (
     <SiteShell className="publish-page" showFooter={false}>
-      <section className="publish-workspace">
+      <section className="publish-workspace layout-wide">
         <header className="publish-workspace-header">
           <div className="publish-product-switcher">
             {selectedAccount?.avatar_url ? <img src={selectedAccount.avatar_url} alt="" /> : <span>{selectedAccount?.name.slice(0, 1) ?? "P"}</span>}
