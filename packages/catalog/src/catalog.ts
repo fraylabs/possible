@@ -7,7 +7,7 @@ export const outcomeCatalog: OutcomeCatalogEntry[] = bundledOutcomes.map(({ slug
   outcome,
   products: resolveProducts(outcome.products, `${slug}.products`),
   catalogNumber: index + 1,
-  sourceUrl: `https://github.com/fraylabs/possible/tree/main/packages/catalog/src/outcomes/${slug}`,
+  sourceUrl: `https://github.com/fraylabs/possible-outcomes/tree/main/outcomes/${slug}`,
 }));
 
 const outcomeBySlug = new Map(outcomeCatalog.map((entry) => [entry.slug, entry]));

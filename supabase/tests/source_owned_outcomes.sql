@@ -1,5 +1,30 @@
 begin;
 
+do $$
+declare
+  legacy_functions text[] := array[
+    'accept_claim_transfer',
+    'claim_first_platform_admin',
+    'create_account',
+    'create_company',
+    'import_gallery_draft',
+    'request_listing_claim',
+    'set_account_outcome_publication',
+    'set_outcome_official'
+  ];
+begin
+  if exists (
+    select 1
+    from pg_proc functions
+    join pg_namespace namespaces on namespaces.oid = functions.pronamespace
+    where namespaces.nspname = 'public'
+      and functions.proname = any(legacy_functions)
+  ) then
+    raise exception 'Legacy hosted-publisher functions must not remain';
+  end if;
+end;
+$$;
+
 insert into auth.users (id, email, created_at, updated_at)
 values ('00000000-0000-0000-0000-000000000951', 'reviewer@example.com', now(), now());
 

@@ -2,6 +2,14 @@
 -- source-owned Outcome registry. This migration has not been deployed before
 -- this contract change; existing rows are pre-product test data.
 
+drop function if exists public.record_outcome_copy(uuid, uuid);
+drop function if exists public.record_outcome_copy(uuid, text);
+drop function if exists public.get_outcome_usage_counts();
+drop function if exists public.submit_outcome_review(uuid, smallint, text);
+drop function if exists public.delete_outcome_review(uuid);
+drop function if exists public.get_outcome_review_summaries(uuid);
+drop function if exists public.get_outcome_reviews(uuid, integer, integer);
+
 drop table if exists public.claim_transfers cascade;
 drop table if exists public.listing_claim_events cascade;
 drop table if exists public.listing_claims cascade;
@@ -239,8 +247,8 @@ with (security_invoker = true)
 as
 select
   directory.id,
-  skill.value->>'repository' || '/' || skill.value->>'directory' as linked_skill_id,
-  regexp_replace(skill.value->>'directory', '^.*/', '') as linked_skill_name,
+  (skill.value->>'repository') || '/' || (skill.value->>'directory') as linked_skill_id,
+  regexp_replace((skill.value->>'directory'), '^.*/', '') as linked_skill_name,
   skill.value->>'repository' as linked_skill_repository,
   skill.value->>'directory' as linked_skill_directory,
   skill.value->>'lastReviewedCommit' as linked_skill_revision

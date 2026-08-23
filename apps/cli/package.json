@@ -1,7 +1,7 @@
 {
   "name": "@fraylabs/possible",
-  "version": "0.1.11",
-  "description": "Install the Possible execution-prompt skill for Codex",
+  "version": "0.2.0",
+  "description": "Create, publish, discover, and reuse source-owned AI Outcomes",
   "keywords": [
     "codex",
     "ai-agents",

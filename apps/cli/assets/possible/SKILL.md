@@ -83,8 +83,8 @@ Do not reconstruct absent provenance as fact. Mark unknown values honestly. Prod
 Use the CLI to scaffold and validate:
 
 ```text
-npx @fraylabs/possible@0.1.11 create <slug>
-npx @fraylabs/possible@0.1.11 validate [directory]
+npx @fraylabs/possible@0.2.0 create <slug>
+npx @fraylabs/possible@0.2.0 validate [directory]
 ```
 
 ## Publish from the owner's source
@@ -97,9 +97,9 @@ Possible does not host publisher accounts or own the canonical files. A publishe
 The publisher index is a thin list of manifest locations. Possible snapshots the public source revision and displays it; changing the source creates a new revision rather than rewriting history.
 
 ```text
-npx @fraylabs/possible@0.1.11 publish [owner/repository | https://publisher.example]
-npx @fraylabs/possible@0.1.11 add <owner/repository | https://publisher.example>
-npx @fraylabs/possible@0.1.11 use <source>@<slug>
+npx @fraylabs/possible@0.2.0 publish [owner/repository | https://publisher.example]
+npx @fraylabs/possible@0.2.0 add <owner/repository | https://publisher.example>
+npx @fraylabs/possible@0.2.0 use <source>@<slug>
 ```
 
 GitHub publishing requires a clean committed revision so the snapshot is reproducible. No Possible login is required. A publisher-domain source is Official for that domain; other sources are Community unless their ownership follows directly from the public source.
@@ -109,9 +109,9 @@ GitHub publishing requires a clean committed revision so the snapshot is reprodu
 Use bookmarks only when the user asks:
 
 ```text
-npx @fraylabs/possible@0.1.11 bookmark add <outcome-slug>
-npx @fraylabs/possible@0.1.11 bookmark list
-npx @fraylabs/possible@0.1.11 bookmark remove <outcome-slug>
+npx @fraylabs/possible@0.2.0 bookmark add <outcome-slug>
+npx @fraylabs/possible@0.2.0 bookmark list
+npx @fraylabs/possible@0.2.0 bookmark remove <outcome-slug>
 ```
 
 Bookmarks are stored locally in `.possible` and do not require an account.

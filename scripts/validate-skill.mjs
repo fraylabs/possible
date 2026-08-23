@@ -17,7 +17,7 @@ if (frontmatter) {
   const keys = [...frontmatter[1].matchAll(/^([a-z]+):/gm)].map((match) => match[1]).sort();
   check(JSON.stringify(keys) === JSON.stringify(["description", "name"]), "frontmatter must contain only name and description");
 }
-for (const phrase of ["search_outcomes", "fetch_outcome", "original prompt", "execution prompt", "fresh subagent", "official documentation", "@fraylabs/possible@0.1.11 create", "@fraylabs/possible@0.1.11 publish", "@fraylabs/possible@0.1.11 bookmark add"]) {
+for (const phrase of ["search_outcomes", "fetch_outcome", "original prompt", "execution prompt", "fresh subagent", "official documentation", "@fraylabs/possible@0.2.0 create", "@fraylabs/possible@0.2.0 publish", "@fraylabs/possible@0.2.0 bookmark add"]) {
   check(skill.toLowerCase().includes(phrase.toLowerCase()), `SKILL.md must include '${phrase}'`);
 }
 for (const forbidden of ["Outcome Pack", "authored expectations", "trust status", "workstreams"]) {

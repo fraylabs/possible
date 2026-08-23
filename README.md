@@ -24,12 +24,12 @@ The repository or domain is the identity. A GitHub publisher keeps `outcomes.jso
 ## CLI
 
 ```bash
-npx @fraylabs/possible@0.1.11 init
-npx @fraylabs/possible@0.1.11 create my-outcome
-npx @fraylabs/possible@0.1.11 validate
-npx @fraylabs/possible@0.1.11 publish owner/repository
-npx @fraylabs/possible@0.1.11 add owner/repository
-npx @fraylabs/possible@0.1.11 use owner/repository@my-outcome
+npx @fraylabs/possible@0.2.0 init
+npx @fraylabs/possible@0.2.0 create my-outcome
+npx @fraylabs/possible@0.2.0 validate
+npx @fraylabs/possible@0.2.0 publish owner/repository
+npx @fraylabs/possible@0.2.0 add owner/repository
+npx @fraylabs/possible@0.2.0 use owner/repository@my-outcome
 ```
 
 The optional `$possible` Skill discovers relevant prior Outcomes, asks only consequential questions, and prepares one complete prompt for a fresh agent. Local bookmarks remain account-free.
