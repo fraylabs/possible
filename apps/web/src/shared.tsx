@@ -5,18 +5,17 @@ import { githubUrl } from "./public-content";
 
 export type CopyState = "idle" | "copied" | "failed";
 const navigationItems = [
-  { label: "OUTCOMES", href: "/#outcomes", external: false },
-  { label: "DISCOVER", href: "/discover", external: false },
   { label: "DOCS", href: "/docs", external: false },
-  { label: "GITHUB", href: githubUrl, external: true },
+  { label: "DASHBOARD", href: "/dashboard", external: false },
 ] as const;
-export function CopyButton({ label, value }: { label: string; value: string }) {
+export function CopyButton({ label, value, onCopied }: { label: string; value: string; onCopied?: () => void | Promise<void> }) {
   const [state, setState] = useState<CopyState>("idle");
 
   async function copy() {
     try {
       await navigator.clipboard.writeText(value);
       setState("copied");
+      void onCopied?.();
       window.setTimeout(() => setState("idle"), 1600);
     } catch {
       setState("failed");
@@ -115,9 +114,9 @@ export function SiteFooter() {
       <div className="site-footer-inner layout-wide">
         <a className="wordmark" href="/">possible<span>.sh</span></a>
         <div className="site-footer-links">
-          <a href="/#outcomes">Outcomes</a>
-          <a href="/discover">Discover</a>
+          <a href="/#discover">Discover</a>
           <a href="/docs">Docs</a>
+          <a href="/dashboard">Dashboard</a>
           <a href={githubUrl} target="_blank" rel="noreferrer">GitHub ↗</a>
         </div>
         <span>OPEN SOURCE / 2026</span>
@@ -142,7 +141,7 @@ export function NotFoundPage() {
       <section className="not-found">
         <p className="eyebrow">404 / OUTCOME NOT FOUND</p>
         <h1>This outcome is<br /><em>not here.</em></h1>
-        <a className="button-link" href="/#outcomes">Browse Outcomes <span>→</span></a>
+        <a className="button-link" href="/#discover">Browse Outcomes <span>→</span></a>
       </section>
     </SiteShell>
   );

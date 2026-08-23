@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider, useInfiniteQuery, useQuery } from "@t
 import type { OutcomeCatalogEntry } from "@possible/catalog";
 import { VirtuosoGrid } from "react-virtuoso";
 import { getProductOutcomes, getPublishedProduct, getPublishedSkill, getSkillOutcomes, outcomeHref } from "./public-content";
+import { recordOutcomeCopy } from "./discovery-data";
 import { CopyButton, SiteShell } from "./shared";
 import { getSupabaseBrowserClient } from "./supabase";
 
@@ -18,6 +19,7 @@ const pageSize = 24;
 
 type ProductGalleryEntry = {
   id: string;
+  databaseId?: string | undefined;
   title: string;
   summary?: string | undefined;
   prompt: string;
@@ -93,6 +95,7 @@ function fromCatalogEntry(entry: OutcomeCatalogEntry): ProductGalleryEntry {
 function fromDirectoryRow(row: DirectoryOutcomeRow, productCategory: string): ProductGalleryEntry {
   return {
     id: row.id,
+    databaseId: row.id,
     title: row.title,
     prompt: row.prompt,
     sourceUrl: row.source_url,
@@ -162,7 +165,7 @@ function OutcomeViewer({ entry, onClose }: { entry: ProductGalleryEntry; onClose
           {entry.summary ? <p>{entry.summary}</p> : null}
           {entry.authorName ? <div className="product-viewer-author">BY {entry.authorUrl ? <a href={entry.authorUrl} target="_blank" rel="noreferrer">{entry.authorName} ↗</a> : <span>{entry.authorName}</span>}</div> : null}
           <section className="product-viewer-prompt" aria-labelledby="product-viewer-prompt-heading">
-            <header><h3 id="product-viewer-prompt-heading">Exact prompt</h3><CopyButton label="Copy prompt" value={entry.prompt} /></header>
+            <header><h3 id="product-viewer-prompt-heading">Exact prompt</h3><CopyButton label="Copy prompt" value={entry.prompt} onCopied={() => recordOutcomeCopy(entry.databaseId)} /></header>
             <pre><code>{entry.prompt}</code></pre>
           </section>
           <nav className="product-viewer-links" aria-label="Outcome links">{entry.outcomeUrl ? <a href={entry.outcomeUrl}>Open Outcome <span>↗</span></a> : null}<a href={entry.sourceUrl} target="_blank" rel="noreferrer">View source <span>↗</span></a></nav>
@@ -382,7 +385,7 @@ function ListingDetailContent({ id, kind }: { id: string; kind: ListingKind }) {
   return (
     <SiteShell className="product-detail-page">
       <article className="product-profile layout-standard">
-        <a className="product-back-link" href={kind === "product" ? "/products" : "/skills"}><span aria-hidden="true">←</span> All {kind === "product" ? "products" : "skills"}</a>
+        <a className="product-back-link" href="/#discover"><span aria-hidden="true">←</span> Discover Outcomes</a>
 
         <header className="product-profile-header">
           <div className="product-profile-identity">{listing.logoUrl ? <img src={listing.logoUrl} alt={`${listing.name} logo`} /> : <span className="product-profile-skill-mark">SK</span>}<div><p>BY <a href={listing.ownerUrl} target="_blank" rel="noreferrer">{listing.ownerName} ↗</a></p><h1>{listing.name}</h1></div></div>

@@ -1,120 +1,248 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import type { RefObject } from "react";
-import { getPublishedOutcome, githubUrl, installCommand, outcomeHref, publishedOutcomes, searchPublishedOutcomes } from "./public-content";
-import type { PublishedOutcomeSearchResult } from "./public-content";
-import { OutcomeCard } from "./outcome-card";
-import { SiteShell } from "./shared";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Virtuoso, VirtuosoGrid } from "react-virtuoso";
+import {
+  fetchDiscoveryOutcomes,
+  fetchWeeklySourceRankings,
+  isOutcomeCategory,
+  localDiscoveryOutcomes,
+  outcomeCategories,
+  outcomeCategoryLabels,
+  recordOutcomeCopy,
+  searchDiscoveryOutcomes,
+} from "./discovery-data";
+import type { DiscoveryOutcome, DiscoveryView, OutcomeCategory, WeeklySourceRanking } from "./discovery-data";
+import { CopyButton, SiteShell } from "./shared";
 
-function OutcomeSearchResult({ result }: { result: PublishedOutcomeSearchResult }) {
-  const { entry } = result;
-  const fit = entry.outcome.source?.type === "official-gallery"
-    ? "Official gallery result, prompt, and source available to remix."
-    : entry.outcome.source?.type === "official-example"
-      ? "Official result and source available to remix."
-      : "Result, provenance, and prompt available to remix.";
+const rankingPageSize = 10;
 
+function formatCopies(copies: number) {
+  return `${copies.toLocaleString("en-US")} ${copies === 1 ? "copy" : "copies"}`;
+}
+
+function visiblePages(current: number, total: number): number[] {
+  if (total <= 7) return Array.from({ length: total }, (_, index) => index + 1);
+  const start = Math.min(Math.max(current - 2, 1), total - 4);
+  return Array.from({ length: 5 }, (_, index) => start + index);
+}
+
+function updateLocation(mutator: (url: URL) => void, mode: "push" | "replace" = "replace") {
+  const url = new URL(window.location.href);
+  mutator(url);
+  window.history[mode === "push" ? "pushState" : "replaceState"](
+    window.history.state,
+    "",
+    `${url.pathname}${url.search}${url.hash}`,
+  );
+}
+
+function OutcomeMedia({ outcome, priority = false }: { outcome: DiscoveryOutcome; priority?: boolean }) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const media = outcome.media;
+  if (!media) return <span className="home-outcome-placeholder">{outcomeCategoryLabels[outcome.category]}</span>;
+  if (media.kind === "image") return <img src={media.src} alt={media.alt} loading={priority ? "eager" : "lazy"} decoding="async" />;
   return (
-    <a className="pack-search-result" href={outcomeHref(entry)}>
-      <div className="pack-search-source">
-        <span className="pack-search-favicon" aria-hidden="true">{entry.outcome.author.name.slice(0, 1)}</span>
-        <span className="pack-search-source-copy">
-          <span className="pack-search-source-title"><strong>{entry.outcome.author.name}</strong></span>
-          <small>possible.sh <i>›</i> outcomes <i>›</i> {entry.slug}</small>
-        </span>
-      </div>
-      <h3>{entry.outcome.title}</h3>
-      <p>{entry.outcome.summary}</p>
-      {entry.products.length ? <div className="pack-search-product">Uses {entry.products.map(({ name, company }) => `${name} by ${company.name}`).join(" · ")}</div> : null}
-      <div className="pack-search-fit"><strong>Exact prompt</strong><span>{fit}</span></div>
+    <video
+      ref={videoRef}
+      muted
+      loop
+      playsInline
+      preload="metadata"
+      poster={media.poster}
+      aria-label={media.alt}
+      onLoadedMetadata={(event) => {
+        if (media.poster || !Number.isFinite(event.currentTarget.duration)) return;
+        event.currentTarget.currentTime = Math.min(Math.max(event.currentTarget.duration * 0.08, 0.25), 1);
+      }}
+      onPointerEnter={() => void videoRef.current?.play().catch(() => undefined)}
+      onPointerLeave={() => videoRef.current?.pause()}
+      onFocus={() => void videoRef.current?.play().catch(() => undefined)}
+      onBlur={() => videoRef.current?.pause()}
+    >
+      <source src={media.src} />
+    </video>
+  );
+}
+
+function OutcomeSource({ outcome }: { outcome: DiscoveryOutcome }) {
+  const source = outcome.source;
+  if (!source) return <span className="home-outcome-source">Outcome</span>;
+  return (
+    <a className="home-outcome-source" href={source.href}>
+      <span>{source.name}</span>
+      <i>{source.kind}</i>
     </a>
   );
 }
 
-export const commonSearches = [
-  "Design a 3D-printable cat shelter",
-  "Create a community solar PowerPoint",
-  "Make a product launch film",
-  "Compose a quiet Strudel soundtrack",
-  "Model a ten-link robot snake",
-];
-const packsPerPage = 6;
-
-function PackSearchBox({ query, inputRef, onChange, compact = false }: {
-  query: string;
-  inputRef: RefObject<HTMLInputElement | null>;
-  onChange: (query: string) => void;
-  compact?: boolean;
-}) {
+function OutcomeActions({ outcome }: { outcome: DiscoveryOutcome }) {
   return (
-    <label className={`packs-search${compact ? " packs-search--compact" : ""}`}>
-      <span className="sr-only">Search what agents can do</span>
-      <i aria-hidden="true" />
-      <input
-        ref={inputRef}
-        type="search"
-        aria-label="Search what agents can do"
-        value={query}
-        onChange={(event) => onChange(event.target.value)}
-        placeholder="What do you want your agent to do?"
+    <div className="home-outcome-actions">
+      {outcome.requirements.map((requirement) => <span key={requirement}>{requirement}</span>)}
+      <CopyButton
+        label="Copy prompt"
+        value={outcome.prompt}
+        onCopied={() => recordOutcomeCopy(outcome.databaseId)}
       />
-      {query ? <button type="button" onClick={() => onChange("")} aria-label="Clear search">CLEAR</button> : <kbd>⌘ K</kbd>}
-    </label>
+    </div>
   );
 }
 
-export function OutcomesPage() {
-  const [query, setQuery] = useState("");
-  const [page, setPage] = useState(1);
-  const [introOpen, setIntroOpen] = useState(false);
-  const searchRef = useRef<HTMLInputElement>(null);
-  const introVideoRef = useRef<HTMLVideoElement>(null);
-  const launchFilmOutcome = getPublishedOutcome("html-css-animated-product-launch-film");
-  const launchFilm = launchFilmOutcome?.outcome.preview?.video;
-  const normalizedQuery = query.trim();
-  const searchResults = normalizedQuery ? searchPublishedOutcomes(normalizedQuery) : [];
-  const pageCount = Math.max(1, Math.ceil(publishedOutcomes.length / packsPerPage));
-  const currentPage = Math.min(page, pageCount);
-  const pageStart = (currentPage - 1) * packsPerPage;
-  const visibleOutcomes = publishedOutcomes.slice(pageStart, pageStart + packsPerPage);
-  function updateQuery(nextQuery: string) {
-    setQuery(nextQuery);
-    setPage(1);
-    const url = new URL(window.location.href);
-    if (nextQuery.trim()) url.searchParams.set("q", nextQuery.trim());
-    else url.searchParams.delete("q");
-    url.searchParams.delete("page");
-    window.history.replaceState(window.history.state, "", `${url.pathname}${url.search}${url.hash}`);
-  }
-  function updatePage(nextPage: number) {
-    const boundedPage = Math.min(Math.max(nextPage, 1), pageCount);
-    setPage(boundedPage);
-    const url = new URL(window.location.href);
-    url.searchParams.delete("q");
-    if (boundedPage === 1) url.searchParams.delete("page");
-    else url.searchParams.set("page", String(boundedPage));
-    window.history.pushState(window.history.state, "", `${url.pathname}${url.search}${url.hash}`);
-    window.requestAnimationFrame(() => document.getElementById("outcomes")?.scrollIntoView?.({ behavior: "smooth", block: "start" }));
-  }
-  function resetFilters() {
-    updateQuery("");
-  }
+function OutcomeGalleryCard({ outcome, priority }: { outcome: DiscoveryOutcome; priority: boolean }) {
+  const external = outcome.href.startsWith("https://");
+  return (
+    <article className="home-outcome-card">
+      <a
+        className="home-outcome-visual"
+        data-fit={outcome.media?.fit ?? "cover"}
+        href={outcome.href}
+        target={external ? "_blank" : undefined}
+        rel={external ? "noreferrer" : undefined}
+        aria-label={`Open ${outcome.title}`}
+      >
+        <OutcomeMedia outcome={outcome} priority={priority} />
+        <span>{outcomeCategoryLabels[outcome.category]}</span>
+      </a>
+      <div className="home-outcome-card-copy">
+        <OutcomeSource outcome={outcome} />
+        <h3><a href={outcome.href} target={external ? "_blank" : undefined} rel={external ? "noreferrer" : undefined}>{outcome.title}</a></h3>
+        <p>{outcome.summary}</p>
+        <OutcomeActions outcome={outcome} />
+      </div>
+    </article>
+  );
+}
 
-  function toggleIntro() {
-    const nextOpen = !introOpen;
-    const video = introVideoRef.current;
-    setIntroOpen(nextOpen);
-    if (!video) return;
-    if (!nextOpen) {
-      video.pause();
+function OutcomeListRow({ outcome }: { outcome: DiscoveryOutcome }) {
+  const external = outcome.href.startsWith("https://");
+  return (
+    <article className="home-outcome-list-row">
+      <a
+        className="home-outcome-list-media"
+        data-fit={outcome.media?.fit ?? "cover"}
+        href={outcome.href}
+        target={external ? "_blank" : undefined}
+        rel={external ? "noreferrer" : undefined}
+        aria-label={`Open ${outcome.title}`}
+      >
+        <OutcomeMedia outcome={outcome} />
+      </a>
+      <div className="home-outcome-list-copy">
+        <OutcomeSource outcome={outcome} />
+        <h3><a href={outcome.href} target={external ? "_blank" : undefined} rel={external ? "noreferrer" : undefined}>{outcome.title}</a></h3>
+        <p>{outcome.summary}</p>
+      </div>
+      <OutcomeActions outcome={outcome} />
+    </article>
+  );
+}
+
+function WeeklyRanking({
+  entries,
+  page,
+  total,
+  loading,
+  onPageChange,
+}: {
+  entries: WeeklySourceRanking[];
+  page: number;
+  total: number;
+  loading: boolean;
+  onPageChange: (page: number) => void;
+}) {
+  const pageCount = Math.ceil(total / rankingPageSize);
+  const pages = visiblePages(page, pageCount);
+  return (
+    <section className="home-ranking" aria-labelledby="home-ranking-heading">
+      <header><h1 id="home-ranking-heading">Most copied this week</h1><span>Last 7 days</span></header>
+      {entries.length ? (
+        <ol start={(page - 1) * rankingPageSize + 1}>
+          {entries.map((entry, index) => (
+            <li key={`${entry.type}:${entry.id}`}>
+              <a href={entry.href}>
+                <span className="home-ranking-number">{String((page - 1) * rankingPageSize + index + 1).padStart(2, "0")}</span>
+                <span className="home-ranking-identity">
+                  {entry.logoUrl ? <img src={entry.logoUrl} alt="" /> : <i aria-hidden="true">{entry.type === "skill" ? "SK" : entry.name.slice(0, 1)}</i>}
+                  <strong>{entry.name}</strong>
+                  <small>{entry.owner}</small>
+                </span>
+                <span className="home-ranking-type">{entry.type}</span>
+                <span className="home-ranking-copies">{formatCopies(entry.copies)}</span>
+                <span className="home-ranking-arrow" aria-hidden="true">↗</span>
+              </a>
+            </li>
+          ))}
+        </ol>
+      ) : <p className="home-ranking-empty">{loading ? "Loading this week’s ranking…" : "No copied prompts yet this week."}</p>}
+      {pageCount > 1 ? (
+        <nav className="home-ranking-pagination" aria-label="Weekly ranking pages">
+          <button type="button" onClick={() => onPageChange(page - 1)} disabled={page === 1} aria-label="Previous ranking page">←</button>
+          {pages[0] && pages[0] > 1 ? <span aria-hidden="true">…</span> : null}
+          {pages.map((pageNumber) => <button type="button" key={pageNumber} aria-current={pageNumber === page ? "page" : undefined} onClick={() => onPageChange(pageNumber)}>{pageNumber}</button>)}
+          {pages.at(-1) && pages.at(-1)! < pageCount ? <span aria-hidden="true">…</span> : null}
+          <button type="button" onClick={() => onPageChange(page + 1)} disabled={page === pageCount} aria-label="Next ranking page">→</button>
+        </nav>
+      ) : null}
+    </section>
+  );
+}
+
+export function OutcomesPage({ rankingFixture }: { rankingFixture?: WeeklySourceRanking[] } = {}) {
+  const [outcomes, setOutcomes] = useState<DiscoveryOutcome[]>(localDiscoveryOutcomes);
+  const [query, setQuery] = useState("");
+  const [category, setCategory] = useState<OutcomeCategory | "all">("all");
+  const [view, setView] = useState<DiscoveryView>("gallery");
+  const [rankingPage, setRankingPage] = useState(1);
+  const [rankings, setRankings] = useState<WeeklySourceRanking[]>(rankingFixture?.slice(0, rankingPageSize) ?? []);
+  const [rankingTotal, setRankingTotal] = useState(rankingFixture?.length ?? 0);
+  const [rankingLoading, setRankingLoading] = useState(rankingFixture === undefined);
+  const searchRef = useRef<HTMLInputElement>(null);
+  const normalizedQuery = query.trim();
+  const filteredOutcomes = useMemo(() => searchDiscoveryOutcomes(outcomes, query, category), [category, outcomes, query]);
+  const availableCategories = useMemo(() => outcomeCategories.filter((candidate) => outcomes.some((outcome) => outcome.category === candidate)), [outcomes]);
+
+  useEffect(() => {
+    let cancelled = false;
+    void fetchDiscoveryOutcomes().then((entries) => { if (!cancelled) setOutcomes(entries); });
+    return () => { cancelled = true; };
+  }, []);
+
+  useEffect(() => {
+    if (rankingFixture) {
+      const start = (rankingPage - 1) * rankingPageSize;
+      setRankings(rankingFixture.slice(start, start + rankingPageSize));
+      setRankingTotal(rankingFixture.length);
+      setRankingLoading(false);
       return;
     }
-    video.muted = false;
-    video.volume = 1;
-    video.currentTime = 0;
-    void video.play().catch(() => undefined);
-  }
+    let cancelled = false;
+    setRankingLoading(true);
+    void fetchWeeklySourceRankings(rankingPage, rankingPageSize).then((result) => {
+      if (cancelled) return;
+      setRankings(result.entries);
+      setRankingTotal(result.total);
+      setRankingLoading(false);
+    });
+    return () => { cancelled = true; };
+  }, [rankingFixture, rankingPage]);
+
+  useEffect(() => {
+    const syncFromUrl = () => {
+      const parameters = new URLSearchParams(window.location.search);
+      const urlCategory = parameters.get("category");
+      const urlView = parameters.get("view");
+      const urlRankingPage = Number.parseInt(parameters.get("rankingPage") ?? "1", 10);
+      const storedView = window.localStorage?.getItem("possible.discovery-view");
+      setQuery(parameters.get("q") ?? "");
+      setCategory(isOutcomeCategory(urlCategory) ? urlCategory : "all");
+      setView(urlView === "list" || urlView === "gallery" ? urlView : storedView === "list" ? "list" : "gallery");
+      setRankingPage(Number.isFinite(urlRankingPage) ? Math.max(urlRankingPage, 1) : 1);
+    };
+    syncFromUrl();
+    window.addEventListener("popstate", syncFromUrl);
+    return () => window.removeEventListener("popstate", syncFromUrl);
+  }, []);
 
   useEffect(() => {
     const focusSearch = (event: KeyboardEvent) => {
@@ -126,133 +254,119 @@ export function OutcomesPage() {
     return () => window.removeEventListener("keydown", focusSearch);
   }, []);
 
-  useEffect(() => {
-    const syncFromUrl = () => {
-      const parameters = new URLSearchParams(window.location.search);
-      const nextPage = Number.parseInt(parameters.get("page") ?? "1", 10);
-      setQuery(parameters.get("q") ?? "");
-      setPage(Number.isFinite(nextPage) ? Math.min(Math.max(nextPage, 1), pageCount) : 1);
-    };
-    syncFromUrl();
-    window.addEventListener("popstate", syncFromUrl);
-    return () => window.removeEventListener("popstate", syncFromUrl);
-  }, [pageCount]);
+  function changeQuery(nextQuery: string) {
+    setQuery(nextQuery);
+    updateLocation((url) => {
+      if (nextQuery.trim()) url.searchParams.set("q", nextQuery.trim());
+      else url.searchParams.delete("q");
+    });
+  }
+
+  function changeCategory(nextCategory: OutcomeCategory | "all") {
+    setCategory(nextCategory);
+    updateLocation((url) => {
+      if (nextCategory === "all") url.searchParams.delete("category");
+      else url.searchParams.set("category", nextCategory);
+    });
+  }
+
+  function changeView(nextView: DiscoveryView) {
+    setView(nextView);
+    window.localStorage?.setItem("possible.discovery-view", nextView);
+    updateLocation((url) => {
+      if (nextView === "gallery") url.searchParams.delete("view");
+      else url.searchParams.set("view", nextView);
+    });
+  }
+
+  function changeRankingPage(nextPage: number) {
+    const pageCount = Math.max(1, Math.ceil(rankingTotal / rankingPageSize));
+    const bounded = Math.min(Math.max(nextPage, 1), pageCount);
+    setRankingPage(bounded);
+    updateLocation((url) => {
+      if (bounded === 1) url.searchParams.delete("rankingPage");
+      else url.searchParams.set("rankingPage", String(bounded));
+    }, "push");
+    window.requestAnimationFrame(() => document.getElementById("weekly-ranking")?.scrollIntoView?.({ behavior: "smooth", block: "start" }));
+  }
 
   return (
-    <SiteShell className={`packs-library-page${normalizedQuery ? " is-searching" : ""}`}>
+    <SiteShell className="home-page">
+      {!normalizedQuery ? <div className="layout-standard" id="weekly-ranking"><WeeklyRanking entries={rankings} page={rankingPage} total={rankingTotal} loading={rankingLoading} onPageChange={changeRankingPage} /></div> : null}
 
-      <section className={`packs-library-hero${normalizedQuery ? "" : " layout-standard"}`} aria-labelledby="packs-library-heading">
-        {!normalizedQuery ? <><h1 id="packs-library-heading">Anything is <em>possible</em></h1>
-        <p className="packs-library-subtitle">Discover what agents can do.</p>
-        <button
-          className="packs-intro-toggle"
-          type="button"
-          aria-expanded={introOpen}
-          aria-controls="packs-intro-panel"
-          onClick={toggleIntro}
-        >
-          <span>What is Possible?</span>
-          <i aria-hidden="true" />
-        </button>
-        <div
-          className={`packs-intro-collapse${introOpen ? " is-open" : ""}`}
-          id="packs-intro-panel"
-          role="region"
-          aria-label="About Possible"
-          aria-hidden={!introOpen}
-        >
-          <div>
-            <section className="packs-intro-panel">
-              <header className="packs-intro-panel-header">
-                <span>HOW POSSIBLE WORKS</span>
-                <strong>OPEN SOURCE / FOR CODEX</strong>
-              </header>
-              <div className="packs-intro-content">
-                <div className="packs-intro-copy">
-                  <p><strong>See more of what your agent can do</strong>AI agents can build websites, videos, CAD, presentations, games, and much more. The hard part is knowing what to ask for and how to guide them there.</p>
-                  <p>Possible.sh connects rough requests, the full prompts given to agents, and the outcomes they produced. Browse what worked, then use $possible to prepare your own execution prompt.</p>
-                  <div className="packs-intro-steps">
-                    <article>
-                      <span>01 / INSTALL</span>
-                      <pre><code>{installCommand}</code></pre>
-                    </article>
-                    <article>
-                      <span>02 / ASK CODEX</span>
-                      <code>$possible</code>
-                    </article>
-                  </div>
-                </div>
-                {launchFilm ? (
-                  <figure className="packs-intro-film" aria-hidden={!introOpen}>
-                    <video
-                      ref={introVideoRef}
-                      controls={introOpen}
-                      loop
-                      playsInline
-                      preload="metadata"
-                      poster={launchFilm.poster}
-                      tabIndex={introOpen ? 0 : -1}
-                    >
-                      <source src={launchFilm.src} type="video/mp4" />
-                      <a href={launchFilm.src}>Watch the Possible launch film</a>
-                    </video>
-                    <figcaption><span>THE WORLD INSIDE CODEX</span><strong>SOUND ON / MADE WITH POSSIBLE</strong></figcaption>
-                  </figure>
-                ) : null}
-              </div>
-            </section>
-          </div>
-        </div></> : <h1 className="sr-only" id="packs-library-heading">Outcome search results for {normalizedQuery}</h1>}
-        <PackSearchBox query={query} inputRef={searchRef} onChange={updateQuery} compact={Boolean(normalizedQuery)} />
-        {!normalizedQuery ? <div className="packs-search-examples"><span>COMMON SEARCHES</span>{commonSearches.map((example) => <button type="button" onClick={() => updateQuery(example)} key={example}>{example}</button>)}</div> : null}
-      </section>
+      <section className="home-discover layout-wide" id="discover" aria-labelledby="home-discover-heading">
+        <header className="home-discover-heading">
+          <div><p>Discover</p><h2 id="home-discover-heading">What can agents make?</h2></div>
+          <span>{filteredOutcomes.length} {filteredOutcomes.length === 1 ? "outcome" : "outcomes"}</span>
+        </header>
 
-      <section className={`packs-results${normalizedQuery ? " is-search-results" : " layout-wide"}`} id="outcomes" aria-labelledby="packs-results-heading">
-        {normalizedQuery ? <header className="packs-search-summary">
-          <h2 className="sr-only" id="packs-results-heading">Results for {normalizedQuery}</h2>
-          <p>{searchResults.length} {searchResults.length === 1 ? "result" : "results"} for <strong>“{normalizedQuery}”</strong></p>
-        </header> : <header className="packs-results-bar">
-          <div><h2 id="packs-results-heading">What agents can do</h2><span>{publishedOutcomes.length} {publishedOutcomes.length === 1 ? "OUTCOME" : "OUTCOMES"}</span></div>
-          <span>RESULTS / EXACT PROMPTS / SOURCES</span>
-        </header>}
-        {normalizedQuery && searchResults.length ? (
-          <div className="packs-search-list" role="region" aria-label="Agent outcome search results">
-            {searchResults.map((result) => <OutcomeSearchResult result={result} key={result.entry.slug} />)}
+        <label className="home-search">
+          <span aria-hidden="true">⌕</span>
+          <input
+            ref={searchRef}
+            type="search"
+            value={query}
+            onChange={(event) => changeQuery(event.target.value)}
+            placeholder="What do you want an agent to make?"
+            aria-label="What do you want an agent to make?"
+          />
+          {query ? <button type="button" onClick={() => changeQuery("")} aria-label="Clear search">Clear</button> : <kbd>⌘ K</kbd>}
+        </label>
+
+        <div className="home-discovery-controls">
+          <nav className="home-category-filter" aria-label="Outcome categories">
+            <button type="button" aria-pressed={category === "all"} onClick={() => changeCategory("all")}>All</button>
+            {availableCategories.map((candidate) => <button type="button" aria-pressed={category === candidate} onClick={() => changeCategory(candidate)} key={candidate}>{outcomeCategoryLabels[candidate]}</button>)}
+          </nav>
+          <div className="home-view-switcher" role="group" aria-label="Result view">
+            <button type="button" aria-pressed={view === "gallery"} onClick={() => changeView("gallery")}>Gallery</button>
+            <button type="button" aria-pressed={view === "list"} onClick={() => changeView("list")}>List</button>
           </div>
-        ) : !normalizedQuery ? (
-          <div className="packs-results-grid" role="region" aria-label="Outcome directory">
-            {visibleOutcomes.map((entry, index) => <OutcomeCard entry={entry} priority={index < 3} key={entry.slug} />)}
+        </div>
+
+        {normalizedQuery ? <p className="home-search-summary">Results related to <strong>“{normalizedQuery}”</strong></p> : null}
+        {filteredOutcomes.length ? view === "gallery" ? filteredOutcomes.length > 30 ? (
+          <VirtuosoGrid
+            className="home-outcome-virtual"
+            listClassName="home-outcome-grid"
+            itemClassName="home-outcome-grid-item"
+            useWindowScroll
+            data={filteredOutcomes}
+            computeItemKey={(_, outcome) => outcome.id}
+            increaseViewportBy={{ top: 300, bottom: 600 }}
+            itemContent={(index, outcome) => <OutcomeGalleryCard outcome={outcome} priority={index < 3} />}
+            role="region"
+            aria-label="Outcome gallery"
+          />
+        ) : (
+          <div className="home-outcome-grid" role="region" aria-label="Outcome gallery">
+            {filteredOutcomes.map((outcome, index) => <OutcomeGalleryCard outcome={outcome} priority={index < 3} key={outcome.id} />)}
+          </div>
+        ) : filteredOutcomes.length > 30 ? (
+          <Virtuoso
+            className="home-outcome-virtual"
+            useWindowScroll
+            data={filteredOutcomes}
+            computeItemKey={(_, outcome) => outcome.id}
+            increaseViewportBy={{ top: 300, bottom: 600 }}
+            itemContent={(_, outcome) => <OutcomeListRow outcome={outcome} />}
+            role="region"
+            aria-label="Outcome list"
+          />
+        ) : (
+          <div className="home-outcome-list" role="region" aria-label="Outcome list">
+            {filteredOutcomes.map((outcome) => <OutcomeListRow outcome={outcome} key={outcome.id} />)}
           </div>
         ) : (
-          <div className="packs-empty">
-            <span aria-hidden="true">00</span>
-            <h3>No outcome matches that yet.</h3>
-            <p>Try a broader search, or browse everything agents can do.</p>
-            <button type="button" onClick={resetFilters}>Show all outcomes</button>
+          <div className="home-empty">
+            <h2>No exact match yet.</h2>
+            <p>Try another description or browse a nearby category.</p>
+            <div>{availableCategories.slice(0, 3).map((candidate) => <button type="button" onClick={() => { changeQuery(""); changeCategory(candidate); }} key={candidate}>{outcomeCategoryLabels[candidate]}</button>)}</div>
           </div>
         )}
-        {!normalizedQuery && pageCount > 1 ? <div className="packs-pagination" role="navigation" aria-label="Outcome pages">
-          <button type="button" onClick={() => updatePage(currentPage - 1)} disabled={currentPage === 1}>← PREVIOUS</button>
-          <div>{Array.from({ length: pageCount }, (_, index) => index + 1).map((pageNumber) => <button
-            type="button"
-            aria-current={pageNumber === currentPage ? "page" : undefined}
-            aria-label={`Page ${pageNumber}`}
-            onClick={() => updatePage(pageNumber)}
-            key={pageNumber}
-          >{String(pageNumber).padStart(2, "0")}</button>)}</div>
-          <button type="button" onClick={() => updatePage(currentPage + 1)} disabled={currentPage === pageCount}>NEXT →</button>
-          <span aria-live="polite">PAGE {currentPage} OF {pageCount} / SHOWING {pageStart + 1}–{pageStart + visibleOutcomes.length}</span>
-        </div> : null}
       </section>
-
-      {!normalizedQuery ? <section className="packs-library-note layout-wide">
-        <p><strong>Made something worth sharing?</strong> Publish the result, the exact prompt, and a source people can inspect.</p>
-        <a href={`${githubUrl}/blob/main/CONTRIBUTING.md`} target="_blank" rel="noreferrer">Share an Outcome <span>↗</span></a>
-      </section> : null}
-
     </SiteShell>
   );
 }
-
 
 export default OutcomesPage;

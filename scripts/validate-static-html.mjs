@@ -13,11 +13,19 @@ const htmlText = (value) => value
   .replaceAll("'", "&#x27;");
 
 const home = await html("index.html");
-assert.match(home, /Anything is/);
 assert.match(home, /Discover what agents can do/);
-assert.match(home, /aria-label="Outcome directory"/);
-assert.match(home, />OUTCOMES</);
+assert.match(home, /Most copied this week/);
+assert.match(home, /What can agents make\?/);
+assert.match(home, /What do you want an agent to make\?/);
+assert.match(home, /aria-label="Outcome gallery"/);
 assert.doesNotMatch(home, /Outcome Pack|expectations checklist|structured prompt/);
+
+for (const alias of ["discover/index.html", "products/index.html", "skills/index.html"]) {
+  const markup = await html(alias);
+  assert.match(markup, /Most copied this week/);
+  assert.match(markup, /What can agents make\?/);
+  assert.match(markup, /rel="canonical" href="https:\/\/possible\.sh\/"/);
+}
 
 for (const entry of outcomeCatalog) {
   const markup = await html(`outcomes/${entry.slug}/index.html`);
@@ -31,9 +39,7 @@ for (const entry of outcomeCatalog) {
   assert.doesNotMatch(markup, /trust status|accepted evidence|compiled prompt|verification framework/i);
 }
 
-const products = await html("products/index.html");
 for (const product of productCatalog) {
-  assert.match(products, new RegExp(escape(htmlText(product.name))));
   const slug = product.id.split("/").at(-1);
   const detail = await html(`products/${slug}/index.html`);
   assert.match(detail, new RegExp(escape(htmlText(product.summary))));

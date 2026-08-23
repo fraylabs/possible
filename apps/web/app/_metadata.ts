@@ -8,13 +8,14 @@ type PageMetadataInput = {
   title: string;
   description: string;
   path: string;
+  canonicalPath?: string;
   noIndex?: boolean;
   alternates?: Record<string, string>;
   socialImage?: { url: string; width?: number; height?: number; alt: string } | null;
 };
 
-export function pageMetadata({ title, description, path, noIndex = false, alternates = {}, socialImage }: PageMetadataInput): Metadata {
-  const canonical = path === "/" ? `${siteUrl}/` : `${siteUrl}${path}/`;
+export function pageMetadata({ title, description, path, canonicalPath = path, noIndex = false, alternates = {}, socialImage }: PageMetadataInput): Metadata {
+  const canonical = canonicalPath === "/" ? `${siteUrl}/` : `${siteUrl}${canonicalPath}/`;
   const socialTitle = path === "/" ? title : `${title} — ${siteName}`;
   const socialImages = socialImage === null
     ? []

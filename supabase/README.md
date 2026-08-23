@@ -33,8 +33,8 @@ npm run db:test
 The private `/dashboard` route lets the first authenticated maintainer claim the
 administrator slot, manage account Outcomes, create any number of companies and
 Products, inspect linked Skills, and connect one public gallery URL per Product.
-The legacy `/publish` route redirects there. Both are intentionally absent from
-public navigation and search indexing.
+The public navigation links to the dashboard, while its management data remains
+authenticated. The legacy `/publish` route redirects there.
 
 `/fray-labs` is the first public account page. It reads account-attributed
 Outcomes, their Product links, and their Skill links from Supabase, with the
@@ -46,7 +46,7 @@ or refresh private Outcome drafts. Imports cannot publish. Source fields remain
 separate from editorial overrides, and an Outcome cannot be published without a
 title, exact prompt, and result media URL.
 
-Sync the five bundled Fray Labs Outcomes into the hosted account idempotently:
+Sync the bundled Fray Labs Outcomes into the hosted account idempotently:
 
 ```bash
 npm run account-outcomes:sync
@@ -54,3 +54,8 @@ npm run account-outcomes:sync
 
 Imported gallery rows remain source-attributed even when Fray Labs manages them.
 Only account-authored Outcomes appear on the Fray Labs public profile.
+
+Successful prompt copies are recorded without prompt text, account identity, or
+browser metadata. A random local visitor token limits one counted copy per
+Outcome per UTC day. Raw events are private; the public application can only
+record a copy and read the rolling seven-day Product and Skill ranking.

@@ -1,12 +1,13 @@
-import { ProductsPage } from "../../src/App";
+import { OutcomesPage } from "../../src/App";
 import { pageMetadata } from "../_metadata";
 
 export const metadata = pageMetadata({
   title: "Products for AI agents",
   description: "Discover products through the complete outcomes AI agents can make with them.",
   path: "/products",
+  canonicalPath: "/",
 });
 
 export default function ProductsDirectoryPage() {
-  return <ProductsPage />;
+  return <OutcomesPage />;
 }

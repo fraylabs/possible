@@ -2,38 +2,63 @@ import { cleanup, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { axe } from "vitest-axe";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import App, { AccountProfilePage, AuthoringDocsPage, DiscoverPage, DocsPage, OutcomeDetailPage, ProductDetailPage, ProductsPage, PublishPage, SkillDetailPage, SkillsPage } from "./App";
-import { commonSearches } from "./catalog";
-import { getPublishedOutcome, searchPublishedOutcomes } from "./public-content";
+import App, { AccountProfilePage, AuthoringDocsPage, DocsPage, OutcomeDetailPage, OutcomesPage, ProductDetailPage, PublishPage, SkillDetailPage } from "./App";
+import type { WeeklySourceRanking } from "./discovery-data";
+import { getPublishedOutcome } from "./public-content";
 import { getOutcomeState, summarizeGalleryImport } from "./publish";
 
 vi.mock("./OutcomeCadViewer", () => ({ default: () => <div data-testid="cad-viewer" /> }));
 afterEach(() => { cleanup(); window.history.pushState({}, "", "/"); });
 
 describe("Possible website", () => {
-  it("uses the visual Outcome directory as the homepage", async () => {
-    const { container } = render(<App />);
-    expect(screen.getByRole("heading", { name: /Anything is possible/, level: 1 })).toBeInTheDocument();
-    expect(screen.getByText("Discover what agents can do.")).toBeInTheDocument();
-    expect(Array.from(container.querySelectorAll(".nav-links a")).map((link) => link.textContent)).toEqual(["OUTCOMES", "DISCOVER", "DOCS", "GITHUB ↗"]);
+  const rankingFixture: WeeklySourceRanking[] = Array.from({ length: 12 }, (_, index) => ({
+    type: index % 2 === 0 ? "product" : "skill",
+    id: `source-${index + 1}`,
+    slug: `source-${index + 1}`,
+    name: `Source ${index + 1}`,
+    owner: "Example",
+    href: index % 2 === 0 ? `/products/source-${index + 1}` : `/skills/source-${index + 1}`,
+    copies: 120 - index,
+  }));
+
+  it("uses one ranked, visual Outcome directory as the homepage", async () => {
+    const { container } = render(<OutcomesPage rankingFixture={rankingFixture} />);
+    expect(screen.getByRole("heading", { name: "Most copied this week", level: 1 })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "What can agents make?", level: 2 })).toBeInTheDocument();
+    expect(Array.from(container.querySelectorAll(".nav-links a")).map((link) => link.textContent)).toEqual(["DOCS", "DASHBOARD"]);
     expect(container.querySelector(".site-shell > .site-nav > .site-nav-inner.layout-wide")).toBeInTheDocument();
-    expect(container.querySelector(".site-shell > .site-shell-body")).toContainElement(screen.getByRole("region", { name: "Outcome directory" }));
+    expect(container.querySelector(".site-shell > .site-shell-body")).toContainElement(screen.getByRole("region", { name: "Outcome gallery" }));
     expect(container.querySelector(".site-shell > .site-footer > .site-footer-inner.layout-wide")).toBeInTheDocument();
-    const gallery = screen.getByRole("region", { name: "Outcome directory" });
-    expect(within(gallery).getAllByRole("link")).toHaveLength(6);
-    expect(gallery.querySelector(".library-pack-card.has-media .library-pack-visual")).toBeInTheDocument();
-    expect(screen.queryByRole("navigation", { name: "Outcome pages" })).not.toBeInTheDocument();
+    expect(screen.getAllByRole("listitem")).toHaveLength(10);
+    expect(screen.getByRole("navigation", { name: "Weekly ranking pages" })).toBeInTheDocument();
+    await userEvent.click(screen.getByRole("button", { name: "Next ranking page" }));
+    expect(screen.getByRole("link", { name: /Source 11/i })).toBeInTheDocument();
+    expect(screen.getAllByRole("listitem")).toHaveLength(2);
+    expect(window.location.search).toContain("rankingPage=2");
+    const gallery = screen.getByRole("region", { name: "Outcome gallery" });
+    expect(within(gallery).getByRole("heading", { name: /Possible Launch Film/i })).toBeInTheDocument();
+    expect(within(gallery).getAllByRole("button", { name: "Copy prompt" })).toHaveLength(6);
     expect(await axe(container)).toHaveNoViolations();
   });
 
-  it("turns common searches into prompt-directory results", async () => {
+  it("turns ordinary searches into related cards and a compact list", async () => {
     render(<App />);
-    for (const query of commonSearches) expect(searchPublishedOutcomes(query).length, query).toBeGreaterThan(0);
-    await userEvent.click(screen.getByRole("button", { name: "Compose a quiet Strudel soundtrack" }));
-    expect(screen.getByRole("searchbox", { name: "Search what agents can do" })).toHaveValue("Compose a quiet Strudel soundtrack");
-    const results = screen.getByRole("region", { name: "Agent outcome search results" });
-    expect(within(results).getByRole("heading", { name: /Lantern Rain: Original Strudel Soundtrack/i })).toBeInTheDocument();
-    expect(within(results).getAllByText("Exact prompt").length).toBeGreaterThan(0);
+    await userEvent.type(screen.getByRole("searchbox", { name: "What do you want an agent to make?" }), "quiet soundtrack");
+    expect(screen.queryByRole("heading", { name: "Most copied this week" })).not.toBeInTheDocument();
+    const gallery = screen.getByRole("region", { name: "Outcome gallery" });
+    expect(within(gallery).getByRole("heading", { name: /Lantern Rain: Original Strudel Soundtrack/i })).toBeInTheDocument();
+    await userEvent.click(screen.getByRole("button", { name: "List" }));
+    expect(screen.getByRole("region", { name: "Outcome list" })).toBeInTheDocument();
+    expect(window.location.search).toContain("view=list");
+  });
+
+  it("filters Outcomes by understandable capability categories", async () => {
+    render(<App />);
+    await userEvent.click(screen.getByRole("button", { name: "CAD" }));
+    const gallery = screen.getByRole("region", { name: "Outcome gallery" });
+    expect(within(gallery).getByRole("heading", { name: /Robot Snake CAD Prototype/i })).toBeInTheDocument();
+    expect(within(gallery).queryByRole("heading", { name: /Launch Film/i })).not.toBeInTheDocument();
+    expect(window.location.search).toContain("category=cad");
   });
 
   it("shows the preview, exact prompt, provenance, author, Products, and optional Skills", async () => {
@@ -52,10 +77,6 @@ describe("Possible website", () => {
   });
 
   it("keeps Products as official attribution with related Outcome cards", () => {
-    render(<ProductsPage />);
-    expect(screen.getByRole("heading", { name: "Products" })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /HyperFrames/i })).toBeInTheDocument();
-    cleanup();
     render(<ProductDetailPage id="heygen/hyperframes" />);
     expect(screen.getByRole("heading", { name: "HyperFrames", level: 1 })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Outcomes" })).toBeInTheDocument();
@@ -63,21 +84,7 @@ describe("Possible website", () => {
     expect(screen.queryByText(/checkout|pricing unknown/i)).not.toBeInTheDocument();
   });
 
-  it("discovers Products and Skills in one searchable directory", async () => {
-    const { container } = render(<DiscoverPage />);
-    const directory = screen.getByRole("region", { name: "Discover Products and Skills" });
-    expect(directory.querySelector('a[href="/products/hyperframes"]')).toBeInTheDocument();
-    expect(directory.querySelector('a[href^="/skills/"]')).toBeInTheDocument();
-    await userEvent.type(screen.getByRole("searchbox", { name: "Search products and skills" }), "pptx");
-    expect(screen.getByRole("link", { name: /Pptx Generator/i })).toBeInTheDocument();
-    expect(container.querySelector('a[href="/products/hyperframes"]')).not.toBeInTheDocument();
-  });
-
   it("uses the same gallery-first structure for Skills", () => {
-    render(<SkillsPage />);
-    expect(screen.getByRole("region", { name: "Skills" })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /Strudel Compose/i })).toBeInTheDocument();
-    cleanup();
     render(<SkillDetailPage id="MiniMax-AI/skills/skills/pptx-generator" />);
     expect(screen.getByRole("heading", { name: "Pptx Generator", level: 1 })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Community/ })).toBeInTheDocument();

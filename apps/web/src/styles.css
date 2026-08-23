@@ -1,6 +1,7 @@
 @import "./styles/shared.css";
 @import "./styles/docs.css";
 @import "./styles/catalog.css";
+@import "./styles/home.css";
 @import "./styles/outcome-detail.css";
 @import "./styles/product-detail.css";
 @import "./styles/product-directory.css";
