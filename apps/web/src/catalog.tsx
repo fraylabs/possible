@@ -1,10 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Virtuoso, VirtuosoGrid } from "react-virtuoso";
 import {
   fetchDiscoveryOutcomes,
-  fetchWeeklySourceRankings,
   isOutcomeCategory,
   localDiscoveryOutcomes,
   outcomeCategories,
@@ -12,14 +10,10 @@ import {
   recordOutcomeCopy,
   searchDiscoveryOutcomes,
 } from "./discovery-data";
-import type { DiscoveryOutcome, DiscoveryView, OutcomeCategory, WeeklySourceRanking } from "./discovery-data";
+import type { DiscoveryOutcome, OutcomeCategory } from "./discovery-data";
 import { CopyButton, SiteShell } from "./shared";
 
-const rankingPageSize = 10;
-
-function formatCopies(copies: number) {
-  return `${copies.toLocaleString("en-US")} ${copies === 1 ? "copy" : "copies"}`;
-}
+const pageSize = 10;
 
 function visiblePages(current: number, total: number): number[] {
   if (total <= 7) return Array.from({ length: total }, (_, index) => index + 1);
@@ -67,34 +61,34 @@ function OutcomeMedia({ outcome, priority = false }: { outcome: DiscoveryOutcome
 
 function OutcomeSource({ outcome }: { outcome: DiscoveryOutcome }) {
   const source = outcome.source;
-  if (!source) return <span className="home-outcome-source">Outcome</span>;
+  if (!source) return <span className="home-outcome-source">No Product or Skill attached</span>;
   return (
     <a className="home-outcome-source" href={source.href}>
-      <span>{source.name}</span>
+      <span>Made with {source.name}{outcome.sources.length > 1 ? ` +${outcome.sources.length - 1}` : ""}</span>
       <i>{source.kind}</i>
     </a>
   );
 }
 
-function OutcomeActions({ outcome }: { outcome: DiscoveryOutcome }) {
-  return (
-    <div className="home-outcome-actions">
-      {outcome.requirements.map((requirement) => <span key={requirement}>{requirement}</span>)}
-      <CopyButton
-        label="Copy prompt"
-        value={outcome.prompt}
-        onCopied={() => recordOutcomeCopy(outcome.databaseId)}
-      />
-    </div>
-  );
+function usageLabel(count: number): string {
+  return `${count.toLocaleString()} ${count === 1 ? "copy" : "copies"}`;
 }
 
-function OutcomeGalleryCard({ outcome, priority }: { outcome: DiscoveryOutcome; priority: boolean }) {
+function OutcomeResult({ outcome, position, priority, featured }: { outcome: DiscoveryOutcome; position: number; priority: boolean; featured: boolean }) {
   const external = outcome.href.startsWith("https://");
+  const [useCount, setUseCount] = useState(outcome.useCount);
+
+  useEffect(() => setUseCount(outcome.useCount), [outcome.id, outcome.useCount]);
+
+  async function recordUse() {
+    if (await recordOutcomeCopy(outcome.databaseId)) setUseCount((count) => count + 1);
+  }
+
   return (
-    <article className="home-outcome-card">
+    <article className="home-result-row" data-featured={featured ? "true" : undefined}>
+      <span className="home-result-rank" aria-label={`Result ${position}`}>#{position}</span>
       <a
-        className="home-outcome-visual"
+        className="home-result-media"
         data-fit={outcome.media?.fit ?? "cover"}
         href={outcome.href}
         target={external ? "_blank" : undefined}
@@ -102,142 +96,102 @@ function OutcomeGalleryCard({ outcome, priority }: { outcome: DiscoveryOutcome; 
         aria-label={`Open ${outcome.title}`}
       >
         <OutcomeMedia outcome={outcome} priority={priority} />
-        <span>{outcomeCategoryLabels[outcome.category]}</span>
       </a>
-      <div className="home-outcome-card-copy">
-        <OutcomeSource outcome={outcome} />
-        <h3><a href={outcome.href} target={external ? "_blank" : undefined} rel={external ? "noreferrer" : undefined}>{outcome.title}</a></h3>
+      <div className="home-result-copy">
+        <div className="home-result-meta">
+          <OutcomeSource outcome={outcome} />
+          <span>{outcome.publicationKind} · {outcomeCategoryLabels[outcome.category]}</span>
+        </div>
+        <h2><a href={outcome.href} target={external ? "_blank" : undefined} rel={external ? "noreferrer" : undefined}>{outcome.title}</a></h2>
         <p>{outcome.summary}</p>
-        <OutcomeActions outcome={outcome} />
+        <footer>
+          <div className="home-result-requirements">
+            <strong><i aria-hidden="true" /> {usageLabel(useCount)}</strong>
+            <span className="home-result-rating" aria-label={`${outcome.averageRating.toFixed(1)} out of 5 stars from ${outcome.reviewCount} reviews`}>
+              ★ {outcome.averageRating.toFixed(1)} · {outcome.reviewCount} {outcome.reviewCount === 1 ? "review" : "reviews"}
+            </span>
+            {outcome.requirements.map((requirement) => <span key={requirement}>{requirement}</span>)}
+          </div>
+          <CopyButton label="Copy prompt" value={outcome.prompt} onCopied={recordUse} />
+        </footer>
       </div>
     </article>
   );
 }
 
-function OutcomeListRow({ outcome }: { outcome: DiscoveryOutcome }) {
-  const external = outcome.href.startsWith("https://");
+function Leaderboard({ outcomes, page, onPageChange }: { outcomes: DiscoveryOutcome[]; page: number; onPageChange: (page: number) => void }) {
+  const ranked = [...outcomes].sort((left, right) => right.useCount - left.useCount || right.reviewCount - left.reviewCount || left.catalogNumber - right.catalogNumber);
+  const pageCount = Math.max(1, Math.ceil(ranked.length / pageSize));
+  const currentPage = Math.min(page, pageCount);
+  const visible = ranked.slice((currentPage - 1) * pageSize, currentPage * pageSize);
   return (
-    <article className="home-outcome-list-row">
-      <a
-        className="home-outcome-list-media"
-        data-fit={outcome.media?.fit ?? "cover"}
-        href={outcome.href}
-        target={external ? "_blank" : undefined}
-        rel={external ? "noreferrer" : undefined}
-        aria-label={`Open ${outcome.title}`}
-      >
-        <OutcomeMedia outcome={outcome} />
-      </a>
-      <div className="home-outcome-list-copy">
-        <OutcomeSource outcome={outcome} />
-        <h3><a href={outcome.href} target={external ? "_blank" : undefined} rel={external ? "noreferrer" : undefined}>{outcome.title}</a></h3>
-        <p>{outcome.summary}</p>
-      </div>
-      <OutcomeActions outcome={outcome} />
-    </article>
-  );
-}
-
-function WeeklyRanking({
-  entries,
-  page,
-  total,
-  loading,
-  onPageChange,
-}: {
-  entries: WeeklySourceRanking[];
-  page: number;
-  total: number;
-  loading: boolean;
-  onPageChange: (page: number) => void;
-}) {
-  const pageCount = Math.ceil(total / rankingPageSize);
-  const pages = visiblePages(page, pageCount);
-  return (
-    <section className="home-ranking" aria-labelledby="home-ranking-heading">
-      <header><h1 id="home-ranking-heading">Most copied this week</h1><span>Last 7 days</span></header>
-      {entries.length ? (
-        <ol start={(page - 1) * rankingPageSize + 1}>
-          {entries.map((entry, index) => (
-            <li key={`${entry.type}:${entry.id}`}>
-              <a href={entry.href}>
-                <span className="home-ranking-number">{String((page - 1) * rankingPageSize + index + 1).padStart(2, "0")}</span>
-                <span className="home-ranking-identity">
-                  {entry.logoUrl ? <img src={entry.logoUrl} alt="" /> : <i aria-hidden="true">{entry.type === "skill" ? "SK" : entry.name.slice(0, 1)}</i>}
-                  <strong>{entry.name}</strong>
-                  <small>{entry.owner}</small>
-                </span>
-                <span className="home-ranking-type">{entry.type}</span>
-                <span className="home-ranking-copies">{formatCopies(entry.copies)}</span>
-                <span className="home-ranking-arrow" aria-hidden="true">↗</span>
-              </a>
-            </li>
-          ))}
-        </ol>
-      ) : <p className="home-ranking-empty">{loading ? "Loading this week’s ranking…" : "No copied prompts yet this week."}</p>}
-      {pageCount > 1 ? (
-        <nav className="home-ranking-pagination" aria-label="Weekly ranking pages">
-          <button type="button" onClick={() => onPageChange(page - 1)} disabled={page === 1} aria-label="Previous ranking page">←</button>
-          {pages[0] && pages[0] > 1 ? <span aria-hidden="true">…</span> : null}
-          {pages.map((pageNumber) => <button type="button" key={pageNumber} aria-current={pageNumber === page ? "page" : undefined} onClick={() => onPageChange(pageNumber)}>{pageNumber}</button>)}
-          {pages.at(-1) && pages.at(-1)! < pageCount ? <span aria-hidden="true">…</span> : null}
-          <button type="button" onClick={() => onPageChange(page + 1)} disabled={page === pageCount} aria-label="Next ranking page">→</button>
-        </nav>
-      ) : null}
+    <section className="home-leaderboard layout-reading" aria-labelledby="leaderboard-heading">
+      <header><div><span>ALL TIME</span><h1 id="leaderboard-heading">Most copied Outcomes</h1></div><p>Prompts people return to and reuse.</p></header>
+      <ol start={(currentPage - 1) * pageSize + 1}>{visible.map((outcome, index) => <li key={outcome.id} data-top={currentPage === 1 && index < 3 ? "true" : undefined}>
+        <span>{String((currentPage - 1) * pageSize + index + 1).padStart(2, "0")}</span>
+        <a className="home-leaderboard-media" href={outcome.href}><OutcomeMedia outcome={outcome} priority={currentPage === 1 && index < 3} /></a>
+        <div><a href={outcome.href}>{outcome.title}</a><small>{outcome.publicationKind}{outcome.source ? ` · Made with ${outcome.source.name}` : ""}</small></div>
+        <strong>{usageLabel(outcome.useCount)}</strong>
+      </li>)}</ol>
+      <Pagination page={currentPage} total={ranked.length} onPageChange={onPageChange} label="Leaderboard pages" />
     </section>
   );
 }
 
-export function OutcomesPage({ rankingFixture }: { rankingFixture?: WeeklySourceRanking[] } = {}) {
-  const [outcomes, setOutcomes] = useState<DiscoveryOutcome[]>(localDiscoveryOutcomes);
+function Pagination({ page, total, onPageChange, label = "Outcome pages" }: { page: number; total: number; onPageChange: (page: number) => void; label?: string }) {
+  const pageCount = Math.ceil(total / pageSize);
+  if (pageCount <= 1) return null;
+  const pages = visiblePages(page, pageCount);
+  return (
+    <nav className="home-pagination" aria-label={label}>
+      <button type="button" onClick={() => onPageChange(page - 1)} disabled={page === 1} aria-label={`Previous ${label === "Outcome pages" ? "Outcome" : "leaderboard"} page`}>←</button>
+      {pages[0] && pages[0] > 1 ? <span aria-hidden="true">…</span> : null}
+      {pages.map((pageNumber) => <button type="button" key={pageNumber} aria-current={pageNumber === page ? "page" : undefined} onClick={() => onPageChange(pageNumber)}>{pageNumber}</button>)}
+      {pages.at(-1) && pages.at(-1)! < pageCount ? <span aria-hidden="true">…</span> : null}
+      <button type="button" onClick={() => onPageChange(page + 1)} disabled={page === pageCount} aria-label={`Next ${label === "Outcome pages" ? "Outcome" : "leaderboard"} page`}>→</button>
+    </nav>
+  );
+}
+
+export function OutcomesPage({ outcomesFixture }: { outcomesFixture?: DiscoveryOutcome[] } = {}) {
+  const [outcomes, setOutcomes] = useState<DiscoveryOutcome[]>(outcomesFixture ?? localDiscoveryOutcomes);
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState<OutcomeCategory | "all">("all");
-  const [view, setView] = useState<DiscoveryView>("gallery");
-  const [rankingPage, setRankingPage] = useState(1);
-  const [rankings, setRankings] = useState<WeeklySourceRanking[]>(rankingFixture?.slice(0, rankingPageSize) ?? []);
-  const [rankingTotal, setRankingTotal] = useState(rankingFixture?.length ?? 0);
-  const [rankingLoading, setRankingLoading] = useState(rankingFixture === undefined);
+  const [page, setPage] = useState(1);
+  const [leaderboardPage, setLeaderboardPage] = useState(1);
   const searchRef = useRef<HTMLInputElement>(null);
   const normalizedQuery = query.trim();
-  const filteredOutcomes = useMemo(() => searchDiscoveryOutcomes(outcomes, query, category), [category, outcomes, query]);
   const availableCategories = useMemo(() => outcomeCategories.filter((candidate) => outcomes.some((outcome) => outcome.category === candidate)), [outcomes]);
 
+  const filteredOutcomes = useMemo(() => {
+    const matches = searchDiscoveryOutcomes(outcomes, query, category);
+    if (normalizedQuery) return matches;
+    return [...matches].sort((left, right) => {
+      const byDate = Date.parse(right.publishedAt ?? "") - Date.parse(left.publishedAt ?? "");
+      if (Number.isFinite(byDate) && byDate !== 0) return byDate;
+      return left.catalogNumber - right.catalogNumber;
+    });
+  }, [category, normalizedQuery, outcomes, query]);
+
+  const pageCount = Math.max(1, Math.ceil(filteredOutcomes.length / pageSize));
+  const currentPage = Math.min(page, pageCount);
+  const visibleOutcomes = filteredOutcomes.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+
   useEffect(() => {
+    if (outcomesFixture) return;
     let cancelled = false;
     void fetchDiscoveryOutcomes().then((entries) => { if (!cancelled) setOutcomes(entries); });
     return () => { cancelled = true; };
-  }, []);
-
-  useEffect(() => {
-    if (rankingFixture) {
-      const start = (rankingPage - 1) * rankingPageSize;
-      setRankings(rankingFixture.slice(start, start + rankingPageSize));
-      setRankingTotal(rankingFixture.length);
-      setRankingLoading(false);
-      return;
-    }
-    let cancelled = false;
-    setRankingLoading(true);
-    void fetchWeeklySourceRankings(rankingPage, rankingPageSize).then((result) => {
-      if (cancelled) return;
-      setRankings(result.entries);
-      setRankingTotal(result.total);
-      setRankingLoading(false);
-    });
-    return () => { cancelled = true; };
-  }, [rankingFixture, rankingPage]);
+  }, [outcomesFixture]);
 
   useEffect(() => {
     const syncFromUrl = () => {
       const parameters = new URLSearchParams(window.location.search);
       const urlCategory = parameters.get("category");
-      const urlView = parameters.get("view");
-      const urlRankingPage = Number.parseInt(parameters.get("rankingPage") ?? "1", 10);
-      const storedView = window.localStorage?.getItem("possible.discovery-view");
+      const urlPage = Number.parseInt(parameters.get("page") ?? "1", 10);
       setQuery(parameters.get("q") ?? "");
       setCategory(isOutcomeCategory(urlCategory) ? urlCategory : "all");
-      setView(urlView === "list" || urlView === "gallery" ? urlView : storedView === "list" ? "list" : "gallery");
-      setRankingPage(Number.isFinite(urlRankingPage) ? Math.max(urlRankingPage, 1) : 1);
+      setPage(Number.isFinite(urlPage) ? Math.max(urlPage, 1) : 1);
     };
     syncFromUrl();
     window.addEventListener("popstate", syncFromUrl);
@@ -254,11 +208,17 @@ export function OutcomesPage({ rankingFixture }: { rankingFixture?: WeeklySource
     return () => window.removeEventListener("keydown", focusSearch);
   }, []);
 
+  function resetPage(url: URL) {
+    setPage(1);
+    url.searchParams.delete("page");
+  }
+
   function changeQuery(nextQuery: string) {
     setQuery(nextQuery);
     updateLocation((url) => {
       if (nextQuery.trim()) url.searchParams.set("q", nextQuery.trim());
       else url.searchParams.delete("q");
+      resetPage(url);
     });
   }
 
@@ -267,37 +227,28 @@ export function OutcomesPage({ rankingFixture }: { rankingFixture?: WeeklySource
     updateLocation((url) => {
       if (nextCategory === "all") url.searchParams.delete("category");
       else url.searchParams.set("category", nextCategory);
+      resetPage(url);
     });
   }
 
-  function changeView(nextView: DiscoveryView) {
-    setView(nextView);
-    window.localStorage?.setItem("possible.discovery-view", nextView);
-    updateLocation((url) => {
-      if (nextView === "gallery") url.searchParams.delete("view");
-      else url.searchParams.set("view", nextView);
-    });
-  }
-
-  function changeRankingPage(nextPage: number) {
-    const pageCount = Math.max(1, Math.ceil(rankingTotal / rankingPageSize));
+  function changePage(nextPage: number) {
     const bounded = Math.min(Math.max(nextPage, 1), pageCount);
-    setRankingPage(bounded);
+    setPage(bounded);
     updateLocation((url) => {
-      if (bounded === 1) url.searchParams.delete("rankingPage");
-      else url.searchParams.set("rankingPage", String(bounded));
+      if (bounded === 1) url.searchParams.delete("page");
+      else url.searchParams.set("page", String(bounded));
     }, "push");
-    window.requestAnimationFrame(() => document.getElementById("weekly-ranking")?.scrollIntoView?.({ behavior: "smooth", block: "start" }));
+    window.requestAnimationFrame(() => document.getElementById("discover")?.scrollIntoView?.({ behavior: "smooth", block: "start" }));
   }
 
   return (
     <SiteShell className="home-page">
-      {!normalizedQuery ? <div className="layout-standard" id="weekly-ranking"><WeeklyRanking entries={rankings} page={rankingPage} total={rankingTotal} loading={rankingLoading} onPageChange={changeRankingPage} /></div> : null}
-
-      <section className="home-discover layout-wide" id="discover" aria-labelledby="home-discover-heading">
-        <header className="home-discover-heading">
-          <div><p>Discover</p><h2 id="home-discover-heading">What can agents make?</h2></div>
-          <span>{filteredOutcomes.length} {filteredOutcomes.length === 1 ? "outcome" : "outcomes"}</span>
+      <Leaderboard outcomes={outcomes} page={leaderboardPage} onPageChange={setLeaderboardPage} />
+      <section className="home-directory layout-reading" id="discover" aria-labelledby="home-heading">
+        <header className="home-heading">
+          <span>DISCOVER</span>
+          <h1 id="home-heading">What do you want an agent to make?</h1>
+          <p>Search real Outcomes. Copy the prompt. Remix it for your job.</p>
         </header>
 
         <label className="home-search">
@@ -307,55 +258,35 @@ export function OutcomesPage({ rankingFixture }: { rankingFixture?: WeeklySource
             type="search"
             value={query}
             onChange={(event) => changeQuery(event.target.value)}
-            placeholder="What do you want an agent to make?"
+            placeholder="Describe the result you want"
             aria-label="What do you want an agent to make?"
           />
           {query ? <button type="button" onClick={() => changeQuery("")} aria-label="Clear search">Clear</button> : <kbd>⌘ K</kbd>}
         </label>
 
-        <div className="home-discovery-controls">
+        <div className="home-controls">
           <nav className="home-category-filter" aria-label="Outcome categories">
             <button type="button" aria-pressed={category === "all"} onClick={() => changeCategory("all")}>All</button>
             {availableCategories.map((candidate) => <button type="button" aria-pressed={category === candidate} onClick={() => changeCategory(candidate)} key={candidate}>{outcomeCategoryLabels[candidate]}</button>)}
           </nav>
-          <div className="home-view-switcher" role="group" aria-label="Result view">
-            <button type="button" aria-pressed={view === "gallery"} onClick={() => changeView("gallery")}>Gallery</button>
-            <button type="button" aria-pressed={view === "list"} onClick={() => changeView("list")}>List</button>
-          </div>
         </div>
 
-        {normalizedQuery ? <p className="home-search-summary">Results related to <strong>“{normalizedQuery}”</strong></p> : null}
-        {filteredOutcomes.length ? view === "gallery" ? filteredOutcomes.length > 30 ? (
-          <VirtuosoGrid
-            className="home-outcome-virtual"
-            listClassName="home-outcome-grid"
-            itemClassName="home-outcome-grid-item"
-            useWindowScroll
-            data={filteredOutcomes}
-            computeItemKey={(_, outcome) => outcome.id}
-            increaseViewportBy={{ top: 300, bottom: 600 }}
-            itemContent={(index, outcome) => <OutcomeGalleryCard outcome={outcome} priority={index < 3} />}
-            role="region"
-            aria-label="Outcome gallery"
-          />
-        ) : (
-          <div className="home-outcome-grid" role="region" aria-label="Outcome gallery">
-            {filteredOutcomes.map((outcome, index) => <OutcomeGalleryCard outcome={outcome} priority={index < 3} key={outcome.id} />)}
-          </div>
-        ) : filteredOutcomes.length > 30 ? (
-          <Virtuoso
-            className="home-outcome-virtual"
-            useWindowScroll
-            data={filteredOutcomes}
-            computeItemKey={(_, outcome) => outcome.id}
-            increaseViewportBy={{ top: 300, bottom: 600 }}
-            itemContent={(_, outcome) => <OutcomeListRow outcome={outcome} />}
-            role="region"
-            aria-label="Outcome list"
-          />
-        ) : (
-          <div className="home-outcome-list" role="region" aria-label="Outcome list">
-            {filteredOutcomes.map((outcome) => <OutcomeListRow outcome={outcome} key={outcome.id} />)}
+        <div className="home-result-summary">
+          <p>{normalizedQuery ? <>Results for <strong>“{normalizedQuery}”</strong></> : category === "all" ? "All Outcomes" : `${outcomeCategoryLabels[category]} Outcomes`}</p>
+          <span>{filteredOutcomes.length} {filteredOutcomes.length === 1 ? "result" : "results"}</span>
+        </div>
+
+        {visibleOutcomes.length ? (
+          <div className="home-results" role="region" aria-label="Outcome results">
+            {visibleOutcomes.map((outcome, index) => (
+              <OutcomeResult
+                outcome={outcome}
+                position={(currentPage - 1) * pageSize + index + 1}
+                priority={currentPage === 1 && index < 3}
+                featured={false}
+                key={outcome.id}
+              />
+            ))}
           </div>
         ) : (
           <div className="home-empty">
@@ -364,6 +295,13 @@ export function OutcomesPage({ rankingFixture }: { rankingFixture?: WeeklySource
             <div>{availableCategories.slice(0, 3).map((candidate) => <button type="button" onClick={() => { changeQuery(""); changeCategory(candidate); }} key={candidate}>{outcomeCategoryLabels[candidate]}</button>)}</div>
           </div>
         )}
+
+        <Pagination page={currentPage} total={filteredOutcomes.length} onPageChange={changePage} />
+        {filteredOutcomes.length ? (
+          <p className="home-pagination-summary">
+            {(currentPage - 1) * pageSize + 1}–{Math.min(currentPage * pageSize, filteredOutcomes.length)} of {filteredOutcomes.length}
+          </p>
+        ) : null}
       </section>
     </SiteShell>
   );

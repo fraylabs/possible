@@ -1,6 +1,6 @@
 # Possible
 
-Possible is an open-source directory connecting original requests, full execution prompts, execution provenance, and representative outcomes.
+Possible is an open-source directory of inspectable results and exact reusable prompts.
 
 Before editing:
 
@@ -9,8 +9,10 @@ jj status
 npm run outcomes:check
 ```
 
-Keep each Outcome in `packages/catalog/src/outcomes/<slug>/outcome.json` with optional `media/`, `inputs/`, and `artifacts/` beside it. `outcome.json` is the only authored source for title, summary, original prompt, full execution prompt, execution provenance, author, optional Products, optional Skills, actual input files, downloadable artifacts, and optional preview media.
+One Outcome owns one folder under `packages/catalog/src/outcomes/<slug>/` with required `outcome.json`, `outcome.md`, and `prompt.md`. Optional media, inputs, and artifacts live beside them and must be referenced.
 
-Do not add a pack compiler, authored expectations, workstreams, lifecycle, trust, evidence, snapshots, a separate registry, or execution ceremony. The website, MCP, and publications are projections of the same generated catalog. The optional `$possible` skill may prepare a new execution prompt at run time; it must not mutate published records.
+Keep the separation exact: human title and explanation in `outcome.md`; full prompt in `prompt.md`; models, Products, Skills, requirements, provenance, and file metadata in `outcome.json`. Do not reintroduce a pack compiler, authored expectations, workstreams, lifecycle, or execution ceremony.
+
+Publishers own their canonical public GitHub repository or domain source. Possible stores immutable discovery snapshots but does not host publisher accounts. The optional `$possible` Skill may prepare a new prompt at run time; it must not rewrite a published prompt.
 
 Run `npm run outcomes:generate` after catalog edits and `npm run check` before handoff. Use Jujutsu. Do not push or deploy unless explicitly requested.

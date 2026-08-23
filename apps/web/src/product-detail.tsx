@@ -23,7 +23,7 @@ type ProductGalleryEntry = {
   title: string;
   summary?: string | undefined;
   prompt: string;
-  sourceUrl: string;
+  sourceUrl?: string | undefined;
   outcomeUrl?: string | undefined;
   provider: string;
   model?: string | undefined;
@@ -40,15 +40,16 @@ type ProductGalleryEntry = {
 
 type DirectoryOutcomeRow = {
   id: string;
-  source_url: string;
   title: string;
+  summary: string;
   prompt: string;
-  result_media_url: string;
+  result_media_url: string | null;
   poster_url: string | null;
   model: string | null;
   author_name: string | null;
   author_url: string | null;
   linked_company_name: string;
+  publication_kind: "official" | "community";
 };
 
 type DirectoryPage = {
@@ -57,10 +58,11 @@ type DirectoryPage = {
   nextOffset?: number | undefined;
 };
 
-function inferMediaKind(url: string, productCategory: string): GalleryKind {
-  if (/\.(?:mp4|webm|mov)(?:$|\?)/i.test(url) || productCategory === "video") return "video";
-  if (/\.(?:wav|mp3|m4a|ogg|flac)(?:$|\?)/i.test(url) || productCategory === "audio") return "audio";
-  if (/\.(?:step|stp|stl|3mf|glb|gltf)(?:$|\?)/i.test(url) || productCategory === "3d" || productCategory === "robotics") return "cad";
+function inferMediaKind(url: string | null, productCategory: string): GalleryKind {
+  const mediaUrl = url ?? "";
+  if (/\.(?:mp4|webm|mov)(?:$|\?)/i.test(mediaUrl) || productCategory === "video") return "video";
+  if (/\.(?:wav|mp3|m4a|ogg|flac)(?:$|\?)/i.test(mediaUrl) || productCategory === "audio") return "audio";
+  if (/\.(?:step|stp|stl|3mf|glb|gltf)(?:$|\?)/i.test(mediaUrl) || productCategory === "3d" || productCategory === "robotics") return "cad";
   return "image";
 }
 
@@ -73,6 +75,7 @@ function fromCatalogEntry(entry: OutcomeCatalogEntry): ProductGalleryEntry {
   const preview = outcome.preview;
   const image = preview?.images?.find(({ cover }) => cover) ?? preview?.images?.[0];
   const kind: GalleryKind = preview?.video ? "video" : image ? "image" : preview?.audio ? "audio" : preview?.cad ? "cad" : "prompt";
+  const executionModel = outcome.models.find(({ role }) => role === "execution");
   return {
     id: `catalog:${entry.slug}`,
     title: outcome.title,
@@ -80,8 +83,8 @@ function fromCatalogEntry(entry: OutcomeCatalogEntry): ProductGalleryEntry {
     prompt: outcome.executionPrompt,
     sourceUrl: entry.sourceUrl,
     outcomeUrl: outcomeHref(entry),
-    provider: outcome.execution.provider,
-    model: outcome.execution.model,
+    provider: executionModel?.provider ?? outcome.author.name,
+    model: executionModel?.model,
     authorName: outcome.author.name,
     authorUrl: outcome.author.url,
     kind,
@@ -97,16 +100,17 @@ function fromDirectoryRow(row: DirectoryOutcomeRow, productCategory: string): Pr
     id: row.id,
     databaseId: row.id,
     title: row.title,
+    summary: row.summary,
     prompt: row.prompt,
-    sourceUrl: row.source_url,
+    outcomeUrl: `/outcomes/view/?id=${row.id}`,
     provider: row.linked_company_name,
     model: row.model ?? undefined,
     authorName: row.author_name ?? undefined,
     authorUrl: row.author_url ?? undefined,
     kind: inferMediaKind(row.result_media_url, productCategory),
-    mediaUrl: row.result_media_url,
+    mediaUrl: row.result_media_url ?? undefined,
     posterUrl: row.poster_url ?? undefined,
-    sourceKind: "community",
+    sourceKind: row.publication_kind,
   };
 }
 
@@ -168,7 +172,7 @@ function OutcomeViewer({ entry, onClose }: { entry: ProductGalleryEntry; onClose
             <header><h3 id="product-viewer-prompt-heading">Exact prompt</h3><CopyButton label="Copy prompt" value={entry.prompt} onCopied={() => recordOutcomeCopy(entry.databaseId)} /></header>
             <pre><code>{entry.prompt}</code></pre>
           </section>
-          <nav className="product-viewer-links" aria-label="Outcome links">{entry.outcomeUrl ? <a href={entry.outcomeUrl}>Open Outcome <span>↗</span></a> : null}<a href={entry.sourceUrl} target="_blank" rel="noreferrer">View source <span>↗</span></a></nav>
+          <nav className="product-viewer-links" aria-label="Outcome links">{entry.outcomeUrl ? <a href={entry.outcomeUrl}>Open Outcome <span>↗</span></a> : null}{entry.sourceUrl ? <a href={entry.sourceUrl} target="_blank" rel="noreferrer">View source <span>↗</span></a> : null}</nav>
         </aside>
       </section>
     </div>
@@ -216,19 +220,6 @@ function ListingDetailContent({ id, kind }: { id: string; kind: ListingKind }) {
     category: "skill",
   } : undefined;
   const client = useMemo(() => getSupabaseBrowserClient(), []);
-  const managerQuery = useQuery({
-    queryKey: ["listing-manager", kind, product?.company.id, skill?.repository, skill?.directory],
-    enabled: Boolean(client && listing),
-    queryFn: async () => {
-      if (!client) return null;
-      let request = client.from("listing_claim_directory").select("account_handle,account_name").eq("status", "claimed").eq("target_type", kind === "product" ? "company" : "skill");
-      request = kind === "product" && product ? request.eq("company_slug", product.company.id) : skill ? request.eq("skill_repository", skill.repository).eq("skill_directory", skill.directory) : request;
-      const { data, error } = await request.maybeSingle();
-      if (error) return null;
-      // SAFETY: the explicit listing_claim_directory select list matches this manager summary.
-      return data as { account_handle: string; account_name: string } | null;
-    },
-  });
   const bundledOutcomes = useMemo(() => product ? getProductOutcomes(product.id).map(fromCatalogEntry) : skill ? getSkillOutcomes(skill.id).map(fromCatalogEntry) : [], [product, skill]);
   const [query, setQuery] = useState("");
   const [directoryQuery, setDirectoryQuery] = useState("");
@@ -258,10 +249,10 @@ function ListingDetailContent({ id, kind }: { id: string; kind: ListingKind }) {
     queryFn: async ({ pageParam }): Promise<DirectoryPage> => {
       if (!client || !product) throw new Error("The public Outcome directory is unavailable.");
       const productSlug = product.id.split("/").at(-1);
-      let request = client.from("product_outcome_directory").select("id,source_url,title,prompt,result_media_url,poster_url,model,author_name,author_url,linked_company_name", { count: "exact" }).eq("linked_product_slug", productSlug);
+      let request = client.from("product_outcome_directory").select("id,title,summary,prompt,result_media_url,poster_url,model,author_name,author_url,linked_company_name,publication_kind", { count: "exact" }).eq("linked_product_slug", productSlug);
       const safeSearch = sanitizeDirectorySearch(directoryQuery);
       if (safeSearch) request = request.or(`title.ilike.%${safeSearch}%,prompt.ilike.%${safeSearch}%,model.ilike.%${safeSearch}%,author_name.ilike.%${safeSearch}%`);
-      const { data, count, error } = await request.order("source_published_at", { ascending: false, nullsFirst: false }).order("id").range(pageParam, pageParam + pageSize - 1);
+      const { data, count, error } = await request.order("published_at", { ascending: false }).order("id").range(pageParam, pageParam + pageSize - 1);
       if (error) throw new Error(error.message);
       // SAFETY: the explicit product_outcome_directory select list matches DirectoryOutcomeRow.
       const rows = (data ?? []) as DirectoryOutcomeRow[];
@@ -278,31 +269,12 @@ function ListingDetailContent({ id, kind }: { id: string; kind: ListingKind }) {
 
   const directoryPages = directoryFeed.data?.pages;
   const directoryOutcomes = useMemo(() => directoryPages?.flatMap((page) => page.outcomes) ?? [], [directoryPages]);
-  const endorsementQuery = useQuery({
-    queryKey: ["outcome-endorsements", directoryOutcomes.map(({ id }) => id).join(",")],
-    enabled: Boolean(client && directoryOutcomes.length),
-    queryFn: async () => {
-      if (!client || !directoryOutcomes.length) return [];
-      const { data, error } = await client.from("outcome_endorsement_directory").select("outcome_id,official_by_name,official_by_handle").in("outcome_id", directoryOutcomes.map(({ id }) => id));
-      // The public gallery remains Community-only until the additive claims migration exists.
-      if (error) return [];
-      // SAFETY: the explicit outcome_endorsement_directory select list matches this endorsement summary.
-      return data as Array<{ outcome_id: string; official_by_name: string; official_by_handle: string }>;
-    },
-  });
-  const endorsedDirectoryOutcomes = useMemo(() => {
-    const endorsements = new Map((endorsementQuery.data ?? []).map((endorsement) => [endorsement.outcome_id, endorsement]));
-    return directoryOutcomes.map((entry) => {
-      const endorsement = endorsements.get(entry.id);
-      return endorsement ? { ...entry, sourceKind: "official" as const, officialByName: endorsement.official_by_name, officialByHandle: endorsement.official_by_handle } : entry;
-    });
-  }, [directoryOutcomes, endorsementQuery.data]);
   const directoryTotal = directoryFeed.data?.pages[0]?.total ?? 0;
   const unfilteredDirectoryTotal = directoryAvailability.data ?? (directoryQuery === "" ? directoryTotal : undefined);
   const hasDirectoryOutcomes = !product || !client ? false : unfilteredDirectoryTotal === undefined ? directoryAvailability.isError ? false : null : unfilteredDirectoryTotal > 0;
   const directoryLoading = Boolean(product) && (directoryAvailability.isPending || directoryFeed.isPending);
 
-  const outcomes = useMemo(() => hasDirectoryOutcomes === true ? endorsedDirectoryOutcomes : hasDirectoryOutcomes === false ? bundledOutcomes : [], [bundledOutcomes, endorsedDirectoryOutcomes, hasDirectoryOutcomes]);
+  const outcomes = useMemo(() => hasDirectoryOutcomes === true ? directoryOutcomes : hasDirectoryOutcomes === false ? bundledOutcomes : [], [bundledOutcomes, directoryOutcomes, hasDirectoryOutcomes]);
   const availableKinds = useMemo(() => kindOrder.filter((kind) => outcomes.some((entry) => entry.kind === kind)), [outcomes]);
   const filteredOutcomes = useMemo(() => outcomes.filter((entry) => {
     if (sourceFilter !== "all" && entry.sourceKind !== sourceFilter) return false;
@@ -338,7 +310,7 @@ function ListingDetailContent({ id, kind }: { id: string; kind: ListingKind }) {
     }
     let cancelled = false;
     const productSlug = product.id.split("/").at(-1);
-    void client.from("product_outcome_directory").select("id,source_url,title,prompt,result_media_url,poster_url,model,author_name,author_url,linked_company_name").eq("linked_product_slug", productSlug).eq("id", selectedId).maybeSingle().then(({ data, error }) => {
+    void client.from("product_outcome_directory").select("id,title,summary,prompt,result_media_url,poster_url,model,author_name,author_url,linked_company_name,publication_kind").eq("linked_product_slug", productSlug).eq("id", selectedId).maybeSingle().then(({ data, error }) => {
       if (cancelled || error || !data) return;
       // SAFETY: the explicit product_outcome_directory select list matches DirectoryOutcomeRow.
       setSelectedFromDirectory(fromDirectoryRow(data as DirectoryOutcomeRow, product.category));
@@ -359,8 +331,6 @@ function ListingDetailContent({ id, kind }: { id: string; kind: ListingKind }) {
   const outcomeTotal = hasDirectoryOutcomes ? unfilteredDirectoryTotal ?? directoryTotal : bundledOutcomes.length;
   const officialCount = outcomes.filter((entry) => entry.sourceKind === "official").length;
   const communityCount = outcomes.filter((entry) => entry.sourceKind === "community").length;
-  const manager = managerQuery.data;
-  const claimTarget = kind === "product" && product ? `company:${product.company.id}` : skill ? `skill:${skill.id}` : "";
 
   function openOutcome(entry: ProductGalleryEntry) {
     const url = new URL(window.location.href);
@@ -393,7 +363,6 @@ function ListingDetailContent({ id, kind }: { id: string; kind: ListingKind }) {
           <div className="product-profile-actions">
             <nav className="product-profile-links" aria-label={`${listing.name} links`}><a href={listing.website} target="_blank" rel="noreferrer">{kind === "product" ? "Website" : "Open Skill"} <span>↗</span></a>{listing.docsUrl !== listing.website ? <a href={listing.docsUrl} target="_blank" rel="noreferrer">Documentation <span>↗</span></a> : null}</nav>
             <div className="product-access-note"><span>{listing.category}</span><span>{outcomeTotal} Outcome{outcomeTotal === 1 ? "" : "s"}</span></div>
-            {manager ? <a className="product-manager-link" href={`/${manager.account_handle}`}>Managed by {manager.account_name} <span>↗</span></a> : <a className="product-claim-link" href={`/dashboard?tab=claims&target=${encodeURIComponent(claimTarget)}`}>Claim this {kind} <span>↗</span></a>}
           </div>
         </header>
 

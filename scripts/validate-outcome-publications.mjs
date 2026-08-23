@@ -5,7 +5,7 @@ import { outcomeCatalog } from "../packages/catalog/dist/index.js";
 const webDist = new URL("../apps/web/out/", import.meta.url);
 const text = (relative) => readFile(new URL(relative, webDist), "utf8");
 const index = JSON.parse(await text("outcomes/index.json"));
-assert.equal(index.schemaVersion, 2);
+assert.equal(index.schemaVersion, 3);
 assert.deepEqual(index.outcomes.map(({ slug }) => slug), outcomeCatalog.map(({ slug }) => slug));
 
 for (const entry of outcomeCatalog) {
@@ -13,8 +13,9 @@ for (const entry of outcomeCatalog) {
   assert.equal(publication.slug, entry.slug);
   assert.equal(publication.originalPrompt, entry.outcome.originalPrompt);
   assert.equal(publication.executionPrompt, entry.outcome.executionPrompt);
-  assert.deepEqual(publication.execution, entry.outcome.execution);
-  assert.deepEqual(publication.source, entry.outcome.source);
+  assert.equal(publication.aboutMarkdown, entry.outcome.aboutMarkdown);
+  assert.deepEqual(publication.models, entry.outcome.models);
+  assert.deepEqual(publication.requirements, entry.outcome.requirements);
   assert.deepEqual(publication.inputs, entry.outcome.inputs);
   assert.deepEqual(publication.artifacts, entry.outcome.artifacts);
   if (entry.outcome.originalPrompt) assert.equal(await text(`outcomes/${entry.slug}/request.txt`), `${entry.outcome.originalPrompt}\n`);

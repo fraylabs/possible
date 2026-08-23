@@ -6,7 +6,7 @@ const siteUpdatedAt = "2026-08-21";
 export const dynamic = "force-static";
 const staticPaths = [
   "/",
-  "/fray-labs/",
+  "/publish/",
   "/docs/",
   "/docs/how-to-use/",
   "/docs/authoring/",

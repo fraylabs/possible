@@ -1,84 +1,39 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://possible.sh/schemas/outcome.schema.json",
-  "title": "Possible Outcome",
-  "description": "One concrete result with the exact prompt that produced it, available provenance, and optional inputs, artifacts, Products, Skills, and preview media.",
+  "title": "Possible Outcome manifest",
+  "description": "Machine-readable metadata beside the required outcome.md and prompt.md files.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schemaVersion", "title", "summary", "executionPrompt", "execution", "author"],
+  "required": ["schemaVersion", "slug", "files", "authoredAt", "author", "models", "requirements"],
   "properties": {
-    "schemaVersion": { "const": 2 },
-    "title": {
-      "type": "string",
-      "minLength": 1,
-      "description": "A specific, human-readable name for the result."
+    "schemaVersion": { "const": 3 },
+    "slug": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+    "files": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["about", "prompt"],
+      "properties": {
+        "about": { "const": "outcome.md" },
+        "prompt": { "const": "prompt.md" }
+      }
     },
-    "summary": {
-      "type": "string",
-      "minLength": 1,
-      "description": "One plain-language sentence describing what the prompt produces."
-    },
-    "originalPrompt": {
-      "type": "string",
-      "minLength": 1,
-      "description": "The human's original request, preserved verbatim."
-    },
-    "executionPrompt": {
-      "type": "string",
-      "minLength": 1,
-      "description": "The complete one-shot prompt sent to the working agent."
-    },
-    "execution": { "$ref": "#/$defs/execution" },
+    "authoredAt": { "oneOf": [{ "type": "string", "format": "date-time" }, { "type": "null" }] },
     "author": { "$ref": "#/$defs/author" },
-    "source": { "$ref": "#/$defs/source" },
-    "skills": {
-      "type": "array",
-      "minItems": 1,
-      "items": { "$ref": "#/$defs/skill" }
-    },
+    "models": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/model" } },
+    "requirements": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+    "skills": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/skill" } },
     "products": {
       "type": "array",
       "minItems": 1,
       "uniqueItems": true,
-      "items": {
-        "type": "string",
-        "pattern": "^[a-z0-9][a-z0-9-]*/[a-z0-9][a-z0-9-]*$"
-      }
+      "items": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*/[a-z0-9][a-z0-9-]*$" }
     },
-    "inputs": {
-      "type": "array",
-      "minItems": 1,
-      "items": { "$ref": "#/$defs/file" }
-    },
-    "artifacts": {
-      "type": "array",
-      "minItems": 1,
-      "items": { "$ref": "#/$defs/file" }
-    },
+    "inputs": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/file" } },
+    "artifacts": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/file" } },
     "preview": { "$ref": "#/$defs/preview" }
   },
   "$defs": {
-    "execution": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["provider", "model"],
-      "properties": {
-        "provider": { "type": "string", "minLength": 1 },
-        "agent": { "type": "string", "minLength": 1 },
-        "model": { "type": "string", "minLength": 1 },
-        "timestamp": { "type": "string", "format": "date-time" }
-      }
-    },
-    "source": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["type", "url"],
-      "properties": {
-        "type": { "enum": ["official-gallery", "official-example", "community"] },
-        "url": { "type": "string", "format": "uri", "pattern": "^https://" },
-        "publishedAt": { "type": "string", "format": "date" }
-      }
-    },
     "author": {
       "type": "object",
       "additionalProperties": false,
@@ -88,23 +43,25 @@
         "url": { "type": "string", "format": "uri", "pattern": "^https://" }
       }
     },
+    "model": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["provider", "model", "role"],
+      "properties": {
+        "provider": { "type": "string", "minLength": 1 },
+        "model": { "type": "string", "minLength": 1 },
+        "agent": { "type": "string", "minLength": 1 },
+        "role": { "enum": ["authorship", "execution", "review"] }
+      }
+    },
     "skill": {
       "type": "object",
       "additionalProperties": false,
       "required": ["repository", "lastReviewedCommit", "directory"],
       "properties": {
-        "repository": {
-          "type": "string",
-          "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$"
-        },
-        "lastReviewedCommit": {
-          "type": "string",
-          "pattern": "^(?:[0-9a-f]{40}|[0-9a-f]{64})$"
-        },
-        "directory": {
-          "type": "string",
-          "pattern": "^(?:\\.|(?!.*(?:^|/)\\.\\.?($|/))[a-z0-9._-]+(?:/[a-z0-9._-]+)*)$"
-        }
+        "repository": { "type": "string", "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$" },
+        "lastReviewedCommit": { "type": "string", "pattern": "^(?:[0-9a-f]{40}|[0-9a-f]{64})$" },
+        "directory": { "type": "string", "pattern": "^(?:\\.|(?!.*(?:^|/)\\.\\.?($|/))[a-z0-9._-]+(?:/[a-z0-9._-]+)*)$" }
       }
     },
     "file": {
@@ -166,10 +123,7 @@
         "preview": { "type": "string", "minLength": 1 },
         "poster": { "type": "string", "minLength": 1 },
         "caption": { "type": "string", "minLength": 1 },
-        "downloads": {
-          "type": "array",
-          "items": { "$ref": "#/$defs/cadDownload" }
-        }
+        "downloads": { "type": "array", "items": { "$ref": "#/$defs/cadDownload" } }
       }
     },
     "preview": {
@@ -177,11 +131,7 @@
       "additionalProperties": false,
       "properties": {
         "description": { "type": "string", "minLength": 1 },
-        "images": {
-          "type": "array",
-          "maxItems": 5,
-          "items": { "$ref": "#/$defs/image" }
-        },
+        "images": { "type": "array", "maxItems": 5, "items": { "$ref": "#/$defs/image" } },
         "video": { "$ref": "#/$defs/video" },
         "audio": { "$ref": "#/$defs/audio" },
         "cad": { "$ref": "#/$defs/cad" }

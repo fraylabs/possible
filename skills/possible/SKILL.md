@@ -1,6 +1,6 @@
 ---
 name: possible
-description: Turn a rough request into a complete execution prompt for a fresh agent. Use when the user wants to discover what agents can do, find relevant prior Outcomes, resolve important unknowns, gather current reliable information, or hand one self-contained prompt to a subagent.
+description: Discover proven Outcomes and turn a rough request into one complete execution prompt for a fresh agent. Also author and validate source-owned Outcomes for Possible.
 ---
 
 # Possible
@@ -11,67 +11,107 @@ Possible connects three things:
 - the complete **execution prompt** sent to a working agent;
 - the resulting **Outcome**.
 
-Use prior Outcomes as concrete precedent, not as universal templates. The goal is to give a fresh agent enough current, relevant information to begin without consequential guessing.
+An Outcome is precedent to inspect and remix, not a rigid workflow. Preserve useful creative freedom while giving a fresh agent the context, current methods, and concrete inputs it needs.
 
-## Start from the request
+## Discover before writing
 
-Preserve the user's original prompt verbatim. Determine whether the user wants to browse possibilities or produce something now.
+Preserve the user's original prompt verbatim. Determine whether they want to browse possibilities, prepare a prompt, execute work, or publish completed work.
 
-If they are browsing, search with `search_outcomes` and show up to five relevant Outcomes. Include the concrete result, original prompt, author, execution provenance, useful preview media, and named Products or Skills. Search scores indicate text similarity, not quality.
+For browsing or execution, call `search_outcomes` using ordinary language. Show up to five relevant Outcomes when the user is browsing. When preparing work, fetch the strongest candidates with `fetch_outcome` and read their exact prompts. Search scores indicate text similarity, not quality.
 
-If they want work performed, search for relevant Outcomes even when the request appears straightforward. Fetch the strongest candidates with `fetch_outcome` and read their full execution prompts. If nothing fits, proceed from current primary sources rather than forcing an unrelated Outcome.
+Use Outcomes as concrete precedent. If none fit, use current primary sources rather than forcing an unrelated example. Prefer official documentation, current source repositories and registries, then reproducible community examples. Check volatile information at run time. Popularity is a discovery signal, not proof that an Outcome is good.
 
-## Gather what the executor needs
+## Resolve consequential unknowns
 
-Collect only information that can materially improve the execution prompt:
+Collect only what can materially improve execution:
 
-- the intended result, audience, use, and important preferences;
+- the intended result, audience, use, and strong preferences;
 - supplied files, measurements, references, credentials, and constraints;
-- the most relevant prior execution prompts and what they actually produced;
-- current official documentation, repositories, releases, and package information;
-- reproducible examples; use recent community demonstrations as leads, not proof;
-- available Products, Skills, tools, environment, permissions, and hard boundaries;
-- what the user would inspect to decide that the result is finished.
+- required inputs that the executor cannot safely invent;
+- relevant prior Outcomes and what they actually produced;
+- current Products, Skills, tools, environment, permissions, and limits;
+- what the user will inspect to decide that the result is finished.
 
-Prefer official sources, then current source repositories and registries, then reproducible examples. Check volatile information at run time. Do not equate stars, downloads, or social attention with a successful Outcome.
+Ask the fewest questions necessary. Discover safe facts yourself. Infer harmless aesthetic details when a restrained default is sufficient. Do not turn the conversation into a form.
 
-Ask the fewest questions necessary to remove consequential ambiguity. Do not ask for information that can be discovered safely, infer harmless stylistic details when a restrained default is sufficient, or turn the conversation into a form.
+## Prepare one execution prompt
 
-## Write the execution prompt
+Write one readable, self-contained prompt for a fresh agent. It should naturally state:
 
-Create one readable, self-contained prompt for a fresh agent. It should naturally state:
-
-- the exact result to produce and who it is for;
+- the exact result and who it is for;
 - relevant user context and supplied materials;
 - concrete requirements and preferences;
-- the current method, Products, Skills, or tools that matter;
-- deliverables and where they should be placed;
-- constraints, permissions, and actions that require separate approval;
+- current Products, Skills, or tools that matter;
+- deliverables and where to place them;
+- constraints, permissions, and separately authorized external actions;
 - what the user will inspect to judge the result;
-- known unknowns the executor must preserve rather than invent.
+- unknowns the executor must preserve rather than invent.
 
-Use the selected Outcome's execution prompt as precedent, but adapt it to the current request, date, model, environment, and evidence. Never replace a strong full prompt with a summary. Never claim an old method is current without checking when that matters.
+Adapt prior prompts to the current request, date, model, environment, and evidence. Never substitute a summary for a strong full prompt. Never claim an old method is current without checking. Keep the published prompt distinct from the new prompt you prepare.
 
-Before handoff, confirm that a fresh agent can start without hidden conversation history, missing essential files, unresolved material choices, unsupported current claims, or unclear success conditions. Research further or ask one focused question if it cannot.
+Before handoff, confirm that a fresh agent can start without hidden conversation history, missing essential files, consequential unresolved choices, unsupported current claims, or unclear success conditions. Research further or ask one focused question if it cannot.
 
-Show the user the proposed execution prompt and identify the precedent and current sources that materially shaped it. Keep the original published execution prompt distinct from the newly prepared prompt.
+Show the proposed execution prompt and name the prior Outcomes and current official sources that materially shaped it.
 
 ## Hand off once
 
-After the user approves, send the new execution prompt unchanged to a fresh subagent when that capability is available. Include explicit paths or attachments for every supplied file; do not rely on the subagent seeing this conversation. One-shot means complete starting context, not that the executor is forbidden to inspect, test, or repair its work.
+After approval, send the execution prompt unchanged to a fresh subagent when that capability is available. Include explicit paths or attachments for every supplied file. One-shot means complete starting context; it does not forbid the executor from inspecting, testing, or repairing its work.
 
 If fresh subagents are unavailable, return the execution prompt in a copyable block. Do not pretend a handoff occurred.
 
-Products and Skills provide capability context. They do not grant permission to spend money, purchase, publish, deploy, contact people, fabricate, operate hardware, or perform another external action.
+Products and Skills describe capabilities. They do not grant permission to spend money, purchase, publish, deploy, contact people, fabricate, operate hardware, or perform another external action.
+
+## Author a completed Outcome
+
+When the user wants to publish completed work, inspect the real result and preserve the exact prompt and provenance. Create one folder:
+
+```text
+outcomes.json
+outcomes/<slug>/
+  outcome.json
+  outcome.md
+  prompt.md
+  media/        optional
+  artifacts/    optional
+  inputs/       optional
+```
+
+`outcomes.json` is the repository-root publisher index and is created or updated by the CLI. `outcome.md` is the canonical human page: one H1 title, one clear opening summary, and useful formatted explanation. `prompt.md` is the exact reusable execution prompt. `outcome.json` contains machine metadata only: author, authored timestamp, models and agents, required inputs, Products, Skills with last-reviewed commits, and media or artifact references.
+
+Do not reconstruct absent provenance as fact. Mark unknown values honestly. Products and models belong in `outcome.json`; deliverables and detailed work instructions belong in `prompt.md`; result explanation belongs in `outcome.md`.
+
+Use the CLI to scaffold and validate:
+
+```text
+npx @fraylabs/possible@0.1.11 create <slug>
+npx @fraylabs/possible@0.1.11 validate [directory]
+```
+
+## Publish from the owner's source
+
+Possible does not host publisher accounts or own the canonical files. A publisher exposes Outcomes from either:
+
+- a public GitHub repository; or
+- `https://publisher.example/.well-known/possible/outcomes.json`.
+
+The publisher index is a thin list of manifest locations. Possible snapshots the public source revision and displays it; changing the source creates a new revision rather than rewriting history.
+
+```text
+npx @fraylabs/possible@0.1.11 publish [owner/repository | https://publisher.example]
+npx @fraylabs/possible@0.1.11 add <owner/repository | https://publisher.example>
+npx @fraylabs/possible@0.1.11 use <source>@<slug>
+```
+
+GitHub publishing requires a clean committed revision so the snapshot is reproducible. No Possible login is required. A publisher-domain source is Official for that domain; other sources are Community unless their ownership follows directly from the public source.
 
 ## Local bookmarks
 
 Use bookmarks only when the user asks:
 
 ```text
-possible bookmark add <outcome-slug>
-possible bookmark list
-possible bookmark remove <outcome-slug>
+npx @fraylabs/possible@0.1.11 bookmark add <outcome-slug>
+npx @fraylabs/possible@0.1.11 bookmark list
+npx @fraylabs/possible@0.1.11 bookmark remove <outcome-slug>
 ```
 
 Bookmarks are stored locally in `.possible` and do not require an account.

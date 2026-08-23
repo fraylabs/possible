@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "publisher": {
+    "name": "Fray Labs",
+    "url": "https://github.com/fraylabs"
+  },
+  "outcomes": [
+    { "slug": "functional-hardware-prototype", "url": "./outcomes/functional-hardware-prototype/outcome.json" },
+    { "slug": "html-css-animated-product-launch-film", "url": "./outcomes/html-css-animated-product-launch-film/outcome.json" },
+    { "slug": "original-strudel-soundtrack", "url": "./outcomes/original-strudel-soundtrack/outcome.json" },
+    { "slug": "polished-editable-powerpoint-presentation", "url": "./outcomes/polished-editable-powerpoint-presentation/outcome.json" },
+    { "slug": "robot-digital-prototype", "url": "./outcomes/robot-digital-prototype/outcome.json" },
+    { "slug": "split-vibrotactile-headrest-cad-package", "url": "./outcomes/split-vibrotactile-headrest-cad-package/outcome.json" }
+  ]
+}

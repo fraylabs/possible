@@ -18,11 +18,31 @@ const fixture = async () => {
 };
 afterEach(async () => Promise.all(temporaryDirectories.splice(0).map((directory) => rm(directory, { recursive: true, force: true }))));
 
-test("the CLI exposes only skill installation and local bookmarks", async () => {
+test("the CLI exposes authoring, source discovery, skill installation, and local bookmarks", async () => {
   const { stdout } = await execute(process.execPath, [cli, "--help"]);
   assert.match(stdout, /possible init/);
   assert.match(stdout, /possible bookmark/);
-  assert.doesNotMatch(stdout, /possible pack|compile|validate|export/);
+  assert.match(stdout, /possible create/);
+  assert.match(stdout, /possible validate/);
+  assert.match(stdout, /possible publish/);
+  assert.match(stdout, /possible add/);
+  assert.match(stdout, /possible use/);
+  assert.doesNotMatch(stdout, /possible pack|compile|export/);
+});
+
+test("create and validate use the three-file Outcome contract", async () => {
+  const project = await fixture();
+  const created = await execute(process.execPath, [cli, "create", "quiet-launch-film"], { cwd: project });
+  assert.match(created.stdout, /Created .*quiet-launch-film/);
+  const folder = join(project, "outcomes", "quiet-launch-film");
+  const manifest = JSON.parse(await readFile(join(folder, "outcome.json"), "utf8"));
+  assert.equal(manifest.schemaVersion, 3);
+  assert.deepEqual(manifest.files, { about: "outcome.md", prompt: "prompt.md" });
+  assert.match(await readFile(join(folder, "outcome.md"), "utf8"), /^# /);
+  assert.ok((await readFile(join(folder, "prompt.md"), "utf8")).trim());
+  const publisherIndex = JSON.parse(await readFile(join(project, "outcomes.json"), "utf8"));
+  assert.deepEqual(publisherIndex.outcomes, [{ slug: "quiet-launch-film", url: "./outcomes/quiet-launch-film/outcome.json" }]);
+  assert.equal((await execute(process.execPath, [cli, "validate"], { cwd: project })).stdout, "Validated 1 Outcome.\n");
 });
 
 test("init installs the small optional prompt-preparation skill", async () => {

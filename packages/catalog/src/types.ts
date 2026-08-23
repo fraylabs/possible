@@ -9,17 +9,13 @@ export interface OutcomeAuthor {
   url: string;
 }
 
-export interface OutcomeExecution {
+export type OutcomeModelRole = "authorship" | "execution" | "review";
+
+export interface OutcomeModel {
   provider: string;
   model: string;
   agent?: string;
-  timestamp?: string;
-}
-
-export interface OutcomeSource {
-  type: "official-gallery" | "official-example" | "community";
-  url: string;
-  publishedAt?: string;
+  role: OutcomeModelRole;
 }
 
 export type CompanyId = string;
@@ -100,20 +96,32 @@ export interface OutcomeFile {
   format?: string;
 }
 
-export interface Outcome {
-  schemaVersion: 2;
-  title: string;
-  summary: string;
-  originalPrompt?: string;
-  executionPrompt: string;
-  execution: OutcomeExecution;
+export interface OutcomeFiles {
+  about: "outcome.md";
+  prompt: "prompt.md";
+}
+
+export interface OutcomeManifest {
+  schemaVersion: 3;
+  slug: string;
+  files: OutcomeFiles;
+  authoredAt: string | null;
   author: OutcomeAuthor;
-  source?: OutcomeSource;
+  models: OutcomeModel[];
+  requirements: string[];
   skills?: SkillReference[];
   products?: ProductId[];
   inputs?: OutcomeFile[];
   artifacts?: OutcomeFile[];
   preview?: OutcomePreview;
+}
+
+export interface Outcome extends OutcomeManifest {
+  title: string;
+  summary: string;
+  aboutMarkdown: string;
+  executionPrompt: string;
+  originalPrompt?: string;
 }
 
 export interface OutcomeCatalogEntry {

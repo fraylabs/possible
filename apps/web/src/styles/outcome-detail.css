@@ -86,6 +86,39 @@
 .pack-readable-section--first { padding-top: 0; border-top: 0; }
 .pack-readable-section--first + .pack-use-panel { margin-top: 38px; }
 .pack-use-panel + .pack-readable-section { margin-top: 38px; }
+.pack-use-panel + .outcome-reviews { margin-top: 38px; }
+.outcome-reviews { padding: 34px 0; border-top: 1px solid #2f2f2d; border-bottom: 1px solid #2f2f2d; }
+.outcome-reviews > header { display: flex; justify-content: space-between; gap: 22px; align-items: flex-start; }
+.outcome-reviews > header h2 { margin: 0; font-size: 18px; font-weight: 550; letter-spacing: -.025em; }
+.outcome-reviews > header p { margin: 7px 0 0; color: #85857f; font-size: 11px; }
+.outcome-review-summary { display: flex; gap: 12px; align-items: center; }
+.outcome-review-summary > strong { color: #f2efe8; font-size: 28px; font-weight: 550; line-height: 1; letter-spacing: -.04em; }
+.outcome-review-stars { display: inline-flex; gap: 2px; color: #3f3f3c; font-size: 15px; }
+.outcome-review-stars i { font-style: normal; }
+.outcome-review-stars i[data-filled="true"] { color: #ff7040; }
+.outcome-review-list { margin-top: 25px; border-top: 1px solid #343432; }
+.outcome-review-list article { padding: 18px 0; border-bottom: 1px solid #343432; }
+.outcome-review-list article > header { display: flex; justify-content: space-between; gap: 18px; align-items: center; }
+.outcome-review-list time { color: #777772; font: 8px "DM Mono", monospace; }
+.outcome-review-list p { margin: 10px 0 0; color: #b7b6b0; font-size: 13px; line-height: 1.65; }
+.outcome-review-unavailable { margin: 24px 0 0; padding: 14px 16px; border: 1px solid #393936; border-radius: 8px; background: #151514; color: #85857f; font-size: 11px; }
+.outcome-review-signin { margin-top: 25px; display: grid; grid-template-columns: minmax(0, 1fr) auto; }
+.outcome-review-signin label { min-width: 0; display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; }
+.outcome-review-signin label span { padding: 0 14px; color: #85857f; font: 8px "DM Mono", monospace; text-transform: uppercase; }
+.outcome-review-signin input { min-width: 0; height: 46px; padding: 0 14px; border: 1px solid #393936; border-right: 0; background: #151514; color: #f2efe8; font-size: 12px; }
+.outcome-review-signin button, .outcome-review-form > div > button { min-height: 46px; padding: 0 17px; border: 1px solid #ff5a1f; background: #ff5a1f; color: #151411; cursor: pointer; font: 8px "DM Mono", monospace; text-transform: uppercase; }
+.outcome-review-signin button:disabled, .outcome-review-form button:disabled { cursor: default; opacity: .55; }
+.outcome-review-form { margin-top: 25px; display: grid; gap: 18px; }
+.outcome-review-form fieldset { margin: 0; padding: 0; border: 0; }
+.outcome-review-form legend, .outcome-review-form label > span { margin-bottom: 9px; display: block; color: #85857f; font: 8px "DM Mono", monospace; text-transform: uppercase; }
+.outcome-review-form label small { margin-left: 8px; color: #62625e; font: inherit; }
+.outcome-review-form fieldset > div { display: flex; gap: 5px; }
+.outcome-review-form fieldset button { width: 42px; height: 42px; padding: 0; border: 1px solid #393936; border-radius: 6px; background: #151514; color: #565652; cursor: pointer; font-size: 20px; }
+.outcome-review-form fieldset button:hover, .outcome-review-form fieldset button[aria-pressed="true"] { border-color: #ff5a1f; color: #ff7040; }
+.outcome-review-form textarea { width: 100%; min-height: 112px; padding: 13px 14px; border: 1px solid #393936; border-radius: 7px; display: block; resize: vertical; background: #151514; color: #f2efe8; font-size: 12px; line-height: 1.6; }
+.outcome-review-form > div { display: flex; gap: 8px; }
+.outcome-review-form > div > button + button { border-color: #393936; background: #151514; color: #aaa9a4; }
+.outcome-review-notice { margin: 13px 0 0; color: #a8ff52; font-size: 10px; }
 .pack-readable-lead, .pack-section-intro { margin: 0; color: #b2b1ab; font-size: 15px; line-height: 1.75; }
 .pack-section-intro { margin-bottom: 28px; font-size: 13px; }
 .pack-readable-list { margin: 0; padding: 0; list-style: none; }
@@ -153,6 +186,17 @@
 .pack-related p { margin: 8px 0 0; color: #85857f; font-size: 11px; line-height: 1.55; }
 .pack-related i { position: absolute; top: 18px; right: 16px; color: #ff7040; font: normal 10px "DM Mono", monospace; }
 
+.dynamic-outcome-loading { padding: 80px 0; color: #85857f; font: 9px "DM Mono", monospace; text-transform: uppercase; }
+.dynamic-outcome-missing { padding: 90px 0 140px; }
+.dynamic-outcome-missing > span { color: #ff7040; font: 9px "DM Mono", monospace; }
+.dynamic-outcome-missing h1 { max-width: 650px; margin: 14px 0 28px; font-size: clamp(40px, 7vw, 72px); line-height: .95; letter-spacing: -.06em; }
+.dynamic-outcome-missing a { color: #ff7040; font: 9px "DM Mono", monospace; text-transform: uppercase; }
+.dynamic-outcome-preview { margin: 0; }
+.dynamic-outcome-preview :where(img, video) { width: 100%; max-height: 720px; border: 1px solid #343432; border-radius: 14px; display: block; object-fit: contain; background: #111; }
+.dynamic-outcome-preview figcaption { margin-top: 10px; color: #85857f; font-size: 11px; }
+.dynamic-outcome-requirements { margin: 0; padding: 0; border-top: 1px solid #343432; list-style: none; }
+.dynamic-outcome-requirements li { padding: 13px 2px; border-bottom: 1px solid #343432; color: #f2efe8; font-size: 13px; }
+
 @media (max-width: 620px) {
   .pack-detail-document { padding-bottom: 64px; }
   .pack-detail-header { padding: 34px 0 28px; }
@@ -163,6 +207,12 @@
   .pack-use-content textarea { min-height: 280px; font-size: 9px; }
   .prompt-actions { grid-template-columns: 1fr; }
   .remix-button { min-height: 44px; border-top: 1px solid #393936; border-left: 0; }
+  .outcome-reviews > header { align-items: center; }
+  .outcome-review-summary { flex-direction: column; gap: 5px; align-items: flex-end; }
+  .outcome-review-signin { grid-template-columns: 1fr; gap: 8px; }
+  .outcome-review-signin label { grid-template-columns: 1fr; gap: 8px; }
+  .outcome-review-signin label span { padding: 0; }
+  .outcome-review-signin input { border-right: 1px solid #393936; border-radius: 6px; }
   .outcome-execution { grid-template-columns: 1fr; }
   .outcome-execution > div:nth-child(odd), .outcome-execution > div:nth-child(even) { padding-inline: 0; border-left: 0; }
   .pack-skill-list a { grid-template-columns: 1fr auto; gap: 6px 14px; }

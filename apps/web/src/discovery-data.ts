@@ -9,9 +9,11 @@ import {
 } from "./public-content";
 import { getSupabaseBrowserClient } from "./supabase";
 
+const outcomeUsageTrackingEnabled = process.env.NEXT_PUBLIC_OUTCOME_USAGE_TRACKING === "true";
+const outcomeReviewsEnabled = process.env.NEXT_PUBLIC_OUTCOME_REVIEWS_ENABLED === "true";
+
 export const outcomeCategories = ["video", "images", "websites", "cad", "slides", "audio", "apps"] as const;
 export type OutcomeCategory = (typeof outcomeCategories)[number];
-export type DiscoveryView = "gallery" | "list";
 
 export function isOutcomeCategory(value: string | null): value is OutcomeCategory {
   return outcomeCategories.some((category) => category === value);
@@ -55,40 +57,32 @@ export interface DiscoveryOutcome {
   sourceUrl?: string;
   category: OutcomeCategory;
   source?: DiscoverySource;
+  sources: DiscoverySource[];
   media?: DiscoveryMedia;
   requirements: string[];
+  publicationKind: "official" | "community";
+  useCount: number;
+  averageRating: number;
+  reviewCount: number;
   publishedAt?: string;
   catalogNumber: number;
-}
-
-export interface WeeklySourceRanking {
-  type: "product" | "skill";
-  id: string;
-  slug: string;
-  name: string;
-  owner: string;
-  logoUrl?: string;
-  href: string;
-  copies: number;
 }
 
 interface PublicOutcomeRow {
   id: string;
   slug: string | null;
-  source_url: string;
   title: string;
   summary: string | null;
   prompt: string;
-  result_media_url: string;
+  result_media_url: string | null;
   poster_url: string | null;
   provider: string | null;
   model: string | null;
   author_name: string | null;
-  source_published_at: string | null;
-  product_id: string | null;
-  product_slug: string | null;
-  product_name: string | null;
-  company_name: string | null;
+  requirements: string[];
+  published_at: string;
+  publication_kind: "official" | "community";
+  source_url: string;
 }
 
 interface LinkedProductRow {
@@ -99,16 +93,23 @@ interface LinkedProductRow {
   linked_company_name: string;
 }
 
-interface RankingRow {
-  source_type: "product" | "skill";
-  source_id: string;
-  source_slug: string;
-  source_name: string;
-  owner_name: string;
-  logo_url: string | null;
-  href: string;
-  copy_count: number | string;
-  total_count: number | string;
+interface LinkedSkillRow {
+  id: string;
+  linked_skill_id: string;
+  linked_skill_name: string;
+  linked_skill_repository: string;
+  linked_skill_directory: string;
+}
+
+interface OutcomeUsageRow {
+  outcome_id: string;
+  use_count: number;
+}
+
+interface OutcomeReviewSummaryRow {
+  outcome_id: string;
+  average_rating: number;
+  review_count: number;
 }
 
 const CATEGORY_ALIASES = new Map<string, OutcomeCategory>([
@@ -226,18 +227,6 @@ function localMedia(entry: OutcomeCatalogEntry, category: OutcomeCategory): Disc
   return undefined;
 }
 
-function localRequirements(entry: OutcomeCatalogEntry): string[] {
-  const labels = new Set<string>();
-  for (const input of entry.outcome.inputs ?? []) {
-    if (input.type === "image") labels.add("Needs an image");
-    else if (input.type === "video") labels.add("Needs a video");
-    else if (input.type === "cad") labels.add("Needs CAD");
-    else if (input.type === "document") labels.add("Needs a document");
-    else labels.add(`Needs ${input.type}`);
-  }
-  return [...labels].slice(0, 2);
-}
-
 function fromCatalogEntry(entry: OutcomeCatalogEntry): DiscoveryOutcome {
   const source = localSource(entry);
   const productCategory = entry.products[0]?.category;
@@ -247,7 +236,7 @@ function fromCatalogEntry(entry: OutcomeCatalogEntry): DiscoveryOutcome {
     productCategory,
   );
   const media = localMedia(entry, category);
-  const publishedAt = entry.outcome.source?.publishedAt ?? entry.outcome.execution.timestamp;
+  const publishedAt = entry.outcome.authoredAt ?? undefined;
   const outcome: DiscoveryOutcome = {
     id: `catalog:${entry.slug}`,
     slug: entry.slug,
@@ -256,10 +245,15 @@ function fromCatalogEntry(entry: OutcomeCatalogEntry): DiscoveryOutcome {
     prompt: entry.outcome.executionPrompt,
     href: outcomeHref(entry),
     category,
-    requirements: localRequirements(entry),
+    sources: source ? [source] : [],
+    requirements: entry.outcome.requirements,
+    publicationKind: "community",
+    useCount: 0,
+    averageRating: 0,
+    reviewCount: 0,
     catalogNumber: entry.catalogNumber,
   };
-  if (entry.outcome.source?.url) outcome.sourceUrl = entry.outcome.source.url;
+  outcome.sourceUrl = entry.sourceUrl;
   if (source) outcome.source = source;
   if (media) outcome.media = media;
   if (publishedAt) outcome.publishedAt = publishedAt;
@@ -268,56 +262,79 @@ function fromCatalogEntry(entry: OutcomeCatalogEntry): DiscoveryOutcome {
 
 export const localDiscoveryOutcomes = publishedOutcomes.map(fromCatalogEntry);
 
-function productSource(row: PublicOutcomeRow, linkedProduct?: LinkedProductRow): DiscoverySource | undefined {
-  const slug = linkedProduct?.linked_product_slug ?? row.product_slug;
-  const name = linkedProduct?.linked_product_name ?? row.product_name;
-  if (!slug || !name) return undefined;
+function productSource(linkedProduct: LinkedProductRow): DiscoverySource {
+  const slug = linkedProduct.linked_product_slug;
   const catalogProduct = publishedProducts.find((product) => product.id.split("/").at(-1) === slug);
   const source: DiscoverySource = {
     kind: "product",
-    id: linkedProduct?.linked_product_id ?? row.product_id ?? slug,
-    name,
-    owner: linkedProduct?.linked_company_name ?? row.company_name ?? "",
+    id: linkedProduct.linked_product_id,
+    name: linkedProduct.linked_product_name,
+    owner: linkedProduct.linked_company_name,
     href: `/products/${slug}`,
   };
   if (catalogProduct?.logoUrl) source.logoUrl = catalogProduct.logoUrl;
   return source;
 }
 
-function fromPublicRow(row: PublicOutcomeRow, linkedProduct: LinkedProductRow | undefined, catalogNumber: number): DiscoveryOutcome {
-  const source = productSource(row, linkedProduct);
+function skillSource(linkedSkill: LinkedSkillRow): DiscoverySource {
+  const catalogSkill = publishedSkills.find((skill) => skill.id === linkedSkill.linked_skill_id);
+  return {
+    kind: "skill",
+    id: linkedSkill.linked_skill_id,
+    name: linkedSkill.linked_skill_name,
+    owner: linkedSkill.linked_skill_repository,
+    href: catalogSkill
+      ? skillHref(catalogSkill)
+      : `https://github.com/${linkedSkill.linked_skill_repository}/tree/HEAD/${linkedSkill.linked_skill_directory}`,
+  };
+}
+
+function fromPublicRow(
+  row: PublicOutcomeRow,
+  sources: DiscoverySource[],
+  catalogNumber: number,
+  useCount: number,
+  averageRating: number,
+  reviewCount: number,
+): DiscoveryOutcome {
+  const source = sources[0];
   const productCategory = source
     ? publishedProducts.find((product) => product.id.split("/").at(-1) === source.href.split("/").at(-1))?.category
     : undefined;
   const category = inferCategory(
     [row.title, row.summary, row.provider, row.model, source?.name].filter(Boolean).join(" "),
-    row.result_media_url,
+    row.result_media_url ?? "",
     productCategory,
   );
-  const isVideo = /\.(mp4|mov|webm)(?:$|\?)/i.test(row.result_media_url);
-  const media: DiscoveryMedia = {
+  const isVideo = Boolean(row.result_media_url && /\.(mp4|mov|webm)(?:$|\?)/i.test(row.result_media_url));
+  const media: DiscoveryMedia | undefined = row.result_media_url ? {
     kind: isVideo ? "video" : "image",
     src: row.result_media_url,
     alt: `${row.title} result`,
     fit: category === "slides" || category === "cad" ? "contain" : "cover",
-  };
-  if (row.poster_url) media.poster = row.poster_url;
+    ...(row.poster_url ? { poster: row.poster_url } : {}),
+  } : undefined;
   const outcome: DiscoveryOutcome = {
     id: `directory:${row.id}`,
     databaseId: row.id,
     title: row.title,
     summary: row.summary?.trim() || "Open the original result and copy its prompt.",
     prompt: row.prompt,
-    href: row.source_url,
-    sourceUrl: row.source_url,
+    href: `/outcomes/view/?id=${row.id}`,
     category,
-    media,
-    requirements: [],
+    sources,
+    requirements: row.requirements,
+    publicationKind: row.publication_kind,
+    useCount,
+    averageRating,
+    reviewCount,
     catalogNumber,
   };
+  if (media) outcome.media = media;
+  outcome.sourceUrl = row.source_url;
   if (row.slug) outcome.slug = row.slug;
   if (source) outcome.source = source;
-  if (row.source_published_at) outcome.publishedAt = row.source_published_at;
+  outcome.publishedAt = row.published_at;
   return outcome;
 }
 
@@ -325,25 +342,51 @@ export async function fetchDiscoveryOutcomes(): Promise<DiscoveryOutcome[]> {
   const client = getSupabaseBrowserClient();
   if (!client) return localDiscoveryOutcomes;
 
-  const [outcomeResult, productResult] = await Promise.all([
+  const [outcomeResult, productResult, skillResult, usageResult, reviewResult] = await Promise.all([
     client
       .from("outcome_directory")
-      .select("id,slug,source_url,title,summary,prompt,result_media_url,poster_url,provider,model,author_name,source_published_at,product_id,product_slug,product_name,company_name")
-      .order("source_published_at", { ascending: false, nullsFirst: false })
+      .select("id,slug,title,summary,prompt,result_media_url,poster_url,provider,model,author_name,requirements,published_at,publication_kind,source_url")
+      .order("published_at", { ascending: false })
       .order("id")
       .range(0, 999),
     client
       .from("product_outcome_directory")
       .select("id,linked_product_id,linked_product_slug,linked_product_name,linked_company_name")
       .range(0, 999),
+    client
+      .from("skill_outcome_directory")
+      .select("id,linked_skill_id,linked_skill_name,linked_skill_repository,linked_skill_directory")
+      .range(0, 999),
+    outcomeUsageTrackingEnabled
+      ? client.rpc("get_outcome_usage_counts")
+      : Promise.resolve({ data: [] as OutcomeUsageRow[], error: null }),
+    outcomeReviewsEnabled
+      ? client.rpc("get_outcome_review_summaries", { target_outcome_id: null })
+      : Promise.resolve({ data: [] as OutcomeReviewSummaryRow[], error: null }),
   ]);
   if (outcomeResult.error) return localDiscoveryOutcomes;
 
-  const linkedProducts = new Map<string, LinkedProductRow>();
+  const linkedSources = new Map<string, DiscoverySource[]>();
   if (!productResult.error) {
     // SAFETY: the explicit product_outcome_directory select list matches LinkedProductRow.
     const productRows = (productResult.data ?? []) as LinkedProductRow[];
-    for (const row of productRows) if (!linkedProducts.has(row.id)) linkedProducts.set(row.id, row);
+    for (const row of productRows) linkedSources.set(row.id, [...(linkedSources.get(row.id) ?? []), productSource(row)]);
+  }
+  if (!skillResult.error) {
+    const skillRows = (skillResult.data ?? []) as LinkedSkillRow[];
+    for (const row of skillRows) linkedSources.set(row.id, [...(linkedSources.get(row.id) ?? []), skillSource(row)]);
+  }
+  const usageCounts = new Map<string, number>();
+  if (!usageResult.error) {
+    // SAFETY: get_outcome_usage_counts returns one public aggregate row per published Outcome.
+    const usageRows = (usageResult.data ?? []) as OutcomeUsageRow[];
+    for (const row of usageRows) usageCounts.set(row.outcome_id, Number(row.use_count));
+  }
+  const reviewSummaries = new Map<string, OutcomeReviewSummaryRow>();
+  if (!reviewResult.error) {
+    // SAFETY: get_outcome_review_summaries returns public aggregate rows without reviewer identities.
+    const reviewRows = (reviewResult.data ?? []) as OutcomeReviewSummaryRow[];
+    for (const row of reviewRows) reviewSummaries.set(row.outcome_id, row);
   }
   // SAFETY: the explicit outcome_directory select list matches PublicOutcomeRow.
   const rows = (outcomeResult.data ?? []) as PublicOutcomeRow[];
@@ -354,16 +397,32 @@ export async function fetchDiscoveryOutcomes(): Promise<DiscoveryOutcome[]> {
   for (const [index, row] of rows.entries()) {
     const local = row.slug ? localBySlug.get(row.slug) : undefined;
     if (local) {
-      const publishedAt = row.source_published_at ?? local.publishedAt;
+      const publishedAt = row.published_at ?? local.publishedAt;
+      const sources = linkedSources.get(row.id) ?? local.sources;
       const hydrated: DiscoveryOutcome = {
         ...local,
         databaseId: row.id,
+        sources,
+        requirements: row.requirements,
+        publicationKind: row.publication_kind,
+        useCount: usageCounts.get(row.id) ?? 0,
+        averageRating: Number(reviewSummaries.get(row.id)?.average_rating ?? 0),
+        reviewCount: Number(reviewSummaries.get(row.id)?.review_count ?? 0),
       };
+      if (sources[0]) hydrated.source = sources[0];
       if (publishedAt) hydrated.publishedAt = publishedAt;
       hydratedLocal.set(local.id, hydrated);
       continue;
     }
-    directoryOutcomes.push(fromPublicRow(row, linkedProducts.get(row.id), localDiscoveryOutcomes.length + index + 1));
+    const reviewSummary = reviewSummaries.get(row.id);
+    directoryOutcomes.push(fromPublicRow(
+      row,
+      linkedSources.get(row.id) ?? [],
+      localDiscoveryOutcomes.length + index + 1,
+      usageCounts.get(row.id) ?? 0,
+      Number(reviewSummary?.average_rating ?? 0),
+      Number(reviewSummary?.review_count ?? 0),
+    ));
   }
 
   return [...directoryOutcomes, ...hydratedLocal.values()];
@@ -390,7 +449,7 @@ export function searchDiscoveryOutcomes(outcomes: readonly DiscoveryOutcome[], q
       const title = outcome.title.toLowerCase();
       const summary = outcome.summary.toLowerCase();
       const prompt = outcome.prompt.toLowerCase();
-      const source = [outcome.source?.name, outcome.source?.owner, outcome.source?.kind].filter(Boolean).join(" ").toLowerCase();
+      const source = outcome.sources.flatMap((item) => [item.name, item.owner, item.kind]).join(" ").toLowerCase();
       const categoryText = `${outcome.category} ${outcomeCategoryLabels[outcome.category].toLowerCase()}`;
       const score = terms.reduce((total, term) => total
         + (title.includes(term) ? 10 : 0)
@@ -403,32 +462,6 @@ export function searchDiscoveryOutcomes(outcomes: readonly DiscoveryOutcome[], q
     .filter(({ score }) => terms.length === 0 || score > 0)
     .sort((left, right) => right.score - left.score || left.outcome.catalogNumber - right.outcome.catalogNumber)
     .map(({ outcome }) => outcome);
-}
-
-export async function fetchWeeklySourceRankings(page: number, pageSize = 10): Promise<{ entries: WeeklySourceRanking[]; total: number }> {
-  const client = getSupabaseBrowserClient();
-  if (!client) return { entries: [], total: 0 };
-  const offset = (Math.max(page, 1) - 1) * pageSize;
-  const { data, error } = await client.rpc("get_source_copy_rankings_7d", { page_size: pageSize, page_offset: offset });
-  if (error) return { entries: [], total: 0 };
-  // SAFETY: the RPC return contract is defined by get_source_copy_rankings_7d.
-  const rows = (data ?? []) as RankingRow[];
-  return {
-    entries: rows.map((row) => {
-      const ranking: WeeklySourceRanking = {
-        type: row.source_type,
-        id: row.source_id,
-        slug: row.source_slug,
-        name: row.source_name,
-        owner: row.owner_name,
-        href: row.href,
-        copies: Number(row.copy_count),
-      };
-      if (row.logo_url) ranking.logoUrl = row.logo_url;
-      return ranking;
-    }),
-    total: rows.length ? Number(rows[0]?.total_count ?? 0) : 0,
-  };
 }
 
 export async function findPublishedOutcomeId(slug: string): Promise<string | undefined> {
@@ -455,10 +488,11 @@ function copyVisitorToken(): string | undefined {
   }
 }
 
-export async function recordOutcomeCopy(outcomeId: string | undefined): Promise<void> {
-  if (!outcomeId) return;
+export async function recordOutcomeCopy(outcomeId: string | undefined): Promise<boolean> {
+  if (!outcomeId || !outcomeUsageTrackingEnabled) return false;
   const client = getSupabaseBrowserClient();
   const clientToken = copyVisitorToken();
-  if (!client || !clientToken) return;
-  await client.rpc("record_outcome_copy", { target_outcome_id: outcomeId, client_token: clientToken });
+  if (!client || !clientToken) return false;
+  const result = await client.rpc("record_outcome_copy", { target_outcome_id: outcomeId, client_token: clientToken });
+  return result.error === null && result.data === true;
 }

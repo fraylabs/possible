@@ -1,10 +1,12 @@
 "use client";
 
 import { lazy, Suspense, useEffect, useState } from "react";
+import ReactMarkdown from "react-markdown";
 import { skillPageUrl } from "@possible/catalog";
 import type { OutcomeFile, OutcomePreview } from "@possible/catalog";
 import { getPublishedOutcome, productHref } from "./public-content";
 import { findPublishedOutcomeId, recordOutcomeCopy } from "./discovery-data";
+import { OutcomeReviews } from "./outcome-reviews";
 import { CopyButton, NotFoundPage, SiteShell } from "./shared";
 
 const OutcomeCadViewer = lazy(() => import("./OutcomeCadViewer"));
@@ -75,8 +77,7 @@ export function OutcomeDetailPage({ slug }: { slug: string }) {
   const entry = getPublishedOutcome(slug);
   if (!entry) return <NotFoundPage />;
   const { outcome } = entry;
-  const officialSource = outcome.source?.type === "official-gallery" || outcome.source?.type === "official-example";
-  const authorLabel = outcome.source?.type === "official-gallery" ? "Official gallery result by" : outcome.source?.type === "official-example" ? "Official example by" : "By";
+  const executionModel = outcome.models.find(({ role }) => role === "execution");
 
   return (
     <SiteShell className="pack-detail-page">
@@ -85,35 +86,35 @@ export function OutcomeDetailPage({ slug }: { slug: string }) {
           <nav className="pack-detail-breadcrumb" aria-label="Breadcrumb"><a href="/#discover">Outcomes</a><span>/</span><span>{outcome.title}</span></nav>
           <h1>{outcome.title}</h1>
           <p>{outcome.summary}</p>
-          <p className="outcome-author">{authorLabel} <a href={outcome.author.url} target="_blank" rel="noreferrer">{outcome.author.name} ↗</a></p>
+          <p className="outcome-author">By <a href={outcome.author.url} target="_blank" rel="noreferrer">{outcome.author.name} ↗</a></p>
           {entry.products.length ? <div className="pack-product-attribution"><span>USES</span>{entry.products.map((product) => <a href={productHref(product)} key={product.id}><strong>{product.name}</strong><small>by {product.company.name}</small></a>)}</div> : null}
         </header>
 
         <div className="pack-detail-layout"><div className="pack-detail-main">
           {outcome.preview ? <section className="pack-readable-section pack-readable-section--first" aria-labelledby="outcome-preview-heading"><h2 id="outcome-preview-heading">What it can make</h2><OutcomePreviewView preview={outcome.preview} title={outcome.title} /></section> : null}
 
+          <section className="pack-readable-section outcome-about" aria-labelledby="outcome-about-heading"><h2 id="outcome-about-heading">About this Outcome</h2><ReactMarkdown>{outcome.aboutMarkdown.replace(/^# .+\n+/, "")}</ReactMarkdown></section>
+
+          {outcome.requirements.length ? <section className="pack-readable-section" aria-labelledby="outcome-requirements-heading"><h2 id="outcome-requirements-heading">Required inputs</h2><ul className="dynamic-outcome-requirements">{outcome.requirements.map((requirement) => <li key={requirement}>{requirement}</li>)}</ul></section> : null}
+
           {outcome.inputs?.length ? <section className="pack-readable-section" aria-labelledby="outcome-inputs-heading"><h2 id="outcome-inputs-heading">Inputs used</h2><OutcomeFiles files={outcome.inputs} /></section> : null}
 
           {outcome.artifacts?.length ? <section className="pack-readable-section" aria-labelledby="outcome-artifacts-heading"><h2 id="outcome-artifacts-heading">Download the result</h2><OutcomeFiles files={outcome.artifacts} /></section> : null}
-
-          {outcome.originalPrompt ? <section className="pack-readable-section" aria-labelledby="outcome-original-prompt-heading">
-            <h2 id="outcome-original-prompt-heading">Original request</h2>
-            <blockquote className="outcome-original-prompt">{outcome.originalPrompt}</blockquote>
-          </section> : null}
 
           <section className="pack-use-panel" aria-labelledby="outcome-prompt-heading">
             <h2 id="outcome-prompt-heading">Prompt</h2>
             <PromptPanel prompt={outcome.executionPrompt} outcomeId={databaseId} />
           </section>
 
+          <OutcomeReviews outcomeId={databaseId} />
+
           <section className="pack-readable-section" aria-labelledby="outcome-execution-heading">
             <h2 id="outcome-execution-heading">Made with</h2>
             <dl className="outcome-execution">
-              <div><dt>Provider</dt><dd>{outcome.execution.provider}</dd></div>
-              <div><dt>Model</dt><dd>{outcome.execution.model}</dd></div>
-              {outcome.execution.agent ? <div><dt>Agent</dt><dd>{outcome.execution.agent}</dd></div> : null}
-              {outcome.execution.timestamp ? <div><dt>Created</dt><dd><time dateTime={outcome.execution.timestamp}>{outcome.execution.timestamp}</time></dd></div> : null}
-              {outcome.source?.publishedAt ? <div><dt>Published</dt><dd><time dateTime={outcome.source.publishedAt}>{outcome.source.publishedAt}</time></dd></div> : null}
+              <div><dt>Provider</dt><dd>{executionModel?.provider ?? "Not specified"}</dd></div>
+              <div><dt>Model</dt><dd>{executionModel?.model ?? "Not specified"}</dd></div>
+              {executionModel?.agent ? <div><dt>Agent</dt><dd>{executionModel.agent}</dd></div> : null}
+              {outcome.authoredAt ? <div><dt>Authored</dt><dd><time dateTime={outcome.authoredAt}>{outcome.authoredAt}</time></dd></div> : null}
             </dl>
           </section>
 
@@ -125,7 +126,7 @@ export function OutcomeDetailPage({ slug }: { slug: string }) {
             })}</ul>
           </section> : null}
 
-          <footer className="outcome-source"><span>{officialSource ? "Sourced from" : "Published by"} <a href={outcome.author.url} target="_blank" rel="noreferrer">{outcome.author.name}</a></span><a href={entry.sourceUrl} target="_blank" rel="noreferrer">{outcome.source ? "View original" : "View source"} ↗</a></footer>
+          <footer className="outcome-source"><span>Published by <a href={outcome.author.url} target="_blank" rel="noreferrer">{outcome.author.name}</a></span><a href={entry.sourceUrl} target="_blank" rel="noreferrer">View source ↗</a></footer>
         </div></div>
       </article>
     </SiteShell>

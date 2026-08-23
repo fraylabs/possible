@@ -1,0 +1,5 @@
+Create a digital CAD prototype of a ten-link articulated robot snake. Model one repeatable link body and the joint interfaces needed to assemble ten links into a shallow alternating curve. Keep the design bounded to inspectable geometry and assembly structure; do not add electronics, actuators, batteries, sensors, firmware, networking, skins, or decorative subsystems.
+
+Deliver editable parametric CAD source, a complete STEP assembly, a browser-inspectable GLB preview, and clear isometric, opposite-isometric, and top-view renders. Preserve units and named dimensions. Verify that the exported assembly contains all ten links, that each link remains a valid solid, that the joint spacing is consistent, and that the final files reopen successfully.
+
+Treat this as a digital geometry prototype only. Do not claim locomotion, dynamics, controller performance, collision behavior, printability, strength, tolerances, manufacturability, calibration, safety, or real-world performance. Do not command physical equipment or deploy robot software. State which physical, kinematic, actuation, control, and sim-to-real questions remain unresolved.

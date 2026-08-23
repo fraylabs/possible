@@ -25,9 +25,9 @@ function DocsLayout({ active, eyebrow, title, description, children }: { active:
 }
 
 export function DocsPage() {
-  return <DocsLayout active="overview" eyebrow="OVERVIEW" title="Possible connects results, prompts, and sources" description="See what AI made, inspect the exact prompt connected to it, and remix the parts worth reusing.">
-    <aside className="docs-callout docs-callout--info"><strong>THE SHORT VERSION</strong><p>Outcome = result + exact prompt + available provenance + original source.</p></aside>
-    <section><h2>What Possible does</h2><ol><li><strong>Shows the result first</strong><span>Images, video, audio, or CAD make each possibility concrete.</span></li><li><strong>Preserves the prompt</strong><span>The prompt is published unchanged, not replaced with a retrospective recipe.</span></li><li><strong>Links the source</strong><span>Creator, product, model, date, and the canonical publication are shown whenever they are known.</span></li></ol></section>
+  return <DocsLayout active="overview" eyebrow="OVERVIEW" title="Possible connects results, prompts, and what made them" description="See what AI made, inspect the exact prompt connected to it, and remix the parts worth reusing.">
+    <aside className="docs-callout docs-callout--info"><strong>THE SHORT VERSION</strong><p>Outcome = result + exact prompt + optional Products and Skills.</p></aside>
+    <section><h2>What Possible does</h2><ol><li><strong>Shows the result first</strong><span>Images, video, audio, or CAD make each possibility concrete.</span></li><li><strong>Preserves the prompt</strong><span>The prompt is published unchanged, not replaced with a retrospective recipe.</span></li><li><strong>Credits what made it</strong><span>Products and Skills receive visible attribution whenever the creator attaches them.</span></li></ol></section>
     <section><h2>Optional $possible skill</h2><p>The website shows prior work. The skill uses those Outcomes as precedent, gathers current information, asks only consequential questions, and prepares a new execution prompt for a fresh agent.</p><div className="docs-command"><header><strong>INSTALL</strong></header><pre><code>{installCommand}</code></pre><CopyButton label="Copy install command" value={installCommand} /></div></section>
     <nav className="docs-next"><span>NEXT</span><a href="/docs/how-to-use">How to use Possible <b>→</b></a></nav>
   </DocsLayout>;
@@ -42,33 +42,25 @@ export function HowToUsePage() {
 }
 
 export function AuthoringDocsPage() {
-  return <DocsLayout active="authoring" eyebrow="PUBLISH" title="Share an Outcome" description="Publish a real result, its exact prompt, available provenance, and an inspectable source.">
-    <section><h2>Folder shape</h2><pre className="docs-code-block"><code>{`packages/catalog/src/outcomes/my-outcome/
-  outcome.json
+  return <DocsLayout active="authoring" eyebrow="PUBLISH" title="Publish from your source" description="Keep the canonical Outcome in your public repository or domain. Possible reads it—no account required.">
+    <section><h2>One folder per Outcome</h2><pre className="docs-code-block"><code>{`outcomes.json      # publisher and manifest locations
+outcomes/my-outcome/
+  outcome.json    # machine metadata
+  outcome.md      # human-facing title and explanation
+  prompt.md       # exact reusable execution prompt
   media/          # optional previews
-  inputs/         # optional files supplied to the run
-  artifacts/      # optional files produced by the run`}</code></pre></section>
-    <section><h2>The complete authored record</h2><pre className="docs-code-block"><code>{`{
-  "schemaVersion": 2,
-  "title": "A clear, specific result",
-  "summary": "One sentence explaining the resulting work.",
-  "executionPrompt": "The full prompt sent to the working agent.",
-  "execution": {
-    "provider": "OpenAI",
-    "agent": "Codex",
-    "model": "GPT-5.6",
-    "timestamp": "2026-08-19T10:30:00+08:00"
-  },
-  "author": { "name": "Your name", "url": "https://..." }
-}`}</code></pre><p>The prompt, provider, model, title, summary, and author are required. A prior request, agent, timestamp, source, Products, Skills, actual input files, downloadable artifacts, and preview media are optional. Instructions and requested deliverables belong in the prompt. External examples must link their original publication.</p></section>
-    <section><h2>Submit it</h2><ol><li><strong>Start from a real run</strong><span>Do not publish a hypothetical prompt as though it produced an Outcome.</span></li><li><strong>Create the folder</strong><span>Use a lowercase hyphenated slug.</span></li><li><strong>Add optional preview media</strong><span>Up to five images, one video, one audio file, and CAD files may be referenced from <code>media/</code>.</span></li><li><strong>Run the checks</strong><span>Run <code>npm run outcomes:generate</code> and <code>npm run check</code>.</span></li><li><strong>Open a pull request</strong><span>No account system, export step, or separate submission record is required.</span></li></ol></section>
+  inputs/         # optional supplied files
+  artifacts/      # optional downloadable results`}</code></pre></section>
+    <section><h2>Author locally</h2><ol><li><strong>Create the folder</strong><span>Run <code>npx @fraylabs/possible@0.1.11 create my-outcome</code>.</span></li><li><strong>Write the human record</strong><span>Put the title, opening summary, and formatted explanation in <code>outcome.md</code>.</span></li><li><strong>Preserve the prompt</strong><span>Put the exact reusable execution prompt in <code>prompt.md</code>.</span></li><li><strong>Add provenance</strong><span>Record models, Products, Skills, requirements, author, timestamp, and file references in <code>outcome.json</code>.</span></li><li><strong>Validate</strong><span>Run <code>npx @fraylabs/possible@0.1.11 validate</code>.</span></li></ol></section>
+    <section><h2>Publish publicly</h2><p>The create command adds the Outcome to the repository-root <code>outcomes.json</code> index. Commit the public GitHub repository and run <code>npx @fraylabs/possible@0.1.11 publish owner/repository</code>. Domain publishers expose that index at <code>/.well-known/possible/outcomes.json</code> and publish the HTTPS origin. Possible stores an immutable snapshot of every accepted revision.</p><a href="/publish">Publish a source →</a></section>
+    <section><h2>Identity and labels</h2><p>A publisher-domain source is Official for that domain. GitHub sources are Community by default unless ownership of a referenced Skill follows directly from the repository. Authors cannot self-award another company’s identity.</p></section>
   </DocsLayout>;
 }
 
 export function DocsReferencePage() {
   return <DocsLayout active="reference" eyebrow="REFERENCE" title="Outcome reference" description="The public format keeps each prompt-to-result record small enough to inspect and reuse.">
-    <section><h2>Required fields</h2><div className="docs-table"><div><code>title</code><span>The self-explanatory name of the result.</span></div><div><code>summary</code><span>A concise explanation of the resulting work.</span></div><div><code>executionPrompt</code><span>The exact prompt connected to the result.</span></div><div><code>execution</code><span>The provider and model; agent and timestamp may be added when known.</span></div><div><code>author</code><span>The creator or publisher's display name and HTTPS link.</span></div></div></section>
-    <section><h2>Optional fields</h2><div className="docs-table"><div><code>originalPrompt</code><span>The prior rough request, preserved verbatim when one exists.</span></div><div><code>source</code><span>The canonical official or community publication and date.</span></div><div><code>products</code><span>Official Products meaningfully involved in the outcome.</span></div><div><code>skills</code><span>GitHub Skill references the author reviewed.</span></div><div><code>inputs</code><span>Actual files supplied to the run—not written prerequisites.</span></div><div><code>artifacts</code><span>Actual files produced by the run and available to download.</span></div><div><code>preview</code><span>Representative images, video, audio, or CAD.</span></div></div></section>
+    <section><h2>Required files</h2><div className="docs-table"><div><code>outcomes.json</code><span>Repository-root publisher identity and a thin list of Outcome manifest locations.</span></div><div><code>outcome.md</code><span>H1 title, opening summary, and optional formatted explanation.</span></div><div><code>prompt.md</code><span>The exact reusable execution prompt.</span></div><div><code>outcome.json</code><span>Schema version, slug, file pointers, author, models, authored timestamp, and requirements.</span></div></div></section>
+    <section><h2>Optional metadata</h2><div className="docs-table"><div><code>products</code><span>Products meaningfully involved in the Outcome.</span></div><div><code>skills</code><span>GitHub Skill references with the last-reviewed commit.</span></div><div><code>inputs</code><span>Actual files supplied to the run.</span></div><div><code>artifacts</code><span>Actual files produced by the run and available to download.</span></div><div><code>preview</code><span>Representative images, video, audio, or CAD.</span></div></div></section>
     <section><h2>Machine interfaces</h2><ul><li><code>/outcomes/index.json</code> lists the directory.</li><li><code>/outcomes/&lt;slug&gt;.json</code> returns one Outcome.</li><li><code>/outcomes/&lt;slug&gt;/prompt.txt</code> returns the exact prompt.</li><li><code>/outcomes/&lt;slug&gt;/request.txt</code> returns the prior rough request when one exists.</li><li>The MCP exposes <code>list_outcomes</code>, <code>search_outcomes</code>, and <code>fetch_outcome</code>.</li></ul></section>
   </DocsLayout>;
 }

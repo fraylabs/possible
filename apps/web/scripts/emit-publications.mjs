@@ -16,15 +16,17 @@ for (const entry of outcomeCatalog) {
 }
 
 await write("outcomes/index.json", json({
-  schemaVersion: 2,
+  schemaVersion: 3,
   outcomes: outcomeCatalog.map((entry) => ({
     slug: entry.slug,
     route: `/outcomes/${entry.slug}`,
     title: entry.outcome.title,
     summary: entry.outcome.summary,
     originalPrompt: entry.outcome.originalPrompt,
-    execution: entry.outcome.execution,
-    source: entry.outcome.source,
+    authoredAt: entry.outcome.authoredAt,
+    models: entry.outcome.models,
+    requirements: entry.outcome.requirements,
+    sourceUrl: entry.sourceUrl,
     author: entry.outcome.author,
     products: entry.products.map(({ id, name, company }) => ({ id, name, company: company.name })),
     skills: entry.outcome.skills ?? [],

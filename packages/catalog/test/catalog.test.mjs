@@ -18,7 +18,7 @@ test("the catalog is made from one prompt-to-result record per folder", () => {
   assert.ok(film);
   assert.equal(film.outcome.originalPrompt, "nono just to explain what possible is");
   assert.match(film.outcome.executionPrompt, /^Use \$hyperframes/);
-  assert.equal(film.outcome.execution.model, "GPT-5.6");
+  assert.equal(film.outcome.models.find(({ role }) => role === "execution")?.model, "GPT-5.6");
   assert.deepEqual(film.products.map(({ id }) => id), ["heygen/hyperframes", "uzu/strudel"]);
   assert.match(film.outcome.preview.video.src, /^\/outcome-media\//);
   for (const forbidden of ["expectations", "notFor", "workstreams", "verification", "trust", "lifecycle"]) {
@@ -41,9 +41,9 @@ test("Outcome validation keeps both prompts exact and rejects framework fields",
   assert.equal(validateOutcome(valid).originalPrompt, valid.originalPrompt);
   assert.equal(validateOutcome(valid).executionPrompt, valid.executionPrompt);
   assert.throws(() => validateOutcome({ ...valid, expectations: [] }), /not part of the Outcome contract/);
-  assert.throws(() => validateOutcome({ ...valid, originalPrompt: ` ${valid.originalPrompt}` }), /leading or trailing whitespace/);
+  assert.throws(() => validateOutcome({ ...valid, files: { about: "about.md", prompt: "prompt.md" } }), /reference outcome.md and prompt.md/);
   assert.throws(() => validateOutcome({ ...valid, executionPrompt: `${valid.executionPrompt} ` }), /leading or trailing whitespace/);
-  assert.throws(() => validateOutcome({ ...valid, execution: { ...valid.execution, timestamp: "yesterday" } }), /ISO 8601/);
+  assert.throws(() => validateOutcome({ ...valid, authoredAt: "yesterday" }), /ISO 8601/);
 });
 
 test("Product records contain only official directory information", () => {

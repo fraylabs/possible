@@ -1,8 +1,9 @@
 import { lstat, readFile, readdir, writeFile } from "node:fs/promises";
 import { dirname, extname, join, relative, resolve } from "node:path";
+import { parseOutcomeMarkdown, validateOutcomeManifest } from "../../apps/cli/src/outcome-format.mjs";
 
 const SAFE_SLUG = /^[a-z0-9][a-z0-9-]*$/;
-const ALLOWED_ENTRIES = new Set(["artifacts", "inputs", "media", "outcome.json"]);
+const ALLOWED_ENTRIES = new Set(["artifacts", "inputs", "media", "outcome.json", "outcome.md", "prompt.md"]);
 const MEDIA_EXTENSIONS = new Set([".3mf", ".avif", ".glb", ".jpeg", ".jpg", ".mp3", ".mp4", ".ogg", ".png", ".step", ".stl", ".wav", ".webm", ".webp"]);
 const FILE_EXTENSIONS = new Set([...MEDIA_EXTENSIONS, ".css", ".csv", ".docx", ".html", ".js", ".json", ".md", ".pdf", ".pptx", ".py", ".txt", ".ts", ".tsx", ".xlsx", ".zip"]);
 
@@ -90,13 +91,39 @@ export async function readOutcomeFolders(repositoryRoot) {
       if (!ALLOWED_ENTRIES.has(child.name)) throw new Error(`${relative(repositoryRoot, join(folder, child.name))} is not part of an Outcome`);
       if (["artifacts", "inputs", "media"].includes(child.name) ? !child.isDirectory() : !child.isFile()) throw new Error(`${entry.name}/${child.name} has the wrong type`);
     }
-    if (!children.some(({ name }) => name === "outcome.json")) throw new Error(`${entry.name} requires outcome.json`);
-    const outcome = await parseJson(join(folder, "outcome.json"));
+    for (const required of ["outcome.json", "outcome.md", "prompt.md"]) {
+      if (!children.some(({ name }) => name === required)) throw new Error(`${entry.name} requires ${required}`);
+    }
+    const manifest = validateOutcomeManifest(await parseJson(join(folder, "outcome.json")), `${entry.name}/outcome.json`);
+    if (manifest.slug !== entry.name) throw new Error(`${entry.name}/outcome.json slug must match its folder`);
+    const about = parseOutcomeMarkdown(await readFile(join(folder, "outcome.md"), "utf8"), `${entry.name}/outcome.md`);
+    const executionPrompt = (await readFile(join(folder, "prompt.md"), "utf8")).trim();
+    if (!executionPrompt) throw new Error(`${entry.name}/prompt.md must contain the exact execution prompt`);
+    const outcome = {
+      ...manifest,
+      title: about.title,
+      summary: about.summary,
+      aboutMarkdown: about.markdown,
+      executionPrompt,
+      ...(about.originalPrompt ? { originalPrompt: about.originalPrompt } : {}),
+    };
     await validateAndResolveMedia(folder, entry.name, outcome);
     outcomes.push({ slug: entry.name, outcome });
   }
   if (outcomes.length === 0) throw new Error("The Outcome directory cannot be empty");
-  return outcomes.sort((left, right) => left.outcome.title.localeCompare(right.outcome.title) || left.slug.localeCompare(right.slug));
+  const sorted = outcomes.sort((left, right) => left.outcome.title.localeCompare(right.outcome.title) || left.slug.localeCompare(right.slug));
+  const index = await parseJson(join(repositoryRoot, "packages/catalog/src/outcomes.json"));
+  if (index?.schemaVersion !== 1 || typeof index.publisher?.name !== "string" || typeof index.publisher?.url !== "string" || !Array.isArray(index.outcomes)) {
+    throw new Error("outcomes.json must be a publisher index with schemaVersion, publisher, and outcomes");
+  }
+  const indexed = index.outcomes.map((entry, position) => {
+    if (typeof entry?.slug !== "string" || typeof entry?.url !== "string") throw new Error(`outcomes.json outcomes[${position}] is invalid`);
+    if (entry.url !== `./outcomes/${entry.slug}/outcome.json`) throw new Error(`outcomes.json ${entry.slug} must point to its relative outcome.json`);
+    return entry.slug;
+  }).sort();
+  const authored = sorted.map(({ slug }) => slug).sort();
+  if (JSON.stringify(indexed) !== JSON.stringify(authored)) throw new Error("outcomes.json must list every authored Outcome exactly once");
+  return sorted;
 }
 
 export async function buildOutcomeArtifacts(repositoryRoot) {

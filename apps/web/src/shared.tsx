@@ -6,9 +6,9 @@ import { githubUrl } from "./public-content";
 export type CopyState = "idle" | "copied" | "failed";
 const navigationItems = [
   { label: "DOCS", href: "/docs", external: false },
-  { label: "DASHBOARD", href: "/dashboard", external: false },
+  { label: "PUBLISH", href: "/publish", external: false },
 ] as const;
-export function CopyButton({ label, value, onCopied }: { label: string; value: string; onCopied?: () => void | Promise<void> }) {
+export function CopyButton({ label, value, onCopied }: { label: string; value: string; onCopied?: () => void | Promise<unknown> }) {
   const [state, setState] = useState<CopyState>("idle");
 
   async function copy() {
@@ -116,7 +116,7 @@ export function SiteFooter() {
         <div className="site-footer-links">
           <a href="/#discover">Discover</a>
           <a href="/docs">Docs</a>
-          <a href="/dashboard">Dashboard</a>
+          <a href="/publish">Publish</a>
           <a href={githubUrl} target="_blank" rel="noreferrer">GitHub ↗</a>
         </div>
         <span>OPEN SOURCE / 2026</span>

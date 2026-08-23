@@ -1,19 +1,24 @@
 {
-  "schemaVersion": 2,
-  "title": "Flat-Pack Corridor Cat Shelter CAD Prototype",
-  "summary": "Design a fully printable, screw-free cat shelter with a captured triangular roof, replaceable panels, and concealed ballast bays for an HDB corridor.",
-  "originalPrompt": "Can u use $possible from repos/possible to make a cat house?",
-  "executionPrompt": "Design a fully 3D-printable, screw-free, flat-pack cat shelter for supervised indoor use immediately outside an HDB flat door in a spacious corridor. It should fit a typical adult cat, include a floor and stable base, and resist being flipped by using concealed compartments for removable ballast that the owner supplies separately.\n\nUse interlocking or snap-fit walls connected to the base and a triangular roof that is mechanically captured by the wall geometry. The assembled shelter must not depend on screws, glue, tape, or non-printed structural fasteners. Make panels replaceable and make the roof attachment understandable in both the CAD and the exploded view. Keep every part printable through a commercial large-format FDM service; disclose the largest part dimensions and do not pretend it fits a common desktop printer.\n\nDeliver editable parametric CAD source, an assembled STEP model, an exploded STEP model, individual STEP parts, and print-oriented STL exports. Include clear assembled, exploded, ballast-base, and roof-lock renders. Check that the solids are valid, the intended interfaces overlap correctly, the entrance is usable, and the assembled envelope and largest part are reported.\n\nThis is a digital pre-build only. Do not purchase, fabricate, expose it to an animal, or claim that the snap fits, ballast, stability, edges, material, weather resistance, hygiene, durability, or corridor suitability have been physically validated. State the coupon, assembly-cycle, push, under-ballast, contact-edge, and cleaning tests that must happen before use, and return the result as repair-required until those tests exist.",
-  "execution": {
-    "provider": "OpenAI",
-    "agent": "Codex",
-    "model": "GPT-5.6",
-    "timestamp": "2026-08-14T16:06:58+08:00"
+  "schemaVersion": 3,
+  "slug": "functional-hardware-prototype",
+  "files": {
+    "about": "outcome.md",
+    "prompt": "prompt.md"
   },
+  "authoredAt": "2026-08-14T16:06:58+08:00",
   "author": {
     "name": "Fray Labs",
     "url": "https://github.com/fraylabs"
   },
+  "models": [
+    {
+      "provider": "OpenAI",
+      "model": "GPT-5.6",
+      "role": "execution",
+      "agent": "Codex"
+    }
+  ],
+  "requirements": [],
   "skills": [
     {
       "repository": "earthtojake/text-to-cad",

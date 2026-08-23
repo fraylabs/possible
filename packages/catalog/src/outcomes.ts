@@ -1,7 +1,7 @@
 import { rawOutcomes } from "./generated-outcomes.js";
 import outcomeSchema from "./outcome.schema.json" with { type: "json" };
 import { validateProductId } from "./products.js";
-import type { Outcome, OutcomeFile, OutcomePreview, SkillReference } from "./types.js";
+import type { Outcome, OutcomeFile, OutcomeModel, OutcomePreview, SkillReference } from "./types.js";
 
 export interface BundledOutcome {
   slug: string;
@@ -12,7 +12,7 @@ const SAFE_SLUG = /^[a-z0-9][a-z0-9-]*$/;
 const EXACT_REVISION = /^(?:[0-9a-f]{40}|[0-9a-f]{64})$/;
 const GITHUB_REPOSITORY = /^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/;
 const SKILL_DIRECTORY = /^(?:\.|[a-z0-9._-]+(?:\/[a-z0-9._-]+)*)$/;
-const OUTCOME_KEYS = new Set(Object.keys(outcomeSchema.properties));
+const OUTCOME_KEYS = new Set([...Object.keys(outcomeSchema.properties), "title", "summary", "aboutMarkdown", "executionPrompt", "originalPrompt"]);
 
 const asRecord = (value: unknown, context: string): Record<string, unknown> => {
   if (value === null || typeof value !== "object" || Array.isArray(value)) throw new Error(`${context} must be a JSON object`);
@@ -27,13 +27,38 @@ const requiredString = (value: unknown, context: string): string => {
 const validateHttpsUrl = (value: unknown, context: string): string => {
   const url = requiredString(value, context);
   let parsed: URL;
-  try {
-    parsed = new URL(url);
-  } catch {
-    throw new Error(`${context} must be an HTTPS URL`);
-  }
+  try { parsed = new URL(url); } catch { throw new Error(`${context} must be an HTTPS URL`); }
   if (parsed.protocol !== "https:") throw new Error(`${context} must be an HTTPS URL`);
   return url;
+};
+
+const validateTimestamp = (value: unknown, context: string): void => {
+  if (value === null) return;
+  const timestamp = requiredString(value, context);
+  if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3})?(?:Z|[+-]\d{2}:\d{2})$/.test(timestamp) || Number.isNaN(Date.parse(timestamp))) {
+    throw new Error(`${context} must be null or an ISO 8601 timestamp with a timezone`);
+  }
+};
+
+const validateModels = (value: unknown, context: string): OutcomeModel[] => {
+  if (!Array.isArray(value) || value.length === 0) throw new Error(`${context} must be a non-empty array`);
+  return value.map((item, index) => {
+    const model = asRecord(item, `${context}[${index}]`);
+    const allowed = new Set(["provider", "model", "agent", "role"]);
+    for (const key of Object.keys(model)) if (!allowed.has(key)) throw new Error(`${context}[${index}].${key} is unsupported`);
+    requiredString(model.provider, `${context}[${index}].provider`);
+    requiredString(model.model, `${context}[${index}].model`);
+    if (model.agent !== undefined) requiredString(model.agent, `${context}[${index}].agent`);
+    if (!new Set(["authorship", "execution", "review"]).has(String(model.role))) throw new Error(`${context}[${index}].role is unsupported`);
+    return item as OutcomeModel;
+  });
+};
+
+const validateRequirements = (value: unknown, context: string): string[] => {
+  if (!Array.isArray(value)) throw new Error(`${context} must be an array`);
+  const requirements = value.map((item, index) => requiredString(item, `${context}[${index}]`));
+  if (new Set(requirements).size !== requirements.length) throw new Error(`${context} contains duplicates`);
+  return requirements;
 };
 
 const validateSkills = (value: unknown, context: string): SkillReference[] | undefined => {
@@ -77,9 +102,7 @@ const validateFiles = (value: unknown, context: string): OutcomeFile[] | undefin
     const format = file.format === undefined ? undefined : requiredString(file.format, `${context}[${index}].format`);
     if (sources.has(src)) throw new Error(`${context} contains duplicate source ${src}`);
     sources.add(src);
-    const validated = { type, src, label } as OutcomeFile;
-    if (format !== undefined) validated.format = format;
-    return validated;
+    return { type, src, label, ...(format ? { format } : {}) } as OutcomeFile;
   });
 };
 
@@ -96,51 +119,25 @@ const validatePreview = (value: unknown, context: string): OutcomePreview | unde
   return value as OutcomePreview;
 };
 
-const validateExecution = (value: unknown, context: string): void => {
-  const execution = asRecord(value, context);
-  const allowed = new Set(["provider", "agent", "model", "timestamp"]);
-  for (const key of Object.keys(execution)) if (!allowed.has(key)) throw new Error(`${context}.${key} is unsupported`);
-  requiredString(execution.provider, `${context}.provider`);
-  if (execution.agent !== undefined) requiredString(execution.agent, `${context}.agent`);
-  requiredString(execution.model, `${context}.model`);
-  if (execution.timestamp !== undefined) {
-    const timestamp = requiredString(execution.timestamp, `${context}.timestamp`);
-    if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3})?(?:Z|[+-]\d{2}:\d{2})$/.test(timestamp) || Number.isNaN(Date.parse(timestamp))) {
-      throw new Error(`${context}.timestamp must be an ISO 8601 timestamp with a timezone`);
-    }
-  }
-};
-
-const validateSource = (value: unknown, context: string): void => {
-  if (value === undefined) return;
-  const source = asRecord(value, context);
-  const allowed = new Set(["type", "url", "publishedAt"]);
-  for (const key of Object.keys(source)) if (!allowed.has(key)) throw new Error(`${context}.${key} is unsupported`);
-  if (source.type !== "official-gallery" && source.type !== "official-example" && source.type !== "community") throw new Error(`${context}.type is unsupported`);
-  validateHttpsUrl(source.url, `${context}.url`);
-  if (source.publishedAt !== undefined) {
-    const publishedAt = requiredString(source.publishedAt, `${context}.publishedAt`);
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(publishedAt) || Number.isNaN(Date.parse(`${publishedAt}T00:00:00Z`))) {
-      throw new Error(`${context}.publishedAt must be an ISO 8601 date`);
-    }
-  }
-};
-
-/** Validate one exact prompt, its available provenance, and directory metadata without rewriting the prompt. */
+/** Validate one generated Outcome projection without rewriting its authored files. */
 export function validateOutcome(input: unknown, context = "outcome"): Outcome {
   const outcome = asRecord(input, context);
   for (const key of Object.keys(outcome)) if (!OUTCOME_KEYS.has(key)) throw new Error(`${context}.${key} is not part of the Outcome contract`);
-  if (outcome.schemaVersion !== 2) throw new Error(`${context}.schemaVersion must be 2`);
+  if (outcome.schemaVersion !== 3) throw new Error(`${context}.schemaVersion must be 3`);
+  const slug = requiredString(outcome.slug, `${context}.slug`);
+  if (!SAFE_SLUG.test(slug)) throw new Error(`${context}.slug must be lowercase and hyphenated`);
+  const files = asRecord(outcome.files, `${context}.files`);
+  if (files.about !== "outcome.md" || files.prompt !== "prompt.md" || Object.keys(files).length !== 2) throw new Error(`${context}.files must reference outcome.md and prompt.md`);
+  validateTimestamp(outcome.authoredAt, `${context}.authoredAt`);
+  validateModels(outcome.models, `${context}.models`);
+  validateRequirements(outcome.requirements, `${context}.requirements`);
   requiredString(outcome.title, `${context}.title`);
   requiredString(outcome.summary, `${context}.summary`);
-  if (outcome.originalPrompt !== undefined) {
-    const originalPrompt = requiredString(outcome.originalPrompt, `${context}.originalPrompt`);
-    if (originalPrompt !== originalPrompt.trim()) throw new Error(`${context}.originalPrompt must not contain leading or trailing whitespace`);
-  }
+  const aboutMarkdown = requiredString(outcome.aboutMarkdown, `${context}.aboutMarkdown`);
   const executionPrompt = requiredString(outcome.executionPrompt, `${context}.executionPrompt`);
+  if (aboutMarkdown !== aboutMarkdown.trim()) throw new Error(`${context}.aboutMarkdown must not contain leading or trailing whitespace`);
   if (executionPrompt !== executionPrompt.trim()) throw new Error(`${context}.executionPrompt must not contain leading or trailing whitespace`);
-  validateExecution(outcome.execution, `${context}.execution`);
-  validateSource(outcome.source, `${context}.source`);
+  if (outcome.originalPrompt !== undefined) requiredString(outcome.originalPrompt, `${context}.originalPrompt`);
 
   const author = asRecord(outcome.author, `${context}.author`);
   for (const key of Object.keys(author)) if (key !== "name" && key !== "url") throw new Error(`${context}.author.${key} is unsupported`);
@@ -149,7 +146,6 @@ export function validateOutcome(input: unknown, context = "outcome"): Outcome {
   validateSkills(outcome.skills, `${context}.skills`);
   validateFiles(outcome.inputs, `${context}.inputs`);
   validateFiles(outcome.artifacts, `${context}.artifacts`);
-
   if (outcome.products !== undefined) {
     if (!Array.isArray(outcome.products) || outcome.products.length === 0) throw new Error(`${context}.products must be omitted or a non-empty array`);
     const products = outcome.products.map((product, index) => validateProductId(product, `${context}.products[${index}]`));
@@ -160,8 +156,9 @@ export function validateOutcome(input: unknown, context = "outcome"): Outcome {
 }
 
 export const bundledOutcomes: BundledOutcome[] = rawOutcomes.map((entry, index) => {
-  if (!SAFE_SLUG.test(entry.slug)) throw new Error(`outcomes[${index}].slug must be lowercase and hyphenated`);
-  return { slug: entry.slug, outcome: validateOutcome(entry.outcome, `outcomes[${index}].outcome`) };
+  const outcome = validateOutcome(entry.outcome, `outcomes[${index}].outcome`);
+  if (entry.slug !== outcome.slug) throw new Error(`outcomes[${index}] folder slug must match outcome.slug`);
+  return { slug: entry.slug, outcome };
 });
 
 if (new Set(bundledOutcomes.map(({ slug }) => slug)).size !== bundledOutcomes.length) throw new Error("Outcome slugs must be unique");

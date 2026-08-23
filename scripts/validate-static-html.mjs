@@ -14,10 +14,11 @@ const htmlText = (value) => value
 
 const home = await html("index.html");
 assert.match(home, /Discover what agents can do/);
-assert.match(home, /Most copied this week/);
-assert.match(home, /What can agents make\?/);
 assert.match(home, /What do you want an agent to make\?/);
-assert.match(home, /aria-label="Outcome gallery"/);
+assert.match(home, /Most copied Outcomes/);
+assert.match(home, /Describe the result you want/);
+assert.match(home, /aria-label="Outcome results"/);
+assert.doesNotMatch(home, /Most copied this week|aria-label="Result view"|gallery source|Import JSON/);
 assert.doesNotMatch(home, /Outcome Pack|expectations checklist|structured prompt/);
 
 for (const entry of outcomeCatalog) {
@@ -45,7 +46,13 @@ for (const path of ["docs/index.html", "docs/how-to-use/index.html", "docs/autho
   assert.doesNotMatch(markup, /Outcome Pack|expectations checklist|trust status/i);
 }
 
-for (const removed of ["discover/index.html", "packs/index.html", "products/index.html", "publish/index.html", "skills/index.html", "docs/outcome-packs/index.html", "docs/expectations/index.html", "docs/glossary/index.html"]) {
+const publish = await html("publish/index.html");
+assert.match(publish, /Publish from your source/);
+assert.match(publish, /outcomes\.json/);
+assert.match(publish, /no account required/i);
+assert.doesNotMatch(publish, /sign in|claim/i);
+
+for (const removed of ["dashboard/index.html", "discover/index.html", "packs/index.html", "products/index.html", "skills/index.html", "docs/outcome-packs/index.html", "docs/expectations/index.html", "docs/glossary/index.html"]) {
   await assert.rejects(html(removed), { code: "ENOENT" });
 }
 console.log("Static Outcome, Product, and documentation pages are valid.");
