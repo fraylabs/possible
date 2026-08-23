@@ -1,4 +1,4 @@
-import { outcomeHref, productHref, publishedOutcomes, publishedProducts, publishedSkills, skillHref } from "../src/public-content";
+import { productHref, publishedProducts, publishedSkills, skillHref } from "../src/public-content";
 import type { MetadataRoute } from "next";
 
 const baseUrl = "https://possible.sh";
@@ -17,11 +17,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return [
     ...staticPaths.map((path) => ({
       url: `${baseUrl}${path}`,
-      lastModified: siteUpdatedAt,
-      changeFrequency: "weekly" as const,
-    })),
-    ...publishedOutcomes.map((entry) => ({
-      url: `${baseUrl}${outcomeHref(entry)}/`,
       lastModified: siteUpdatedAt,
       changeFrequency: "weekly" as const,
     })),

@@ -4,10 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "predev": "node ../../scripts/sync-outcome-media.mjs",
     "dev": "next dev",
-    "prebuild": "node ../../scripts/sync-outcome-media.mjs",
-    "build": "next build && node scripts/emit-publications.mjs",
+    "build": "next build",
     "test": "vitest run src/App.test.tsx",
     "test:watch": "vitest src/App.test.tsx"
   },
@@ -19,8 +17,7 @@
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "react-markdown": "^10.1.0",
-    "react-virtuoso": "^4.18.12",
-    "three": "^0.185.1"
+    "react-virtuoso": "^4.18.12"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.9.1",
@@ -28,7 +25,6 @@
     "@testing-library/user-event": "^14.6.1",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
-    "@types/three": "^0.185.1",
     "jsdom": "^29.1.1",
     "typescript": "^5.9.3",
     "vitest": "^4.1.10",

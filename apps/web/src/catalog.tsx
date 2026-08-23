@@ -4,7 +4,6 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import {
   fetchDiscoveryOutcomes,
   isOutcomeCategory,
-  localDiscoveryOutcomes,
   outcomeCategories,
   outcomeCategoryLabels,
   recordOutcomeCopy,
@@ -154,7 +153,8 @@ function Pagination({ page, total, onPageChange, label = "Outcome pages" }: { pa
 }
 
 export function OutcomesPage({ outcomesFixture }: { outcomesFixture?: DiscoveryOutcome[] } = {}) {
-  const [outcomes, setOutcomes] = useState<DiscoveryOutcome[]>(outcomesFixture ?? localDiscoveryOutcomes);
+  const [outcomes, setOutcomes] = useState<DiscoveryOutcome[]>(outcomesFixture ?? []);
+  const [directoryState, setDirectoryState] = useState<"loading" | "ready" | "error">(outcomesFixture === undefined ? "loading" : "ready");
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState<OutcomeCategory | "all">("all");
   const [page, setPage] = useState(1);
@@ -178,9 +178,11 @@ export function OutcomesPage({ outcomesFixture }: { outcomesFixture?: DiscoveryO
   const visibleOutcomes = filteredOutcomes.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
   useEffect(() => {
-    if (outcomesFixture) return;
+    if (outcomesFixture !== undefined) return;
     let cancelled = false;
-    void fetchDiscoveryOutcomes().then((entries) => { if (!cancelled) setOutcomes(entries); });
+    void fetchDiscoveryOutcomes()
+      .then((entries) => { if (!cancelled) { setOutcomes(entries); setDirectoryState("ready"); } })
+      .catch(() => { if (!cancelled) setDirectoryState("error"); });
     return () => { cancelled = true; };
   }, [outcomesFixture]);
 
@@ -276,7 +278,11 @@ export function OutcomesPage({ outcomesFixture }: { outcomesFixture?: DiscoveryO
           <span>{filteredOutcomes.length} {filteredOutcomes.length === 1 ? "result" : "results"}</span>
         </div>
 
-        {visibleOutcomes.length ? (
+        {directoryState === "loading" ? (
+          <div className="home-empty" role="status"><h2>Loading Outcomes…</h2><p>Reading the public directory.</p></div>
+        ) : directoryState === "error" ? (
+          <div className="home-empty" role="alert"><h2>The directory is unavailable.</h2><p>Try again shortly. Published sources remain unchanged.</p></div>
+        ) : visibleOutcomes.length ? (
           <div className="home-results" role="region" aria-label="Outcome results">
             {visibleOutcomes.map((outcome, index) => (
               <OutcomeResult

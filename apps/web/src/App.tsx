@@ -1,5 +1,5 @@
 export { OutcomesPage } from "./catalog";
-export { OutcomeDetailPage } from "./outcome-detail";
+export { DynamicOutcomeDetailPage } from "./dynamic-outcome-detail";
 export { ProductDetailPage, SkillDetailPage } from "./product-detail";
 export { PublishPage } from "./publish";
 export {

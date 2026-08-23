@@ -12,17 +12,13 @@
     "test": "npm run test -w @possible/catalog && npm run test -w @fraylabs/possible && npm run test -w @possible/mcp && npm run test -w @possible/web",
     "skill:validate": "node scripts/validate-skill.mjs",
     "routes:validate": "node scripts/validate-routes.mjs",
-    "publications:validate": "node scripts/validate-outcome-publications.mjs",
     "html:validate": "node scripts/validate-static-html.mjs",
-    "discovery:evaluate": "npm run build -w @possible/catalog && npm exec -- tsx evaluations/discovery/verify.mjs",
-    "outcomes:generate": "node scripts/generate-outcome-artifacts.mjs && node apps/cli/scripts/sync-skill.mjs",
-    "outcomes:check": "node scripts/generate-outcome-artifacts.mjs --check && npm run test -w @possible/catalog",
     "db:push": "node --env-file-if-exists=.env.local scripts/run-supabase.mjs db push --linked",
     "db:lint": "node --env-file-if-exists=.env.local scripts/run-supabase.mjs db lint --linked --schema public --level warning --fail-on error",
     "db:test": "node --env-file-if-exists=.env.local scripts/run-supabase.mjs db query --linked --file supabase/tests/source_owned_outcomes.sql",
-    "check": "npm run lint && npm run outcomes:check && npm run skill:validate && npm run routes:validate && npm run test && npm exec -- tsx evaluations/discovery/verify.mjs --enforce && npm run build:consumers && npm run publications:validate && npm run html:validate",
+    "check": "npm run lint && npm run skill:validate && npm run routes:validate && npm run test && npm run build:consumers && npm run html:validate",
     "dev:web": "npm run build -w @possible/catalog && npm run dev -w @possible/web",
-    "dev:mcp": "npm run build -w @possible/catalog && npm run dev -w @possible/mcp"
+    "dev:mcp": "npm run dev -w @possible/mcp"
   },
   "engines": { "node": ">=22" },
   "devDependencies": {

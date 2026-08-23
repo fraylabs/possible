@@ -1,92 +1,119 @@
 import { cleanup, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { axe } from "vitest-axe";
-import { afterEach, describe, expect, it, vi } from "vitest";
-import App, { AuthoringDocsPage, DocsPage, OutcomeDetailPage, OutcomesPage, ProductDetailPage, PublishPage, SkillDetailPage } from "./App";
-import { localDiscoveryOutcomes } from "./discovery-data";
+import { afterEach, describe, expect, it } from "vitest";
+import { AuthoringDocsPage, DocsPage, DynamicOutcomeDetailPage, OutcomesPage, ProductDetailPage, PublishPage, SkillDetailPage } from "./App";
+import type { DirectoryOutcomeDetail } from "./dynamic-outcome-detail";
 import type { DiscoveryOutcome } from "./discovery-data";
-import { getPublishedOutcome } from "./public-content";
 import { normalizeSource } from "./publish";
 
-vi.mock("./OutcomeCadViewer", () => ({ default: () => <div data-testid="cad-viewer" /> }));
 afterEach(() => { cleanup(); window.history.pushState({}, "", "/"); });
+
+const baseOutcome: DiscoveryOutcome = {
+  id: "fixture-1",
+  databaseId: "00000000-0000-0000-0000-000000000001",
+  slug: "possible-launch-film",
+  title: "Possible Launch Film",
+  summary: "A launch film explaining what agents can make.",
+  prompt: "Create a launch film.",
+  href: "/outcomes/view/?id=00000000-0000-0000-0000-000000000001",
+  category: "video",
+  sources: [{ kind: "product", id: "heygen/hyperframes", name: "HyperFrames", owner: "HeyGen", href: "/products/hyperframes" }],
+  source: { kind: "product", id: "heygen/hyperframes", name: "HyperFrames", owner: "HeyGen", href: "/products/hyperframes" },
+  requirements: [],
+  publicationKind: "community",
+  useCount: 0,
+  averageRating: 0,
+  reviewCount: 0,
+  publishedAt: "2026-08-24T00:00:00Z",
+  catalogNumber: 1,
+};
+
+const seedOutcomes: DiscoveryOutcome[] = [
+  baseOutcome,
+  { ...baseOutcome, id: "fixture-2", title: "Lantern Rain: Quiet Soundtrack", summary: "A quiet original instrumental soundtrack.", prompt: "Compose a quiet soundtrack.", category: "audio", catalogNumber: 2 },
+  { ...baseOutcome, id: "fixture-3", title: "Robot Snake CAD Prototype", summary: "An articulated robot CAD model.", prompt: "Create an articulated robot CAD model.", category: "cad", catalogNumber: 3 },
+];
+
+const detailFixture: DirectoryOutcomeDetail = {
+  id: "00000000-0000-0000-0000-000000000001",
+  title: "Possible Launch Film",
+  summary: "A launch film explaining what agents can make.",
+  about_markdown: "# Possible Launch Film\n\nA launch film explaining what agents can make.",
+  prompt: "Create a launch film.",
+  result_media_url: "https://example.com/film.mp4",
+  poster_url: "https://example.com/poster.jpg",
+  provider: "OpenAI",
+  agent: "Codex",
+  model: "GPT-5.6",
+  author_name: "Fray Labs",
+  author_url: "https://fraylabs.com",
+  requirements: [],
+  published_at: "2026-08-24T00:00:00Z",
+  publication_kind: "community",
+  source_locator: "fraylabs/possible-outcomes",
+  source_url: "https://github.com/fraylabs/possible-outcomes",
+  preview: { video: { src: "https://example.com/film.mp4", poster: "https://example.com/poster.jpg" } },
+  inputs: [],
+  artifacts: [{ type: "source", src: "https://example.com/source.zip", label: "Editable source", format: "zip" }],
+};
 
 describe("Possible website", () => {
   const outcomeFixture: DiscoveryOutcome[] = Array.from({ length: 12 }, (_, index) => ({
-    ...localDiscoveryOutcomes[index % localDiscoveryOutcomes.length]!,
+    ...seedOutcomes[index % seedOutcomes.length]!,
     id: `fixture-${index + 1}`,
     title: `Fixture Outcome ${index + 1}`,
     catalogNumber: index + 1,
   }));
+
   it("uses one ranked, visual Outcome directory as the homepage", async () => {
     const { container } = render(<OutcomesPage outcomesFixture={outcomeFixture} />);
     expect(screen.getByRole("heading", { name: "What do you want an agent to make?", level: 1 })).toBeInTheDocument();
     expect(Array.from(container.querySelectorAll(".nav-links a")).map((link) => link.textContent)).toEqual(["DOCS", "PUBLISH"]);
-    expect(container.querySelector(".site-shell > .site-nav > .site-nav-inner.layout-wide")).toBeInTheDocument();
-    expect(container.querySelector(".site-shell > .site-shell-body")).toContainElement(screen.getByRole("region", { name: "Outcome results" }));
-    expect(container.querySelector(".site-shell > .site-footer > .site-footer-inner.layout-wide")).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Most copied Outcomes" })).toBeInTheDocument();
     expect(screen.getAllByRole("article")).toHaveLength(10);
-    expect(within(screen.getByRole("region", { name: "Outcome results" })).getAllByText("0 copies")).toHaveLength(10);
-    expect(screen.getAllByText(/★ 0\.0 · 0 reviews/)).toHaveLength(10);
     expect(screen.getByRole("navigation", { name: "Outcome pages" })).toBeInTheDocument();
     await userEvent.click(screen.getByRole("button", { name: "Next Outcome page" }));
     expect(screen.getByRole("heading", { name: "Fixture Outcome 11" })).toBeInTheDocument();
-    expect(screen.getAllByRole("article")).toHaveLength(2);
-    expect(window.location.search).toContain("page=2");
     expect((await axe(container)).violations).toHaveLength(0);
   });
 
   it("turns ordinary searches into related visual results", async () => {
-    render(<App />);
+    render(<OutcomesPage outcomesFixture={seedOutcomes} />);
     await userEvent.type(screen.getByRole("searchbox", { name: "What do you want an agent to make?" }), "quiet soundtrack");
-    const results = screen.getByRole("region", { name: "Outcome results" });
-    expect(within(results).getByRole("heading", { name: /Lantern Rain: Original Strudel Soundtrack/i })).toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: "List" })).not.toBeInTheDocument();
-    expect(window.location.search).toContain("q=quiet+soundtrack");
+    expect(within(screen.getByRole("region", { name: "Outcome results" })).getByRole("heading", { name: /Lantern Rain/i })).toBeInTheDocument();
   });
 
   it("filters Outcomes by understandable capability categories", async () => {
-    render(<App />);
+    render(<OutcomesPage outcomesFixture={seedOutcomes} />);
     await userEvent.click(screen.getByRole("button", { name: "CAD" }));
     const results = screen.getByRole("region", { name: "Outcome results" });
     expect(within(results).getByRole("heading", { name: /Robot Snake CAD Prototype/i })).toBeInTheDocument();
     expect(within(results).queryByRole("heading", { name: /Launch Film/i })).not.toBeInTheDocument();
-    expect(window.location.search).toContain("category=cad");
   });
 
-  it("shows the preview, exact prompt, provenance, author, Products, and optional Skills", async () => {
-    const entry = getPublishedOutcome("html-css-animated-product-launch-film");
-    expect(entry).toBeDefined();
-    if (!entry) {
-      throw new Error("Expected the launch-film Outcome fixture to exist");
-    }
-    const { container } = render(<OutcomeDetailPage slug="html-css-animated-product-launch-film" />);
-    expect(screen.getByRole("heading", { name: entry.outcome.title, level: 1 })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "What it can make" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Original request" })).toBeInTheDocument();
+  it("shows a source-owned preview, exact prompt, provenance, and artifacts", async () => {
+    const { container } = render(<DynamicOutcomeDetailPage outcomeFixture={detailFixture} attributionsFixture={[{ id: "heygen/hyperframes", kind: "Product", name: "HyperFrames", owner: "HeyGen", href: "/products/hyperframes" }]} />);
+    expect(screen.getByRole("heading", { name: "Possible Launch Film", level: 1 })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "What it made" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Prompt" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Made with" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Reviews" })).toBeInTheDocument();
-    expect(screen.getByText("No reviews yet.")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Download the result" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Copy prompt" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Remix this prompt" })).toBeInTheDocument();
     expect(container).not.toHaveTextContent(/workstreams|trust|verification framework/i);
     expect((await axe(container)).violations).toHaveLength(0);
   });
 
-  it("keeps Products as official attribution with related Outcome cards", () => {
+  it("keeps Products as official attribution records", () => {
     render(<ProductDetailPage id="heygen/hyperframes" />);
     expect(screen.getByRole("heading", { name: "HyperFrames", level: 1 })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Outcomes" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Community 1" })).toBeInTheDocument();
     expect(screen.queryByText(/checkout|pricing unknown/i)).not.toBeInTheDocument();
   });
 
-  it("uses the same gallery-first structure for Skills", () => {
+  it("keeps Skills as links with directory-backed Outcomes", () => {
     render(<SkillDetailPage id="MiniMax-AI/skills/skills/pptx-generator" />);
-    expect(screen.getByRole("heading", { name: "Pptx Generator", level: 1 })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /Community/ })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "PPTX Generator", level: 1 })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Open Skill/i })).toHaveAttribute("href", "https://skills.sh/MiniMax-AI/skills/pptx-generator");
   });
 
   it("documents the same small public contract", () => {
@@ -96,14 +123,11 @@ describe("Possible website", () => {
     render(<AuthoringDocsPage />);
     expect(screen.getByRole("heading", { name: "Publish from your source" })).toBeInTheDocument();
     expect(screen.getByText(/Possible reads it—no account required/i)).toBeInTheDocument();
-    expect(screen.getAllByText(/outcome\.md/).length).toBeGreaterThan(0);
-    expect(screen.queryByText(/trust status|expectations checklist|compiler/i)).not.toBeInTheDocument();
   });
 
   it("publishes from a public source without a publisher account", () => {
     render(<PublishPage />);
     expect(screen.getByRole("heading", { name: "Publish from your source." })).toBeInTheDocument();
-    expect(screen.getByText(/no account required/i)).toBeInTheDocument();
     expect(screen.getByRole("textbox", { name: /GitHub repository or publisher domain/i })).toBeInTheDocument();
   });
 

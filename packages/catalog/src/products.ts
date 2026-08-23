@@ -1,4 +1,4 @@
-import { rawCompanies, rawProducts } from "./generated-products.js";
+import { rawCompanies, rawProducts } from "./records.js";
 import type {
   CompanyRecord,
   ProductCategory,

@@ -109,11 +109,15 @@ begin
     select 1 from public.product_outcome_directory
     where id = '00000000-0000-0000-0000-000000000902'
       and linked_product_id = 'fixture/product'
+      and title = 'Source-owned Outcome'
+      and prompt = 'Create the fixture result.'
   ) then raise exception 'Product attribution is missing'; end if;
   if not exists (
     select 1 from public.skill_outcome_directory
     where id = '00000000-0000-0000-0000-000000000902'
       and linked_skill_id = 'fixture/outcomes/skills/example'
+      and title = 'Source-owned Outcome'
+      and prompt = 'Create the fixture result.'
   ) then raise exception 'Skill attribution is missing'; end if;
   if not public.record_outcome_copy('00000000-0000-0000-0000-000000000902', '00000000-0000-0000-0000-000000000921') then raise exception 'First copy was not recorded'; end if;
   if public.record_outcome_copy('00000000-0000-0000-0000-000000000902', '00000000-0000-0000-0000-000000000921') then raise exception 'Duplicate daily copy was recorded'; end if;

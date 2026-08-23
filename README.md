@@ -36,19 +36,18 @@ The optional `$possible` Skill discovers relevant prior Outcomes, asks only cons
 
 ## Repository
 
-- `packages/catalog` — bundled seed Outcomes, Products, validation, and search
+- `packages/catalog` — Product definitions, lightweight Skill links, and public contract types
 - `apps/web` — visual directory, Outcome pages, source publishing, and docs
 - `apps/mcp` — read-only list, search, and fetch tools
 - `apps/cli` — authoring, validation, publishing, discovery, use, and bookmarks
 - `skills/possible` — Outcome discovery and execution-prompt preparation
 - `supabase` — source registry, immutable snapshots, copies, and reviews
 
-The six bundled Outcomes are Fray Labs seed content. They use the same public contract as every outside publisher and can move to a standalone public source without a special migration.
+Fray Labs publishes its seed Outcomes independently at [fraylabs/possible-outcomes](https://github.com/fraylabs/possible-outcomes). They enter Possible through the same public source path as every other publisher.
 
 ## Verify
 
 ```bash
 npm install
-npm run outcomes:generate
 npm run check
 ```

@@ -1,7 +1,3 @@
-export { getOutcome, outcomeCatalog } from "./catalog.js";
-export { bundledOutcomes, validateOutcome } from "./outcomes.js";
-export { searchOutcomes, tokenizeOutcomeSearch } from "./search.js";
-export type { OutcomeSearchInput, OutcomeSearchResult } from "./search.js";
 export {
   companies,
   getProduct,
@@ -13,12 +9,11 @@ export {
   validateProductId,
   validateProductRecord,
 } from "./products.js";
+export { getSkill, skillCatalog } from "./skills.js";
 export type {
   CompanyId,
   CompanyRecord,
-  Outcome,
   OutcomeAuthor,
-  OutcomeCatalogEntry,
   OutcomeFiles,
   OutcomeManifest,
   OutcomeModel,
@@ -36,6 +31,7 @@ export type {
   ProductRecord,
   ResolvedProduct,
   SkillReference,
+  SkillRecord,
 } from "./types.js";
 
 export function skillPageUrl(skill: import("./types.js").SkillReference): string {

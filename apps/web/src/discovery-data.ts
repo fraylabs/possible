@@ -1,8 +1,6 @@
-import type { OutcomeCatalogEntry, ProductCategory } from "@possible/catalog";
+import type { ProductCategory } from "@possible/catalog";
 import {
-  outcomeHref,
   productHref,
-  publishedOutcomes,
   publishedProducts,
   publishedSkills,
   skillHref,
@@ -175,102 +173,15 @@ function inferCategory(text: string, mediaUrl = "", productCategory?: ProductCat
   return "apps";
 }
 
-function localSource(entry: OutcomeCatalogEntry): DiscoverySource | undefined {
-  const product = entry.products[0];
-  if (product) return {
-    kind: "product",
-    id: product.id,
-    name: product.name,
-    owner: product.company.name,
-    href: productHref(product),
-    logoUrl: product.logoUrl,
-  };
-  const reference = entry.outcome.skills?.[0];
-  if (!reference) return undefined;
-  const id = `${reference.repository}/${reference.directory}`;
-  const skill = publishedSkills.find((candidate) => candidate.id === id);
-  return skill ? {
-    kind: "skill",
-    id: skill.id,
-    name: skill.name,
-    owner: skill.repository,
-    href: skillHref(skill),
-  } : undefined;
-}
-
-function localMedia(entry: OutcomeCatalogEntry, category: OutcomeCategory): DiscoveryMedia | undefined {
-  const preview = entry.outcome.preview;
-  const cover = preview?.images?.find((image) => image.cover) ?? preview?.images?.[0];
-  if (preview?.video) {
-    const media: DiscoveryMedia = {
-      kind: "video",
-      src: preview.video.src,
-      alt: preview.video.caption ?? `${entry.outcome.title} preview`,
-      fit: category === "slides" || category === "cad" ? "contain" : "cover",
-    };
-    const poster = preview.video.poster ?? cover?.src;
-    if (poster) media.poster = poster;
-    return media;
-  }
-  if (cover) return {
-    kind: "image",
-    src: cover.src,
-    alt: cover.alt,
-    fit: category === "slides" || category === "cad" ? "contain" : "cover",
-  };
-  if (preview?.cad?.poster) return {
-    kind: "image",
-    src: preview.cad.poster,
-    alt: preview.cad.caption ?? `${entry.outcome.title} CAD preview`,
-    fit: "contain",
-  };
-  return undefined;
-}
-
-function fromCatalogEntry(entry: OutcomeCatalogEntry): DiscoveryOutcome {
-  const source = localSource(entry);
-  const productCategory = entry.products[0]?.category;
-  const category = inferCategory(
-    [entry.outcome.title, entry.outcome.summary, source?.name].filter(Boolean).join(" "),
-    entry.outcome.preview?.video?.src ?? entry.outcome.preview?.images?.[0]?.src ?? "",
-    productCategory,
-  );
-  const media = localMedia(entry, category);
-  const publishedAt = entry.outcome.authoredAt ?? undefined;
-  const outcome: DiscoveryOutcome = {
-    id: `catalog:${entry.slug}`,
-    slug: entry.slug,
-    title: entry.outcome.title,
-    summary: entry.outcome.summary,
-    prompt: entry.outcome.executionPrompt,
-    href: outcomeHref(entry),
-    category,
-    sources: source ? [source] : [],
-    requirements: entry.outcome.requirements,
-    publicationKind: "community",
-    useCount: 0,
-    averageRating: 0,
-    reviewCount: 0,
-    catalogNumber: entry.catalogNumber,
-  };
-  outcome.sourceUrl = entry.sourceUrl;
-  if (source) outcome.source = source;
-  if (media) outcome.media = media;
-  if (publishedAt) outcome.publishedAt = publishedAt;
-  return outcome;
-}
-
-export const localDiscoveryOutcomes = publishedOutcomes.map(fromCatalogEntry);
-
 function productSource(linkedProduct: LinkedProductRow): DiscoverySource {
   const slug = linkedProduct.linked_product_slug;
   const catalogProduct = publishedProducts.find((product) => product.id.split("/").at(-1) === slug);
   const source: DiscoverySource = {
     kind: "product",
     id: linkedProduct.linked_product_id,
-    name: linkedProduct.linked_product_name,
-    owner: linkedProduct.linked_company_name,
-    href: `/products/${slug}`,
+    name: catalogProduct?.name ?? linkedProduct.linked_product_name,
+    owner: catalogProduct?.company.name ?? linkedProduct.linked_company_name,
+    href: catalogProduct ? productHref(catalogProduct) : `/products/${slug}`,
   };
   if (catalogProduct?.logoUrl) source.logoUrl = catalogProduct.logoUrl;
   return source;
@@ -281,7 +192,7 @@ function skillSource(linkedSkill: LinkedSkillRow): DiscoverySource {
   return {
     kind: "skill",
     id: linkedSkill.linked_skill_id,
-    name: linkedSkill.linked_skill_name,
+    name: catalogSkill?.name ?? linkedSkill.linked_skill_name,
     owner: linkedSkill.linked_skill_repository,
     href: catalogSkill
       ? skillHref(catalogSkill)
@@ -340,7 +251,7 @@ function fromPublicRow(
 
 export async function fetchDiscoveryOutcomes(): Promise<DiscoveryOutcome[]> {
   const client = getSupabaseBrowserClient();
-  if (!client) return localDiscoveryOutcomes;
+  if (!client) return [];
 
   const [outcomeResult, productResult, skillResult, usageResult, reviewResult] = await Promise.all([
     client
@@ -364,7 +275,7 @@ export async function fetchDiscoveryOutcomes(): Promise<DiscoveryOutcome[]> {
       ? client.rpc("get_outcome_review_summaries", { target_outcome_id: null })
       : Promise.resolve({ data: [] as OutcomeReviewSummaryRow[], error: null }),
   ]);
-  if (outcomeResult.error) return localDiscoveryOutcomes;
+  if (outcomeResult.error) throw outcomeResult.error;
 
   const linkedSources = new Map<string, DiscoverySource[]>();
   if (!productResult.error) {
@@ -390,42 +301,21 @@ export async function fetchDiscoveryOutcomes(): Promise<DiscoveryOutcome[]> {
   }
   // SAFETY: the explicit outcome_directory select list matches PublicOutcomeRow.
   const rows = (outcomeResult.data ?? []) as PublicOutcomeRow[];
-  const localBySlug = new Map(localDiscoveryOutcomes.map((entry) => [entry.slug, entry]));
-  const hydratedLocal = new Map(localDiscoveryOutcomes.map((entry) => [entry.id, entry]));
   const directoryOutcomes: DiscoveryOutcome[] = [];
 
   for (const [index, row] of rows.entries()) {
-    const local = row.slug ? localBySlug.get(row.slug) : undefined;
-    if (local) {
-      const publishedAt = row.published_at ?? local.publishedAt;
-      const sources = linkedSources.get(row.id) ?? local.sources;
-      const hydrated: DiscoveryOutcome = {
-        ...local,
-        databaseId: row.id,
-        sources,
-        requirements: row.requirements,
-        publicationKind: row.publication_kind,
-        useCount: usageCounts.get(row.id) ?? 0,
-        averageRating: Number(reviewSummaries.get(row.id)?.average_rating ?? 0),
-        reviewCount: Number(reviewSummaries.get(row.id)?.review_count ?? 0),
-      };
-      if (sources[0]) hydrated.source = sources[0];
-      if (publishedAt) hydrated.publishedAt = publishedAt;
-      hydratedLocal.set(local.id, hydrated);
-      continue;
-    }
     const reviewSummary = reviewSummaries.get(row.id);
     directoryOutcomes.push(fromPublicRow(
       row,
       linkedSources.get(row.id) ?? [],
-      localDiscoveryOutcomes.length + index + 1,
+      index + 1,
       usageCounts.get(row.id) ?? 0,
       Number(reviewSummary?.average_rating ?? 0),
       Number(reviewSummary?.review_count ?? 0),
     ));
   }
 
-  return [...directoryOutcomes, ...hydratedLocal.values()];
+  return directoryOutcomes;
 }
 
 function tokenize(value: string): string[] {

@@ -4,6 +4,15 @@ export interface SkillReference {
   directory: string;
 }
 
+export interface SkillRecord {
+  id: string;
+  slug: string;
+  name: string;
+  repository: string;
+  directory: string;
+  sourceUrl: string;
+}
+
 export interface OutcomeAuthor {
   name: string;
   url: string;
@@ -114,20 +123,4 @@ export interface OutcomeManifest {
   inputs?: OutcomeFile[];
   artifacts?: OutcomeFile[];
   preview?: OutcomePreview;
-}
-
-export interface Outcome extends OutcomeManifest {
-  title: string;
-  summary: string;
-  aboutMarkdown: string;
-  executionPrompt: string;
-  originalPrompt?: string;
-}
-
-export interface OutcomeCatalogEntry {
-  slug: string;
-  outcome: Outcome;
-  products: ResolvedProduct[];
-  catalogNumber: number;
-  sourceUrl: string;
 }

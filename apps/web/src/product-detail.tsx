@@ -2,9 +2,8 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { QueryClient, QueryClientProvider, useInfiniteQuery, useQuery } from "@tanstack/react-query";
-import type { OutcomeCatalogEntry } from "@possible/catalog";
 import { VirtuosoGrid } from "react-virtuoso";
-import { getProductOutcomes, getPublishedProduct, getPublishedSkill, getSkillOutcomes, outcomeHref } from "./public-content";
+import { getPublishedProduct, getPublishedSkill } from "./public-content";
 import { recordOutcomeCopy } from "./discovery-data";
 import { CopyButton, SiteShell } from "./shared";
 import { getSupabaseBrowserClient } from "./supabase";
@@ -48,7 +47,7 @@ type DirectoryOutcomeRow = {
   model: string | null;
   author_name: string | null;
   author_url: string | null;
-  linked_company_name: string;
+  provider: string | null;
   publication_kind: "official" | "community";
 };
 
@@ -70,32 +69,7 @@ function sanitizeDirectorySearch(value: string) {
   return value.trim().replace(/[^\p{L}\p{N}\s'-]/gu, " ").replace(/\s+/g, " ");
 }
 
-function fromCatalogEntry(entry: OutcomeCatalogEntry): ProductGalleryEntry {
-  const { outcome } = entry;
-  const preview = outcome.preview;
-  const image = preview?.images?.find(({ cover }) => cover) ?? preview?.images?.[0];
-  const kind: GalleryKind = preview?.video ? "video" : image ? "image" : preview?.audio ? "audio" : preview?.cad ? "cad" : "prompt";
-  const executionModel = outcome.models.find(({ role }) => role === "execution");
-  return {
-    id: `catalog:${entry.slug}`,
-    title: outcome.title,
-    summary: outcome.summary,
-    prompt: outcome.executionPrompt,
-    sourceUrl: entry.sourceUrl,
-    outcomeUrl: outcomeHref(entry),
-    provider: executionModel?.provider ?? outcome.author.name,
-    model: executionModel?.model,
-    authorName: outcome.author.name,
-    authorUrl: outcome.author.url,
-    kind,
-    mediaUrl: preview?.video?.src ?? image?.src ?? preview?.audio?.src ?? preview?.cad?.poster,
-    posterUrl: preview?.video?.poster ?? preview?.audio?.poster ?? preview?.cad?.poster,
-    mediaAlt: image?.alt ?? preview?.cad?.caption,
-    sourceKind: "community",
-  };
-}
-
-function fromDirectoryRow(row: DirectoryOutcomeRow, productCategory: string): ProductGalleryEntry {
+function fromDirectoryRow(row: DirectoryOutcomeRow, category: string, ownerName: string): ProductGalleryEntry {
   return {
     id: row.id,
     databaseId: row.id,
@@ -103,11 +77,11 @@ function fromDirectoryRow(row: DirectoryOutcomeRow, productCategory: string): Pr
     summary: row.summary,
     prompt: row.prompt,
     outcomeUrl: `/outcomes/view/?id=${row.id}`,
-    provider: row.linked_company_name,
+    provider: row.provider ?? ownerName,
     model: row.model ?? undefined,
     authorName: row.author_name ?? undefined,
     authorUrl: row.author_url ?? undefined,
-    kind: inferMediaKind(row.result_media_url, productCategory),
+    kind: inferMediaKind(row.result_media_url, category),
     mediaUrl: row.result_media_url ?? undefined,
     posterUrl: row.poster_url ?? undefined,
     sourceKind: row.publication_kind,
@@ -196,7 +170,7 @@ export function SkillDetailPage({ id }: { id: string }) {
 function ListingDetailContent({ id, kind }: { id: string; kind: ListingKind }) {
   const product = kind === "product" ? getPublishedProduct(id) : undefined;
   const skill = kind === "skill" ? getPublishedSkill(id) : undefined;
-  const listing = product ? {
+  const listing = useMemo(() => product ? {
     id: product.id,
     name: product.name,
     ownerName: product.company.name,
@@ -218,38 +192,36 @@ function ListingDetailContent({ id, kind }: { id: string; kind: ListingKind }) {
     website: skill.sourceUrl,
     docsUrl: skill.sourceUrl,
     category: "skill",
-  } : undefined;
+  } : undefined, [product, skill]);
   const client = useMemo(() => getSupabaseBrowserClient(), []);
-  const bundledOutcomes = useMemo(() => product ? getProductOutcomes(product.id).map(fromCatalogEntry) : skill ? getSkillOutcomes(skill.id).map(fromCatalogEntry) : [], [product, skill]);
+  const directoryView = kind === "product" ? "product_outcome_directory" : "skill_outcome_directory";
+  const linkColumn = kind === "product" ? "linked_product_id" : "linked_skill_id";
   const [query, setQuery] = useState("");
   const [directoryQuery, setDirectoryQuery] = useState("");
   const [filter, setFilter] = useState<GalleryFilter>("all");
   const [sourceFilter, setSourceFilter] = useState<OutcomeSourceFilter>("all");
-  const [visibleCount, setVisibleCount] = useState(pageSize);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [selectedFromDirectory, setSelectedFromDirectory] = useState<ProductGalleryEntry | null>(null);
   const openedHere = useRef(false);
 
   const directoryAvailability = useQuery({
-    queryKey: ["product-outcome-count", product?.id],
-    enabled: Boolean(client && product),
+    queryKey: ["listing-outcome-count", kind, listing?.id],
+    enabled: Boolean(client && listing),
     queryFn: async () => {
-      if (!client || !product) throw new Error("The public Outcome directory is unavailable.");
-      const productSlug = product.id.split("/").at(-1);
-      const { count, error } = await client.from("product_outcome_directory").select("id", { count: "exact", head: true }).eq("linked_product_slug", productSlug);
+      if (!client || !listing) throw new Error("The public Outcome directory is unavailable.");
+      const { count, error } = await client.from(directoryView).select("id", { count: "exact", head: true }).eq(linkColumn, listing.id);
       if (error) throw new Error(error.message);
       return count ?? 0;
     },
   });
 
   const directoryFeed = useInfiniteQuery({
-    queryKey: ["product-outcomes", product?.id, directoryQuery],
-    enabled: Boolean(client && product),
+    queryKey: ["listing-outcomes", kind, listing?.id, directoryQuery],
+    enabled: Boolean(client && listing),
     initialPageParam: 0,
     queryFn: async ({ pageParam }): Promise<DirectoryPage> => {
-      if (!client || !product) throw new Error("The public Outcome directory is unavailable.");
-      const productSlug = product.id.split("/").at(-1);
-      let request = client.from("product_outcome_directory").select("id,title,summary,prompt,result_media_url,poster_url,model,author_name,author_url,linked_company_name,publication_kind", { count: "exact" }).eq("linked_product_slug", productSlug);
+      if (!client || !listing) throw new Error("The public Outcome directory is unavailable.");
+      let request = client.from(directoryView).select("id,title,summary,prompt,result_media_url,poster_url,provider,model,author_name,author_url,publication_kind", { count: "exact" }).eq(linkColumn, listing.id);
       const safeSearch = sanitizeDirectorySearch(directoryQuery);
       if (safeSearch) request = request.or(`title.ilike.%${safeSearch}%,prompt.ilike.%${safeSearch}%,model.ilike.%${safeSearch}%,author_name.ilike.%${safeSearch}%`);
       const { data, count, error } = await request.order("published_at", { ascending: false }).order("id").range(pageParam, pageParam + pageSize - 1);
@@ -259,7 +231,7 @@ function ListingDetailContent({ id, kind }: { id: string; kind: ListingKind }) {
       const total = count ?? 0;
       const nextOffset = pageParam + rows.length;
       return {
-        outcomes: rows.map((row) => fromDirectoryRow(row, product.category)),
+        outcomes: rows.map((row) => fromDirectoryRow(row, listing.category, listing.ownerName)),
         total,
         nextOffset: rows.length > 0 && nextOffset < total ? nextOffset : undefined,
       };
@@ -271,24 +243,21 @@ function ListingDetailContent({ id, kind }: { id: string; kind: ListingKind }) {
   const directoryOutcomes = useMemo(() => directoryPages?.flatMap((page) => page.outcomes) ?? [], [directoryPages]);
   const directoryTotal = directoryFeed.data?.pages[0]?.total ?? 0;
   const unfilteredDirectoryTotal = directoryAvailability.data ?? (directoryQuery === "" ? directoryTotal : undefined);
-  const hasDirectoryOutcomes = !product || !client ? false : unfilteredDirectoryTotal === undefined ? directoryAvailability.isError ? false : null : unfilteredDirectoryTotal > 0;
-  const directoryLoading = Boolean(product) && (directoryAvailability.isPending || directoryFeed.isPending);
+  const directoryLoading = Boolean(listing) && (directoryAvailability.isPending || directoryFeed.isPending);
 
-  const outcomes = useMemo(() => hasDirectoryOutcomes === true ? directoryOutcomes : hasDirectoryOutcomes === false ? bundledOutcomes : [], [bundledOutcomes, directoryOutcomes, hasDirectoryOutcomes]);
+  const outcomes = directoryOutcomes;
   const availableKinds = useMemo(() => kindOrder.filter((kind) => outcomes.some((entry) => entry.kind === kind)), [outcomes]);
   const filteredOutcomes = useMemo(() => outcomes.filter((entry) => {
     if (sourceFilter !== "all" && entry.sourceKind !== sourceFilter) return false;
     if (filter !== "all" && entry.kind !== filter) return false;
-    if (hasDirectoryOutcomes) return true;
-    const haystack = [entry.title, entry.summary, entry.model, entry.authorName].join(" ").toLowerCase();
-    return haystack.includes(query.trim().toLowerCase());
-  }), [filter, hasDirectoryOutcomes, outcomes, query, sourceFilter]);
-  const visibleOutcomes = useMemo(() => hasDirectoryOutcomes ? filteredOutcomes : filteredOutcomes.slice(0, visibleCount), [filteredOutcomes, hasDirectoryOutcomes, visibleCount]);
-  const resultCount = hasDirectoryOutcomes && filter === "all" && sourceFilter === "all" ? directoryTotal : filteredOutcomes.length;
+    return true;
+  }), [filter, outcomes, sourceFilter]);
+  const visibleOutcomes = filteredOutcomes;
+  const resultCount = filter === "all" && sourceFilter === "all" ? directoryTotal : filteredOutcomes.length;
   const selected = selectedId ? outcomes.find((entry) => entry.id === selectedId) ?? selectedFromDirectory : null;
 
   useEffect(() => {
-    const timer = window.setTimeout(() => { setVisibleCount(pageSize); setDirectoryQuery(query); }, 250);
+    const timer = window.setTimeout(() => setDirectoryQuery(query), 250);
     return () => window.clearTimeout(timer);
   }, [query]);
 
@@ -304,31 +273,26 @@ function ListingDetailContent({ id, kind }: { id: string; kind: ListingKind }) {
   }, [outcomes]);
 
   useEffect(() => {
-    if (!selectedId || outcomes.some((entry) => entry.id === selectedId) || !client || !product || !hasDirectoryOutcomes) {
+    if (!selectedId || outcomes.some((entry) => entry.id === selectedId) || !client || !listing) {
       setSelectedFromDirectory(null);
       return;
     }
     let cancelled = false;
-    const productSlug = product.id.split("/").at(-1);
-    void client.from("product_outcome_directory").select("id,title,summary,prompt,result_media_url,poster_url,model,author_name,author_url,linked_company_name,publication_kind").eq("linked_product_slug", productSlug).eq("id", selectedId).maybeSingle().then(({ data, error }) => {
+    void client.from(directoryView).select("id,title,summary,prompt,result_media_url,poster_url,provider,model,author_name,author_url,publication_kind").eq(linkColumn, listing.id).eq("id", selectedId).maybeSingle().then(({ data, error }) => {
       if (cancelled || error || !data) return;
       // SAFETY: the explicit product_outcome_directory select list matches DirectoryOutcomeRow.
-      setSelectedFromDirectory(fromDirectoryRow(data as DirectoryOutcomeRow, product.category));
+      setSelectedFromDirectory(fromDirectoryRow(data as DirectoryOutcomeRow, listing.category, listing.ownerName));
     });
     return () => { cancelled = true; };
-  }, [client, hasDirectoryOutcomes, outcomes, product, selectedId]);
+  }, [client, directoryView, linkColumn, listing, outcomes, selectedId]);
 
   const loadNextPage = useCallback(() => {
-    if (hasDirectoryOutcomes === true) {
-      if (directoryFeed.hasNextPage && !directoryFeed.isFetchingNextPage) void directoryFeed.fetchNextPage();
-      return;
-    }
-    if (hasDirectoryOutcomes === false) setVisibleCount((count) => Math.min(count + pageSize, filteredOutcomes.length));
-  }, [directoryFeed.fetchNextPage, directoryFeed.hasNextPage, directoryFeed.isFetchingNextPage, filteredOutcomes.length, hasDirectoryOutcomes]);
+    if (directoryFeed.hasNextPage && !directoryFeed.isFetchingNextPage) void directoryFeed.fetchNextPage();
+  }, [directoryFeed.fetchNextPage, directoryFeed.hasNextPage, directoryFeed.isFetchingNextPage]);
 
   if (!listing) return null;
 
-  const outcomeTotal = hasDirectoryOutcomes ? unfilteredDirectoryTotal ?? directoryTotal : bundledOutcomes.length;
+  const outcomeTotal = unfilteredDirectoryTotal ?? directoryTotal;
   const officialCount = outcomes.filter((entry) => entry.sourceKind === "official").length;
   const communityCount = outcomes.filter((entry) => entry.sourceKind === "community").length;
 
@@ -374,7 +338,7 @@ function ListingDetailContent({ id, kind }: { id: string; kind: ListingKind }) {
             <button type="button" className={sourceFilter === "community" ? "active" : ""} aria-pressed={sourceFilter === "community"} onClick={() => setSourceFilter("community")}>Community <span>{communityCount}</span></button>
           </div>
           {availableKinds.length > 1 ? <div className="product-gallery-filters" role="group" aria-label="Filter by media"><button type="button" className={filter === "all" ? "active" : ""} aria-pressed={filter === "all"} onClick={() => setFilter("all")}>All</button>{availableKinds.map((kind) => <button type="button" className={filter === kind ? "active" : ""} aria-pressed={filter === kind} onClick={() => setFilter(kind)} key={kind}>{kind}</button>)}</div> : null}
-          {visibleOutcomes.length ? <VirtuosoGrid className="product-gallery-virtual" listClassName="product-gallery-grid" itemClassName="product-gallery-grid-item" useWindowScroll data={visibleOutcomes} computeItemKey={(_, entry) => entry.id} endReached={loadNextPage} increaseViewportBy={{ top: 300, bottom: 500 }} itemContent={(index, entry) => <GalleryTile entry={entry} priority={index < 5} onOpen={openOutcome} />} /> : <p className="product-outcomes-empty">{directoryLoading ? "Loading published Outcomes…" : directoryFeed.isError && hasDirectoryOutcomes ? "The published Outcomes could not be loaded." : outcomes.length ? "No Outcomes match this search." : `No published Outcomes use this ${kind} yet.`}</p>}
+          {visibleOutcomes.length ? <VirtuosoGrid className="product-gallery-virtual" listClassName="product-gallery-grid" itemClassName="product-gallery-grid-item" useWindowScroll data={visibleOutcomes} computeItemKey={(_, entry) => entry.id} endReached={loadNextPage} increaseViewportBy={{ top: 300, bottom: 500 }} itemContent={(index, entry) => <GalleryTile entry={entry} priority={index < 5} onOpen={openOutcome} />} /> : <p className="product-outcomes-empty">{directoryLoading ? "Loading published Outcomes…" : directoryFeed.isError || directoryAvailability.isError ? "The published Outcomes could not be loaded." : outcomes.length ? "No Outcomes match this search." : `No published Outcomes use this ${kind} yet.`}</p>}
           <span className="sr-only" aria-live="polite">{directoryFeed.isFetchingNextPage ? "Loading more Outcomes." : ""}</span>
         </section>
       </article>

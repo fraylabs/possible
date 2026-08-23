@@ -1,50 +1,12 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import {
-  bundledOutcomes,
-  getOutcome,
   getProduct,
-  outcomeCatalog,
+  getSkill,
   productCatalog,
   resolveProducts,
-  searchOutcomes,
-  validateOutcome,
+  skillCatalog,
 } from "../dist/index.js";
-
-test("the catalog is made from one prompt-to-result record per folder", () => {
-  assert.equal(outcomeCatalog.length, 6);
-  assert.equal(bundledOutcomes.length, outcomeCatalog.length);
-  const film = getOutcome("html-css-animated-product-launch-film");
-  assert.ok(film);
-  assert.equal(film.outcome.originalPrompt, "nono just to explain what possible is");
-  assert.match(film.outcome.executionPrompt, /^Use \$hyperframes/);
-  assert.equal(film.outcome.models.find(({ role }) => role === "execution")?.model, "GPT-5.6");
-  assert.deepEqual(film.products.map(({ id }) => id), ["heygen/hyperframes", "uzu/strudel"]);
-  assert.match(film.outcome.preview.video.src, /^\/outcome-media\//);
-  for (const forbidden of ["expectations", "notFor", "workstreams", "verification", "trust", "lifecycle"]) {
-    assert.equal(forbidden in film.outcome, false);
-  }
-
-});
-
-test("Outcome inputs and artifacts are concrete optional files", () => {
-  const headrest = getOutcome("split-vibrotactile-headrest-cad-package");
-  assert.ok(headrest);
-  assert.equal(headrest.outcome.inputs, undefined);
-  assert.equal(headrest.outcome.artifacts.length, 6);
-  assert.match(headrest.outcome.artifacts[0].src, /^\/outcome-media\//);
-  assert.throws(() => validateOutcome({ ...headrest.outcome, artifacts: [{ type: "wish", src: "artifacts/nope", label: "Nope" }] }), /type is unsupported/);
-});
-
-test("Outcome validation keeps both prompts exact and rejects framework fields", () => {
-  const valid = structuredClone(getOutcome("html-css-animated-product-launch-film").outcome);
-  assert.equal(validateOutcome(valid).originalPrompt, valid.originalPrompt);
-  assert.equal(validateOutcome(valid).executionPrompt, valid.executionPrompt);
-  assert.throws(() => validateOutcome({ ...valid, expectations: [] }), /not part of the Outcome contract/);
-  assert.throws(() => validateOutcome({ ...valid, files: { about: "about.md", prompt: "prompt.md" } }), /reference outcome.md and prompt.md/);
-  assert.throws(() => validateOutcome({ ...valid, executionPrompt: `${valid.executionPrompt} ` }), /leading or trailing whitespace/);
-  assert.throws(() => validateOutcome({ ...valid, authoredAt: "yesterday" }), /ISO 8601/);
-});
 
 test("Product records contain only official directory information", () => {
   const product = getProduct("heygen/hyperframes");
@@ -59,10 +21,12 @@ test("Product records contain only official directory information", () => {
   assert.throws(() => resolveProducts(["missing/product"]), /missing product/i);
 });
 
-test("search uses the human-facing Outcome and Product text", () => {
-  assert.equal(searchOutcomes(outcomeCatalog, { query: "digital robot simulation" })[0]?.entry.slug, "robot-digital-prototype");
-  assert.equal(searchOutcomes(outcomeCatalog, { query: "editable PowerPoint deck" })[0]?.entry.slug, "polished-editable-powerpoint-presentation");
-  assert.equal(searchOutcomes(outcomeCatalog, { query: "original instrumental soundtrack" })[0]?.entry.slug, "original-strudel-soundtrack");
-  assert.deepEqual(searchOutcomes(outcomeCatalog, { query: "zyxquux" }), []);
-  assert.equal(searchOutcomes(outcomeCatalog, { query: "" }).length, outcomeCatalog.length);
+test("Skill records are lightweight links to their public Skills pages", () => {
+  const skill = getSkill("heygen-com/hyperframes/skills/hyperframes");
+  assert.ok(skill);
+  assert.equal(skill.name, "HyperFrames");
+  assert.equal(skill.sourceUrl, "https://skills.sh/heygen-com/hyperframes/hyperframes");
+  assert.equal(getSkill(skill.slug), skill);
+  assert.ok(skillCatalog.length > 0);
+  assert.ok(skillCatalog.every((entry) => entry.sourceUrl.startsWith("https://skills.sh/")));
 });

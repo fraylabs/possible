@@ -1,4 +1,5 @@
 export { startHttpServer, type PossibleHttpOptions } from "./http.js";
+export { createSupabaseOutcomeDirectory, searchDirectory, type DirectoryOutcome, type OutcomeDirectory } from "./directory.js";
 export {
   createPossibleServer,
   POSSIBLE_SERVER_INSTRUCTIONS,

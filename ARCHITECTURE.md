@@ -1,16 +1,21 @@
 # Architecture
 
 ```text
-outcomes/<slug>/outcome.json
-             │
-             └── generated catalog
-                    ├── possible.sh
-                    ├── /outcomes/*.json + original-prompt.txt + execution-prompt.txt
-                    └── MCP list / search / fetch
+publisher repository or domain
+  outcomes.json
+  outcomes/<slug>/{outcome.json,outcome.md,prompt.md}
+                │
+                ▼
+       registration function
+                │
+                ▼
+       immutable Supabase snapshot
+          ├── possible.sh
+          └── Possible MCP
 ```
 
-`outcome.json` is the single source of truth for the title, summary, original prompt, full execution prompt, execution provenance, author, and optional Products, Skills, and preview media. The generator validates folders, resolves local media URLs, and produces one typed catalog.
+The publisher source is canonical. Possible independently reads an exact Git commit or same-origin domain publication, validates the public contract, and stores an immutable content-addressed snapshot. The current directory points to one snapshot; older snapshots remain immutable and private.
 
-The website, MCP, and static publications only project that catalog. They do not rewrite published prompts, execute them, rank by trust, or add completion rules.
+The website and MCP read the same public Supabase views. Neither keeps a second Outcome catalog or rewrites a published prompt. Products and lightweight Skill links remain static reference data because they provide attribution context, not canonical Outcome content.
 
-The optional `$possible` skill uses prior Outcomes as precedent, gathers current information, asks for missing intent, and prepares a new execution prompt for user-approved handoff. The CLI only installs that skill and stores local Outcome bookmarks.
+The CLI owns authoring, validation, source publishing, direct source installation, prompt use, and local bookmarks. The optional `$possible` Skill uses published Outcomes as precedent and prepares a new prompt without changing the original record.

@@ -26,11 +26,7 @@ export function pageMetadata({ title, description, path, noIndex = false, altern
     robots: noIndex ? { index: false, follow: false } : undefined,
     alternates: {
       canonical,
-      types: {
-        "text/plain": `${siteUrl}/llms.txt`,
-        "application/json": `${siteUrl}/outcomes/index.json`,
-        ...alternates,
-      },
+      types: alternates,
     },
     openGraph: {
       type: "website",
