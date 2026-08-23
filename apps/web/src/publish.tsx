@@ -975,5 +975,3 @@ export function DashboardPage() {
     </SiteShell>
   );
 }
-
-export const PublishPage = DashboardPage;

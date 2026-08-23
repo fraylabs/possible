@@ -39,6 +39,7 @@
 }
 .not-found { min-height: calc(100vh - 74px); padding: 10vw 3.5vw; display: flex; flex-direction: column; justify-content: center; }
 .not-found h1 { margin: 35px 0 60px; font-size: clamp(65px, 9vw, 145px); font-weight: 500; line-height: .87; letter-spacing: -.075em; }
+.not-found h1 em { color: #ff4d00; font-style: normal; }
 
 /* Readable Outcome record */
 

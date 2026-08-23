@@ -10,4 +10,4 @@ Use the repository's private **Report a vulnerability** form under GitHub Securi
 
 Include the affected version, reproduction steps, impact and any suggested mitigation. Fray Labs will acknowledge a complete report and coordinate disclosure after a fix is available.
 
-Possible treats installed third-party skills as untrusted instructions. A pack's reviewed revision is evidence of what was inspected, not an endorsement of the upstream repository or a substitute for reviewing it in your environment.
+Possible treats installed third-party Skills as untrusted instructions. A recorded review revision identifies what was inspected; it is not an endorsement of the upstream repository or a substitute for reviewing it in your environment.

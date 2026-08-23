@@ -58,7 +58,6 @@ export async function startHttpServer(
       // SAFETY: SDK v1's accessor declarations conflict with its Transport interface
       // only when exactOptionalPropertyTypes is enabled; this SDK-provided runtime
       // class implements the transport contract consumed by the same SDK server.
-      // oxlint-disable-next-line anti-slop/no-chained-type-assertions -- Upstream SDK declaration mismatch; both values come from the same SDK version.
       await server.connect(transport as unknown as Transport);
       await transport.handleRequest(request, response, request.body);
     } catch (error) {

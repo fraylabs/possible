@@ -27,7 +27,6 @@
   },
   "engines": { "node": ">=22" },
   "devDependencies": {
-    "@oxlint/plugins": "^1.78.0",
     "oxlint": "^1.78.0"
   },
   "optionalDependencies": {

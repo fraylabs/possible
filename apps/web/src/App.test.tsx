@@ -2,7 +2,7 @@ import { cleanup, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { axe } from "vitest-axe";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import App, { AccountProfilePage, AuthoringDocsPage, DocsPage, OutcomeDetailPage, OutcomesPage, ProductDetailPage, PublishPage, SkillDetailPage } from "./App";
+import App, { AccountProfilePage, AuthoringDocsPage, DashboardPage, DocsPage, OutcomeDetailPage, OutcomesPage, ProductDetailPage, SkillDetailPage } from "./App";
 import type { WeeklySourceRanking } from "./discovery-data";
 import { getPublishedOutcome } from "./public-content";
 import { getOutcomeState, summarizeGalleryImport } from "./publish";
@@ -101,7 +101,7 @@ describe("Possible website", () => {
   });
 
   it("keeps the publisher workspace private and explicit when it is not configured", () => {
-    render(<PublishPage />);
+    render(<DashboardPage />);
     expect(screen.getByRole("heading", { name: "Publisher workspace" })).toBeInTheDocument();
     expect(screen.getByText(/ignored workspace environment file/i)).toBeInTheDocument();
     expect(screen.queryByRole("link", { name: /publish/i })).not.toBeInTheDocument();

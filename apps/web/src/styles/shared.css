@@ -25,6 +25,10 @@ button, textarea { font: inherit; }
 button { color: inherit; }
 a { color: inherit; text-decoration: none; }
 .sr-only { width: 1px; height: 1px; padding: 0; position: absolute; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+.eyebrow { margin: 0; color: #736e65; font: 500 10px "DM Mono", monospace; letter-spacing: .12em; }
+.copy-button { width: 100%; padding: 17px 20px; border: 0; display: flex; justify-content: space-between; align-items: center; background: #f3f0e8; cursor: pointer; font: 500 11px "DM Mono", monospace; text-transform: uppercase; }
+.button-link { width: fit-content; min-width: 230px; padding: 17px 19px; border: 1px solid #151411; display: flex; justify-content: space-between; align-items: center; gap: 35px; font: 500 10px "DM Mono", monospace; text-transform: uppercase; transition: background .18s ease, color .18s ease; }
+.button-link:hover, .button-link:focus-visible { background: #151411; color: #f3f0e8; }
 
 .site-shell { min-height: 100svh; display: flex; flex-direction: column; background: var(--site-background); color: var(--site-text); }
 .site-shell-body { min-width: 0; flex: 1 0 auto; display: flex; flex-direction: column; }

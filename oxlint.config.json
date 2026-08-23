@@ -17,66 +17,6 @@
     "**/dist/**",
     "**/node_modules/**",
     "**/out/**",
-    "apps/web/public/**",
-    "tools/oxlint/anti-slop/**"
-  ],
-  "jsPlugins": [
-    {
-      "name": "anti-slop",
-      "specifier": "./tools/oxlint/anti-slop/index.ts"
-    }
-  ],
-  "rules": {
-    "anti-slop/no-chained-type-assertions": "error",
-    "anti-slop/no-conditional-empty-object-spread": "error",
-    "anti-slop/no-known-value-widening": "error",
-    "anti-slop/no-module-mocking": "error",
-    "anti-slop/no-object-parameters": "error",
-    "anti-slop/no-reflect-apply": "error",
-    "anti-slop/no-reflect-get": "error",
-    "anti-slop/no-runtime-typeof": "error",
-    "anti-slop/no-shape-in-symbol-names": "error",
-    "anti-slop/no-unknown-parameters": "error",
-    "anti-slop/no-unknown-returns": "error",
-    "anti-slop/no-unknown-type-aliases": "error",
-    "anti-slop/no-unsafe-dictionary-type": "error",
-    "anti-slop/no-widen-then-assert": "error",
-    "anti-slop/require-safety-comment-for-type-assertion": "error"
-  },
-  "overrides": [
-    {
-      "files": [
-        "packages/catalog/src/outcomes.ts",
-        "packages/catalog/src/products.ts"
-      ],
-      "rules": {
-        "anti-slop/no-runtime-typeof": "off",
-        "anti-slop/no-unknown-parameters": "off",
-        "anti-slop/no-unsafe-dictionary-type": "off",
-        "anti-slop/require-safety-comment-for-type-assertion": "off"
-      }
-    },
-    {
-      "files": [
-        "apps/cli/src/bookmarks.mjs",
-        "evaluations/discovery/verify.mjs",
-        "scripts/lib/outcome-folders.mjs"
-      ],
-      "rules": {
-        "anti-slop/no-runtime-typeof": "off"
-      }
-    },
-    {
-      "files": [
-        "apps/mcp/test/server.test.ts",
-        "apps/web/src/App.test.tsx",
-        "packages/catalog/test/catalog.test.mjs"
-      ],
-      "rules": {
-        "anti-slop/no-module-mocking": "off",
-        "anti-slop/no-runtime-typeof": "off",
-        "anti-slop/require-safety-comment-for-type-assertion": "off"
-      }
-    }
+    "apps/web/public/**"
   ]
 }

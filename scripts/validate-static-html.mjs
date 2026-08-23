@@ -20,13 +20,6 @@ assert.match(home, /What do you want an agent to make\?/);
 assert.match(home, /aria-label="Outcome gallery"/);
 assert.doesNotMatch(home, /Outcome Pack|expectations checklist|structured prompt/);
 
-for (const alias of ["discover/index.html", "products/index.html", "skills/index.html"]) {
-  const markup = await html(alias);
-  assert.match(markup, /Most copied this week/);
-  assert.match(markup, /What can agents make\?/);
-  assert.match(markup, /rel="canonical" href="https:\/\/possible\.sh\/"/);
-}
-
 for (const entry of outcomeCatalog) {
   const markup = await html(`outcomes/${entry.slug}/index.html`);
   assert.match(markup, new RegExp(escape(htmlText(entry.outcome.title))));
@@ -52,7 +45,7 @@ for (const path of ["docs/index.html", "docs/how-to-use/index.html", "docs/autho
   assert.doesNotMatch(markup, /Outcome Pack|expectations checklist|trust status/i);
 }
 
-for (const removed of ["packs/index.html", "docs/outcome-packs/index.html", "docs/expectations/index.html", "docs/glossary/index.html"]) {
+for (const removed of ["discover/index.html", "packs/index.html", "products/index.html", "publish/index.html", "skills/index.html", "docs/outcome-packs/index.html", "docs/expectations/index.html", "docs/glossary/index.html"]) {
   await assert.rejects(html(removed), { code: "ENOENT" });
 }
 console.log("Static Outcome, Product, and documentation pages are valid.");

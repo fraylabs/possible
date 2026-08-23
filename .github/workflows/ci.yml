@@ -4,12 +4,6 @@ on:
   push:
     branches: [main]
   pull_request:
-    paths-ignore:
-      - "registry/entries/**"
-      - "registry/snapshots/**"
-      - "packages/packs/src/federated-catalog.json"
-      - "skills/possible/references/packs.md"
-      - "apps/cli/assets/possible/references/packs.md"
 
 permissions:
   contents: read
