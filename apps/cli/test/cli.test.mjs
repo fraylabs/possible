@@ -7,6 +7,7 @@ import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
 import { afterEach, test } from "node:test";
+import { validateOutcomeManifest } from "../src/outcome-format.mjs";
 
 const execute = promisify(execFile);
 const packageRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
@@ -35,11 +36,12 @@ test("the CLI exposes authoring, live discovery, source use, and local bookmarks
 
 test("create and validate use the three-file Outcome contract", async () => {
   const project = await fixture();
-  const created = await execute(process.execPath, [cli, "create", "quiet-launch-film"], { cwd: project });
+  const created = await execute(process.execPath, [cli, "create", "quiet-launch-film", "--product", "example/film-maker"], { cwd: project });
   assert.match(created.stdout, /Created .*quiet-launch-film/);
   const folder = join(project, "outcomes", "quiet-launch-film");
   const manifest = JSON.parse(await readFile(join(folder, "outcome.json"), "utf8"));
-  assert.equal(manifest.schemaVersion, 3);
+  assert.equal(manifest.schemaVersion, 4);
+  assert.deepEqual(manifest.primary, { kind: "product", id: "example/film-maker" });
   assert.deepEqual(manifest.files, { about: "outcome.md", prompt: "prompt.md" });
   assert.match(await readFile(join(folder, "outcome.md"), "utf8"), /^# /);
   assert.ok((await readFile(join(folder, "prompt.md"), "utf8")).trim());
@@ -48,11 +50,42 @@ test("create and validate use the three-file Outcome contract", async () => {
   assert.equal((await execute(process.execPath, [cli, "validate"], { cwd: project })).stdout, "Validated 1 Outcome.\n");
 });
 
+test("version 4 requires one unique primary attribution", () => {
+  const base = {
+    schemaVersion: 4,
+    slug: "quiet-launch-film",
+    files: { about: "outcome.md", prompt: "prompt.md" },
+    authoredAt: null,
+    author: { name: "Example Studio", url: "https://example.com" },
+    models: [{ provider: "OpenAI", model: "GPT-5.6", role: "execution" }],
+    requirements: [],
+  };
+  assert.throws(() => validateOutcomeManifest(base), /primary/);
+  assert.throws(() => validateOutcomeManifest({
+    ...base,
+    primary: { kind: "product", id: "example/film-maker" },
+    secondary: [{ kind: "product", id: "example/film-maker" }],
+  }), /duplicate primary or secondary/);
+  assert.doesNotThrow(() => validateOutcomeManifest({
+    ...base,
+    primary: {
+      kind: "skill",
+      repository: "example/skills",
+      directory: "skills/film",
+      lastReviewedCommit: "0123456789012345678901234567890123456789",
+    },
+  }));
+});
+
 test("search and fetch use the live directory contract", async () => {
   const id = "11111111-1111-4111-8111-111111111111";
   const server = createServer((request, response) => {
     response.setHeader("content-type", "application/json");
     const url = new URL(request.url, "http://127.0.0.1");
+    if (request.method === "POST" && url.pathname.endsWith("/use")) {
+      response.end(JSON.stringify({ counted: true }));
+      return;
+    }
     if (url.searchParams.get("id")) {
       response.end(JSON.stringify({ outcome: { id, title: "Corridor Cat Shelter", prompt: "Make the printable shelter." } }));
       return;
@@ -62,7 +95,7 @@ test("search and fetch use the live directory contract", async () => {
   await new Promise((resolve, reject) => server.listen(0, "127.0.0.1", (error) => error ? reject(error) : resolve()));
   try {
     const address = server.address();
-    const environment = { ...process.env, POSSIBLE_DIRECTORY_ENDPOINT: `http://127.0.0.1:${address.port}` };
+    const environment = { ...process.env, POSSIBLE_HOME: await fixture(), POSSIBLE_DIRECTORY_ENDPOINT: `http://127.0.0.1:${address.port}` };
     const search = await execute(process.execPath, [cli, "search", "printable", "cat", "shelter"], { env: environment });
     assert.match(search.stdout, /Corridor Cat Shelter/);
     assert.match(search.stdout, new RegExp(id));

@@ -1,14 +1,4 @@
-import type { ProductCategory } from "@possible/catalog";
-import {
-  productHref,
-  publishedProducts,
-  publishedSkills,
-  skillHref,
-} from "./public-content";
-import { getSupabaseBrowserClient } from "./supabase";
-
-const outcomeUsageTrackingEnabled = process.env.NEXT_PUBLIC_OUTCOME_USAGE_TRACKING === "true";
-const outcomeReviewsEnabled = process.env.NEXT_PUBLIC_OUTCOME_REVIEWS_ENABLED === "true";
+import { outcomeApiUrl } from "./backend";
 
 export const outcomeCategories = ["video", "images", "websites", "cad", "slides", "audio", "apps"] as const;
 export type OutcomeCategory = (typeof outcomeCategories)[number];
@@ -32,8 +22,7 @@ export interface DiscoverySource {
   id: string;
   name: string;
   owner: string;
-  href: string;
-  logoUrl?: string;
+  role?: "primary" | "secondary";
 }
 
 export interface DiscoveryMedia {
@@ -60,8 +49,7 @@ export interface DiscoveryOutcome {
   requirements: string[];
   publicationKind: "official" | "community";
   useCount: number;
-  averageRating: number;
-  reviewCount: number;
+  likeCount: number;
   publishedAt?: string;
   catalogNumber: number;
 }
@@ -81,34 +69,15 @@ interface PublicOutcomeRow {
   published_at: string;
   publication_kind: "official" | "community";
   source_url: string;
-}
-
-interface LinkedProductRow {
-  id: string;
-  linked_product_id: string;
-  linked_product_slug: string;
-  linked_product_name: string;
-  linked_company_name: string;
-}
-
-interface LinkedSkillRow {
-  id: string;
-  linked_skill_id: string;
-  linked_skill_name: string;
-  linked_skill_repository: string;
-  linked_skill_directory: string;
-}
-
-interface OutcomeUsageRow {
-  outcome_id: string;
+  primary_attribution: AttributionRow | null;
+  secondary_attributions: AttributionRow[];
   use_count: number;
+  like_count: number;
 }
 
-interface OutcomeReviewSummaryRow {
-  outcome_id: string;
-  average_rating: number;
-  review_count: number;
-}
+type AttributionRow =
+  | { kind: "product"; id: string }
+  | { kind: "skill"; repository: string; directory: string; lastReviewedCommit: string };
 
 const CATEGORY_ALIASES = new Map<string, OutcomeCategory>([
   ["animation", "video"],
@@ -145,14 +114,7 @@ const CATEGORY_ALIASES = new Map<string, OutcomeCategory>([
   ["game", "apps"],
 ]);
 
-function productCategoryToOutcomeCategory(category: ProductCategory | undefined): OutcomeCategory | undefined {
-  if (category === "video") return "video";
-  if (category === "audio") return "audio";
-  if (category === "3d" || category === "robotics") return "cad";
-  return undefined;
-}
-
-function inferCategory(text: string, mediaUrl = "", productCategory?: ProductCategory): OutcomeCategory {
+function inferCategory(text: string, mediaUrl = ""): OutcomeCategory {
   const normalized = `${text} ${mediaUrl}`.toLowerCase();
   const explicitChecks: Array<[OutcomeCategory, RegExp]> = [
     ["slides", /\b(powerpoint|presentation|slide|slides|deck|pptx)\b/],
@@ -162,8 +124,6 @@ function inferCategory(text: string, mediaUrl = "", productCategory?: ProductCat
     ["apps", /\b(app|application|browser game|mobile game)\b/],
   ];
   for (const [category, pattern] of explicitChecks) if (pattern.test(normalized)) return category;
-  const fromProduct = productCategoryToOutcomeCategory(productCategory);
-  if (fromProduct) return fromProduct;
   if (/\b(image|illustration|photo|picture|portrait)\b/.test(normalized)) return "images";
   if (/\b(video|film|animation|cinematic|reel|clip)\b/.test(normalized)) return "video";
   if (/\.(mp4|mov|webm)(?:$|\?)/.test(normalized)) return "video";
@@ -173,49 +133,51 @@ function inferCategory(text: string, mediaUrl = "", productCategory?: ProductCat
   return "apps";
 }
 
-function productSource(linkedProduct: LinkedProductRow): DiscoverySource {
-  const slug = linkedProduct.linked_product_slug;
-  const catalogProduct = publishedProducts.find((product) => product.id.split("/").at(-1) === slug);
-  const source: DiscoverySource = {
-    kind: "product",
-    id: linkedProduct.linked_product_id,
-    name: catalogProduct?.name ?? linkedProduct.linked_product_name,
-    owner: catalogProduct?.company.name ?? linkedProduct.linked_company_name,
-    href: catalogProduct ? productHref(catalogProduct) : `/products/${slug}`,
-  };
-  if (catalogProduct?.logoUrl) source.logoUrl = catalogProduct.logoUrl;
-  return source;
+const attributionAcronyms = new Map([
+  ["3d", "3D"],
+  ["ai", "AI"],
+  ["api", "API"],
+  ["cad", "CAD"],
+  ["pptx", "PPTX"],
+  ["ui", "UI"],
+  ["ux", "UX"],
+]);
+
+export function attributionDisplayName(value: string): string {
+  const segment = value.split("/").filter(Boolean).at(-1) ?? value;
+  return segment.split(/[-_]+/).filter(Boolean).map((part) => attributionAcronyms.get(part.toLowerCase())
+    ?? `${part.charAt(0).toUpperCase()}${part.slice(1)}`).join(" ");
 }
 
-function skillSource(linkedSkill: LinkedSkillRow): DiscoverySource {
-  const catalogSkill = publishedSkills.find((skill) => skill.id === linkedSkill.linked_skill_id);
-  return {
-    kind: "skill",
-    id: linkedSkill.linked_skill_id,
-    name: catalogSkill?.name ?? linkedSkill.linked_skill_name,
-    owner: linkedSkill.linked_skill_repository,
-    href: catalogSkill
-      ? skillHref(catalogSkill)
-      : `https://github.com/${linkedSkill.linked_skill_repository}/tree/HEAD/${linkedSkill.linked_skill_directory}`,
-  };
+export function sourceFilterKey(source: Pick<DiscoverySource, "kind" | "id">): string {
+  return `${source.kind}:${source.id}`;
+}
+
+export function sourceFilterHref(source: Pick<DiscoverySource, "kind" | "id">): string {
+  return `/?uses=${encodeURIComponent(sourceFilterKey(source))}#discover`;
+}
+
+function attributionSource(attribution: AttributionRow, role: "primary" | "secondary"): DiscoverySource {
+  if (attribution.kind === "product") {
+    const [owner = attribution.id, product = attribution.id] = attribution.id.split("/");
+    return { kind: "product", id: attribution.id, name: attributionDisplayName(product), owner: attributionDisplayName(owner), role };
+  }
+  const id = `${attribution.repository}/${attribution.directory}`;
+  return { kind: "skill", id, name: attributionDisplayName(attribution.directory), owner: attribution.repository, role };
 }
 
 function fromPublicRow(
   row: PublicOutcomeRow,
-  sources: DiscoverySource[],
   catalogNumber: number,
-  useCount: number,
-  averageRating: number,
-  reviewCount: number,
 ): DiscoveryOutcome {
-  const source = sources[0];
-  const productCategory = source
-    ? publishedProducts.find((product) => product.id.split("/").at(-1) === source.href.split("/").at(-1))?.category
-    : undefined;
+  const sources = [
+    ...(row.primary_attribution ? [attributionSource(row.primary_attribution, "primary")] : []),
+    ...row.secondary_attributions.map((attribution) => attributionSource(attribution, "secondary")),
+  ];
+  const source = sources.find((item) => item.role === "primary") ?? sources[0];
   const category = inferCategory(
     [row.title, row.summary, row.provider, row.model, source?.name].filter(Boolean).join(" "),
     row.result_media_url ?? "",
-    productCategory,
   );
   const isVideo = Boolean(row.result_media_url && /\.(mp4|mov|webm)(?:$|\?)/i.test(row.result_media_url));
   const media: DiscoveryMedia | undefined = row.result_media_url ? {
@@ -236,9 +198,8 @@ function fromPublicRow(
     sources,
     requirements: row.requirements,
     publicationKind: row.publication_kind,
-    useCount,
-    averageRating,
-    reviewCount,
+    useCount: row.use_count,
+    likeCount: row.like_count,
     catalogNumber,
   };
   if (media) outcome.media = media;
@@ -250,72 +211,12 @@ function fromPublicRow(
 }
 
 export async function fetchDiscoveryOutcomes(): Promise<DiscoveryOutcome[]> {
-  const client = getSupabaseBrowserClient();
-  if (!client) return [];
-
-  const [outcomeResult, productResult, skillResult, usageResult, reviewResult] = await Promise.all([
-    client
-      .from("outcome_directory")
-      .select("id,slug,title,summary,prompt,result_media_url,poster_url,provider,model,author_name,requirements,published_at,publication_kind,source_url")
-      .order("published_at", { ascending: false })
-      .order("id")
-      .range(0, 999),
-    client
-      .from("product_outcome_directory")
-      .select("id,linked_product_id,linked_product_slug,linked_product_name,linked_company_name")
-      .range(0, 999),
-    client
-      .from("skill_outcome_directory")
-      .select("id,linked_skill_id,linked_skill_name,linked_skill_repository,linked_skill_directory")
-      .range(0, 999),
-    outcomeUsageTrackingEnabled
-      ? client.rpc("get_outcome_usage_counts")
-      : Promise.resolve({ data: [] as OutcomeUsageRow[], error: null }),
-    outcomeReviewsEnabled
-      ? client.rpc("get_outcome_review_summaries", { target_outcome_id: null })
-      : Promise.resolve({ data: [] as OutcomeReviewSummaryRow[], error: null }),
-  ]);
-  if (outcomeResult.error) throw outcomeResult.error;
-
-  const linkedSources = new Map<string, DiscoverySource[]>();
-  if (!productResult.error) {
-    // SAFETY: the explicit product_outcome_directory select list matches LinkedProductRow.
-    const productRows = (productResult.data ?? []) as LinkedProductRow[];
-    for (const row of productRows) linkedSources.set(row.id, [...(linkedSources.get(row.id) ?? []), productSource(row)]);
-  }
-  if (!skillResult.error) {
-    const skillRows = (skillResult.data ?? []) as LinkedSkillRow[];
-    for (const row of skillRows) linkedSources.set(row.id, [...(linkedSources.get(row.id) ?? []), skillSource(row)]);
-  }
-  const usageCounts = new Map<string, number>();
-  if (!usageResult.error) {
-    // SAFETY: get_outcome_usage_counts returns one public aggregate row per published Outcome.
-    const usageRows = (usageResult.data ?? []) as OutcomeUsageRow[];
-    for (const row of usageRows) usageCounts.set(row.outcome_id, Number(row.use_count));
-  }
-  const reviewSummaries = new Map<string, OutcomeReviewSummaryRow>();
-  if (!reviewResult.error) {
-    // SAFETY: get_outcome_review_summaries returns public aggregate rows without reviewer identities.
-    const reviewRows = (reviewResult.data ?? []) as OutcomeReviewSummaryRow[];
-    for (const row of reviewRows) reviewSummaries.set(row.outcome_id, row);
-  }
-  // SAFETY: the explicit outcome_directory select list matches PublicOutcomeRow.
-  const rows = (outcomeResult.data ?? []) as PublicOutcomeRow[];
-  const directoryOutcomes: DiscoveryOutcome[] = [];
-
-  for (const [index, row] of rows.entries()) {
-    const reviewSummary = reviewSummaries.get(row.id);
-    directoryOutcomes.push(fromPublicRow(
-      row,
-      linkedSources.get(row.id) ?? [],
-      index + 1,
-      usageCounts.get(row.id) ?? 0,
-      Number(reviewSummary?.average_rating ?? 0),
-      Number(reviewSummary?.review_count ?? 0),
-    ));
-  }
-
-  return directoryOutcomes;
+  const endpoint = outcomeApiUrl();
+  if (!endpoint) return [];
+  const response = await fetch(endpoint, { headers: { accept: "application/json" } });
+  if (!response.ok) throw new Error(`Possible directory returned HTTP ${response.status}`);
+  const body = await response.json() as { outcomes?: PublicOutcomeRow[] };
+  return (body.outcomes ?? []).map((row, index) => fromPublicRow(row, index + 1));
 }
 
 function tokenize(value: string): string[] {
@@ -330,10 +231,16 @@ function expandedTerms(query: string): string[] {
   }))];
 }
 
-export function searchDiscoveryOutcomes(outcomes: readonly DiscoveryOutcome[], query: string, category: OutcomeCategory | "all"): DiscoveryOutcome[] {
+export function searchDiscoveryOutcomes(
+  outcomes: readonly DiscoveryOutcome[],
+  query: string,
+  category: OutcomeCategory | "all",
+  source: string | null = null,
+): DiscoveryOutcome[] {
   const terms = expandedTerms(query.trim());
   return outcomes
     .filter((outcome) => category === "all" || outcome.category === category)
+    .filter((outcome) => source === null || outcome.sources.some((item) => sourceFilterKey(item) === source))
     .map((outcome) => {
       if (terms.length === 0) return { outcome, score: 0 };
       const title = outcome.title.toLowerCase();
@@ -350,18 +257,21 @@ export function searchDiscoveryOutcomes(outcomes: readonly DiscoveryOutcome[], q
       return { outcome, score };
     })
     .filter(({ score }) => terms.length === 0 || score > 0)
-    .sort((left, right) => right.score - left.score || left.outcome.catalogNumber - right.outcome.catalogNumber)
+    .sort((left, right) => {
+      const byPublishedAt = Date.parse(right.outcome.publishedAt ?? "") - Date.parse(left.outcome.publishedAt ?? "");
+      return right.score - left.score
+        || right.outcome.useCount - left.outcome.useCount
+        || right.outcome.likeCount - left.outcome.likeCount
+        || (Number.isFinite(byPublishedAt) ? byPublishedAt : 0)
+        || left.outcome.catalogNumber - right.outcome.catalogNumber;
+    })
     .map(({ outcome }) => outcome);
 }
 
 export async function findPublishedOutcomeId(slug: string): Promise<string | undefined> {
-  const client = getSupabaseBrowserClient();
-  if (!client) return undefined;
-  const { data, error } = await client.from("outcome_directory").select("id").eq("slug", slug).limit(2);
-  if (error || !data || data.length !== 1) return undefined;
-  // SAFETY: the explicit outcome_directory select list contains one UUID id.
-  const row = data[0] as { id: string };
-  return row.id;
+  const outcomes = await fetchDiscoveryOutcomes();
+  const matches = outcomes.filter((outcome) => outcome.slug === slug);
+  return matches.length === 1 ? matches[0]?.databaseId : undefined;
 }
 
 const COPY_VISITOR_KEY = "possible.copy-visitor.v1";
@@ -378,11 +288,22 @@ function copyVisitorToken(): string | undefined {
   }
 }
 
-export async function recordOutcomeCopy(outcomeId: string | undefined): Promise<boolean> {
-  if (!outcomeId || !outcomeUsageTrackingEnabled) return false;
-  const client = getSupabaseBrowserClient();
+async function hashVisitorToken(token: string): Promise<string> {
+  const digest = await window.crypto.subtle.digest("SHA-256", new TextEncoder().encode(token));
+  return [...new Uint8Array(digest)].map((byte) => byte.toString(16).padStart(2, "0")).join("");
+}
+
+export async function recordOutcomeUse(outcomeId: string | undefined): Promise<boolean> {
+  if (!outcomeId) return false;
+  const endpoint = outcomeApiUrl("/use");
   const clientToken = copyVisitorToken();
-  if (!client || !clientToken) return false;
-  const result = await client.rpc("record_outcome_copy", { target_outcome_id: outcomeId, client_token: clientToken });
-  return result.error === null && result.data === true;
+  if (!endpoint || !clientToken) return false;
+  const response = await fetch(endpoint, {
+    method: "POST",
+    headers: { "content-type": "application/json", accept: "application/json" },
+    body: JSON.stringify({ outcomeId, visitorHash: await hashVisitorToken(clientToken), source: "web", ci: false }),
+  });
+  if (!response.ok) return false;
+  const body = await response.json() as { counted?: boolean };
+  return body.counted === true;
 }

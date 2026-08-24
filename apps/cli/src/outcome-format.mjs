@@ -8,7 +8,9 @@ const GITHUB_REPOSITORY = /^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/;
 const SAFE_REPOSITORY_PATH = /^(?:\.|[A-Za-z0-9._-]+(?:\/[A-Za-z0-9._-]+)*)$/;
 const MODEL_ROLES = new Set(["authorship", "execution", "review"]);
 const FILE_TYPES = new Set(["image", "video", "audio", "cad", "document", "data", "source", "archive", "other"]);
-const MANIFEST_KEYS = new Set(["schemaVersion", "slug", "files", "authoredAt", "author", "models", "requirements", "products", "skills", "inputs", "artifacts", "preview"]);
+const BASE_MANIFEST_KEYS = ["schemaVersion", "slug", "files", "authoredAt", "author", "models", "requirements", "inputs", "artifacts", "preview"];
+const LEGACY_MANIFEST_KEYS = new Set([...BASE_MANIFEST_KEYS, "products", "skills"]);
+const MANIFEST_KEYS = new Set([...BASE_MANIFEST_KEYS, "primary", "secondary"]);
 
 const asObject = (value, context) => {
   if (value === null || typeof value !== "object" || Array.isArray(value)) throw new Error(`${context} must be a JSON object`);
@@ -56,10 +58,59 @@ const validateFiles = (value, context) => {
   });
 };
 
+const validateSkillReference = (value, context, includeKind = false) => {
+  const skill = asObject(value, context);
+  exactKeys(skill, new Set(includeKind ? ["kind", "repository", "lastReviewedCommit", "directory"] : ["repository", "lastReviewedCommit", "directory"]), context);
+  if (includeKind && skill.kind !== "skill") throw new Error(`${context}.kind must be skill`);
+  if (!GITHUB_REPOSITORY.test(string(skill.repository, `${context}.repository`))) throw new Error(`${context}.repository is invalid`);
+  if (!EXACT_REVISION.test(string(skill.lastReviewedCommit, `${context}.lastReviewedCommit`))) throw new Error(`${context}.lastReviewedCommit must be an exact commit`);
+  const directory = string(skill.directory, `${context}.directory`);
+  if (!SAFE_REPOSITORY_PATH.test(directory) || (directory !== "." && directory.split("/").some((part) => part === "." || part === ".."))) throw new Error(`${context}.directory is invalid`);
+  return skill;
+};
+
+const validateAttribution = (value, context) => {
+  const attribution = asObject(value, context);
+  if (attribution.kind === "product") {
+    exactKeys(attribution, new Set(["kind", "id"]), context);
+    if (!PRODUCT_ID.test(string(attribution.id, `${context}.id`))) throw new Error(`${context}.id is invalid`);
+    return attribution;
+  }
+  if (attribution.kind === "skill") return validateSkillReference(attribution, context, true);
+  throw new Error(`${context}.kind must be product or skill`);
+};
+
+export const attributionKey = (attribution) => attribution.kind === "product"
+  ? `product:${attribution.id}`
+  : `skill:${attribution.repository}/${attribution.directory}`;
+
+export function normalizeOutcomeAttributions(manifest) {
+  if (manifest.schemaVersion === 4) {
+    const secondary = manifest.secondary ?? [];
+    const all = [manifest.primary, ...secondary];
+    return {
+      primary: manifest.primary,
+      secondary,
+      products: all.filter((item) => item.kind === "product").map((item) => item.id),
+      skills: all.filter((item) => item.kind === "skill").map(({ kind: _kind, ...skill }) => skill),
+    };
+  }
+  const legacy = [
+    ...(manifest.products ?? []).map((id) => ({ kind: "product", id })),
+    ...(manifest.skills ?? []).map((skill) => ({ kind: "skill", ...skill })),
+  ];
+  return {
+    primary: legacy[0] ?? null,
+    secondary: legacy.slice(1),
+    products: manifest.products ?? [],
+    skills: manifest.skills ?? [],
+  };
+}
+
 export function validateOutcomeManifest(value, context = "outcome.json") {
   const manifest = asObject(value, context);
-  exactKeys(manifest, MANIFEST_KEYS, context);
-  if (manifest.schemaVersion !== 3) throw new Error(`${context}.schemaVersion must be 3`);
+  if (manifest.schemaVersion !== 3 && manifest.schemaVersion !== 4) throw new Error(`${context}.schemaVersion must be 3 or 4`);
+  exactKeys(manifest, manifest.schemaVersion === 4 ? MANIFEST_KEYS : LEGACY_MANIFEST_KEYS, context);
   if (!SAFE_SLUG.test(string(manifest.slug, `${context}.slug`))) throw new Error(`${context}.slug must be lowercase and hyphenated`);
 
   const files = asObject(manifest.files, `${context}.files`);
@@ -92,22 +143,25 @@ export function validateOutcomeManifest(value, context = "outcome.json") {
   const requirements = manifest.requirements.map((entry, index) => string(entry, `${context}.requirements[${index}]`));
   if (new Set(requirements).size !== requirements.length) throw new Error(`${context}.requirements contains duplicates`);
 
-  if (manifest.products !== undefined) {
+  if (manifest.schemaVersion === 3 && manifest.products !== undefined) {
     if (!Array.isArray(manifest.products) || manifest.products.length === 0) throw new Error(`${context}.products must be omitted or a non-empty array`);
     for (const [index, product] of manifest.products.entries()) if (!PRODUCT_ID.test(string(product, `${context}.products[${index}]`))) throw new Error(`${context}.products[${index}] is invalid`);
     if (new Set(manifest.products).size !== manifest.products.length) throw new Error(`${context}.products contains duplicates`);
   }
 
-  if (manifest.skills !== undefined) {
+  if (manifest.schemaVersion === 3 && manifest.skills !== undefined) {
     if (!Array.isArray(manifest.skills) || manifest.skills.length === 0) throw new Error(`${context}.skills must be omitted or a non-empty array`);
     for (const [index, entry] of manifest.skills.entries()) {
-      const skill = asObject(entry, `${context}.skills[${index}]`);
-      exactKeys(skill, new Set(["repository", "lastReviewedCommit", "directory"]), `${context}.skills[${index}]`);
-      if (!GITHUB_REPOSITORY.test(string(skill.repository, `${context}.skills[${index}].repository`))) throw new Error(`${context}.skills[${index}].repository is invalid`);
-      if (!EXACT_REVISION.test(string(skill.lastReviewedCommit, `${context}.skills[${index}].lastReviewedCommit`))) throw new Error(`${context}.skills[${index}].lastReviewedCommit must be an exact commit`);
-      const directory = string(skill.directory, `${context}.skills[${index}].directory`);
-      if (!SAFE_REPOSITORY_PATH.test(directory) || (directory !== "." && directory.split("/").some((part) => part === "." || part === ".."))) throw new Error(`${context}.skills[${index}].directory is invalid`);
+      validateSkillReference(entry, `${context}.skills[${index}]`);
     }
+  }
+
+  if (manifest.schemaVersion === 4) {
+    const primary = validateAttribution(manifest.primary, `${context}.primary`);
+    if (manifest.secondary !== undefined && (!Array.isArray(manifest.secondary) || manifest.secondary.length === 0)) throw new Error(`${context}.secondary must be omitted or a non-empty array`);
+    const secondary = (manifest.secondary ?? []).map((entry, index) => validateAttribution(entry, `${context}.secondary[${index}]`));
+    const keys = [attributionKey(primary), ...secondary.map(attributionKey)];
+    if (new Set(keys).size !== keys.length) throw new Error(`${context} contains duplicate primary or secondary attributions`);
   }
 
   validateFiles(manifest.inputs, `${context}.inputs`);

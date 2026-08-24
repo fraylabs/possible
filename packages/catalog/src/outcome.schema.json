@@ -5,9 +5,9 @@
   "description": "Machine-readable metadata beside the required outcome.md and prompt.md files.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schemaVersion", "slug", "files", "authoredAt", "author", "models", "requirements"],
+  "required": ["schemaVersion", "slug", "files", "authoredAt", "author", "models", "requirements", "primary"],
   "properties": {
-    "schemaVersion": { "const": 3 },
+    "schemaVersion": { "const": 4 },
     "slug": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
     "files": {
       "type": "object",
@@ -22,13 +22,8 @@
     "author": { "$ref": "#/$defs/author" },
     "models": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/model" } },
     "requirements": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
-    "skills": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/skill" } },
-    "products": {
-      "type": "array",
-      "minItems": 1,
-      "uniqueItems": true,
-      "items": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*/[a-z0-9][a-z0-9-]*$" }
-    },
+    "primary": { "$ref": "#/$defs/attribution" },
+    "secondary": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/$defs/attribution" } },
     "inputs": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/file" } },
     "artifacts": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/file" } },
     "preview": { "$ref": "#/$defs/preview" }
@@ -63,6 +58,32 @@
         "lastReviewedCommit": { "type": "string", "pattern": "^(?:[0-9a-f]{40}|[0-9a-f]{64})$" },
         "directory": { "type": "string", "pattern": "^(?:\\.|(?!.*(?:^|/)\\.\\.?($|/))[a-z0-9._-]+(?:/[a-z0-9._-]+)*)$" }
       }
+    },
+    "productAttribution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id"],
+      "properties": {
+        "kind": { "const": "product" },
+        "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*/[a-z0-9][a-z0-9-]*$" }
+      }
+    },
+    "skillAttribution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "repository", "lastReviewedCommit", "directory"],
+      "properties": {
+        "kind": { "const": "skill" },
+        "repository": { "type": "string", "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$" },
+        "lastReviewedCommit": { "type": "string", "pattern": "^(?:[0-9a-f]{40}|[0-9a-f]{64})$" },
+        "directory": { "type": "string", "pattern": "^(?:\\.|(?!.*(?:^|/)\\.\\.?($|/))[a-z0-9._-]+(?:/[a-z0-9._-]+)*)$" }
+      }
+    },
+    "attribution": {
+      "oneOf": [
+        { "$ref": "#/$defs/productAttribution" },
+        { "$ref": "#/$defs/skillAttribution" }
+      ]
     },
     "file": {
       "type": "object",

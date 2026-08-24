@@ -4,7 +4,10 @@
   "private": true,
   "type": "module",
   "packageManager": "npm@11.6.2",
-  "workspaces": ["apps/*", "packages/*"],
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
     "build": "npm run build -w @possible/catalog && npm run build:consumers && node scripts/prepare-sites-dist.mjs",
     "build:consumers": "npm run build -w @fraylabs/possible && npm run build -w @possible/mcp && npm run build -w @possible/web",
@@ -13,20 +16,31 @@
     "skill:validate": "node scripts/validate-skill.mjs",
     "routes:validate": "node scripts/validate-routes.mjs",
     "html:validate": "node scripts/validate-static-html.mjs",
-    "db:push": "node --env-file-if-exists=.env.local scripts/run-supabase.mjs db push --linked",
-    "db:lint": "node --env-file-if-exists=.env.local scripts/run-supabase.mjs db lint --linked --schema public --level warning --fail-on error",
-    "db:test": "node --env-file-if-exists=.env.local scripts/run-supabase.mjs db query --linked --file supabase/tests/source_owned_outcomes.sql",
-    "check": "npm run lint && npm run skill:validate && npm run routes:validate && npm run test && npm run build:consumers && npm run html:validate",
+    "convex:codegen": "convex codegen --typecheck enable",
+    "convex:typecheck": "tsc -p convex/tsconfig.json --noEmit",
+    "test:convex": "vitest run convex/*.test.ts",
+    "check": "npm run lint && npm run convex:typecheck && npm run skill:validate && npm run routes:validate && npm run test:convex && npm run test && npm run build:consumers && npm run html:validate",
     "dev:web": "npm run build -w @possible/catalog && npm run dev -w @possible/web",
-    "dev:mcp": "npm run dev -w @possible/mcp"
+    "dev:mcp": "npm run dev -w @possible/mcp",
+    "dev:convex": "convex dev"
   },
-  "engines": { "node": ">=22" },
+  "engines": {
+    "node": ">=22"
+  },
   "devDependencies": {
-    "oxlint": "^1.78.0"
+    "convex-test": "^0.0.56",
+    "oxlint": "^1.78.0",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.10"
   },
   "optionalDependencies": {
     "@esbuild/linux-x64": "0.28.1",
     "@rolldown/binding-linux-x64-gnu": "1.1.5",
     "lightningcss-linux-x64-gnu": "1.32.0"
+  },
+  "dependencies": {
+    "@auth/core": "^0.41.1",
+    "@convex-dev/auth": "^0.0.95",
+    "convex": "^1.45.0"
   }
 }

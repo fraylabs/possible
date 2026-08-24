@@ -4,15 +4,6 @@ export interface SkillReference {
   directory: string;
 }
 
-export interface SkillRecord {
-  id: string;
-  slug: string;
-  name: string;
-  repository: string;
-  directory: string;
-  sourceUrl: string;
-}
-
 export interface OutcomeAuthor {
   name: string;
   url: string;
@@ -27,34 +18,7 @@ export interface OutcomeModel {
   role: OutcomeModelRole;
 }
 
-export type CompanyId = string;
 export type ProductId = `${string}/${string}`;
-
-export interface CompanyRecord {
-  schemaVersion: 1;
-  id: CompanyId;
-  name: string;
-  website: string;
-}
-
-export type ProductCategory = "video" | "audio" | "3d" | "robotics";
-
-export interface ProductRecord {
-  schemaVersion: 1;
-  id: ProductId;
-  name: string;
-  company: CompanyId;
-  category: ProductCategory;
-  summary: string;
-  summarySourceUrl: string;
-  logoUrl: string;
-  website: string;
-  docsUrl: string;
-}
-
-export interface ResolvedProduct extends Omit<ProductRecord, "company"> {
-  company: CompanyRecord;
-}
 
 export interface OutcomePreviewImage {
   src: string;
@@ -110,16 +74,27 @@ export interface OutcomeFiles {
   prompt: "prompt.md";
 }
 
+export interface ProductAttribution {
+  kind: "product";
+  id: ProductId;
+}
+
+export interface SkillAttribution extends SkillReference {
+  kind: "skill";
+}
+
+export type OutcomeAttribution = ProductAttribution | SkillAttribution;
+
 export interface OutcomeManifest {
-  schemaVersion: 3;
+  schemaVersion: 4;
   slug: string;
   files: OutcomeFiles;
   authoredAt: string | null;
   author: OutcomeAuthor;
   models: OutcomeModel[];
   requirements: string[];
-  skills?: SkillReference[];
-  products?: ProductId[];
+  primary: OutcomeAttribution;
+  secondary?: OutcomeAttribution[];
   inputs?: OutcomeFile[];
   artifacts?: OutcomeFile[];
   preview?: OutcomePreview;

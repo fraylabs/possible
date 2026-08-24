@@ -3,7 +3,8 @@
 ## Unreleased
 
 - Replaced `possible init` with the standard `npx skills add` installation path and added public `possible search` and `possible fetch` commands.
-- Made publisher-owned Supabase snapshots the sole runtime Outcome directory for the website and MCP.
+- Made publisher-owned Convex snapshots the sole runtime Outcome directory for the website, CLI, and MCP.
+- Added deduplicated anonymous usage, account likes, and private bookmarks without adding publisher accounts.
 - Moved Fray Labs seed Outcomes to `fraylabs/possible-outcomes` and removed their duplicated media and manifests from this repository.
 - Kept only static Product definitions, lightweight Skill links, and contract types in the reference catalog.
 - Rebuilt Possible as a visual directory of exact prompts and representative outcomes.

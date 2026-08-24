@@ -2,7 +2,7 @@ import { cleanup, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { axe } from "vitest-axe";
 import { afterEach, describe, expect, it } from "vitest";
-import { AuthoringDocsPage, DocsPage, DynamicOutcomeDetailPage, OutcomesPage, ProductDetailPage, PublishPage, SkillDetailPage } from "./App";
+import { AuthoringDocsPage, DocsPage, DynamicOutcomeDetailPage, OutcomesPage, PublishPage } from "./App";
 import type { DirectoryOutcomeDetail } from "./dynamic-outcome-detail";
 import type { DiscoveryOutcome } from "./discovery-data";
 import { normalizeSource } from "./publish";
@@ -18,13 +18,12 @@ const baseOutcome: DiscoveryOutcome = {
   prompt: "Create a launch film.",
   href: "/outcomes/view/?id=00000000-0000-0000-0000-000000000001",
   category: "video",
-  sources: [{ kind: "product", id: "heygen/hyperframes", name: "HyperFrames", owner: "HeyGen", href: "/products/hyperframes" }],
-  source: { kind: "product", id: "heygen/hyperframes", name: "HyperFrames", owner: "HeyGen", href: "/products/hyperframes" },
+  sources: [{ kind: "product", id: "heygen/hyperframes", name: "HyperFrames", owner: "HeyGen", role: "primary" }],
+  source: { kind: "product", id: "heygen/hyperframes", name: "HyperFrames", owner: "HeyGen", role: "primary" },
   requirements: [],
   publicationKind: "community",
   useCount: 0,
-  averageRating: 0,
-  reviewCount: 0,
+  likeCount: 0,
   publishedAt: "2026-08-24T00:00:00Z",
   catalogNumber: 1,
 };
@@ -32,7 +31,17 @@ const baseOutcome: DiscoveryOutcome = {
 const seedOutcomes: DiscoveryOutcome[] = [
   baseOutcome,
   { ...baseOutcome, id: "fixture-2", title: "Lantern Rain: Quiet Soundtrack", summary: "A quiet original instrumental soundtrack.", prompt: "Compose a quiet soundtrack.", category: "audio", catalogNumber: 2 },
-  { ...baseOutcome, id: "fixture-3", title: "Robot Snake CAD Prototype", summary: "An articulated robot CAD model.", prompt: "Create an articulated robot CAD model.", category: "cad", catalogNumber: 3 },
+  {
+    ...baseOutcome,
+    id: "fixture-3",
+    title: "Robot Snake CAD Prototype",
+    summary: "An articulated robot CAD model.",
+    prompt: "Create an articulated robot CAD model.",
+    category: "cad",
+    sources: [{ kind: "skill", id: "earthtojake/text-to-cad/skills/cad", name: "CAD", owner: "earthtojake/text-to-cad", role: "primary" }],
+    source: { kind: "skill", id: "earthtojake/text-to-cad/skills/cad", name: "CAD", owner: "earthtojake/text-to-cad", role: "primary" },
+    catalogNumber: 3,
+  },
 ];
 
 const detailFixture: DirectoryOutcomeDetail = {
@@ -64,15 +73,20 @@ describe("Possible website", () => {
     id: `fixture-${index + 1}`,
     title: `Fixture Outcome ${index + 1}`,
     catalogNumber: index + 1,
+    useCount: 12 - index,
   }));
 
   it("uses one ranked, visual Outcome directory as the homepage", async () => {
     const { container } = render(<OutcomesPage outcomesFixture={outcomeFixture} />);
-    expect(screen.getByRole("heading", { name: "What do you want an agent to make?", level: 1 })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "All Outcomes", level: 1 })).toBeInTheDocument();
     expect(Array.from(container.querySelectorAll(".nav-links a")).map((link) => link.textContent)).toEqual(["DOCS", "PUBLISH"]);
-    expect(screen.getByRole("heading", { name: "Most copied Outcomes" })).toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "Most copied Outcomes" })).not.toBeInTheDocument();
+    expect(container.querySelectorAll(".home-outcome-fallback").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("HyperFrames").length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/product · HeyGen/i).length).toBeGreaterThan(0);
+    expect(container.querySelectorAll('.home-result-row[data-featured="true"]')).toHaveLength(3);
     expect(screen.getAllByRole("article")).toHaveLength(10);
-    expect(screen.getByRole("navigation", { name: "Outcome pages" })).toBeInTheDocument();
+    expect(screen.getAllByRole("navigation", { name: "Outcome pages" })).toHaveLength(1);
     await userEvent.click(screen.getByRole("button", { name: "Next Outcome page" }));
     expect(screen.getByRole("heading", { name: "Fixture Outcome 11" })).toBeInTheDocument();
     expect((await axe(container)).violations).toHaveLength(0);
@@ -92,28 +106,27 @@ describe("Possible website", () => {
     expect(within(results).queryByRole("heading", { name: /Launch Film/i })).not.toBeInTheDocument();
   });
 
+  it("uses Product and Skill labels as shareable leaderboard filters", async () => {
+    render(<OutcomesPage outcomesFixture={seedOutcomes} />);
+    await userEvent.click(screen.getAllByRole("button", { name: "Filter by product HyperFrames" })[0]!);
+    const results = screen.getByRole("region", { name: "Outcome results" });
+    expect(within(results).getByRole("heading", { name: /Possible Launch Film/i })).toBeInTheDocument();
+    expect(within(results).queryByRole("heading", { name: /Robot Snake CAD Prototype/i })).not.toBeInTheDocument();
+    expect(window.location.search).toContain("uses=product%3Aheygen%2Fhyperframes");
+    await userEvent.click(screen.getByRole("button", { name: "Clear Product or Skill filter" }));
+    expect(within(screen.getByRole("region", { name: "Outcome results" })).getByRole("heading", { name: /Robot Snake CAD Prototype/i })).toBeInTheDocument();
+  });
+
   it("shows a source-owned preview, exact prompt, provenance, and artifacts", async () => {
-    const { container } = render(<DynamicOutcomeDetailPage outcomeFixture={detailFixture} attributionsFixture={[{ id: "heygen/hyperframes", kind: "Product", name: "HyperFrames", owner: "HeyGen", href: "/products/hyperframes" }]} />);
+    const { container } = render(<DynamicOutcomeDetailPage outcomeFixture={detailFixture} attributionsFixture={[{ id: "heygen/hyperframes", kind: "Product", name: "HyperFrames", owner: "HeyGen", href: "/?uses=product%3Aheygen%2Fhyperframes#discover", role: "primary" }]} />);
     expect(screen.getByRole("heading", { name: "Possible Launch Film", level: 1 })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "What it made" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Prompt" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Download the result" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Copy prompt" })).toBeInTheDocument();
+    expect(screen.getByText(/Primary Product · HeyGen/i)).toBeInTheDocument();
     expect(container).not.toHaveTextContent(/workstreams|trust|verification framework/i);
     expect((await axe(container)).violations).toHaveLength(0);
-  });
-
-  it("keeps Products as official attribution records", () => {
-    render(<ProductDetailPage id="heygen/hyperframes" />);
-    expect(screen.getByRole("heading", { name: "HyperFrames", level: 1 })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Outcomes" })).toBeInTheDocument();
-    expect(screen.queryByText(/checkout|pricing unknown/i)).not.toBeInTheDocument();
-  });
-
-  it("keeps Skills as links with directory-backed Outcomes", () => {
-    render(<SkillDetailPage id="MiniMax-AI/skills/skills/pptx-generator" />);
-    expect(screen.getByRole("heading", { name: "PPTX Generator", level: 1 })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /Open Skill/i })).toHaveAttribute("href", "https://skills.sh/MiniMax-AI/skills/pptx-generator");
   });
 
   it("documents the same small public contract", () => {

@@ -24,13 +24,13 @@ function response(body, status = 200) {
   });
 }
 
-function installGitHubFixture(indexUrl = "./outcomes/quiet-launch-film/outcome.json") {
+function installGitHubFixture(indexUrl = "./outcomes/quiet-launch-film/outcome.json", outcomeManifest = manifest) {
   globalThis.fetch = async (url) => {
     const value = String(url);
     if (value === "https://api.github.com/repos/example/outcomes") return response({ private: false, default_branch: "main" });
     if (value === "https://api.github.com/repos/example/outcomes/commits/main") return response({ sha: revision });
     if (value === `https://raw.githubusercontent.com/example/outcomes/${revision}/outcomes.json`) return response({ schemaVersion: 1, publisher: { name: "Example Studio" }, outcomes: [{ slug: "quiet-launch-film", url: indexUrl }] });
-    if (value.endsWith("/outcome.json")) return response(manifest);
+    if (value.endsWith("/outcome.json")) return response(outcomeManifest);
     if (value.endsWith("/outcome.md")) return response("# Quiet launch film\n\nA restrained launch film for one real product.\n");
     if (value.endsWith("/prompt.md")) return response("Create the launch film from the supplied product source.\n");
     return response({ error: "not found" }, 404);
@@ -51,6 +51,22 @@ test("GitHub source discovery follows its root index at an exact commit", async 
   assert.equal(discovery.outcomes[0].slug, "quiet-launch-film");
   assert.equal(discovery.outcomes[0].prompt, "Create the launch film from the supplied product source.");
   assert.match(discovery.outcomes[0].contentHash, /^sha256:[0-9a-f]{64}$/);
+});
+
+test("GitHub source discovery accepts the primary-attribution contract", async () => {
+  installGitHubFixture("./outcomes/quiet-launch-film/outcome.json", {
+    ...manifest,
+    schemaVersion: 4,
+    primary: { kind: "product", id: "example/film-maker" },
+    secondary: [{
+      kind: "skill",
+      repository: "example/skills",
+      directory: "skills/film",
+      lastReviewedCommit: revision,
+    }],
+  });
+  const discovery = await discoverOutcomeSource("example/outcomes");
+  assert.deepEqual(discovery.outcomes[0].manifest.primary, { kind: "product", id: "example/film-maker" });
 });
 
 test("GitHub source indexes cannot point outside their pinned repository revision", async () => {

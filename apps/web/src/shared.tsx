@@ -4,7 +4,9 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import { githubUrl } from "./public-content";
 
 export type CopyState = "idle" | "copied" | "failed";
+const accountEnabled = process.env.NEXT_PUBLIC_GITHUB_AUTH_ENABLED === "true";
 const navigationItems = [
+  ...(accountEnabled ? [{ label: "SAVED", href: "/saved", external: false }] : []),
   { label: "DOCS", href: "/docs", external: false },
   { label: "PUBLISH", href: "/publish", external: false },
 ] as const;
@@ -117,6 +119,7 @@ export function SiteFooter() {
           <a href="/#discover">Discover</a>
           <a href="/docs">Docs</a>
           <a href="/publish">Publish</a>
+          {accountEnabled ? <a href="/saved">Saved</a> : null}
           <a href={githubUrl} target="_blank" rel="noreferrer">GitHub ↗</a>
         </div>
         <span>OPEN SOURCE / 2026</span>

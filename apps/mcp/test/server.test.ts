@@ -17,6 +17,8 @@ const base: DirectoryOutcome = {
   models: [{ provider: "OpenAI", model: "GPT-5.6", role: "execution" }],
   products: [],
   skills: [],
+  primary: { kind: "skill", repository: "MiniMax-AI/skills", directory: "skills/pptx-generator", lastReviewedCommit: "0123456789012345678901234567890123456789" },
+  secondary: [],
   inputs: [],
   artifacts: [],
   preview: null,
@@ -32,6 +34,8 @@ const base: DirectoryOutcome = {
   provider: "OpenAI",
   model: "GPT-5.6",
   agent: "Codex",
+  useCount: 0,
+  likeCount: 0,
 };
 
 const outcomes: DirectoryOutcome[] = [

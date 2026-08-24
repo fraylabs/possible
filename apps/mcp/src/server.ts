@@ -1,6 +1,6 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod/v4";
-import { createSupabaseOutcomeDirectory, searchDirectory } from "./directory.js";
+import { createConvexOutcomeDirectory, searchDirectory } from "./directory.js";
 import type { DirectoryOutcome, OutcomeDirectory } from "./directory.js";
 import { errorResult, retrievalFailure, successResult } from "./result.js";
 
@@ -19,6 +19,8 @@ const serializeEntry = (entry: DirectoryOutcome) => ({
   requirements: entry.requirements,
   products: entry.products,
   skills: entry.skills,
+  primary: entry.primary,
+  secondary: entry.secondary,
   inputs: entry.inputs,
   artifacts: entry.artifacts,
   preview: entry.preview,
@@ -27,6 +29,8 @@ const serializeEntry = (entry: DirectoryOutcome) => ({
   sourceUrl: entry.sourceUrl,
   manifestUrl: entry.manifestUrl,
   pageUrl: `https://possible.sh/outcomes/view/?id=${entry.id}`,
+  useCount: entry.useCount,
+  likeCount: entry.likeCount,
 });
 
 export interface PossibleServerOptions {
@@ -34,7 +38,7 @@ export interface PossibleServerOptions {
 }
 
 export async function createPossibleServer(options: PossibleServerOptions = {}): Promise<McpServer> {
-  const directory = options.directory ?? createSupabaseOutcomeDirectory();
+  const directory = options.directory ?? createConvexOutcomeDirectory();
   const server = new McpServer({ name: "possible", version: "0.2.0" }, { instructions: POSSIBLE_SERVER_INSTRUCTIONS });
 
   server.registerTool("list_outcomes", {

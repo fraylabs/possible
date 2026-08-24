@@ -9,6 +9,8 @@ export interface DirectoryOutcome {
   models: Array<Record<string, unknown>>;
   products: string[];
   skills: Array<Record<string, unknown>>;
+  primary: Record<string, unknown> | null;
+  secondary: Array<Record<string, unknown>>;
   inputs: Array<Record<string, unknown>>;
   artifacts: Array<Record<string, unknown>>;
   preview: Record<string, unknown> | null;
@@ -24,6 +26,8 @@ export interface DirectoryOutcome {
   provider: string | null;
   model: string | null;
   agent: string | null;
+  useCount: number;
+  likeCount: number;
 }
 
 export interface OutcomeDirectory {
@@ -41,6 +45,8 @@ interface OutcomeRow {
   models: Array<Record<string, unknown>>;
   products: string[];
   skills: Array<Record<string, unknown>>;
+  primary_attribution?: Record<string, unknown> | null;
+  secondary_attributions?: Array<Record<string, unknown>>;
   inputs: Array<Record<string, unknown>>;
   artifacts: Array<Record<string, unknown>>;
   preview: Record<string, unknown> | null;
@@ -57,15 +63,20 @@ interface OutcomeRow {
   provider: string | null;
   model: string | null;
   agent: string | null;
+  use_count: number;
+  like_count: number;
 }
 
-const columns = [
-  "id", "slug", "title", "summary", "about_markdown", "prompt", "requirements", "models", "products", "skills",
-  "inputs", "artifacts", "preview", "author_name", "author_url", "published_at", "publication_kind", "source_locator",
-  "source_url", "source_revision", "manifest_url", "result_media_url", "poster_url", "provider", "model", "agent",
-].join(",");
+function legacyAttributions(row: OutcomeRow) {
+  const attributions = [
+    ...row.products.map((id) => ({ kind: "product", id })),
+    ...row.skills.map((skill) => ({ kind: "skill", ...skill })),
+  ];
+  return { primary: attributions[0] ?? null, secondary: attributions.slice(1) };
+}
 
 function fromRow(row: OutcomeRow): DirectoryOutcome {
+  const fallback = legacyAttributions(row);
   return {
     id: row.id,
     slug: row.slug,
@@ -77,6 +88,8 @@ function fromRow(row: OutcomeRow): DirectoryOutcome {
     models: row.models,
     products: row.products,
     skills: row.skills,
+    primary: row.primary_attribution ?? fallback.primary,
+    secondary: row.secondary_attributions ?? fallback.secondary,
     inputs: row.inputs,
     artifacts: row.artifacts,
     preview: row.preview,
@@ -92,23 +105,22 @@ function fromRow(row: OutcomeRow): DirectoryOutcome {
     provider: row.provider,
     model: row.model,
     agent: row.agent,
+    useCount: row.use_count,
+    likeCount: row.like_count,
   };
 }
 
-export function createSupabaseOutcomeDirectory(options: { url?: string; publishableKey?: string; fetch?: typeof globalThis.fetch } = {}): OutcomeDirectory {
-  const url = options.url ?? process.env.POSSIBLE_SUPABASE_URL ?? process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const publishableKey = options.publishableKey ?? process.env.POSSIBLE_SUPABASE_PUBLISHABLE_KEY ?? process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+const DEFAULT_ENDPOINT = "https://reminiscent-lark-333.eu-west-1.convex.site/api/outcomes";
+
+export function createConvexOutcomeDirectory(options: { endpoint?: string; fetch?: typeof globalThis.fetch } = {}): OutcomeDirectory {
+  const endpoint = options.endpoint ?? process.env.POSSIBLE_DIRECTORY_ENDPOINT ?? DEFAULT_ENDPOINT;
   const request = options.fetch ?? globalThis.fetch;
   return {
     async list() {
-      if (!url || !publishableKey) throw new Error("Possible directory configuration is missing");
-      const endpoint = new URL("/rest/v1/outcome_directory", url);
-      endpoint.searchParams.set("select", columns);
-      endpoint.searchParams.set("order", "published_at.desc,id.asc");
-      endpoint.searchParams.set("limit", "1000");
-      const response = await request(endpoint, { headers: { apikey: publishableKey, accept: "application/json" } });
+      const response = await request(endpoint, { headers: { accept: "application/json" } });
       if (!response.ok) throw new Error(`Possible directory returned HTTP ${response.status}`);
-      return ((await response.json()) as OutcomeRow[]).map(fromRow);
+      const body = await response.json() as { outcomes?: OutcomeRow[] };
+      return (body.outcomes ?? []).map(fromRow);
     },
   };
 }
@@ -124,7 +136,7 @@ export function searchDirectory(outcomes: readonly DirectoryOutcome[], query: st
     const title = outcome.title.toLowerCase();
     const summary = outcome.summary.toLowerCase();
     const prompt = outcome.prompt.toLowerCase();
-    const context = JSON.stringify([outcome.products, outcome.skills, outcome.models]).toLowerCase();
+    const context = JSON.stringify([outcome.primary, outcome.secondary, outcome.models]).toLowerCase();
     const score = terms.reduce((total, term) => total
       + (title.includes(term) ? 10 : 0)
       + (summary.includes(term) ? 5 : 0)

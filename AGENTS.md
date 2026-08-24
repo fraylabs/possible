@@ -9,7 +9,7 @@ jj status
 npm run test -w @possible/catalog
 ```
 
-Outcome publishers own canonical `outcome.json`, `outcome.md`, and `prompt.md` files in their public repository or domain. This repository owns the directory clients, public contract, Products, and lightweight Skill links; do not add canonical Outcomes here.
+Outcome publishers own canonical `outcome.json`, `outcome.md`, and `prompt.md` files in their public repository or domain. This repository owns the directory clients and public contract; it does not own Product or Skill catalogs. Do not add canonical Outcomes here.
 
 Keep the separation exact: human title and explanation in `outcome.md`; full prompt in `prompt.md`; models, Products, Skills, requirements, provenance, and file metadata in `outcome.json`. Do not reintroduce a pack compiler, authored expectations, workstreams, lifecycle, or execution ceremony.
 

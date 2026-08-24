@@ -76,9 +76,9 @@ outcomes/<slug>/
   inputs/       optional
 ```
 
-`outcomes.json` is the repository-root publisher index and is created or updated by the CLI. `outcome.md` is the canonical human page: one H1 title, one clear opening summary, and useful formatted explanation. `prompt.md` is the exact reusable execution prompt. `outcome.json` contains machine metadata only: author, authored timestamp, models and agents, required inputs, Products, Skills with last-reviewed commits, and media or artifact references.
+`outcomes.json` is the repository-root publisher index and is created or updated by the CLI. `outcome.md` is the canonical human page: one H1 title, one clear opening summary, and useful formatted explanation. `prompt.md` is the exact reusable execution prompt. `outcome.json` contains machine metadata only: author, authored timestamp, models and agents, required inputs, one primary Product or Skill, optional secondary credits, and media or artifact references. A Skill credit retains its repository, directory and last-reviewed commit.
 
-Do not reconstruct absent provenance as fact. Mark unknown values honestly. Products and models belong in `outcome.json`; deliverables and detailed work instructions belong in `prompt.md`; result explanation belongs in `outcome.md`.
+Do not reconstruct absent provenance as fact. Mark unknown values honestly. The primary attribution is the Product or Skill people should understand first; do not duplicate it under `secondary`. Attributions and models belong in `outcome.json`; deliverables and detailed work instructions belong in `prompt.md`; result explanation belongs in `outcome.md`.
 
 Use the CLI to scaffold and validate:
 

@@ -6,10 +6,12 @@ import {
   isOutcomeCategory,
   outcomeCategories,
   outcomeCategoryLabels,
-  recordOutcomeCopy,
+  recordOutcomeUse,
   searchDiscoveryOutcomes,
+  sourceFilterKey,
 } from "./discovery-data";
-import type { DiscoveryOutcome, OutcomeCategory } from "./discovery-data";
+import type { DiscoveryOutcome, DiscoverySource, OutcomeCategory } from "./discovery-data";
+import { OutcomeReactions } from "./outcome-reactions";
 import { CopyButton, SiteShell } from "./shared";
 
 const pageSize = 10;
@@ -33,7 +35,13 @@ function updateLocation(mutator: (url: URL) => void, mode: "push" | "replace" = 
 function OutcomeMedia({ outcome, priority = false }: { outcome: DiscoveryOutcome; priority?: boolean }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const media = outcome.media;
-  if (!media) return <span className="home-outcome-placeholder">{outcomeCategoryLabels[outcome.category]}</span>;
+  if (!media) {
+    const label = outcomeCategoryLabels[outcome.category];
+    return <span className="home-outcome-fallback" data-category={outcome.category}>
+      <b aria-hidden="true">{label.slice(0, 3).toUpperCase()}</b>
+      <small>{label}</small>
+    </span>;
+  }
   if (media.kind === "image") return <img src={media.src} alt={media.alt} loading={priority ? "eager" : "lazy"} decoding="async" />;
   return (
     <video
@@ -58,34 +66,36 @@ function OutcomeMedia({ outcome, priority = false }: { outcome: DiscoveryOutcome
   );
 }
 
-function OutcomeSource({ outcome }: { outcome: DiscoveryOutcome }) {
+function OutcomeSource({ outcome, onSelect }: { outcome: DiscoveryOutcome; onSelect: (source: DiscoverySource) => void }) {
   const source = outcome.source;
   if (!source) return <span className="home-outcome-source">No Product or Skill attached</span>;
+  const initials = source.name.split(/\s+/).map((part) => part[0]).join("").slice(0, 2).toUpperCase();
   return (
-    <a className="home-outcome-source" href={source.href}>
-      <span>Made with {source.name}{outcome.sources.length > 1 ? ` +${outcome.sources.length - 1}` : ""}</span>
-      <i>{source.kind}</i>
-    </a>
+    <button className="home-outcome-source" type="button" onClick={() => onSelect(source)} aria-label={`Filter by ${source.kind} ${source.name}`}>
+      <b aria-hidden="true">{initials}</b>
+      <span><small>{source.kind} · {source.owner}</small><strong>{source.name}</strong></span>
+      {outcome.sources.length > 1 ? <i>+{outcome.sources.length - 1}</i> : null}
+    </button>
   );
 }
 
 function usageLabel(count: number): string {
-  return `${count.toLocaleString()} ${count === 1 ? "copy" : "copies"}`;
+  return `${count.toLocaleString()} ${count === 1 ? "use" : "uses"}`;
 }
 
-function OutcomeResult({ outcome, position, priority, featured }: { outcome: DiscoveryOutcome; position: number; priority: boolean; featured: boolean }) {
+function OutcomeResult({ outcome, rank, priority, featured, onSelectSource }: { outcome: DiscoveryOutcome; rank: number | undefined; priority: boolean; featured: boolean; onSelectSource: (source: DiscoverySource) => void }) {
   const external = outcome.href.startsWith("https://");
   const [useCount, setUseCount] = useState(outcome.useCount);
 
   useEffect(() => setUseCount(outcome.useCount), [outcome.id, outcome.useCount]);
 
   async function recordUse() {
-    if (await recordOutcomeCopy(outcome.databaseId)) setUseCount((count) => count + 1);
+    if (await recordOutcomeUse(outcome.databaseId)) setUseCount((count) => count + 1);
   }
 
   return (
     <article className="home-result-row" data-featured={featured ? "true" : undefined}>
-      <span className="home-result-rank" aria-label={`Result ${position}`}>#{position}</span>
+      <span className="home-result-rank" aria-label={rank ? `Rank ${rank}` : "Unranked Outcome"}>{rank ? `#${rank}` : "—"}</span>
       <a
         className="home-result-media"
         data-fit={outcome.media?.fit ?? "cover"}
@@ -98,42 +108,20 @@ function OutcomeResult({ outcome, position, priority, featured }: { outcome: Dis
       </a>
       <div className="home-result-copy">
         <div className="home-result-meta">
-          <OutcomeSource outcome={outcome} />
+          <OutcomeSource outcome={outcome} onSelect={onSelectSource} />
           <span>{outcome.publicationKind} · {outcomeCategoryLabels[outcome.category]}</span>
         </div>
         <h2><a href={outcome.href} target={external ? "_blank" : undefined} rel={external ? "noreferrer" : undefined}>{outcome.title}</a></h2>
         <p>{outcome.summary}</p>
         <footer>
-          <div className="home-result-requirements">
+          <div className="home-result-signals">
             <strong><i aria-hidden="true" /> {usageLabel(useCount)}</strong>
-            <span className="home-result-rating" aria-label={`${outcome.averageRating.toFixed(1)} out of 5 stars from ${outcome.reviewCount} reviews`}>
-              ★ {outcome.averageRating.toFixed(1)} · {outcome.reviewCount} {outcome.reviewCount === 1 ? "review" : "reviews"}
-            </span>
-            {outcome.requirements.map((requirement) => <span key={requirement}>{requirement}</span>)}
+            <OutcomeReactions outcomeId={outcome.databaseId} likeCount={outcome.likeCount} />
           </div>
           <CopyButton label="Copy prompt" value={outcome.prompt} onCopied={recordUse} />
         </footer>
       </div>
     </article>
-  );
-}
-
-function Leaderboard({ outcomes, page, onPageChange }: { outcomes: DiscoveryOutcome[]; page: number; onPageChange: (page: number) => void }) {
-  const ranked = [...outcomes].sort((left, right) => right.useCount - left.useCount || right.reviewCount - left.reviewCount || left.catalogNumber - right.catalogNumber);
-  const pageCount = Math.max(1, Math.ceil(ranked.length / pageSize));
-  const currentPage = Math.min(page, pageCount);
-  const visible = ranked.slice((currentPage - 1) * pageSize, currentPage * pageSize);
-  return (
-    <section className="home-leaderboard layout-reading" aria-labelledby="leaderboard-heading">
-      <header><div><span>ALL TIME</span><h1 id="leaderboard-heading">Most copied Outcomes</h1></div><p>Prompts people return to and reuse.</p></header>
-      <ol start={(currentPage - 1) * pageSize + 1}>{visible.map((outcome, index) => <li key={outcome.id} data-top={currentPage === 1 && index < 3 ? "true" : undefined}>
-        <span>{String((currentPage - 1) * pageSize + index + 1).padStart(2, "0")}</span>
-        <a className="home-leaderboard-media" href={outcome.href}><OutcomeMedia outcome={outcome} priority={currentPage === 1 && index < 3} /></a>
-        <div><a href={outcome.href}>{outcome.title}</a><small>{outcome.publicationKind}{outcome.source ? ` · Made with ${outcome.source.name}` : ""}</small></div>
-        <strong>{usageLabel(outcome.useCount)}</strong>
-      </li>)}</ol>
-      <Pagination page={currentPage} total={ranked.length} onPageChange={onPageChange} label="Leaderboard pages" />
-    </section>
   );
 }
 
@@ -157,21 +145,23 @@ export function OutcomesPage({ outcomesFixture }: { outcomesFixture?: DiscoveryO
   const [directoryState, setDirectoryState] = useState<"loading" | "ready" | "error">(outcomesFixture === undefined ? "loading" : "ready");
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState<OutcomeCategory | "all">("all");
+  const [sourceFilter, setSourceFilter] = useState<string | null>(null);
   const [page, setPage] = useState(1);
-  const [leaderboardPage, setLeaderboardPage] = useState(1);
   const searchRef = useRef<HTMLInputElement>(null);
   const normalizedQuery = query.trim();
+  const hasUsageRanking = outcomes.some((outcome) => outcome.useCount > 0);
   const availableCategories = useMemo(() => outcomeCategories.filter((candidate) => outcomes.some((outcome) => outcome.category === candidate)), [outcomes]);
+  const activeSource = useMemo(() => outcomes.flatMap((outcome) => outcome.sources).find((source) => sourceFilterKey(source) === sourceFilter), [outcomes, sourceFilter]);
 
   const filteredOutcomes = useMemo(() => {
-    const matches = searchDiscoveryOutcomes(outcomes, query, category);
-    if (normalizedQuery) return matches;
+    const matches = searchDiscoveryOutcomes(outcomes, query, category, sourceFilter);
+    if (normalizedQuery || hasUsageRanking) return matches;
     return [...matches].sort((left, right) => {
       const byDate = Date.parse(right.publishedAt ?? "") - Date.parse(left.publishedAt ?? "");
       if (Number.isFinite(byDate) && byDate !== 0) return byDate;
       return left.catalogNumber - right.catalogNumber;
     });
-  }, [category, normalizedQuery, outcomes, query]);
+  }, [category, hasUsageRanking, normalizedQuery, outcomes, query, sourceFilter]);
 
   const pageCount = Math.max(1, Math.ceil(filteredOutcomes.length / pageSize));
   const currentPage = Math.min(page, pageCount);
@@ -193,6 +183,7 @@ export function OutcomesPage({ outcomesFixture }: { outcomesFixture?: DiscoveryO
       const urlPage = Number.parseInt(parameters.get("page") ?? "1", 10);
       setQuery(parameters.get("q") ?? "");
       setCategory(isOutcomeCategory(urlCategory) ? urlCategory : "all");
+      setSourceFilter(parameters.get("uses"));
       setPage(Number.isFinite(urlPage) ? Math.max(urlPage, 1) : 1);
     };
     syncFromUrl();
@@ -233,6 +224,16 @@ export function OutcomesPage({ outcomesFixture }: { outcomesFixture?: DiscoveryO
     });
   }
 
+  function changeSource(nextSource: DiscoverySource | null) {
+    const nextFilter = nextSource ? sourceFilterKey(nextSource) : null;
+    setSourceFilter(nextFilter);
+    updateLocation((url) => {
+      if (nextFilter) url.searchParams.set("uses", nextFilter);
+      else url.searchParams.delete("uses");
+      resetPage(url);
+    }, "push");
+  }
+
   function changePage(nextPage: number) {
     const bounded = Math.min(Math.max(nextPage, 1), pageCount);
     setPage(bounded);
@@ -245,12 +246,14 @@ export function OutcomesPage({ outcomesFixture }: { outcomesFixture?: DiscoveryO
 
   return (
     <SiteShell className="home-page">
-      <Leaderboard outcomes={outcomes} page={leaderboardPage} onPageChange={setLeaderboardPage} />
       <section className="home-directory layout-reading" id="discover" aria-labelledby="home-heading">
         <header className="home-heading">
-          <span>DISCOVER</span>
-          <h1 id="home-heading">What do you want an agent to make?</h1>
-          <p>Search real Outcomes. Copy the prompt. Remix it for your job.</p>
+          <div>
+            <span>{normalizedQuery ? "SEARCH RESULTS" : sourceFilter ? "FILTERED OUTCOMES" : hasUsageRanking ? "LEADERBOARD / ALL TIME" : "OUTCOME DIRECTORY"}</span>
+            <h1 id="home-heading">{normalizedQuery ? "Search Results" : activeSource ? `${activeSource.name} Outcomes` : category === "all" ? "All Outcomes" : `${outcomeCategoryLabels[category]} Outcomes`}</h1>
+            <p>{normalizedQuery ? "Results ranked by relevance, then use." : activeSource ? `Prompts that use ${activeSource.name}.` : hasUsageRanking ? "Prompts ranked by how often people use them." : "Browse the latest published Outcomes."}</p>
+          </div>
+          <strong>{directoryState === "loading" ? "—" : `${filteredOutcomes.length} ${filteredOutcomes.length === 1 ? "Outcome" : "Outcomes"}`}</strong>
         </header>
 
         <label className="home-search">
@@ -260,7 +263,7 @@ export function OutcomesPage({ outcomesFixture }: { outcomesFixture?: DiscoveryO
             type="search"
             value={query}
             onChange={(event) => changeQuery(event.target.value)}
-            placeholder="Describe the result you want"
+            placeholder="What do you want an agent to make?"
             aria-label="What do you want an agent to make?"
           />
           {query ? <button type="button" onClick={() => changeQuery("")} aria-label="Clear search">Clear</button> : <kbd>⌘ K</kbd>}
@@ -271,11 +274,11 @@ export function OutcomesPage({ outcomesFixture }: { outcomesFixture?: DiscoveryO
             <button type="button" aria-pressed={category === "all"} onClick={() => changeCategory("all")}>All</button>
             {availableCategories.map((candidate) => <button type="button" aria-pressed={category === candidate} onClick={() => changeCategory(candidate)} key={candidate}>{outcomeCategoryLabels[candidate]}</button>)}
           </nav>
-        </div>
-
-        <div className="home-result-summary">
-          <p>{normalizedQuery ? <>Results for <strong>“{normalizedQuery}”</strong></> : category === "all" ? "All Outcomes" : `${outcomeCategoryLabels[category]} Outcomes`}</p>
-          <span>{filteredOutcomes.length} {filteredOutcomes.length === 1 ? "result" : "results"}</span>
+          {sourceFilter ? <button className="home-active-filter" type="button" onClick={() => changeSource(null)} aria-label="Clear Product or Skill filter">
+            <span>{activeSource?.kind ?? sourceFilter.split(":", 1)[0]}</span>
+            <strong>{activeSource?.name ?? sourceFilter.slice(sourceFilter.indexOf(":") + 1)}</strong>
+            <i aria-hidden="true">×</i>
+          </button> : null}
         </div>
 
         {directoryState === "loading" ? (
@@ -287,9 +290,10 @@ export function OutcomesPage({ outcomesFixture }: { outcomesFixture?: DiscoveryO
             {visibleOutcomes.map((outcome, index) => (
               <OutcomeResult
                 outcome={outcome}
-                position={(currentPage - 1) * pageSize + index + 1}
+                rank={!normalizedQuery && hasUsageRanking ? (currentPage - 1) * pageSize + index + 1 : undefined}
                 priority={currentPage === 1 && index < 3}
-                featured={false}
+                featured={!normalizedQuery && hasUsageRanking && currentPage === 1 && index < 3}
+                onSelectSource={changeSource}
                 key={outcome.id}
               />
             ))}

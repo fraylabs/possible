@@ -30,7 +30,7 @@ Domain sources are Official for that domain. GitHub Outcomes are Community unles
 
 ## Discovery and reputation
 
-Possible has one organic leaderboard: **Most copied Outcomes — All time**. Copies, ratings, and reviews support discovery but never prove universal fit. Raw visitor and reviewer identifiers remain private.
+Possible has one organic leaderboard: **Most used Outcomes — All time**. Deduplicated uses and account likes support discovery but never prove universal fit. Raw anonymous installation identifiers are hashed before storage; bookmarks are private.
 
 The optional `$possible` Skill searches current Outcomes, checks current primary sources, resolves consequential unknowns, and prepares one complete prompt for a fresh agent.
 
@@ -42,14 +42,14 @@ Do not build bidding until organic repeat use exists.
 
 ## Phases
 
-1. Prove six to ten excellent visual Outcomes, source publishing, prompt copying, reviews, and reliable search.
+1. Prove six to ten excellent visual Outcomes, source publishing, prompt use, likes, bookmarks, and reliable search.
 2. Get outside publishers to expose public repositories or domain indexes.
-3. Learn from successful searches, copies, and remixes; improve retrieval.
+3. Learn from successful searches, uses, and remixes; improve retrieval.
 4. Consider sponsored placement, publisher analytics, APIs, and additional leaderboard windows only when use supports them.
 
 ## Do not build yet
 
-- Possible publisher accounts or OAuth;
+- Possible publisher accounts or publisher OAuth;
 - hosted authoring or canonical prompt storage;
 - passive gallery scraping or bulk import queues;
 - claims, handoffs, or ownership-transfer workflows;
@@ -65,5 +65,7 @@ publisher exposes a real Outcome
   -> user discovers and judges the result
   -> user copies or remixes the exact prompt
   -> Products and Skills receive attribution
-  -> usage and reviews improve discovery
+  -> deduplicated usage and likes improve discovery
 ```
+
+Reader GitHub sign-in is deliberately narrower than a publisher account: it exists only for likes and private bookmarks and grants no publishing or ownership authority.

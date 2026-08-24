@@ -8,7 +8,8 @@ import { addOutcomeSource, createOutcome, publishOutcomeSource, useOutcome, vali
 const HELP = `Possible CLI
 
 Usage:
-  possible create <slug>
+  possible create <slug> --product <owner/product>
+  possible create <slug> --skill <owner/repository> <directory> <commit>
   possible validate [directory]
   possible publish [owner/repository | https://publisher.example]
   possible search <ordinary-language query>
@@ -18,7 +19,7 @@ Usage:
   possible bookmark <command>
 
 Commands:
-  create    Create outcome.json, outcome.md, prompt.md, and media/ for one Outcome
+  create    Create one Outcome with its required primary Product or Skill
   validate  Validate every Outcome folder below a directory
   publish   Validate and submit one public publisher source; no account required
   search    Find relevant Outcomes in the live public directory
@@ -56,9 +57,12 @@ if (args.length === 0 || args.includes("--help") || args.includes("-h")) {
     process.stderr.write(`${error instanceof Error ? error.message : String(error)}\n`);
     process.exitCode = 1;
   }
-} else if (args[0] === "create" && args.length === 2) {
+} else if (args[0] === "create" && ((args[2] === "--product" && args.length === 4) || (args[2] === "--skill" && args.length === 6))) {
   try {
-    const folder = await createOutcome(args[1]);
+    const primary = args[2] === "--product"
+      ? { kind: "product", id: args[3] }
+      : { kind: "skill", repository: args[3], directory: args[4], lastReviewedCommit: args[5] };
+    const folder = await createOutcome(args[1], { primary });
     process.stdout.write(`Created ${folder}\n`);
   } catch (error) {
     process.stderr.write(`${error instanceof Error ? error.message : String(error)}\n`);

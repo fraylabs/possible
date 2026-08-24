@@ -7,10 +7,11 @@ import { discoverOutcomeSource } from "./sources.mjs";
 
 const execFileAsync = promisify(execFile);
 const SAFE_SLUG = /^[a-z0-9][a-z0-9-]*$/;
-const DEFAULT_PUBLISH_ENDPOINT = "https://abutwsaahahtbtlopczi.supabase.co/functions/v1/register-outcome-source";
+const DEFAULT_PUBLISH_ENDPOINT = "https://reminiscent-lark-333.eu-west-1.convex.site/api/outcomes/register";
 
-export async function createOutcome(slug, { directory = process.cwd() } = {}) {
+export async function createOutcome(slug, { directory = process.cwd(), primary } = {}) {
   if (!SAFE_SLUG.test(slug ?? "")) throw new Error("Outcome slug must be lowercase and hyphenated");
+  if (!primary) throw new Error("Choose one primary attribution with --product or --skill");
   const root = resolve(directory);
   const indexPath = join(root, "outcomes.json");
   let publisherIndex = {
@@ -28,13 +29,14 @@ export async function createOutcome(slug, { directory = process.cwd() } = {}) {
   await mkdir(join(folder, "media"), { recursive: true });
   const manifestPath = join(folder, "outcome.json");
   const manifest = {
-    schemaVersion: 3,
+    schemaVersion: 4,
     slug,
     files: { about: "outcome.md", prompt: "prompt.md" },
     authoredAt: null,
     author: { name: "Replace with publisher name", url: "https://example.com" },
     models: [{ provider: "Replace with provider", model: "Replace with model", role: "execution" }],
     requirements: [],
+    primary,
   };
   await writeFile(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`, { flag: "wx" });
   await writeFile(join(folder, "outcome.md"), `# Replace with Outcome name\n\nDescribe the concrete result in one clear opening paragraph.\n`, { flag: "wx" });
