@@ -2,25 +2,27 @@
 
 import process from "node:process";
 import { runBookmarkCommand } from "./bookmarks.mjs";
-import { installPossibleSkill } from "./init.mjs";
+import { fetchOutcome, formatSearchResults, searchOutcomes } from "./directory.mjs";
 import { addOutcomeSource, createOutcome, publishOutcomeSource, useOutcome, validateOutcomes } from "./outcome-commands.mjs";
 
 const HELP = `Possible CLI
 
 Usage:
-  possible init
   possible create <slug>
   possible validate [directory]
   possible publish [owner/repository | https://publisher.example]
+  possible search <ordinary-language query>
+  possible fetch <outcome-id>
   possible add <owner/repository | https://publisher.example>
   possible use <source>@<slug>
   possible bookmark <command>
 
 Commands:
-  init      Install the optional Possible prompt-preparation skill into this project
   create    Create outcome.json, outcome.md, prompt.md, and media/ for one Outcome
   validate  Validate every Outcome folder below a directory
   publish   Validate and submit one public publisher source; no account required
+  search    Find relevant Outcomes in the live public directory
+  fetch     Print one directory Outcome's exact prompt
   add       Discover a public source and save it to .possible/sources.json
   use       Print one exact execution prompt to standard output
   bookmark  add | list | remove locally saved Outcome slugs
@@ -34,6 +36,22 @@ if (args.length === 0 || args.includes("--help") || args.includes("-h")) {
   try {
     const result = await runBookmarkCommand(args.slice(1));
     if (result) process.stdout.write(`${result}\n`);
+  } catch (error) {
+    process.stderr.write(`${error instanceof Error ? error.message : String(error)}\n`);
+    process.exitCode = 1;
+  }
+} else if (args[0] === "search" && args.length >= 2) {
+  try {
+    const outcomes = await searchOutcomes(args.slice(1).join(" "));
+    process.stdout.write(formatSearchResults(outcomes));
+  } catch (error) {
+    process.stderr.write(`${error instanceof Error ? error.message : String(error)}\n`);
+    process.exitCode = 1;
+  }
+} else if (args[0] === "fetch" && args.length === 2) {
+  try {
+    const outcome = await fetchOutcome(args[1]);
+    process.stdout.write(`${outcome.prompt}\n`);
   } catch (error) {
     process.stderr.write(`${error instanceof Error ? error.message : String(error)}\n`);
     process.exitCode = 1;
@@ -81,15 +99,7 @@ if (args.length === 0 || args.includes("--help") || args.includes("-h")) {
     process.stderr.write(`${error instanceof Error ? error.message : String(error)}\n`);
     process.exitCode = 1;
   }
-} else if (args.length !== 1 || args[0] !== "init") {
+} else {
   process.stderr.write(`Unknown command: ${args.join(" ")}\n\n${HELP}`);
   process.exitCode = 1;
-} else {
-  try {
-    const result = await installPossibleSkill();
-    process.stdout.write(`${result.changed ? "Possible installed" : "Possible is already installed"} at ${result.installPath}\n\nOpen Codex in this project and type:\n\n  $possible\n`);
-  } catch (error) {
-    process.stderr.write(`${error instanceof Error ? error.message : String(error)}\n`);
-    process.exitCode = 1;
-  }
 }

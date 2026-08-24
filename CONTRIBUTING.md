@@ -5,7 +5,7 @@ Publishers keep canonical Outcomes in their own public GitHub repository or doma
 ## Author one Outcome
 
 ```bash
-npx @fraylabs/possible@0.2.0 create my-outcome
+npx @fraylabs/possible@0.3.0 create my-outcome
 ```
 
 This creates the public contract:
@@ -30,8 +30,8 @@ Publish only a prompt genuinely connected to the result. Record only known prove
 ## Validate and publish
 
 ```bash
-npx @fraylabs/possible@0.2.0 validate
-npx @fraylabs/possible@0.2.0 publish owner/repository
+npx @fraylabs/possible@0.3.0 validate
+npx @fraylabs/possible@0.3.0 publish owner/repository
 ```
 
 GitHub sources keep `outcomes.json` at the repository root. Domain sources expose the same index at `/.well-known/possible/outcomes.json`. Possible reads the public source at an exact revision and stores an immutable discovery snapshot.

@@ -24,15 +24,22 @@ The repository or domain is the identity. A GitHub publisher keeps `outcomes.jso
 ## CLI
 
 ```bash
-npx @fraylabs/possible@0.2.0 init
-npx @fraylabs/possible@0.2.0 create my-outcome
-npx @fraylabs/possible@0.2.0 validate
-npx @fraylabs/possible@0.2.0 publish owner/repository
-npx @fraylabs/possible@0.2.0 add owner/repository
-npx @fraylabs/possible@0.2.0 use owner/repository@my-outcome
+npx @fraylabs/possible@0.3.0 search "make a launch video"
+npx @fraylabs/possible@0.3.0 fetch <outcome-id>
+npx @fraylabs/possible@0.3.0 create my-outcome
+npx @fraylabs/possible@0.3.0 validate
+npx @fraylabs/possible@0.3.0 publish owner/repository
+npx @fraylabs/possible@0.3.0 add owner/repository
+npx @fraylabs/possible@0.3.0 use owner/repository@my-outcome
 ```
 
-The optional `$possible` Skill discovers relevant prior Outcomes, asks only consequential questions, and prepares one complete prompt for a fresh agent. Local bookmarks remain account-free.
+Install the optional `$possible` Skill through the standard agent-skill ecosystem:
+
+```bash
+npx skills add https://github.com/fraylabs/possible/tree/skill/skills/possible --skill possible
+```
+
+The Skill discovers relevant prior Outcomes, asks only consequential questions, and prepares one complete prompt for a fresh agent. It uses the Possible MCP when available and otherwise uses the public CLI. Local bookmarks remain account-free.
 
 ## Repository
 

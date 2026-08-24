@@ -1,6 +1,6 @@
 {
   "name": "@fraylabs/possible",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Create, publish, discover, and reuse source-owned AI Outcomes",
   "keywords": [
     "codex",
@@ -23,15 +23,10 @@
   "bin": {
     "possible": "src/index.mjs"
   },
-  "files": [
-    "assets/possible",
-    "src"
-  ],
+  "files": ["src"],
   "scripts": {
-    "build": "node scripts/sync-skill.mjs",
-    "test": "node --test test/*.test.mjs",
-    "sync:skill": "node scripts/sync-skill.mjs",
-    "prepack": "node scripts/sync-skill.mjs"
+    "build": "node --check src/index.mjs && node --check src/directory.mjs",
+    "test": "node --test test/*.test.mjs"
   },
   "engines": {
     "node": ">=22"

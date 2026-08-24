@@ -60,7 +60,7 @@ export function PublishPage() {
 
         <section className="source-publish-contract">
           <div><span>01</span><h2>Author one folder per Outcome.</h2><pre>{"outcomes.json\noutcomes/<slug>/\n  outcome.json\n  outcome.md\n  prompt.md\n  media/       optional"}</pre></div>
-          <div><span>02</span><h2>Validate and publish.</h2><p>The CLI creates the folder, checks the public contract, and submits the source URL.</p><CopyButton label="Copy CLI commands" value={"npx @fraylabs/possible@0.2.0 create my-outcome\nnpx @fraylabs/possible@0.2.0 validate\nnpx @fraylabs/possible@0.2.0 publish"} /></div>
+          <div><span>02</span><h2>Validate and publish.</h2><p>The CLI creates the folder, checks the public contract, and submits the source URL.</p><CopyButton label="Copy CLI commands" value={"npx @fraylabs/possible@0.3.0 create my-outcome\nnpx @fraylabs/possible@0.3.0 validate\nnpx @fraylabs/possible@0.3.0 publish"} /></div>
         </section>
       </section>
     </SiteShell>

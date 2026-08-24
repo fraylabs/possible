@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { execFile } from "node:child_process";
 import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { createServer } from "node:http";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -18,15 +19,17 @@ const fixture = async () => {
 };
 afterEach(async () => Promise.all(temporaryDirectories.splice(0).map((directory) => rm(directory, { recursive: true, force: true }))));
 
-test("the CLI exposes authoring, source discovery, skill installation, and local bookmarks", async () => {
+test("the CLI exposes authoring, live discovery, source use, and local bookmarks", async () => {
   const { stdout } = await execute(process.execPath, [cli, "--help"]);
-  assert.match(stdout, /possible init/);
   assert.match(stdout, /possible bookmark/);
   assert.match(stdout, /possible create/);
   assert.match(stdout, /possible validate/);
   assert.match(stdout, /possible publish/);
+  assert.match(stdout, /possible search/);
+  assert.match(stdout, /possible fetch/);
   assert.match(stdout, /possible add/);
   assert.match(stdout, /possible use/);
+  assert.doesNotMatch(stdout, /possible init/);
   assert.doesNotMatch(stdout, /possible pack|compile|export/);
 });
 
@@ -45,14 +48,29 @@ test("create and validate use the three-file Outcome contract", async () => {
   assert.equal((await execute(process.execPath, [cli, "validate"], { cwd: project })).stdout, "Validated 1 Outcome.\n");
 });
 
-test("init installs the small optional prompt-preparation skill", async () => {
-  const project = await fixture();
-  const { stdout, stderr } = await execute(process.execPath, [cli, "init"], { cwd: project });
-  assert.equal(stderr, "");
-  assert.match(stdout, /Possible installed/);
-  const skill = await readFile(join(project, ".agents", "skills", "possible", "SKILL.md"), "utf8");
-  assert.match(skill, /complete execution prompt for a fresh agent/);
-  assert.doesNotMatch(skill, /Outcome Pack|authored expectations|workstreams/);
+test("search and fetch use the live directory contract", async () => {
+  const id = "11111111-1111-4111-8111-111111111111";
+  const server = createServer((request, response) => {
+    response.setHeader("content-type", "application/json");
+    const url = new URL(request.url, "http://127.0.0.1");
+    if (url.searchParams.get("id")) {
+      response.end(JSON.stringify({ outcome: { id, title: "Corridor Cat Shelter", prompt: "Make the printable shelter." } }));
+      return;
+    }
+    response.end(JSON.stringify({ outcomes: [{ id, title: "Corridor Cat Shelter", summary: "A weighted printable shelter.", source_locator: "fraylabs/possible-outcomes" }] }));
+  });
+  await new Promise((resolve, reject) => server.listen(0, "127.0.0.1", (error) => error ? reject(error) : resolve()));
+  try {
+    const address = server.address();
+    const environment = { ...process.env, POSSIBLE_DIRECTORY_ENDPOINT: `http://127.0.0.1:${address.port}` };
+    const search = await execute(process.execPath, [cli, "search", "printable", "cat", "shelter"], { env: environment });
+    assert.match(search.stdout, /Corridor Cat Shelter/);
+    assert.match(search.stdout, new RegExp(id));
+    const fetched = await execute(process.execPath, [cli, "fetch", id], { env: environment });
+    assert.equal(fetched.stdout, "Make the printable shelter.\n");
+  } finally {
+    await new Promise((resolve, reject) => server.close((error) => error ? reject(error) : resolve()));
+  }
 });
 
 test("bookmarks store Outcome slugs locally without an account", async () => {

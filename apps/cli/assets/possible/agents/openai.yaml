@@ -1,4 +1,0 @@
-interface:
-  display_name: "Possible"
-  short_description: "Discover Outcomes and prepare complete prompts"
-  default_prompt: "Use $possible to find relevant Outcomes and turn my request into a complete execution prompt for a fresh agent."

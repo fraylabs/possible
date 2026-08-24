@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Replaced `possible init` with the standard `npx skills add` installation path and added public `possible search` and `possible fetch` commands.
 - Made publisher-owned Supabase snapshots the sole runtime Outcome directory for the website and MCP.
 - Moved Fray Labs seed Outcomes to `fraylabs/possible-outcomes` and removed their duplicated media and manifests from this repository.
 - Kept only static Product definitions, lightweight Skill links, and contract types in the reference catalog.

@@ -18,4 +18,4 @@ The publisher source is canonical. Possible independently reads an exact Git com
 
 The website and MCP read the same public Supabase views. Neither keeps a second Outcome catalog or rewrites a published prompt. Products and lightweight Skill links remain static reference data because they provide attribution context, not canonical Outcome content.
 
-The CLI owns authoring, validation, source publishing, direct source installation, prompt use, and local bookmarks. The optional `$possible` Skill uses published Outcomes as precedent and prepares a new prompt without changing the original record.
+The CLI owns authoring, validation, source publishing, live directory search and fetch, direct source installation, prompt use, and local bookmarks. The optional `$possible` Skill is installed through the standard Skills ecosystem; it uses the MCP when available and otherwise uses the public CLI to read published Outcomes as precedent without changing the original record.
