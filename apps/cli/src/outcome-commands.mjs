@@ -7,7 +7,7 @@ import { discoverOutcomeSource } from "./sources.mjs";
 
 const execFileAsync = promisify(execFile);
 const SAFE_SLUG = /^[a-z0-9][a-z0-9-]*$/;
-const DEFAULT_PUBLISH_ENDPOINT = "https://reminiscent-lark-333.eu-west-1.convex.site/api/outcomes/register";
+const DEFAULT_PUBLISH_ENDPOINT = "https://reminiscent-lark-333.convex.site/api/outcomes/register";
 
 export async function createOutcome(slug, { directory = process.cwd(), primary } = {}) {
   if (!SAFE_SLUG.test(slug ?? "")) throw new Error("Outcome slug must be lowercase and hyphenated");

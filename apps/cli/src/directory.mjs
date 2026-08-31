@@ -3,7 +3,7 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { homedir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 
-const DEFAULT_ENDPOINT = "https://reminiscent-lark-333.eu-west-1.convex.site/api/outcomes";
+const DEFAULT_ENDPOINT = "https://reminiscent-lark-333.convex.site/api/outcomes";
 
 const directoryEndpoint = () => process.env.POSSIBLE_DIRECTORY_ENDPOINT?.trim() || DEFAULT_ENDPOINT;
 

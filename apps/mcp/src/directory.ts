@@ -110,7 +110,7 @@ function fromRow(row: OutcomeRow): DirectoryOutcome {
   };
 }
 
-const DEFAULT_ENDPOINT = "https://reminiscent-lark-333.eu-west-1.convex.site/api/outcomes";
+const DEFAULT_ENDPOINT = "https://reminiscent-lark-333.convex.site/api/outcomes";
 
 export function createConvexOutcomeDirectory(options: { endpoint?: string; fetch?: typeof globalThis.fetch } = {}): OutcomeDirectory {
   const endpoint = options.endpoint ?? process.env.POSSIBLE_DIRECTORY_ENDPOINT ?? DEFAULT_ENDPOINT;
