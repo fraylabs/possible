@@ -78,7 +78,11 @@ describe("Possible website", () => {
 
   it("uses one ranked, visual Outcome directory as the homepage", async () => {
     const { container } = render(<OutcomesPage outcomesFixture={outcomeFixture} />);
-    expect(screen.getByRole("heading", { name: "All Outcomes", level: 1 })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "See what AI can make.", level: 1 })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "All Outcomes", level: 2 })).toBeInTheDocument();
+    expect(screen.getByText("Inspect real results. Copy the exact prompts.")).toBeInTheDocument();
+    expect(screen.getByText("Ranked by copies")).toBeInTheDocument();
+    expect(screen.getByText("12 copies")).toBeInTheDocument();
     expect(Array.from(container.querySelectorAll(".nav-links a")).map((link) => link.textContent)).toEqual(["DOCS", "PUBLISH"]);
     expect(screen.queryByRole("heading", { name: "Most copied Outcomes" })).not.toBeInTheDocument();
     expect(container.querySelectorAll(".home-outcome-fallback").length).toBeGreaterThan(0);
@@ -118,12 +122,20 @@ describe("Possible website", () => {
   });
 
   it("shows a source-owned preview, exact prompt, provenance, and artifacts", async () => {
-    const { container } = render(<DynamicOutcomeDetailPage outcomeFixture={detailFixture} attributionsFixture={[{ id: "heygen/hyperframes", kind: "Product", name: "HyperFrames", owner: "HeyGen", href: "/?uses=product%3Aheygen%2Fhyperframes#discover", role: "primary" }]} />);
+    const outcomeWithGallery = {
+      ...detailFixture,
+      preview: { images: [{ src: "https://example.com/tall-result.png", alt: "Tall result preview", cover: true }] },
+    } satisfies DirectoryOutcomeDetail;
+    const { container } = render(<DynamicOutcomeDetailPage outcomeFixture={outcomeWithGallery} attributionsFixture={[{ id: "heygen/hyperframes", kind: "Product", name: "HyperFrames", owner: "HeyGen", href: "/?uses=product%3Aheygen%2Fhyperframes#discover", role: "primary" }]} />);
     expect(screen.getByRole("heading", { name: "Possible Launch Film", level: 1 })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "What it made" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Prompt" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Download the result" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Copy prompt" })).toBeInTheDocument();
+    expect(screen.getByRole("img", { name: "Tall result preview" })).toBeInTheDocument();
+    expect(container.querySelector(".pack-image-grid")).toBeInTheDocument();
+    expect(container.querySelector(".outcome-file-list")).toBeInTheDocument();
+    expect(container.querySelector(".pack-file-list")).not.toBeInTheDocument();
     expect(screen.getByText(/Primary Product · HeyGen/i)).toBeInTheDocument();
     expect(container).not.toHaveTextContent(/workstreams|trust|verification framework/i);
     expect((await axe(container)).violations).toHaveLength(0);

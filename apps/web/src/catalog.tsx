@@ -38,8 +38,9 @@ function OutcomeMedia({ outcome, priority = false }: { outcome: DiscoveryOutcome
   if (!media) {
     const label = outcomeCategoryLabels[outcome.category];
     return <span className="home-outcome-fallback" data-category={outcome.category}>
-      <b aria-hidden="true">{label.slice(0, 3).toUpperCase()}</b>
       <small>{label}</small>
+      <b aria-hidden="true">{label.slice(0, 1).toUpperCase()}</b>
+      <em>Result preview</em>
     </span>;
   }
   if (media.kind === "image") return <img src={media.src} alt={media.alt} loading={priority ? "eager" : "lazy"} decoding="async" />;
@@ -79,8 +80,8 @@ function OutcomeSource({ outcome, onSelect }: { outcome: DiscoveryOutcome; onSel
   );
 }
 
-function usageLabel(count: number): string {
-  return `${count.toLocaleString()} ${count === 1 ? "use" : "uses"}`;
+function copyCountLabel(count: number): string {
+  return `${count.toLocaleString()} ${count === 1 ? "copy" : "copies"}`;
 }
 
 function OutcomeResult({ outcome, rank, priority, featured, onSelectSource }: { outcome: DiscoveryOutcome; rank: number | undefined; priority: boolean; featured: boolean; onSelectSource: (source: DiscoverySource) => void }) {
@@ -89,12 +90,12 @@ function OutcomeResult({ outcome, rank, priority, featured, onSelectSource }: { 
 
   useEffect(() => setUseCount(outcome.useCount), [outcome.id, outcome.useCount]);
 
-  async function recordUse() {
+  async function recordCopy() {
     if (await recordOutcomeUse(outcome.databaseId)) setUseCount((count) => count + 1);
   }
 
   return (
-    <article className="home-result-row" data-featured={featured ? "true" : undefined}>
+    <article className="home-result-row" data-featured={featured ? "true" : undefined} data-rank={rank}>
       <span className="home-result-rank" aria-label={rank ? `Rank ${rank}` : "Unranked Outcome"}>{rank ? `#${rank}` : "—"}</span>
       <a
         className="home-result-media"
@@ -109,16 +110,16 @@ function OutcomeResult({ outcome, rank, priority, featured, onSelectSource }: { 
       <div className="home-result-copy">
         <div className="home-result-meta">
           <OutcomeSource outcome={outcome} onSelect={onSelectSource} />
-          <span>{outcome.publicationKind} · {outcomeCategoryLabels[outcome.category]}</span>
+          <span>{outcome.publicationKind === "official" ? "Official · " : ""}{outcomeCategoryLabels[outcome.category]}</span>
         </div>
         <h2><a href={outcome.href} target={external ? "_blank" : undefined} rel={external ? "noreferrer" : undefined}>{outcome.title}</a></h2>
         <p>{outcome.summary}</p>
         <footer>
           <div className="home-result-signals">
-            <strong><i aria-hidden="true" /> {usageLabel(useCount)}</strong>
+            <strong><i aria-hidden="true" /> {copyCountLabel(useCount)}</strong>
             <OutcomeReactions outcomeId={outcome.databaseId} likeCount={outcome.likeCount} />
           </div>
-          <CopyButton label="Copy prompt" value={outcome.prompt} onCopied={recordUse} />
+          <CopyButton label="Copy prompt" value={outcome.prompt} onCopied={recordCopy} />
         </footer>
       </div>
     </article>
@@ -152,6 +153,20 @@ export function OutcomesPage({ outcomesFixture }: { outcomesFixture?: DiscoveryO
   const hasUsageRanking = outcomes.some((outcome) => outcome.useCount > 0);
   const availableCategories = useMemo(() => outcomeCategories.filter((candidate) => outcomes.some((outcome) => outcome.category === candidate)), [outcomes]);
   const activeSource = useMemo(() => outcomes.flatMap((outcome) => outcome.sources).find((source) => sourceFilterKey(source) === sourceFilter), [outcomes, sourceFilter]);
+  const directoryTitle = normalizedQuery
+    ? "Search results"
+    : activeSource
+      ? `${activeSource.name} Outcomes`
+      : category === "all"
+        ? "All Outcomes"
+        : `${outcomeCategoryLabels[category]} Outcomes`;
+  const directoryContext = normalizedQuery
+    ? "Ranked by relevance, then copies"
+    : sourceFilter || category !== "all"
+      ? "Filtered directory"
+      : hasUsageRanking
+        ? "Ranked by copies"
+        : "Latest published";
 
   const filteredOutcomes = useMemo(() => {
     const matches = searchDiscoveryOutcomes(outcomes, query, category, sourceFilter);
@@ -249,9 +264,9 @@ export function OutcomesPage({ outcomesFixture }: { outcomesFixture?: DiscoveryO
       <section className="home-directory layout-reading" id="discover" aria-labelledby="home-heading">
         <header className="home-heading">
           <div>
-            <span>{normalizedQuery ? "SEARCH RESULTS" : sourceFilter ? "FILTERED OUTCOMES" : hasUsageRanking ? "LEADERBOARD / ALL TIME" : "OUTCOME DIRECTORY"}</span>
-            <h1 id="home-heading">{normalizedQuery ? "Search Results" : activeSource ? `${activeSource.name} Outcomes` : category === "all" ? "All Outcomes" : `${outcomeCategoryLabels[category]} Outcomes`}</h1>
-            <p>{normalizedQuery ? "Results ranked by relevance, then use." : activeSource ? `Prompts that use ${activeSource.name}.` : hasUsageRanking ? "Prompts ranked by how often people use them." : "Browse the latest published Outcomes."}</p>
+            <span>OUTCOME DIRECTORY</span>
+            <h1 id="home-heading">See what AI can make.</h1>
+            <p>Inspect real results. Copy the exact prompts.</p>
           </div>
           <strong>{directoryState === "loading" ? "—" : `${filteredOutcomes.length} ${filteredOutcomes.length === 1 ? "Outcome" : "Outcomes"}`}</strong>
         </header>
@@ -280,6 +295,11 @@ export function OutcomesPage({ outcomesFixture }: { outcomesFixture?: DiscoveryO
             <i aria-hidden="true">×</i>
           </button> : null}
         </div>
+
+        <header className="home-board-heading">
+          <div><span>{normalizedQuery ? "SEARCH" : "DIRECTORY"}</span><h2>{directoryTitle}</h2></div>
+          <p>{directoryContext}<small>{!normalizedQuery && !sourceFilter && category === "all" && hasUsageRanking ? "All time" : null}</small></p>
+        </header>
 
         {directoryState === "loading" ? (
           <div className="home-empty" role="status"><h2>Loading Outcomes…</h2><p>Reading the public directory.</p></div>

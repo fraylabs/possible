@@ -46,7 +46,7 @@ function OutcomePreviewGallery({ outcome }: { outcome: DirectoryOutcomeDetail })
 
 function OutcomeFiles({ title, files }: { title: string; files: OutcomeFile[] }) {
   if (!files.length) return null;
-  return <section className="pack-readable-section"><h2>{title}</h2><ul className="pack-file-list">{files.map((file) => <li key={`${file.type}:${file.src}`}><a href={file.src} target="_blank" rel="noreferrer"><span>{file.type}</span><strong>{file.label}</strong><i>{file.format ?? "open"} ↗</i></a></li>)}</ul></section>;
+  return <section className="pack-readable-section"><h2>{title}</h2><ul className="outcome-file-list">{files.map((file) => <li key={`${file.type}:${file.src}`}><a href={file.src} target="_blank" rel="noreferrer"><span>{file.type}</span><strong>{file.label}</strong><i>{file.format ?? "open"} →</i></a></li>)}</ul></section>;
 }
 
 export function DynamicOutcomeDetailPage({ outcomeFixture, attributionsFixture = [] }: { outcomeFixture?: DirectoryOutcomeDetail; attributionsFixture?: OutcomeAttribution[] } = {}) {
@@ -82,7 +82,7 @@ export function DynamicOutcomeDetailPage({ outcomeFixture, attributionsFixture =
   return <SiteShell className="pack-detail-page"><article className="pack-detail-document layout-reading">
     <header className="pack-detail-header">
       <nav className="pack-detail-breadcrumb" aria-label="Breadcrumb"><a href="/#discover">Outcomes</a><span>/</span><span>{outcome.publication_kind}</span></nav>
-      <h1>{outcome.title}</h1><p>{outcome.summary}</p><p className="outcome-author">By <a href={outcome.author_url ?? outcome.source_url} target="_blank" rel="noreferrer">{outcome.author_name ?? outcome.source_locator} ↗</a></p>
+      <h1>{outcome.title}</h1><p>{outcome.summary}</p><p className="outcome-author">By <a href={outcome.author_url ?? outcome.source_url} target="_blank" rel="noreferrer">{outcome.author_name ?? outcome.source_locator} →</a></p>
       <OutcomeReactions outcomeId={outcome.id} likeCount={outcome.like_count ?? 0} />
       {attributions.length ? <div className="pack-product-attribution"><span>MADE WITH</span>{attributions.map((item, index) => <a className={(item.role ?? (index === 0 ? "primary" : "secondary")) === "primary" ? "is-primary" : undefined} href={item.href} target={item.href.startsWith("https://") ? "_blank" : undefined} rel={item.href.startsWith("https://") ? "noreferrer" : undefined} key={`${item.kind}:${item.id}`}><strong>{item.name}</strong><small>{(item.role ?? (index === 0 ? "primary" : "secondary")) === "primary" ? "Primary " : ""}{item.kind} · {item.owner}</small></a>)}</div> : null}
     </header>
@@ -93,7 +93,7 @@ export function DynamicOutcomeDetailPage({ outcomeFixture, attributionsFixture =
       <OutcomeFiles title="Inputs used" files={outcome.inputs} />
       <section className="pack-use-panel" aria-labelledby="dynamic-prompt-heading"><h2 id="dynamic-prompt-heading">Prompt</h2><div className={`pack-use-content pack-use-content--direct${remixing ? " is-remixing" : ""}`}>{remixing ? <textarea aria-label="Remix prompt" value={draft} onChange={(event) => setDraft(event.target.value)} /> : <pre className="is-long"><code>{outcome.prompt}</code></pre>}<div className="prompt-actions"><CopyButton label={remixing ? "Copy remixed prompt" : "Copy prompt"} value={draft} onCopied={() => recordOutcomeUse(outcome.id)} />{remixing ? <button className="remix-button" type="button" onClick={() => { setDraft(outcome.prompt); setRemixing(false); }}>Reset</button> : <button className="remix-button" type="button" onClick={() => setRemixing(true)}>Remix this prompt</button>}</div></div></section>
       <OutcomeFiles title="Download the result" files={outcome.artifacts} />
-      <section className="pack-readable-section"><h2>Made with</h2><dl className="outcome-execution"><div><dt>Provider</dt><dd>{outcome.provider ?? "Not specified"}</dd></div><div><dt>Model</dt><dd>{outcome.model ?? "Not specified"}</dd></div>{outcome.agent ? <div><dt>Agent</dt><dd>{outcome.agent}</dd></div> : null}<div><dt>Published</dt><dd><time dateTime={outcome.published_at}>{new Date(outcome.published_at).toLocaleDateString()}</time></dd></div><div><dt>Publication</dt><dd>{outcome.publication_kind}</dd></div><div><dt>Source</dt><dd><a href={outcome.source_url} target="_blank" rel="noreferrer">{outcome.source_locator} ↗</a></dd></div></dl></section>
+      <section className="pack-readable-section"><h2>Made with</h2><dl className="outcome-execution"><div><dt>Provider</dt><dd>{outcome.provider ?? "Not specified"}</dd></div><div><dt>Model</dt><dd>{outcome.model ?? "Not specified"}</dd></div>{outcome.agent ? <div><dt>Agent</dt><dd>{outcome.agent}</dd></div> : null}<div><dt>Published</dt><dd><time dateTime={outcome.published_at}>{new Date(outcome.published_at).toLocaleDateString()}</time></dd></div><div><dt>Publication</dt><dd>{outcome.publication_kind}</dd></div><div><dt>Source</dt><dd><a href={outcome.source_url} target="_blank" rel="noreferrer">{outcome.source_locator} →</a></dd></div></dl></section>
     </div></div>
   </article></SiteShell>;
 }
