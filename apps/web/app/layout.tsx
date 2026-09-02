@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { siteDescription, siteUrl } from "./_metadata";
 import { possibleVersion } from "../src/public-content";
@@ -28,10 +28,16 @@ export const metadata: Metadata = {
       "max-video-preview": -1,
     },
   },
-  other: {
-    "theme-color": "#0d0d0c",
-  },
 };
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#faf7f1" },
+    { media: "(prefers-color-scheme: dark)", color: "#171614" },
+  ],
+};
+
+const themeScript = `(function(){try{var t=localStorage.getItem("possible-theme");document.documentElement.dataset.theme=t==="light"||t==="dark"?t:"system"}catch(e){document.documentElement.dataset.theme="system"}})();`;
 
 const discoveryGraph = {
   "@context": "https://schema.org",
@@ -70,7 +76,8 @@ const discoveryGraph = {
 
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      <head><script dangerouslySetInnerHTML={{ __html: themeScript }} /></head>
       <body>
         <BackendProvider>{children}</BackendProvider>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(discoveryGraph) }} />

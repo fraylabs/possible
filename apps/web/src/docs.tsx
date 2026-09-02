@@ -12,23 +12,19 @@ const links = [
   { label: "Reference", href: "/docs/reference", active: "reference" },
 ] as const;
 
-function DocsContextNavigation({ active }: { active: DocsPageKey }) {
-  return <nav className="docs-context-nav" aria-label="Documentation sections"><div className="docs-context-nav-inner layout-wide"><span>DOCS</span>{links.map((link) => <a className={link.active === active ? "is-active" : undefined} href={link.href} key={link.href}>{link.label}</a>)}</div></nav>;
-}
-
 function DocsSidebar({ active }: { active: DocsPageKey }) {
-  return <aside className="docs-sidebar" aria-label="Documentation navigation"><div className="docs-sidebar-title"><strong>Documentation</strong><span>GUIDE</span></div><nav><span>POSSIBLE</span>{links.map((link) => <a className={link.active === active ? "is-active" : undefined} href={link.href} key={link.href}>{link.label}</a>)}<a href="/#discover">Browse Outcomes ↗</a></nav></aside>;
+  return <aside className="docs-sidebar" aria-label="Documentation navigation"><a className="docs-sidebar-title" href="/docs">Documentation</a><nav>{links.map((link) => <a className={link.active === active ? "is-active" : undefined} href={link.href} key={link.href}>{link.label}</a>)}<a href="/#discover">Browse Outcomes ↗</a></nav></aside>;
 }
 
 function DocsLayout({ active, eyebrow, title, description, children }: { active: DocsPageKey; eyebrow: string; title: string; description: string; children: ReactNode }) {
-  return <SiteShell className="docs-page"><DocsContextNavigation active={active} /><div className="docs-shell layout-wide"><DocsSidebar active={active} /><article className="docs-article"><div className="docs-breadcrumb"><a href="/docs">DOCS</a><span>/</span><strong>{eyebrow}</strong></div><header className="docs-title"><div className="docs-title-copy"><p className="eyebrow">{eyebrow}</p><h1>{title}</h1><p>{description}</p></div></header>{children}</article></div></SiteShell>;
+  return <SiteShell className="docs-page"><div className="docs-shell layout-standard"><DocsSidebar active={active} /><article className="docs-article"><div className="docs-breadcrumb"><a href="/docs">Docs</a><span>/</span><span>{eyebrow}</span></div><header className="docs-title"><h1>{title}</h1><p>{description}</p></header>{children}</article></div></SiteShell>;
 }
 
 export function DocsPage() {
-  return <DocsLayout active="overview" eyebrow="OVERVIEW" title="Possible connects results, prompts, and what made them" description="See what AI made, inspect the exact prompt connected to it, and remix the parts worth reusing.">
-    <aside className="docs-callout docs-callout--info"><strong>THE SHORT VERSION</strong><p>Outcome = result + exact prompt + the primary Product or Skill that made it possible.</p></aside>
+  return <DocsLayout active="overview" eyebrow="Overview" title="Results, prompts, and what made them" description="See what AI made, inspect the exact prompt connected to it, and remix the parts worth reusing.">
+    <aside className="docs-callout"><p><strong>Outcome</strong> = result + exact prompt + the primary Product or Skill that made it possible.</p></aside>
     <section><h2>What Possible does</h2><ol><li><strong>Shows the result first</strong><span>Images, video, audio, or CAD make each possibility concrete.</span></li><li><strong>Preserves the prompt</strong><span>The prompt is published unchanged, not replaced with a retrospective recipe.</span></li><li><strong>Credits what made it</strong><span>Product and Skill labels filter the Outcome leaderboard. Possible does not host separate profiles for them.</span></li></ol></section>
-    <section><h2>Optional $possible skill</h2><p>The website shows prior work. The skill uses those Outcomes as precedent, gathers current information, asks only consequential questions, and prepares a new execution prompt for a fresh agent. Install it with the standard Skills installer.</p><div className="docs-command"><header><strong>INSTALL</strong></header><pre><code>{installCommand}</code></pre><CopyButton label="Copy install command" value={installCommand} /></div></section>
+    <section><h2>$possible is optional</h2><p>The website shows prior work. The skill uses those Outcomes as precedent, gathers current information, asks only consequential questions, and prepares a new execution prompt for a fresh agent. Install it with the standard Skills installer.</p><div className="docs-command"><header><strong>Install</strong></header><pre><code>{installCommand}</code></pre><CopyButton label="Copy install command" value={installCommand} /></div></section>
     <nav className="docs-next"><span>NEXT</span><a href="/docs/how-to-use">How to use Possible <b>→</b></a></nav>
   </DocsLayout>;
 }

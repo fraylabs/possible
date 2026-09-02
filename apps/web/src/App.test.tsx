@@ -7,7 +7,12 @@ import type { DirectoryOutcomeDetail } from "./dynamic-outcome-detail";
 import type { DiscoveryOutcome } from "./discovery-data";
 import { normalizeSource } from "./publish";
 
-afterEach(() => { cleanup(); window.history.pushState({}, "", "/"); });
+afterEach(() => {
+  cleanup();
+  window.history.pushState({}, "", "/");
+  window.localStorage.removeItem("possible-theme");
+  document.documentElement.removeAttribute("data-theme");
+});
 
 const baseOutcome: DiscoveryOutcome = {
   id: "fixture-1",
@@ -102,6 +107,19 @@ describe("Possible website", () => {
     expect(within(screen.getByRole("region", { name: "Outcome results" })).getByRole("heading", { name: /Lantern Rain/i })).toBeInTheDocument();
   });
 
+  it("keeps a site-wide theme preference and can return to the system theme", async () => {
+    render(<OutcomesPage outcomesFixture={seedOutcomes} />);
+    const theme = screen.getByRole("combobox", { name: "Theme" });
+
+    await userEvent.selectOptions(theme, "dark");
+    expect(document.documentElement.dataset.theme).toBe("dark");
+    expect(window.localStorage.getItem("possible-theme")).toBe("dark");
+
+    await userEvent.selectOptions(theme, "system");
+    expect(document.documentElement.dataset.theme).toBe("system");
+    expect(window.localStorage.getItem("possible-theme")).toBeNull();
+  });
+
   it("filters Outcomes by understandable capability categories", async () => {
     render(<OutcomesPage outcomesFixture={seedOutcomes} />);
     await userEvent.click(screen.getByRole("button", { name: "CAD" }));
@@ -124,26 +142,36 @@ describe("Possible website", () => {
   it("shows a source-owned preview, exact prompt, provenance, and artifacts", async () => {
     const outcomeWithGallery = {
       ...detailFixture,
-      preview: { images: [{ src: "https://example.com/tall-result.png", alt: "Tall result preview", cover: true }] },
+      requirements: ["Reference image", "Target dimensions", "Material choice", "Printer constraints"],
+      preview: { images: [{ src: "https://example.com/tall-result.png", alt: "Tall result preview", cover: true }, { src: "https://example.com/detail.png", alt: "Detail preview" }] },
     } satisfies DirectoryOutcomeDetail;
     const { container } = render(<DynamicOutcomeDetailPage outcomeFixture={outcomeWithGallery} attributionsFixture={[{ id: "heygen/hyperframes", kind: "Product", name: "HyperFrames", owner: "HeyGen", href: "/?uses=product%3Aheygen%2Fhyperframes#discover", role: "primary" }]} />);
     expect(screen.getByRole("heading", { name: "Possible Launch Film", level: 1 })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "What it made" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Prompt" })).toBeInTheDocument();
+    expect(screen.getByRole("region", { name: "Outcome result" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Exact prompt" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Download the result" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Copy prompt" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Show full prompt" })).toBeInTheDocument();
     expect(screen.getByRole("img", { name: "Tall result preview" })).toBeInTheDocument();
-    expect(container.querySelector(".pack-image-grid")).toBeInTheDocument();
-    expect(container.querySelector(".outcome-file-list")).toBeInTheDocument();
-    expect(container.querySelector(".pack-file-list")).not.toBeInTheDocument();
-    expect(screen.getByText(/Primary Product · HeyGen/i)).toBeInTheDocument();
+    expect(container.querySelector(".outcome-gallery-stage")).toBeInTheDocument();
+    expect(container.querySelector(".outcome-downloads")).toBeInTheDocument();
+    expect(screen.getByText("HyperFrames")).toBeInTheDocument();
+    await userEvent.click(screen.getByRole("button", { name: "Show image 2" }));
+    expect(screen.getByRole("img", { name: "Detail preview" })).toBeInTheDocument();
+    expect(screen.queryByText("Printer constraints")).not.toBeInTheDocument();
+    await userEvent.click(screen.getByRole("button", { name: "Show all 4 requirements" }));
+    expect(screen.getByText("Printer constraints")).toBeInTheDocument();
+    await userEvent.click(screen.getByRole("button", { name: "Show full prompt" }));
+    expect(container.querySelector(".outcome-prompt-panel")).toHaveClass("is-expanded");
+    await userEvent.click(screen.getByRole("button", { name: "Remix prompt" }));
+    expect(screen.getByRole("textbox", { name: "Remix prompt" })).toBeInTheDocument();
     expect(container).not.toHaveTextContent(/workstreams|trust|verification framework/i);
     expect((await axe(container)).violations).toHaveLength(0);
   });
 
   it("documents the same small public contract", () => {
     render(<DocsPage />);
-    expect(screen.getByRole("heading", { name: "Possible connects results, prompts, and what made them" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Results, prompts, and what made them" })).toBeInTheDocument();
     cleanup();
     render(<AuthoringDocsPage />);
     expect(screen.getByRole("heading", { name: "Publish from your source" })).toBeInTheDocument();

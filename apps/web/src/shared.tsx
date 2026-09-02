@@ -4,13 +4,15 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import { githubUrl } from "./public-content";
 
 export type CopyState = "idle" | "copied" | "failed";
+type ThemePreference = "light" | "dark" | "system";
+const themeStorageKey = "possible-theme";
 const accountEnabled = process.env.NEXT_PUBLIC_GITHUB_AUTH_ENABLED === "true";
 const navigationItems = [
   ...(accountEnabled ? [{ label: "SAVED", href: "/saved", external: false }] : []),
   { label: "DOCS", href: "/docs", external: false },
   { label: "PUBLISH", href: "/publish", external: false },
 ] as const;
-export function CopyButton({ label, value, onCopied }: { label: string; value: string; onCopied?: () => void | Promise<unknown> }) {
+export function CopyButton({ label, value, onCopied, ariaLabel }: { label: string; value: string; onCopied?: () => void | Promise<unknown>; ariaLabel?: string }) {
   const [state, setState] = useState<CopyState>("idle");
 
   async function copy() {
@@ -25,11 +27,44 @@ export function CopyButton({ label, value, onCopied }: { label: string; value: s
   }
 
   return (
-    <button className="copy-button" type="button" onClick={copy} aria-label={label}>
+    <button className="copy-button" type="button" onClick={copy} aria-label={ariaLabel ?? label}>
       <span aria-live="polite">{state === "copied" ? "Copied" : state === "failed" ? "Copy failed" : label}</span>
       <span aria-hidden="true">{state === "copied" ? "✓" : "↗"}</span>
     </button>
   );
+}
+
+function ThemeSwitcher({ className = "" }: { className?: string }) {
+  const [theme, setTheme] = useState<ThemePreference>("system");
+
+  useEffect(() => {
+    let stored: string | null = null;
+    try {
+      stored = window.localStorage?.getItem(themeStorageKey) ?? null;
+    } catch {
+      // System remains a safe default when storage is disabled.
+    }
+    const initial = stored === "light" || stored === "dark" ? stored : "system";
+    setTheme(initial);
+    document.documentElement.dataset.theme = initial;
+    const sync = (event: Event) => setTheme((event as CustomEvent<ThemePreference>).detail);
+    window.addEventListener("possible-theme-change", sync);
+    return () => window.removeEventListener("possible-theme-change", sync);
+  }, []);
+
+  function changeTheme(next: ThemePreference) {
+    setTheme(next);
+    document.documentElement.dataset.theme = next;
+    try {
+      if (next === "system") window.localStorage?.removeItem(themeStorageKey);
+      else window.localStorage?.setItem(themeStorageKey, next);
+    } catch {
+      // The selected theme still applies for this page when storage is disabled.
+    }
+    window.dispatchEvent(new CustomEvent<ThemePreference>("possible-theme-change", { detail: next }));
+  }
+
+  return <label className={`theme-switcher ${className}`.trim()}><span>Theme</span><select aria-label="Theme" value={theme} onChange={(event) => changeTheme(event.target.value as ThemePreference)}><option value="light">Light</option><option value="dark">Dark</option><option value="system">System</option></select></label>;
 }
 
 export function SiteNav() {
@@ -71,6 +106,7 @@ export function SiteNav() {
             {navigationItems.map((item) => (
               <a key={item.href} href={item.href} target={item.external ? "_blank" : undefined} rel={item.external ? "noreferrer" : undefined}>{item.label}{item.external ? " ↗" : ""}</a>
             ))}
+            <ThemeSwitcher />
           </div>
           <button
             ref={triggerRef}
@@ -102,6 +138,7 @@ export function SiteNav() {
                 </li>
               ))}
             </ol>
+            <ThemeSwitcher className="mobile-theme-switcher" />
             <footer><span>POSSIBLE.SH</span><strong>MAKE OUTCOMES POSSIBLE.</strong></footer>
           </div>
         </div>
@@ -130,11 +167,11 @@ export function SiteFooter() {
 
 export function SiteShell({ children, className, showFooter = true }: { children: ReactNode; className: string; showFooter?: boolean }) {
   return (
-    <main className={`site-shell ${className}`}>
+    <div className={`site-shell ${className}`}>
       <SiteNav />
-      <div className="site-shell-body">{children}</div>
+      <main className="site-shell-body">{children}</main>
       {showFooter ? <SiteFooter /> : null}
-    </main>
+    </div>
   );
 }
 

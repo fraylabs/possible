@@ -1,43 +1,37 @@
-.publish-page { min-height: 100vh; background: #0d0d0c; color: #f2efe8; }
-.source-publish { padding: clamp(68px, 10vw, 132px) 0 112px; }
-.source-publish > header { max-width: 720px; }
-.source-publish > header > span,
-.source-publish-contract > div > span,
-.publish-result > span { color: #ff6b35; font: 9px "DM Mono", monospace; letter-spacing: .1em; text-transform: uppercase; }
-.source-publish h1 { margin: 16px 0 18px; font-size: clamp(48px, 8vw, 88px); line-height: .92; letter-spacing: -.07em; }
-.source-publish > header p { max-width: 650px; margin: 0; color: #aaa9a3; font-size: 16px; line-height: 1.65; }
-.source-publish > form { margin: 54px 0 0; padding: 24px; border: 1px solid #3b3a37; border-radius: 18px; background: #151514; }
-.source-publish > form label { display: block; margin-bottom: 10px; color: #d6d2cb; font: 9px "DM Mono", monospace; text-transform: uppercase; }
-.source-publish > form > div { display: grid; grid-template-columns: 1fr auto; gap: 9px; }
-.source-publish > form input { min-width: 0; padding: 16px 17px; border: 1px solid #43423f; border-radius: 10px; outline: 0; background: #0e0e0d; color: #f2efe8; font: 14px Manrope, sans-serif; }
-.source-publish > form input:focus { border-color: #ff6b35; }
-.source-publish > form button { padding: 0 24px; border: 1px solid #ff5a1f; border-radius: 10px; background: #ff5a1f; color: #151411; cursor: pointer; font: 9px "DM Mono", monospace; text-transform: uppercase; }
-.source-publish > form button:disabled { cursor: not-allowed; opacity: .45; }
-.source-publish > form small { margin-top: 12px; display: block; color: #777671; line-height: 1.55; }
-.source-publish > form code { color: #aaa9a3; }
-.publish-notice { margin: 14px 0 0; padding: 12px 14px; border: 1px solid #3c3c39; border-radius: 9px; color: #aaa9a3; background: #151514; font: 9px/1.5 "DM Mono", monospace; }
-.publish-notice.success { border-color: #59773f; color: #a8ff52; }
-.publish-notice.error { border-color: #803f2d; color: #ff8f66; }
-.publish-result { margin-top: 18px; padding: 22px; border: 1px solid #3c3c39; border-radius: 14px; display: grid; gap: 5px; background: #131312; }
-.publish-result > strong { font-size: 18px; }
-.publish-result > small { color: #777671; font: 8px "DM Mono", monospace; }
-.publish-result ul { margin: 18px 0 0; padding: 0; border-top: 1px solid #33322f; list-style: none; }
-.publish-result li { padding: 12px 0; border-bottom: 1px solid #33322f; display: flex; justify-content: space-between; gap: 18px; }
-.publish-result li a { color: #f2efe8; }
-.publish-result li span { color: #ff6b35; font: 8px "DM Mono", monospace; text-transform: uppercase; }
-.source-publish-contract { margin-top: 82px; border-top: 1px solid #343330; display: grid; grid-template-columns: 1fr 1fr; }
-.source-publish-contract > div { min-width: 0; padding: 34px 28px 0 0; }
-.source-publish-contract > div + div { padding-left: 28px; border-left: 1px solid #343330; }
-.source-publish-contract h2 { margin: 13px 0 14px; font-size: 26px; letter-spacing: -.04em; }
-.source-publish-contract p { color: #85847f; line-height: 1.6; }
-.source-publish-contract pre { padding: 18px; border: 1px solid #343330; border-radius: 10px; overflow: auto; background: #131312; color: #c8c4bd; font: 10px/1.7 "DM Mono", monospace; }
-.source-publish-contract .copy-button { margin-top: 22px; }
+.publish-page { min-height: 100vh; }
+.source-publish { padding: clamp(46px, 8vw, 92px) 0 112px; }
+.source-publish > header { padding-bottom: 42px; border-bottom: 1px solid var(--site-border); }
+.source-publish > header > span, .source-publish-contract > div > span { color: var(--site-accent); font: 500 8px "DM Mono", monospace; letter-spacing: .08em; }
+.source-publish h1 { max-width: 760px; margin: 15px 0 18px; font-size: clamp(44px, 7vw, 76px); line-height: .98; letter-spacing: -.065em; }
+.source-publish > header p { max-width: 650px; margin: 0; color: var(--site-muted); font-size: 17px; line-height: 1.65; }
+.source-publish form { margin: 38px 0 0; padding: clamp(22px, 4vw, 34px); border: 1px solid var(--site-border); border-radius: var(--site-radius); background: var(--site-surface); box-shadow: var(--site-shadow); }
+.source-publish label { display: block; margin-bottom: 12px; font-size: 13px; font-weight: 700; }
+.source-publish form > div { display: grid; grid-template-columns: minmax(0, 1fr) auto; }
+.source-publish input { min-width: 0; height: 52px; padding: 0 16px; border: 1px solid var(--site-border-strong); border-right: 0; border-radius: 12px 0 0 12px; background: var(--site-background); color: var(--site-text); font-size: 15px; }
+.source-publish form button { padding: 0 24px; border: 1px solid var(--site-accent); border-radius: 0 12px 12px 0; background: var(--site-accent); color: var(--site-on-accent); cursor: pointer; font: 700 9px "DM Mono", monospace; text-transform: uppercase; }
+.source-publish form button:disabled { cursor: not-allowed; opacity: .55; }
+.source-publish form small { margin-top: 12px; display: block; color: var(--site-muted); font-size: 11px; line-height: 1.6; }
+.source-publish code { padding: 2px 5px; border-radius: 4px; background: var(--site-surface-soft); color: var(--site-accent-strong); }
+.publish-notice { margin: 16px 0 0; padding: 13px 15px; border: 1px solid var(--site-notice-border); border-radius: var(--site-radius-small); background: var(--site-notice-background); color: var(--site-notice-text); font-size: 13px; }
+.publish-notice.error { border-color: var(--site-error-border); background: var(--site-error-background); color: var(--site-error-text); }
+.publish-result { margin-top: 24px; padding: 22px; border: 1px solid var(--site-border); border-radius: var(--site-radius); background: var(--site-surface); }
+.publish-result > span, .publish-result > small { display: block; color: var(--site-muted); font: 8px "DM Mono", monospace; text-transform: uppercase; }
+.publish-result > strong { margin: 4px 0; display: block; font-size: 18px; }
+.publish-result ul { margin: 20px 0 0; padding: 0; list-style: none; }
+.publish-result li { padding: 12px 0; border-top: 1px solid var(--site-border); display: flex; justify-content: space-between; gap: 12px; }
+.publish-result li a { color: var(--site-text); font-weight: 700; }
+.publish-result li span { color: var(--site-muted); font: 8px "DM Mono", monospace; text-transform: uppercase; }
+.source-publish-contract { margin-top: 48px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border: 1px solid var(--site-border); border-radius: var(--site-radius); overflow: hidden; background: var(--site-surface); }
+.source-publish-contract > div { min-width: 0; padding: clamp(22px, 4vw, 34px); }
+.source-publish-contract > div + div { border-left: 1px solid var(--site-border); }
+.source-publish-contract h2 { margin: 12px 0 18px; font-size: 21px; letter-spacing: -.035em; }
+.source-publish-contract p { color: var(--site-muted); font-size: 13px; line-height: 1.65; }
+.source-publish-contract pre { margin: 0; padding: 16px; overflow-x: auto; border-radius: var(--site-radius-small); background: var(--site-code); color: var(--site-code-text); font: 11px/1.7 "DM Mono", monospace; }
+.source-publish-contract .copy-button { width: auto; min-width: 150px; min-height: 38px; margin-top: 14px; padding: 0 13px; border-radius: 999px; }
 @media (max-width: 680px) {
-  .source-publish { padding-top: 58px; }
-  .source-publish > form { padding: 16px; }
-  .source-publish > form > div { grid-template-columns: 1fr; }
-  .source-publish > form button { min-height: 48px; }
-  .source-publish-contract { grid-template-columns: 1fr; }
-  .source-publish-contract > div { padding-right: 0; }
-  .source-publish-contract > div + div { margin-top: 32px; padding-left: 0; border-left: 0; border-top: 1px solid #343330; }
+  .source-publish h1 { font-size: 42px; }
+  .source-publish form > div, .source-publish-contract { grid-template-columns: 1fr; }
+  .source-publish input { border-right: 1px solid var(--site-border-strong); border-radius: 10px 10px 0 0; }
+  .source-publish form button { min-height: 46px; border-radius: 0 0 10px 10px; }
+  .source-publish-contract > div + div { border-top: 1px solid var(--site-border); border-left: 0; }
 }
