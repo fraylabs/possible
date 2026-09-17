@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+### CLI 0.3.1 release candidate
+
+- Accept the current schema v4 `primary` and optional `secondary` attribution fields while retaining schema v3 compatibility.
+- Include the required Product or Skill argument in copied authoring commands.
+- Test authoring and validation from an installed npm tarball before release.
+
 - Replaced `possible init` with the standard `npx skills add` installation path and added public `possible search` and `possible fetch` commands.
 - Made publisher-owned Convex snapshots the sole runtime Outcome directory for the website, CLI, and MCP.
 - Added deduplicated anonymous usage, account likes, and private bookmarks without adding publisher accounts.

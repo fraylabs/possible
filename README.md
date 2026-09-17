@@ -24,13 +24,13 @@ The repository or domain is the identity. A GitHub publisher keeps `outcomes.jso
 ## CLI
 
 ```bash
-npx @fraylabs/possible@0.3.0 search "make a launch video"
-npx @fraylabs/possible@0.3.0 fetch <outcome-id>
-npx @fraylabs/possible@0.3.0 create my-outcome --product owner/product
-npx @fraylabs/possible@0.3.0 validate
-npx @fraylabs/possible@0.3.0 publish owner/repository
-npx @fraylabs/possible@0.3.0 add owner/repository
-npx @fraylabs/possible@0.3.0 use owner/repository@my-outcome
+npx @fraylabs/possible@0.3.1 search "make a launch video"
+npx @fraylabs/possible@0.3.1 fetch <outcome-id>
+npx @fraylabs/possible@0.3.1 create my-outcome --product owner/product
+npx @fraylabs/possible@0.3.1 validate
+npx @fraylabs/possible@0.3.1 publish owner/repository
+npx @fraylabs/possible@0.3.1 add owner/repository
+npx @fraylabs/possible@0.3.1 use owner/repository@my-outcome
 ```
 
 Install the optional `$possible` Skill through the standard agent-skill ecosystem:
