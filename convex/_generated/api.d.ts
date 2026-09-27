@@ -13,6 +13,7 @@ import type * as http from "../http.js";
 import type * as outcomes from "../outcomes.js";
 import type * as reactions from "../reactions.js";
 import type * as registry from "../registry.js";
+import type * as sourceDiagnostics from "../sourceDiagnostics.js";
 import type * as sourceRegistration from "../sourceRegistration.js";
 import type * as usage from "../usage.js";
 
@@ -28,6 +29,7 @@ declare const fullApi: ApiFromModules<{
   outcomes: typeof outcomes;
   reactions: typeof reactions;
   registry: typeof registry;
+  sourceDiagnostics: typeof sourceDiagnostics;
   sourceRegistration: typeof sourceRegistration;
   usage: typeof usage;
 }>;
