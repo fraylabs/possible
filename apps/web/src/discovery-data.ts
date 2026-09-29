@@ -1,3 +1,4 @@
+import { visibleValue } from "../../cli/src/text-safety.mjs";
 import { outcomeApiUrl } from "./backend";
 
 export const outcomeCategories = ["video", "images", "websites", "cad", "slides", "audio", "apps"] as const;
@@ -216,7 +217,7 @@ export async function fetchDiscoveryOutcomes(): Promise<DiscoveryOutcome[]> {
   const response = await fetch(endpoint, { headers: { accept: "application/json" } });
   if (!response.ok) throw new Error(`Possible directory returned HTTP ${response.status}`);
   const body = await response.json() as { outcomes?: PublicOutcomeRow[] };
-  return (body.outcomes ?? []).map((row, index) => fromPublicRow(row, index + 1));
+  return (body.outcomes ?? []).map((row, index) => fromPublicRow(visibleValue(row), index + 1));
 }
 
 function tokenize(value: string): string[] {

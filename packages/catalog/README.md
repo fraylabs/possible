@@ -59,4 +59,23 @@ The directory API and MCP return `recipe` when available. `possible fetch <id>
 --json` includes it alongside the prompt; `possible use <source>@<slug> --json`
 returns the source document with `manifest.recipe`. Without `--json`, both commands
 still print the prompt. The website shows known ingredients and copies a text kit;
-this phase does not install skills or capture sessions.
+copying does not install skills. CLI 0.5.0 can capture a local finished session.
+
+
+## Recipe origin (CLI 0.5.0)
+
+Optional `recipe.provenance` distinguishes `{ "method": "reconstructed" }` from
+captured records. A captured record uses `method: "recorded"`, `source` (`claude-code`,
+`turnless`, or `codex`), `reviewedAt` (UTC ISO timestamp), and `reviewDigest` (SHA-256).
+Use `possible capture review` and `capture export` to create these fields; never
+claim an unreviewed session was approved. Optional `recipe.notes` is a nonempty
+array of plain strings disclosing omissions and uncertainty. Existing recipes
+without provenance remain valid and are labeled Published recipe; their origin
+is unknown. Outcomes without any recipe remain Prompt only.
+
+The digest covers canonical sorted-key manifest JSON (excluding reviewDigest),
+a NUL separator, trimmed outcome.md, a NUL separator and trimmed prompt.md, with CRLF normalized to LF.
+Local and remote source readers reject recorded content changed after review.
+This detects accidental edits; it is not an authenticated human signature.
+The editable private capture draft is not an Outcome publisher and must not be
+uploaded. See the root README for local source selection and creator review.

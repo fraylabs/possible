@@ -1,6 +1,8 @@
+import { assertVisibleText } from "./text-safety.mjs";
 import { createHash } from "node:crypto";
 import { isIP } from "node:net";
 import { parseOutcomeMarkdown, validateOutcomeManifest } from "./outcome-format.mjs";
+import { verifyCaptureReview } from "./capture-integrity.mjs";
 
 const MAX_OUTCOMES = 100;
 const MAX_DOCUMENT_BYTES = 1024 * 1024;
@@ -78,6 +80,8 @@ function resolvedRemoteOutcome({ manifestText, aboutText, promptText, manifestUr
   const about = parseOutcomeMarkdown(aboutText, `${aboutUrl}`);
   const prompt = promptText.trim();
   if (!prompt) throw new Error(`${promptUrl} must contain the exact execution prompt`);
+  assertVisibleText(prompt);
+  verifyCaptureReview(manifest, aboutText, promptText);
   return {
     slug: manifest.slug,
     title: about.title,

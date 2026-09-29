@@ -1,5 +1,6 @@
 "use client";
 
+import { hasInvisibleText, visibleText, visibleValue } from "../../cli/src/text-safety.mjs";
 import { useEffect, useMemo, useState } from "react";
 import type { OutcomeFile, OutcomePreview, OutcomeModel, OutcomeRecipe } from "@possible/catalog";
 import ReactMarkdown from "react-markdown";
@@ -90,15 +91,17 @@ function OutcomePrompt({ outcome, draft, setDraft }: { outcome: DirectoryOutcome
   const [expanded, setExpanded] = useState(false);
   const [remixing, setRemixing] = useState(false);
   return <section className="outcome-prompt" aria-labelledby="outcome-prompt-heading">
-    <header><h2 id="outcome-prompt-heading">Exact prompt</h2><span>Published unchanged</span></header>
-    <div className={`outcome-prompt-panel${expanded ? " is-expanded" : ""}${remixing ? " is-remixing" : ""}`}>{remixing ? <textarea aria-label="Remix prompt" value={draft} onChange={(event) => setDraft(event.target.value)} /> : <pre><code>{outcome.prompt}</code></pre>}{!expanded && !remixing ? <div className="outcome-prompt-fade" aria-hidden="true" /> : null}<footer><button type="button" className="prompt-expand" aria-expanded={expanded} onClick={() => setExpanded((current) => !current)}>{expanded ? "Show less" : "Show full prompt"}</button><div>{remixing ? <CopyButton label="Copy remixed prompt" value={draft} onCopied={() => recordOutcomeUse(outcome.id)} /> : null}{remixing ? <button type="button" className="remix-button" onClick={() => { setDraft(outcome.prompt); setRemixing(false); }}>Reset</button> : <button type="button" className="remix-button" onClick={() => { setExpanded(true); setRemixing(true); }}>Remix prompt</button>}</div></footer></div>
+    <header><h2 id="outcome-prompt-heading">Exact prompt</h2><span>Hidden characters, if present, appear as Unicode escapes</span></header>
+    <div className={`outcome-prompt-panel${expanded ? " is-expanded" : ""}${remixing ? " is-remixing" : ""}`}>{remixing ? <textarea aria-label="Remix prompt" value={draft} onChange={(event) => setDraft(visibleText(event.target.value))} /> : <pre><code>{outcome.prompt}</code></pre>}{!expanded && !remixing ? <div className="outcome-prompt-fade" aria-hidden="true" /> : null}<footer><button type="button" className="prompt-expand" aria-expanded={expanded} onClick={() => setExpanded((current) => !current)}>{expanded ? "Show less" : "Show full prompt"}</button><div>{remixing ? <CopyButton label="Copy remixed prompt" value={draft} onCopied={() => recordOutcomeUse(outcome.id)} /> : null}{remixing ? <button type="button" className="remix-button" onClick={() => { setDraft(outcome.prompt); setRemixing(false); }}>Reset</button> : <button type="button" className="remix-button" onClick={() => { setExpanded(true); setRemixing(true); }}>Remix prompt</button>}</div></footer></div>
   </section>;
 }
 
 export function DynamicOutcomeDetailPage({ outcomeFixture, attributionsFixture = [] }: { outcomeFixture?: DirectoryOutcomeDetail; attributionsFixture?: OutcomeAttribution[] } = {}) {
-  const [outcome, setOutcome] = useState<DirectoryOutcomeDetail | null | undefined>(outcomeFixture);
+  const [rawOutcome, setOutcome] = useState<DirectoryOutcomeDetail | null | undefined>(outcomeFixture);
+  const outcome = useMemo(() => visibleValue(rawOutcome), [rawOutcome]);
+  const hiddenText = rawOutcome ? hasInvisibleText(JSON.stringify(rawOutcome)) : false;
   const [attributions, setAttributions] = useState<OutcomeAttribution[]>(attributionsFixture);
-  const [draft, setDraft] = useState(outcomeFixture?.prompt ?? "");
+  const [draft, setDraft] = useState(visibleText(outcomeFixture?.prompt ?? ""));
   useEffect(() => {
     if (outcomeFixture !== undefined) return;
     const id = new URL(window.location.href).searchParams.get("id");
@@ -111,8 +114,8 @@ export function DynamicOutcomeDetailPage({ outcomeFixture, attributionsFixture =
       if (!response.ok) { setOutcome(null); return; }
       const body = await response.json() as { outcome?: DirectoryOutcomeDetail | null };
       if (!body.outcome) { setOutcome(null); return; }
-      const next = body.outcome; setOutcome(next); setDraft(next.prompt);
-      setAttributions([...(next.primary_attribution ? [displayAttribution(next.primary_attribution, "primary")] : []), ...(next.secondary_attributions ?? []).map((item) => displayAttribution(item, "secondary"))]);
+      const next = body.outcome; setOutcome(next); setDraft(visibleText(next.prompt));
+      setAttributions([...(next.primary_attribution ? [displayAttribution(visibleValue(next.primary_attribution), "primary")] : []), ...(next.secondary_attributions ?? []).map((item) => displayAttribution(visibleValue(item), "secondary"))]);
     })();
     return () => { cancelled = true; };
   }, [outcomeFixture]);
@@ -121,6 +124,7 @@ export function DynamicOutcomeDetailPage({ outcomeFixture, attributionsFixture =
   const skills = attributions.filter((item) => item.kind === "Skill");
   return <SiteShell className="pack-detail-page"><article className="outcome-detail layout-reading">
     <header className="outcome-hero"><nav aria-label="Breadcrumb"><a href="/#discover">← All Outcomes</a></nav><div className="outcome-meta"><span>{attributions[0]?.kind ?? "Outcome"}</span><span>{outcome.publication_kind}</span>{outcome.model ? <span aria-label={`Model: ${outcome.model}`}>{outcome.model}</span> : null}<OutcomeReactions outcomeId={outcome.id} likeCount={outcome.like_count ?? 0} /></div><h1>{outcome.title}</h1><p>{outcome.summary}</p><div className="outcome-byline"><span>By <a href={outcome.author_url ?? outcome.source_url} target="_blank" rel="noreferrer">{outcome.author_name ?? outcome.source_locator}</a></span>{attributions.length ? <span>Made with {attributions.map((item, index) => <span key={item.id}>{index ? ", " : ""}<a href={item.href}>{item.name}</a></span>)}</span> : null}</div><div className="outcome-hero-actions"><CopyButton label="Copy prompt" value={draft} onCopied={() => recordOutcomeUse(outcome.id)} /><a href="#exact-prompt">Remix</a></div></header>
+    {hiddenText ? <p role="note">This Outcome contains hidden characters. They are shown and copied as visible Unicode escapes so you can inspect them before reuse.</p> : null}
     <OutcomeGallery outcome={outcome} />
     <OutcomeRecipePanel outcome={outcome} />
     <section className="outcome-about"><h2>About</h2><ReactMarkdown>{outcome.about_markdown.replace(/^# .+\n+/, "")}</ReactMarkdown></section>

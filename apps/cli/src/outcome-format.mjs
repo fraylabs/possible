@@ -1,5 +1,7 @@
+import { assertVisibleText } from "./text-safety.mjs";
 import { readFile, readdir } from "node:fs/promises";
 import { basename, join, relative, resolve } from "node:path";
+import { verifyCaptureReview } from "./capture-integrity.mjs";
 
 const SAFE_SLUG = /^[a-z0-9][a-z0-9-]*$/;
 const EXACT_REVISION = /^(?:[0-9a-f]{40}|[0-9a-f]{64})$/;
@@ -109,8 +111,22 @@ export function normalizeOutcomeAttributions(manifest) {
 
 export function validateOutcomeRecipe(value, context = "recipe") {
   const recipe = asObject(value, context);
-  exactKeys(recipe, new Set(["agent", "skills", "references", "tools", "steps"]), context);
+  exactKeys(recipe, new Set(["agent", "skills", "references", "tools", "steps", "provenance", "notes"]), context);
   if (Object.keys(recipe).length === 0) throw new Error(`${context} must have at least one disclosed ingredient`);
+  if (recipe.provenance !== undefined) {
+    const provenance = asObject(recipe.provenance, `${context}.provenance`);
+    exactKeys(provenance, new Set(["method", "source", "reviewedAt", "reviewDigest"]), `${context}.provenance`);
+    if (!["recorded", "reconstructed"].includes(provenance.method)) throw new Error(`${context}.provenance.method is unsupported`);
+    if (provenance.method === "recorded") {
+      if (!["claude-code", "turnless", "codex"].includes(provenance.source)) throw new Error(`${context}.provenance.source is required for recorded recipes`);
+      if (typeof provenance.reviewDigest !== "string" || !/^[a-f0-9]{64}$/.test(provenance.reviewDigest)) throw new Error(`${context}.provenance requires a privacy review digest`);
+      if (typeof provenance.reviewedAt !== "string" || !/^\d{4}-\d{2}-\d{2}T.*Z$/.test(provenance.reviewedAt) || !Number.isFinite(Date.parse(provenance.reviewedAt))) throw new Error(`${context}.provenance requires a privacy review timestamp`);
+    } else if (Object.keys(provenance).some(key => key !== "method")) throw new Error(`${context}.provenance reconstructed recipes only record method`);
+  }
+  if (recipe.notes !== undefined) {
+    if (!Array.isArray(recipe.notes) || !recipe.notes.length) throw new Error(`${context}.notes must be omitted or non-empty`);
+    recipe.notes.forEach((note, index) => string(note, `${context}.notes[${index}]`));
+  }
   if (recipe.agent !== undefined) {
     const agent = asObject(recipe.agent, `${context}.agent`);
     exactKeys(agent, new Set(["name", "version", "url"]), `${context}.agent`);
@@ -153,6 +169,7 @@ export function validateOutcomeRecipe(value, context = "recipe") {
 }
 
 export function validateOutcomeManifest(value, context = "outcome.json") {
+  assertVisibleText(value);
   const manifest = asObject(value, context);
   if (manifest.schemaVersion !== 3 && manifest.schemaVersion !== 4) throw new Error(`${context}.schemaVersion must be 3 or 4`);
   exactKeys(manifest, manifest.schemaVersion === 4 ? MANIFEST_KEYS : LEGACY_MANIFEST_KEYS, context);
@@ -224,6 +241,7 @@ const plainInlineMarkdown = (value) => value
   .trim();
 
 export function parseOutcomeMarkdown(value, context = "outcome.md") {
+  assertVisibleText(value);
   const markdown = string(value, context).trim();
   const lines = markdown.split(/\r?\n/);
   const titleLine = lines[0] ?? "";
@@ -269,7 +287,9 @@ export async function readOutcomeFolder(folder) {
   const manifest = validateOutcomeManifest(JSON.parse(manifestText), `${relative(process.cwd(), join(folder, "outcome.json")) || "outcome.json"}`);
   if (basename(folder) !== manifest.slug) throw new Error(`${manifest.slug}: folder name must match outcome.json slug`);
   const about = parseOutcomeMarkdown(aboutText, `${manifest.slug}/outcome.md`);
+  assertVisibleText(promptText);
   const executionPrompt = string(promptText, `${manifest.slug}/prompt.md`).trim();
+  verifyCaptureReview(manifest, aboutText, promptText);
   return { slug: manifest.slug, folder, manifest, about, executionPrompt };
 }
 

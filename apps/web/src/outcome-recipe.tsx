@@ -1,3 +1,4 @@
+import { visibleValue } from "../../cli/src/text-safety.mjs";
 import type { ReactNode } from "react";
 import type { SkillReference } from "@possible/catalog";
 import type { DirectoryOutcomeDetail } from "./dynamic-outcome-detail";
@@ -19,9 +20,17 @@ function modelDescriptions(outcome: DirectoryOutcomeDetail): string[] {
   if (outcome.models?.length) return outcome.models.map((model) => `${model.model} · ${model.provider} · ${model.role}${model.agent ? ` · ${model.agent}` : ""}`);
   return outcome.model || outcome.provider || outcome.agent ? [[outcome.model, outcome.provider, outcome.agent].filter(Boolean).join(" · ")] : [];
 }
-export function recipeText(outcome: DirectoryOutcomeDetail): string {
+export function recipeOrigin(outcome: DirectoryOutcomeDetail): string {
+  if (!outcome.recipe) return "Prompt only";
+  if (outcome.recipe.provenance?.method === "recorded") return "Recorded from session";
+  if (outcome.recipe.provenance?.method === "reconstructed") return "Reconstructed";
+  return "Published recipe";
+}
+export function recipeText(rawOutcome: DirectoryOutcomeDetail): string {
+  const outcome = visibleValue(rawOutcome);
   const recipe = outcome.recipe;
-  const lines = [outcome.title, `Source: ${outcome.source_url}`, "", recipe ? "How it was made — published recipe" : "Prompt only — no recipe was published.", "Only recorded details are included; unlisted ingredients and steps are unknown."];
+  const lines = [outcome.title, `Source: ${outcome.source_url}`, "", recipe ? `${recipeOrigin(outcome)} — How it was made` : "Prompt only — no recipe was published.", "Only recorded details are included; unlisted ingredients and steps are unknown."];
+  for (const note of recipe?.notes ?? []) lines.push(`Note: ${note}`);
   for (const model of modelDescriptions(outcome)) lines.push(`Model: ${model}`);
   if (recipe?.agent) lines.push(`Agent: ${recipe.agent.name}${recipe.agent.version ? ` (${recipe.agent.version})` : ""}${safeUrl(recipe.agent.url) ? ` — ${safeUrl(recipe.agent.url)}` : ""}`);
   for (const skill of recipe?.skills ?? []) lines.push(`Skill: ${skill.repository}/${skill.directory}\nPinned commit: ${skill.lastReviewedCommit}\n${skillUrl(skill)}`);
@@ -37,8 +46,9 @@ export function OutcomeRecipePanel({ outcome }: { outcome: DirectoryOutcomeDetai
   const recipe = outcome.recipe;
   const models = modelDescriptions(outcome);
   return <section className="outcome-recipe" aria-labelledby="outcome-recipe-heading">
-    <header><div><span>{recipe ? "PUBLISHED RECIPE" : "Prompt only"}</span><h2 id="outcome-recipe-heading">How it was made</h2></div><CopyButton label="Copy recipe" value={recipeText(outcome)} onCopied={() => recordOutcomeUse(outcome.id)} /></header>
-    <p className="recipe-note">{recipe ? "The publisher’s recorded ingredients and steps. Unlisted details are unknown." : "No recipe was published for this Outcome. The exact prompt and any recorded model details are available."} Copy this text kit to your agent to adapt it.</p>
+    <header><div><span>{recipeOrigin(outcome)}</span><h2 id="outcome-recipe-heading">How it was made</h2></div><CopyButton label="Copy recipe" value={recipeText(outcome)} onCopied={() => recordOutcomeUse(outcome.id)} /></header>
+    <p className="recipe-note">{recipe?.provenance?.method === "recorded" ? "Captured locally, then reviewed and possibly edited by the creator. This is a shared recipe, not an unedited transcript." : recipe ? "The publisher’s ingredients and steps. Unlisted details are unknown." : "No recipe was published for this Outcome. The exact prompt and any recorded model details are available."} Copy this text kit to your agent to adapt it.</p>
+    {recipe?.notes?.length ? <ul className="recipe-note">{recipe.notes.map((note, index) => <li key={index}>{note}</li>)}</ul> : null}
     <div className="recipe-ingredients">
       {models.length ? <div><h3>Models</h3><ul>{models.map((model, index) => <li key={index}>{model}</li>)}</ul></div> : <div><h3>Models</h3><p>Not recorded.</p></div>}
       {recipe?.agent ? <div><h3>Agent</h3><p><SourceLink url={recipe.agent.url}>{recipe.agent.name}{recipe.agent.version ? ` (${recipe.agent.version})` : ""}</SourceLink></p></div> : null}

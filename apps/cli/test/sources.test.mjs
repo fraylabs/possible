@@ -1,3 +1,4 @@
+import { captureReviewDigest } from "../src/capture-integrity.mjs";
 import assert from "node:assert/strict";
 import { afterEach, test } from "node:test";
 import { publishOutcomeSource } from "../src/outcome-commands.mjs";
@@ -91,4 +92,20 @@ test("publishing submits only the source and lets the registry fetch canonical f
   assert.equal(requests.length, 1);
   assert.equal(requests[0].url, "https://registry.example/sources");
   assert.deepEqual(JSON.parse(requests[0].options.body), { source: "example/outcomes" });
+});
+
+
+test("remote recorded recipes require a matching review receipt; old recipes remain valid", async () => {
+  const candidate = { ...manifest, recipe: { provenance: { method: "recorded", source: "codex", reviewedAt: "2026-09-30T00:00:00Z", reviewDigest: "0".repeat(64) } } };
+  const about = "# Quiet launch film\n\nA restrained launch film for one real product.\n";
+  const prompt = "Create the launch film from the supplied product source.\n";
+  candidate.recipe.provenance.reviewDigest = captureReviewDigest(candidate, about, prompt);
+  installGitHubFixture(undefined, candidate);
+  assert.equal((await discoverOutcomeSource("example/outcomes")).outcomes[0].manifest.recipe.provenance.method, "recorded");
+  candidate.author = { ...candidate.author, name: "Changed after review" };
+  await assert.rejects(discoverOutcomeSource("example/outcomes"), /changed after privacy review/);
+  delete candidate.recipe.provenance.reviewDigest;
+  await assert.rejects(discoverOutcomeSource("example/outcomes"), /privacy review digest/);
+  installGitHubFixture(undefined, { ...manifest, recipe: { provenance: { method: "reconstructed" } } });
+  assert.equal((await discoverOutcomeSource("example/outcomes")).outcomes.length, 1);
 });

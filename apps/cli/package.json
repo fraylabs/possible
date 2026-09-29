@@ -1,6 +1,6 @@
 {
   "name": "@fraylabs/possible",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Create, publish, discover, and reuse source-owned AI Outcomes",
   "keywords": [
     "codex",
@@ -23,13 +23,15 @@
   "bin": {
     "possible": "src/index.mjs"
   },
-  "files": ["src"],
+  "files": [
+    "src"
+  ],
   "scripts": {
     "build": "node --check src/index.mjs && node --check src/directory.mjs",
     "test": "node --test test/*.test.mjs"
   },
   "engines": {
-    "node": ">=22"
+    "node": ">=22.13.0"
   },
   "license": "MIT",
   "publishConfig": {

@@ -1,3 +1,26 @@
+# CLI 0.5.0 — local recipe capture
+
+Capture a finished Claude Code JSONL session, one inactive Turnless/T3 SQLite
+thread, or a Codex JSONL session into an editable private draft. Node22.13+ is
+required. Capture omits tool outputs and file contents, flags/redacts sensitive
+text, and preserves unknown provenance as unknown.
+
+`possible capture review` displays the exact draft in the creator's terminal;
+`possible capture export` requires a matching approval and writes only local
+files. Neither command uploads content. Approval is creator-attested and
+unauthenticated, not proof that a person was present. Automated redaction can
+miss private information; the creator must inspect it. Publication is separate.
+
+Optional recipe origin/notes retain v3/v4 compatibility. New imports reject
+unsupported hidden text; the site displays/copies visible escapes for older
+stored text. Standard emoji and contextual Arabic/Indic joiners are preserved.
+The site distinguishes recorded, reconstructed and prompt-only records.
+
+The release uses the existing GitHub package channel; npm authentication is not
+a dependency. Existing published releases remain available. No captured real
+session was published in developing or testing this release. See the README for
+format/platform limits and the creator review workflow.
+
 # CLI 0.4.0 — recipes
 
 CLI 0.4.0 is distributed through the existing GitHub release channel:

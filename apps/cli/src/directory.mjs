@@ -1,3 +1,4 @@
+import { visibleValue } from "./text-safety.mjs";
 import { createHash, randomUUID } from "node:crypto";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { homedir } from "node:os";
@@ -79,7 +80,8 @@ export async function fetchOutcome(id, options = {}) {
   return body.outcome;
 }
 
-export function formatSearchResults(outcomes) {
+export function formatSearchResults(rawOutcomes) {
+  const outcomes = visibleValue(rawOutcomes);
   if (!outcomes.length) return "No matching Outcomes found.\n";
   return `${outcomes.map((outcome, index) => [
     `${index + 1}. ${outcome.title}`,

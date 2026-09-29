@@ -1,4 +1,5 @@
 "use client";
+import { visibleText } from "../../cli/src/text-safety.mjs";
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { githubUrl } from "./public-content";
@@ -17,7 +18,7 @@ export function CopyButton({ label, value, onCopied, ariaLabel }: { label: strin
 
   async function copy() {
     try {
-      await navigator.clipboard.writeText(value);
+      await navigator.clipboard.writeText(visibleText(value));
       setState("copied");
       void onCopied?.();
       window.setTimeout(() => setState("idle"), 1600);

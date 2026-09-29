@@ -31,7 +31,7 @@ test("the CLI exposes authoring, live discovery, source use, and local bookmarks
   assert.match(stdout, /possible add/);
   assert.match(stdout, /possible use/);
   assert.doesNotMatch(stdout, /possible init/);
-  assert.doesNotMatch(stdout, /possible pack|compile|export/);
+  assert.doesNotMatch(stdout, /possible (?:pack|compile|export)\b/);
 });
 
 test("create and validate use the three-file Outcome contract", async () => {

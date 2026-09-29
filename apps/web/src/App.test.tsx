@@ -215,6 +215,48 @@ describe("Possible website", () => {
     expect((await axe(container)).violations).toHaveLength(0);
   });
 
+  it("preserves emoji and script joiners in displayed and copied prompts", async () => {
+    const user = userEvent.setup();
+    const prompt = "Draw ❤️ and 👩‍💻 with the label می‌روم and क्‍ष.";
+    render(<DynamicOutcomeDetailPage outcomeFixture={{ ...detailFixture, prompt }} />);
+    expect(screen.queryByRole("note")).not.toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "Copy prompt" }));
+    expect(await navigator.clipboard.readText()).toBe(prompt);
+  });
+
+  it("makes invisible text visible in legacy prompts, recipe steps and clipboard content", async () => {
+    const user = userEvent.setup();
+    const hidden = String.fromCodePoint(0xe0041);
+    const outcome: DirectoryOutcomeDetail = { ...detailFixture, prompt: `Draw a planet.${hidden}`, recipe: { steps: [{ title: "Draw", instructions: "Use circles.", prompt: `Add rings.${hidden}` }] } };
+    const { container } = render(<DynamicOutcomeDetailPage outcomeFixture={outcome} />);
+    expect(screen.getByRole("note")).toHaveTextContent("hidden characters");
+    expect(container.textContent).not.toContain(hidden);
+    await user.click(screen.getByRole("button", { name: "Copy prompt" }));
+    expect(await navigator.clipboard.readText()).toBe("Draw a planet.\\u{e0041}");
+    await user.click(screen.getByRole("button", { name: "Copy recipe" }));
+    expect(await navigator.clipboard.readText()).toContain("Add rings.\\u{e0041}");
+    expect(await navigator.clipboard.readText()).not.toContain(hidden);
+  });
+
+  it("distinguishes recorded and reconstructed recipes in the page and copied text", async () => {
+    const user = userEvent.setup();
+    const recorded: DirectoryOutcomeDetail = { ...detailFixture, recipe: {
+      provenance: { method: "recorded", source: "claude-code", reviewedAt: "2026-09-30T00:00:00Z", reviewDigest: "a".repeat(64) },
+      notes: ["Some source details were removed for privacy."],
+      steps: [{ title: "First request", instructions: "Recorded user message", prompt: "Make a spinning planet." }],
+    } };
+    render(<DynamicOutcomeDetailPage outcomeFixture={recorded} />);
+    expect(screen.getByText("Recorded from session")).toBeInTheDocument();
+    expect(screen.getByText(/not an unedited transcript/)).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "Copy recipe" }));
+    expect(await navigator.clipboard.readText()).toContain("Some source details were removed for privacy.");
+    expect(await navigator.clipboard.readText()).toContain("Recorded from session");
+    cleanup();
+    render(<DynamicOutcomeDetailPage outcomeFixture={{ ...detailFixture, recipe: { provenance: { method: "reconstructed" } } }} />);
+    expect(screen.getByText("Reconstructed")).toBeInTheDocument();
+    expect(screen.queryByText("Recorded from session")).not.toBeInTheDocument();
+  });
+
   it("labels an external legacy Outcome prompt only while retaining its creator and model", async () => {
     const user = userEvent.setup();
     const outcome = { ...detailFixture, author_name: "Independent Maker", author_url: "https://maker.example", source_url: "https://github.com/maker/old-outcome", source_locator: "maker/old-outcome" };
