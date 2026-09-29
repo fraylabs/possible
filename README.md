@@ -24,13 +24,13 @@ The repository or domain is the identity. A GitHub publisher keeps `outcomes.jso
 ## CLI
 
 ```bash
-npx @fraylabs/possible@0.4.0 search "make a launch video"
-npx @fraylabs/possible@0.4.0 fetch <outcome-id> --json
-npx @fraylabs/possible@0.4.0 create my-outcome --product owner/product
-npx @fraylabs/possible@0.4.0 validate
-npx @fraylabs/possible@0.4.0 publish owner/repository
-npx @fraylabs/possible@0.4.0 add owner/repository
-npx @fraylabs/possible@0.4.0 use owner/repository@my-outcome
+npx https://github.com/fraylabs/possible/releases/download/v0.4.0/fraylabs-possible-0.4.0.tgz search "make a launch video"
+npx https://github.com/fraylabs/possible/releases/download/v0.4.0/fraylabs-possible-0.4.0.tgz fetch <outcome-id> --json
+npx https://github.com/fraylabs/possible/releases/download/v0.4.0/fraylabs-possible-0.4.0.tgz create my-outcome --product owner/product
+npx https://github.com/fraylabs/possible/releases/download/v0.4.0/fraylabs-possible-0.4.0.tgz validate
+npx https://github.com/fraylabs/possible/releases/download/v0.4.0/fraylabs-possible-0.4.0.tgz publish owner/repository
+npx https://github.com/fraylabs/possible/releases/download/v0.4.0/fraylabs-possible-0.4.0.tgz add owner/repository
+npx https://github.com/fraylabs/possible/releases/download/v0.4.0/fraylabs-possible-0.4.0.tgz use owner/repository@my-outcome
 ```
 
 Install the optional `$possible` Skill through the standard agent-skill ecosystem:
@@ -76,3 +76,5 @@ npm run check
 ```
 
 Local backend development uses `npx convex dev`. Publishing remains account-free and source-owned; a reader may sign in with GitHub only when they want to like or save an Outcome.
+
+CLI 0.4.0 is available as the [verified GitHub release package](https://github.com/fraylabs/possible/releases/tag/v0.4.0). The commands above use that package directly. The npm registry remains on 0.3.1 until publisher authentication is restored.

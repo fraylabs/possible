@@ -12,7 +12,7 @@ The canonical machine format is [outcome.schema.json](src/outcome.schema.json). 
 Schema v4 Outcomes may include `recipe`. Existing manifests without it remain
 valid and render as **Prompt only**. Schema v3 remains supported, including this
 optional extension. Older CLI releases cannot validate the new field; use
-`@fraylabs/possible@0.4.0` when authoring a recipe.
+the [CLI 0.4.0 release package](https://github.com/fraylabs/possible/releases/tag/v0.4.0) when authoring a recipe.
 
 `models` continues to describe model provenance. `primary` and `secondary` remain
 attribution fields; they do not imply that every attributed skill was used.

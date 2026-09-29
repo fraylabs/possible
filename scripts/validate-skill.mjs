@@ -10,7 +10,9 @@ const [skill, metadata, entries, packageText] = await Promise.all([
   readdir(directory),
   readFile(join(root, "apps", "cli", "package.json"), "utf8"),
 ]);
-const cliPackage = `@fraylabs/possible@${JSON.parse(packageText).version}`;
+const version = JSON.parse(packageText).version;
+const cliPackage = `@fraylabs/possible@${version}`;
+const cliRelease = `https://github.com/fraylabs/possible/releases/download/v${version}/fraylabs-possible-${version}.tgz`;
 const errors = [];
 const check = (condition, message) => { if (!condition) errors.push(message); };
 const frontmatter = skill.match(/^---\n([\s\S]*?)\n---\n/);
@@ -19,8 +21,11 @@ if (frontmatter) {
   const keys = [...frontmatter[1].matchAll(/^([a-z]+):/gm)].map((match) => match[1]).sort();
   check(JSON.stringify(keys) === JSON.stringify(["description", "name"]), "frontmatter must contain only name and description");
 }
-for (const phrase of ["search_outcomes", "fetch_outcome", `${cliPackage} search`, `${cliPackage} fetch`, "original prompt", "execution prompt", "fresh subagent", "official documentation", `${cliPackage} create`, `${cliPackage} publish`, `${cliPackage} bookmark add`]) {
+for (const phrase of ["search_outcomes", "fetch_outcome", "original prompt", "execution prompt", "fresh subagent", "official documentation"]) {
   check(skill.toLowerCase().includes(phrase.toLowerCase()), `SKILL.md must include '${phrase}'`);
+}
+for (const command of ["search", "fetch", "create", "publish", "bookmark add"]) {
+  check([cliPackage, cliRelease].some(source => skill.includes(`npx ${source} ${command}`)), `SKILL.md must include a versioned CLI ${command} command`);
 }
 for (const forbidden of ["Outcome Pack", "authored expectations", "trust status", "workstreams"]) {
   check(!skill.toLowerCase().includes(forbidden.toLowerCase()), `SKILL.md must not include '${forbidden}'`);
