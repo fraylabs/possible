@@ -18,12 +18,13 @@
 .docs-article p, .docs-article li { color: var(--site-copy); font-size: 15px; line-height: 1.7; }
 .docs-article section > p { max-width: 650px; }
 .docs-article section > a { color: var(--site-accent-strong); font-size: 14px; font-weight: 700; }
-.docs-article code { padding: 2px 5px; border-radius: 4px; background: var(--site-surface-soft); color: var(--site-text); font: .88em "DM Mono", monospace; }
+.docs-article code { overflow-wrap: anywhere; padding: 2px 5px; border-radius: 4px; background: var(--site-surface-soft); color: var(--site-text); font: .88em "DM Mono", monospace; }
 .docs-article ul { margin: 16px 0 0; padding-left: 20px; }
 .docs-article ol { margin: 20px 0 0; padding: 0; border-top: 1px solid var(--site-border); list-style: none; }
 .docs-article ol li { padding: 15px 0; border-bottom: 1px solid var(--site-border); display: grid; grid-template-columns: minmax(150px, .65fr) 1.35fr; gap: 26px; }
 .docs-article ol li strong { color: var(--site-text); font-size: 14px; }
-.docs-article ol li span { color: var(--site-muted); }
+.docs-article ol li > * { min-width: 0; }
+.docs-article ol li span { overflow-wrap: anywhere; color: var(--site-muted); }
 .docs-callout { margin: 24px 0 0; padding: 14px 0 14px 18px; border-left: 2px solid var(--site-accent); }
 .docs-callout p { margin: 0; font-size: 14px; }
 .docs-callout strong { color: var(--site-text); }
