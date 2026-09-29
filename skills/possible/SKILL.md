@@ -15,7 +15,7 @@ An Outcome is precedent to inspect and remix, not a rigid workflow. Preserve use
 
 Preserve the user's original prompt verbatim. Determine whether they want to browse possibilities, prepare a prompt, execute work, or publish completed work.
 
-For browsing or execution, use `search_outcomes` when the Possible MCP is available. Otherwise run `npx https://github.com/fraylabs/possible/releases/download/v0.4.0/fraylabs-possible-0.4.0.tgz search "<ordinary-language request>"`. Show up to five relevant Outcomes when the user is browsing. When preparing work, read the strongest candidates' prompts and disclosed recipes with `fetch_outcome` or `npx https://github.com/fraylabs/possible/releases/download/v0.4.0/fraylabs-possible-0.4.0.tgz fetch <outcome-id> --json`. Search scores indicate text similarity, not quality.
+For browsing or execution, use `search_outcomes` when the Possible MCP is available. Otherwise run `npx https://github.com/fraylabs/possible/releases/download/v0.5.0/fraylabs-possible-0.5.0.tgz search "<ordinary-language request>"`. Show up to five relevant Outcomes when the user is browsing. When preparing work, read the strongest candidates' prompts and disclosed recipes with `fetch_outcome` or `npx https://github.com/fraylabs/possible/releases/download/v0.5.0/fraylabs-possible-0.5.0.tgz fetch <outcome-id> --json`. Search scores indicate text similarity, not quality.
 
 Use Outcomes as concrete precedent. If none fit, use current primary sources rather than forcing an unrelated example. Prefer official documentation, current source repositories and registries, then reproducible community examples. Check volatile information at run time. Popularity is a discovery signal, not proof that an Outcome is good.
 
@@ -62,7 +62,7 @@ Products and Skills describe capabilities. They do not grant permission to spend
 
 ## Author a completed Outcome
 
-When the user wants to publish completed work, inspect the real result and preserve the exact prompt and provenance. Record only evidenced ingredients in the optional `recipe` field: agent/harness, exact-commit skill references, reference URLs, tools with purposes, and ordered steps. Preserve disclosed prompts and follow-ups verbatim; label reconstructed steps and leave unknowns absent. This is manual authoring, not session capture or kit installation. Create one folder:
+When the user wants to publish completed work, inspect the real result and preserve the exact prompt and provenance. Record only evidenced ingredients in the optional `recipe` field: agent/harness, exact-commit skill references, reference URLs, tools with purposes, and ordered steps. Preserve disclosed prompts and follow-ups verbatim; label reconstructed steps and leave unknowns absent. For a manually reconstructed recipe, set `recipe.provenance` to `{ "method": "reconstructed" }`. Kit installation is not supported. Create one folder:
 
 ```text
 outcomes.json
@@ -82,9 +82,9 @@ Do not reconstruct absent provenance as fact. Mark unknown values honestly. The 
 Use the CLI to scaffold and validate:
 
 ```text
-npx https://github.com/fraylabs/possible/releases/download/v0.4.0/fraylabs-possible-0.4.0.tgz create <slug> --product <owner/product>
-npx https://github.com/fraylabs/possible/releases/download/v0.4.0/fraylabs-possible-0.4.0.tgz create <slug> --skill <owner/repository> <directory> <commit>
-npx https://github.com/fraylabs/possible/releases/download/v0.4.0/fraylabs-possible-0.4.0.tgz validate [directory]
+npx https://github.com/fraylabs/possible/releases/download/v0.5.0/fraylabs-possible-0.5.0.tgz create <slug> --product <owner/product>
+npx https://github.com/fraylabs/possible/releases/download/v0.5.0/fraylabs-possible-0.5.0.tgz create <slug> --skill <owner/repository> <directory> <commit>
+npx https://github.com/fraylabs/possible/releases/download/v0.5.0/fraylabs-possible-0.5.0.tgz validate [directory]
 ```
 
 ## Publish from the owner's source
@@ -97,9 +97,9 @@ Possible does not host publisher accounts or own the canonical files. A publishe
 The publisher index is a thin list of manifest locations. Possible snapshots the public source revision and displays it; changing the source creates a new revision rather than rewriting history.
 
 ```text
-npx https://github.com/fraylabs/possible/releases/download/v0.4.0/fraylabs-possible-0.4.0.tgz publish [owner/repository | https://publisher.example]
-npx https://github.com/fraylabs/possible/releases/download/v0.4.0/fraylabs-possible-0.4.0.tgz add <owner/repository | https://publisher.example>
-npx https://github.com/fraylabs/possible/releases/download/v0.4.0/fraylabs-possible-0.4.0.tgz use <source>@<slug>
+npx https://github.com/fraylabs/possible/releases/download/v0.5.0/fraylabs-possible-0.5.0.tgz publish [owner/repository | https://publisher.example]
+npx https://github.com/fraylabs/possible/releases/download/v0.5.0/fraylabs-possible-0.5.0.tgz add <owner/repository | https://publisher.example>
+npx https://github.com/fraylabs/possible/releases/download/v0.5.0/fraylabs-possible-0.5.0.tgz use <source>@<slug>
 ```
 
 GitHub publishing requires a clean committed revision so the snapshot is reproducible. No Possible login is required. A publisher-domain source is Official for that domain; other sources are Community unless their ownership follows directly from the public source.
@@ -109,9 +109,41 @@ GitHub publishing requires a clean committed revision so the snapshot is reprodu
 Use bookmarks only when the user asks:
 
 ```text
-npx https://github.com/fraylabs/possible/releases/download/v0.4.0/fraylabs-possible-0.4.0.tgz bookmark add <outcome-slug>
-npx https://github.com/fraylabs/possible/releases/download/v0.4.0/fraylabs-possible-0.4.0.tgz bookmark list
-npx https://github.com/fraylabs/possible/releases/download/v0.4.0/fraylabs-possible-0.4.0.tgz bookmark remove <outcome-slug>
+npx https://github.com/fraylabs/possible/releases/download/v0.5.0/fraylabs-possible-0.5.0.tgz bookmark add <outcome-slug>
+npx https://github.com/fraylabs/possible/releases/download/v0.5.0/fraylabs-possible-0.5.0.tgz bookmark list
+npx https://github.com/fraylabs/possible/releases/download/v0.5.0/fraylabs-possible-0.5.0.tgz bookmark remove <outcome-slug>
 ```
 
 Bookmarks are stored locally in `.possible` and do not require an account.
+
+
+## Capture a finished session
+
+When the user asks to capture their completed work, use CLI 0.5.0 with Node 22.13+.
+Ask for the specific local session file if it is not known; never crawl their
+history or read unrelated threads. Supported sources: Claude Code JSONL,
+Turnless/T3 SQLite with an exact thread ID, then Codex JSONL.
+
+```sh
+npx https://github.com/fraylabs/possible/releases/download/v0.5.0/fraylabs-possible-0.5.0.tgz capture claude-code <session.jsonl> --out <private-draft>
+# Turnless: capture turnless <state.sqlite> --thread <thread-id> --out <private-draft>
+# Codex: capture codex <rollout.jsonl> --out <private-draft>
+```
+
+Capture runs locally and omits tool outputs, file contents and assistant text.
+Help edit draft.json with the actual result and public author/primary attribution.
+Use ingredientsToReview only as sanitized hints; restore references only when the
+creator confirms they can be shared. Never invent missing skill pins or models.
+Explain removed/unknown details. Do not claim that automated redaction guarantees
+privacy. The creator must inspect private context, names and unusual secrets.
+
+The creator runs `possible capture review <private-draft>` in their own terminal
+and types the displayed approval code. Never enter approval on their behalf,
+fabricate a receipt, use a pseudo-terminal to bypass review, or upload a transcript
+or draft. After explicit creator review, `possible capture export <private-draft>
+--out <new-local-publisher>` writes an unpublished Outcome. Changes invalidate
+approval. Publishing that export requires a separate explicit user instruction.
+
+Captured recipes are labeled recorded from session; privacy edits are disclosed.
+The receipt detects changes, not the reviewer's identity. Terminal approval is creator-attested and unauthenticated; automation can type the phrase, so this prevents accidents rather than proving a human was present. Keep private session
+paths, draft folders and receipts out of public source. No automatic kit install.
