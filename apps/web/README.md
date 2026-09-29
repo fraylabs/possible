@@ -1,7 +1,7 @@
 # Possible web
 
 - `/` — searchable, paginated Outcome directory
-- `/outcomes/view/?id=<uuid>` — source-owned result preview, exact prompt, provenance, files, Products, and Skills
+- `/outcomes/view/?id=<uuid>` — source-owned result preview, recipe panel and copyable text kit, exact prompt, provenance, files, Products, and Skills
 - `/publish` — source-owned publishing from a public repository or domain
 - `/saved` — private account bookmarks when GitHub authentication is enabled
 - `/docs` — use, publishing, and format reference

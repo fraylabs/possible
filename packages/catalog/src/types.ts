@@ -85,6 +85,15 @@ export interface SkillAttribution extends SkillReference {
 
 export type OutcomeAttribution = ProductAttribution | SkillAttribution;
 
+/** Disclosed ingredients only. Omission means unknown, not unused. */
+export interface OutcomeRecipe {
+  agent?: { name: string; version?: string; url?: string };
+  skills?: SkillReference[];
+  references?: { kind: "repository" | "document" | "image" | "web" | "example"; label: string; url: string; purpose?: string }[];
+  tools?: { name: string; purpose: string; url?: string }[];
+  steps?: { title: string; instructions: string; prompt?: string }[];
+}
+
 export interface OutcomeManifest {
   schemaVersion: 4;
   slug: string;
@@ -98,4 +107,5 @@ export interface OutcomeManifest {
   inputs?: OutcomeFile[];
   artifacts?: OutcomeFile[];
   preview?: OutcomePreview;
+  recipe?: OutcomeRecipe;
 }

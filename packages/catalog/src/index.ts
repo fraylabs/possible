@@ -2,6 +2,7 @@ export type {
   OutcomeAuthor,
   OutcomeFiles,
   OutcomeManifest,
+  OutcomeRecipe,
   OutcomeModel,
   OutcomeModelRole,
   OutcomeFile,

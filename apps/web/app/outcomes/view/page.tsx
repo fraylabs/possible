@@ -4,7 +4,7 @@ import { pageMetadata } from "../../_metadata";
 
 export const metadata: Metadata = pageMetadata({
   title: "Outcome",
-  description: "Inspect a published result, its exact prompt, and the Products or Skills that made it possible.",
+  description: "Inspect a published result and its recipe: models, agents, pinned skills, references, tools, steps, and the exact prompt.",
   path: "/outcomes/view/",
 });
 

@@ -266,7 +266,7 @@ export function OutcomesPage({ outcomesFixture }: { outcomesFixture?: DiscoveryO
           <div>
             <span>OUTCOME DIRECTORY</span>
             <h1 id="home-heading">See what AI can make.</h1>
-            <p>Inspect real results. Copy the exact prompts.</p>
+            <p>Inspect real results. Take the recipe to your agent.</p>
           </div>
           <strong>{directoryState === "loading" ? "—" : `${filteredOutcomes.length} ${filteredOutcomes.length === 1 ? "Outcome" : "Outcomes"}`}</strong>
         </header>

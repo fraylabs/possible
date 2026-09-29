@@ -3,6 +3,7 @@ import { afterEach, beforeEach, describe, it } from "node:test";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { createConvexOutcomeDirectory } from "../src/directory.js";
 import type { DirectoryOutcome, OutcomeDirectory } from "../src/directory.js";
 import { createPossibleServer, POSSIBLE_SERVER_INSTRUCTIONS, POSSIBLE_TOOL_NAMES } from "../src/server.js";
 
@@ -38,8 +39,16 @@ const base: DirectoryOutcome = {
   likeCount: 0,
 };
 
+const recipe: NonNullable<DirectoryOutcome["recipe"]> = {
+  agent: { name: "Codex", version: "1.2" },
+  skills: [{ repository: "maker/skills", directory: "skills/pptx", lastReviewedCommit: "a".repeat(40) }],
+  references: [{ kind: "document", label: "Brief", url: "https://example.com/brief", purpose: "Deck direction" }],
+  tools: [{ name: "Renderer", purpose: "Render slides" }],
+  steps: [{ title: "Outline", instructions: "Plan the slides", prompt: "Write an outline." }],
+};
+
 const outcomes: DirectoryOutcome[] = [
-  base,
+  { ...base, recipe },
   { ...base, id: "00000000-0000-0000-0000-000000000002", slug: "quiet-soundtrack", title: "Quiet Soundtrack", summary: "An original instrumental soundtrack.", prompt: "Compose a quiet original soundtrack." },
 ];
 
@@ -85,6 +94,26 @@ describe("Possible MCP", () => {
     assert.equal(envelope.data.author.name, "Fixture");
   });
 
+  it("retains the complete optional recipe through MCP list, search, and fetch", async () => {
+    const fetched = await client.callTool({ name: "fetch_outcome", arguments: { slug: base.slug } });
+    const detail = (fetched.structuredContent as { data: DirectoryOutcome }).data;
+    assert.deepEqual(detail.recipe, recipe);
+    assert.equal(detail.prompt, base.prompt);
+    assert.deepEqual(detail.models, base.models);
+    for (const request of [
+      { name: "list_outcomes", arguments: {} },
+      { name: "search_outcomes", arguments: { query: "editable PowerPoint" } },
+    ]) {
+      const result = await client.callTool(request);
+      const entries = (result.structuredContent as { data: { outcomes: DirectoryOutcome[] } }).data.outcomes;
+      assert.deepEqual(entries.find((entry) => entry.id === base.id)?.recipe, recipe);
+    }
+    const legacy = await client.callTool({ name: "fetch_outcome", arguments: { slug: "quiet-soundtrack" } });
+    const legacyDetail = (legacy.structuredContent as { data: DirectoryOutcome }).data;
+    assert.ok(legacyDetail.recipe == null);
+    assert.equal(legacyDetail.prompt, "Compose a quiet original soundtrack.");
+  });
+
   it("searches ordinary language and returns no invented candidate", async () => {
     const result = await client.callTool({ name: "search_outcomes", arguments: { query: "editable PowerPoint deck" } });
     const envelope = result.structuredContent as { data: { outcomes: Array<{ slug: string }> } };
@@ -98,4 +127,32 @@ describe("Possible MCP", () => {
     assert.equal(result.isError, true);
     assert.equal((result.structuredContent as { error: { code: string } }).error.code, "OUTCOME_NOT_FOUND");
   });
+});
+
+
+it("maps recipe and legacy HTTP directory rows without losing published ingredients", async () => {
+  const row = {
+    id: base.id, slug: base.slug, title: base.title, summary: base.summary,
+    about_markdown: base.aboutMarkdown, prompt: base.prompt, requirements: base.requirements,
+    models: base.models, products: [], skills: [], primary_attribution: base.primary,
+    inputs: [], artifacts: [], preview: null, author_name: base.author.name, author_url: base.author.url,
+    published_at: base.publishedAt, publication_kind: base.publicationKind,
+    source_locator: base.sourceLocator, source_url: base.sourceUrl, source_revision: base.sourceRevision,
+    manifest_url: base.manifestUrl, result_media_url: null, poster_url: null,
+    provider: base.provider, model: base.model, agent: base.agent, use_count: 0, like_count: 0,
+  };
+  const directory = createConvexOutcomeDirectory({
+    endpoint: "https://directory.example/api/outcomes",
+    fetch: async (input, init) => {
+      assert.equal(input, "https://directory.example/api/outcomes");
+      assert.deepEqual(init?.headers, { accept: "application/json" });
+      return new Response(JSON.stringify({ outcomes: [{ ...row, recipe }, { ...row, id: "legacy" }] }), { status: 200 });
+    },
+  });
+  const entries = await directory.list();
+  assert.deepEqual(entries[0]?.recipe, recipe);
+  assert.deepEqual(entries[0]?.models, base.models);
+  assert.equal(entries[0]?.prompt, base.prompt);
+  assert.equal(entries[0]?.author.name, base.author.name);
+  assert.equal(entries[1]?.recipe, null);
 });

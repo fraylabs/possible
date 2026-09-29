@@ -1,3 +1,4 @@
+import type { OutcomeRecipe } from "@possible/catalog";
 export interface DirectoryOutcome {
   id: string;
   slug: string;
@@ -5,6 +6,7 @@ export interface DirectoryOutcome {
   summary: string;
   aboutMarkdown: string;
   prompt: string;
+  recipe?: OutcomeRecipe | null;
   requirements: string[];
   models: Array<Record<string, unknown>>;
   products: string[];
@@ -41,6 +43,7 @@ interface OutcomeRow {
   summary: string;
   about_markdown: string;
   prompt: string;
+  recipe?: OutcomeRecipe | null;
   requirements: string[];
   models: Array<Record<string, unknown>>;
   products: string[];
@@ -84,6 +87,7 @@ function fromRow(row: OutcomeRow): DirectoryOutcome {
     summary: row.summary,
     aboutMarkdown: row.about_markdown,
     prompt: row.prompt,
+    recipe: row.recipe ?? null,
     requirements: row.requirements,
     models: row.models,
     products: row.products,

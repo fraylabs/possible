@@ -5,157 +5,530 @@
   "description": "Machine-readable metadata beside the required outcome.md and prompt.md files.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schemaVersion", "slug", "files", "authoredAt", "author", "models", "requirements", "primary"],
+  "required": [
+    "schemaVersion",
+    "slug",
+    "files",
+    "authoredAt",
+    "author",
+    "models",
+    "requirements",
+    "primary"
+  ],
   "properties": {
-    "schemaVersion": { "const": 4 },
-    "slug": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+    "schemaVersion": {
+      "const": 4
+    },
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]*$"
+    },
     "files": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["about", "prompt"],
+      "required": [
+        "about",
+        "prompt"
+      ],
       "properties": {
-        "about": { "const": "outcome.md" },
-        "prompt": { "const": "prompt.md" }
+        "about": {
+          "const": "outcome.md"
+        },
+        "prompt": {
+          "const": "prompt.md"
+        }
       }
     },
-    "authoredAt": { "oneOf": [{ "type": "string", "format": "date-time" }, { "type": "null" }] },
-    "author": { "$ref": "#/$defs/author" },
-    "models": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/model" } },
-    "requirements": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
-    "primary": { "$ref": "#/$defs/attribution" },
-    "secondary": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/$defs/attribution" } },
-    "inputs": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/file" } },
-    "artifacts": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/file" } },
-    "preview": { "$ref": "#/$defs/preview" }
+    "authoredAt": {
+      "oneOf": [
+        {
+          "type": "string",
+          "format": "date-time"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "author": {
+      "$ref": "#/$defs/author"
+    },
+    "models": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/model"
+      }
+    },
+    "requirements": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "primary": {
+      "$ref": "#/$defs/attribution"
+    },
+    "secondary": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/attribution"
+      }
+    },
+    "inputs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/file"
+      }
+    },
+    "artifacts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/file"
+      }
+    },
+    "preview": {
+      "$ref": "#/$defs/preview"
+    },
+    "recipe": {
+      "$ref": "#/$defs/recipe"
+    }
   },
   "$defs": {
     "author": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["name", "url"],
+      "required": [
+        "name",
+        "url"
+      ],
       "properties": {
-        "name": { "type": "string", "minLength": 1 },
-        "url": { "type": "string", "format": "uri", "pattern": "^https://" }
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://"
+        }
       }
     },
     "model": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["provider", "model", "role"],
+      "required": [
+        "provider",
+        "model",
+        "role"
+      ],
       "properties": {
-        "provider": { "type": "string", "minLength": 1 },
-        "model": { "type": "string", "minLength": 1 },
-        "agent": { "type": "string", "minLength": 1 },
-        "role": { "enum": ["authorship", "execution", "review"] }
+        "provider": {
+          "type": "string",
+          "minLength": 1
+        },
+        "model": {
+          "type": "string",
+          "minLength": 1
+        },
+        "agent": {
+          "type": "string",
+          "minLength": 1
+        },
+        "role": {
+          "enum": [
+            "authorship",
+            "execution",
+            "review"
+          ]
+        }
       }
     },
     "skill": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["repository", "lastReviewedCommit", "directory"],
+      "required": [
+        "repository",
+        "lastReviewedCommit",
+        "directory"
+      ],
       "properties": {
-        "repository": { "type": "string", "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$" },
-        "lastReviewedCommit": { "type": "string", "pattern": "^(?:[0-9a-f]{40}|[0-9a-f]{64})$" },
-        "directory": { "type": "string", "pattern": "^(?:\\.|(?!.*(?:^|/)\\.\\.?($|/))[a-z0-9._-]+(?:/[a-z0-9._-]+)*)$" }
+        "repository": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$"
+        },
+        "lastReviewedCommit": {
+          "type": "string",
+          "pattern": "^(?:[0-9a-f]{40}|[0-9a-f]{64})$"
+        },
+        "directory": {
+          "type": "string",
+          "pattern": "^(?:\\.|(?!.*(?:^|/)\\.\\.?($|/))[a-z0-9._-]+(?:/[a-z0-9._-]+)*)$"
+        }
       }
     },
     "productAttribution": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["kind", "id"],
+      "required": [
+        "kind",
+        "id"
+      ],
       "properties": {
-        "kind": { "const": "product" },
-        "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*/[a-z0-9][a-z0-9-]*$" }
+        "kind": {
+          "const": "product"
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9-]*/[a-z0-9][a-z0-9-]*$"
+        }
       }
     },
     "skillAttribution": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["kind", "repository", "lastReviewedCommit", "directory"],
+      "required": [
+        "kind",
+        "repository",
+        "lastReviewedCommit",
+        "directory"
+      ],
       "properties": {
-        "kind": { "const": "skill" },
-        "repository": { "type": "string", "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$" },
-        "lastReviewedCommit": { "type": "string", "pattern": "^(?:[0-9a-f]{40}|[0-9a-f]{64})$" },
-        "directory": { "type": "string", "pattern": "^(?:\\.|(?!.*(?:^|/)\\.\\.?($|/))[a-z0-9._-]+(?:/[a-z0-9._-]+)*)$" }
+        "kind": {
+          "const": "skill"
+        },
+        "repository": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$"
+        },
+        "lastReviewedCommit": {
+          "type": "string",
+          "pattern": "^(?:[0-9a-f]{40}|[0-9a-f]{64})$"
+        },
+        "directory": {
+          "type": "string",
+          "pattern": "^(?:\\.|(?!.*(?:^|/)\\.\\.?($|/))[a-z0-9._-]+(?:/[a-z0-9._-]+)*)$"
+        }
       }
     },
     "attribution": {
       "oneOf": [
-        { "$ref": "#/$defs/productAttribution" },
-        { "$ref": "#/$defs/skillAttribution" }
+        {
+          "$ref": "#/$defs/productAttribution"
+        },
+        {
+          "$ref": "#/$defs/skillAttribution"
+        }
       ]
     },
     "file": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["type", "src", "label"],
+      "required": [
+        "type",
+        "src",
+        "label"
+      ],
       "properties": {
-        "type": { "enum": ["image", "video", "audio", "cad", "document", "data", "source", "archive", "other"] },
-        "src": { "type": "string", "minLength": 1 },
-        "label": { "type": "string", "minLength": 1 },
-        "format": { "type": "string", "minLength": 1 }
+        "type": {
+          "enum": [
+            "image",
+            "video",
+            "audio",
+            "cad",
+            "document",
+            "data",
+            "source",
+            "archive",
+            "other"
+          ]
+        },
+        "src": {
+          "type": "string",
+          "minLength": 1
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "format": {
+          "type": "string",
+          "minLength": 1
+        }
       }
     },
     "image": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["src", "alt"],
+      "required": [
+        "src",
+        "alt"
+      ],
       "properties": {
-        "src": { "type": "string", "minLength": 1 },
-        "alt": { "type": "string" },
-        "caption": { "type": "string", "minLength": 1 },
-        "cover": { "type": "boolean" }
+        "src": {
+          "type": "string",
+          "minLength": 1
+        },
+        "alt": {
+          "type": "string"
+        },
+        "caption": {
+          "type": "string",
+          "minLength": 1
+        },
+        "cover": {
+          "type": "boolean"
+        }
       }
     },
     "video": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["src"],
+      "required": [
+        "src"
+      ],
       "properties": {
-        "src": { "type": "string", "minLength": 1 },
-        "poster": { "type": "string", "minLength": 1 },
-        "caption": { "type": "string", "minLength": 1 }
+        "src": {
+          "type": "string",
+          "minLength": 1
+        },
+        "poster": {
+          "type": "string",
+          "minLength": 1
+        },
+        "caption": {
+          "type": "string",
+          "minLength": 1
+        }
       }
     },
     "audio": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["src"],
+      "required": [
+        "src"
+      ],
       "properties": {
-        "src": { "type": "string", "minLength": 1 },
-        "poster": { "type": "string", "minLength": 1 },
-        "caption": { "type": "string", "minLength": 1 }
+        "src": {
+          "type": "string",
+          "minLength": 1
+        },
+        "poster": {
+          "type": "string",
+          "minLength": 1
+        },
+        "caption": {
+          "type": "string",
+          "minLength": 1
+        }
       }
     },
     "cadDownload": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["src", "format"],
+      "required": [
+        "src",
+        "format"
+      ],
       "properties": {
-        "src": { "type": "string", "minLength": 1 },
-        "format": { "enum": ["step", "stl", "3mf"] },
-        "label": { "type": "string", "minLength": 1 }
+        "src": {
+          "type": "string",
+          "minLength": 1
+        },
+        "format": {
+          "enum": [
+            "step",
+            "stl",
+            "3mf"
+          ]
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        }
       }
     },
     "cad": {
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "preview": { "type": "string", "minLength": 1 },
-        "poster": { "type": "string", "minLength": 1 },
-        "caption": { "type": "string", "minLength": 1 },
-        "downloads": { "type": "array", "items": { "$ref": "#/$defs/cadDownload" } }
+        "preview": {
+          "type": "string",
+          "minLength": 1
+        },
+        "poster": {
+          "type": "string",
+          "minLength": 1
+        },
+        "caption": {
+          "type": "string",
+          "minLength": 1
+        },
+        "downloads": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/cadDownload"
+          }
+        }
       }
     },
     "preview": {
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "description": { "type": "string", "minLength": 1 },
-        "images": { "type": "array", "maxItems": 5, "items": { "$ref": "#/$defs/image" } },
-        "video": { "$ref": "#/$defs/video" },
-        "audio": { "$ref": "#/$defs/audio" },
-        "cad": { "$ref": "#/$defs/cad" }
+        "description": {
+          "type": "string",
+          "minLength": 1
+        },
+        "images": {
+          "type": "array",
+          "maxItems": 5,
+          "items": {
+            "$ref": "#/$defs/image"
+          }
+        },
+        "video": {
+          "$ref": "#/$defs/video"
+        },
+        "audio": {
+          "$ref": "#/$defs/audio"
+        },
+        "cad": {
+          "$ref": "#/$defs/cad"
+        }
+      }
+    },
+    "recipe": {
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "agent": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "name"
+          ],
+          "properties": {
+            "name": {
+              "type": "string",
+              "minLength": 1
+            },
+            "version": {
+              "type": "string",
+              "minLength": 1
+            },
+            "url": {
+              "type": "string",
+              "format": "uri",
+              "pattern": "^https://"
+            }
+          }
+        },
+        "skills": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/skill"
+          },
+          "uniqueItems": true
+        },
+        "references": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "label",
+              "url"
+            ],
+            "properties": {
+              "kind": {
+                "enum": [
+                  "repository",
+                  "document",
+                  "image",
+                  "web",
+                  "example"
+                ]
+              },
+              "label": {
+                "type": "string",
+                "minLength": 1
+              },
+              "url": {
+                "type": "string",
+                "format": "uri",
+                "pattern": "^https://"
+              },
+              "purpose": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        },
+        "tools": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "name",
+              "purpose"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "minLength": 1
+              },
+              "purpose": {
+                "type": "string",
+                "minLength": 1
+              },
+              "url": {
+                "type": "string",
+                "format": "uri",
+                "pattern": "^https://"
+              }
+            }
+          }
+        },
+        "steps": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "title",
+              "instructions"
+            ],
+            "properties": {
+              "title": {
+                "type": "string",
+                "minLength": 1
+              },
+              "instructions": {
+                "type": "string",
+                "minLength": 1
+              },
+              "prompt": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
       }
     }
   }

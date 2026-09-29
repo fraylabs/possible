@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import type { OutcomeFile, OutcomePreview } from "@possible/catalog";
+import type { OutcomeFile, OutcomePreview, OutcomeModel, OutcomeRecipe } from "@possible/catalog";
 import ReactMarkdown from "react-markdown";
 import { outcomeApiUrl } from "./backend";
 import { attributionDisplayName, recordOutcomeUse, sourceFilterHref } from "./discovery-data";
+import { OutcomeRecipePanel } from "./outcome-recipe";
 import { OutcomeReactions } from "./outcome-reactions";
 import { CopyButton, SiteShell } from "./shared";
 
@@ -12,6 +13,7 @@ export type DirectoryOutcomeDetail = {
   id: string; title: string; summary: string; about_markdown: string; prompt: string; result_media_url: string | null; poster_url: string | null;
   provider: string | null; agent: string | null; model: string | null; author_name: string | null; author_url: string | null;
   requirements: string[]; published_at: string; publication_kind: "official" | "community"; source_locator: string; source_url: string;
+  recipe?: OutcomeRecipe | null; models?: OutcomeModel[];
   preview: OutcomePreview | null; inputs: OutcomeFile[]; artifacts: OutcomeFile[];
   primary_attribution?: RawAttribution | null; secondary_attributions?: RawAttribution[]; like_count?: number;
 };
@@ -120,6 +122,7 @@ export function DynamicOutcomeDetailPage({ outcomeFixture, attributionsFixture =
   return <SiteShell className="pack-detail-page"><article className="outcome-detail layout-reading">
     <header className="outcome-hero"><nav aria-label="Breadcrumb"><a href="/#discover">← All Outcomes</a></nav><div className="outcome-meta"><span>{attributions[0]?.kind ?? "Outcome"}</span><span>{outcome.publication_kind}</span>{outcome.model ? <span aria-label={`Model: ${outcome.model}`}>{outcome.model}</span> : null}<OutcomeReactions outcomeId={outcome.id} likeCount={outcome.like_count ?? 0} /></div><h1>{outcome.title}</h1><p>{outcome.summary}</p><div className="outcome-byline"><span>By <a href={outcome.author_url ?? outcome.source_url} target="_blank" rel="noreferrer">{outcome.author_name ?? outcome.source_locator}</a></span>{attributions.length ? <span>Made with {attributions.map((item, index) => <span key={item.id}>{index ? ", " : ""}<a href={item.href}>{item.name}</a></span>)}</span> : null}</div><div className="outcome-hero-actions"><CopyButton label="Copy prompt" value={draft} onCopied={() => recordOutcomeUse(outcome.id)} /><a href="#exact-prompt">Remix</a></div></header>
     <OutcomeGallery outcome={outcome} />
+    <OutcomeRecipePanel outcome={outcome} />
     <section className="outcome-about"><h2>About</h2><ReactMarkdown>{outcome.about_markdown.replace(/^# .+\n+/, "")}</ReactMarkdown></section>
     <div id="exact-prompt"><OutcomePrompt outcome={outcome} draft={draft} setDraft={setDraft} /></div>
     <OutcomeSupportingInformation outcome={outcome} skills={skills} />

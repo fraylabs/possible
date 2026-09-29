@@ -85,7 +85,7 @@ describe("Possible website", () => {
     const { container } = render(<OutcomesPage outcomesFixture={outcomeFixture} />);
     expect(screen.getByRole("heading", { name: "See what AI can make.", level: 1 })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "All Outcomes", level: 2 })).toBeInTheDocument();
-    expect(screen.getByText("Inspect real results. Copy the exact prompts.")).toBeInTheDocument();
+    expect(screen.getByText("Inspect real results. Take the recipe to your agent.")).toBeInTheDocument();
     expect(screen.getByText("Ranked by copies")).toBeInTheDocument();
     expect(screen.getByText("12 copies")).toBeInTheDocument();
     expect(Array.from(container.querySelectorAll(".nav-links a")).map((link) => link.textContent)).toEqual(["DOCS", "PUBLISH"]);
@@ -169,9 +169,79 @@ describe("Possible website", () => {
     expect((await axe(container)).violations).toHaveLength(0);
   });
 
+  it("shows the recipe after the result and copies the complete kit without losing prompt copy", async () => {
+    const user = userEvent.setup();
+    const commit = "a".repeat(40);
+    const outcome: DirectoryOutcomeDetail = {
+      ...detailFixture,
+      models: [
+        { provider: "OpenAI", model: "GPT-6", agent: "Codex", role: "execution" },
+        { provider: "Anthropic", model: "Claude", agent: "Claude Code", role: "review" },
+      ],
+      recipe: {
+        agent: { name: "Codex", version: "1.2", url: "https://example.com/agent" },
+        skills: [{ repository: "maker/film", directory: "skills/video", lastReviewedCommit: commit }],
+        references: [{ kind: "document", label: "Visual brief", url: "https://example.com/brief", purpose: "Sets the visual direction." }],
+        tools: [{ name: "Renderer", purpose: "Renders the final film.", url: "https://example.com/render" }],
+        steps: [{ title: "Storyboard", instructions: "Plan three scenes.", prompt: "Draft the opening scene." }, { title: "Render", instructions: "Render and inspect the result." }],
+      },
+    };
+    const { container } = render(<DynamicOutcomeDetailPage outcomeFixture={outcome} />);
+    const panel = screen.getByRole("region", { name: "How it was made" });
+    expect(container.querySelector(".outcome-gallery")?.nextElementSibling).toBe(panel);
+    expect(within(panel).getByText("GPT-6 · OpenAI · execution · Codex")).toBeInTheDocument();
+    expect(within(panel).getByText("Claude · Anthropic · review · Claude Code")).toBeInTheDocument();
+    expect(within(panel).getByRole("link", { name: /maker\/film/ })).toHaveAttribute("href", `https://github.com/maker/film/tree/${commit}/skills/video`);
+    expect(within(panel).getByText("Sets the visual direction.")).toBeInTheDocument();
+    expect(within(panel).getByText("Renders the final film.")).toBeInTheDocument();
+    expect(Array.from(panel.querySelectorAll("ol h4")).map((element) => element.textContent)).toEqual(["Storyboard", "Render"]);
+    for (const link of panel.querySelectorAll("a")) expect(link).toHaveAttribute("rel", "noopener noreferrer");
+    await user.click(screen.getByRole("button", { name: "Copy recipe" }));
+    const kit = await navigator.clipboard.readText();
+    expect(kit).toContain(commit);
+    expect(kit).toContain("Claude · Anthropic · review · Claude Code");
+    expect(kit).toContain("1. Storyboard\nPlan three scenes.\nStep prompt:\nDraft the opening scene.");
+    expect(kit).toContain("2. Render\nRender and inspect the result.");
+    expect(kit).toContain("Exact published prompt\nCreate a launch film.");
+    await user.click(screen.getByRole("button", { name: "Copy prompt" }));
+    expect(await navigator.clipboard.readText()).toBe(outcome.prompt);
+    await user.click(screen.getByRole("button", { name: "Remix prompt" }));
+    await user.clear(screen.getByRole("textbox", { name: "Remix prompt" }));
+    await user.type(screen.getByRole("textbox", { name: "Remix prompt" }), "Make a shorter film.");
+    await user.click(screen.getByRole("button", { name: "Copy remixed prompt" }));
+    expect(await navigator.clipboard.readText()).toBe("Make a shorter film.");
+    await user.click(screen.getByRole("button", { name: "Copy recipe" }));
+    expect(await navigator.clipboard.readText()).toContain("Exact published prompt\nCreate a launch film.");
+    expect((await axe(container)).violations).toHaveLength(0);
+  });
+
+  it("labels an external legacy Outcome prompt only while retaining its creator and model", async () => {
+    const user = userEvent.setup();
+    const outcome = { ...detailFixture, author_name: "Independent Maker", author_url: "https://maker.example", source_url: "https://github.com/maker/old-outcome", source_locator: "maker/old-outcome" };
+    render(<DynamicOutcomeDetailPage outcomeFixture={outcome} />);
+    const panel = screen.getByRole("region", { name: "How it was made" });
+    expect(within(panel).getByText("Prompt only")).toBeInTheDocument();
+    expect(within(panel).queryByText("PUBLISHED RECIPE")).not.toBeInTheDocument();
+    expect(within(panel).getByText("GPT-5.6 · OpenAI · Codex")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Independent Maker" })).toHaveAttribute("href", "https://maker.example");
+    await user.click(screen.getByRole("button", { name: "Copy recipe" }));
+    expect(await navigator.clipboard.readText()).toContain("Prompt only — no recipe was published.");
+    expect(await navigator.clipboard.readText()).toContain(outcome.prompt);
+  });
+
+  it("keeps partial recipe omissions explicit and rejects unsafe recipe links", () => {
+    render(<DynamicOutcomeDetailPage outcomeFixture={{ ...detailFixture, model: null, provider: null, agent: null, recipe: { tools: [{ name: "Offline editor", purpose: "Edited the result.", url: "javascript:alert(1)" }] } }} />);
+    const panel = screen.getByRole("region", { name: "How it was made" });
+    expect(within(panel).getByText("Not recorded.")).toBeInTheDocument();
+    expect(within(panel).getByText("No steps were recorded.")).toBeInTheDocument();
+    expect(within(panel).getByText("Offline editor")).toBeInTheDocument();
+    expect(within(panel).queryByRole("link")).not.toBeInTheDocument();
+    expect(panel).toHaveTextContent("Unlisted details are unknown.");
+  });
+
   it("documents the same small public contract", () => {
     render(<DocsPage />);
-    expect(screen.getByRole("heading", { name: "Results, prompts, and what made them" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Results and the recipes behind them" })).toBeInTheDocument();
     cleanup();
     render(<AuthoringDocsPage />);
     expect(screen.getByRole("heading", { name: "Publish from your source" })).toBeInTheDocument();

@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   creator: "Fray Labs",
   publisher: "Fray Labs",
   category: "developer tools",
-  keywords: ["Codex", "AI agents", "prompts", "AI outcomes", "agent skills", "developer tools"],
+  keywords: ["Codex", "AI agents", "prompts", "AI recipes", "AI outcomes", "agent skills", "developer tools"],
   robots: {
     index: true,
     follow: true,

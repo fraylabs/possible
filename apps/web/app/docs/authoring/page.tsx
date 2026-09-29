@@ -3,7 +3,7 @@ import { pageMetadata } from "../../_metadata";
 
 export const metadata = pageMetadata({
   title: "Publish an Outcome",
-  description: "Share an original request, its full execution prompt and provenance, and optional result media, Products, and Skills.",
+  description: "Share a result, its exact prompt, and the recipe behind it with models, pinned skills, references, tools, and steps.",
   path: "/docs/authoring",
 });
 

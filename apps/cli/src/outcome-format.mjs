@@ -8,7 +8,7 @@ const GITHUB_REPOSITORY = /^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/;
 const SAFE_REPOSITORY_PATH = /^(?:\.|[A-Za-z0-9._-]+(?:\/[A-Za-z0-9._-]+)*)$/;
 const MODEL_ROLES = new Set(["authorship", "execution", "review"]);
 const FILE_TYPES = new Set(["image", "video", "audio", "cad", "document", "data", "source", "archive", "other"]);
-const BASE_MANIFEST_KEYS = ["schemaVersion", "slug", "files", "authoredAt", "author", "models", "requirements", "inputs", "artifacts", "preview"];
+const BASE_MANIFEST_KEYS = ["schemaVersion", "slug", "files", "authoredAt", "author", "models", "requirements", "inputs", "artifacts", "preview", "recipe"];
 const LEGACY_MANIFEST_KEYS = new Set([...BASE_MANIFEST_KEYS, "products", "skills"]);
 const MANIFEST_KEYS = new Set([...BASE_MANIFEST_KEYS, "primary", "secondary"]);
 
@@ -107,6 +107,51 @@ export function normalizeOutcomeAttributions(manifest) {
   };
 }
 
+export function validateOutcomeRecipe(value, context = "recipe") {
+  const recipe = asObject(value, context);
+  exactKeys(recipe, new Set(["agent", "skills", "references", "tools", "steps"]), context);
+  if (Object.keys(recipe).length === 0) throw new Error(`${context} must have at least one disclosed ingredient`);
+  if (recipe.agent !== undefined) {
+    const agent = asObject(recipe.agent, `${context}.agent`);
+    exactKeys(agent, new Set(["name", "version", "url"]), `${context}.agent`);
+    string(agent.name, `${context}.agent.name`);
+    if (agent.version !== undefined) string(agent.version, `${context}.agent.version`);
+    if (agent.url !== undefined) httpsUrl(agent.url, `${context}.agent.url`);
+  }
+  for (const key of ["skills", "references", "tools", "steps"]) {
+    if (recipe[key] === undefined) continue;
+    const entries = recipe[key];
+    if (!Array.isArray(entries) || entries.length === 0) throw new Error(`${context}.${key} must be omitted or a non-empty array`);
+    entries.forEach((entry, index) => {
+      const path = `${context}.${key}[${index}]`;
+      const item = asObject(entry, path);
+      if (key === "skills") { validateSkillReference(item, path); return; }
+      if (key === "references") {
+        exactKeys(item, new Set(["kind", "label", "url", "purpose"]), path);
+        if (!["repository", "document", "image", "web", "example"].includes(item.kind)) throw new Error(`${path}.kind is unsupported`);
+        string(item.label, `${path}.label`);
+        httpsUrl(item.url, `${path}.url`);
+        if (item.purpose !== undefined) string(item.purpose, `${path}.purpose`);
+      } else if (key === "tools") {
+        exactKeys(item, new Set(["name", "purpose", "url"]), path);
+        string(item.name, `${path}.name`);
+        string(item.purpose, `${path}.purpose`);
+        if (item.url !== undefined) httpsUrl(item.url, `${path}.url`);
+      } else {
+        exactKeys(item, new Set(["title", "instructions", "prompt"]), path);
+        string(item.title, `${path}.title`);
+        string(item.instructions, `${path}.instructions`);
+        if (item.prompt !== undefined) string(item.prompt, `${path}.prompt`);
+      }
+    });
+    if (key === "skills") {
+      const identities = entries.map(skill => `${skill.repository}/${skill.directory}@${skill.lastReviewedCommit}`);
+      if (new Set(identities).size !== identities.length) throw new Error(`${context}.skills contains duplicates`);
+    }
+  }
+  return recipe;
+}
+
 export function validateOutcomeManifest(value, context = "outcome.json") {
   const manifest = asObject(value, context);
   if (manifest.schemaVersion !== 3 && manifest.schemaVersion !== 4) throw new Error(`${context}.schemaVersion must be 3 or 4`);
@@ -164,6 +209,7 @@ export function validateOutcomeManifest(value, context = "outcome.json") {
     if (new Set(keys).size !== keys.length) throw new Error(`${context} contains duplicate primary or secondary attributions`);
   }
 
+  if (manifest.recipe !== undefined) validateOutcomeRecipe(manifest.recipe, `${context}.recipe`);
   validateFiles(manifest.inputs, `${context}.inputs`);
   validateFiles(manifest.artifacts, `${context}.artifacts`);
   if (manifest.preview !== undefined) asObject(manifest.preview, `${context}.preview`);

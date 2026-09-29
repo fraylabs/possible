@@ -6,6 +6,7 @@ import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
 import { test } from "node:test";
+import { recipe } from "./recipe-fixture.mjs";
 
 const execute = promisify(execFile);
 const packageRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
@@ -27,6 +28,13 @@ test("installed npm package authors and validates current and legacy Outcomes", 
     const manifest = JSON.parse(await readFile(path, "utf8"));
     assert.equal(manifest.schemaVersion, 4);
     assert.deepEqual(manifest.primary, { kind: "product", id: "example/product" });
+    manifest.recipe = structuredClone(recipe);
+    await writeFile(path, JSON.stringify(manifest));
+    assert.equal((await run("validate")).stdout, "Validated 2 Outcomes.\n");
+    manifest.recipe.skills[0].lastReviewedCommit = "main";
+    await writeFile(path, JSON.stringify(manifest));
+    await assert.rejects(run("validate"), (error) => error.code === 1 && /recipe.*exact commit/.test(error.stderr));
+    manifest.recipe = structuredClone(recipe);
     delete manifest.primary;
     await writeFile(path, JSON.stringify(manifest));
     await assert.rejects(run("validate"), (error) => error.code === 1 && /primary/.test(error.stderr));

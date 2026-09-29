@@ -1,6 +1,6 @@
 # Possible
 
-See what AI can make, inspect the exact prompt, and remix it.
+See what AI can make, explore how it was made, and reuse the recipe.
 
 [Browse Outcomes](https://possible.sh) · [Read the docs](https://possible.sh/docs)
 
@@ -11,7 +11,7 @@ Every Outcome is owned by its publisher and lives in three required files:
 ```text
 outcomes.json      # publisher identity and a thin list of Outcome manifests
 outcomes/<slug>/
-  outcome.json    # primary Product or Skill, secondary credits, models, provenance
+  outcome.json    # primary Product or Skill, secondary credits, models, optional recipe, provenance
   outcome.md      # title, summary, and human explanation
   prompt.md       # exact reusable execution prompt
   media/          # optional
@@ -24,13 +24,13 @@ The repository or domain is the identity. A GitHub publisher keeps `outcomes.jso
 ## CLI
 
 ```bash
-npx @fraylabs/possible@0.3.1 search "make a launch video"
-npx @fraylabs/possible@0.3.1 fetch <outcome-id>
-npx @fraylabs/possible@0.3.1 create my-outcome --product owner/product
-npx @fraylabs/possible@0.3.1 validate
-npx @fraylabs/possible@0.3.1 publish owner/repository
-npx @fraylabs/possible@0.3.1 add owner/repository
-npx @fraylabs/possible@0.3.1 use owner/repository@my-outcome
+npx @fraylabs/possible@0.4.0 search "make a launch video"
+npx @fraylabs/possible@0.4.0 fetch <outcome-id> --json
+npx @fraylabs/possible@0.4.0 create my-outcome --product owner/product
+npx @fraylabs/possible@0.4.0 validate
+npx @fraylabs/possible@0.4.0 publish owner/repository
+npx @fraylabs/possible@0.4.0 add owner/repository
+npx @fraylabs/possible@0.4.0 use owner/repository@my-outcome
 ```
 
 Install the optional `$possible` Skill through the standard agent-skill ecosystem:
@@ -40,6 +40,22 @@ npx skills add https://github.com/fraylabs/possible/tree/skill/skills/possible -
 ```
 
 The Skill discovers relevant prior Outcomes, asks only consequential questions, and prepares one complete prompt for a fresh agent. It uses the Possible MCP when available and otherwise uses the public CLI. Local bookmarks remain account-free.
+
+## Recipes
+
+An Outcome still starts with a result and a reusable `prompt.md`. An optional `recipe`
+in `outcome.json` records the disclosed agent/harness, multiple skills pinned to exact
+commits, references, tools/APIs with their purpose, and ordered steps with key prompts
+and follow-ups. Existing `models` records model provenance; `primary` and `secondary`
+remain attribution, not a limit on the recipe's ingredients.
+
+[Recipe format and example](packages/catalog/README.md#optional-recipes-cli-040) · [JSON Schema](packages/catalog/src/outcome.schema.json)
+
+The site shows **How it was made**, with **Copy recipe** for handing the disclosed
+instructions to an agent. Entries without a recipe say **Prompt only**. Missing
+information remains unknown. Copying does not install tools, grant access, capture
+sessions or guarantee reproduction. `fetch --json` and `use --json` retain the recipe;
+plain `fetch` and `use` continue printing only the unchanged prompt.
 
 ## Repository
 

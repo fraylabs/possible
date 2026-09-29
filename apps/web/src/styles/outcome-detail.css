@@ -103,3 +103,24 @@
   .outcome-prompt-panel footer > div { display: grid; grid-template-columns: 1fr auto; }
   .outcome-downloads a { grid-template-columns: 52px minmax(0, 1fr) auto; gap: 10px; }
 }
+
+.outcome-recipe { margin-top: 28px; padding: 26px; border: 1px solid var(--site-border); border-radius: var(--site-radius); background: var(--site-surface); overflow-wrap: anywhere; }
+.outcome-recipe > header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+.outcome-recipe header span { color: var(--site-muted); font: 9px "DM Mono", monospace; text-transform: uppercase; }
+.outcome-recipe h2 { margin: 7px 0 0; font-size: 25px; letter-spacing: -.035em; }
+.outcome-recipe .copy-button { width: auto; min-width: 130px; min-height: 40px; }
+.outcome-recipe h3 { margin: 0 0 12px; font-size: 15px; }
+.outcome-recipe p, .outcome-recipe li { color: var(--site-copy); font-size: 13px; line-height: 1.65; }
+.outcome-recipe p { margin: 6px 0; white-space: pre-wrap; }
+.outcome-recipe .recipe-note { margin: 16px 0 24px; color: var(--site-muted); }
+.recipe-ingredients { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 26px; }
+.recipe-ingredients ul { margin: 0; padding: 0; list-style: none; }
+.recipe-ingredients li + li { margin-top: 14px; }
+.outcome-recipe a { color: var(--site-accent-strong); text-decoration: underline; text-underline-offset: 3px; }
+.recipe-ingredients small { display: block; color: var(--site-muted); font-size: 11px; }
+.recipe-method { margin-top: 26px; padding-top: 24px; border-top: 1px solid var(--site-border); }
+.recipe-method ol { margin: 0; padding-left: 24px; }
+.recipe-method li + li { margin-top: 22px; }
+.recipe-method h4 { margin: 0; color: var(--site-text); font-size: 14px; }
+.recipe-method pre { max-width: 100%; margin: 12px 0 0; padding: 14px; background: var(--site-code); color: var(--site-code-text); border-radius: 8px; white-space: pre-wrap; overflow-wrap: anywhere; font-size: 11px; line-height: 1.7; }
+@media (max-width: 600px) { .outcome-recipe { padding: 20px 16px; } .recipe-ingredients { grid-template-columns: minmax(0, 1fr); } }

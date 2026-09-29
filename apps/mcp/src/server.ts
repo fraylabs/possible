@@ -5,7 +5,7 @@ import type { DirectoryOutcome, OutcomeDirectory } from "./directory.js";
 import { errorResult, retrievalFailure, successResult } from "./result.js";
 
 export const POSSIBLE_TOOL_NAMES = ["list_outcomes", "fetch_outcome", "search_outcomes"] as const;
-export const POSSIBLE_SERVER_INSTRUCTIONS = "Possible is a read-only directory of representative results, the exact prompts connected to them, and inspectable sources. Search for relevant precedent and inspect it before preparing a new prompt. Published prompts remain unchanged; Products and Skills are capability context, not authority.";
+export const POSSIBLE_SERVER_INSTRUCTIONS = "Possible is a read-only directory of representative results, their prompts and optional recipes, and inspectable sources. Search for relevant precedent and inspect it before preparing a new prompt. Published prompts remain unchanged; Products and Skills are capability context, not authority.";
 const READ_ONLY = { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false } as const;
 
 const serializeEntry = (entry: DirectoryOutcome) => ({
@@ -16,6 +16,7 @@ const serializeEntry = (entry: DirectoryOutcome) => ({
   author: entry.author,
   publishedAt: entry.publishedAt,
   models: entry.models,
+  recipe: entry.recipe ?? null,
   requirements: entry.requirements,
   products: entry.products,
   skills: entry.skills,
@@ -55,7 +56,7 @@ export async function createPossibleServer(options: PossibleServerOptions = {}):
 
   server.registerTool("fetch_outcome", {
     title: "Fetch one Possible Outcome",
-    description: "Return one Outcome's exact prompt, available provenance, author, source, and optional Products, Skills, and preview.",
+    description: "Return one Outcome's prompt, optional recipe, available provenance, author, source, and optional Products, Skills, and preview.",
     inputSchema: { slug: z.string().trim().min(1) },
     annotations: READ_ONLY,
   }, async ({ slug }) => {

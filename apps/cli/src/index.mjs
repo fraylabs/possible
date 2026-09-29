@@ -13,9 +13,9 @@ Usage:
   possible validate [directory]
   possible publish [owner/repository | https://publisher.example]
   possible search <ordinary-language query>
-  possible fetch <outcome-id>
+  possible fetch <outcome-id> [--json]
   possible add <owner/repository | https://publisher.example>
-  possible use <source>@<slug>
+  possible use <source>@<slug> [--json]
   possible bookmark <command>
 
 Commands:
@@ -23,9 +23,9 @@ Commands:
   validate  Validate every Outcome folder below a directory
   publish   Validate and submit one public publisher source; no account required
   search    Find relevant Outcomes in the live public directory
-  fetch     Print one directory Outcome's exact prompt
+  fetch     Print a prompt; --json includes the recipe and provenance
   add       Discover a public source and save it to .possible/sources.json
-  use       Print one exact execution prompt to standard output
+  use       Print a source prompt; --json includes its manifest and recipe
   bookmark  add | list | remove locally saved Outcome slugs
 `;
 
@@ -49,10 +49,10 @@ if (args.length === 0 || args.includes("--help") || args.includes("-h")) {
     process.stderr.write(`${error instanceof Error ? error.message : String(error)}\n`);
     process.exitCode = 1;
   }
-} else if (args[0] === "fetch" && args.length === 2) {
+} else if (args[0] === "fetch" && (args.length === 2 || (args.length === 3 && args[2] === "--json"))) {
   try {
     const outcome = await fetchOutcome(args[1]);
-    process.stdout.write(`${outcome.prompt}\n`);
+    process.stdout.write(args[2] === "--json" ? `${JSON.stringify(outcome, null, 2)}\n` : `${outcome.prompt}\n`);
   } catch (error) {
     process.stderr.write(`${error instanceof Error ? error.message : String(error)}\n`);
     process.exitCode = 1;
@@ -84,10 +84,10 @@ if (args.length === 0 || args.includes("--help") || args.includes("-h")) {
     process.stderr.write(`${error instanceof Error ? error.message : String(error)}\n`);
     process.exitCode = 1;
   }
-} else if (args[0] === "use" && args.length === 2) {
+} else if (args[0] === "use" && (args.length === 2 || (args.length === 3 && args[2] === "--json"))) {
   try {
     const result = await useOutcome(args[1]);
-    process.stdout.write(`${result.outcome.prompt}\n`);
+    process.stdout.write(args[2] === "--json" ? `${JSON.stringify(result.outcome, null, 2)}\n` : `${result.outcome.prompt}\n`);
   } catch (error) {
     process.stderr.write(`${error instanceof Error ? error.message : String(error)}\n`);
     process.exitCode = 1;
