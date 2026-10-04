@@ -50,6 +50,7 @@ if (process.platform === "darwin") {
 // Include both application and embedded Node runtime licenses.
 await copyFile(join(cli, "LICENSE"), join(output, "LICENSE"));
 await copyFile(join(dirname(process.execPath), "../LICENSE"), join(output, "NODE-LICENSE"));
+await copyFile(join(root, "node_modules/acorn/LICENSE"), join(output, "ACORN-LICENSE"));
 const name = `possible-v${version}-${process.platform}-${process.arch}.tar.gz`;
-execFileSync("tar", ["-czf", join(output, name), "-C", output, "possible", "LICENSE", "NODE-LICENSE"]);
+execFileSync("tar", ["-czf", join(output, name), "-C", output, "possible", "LICENSE", "NODE-LICENSE", "ACORN-LICENSE"]);
 console.log(`Built ${name}`);

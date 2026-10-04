@@ -114,6 +114,21 @@ by default; the private draft retains sanitized ingredient hints and known pins
 under `ingredientsToReview` so you can add verified public references yourself.
 Unknown models, historical skill pins and unavailable tool details stay unknown.
 
+Codex exec wrappers are inspected statically for nested tool calls, known shell
+programs, named packages and imports in executed inline scripts. Coordination
+calls are omitted. Arguments, paths and outputs never become tool ingredients;
+dynamic code and libraries loaded only by external files remain unknown. Skill
+reads and `$skill` mentions provide ingredient hints; repository revisions are
+kept only when explicitly recorded, never taken from the current checkout.
+Harness envelopes and inline attachment metadata are omitted while surrounding
+request text is kept. Step titles come from sanitized prompts; brief continuation
+turns join the preceding step.
+
+JSONL files stream without a whole-file size limit. Individual records remain
+limited to 32 MiB, and retained evidence to 1,000 items per category and 2 MB total.
+These bounds protect memory even when a rollout contains large tool outputs.
+
+
 ```sh
 possible capture review ./private-draft
 possible capture export ./private-draft --out ./reviewed-outcome

@@ -32,10 +32,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
+      - name: Install CLI parser dependency
+        run: npm ci --workspace @fraylabs/possible --include-workspace-root=false --ignore-scripts --no-audit --no-fund
       - name: Verify release version
         if: startsWith(github.ref, 'refs/tags/')
         run: node -e 'const p = require("./apps/cli/package.json"); if (process.env.GITHUB_REF_NAME !== "v" + p.version) throw new Error("Tag must match CLI version");'
-      - name: Test unchanged CLI source
+      - name: Test CLI source
         working-directory: apps/cli
         run: node --test test/*.test.mjs
       - run: sh -n apps/web/public/install.sh
@@ -63,7 +65,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-      - name: Install pinned build tools (CLI has no dependencies)
+      - name: Install CLI parser dependency
+        run: npm ci --workspace @fraylabs/possible --include-workspace-root=false --ignore-scripts --no-audit --no-fund
+      - name: Install pinned build tools
         run: npm ci --prefix scripts/sea --ignore-scripts --no-audit --no-fund
       - name: Build SEA and ad-hoc sign macOS after injection
         run: node scripts/sea/build.mjs

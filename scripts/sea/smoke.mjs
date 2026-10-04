@@ -18,10 +18,15 @@ try {
   console.log(run("create", "smoke", "--product", "example/product").trim());
   console.log(run("validate").trim());
   const transcript = join(directory, "codex.jsonl");
-  await writeFile(transcript, jsonl(codexRows));
+  await writeFile(transcript, jsonl([
+    ...codexRows.slice(0, -1),
+    { type: "response_item", payload: { type: "custom_tool_call", name: "exec", input: "await tools.exec_command({cmd:\"uv run --with numpy python -c 'import numpy'\"});" } },
+    codexRows.at(-1),
+  ]));
   console.log(run("capture", "codex", transcript, "--out", join(directory, "codex-draft")).trim());
   const draft = await readFile(join(directory, "codex-draft/draft.json"), "utf8");
   assert.match(draft, /Make a diagram/);
+  assert.ok(JSON.parse(draft).manifest.recipe.tools.some(tool => tool.name === "numpy"));
   assert.doesNotMatch(draft, /ASSISTANT_SECRET|OUTPUT_SECRET|BASE_SECRET|COMMAND_SECRET/);
 
   // Exercise the dynamically imported node:sqlite inside the executable as well.
