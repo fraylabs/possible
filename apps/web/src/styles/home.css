@@ -31,6 +31,12 @@
 .home-active-filter strong { max-width: 160px; overflow: hidden; font: 700 10px Manrope, sans-serif; text-overflow: ellipsis; white-space: nowrap; }
 .home-active-filter i { color: var(--site-accent); font-size: 15px; font-style: normal; line-height: 1; }
 .home-active-filter:hover { border-color: var(--site-accent); }
+.home-recipe-filter { min-height: 38px; margin-left: auto; padding: 0 14px; border: 1px solid var(--site-border); border-radius: 999px; display: flex; flex: none; gap: 8px; align-items: center; background: transparent; color: var(--site-muted); cursor: pointer; font: 600 12px Manrope, sans-serif; }
+.home-recipe-filter i { width: 12px; height: 12px; border: 1px solid var(--site-border-strong); border-radius: 4px; display: grid; place-items: center; }
+.home-recipe-filter:hover { border-color: var(--site-border-strong); background: var(--site-surface); color: var(--site-text); }
+.home-recipe-filter[aria-pressed="true"] { border-color: var(--site-accent); background: var(--site-surface); color: var(--site-accent-strong); }
+.home-recipe-filter[aria-pressed="true"] i { border-color: var(--site-accent); background: var(--site-accent); }
+.home-recipe-filter[aria-pressed="true"] i::after { content: ""; width: 4px; height: 7px; margin-top: -2px; border: solid var(--site-on-accent); border-width: 0 1.5px 1.5px 0; transform: rotate(45deg); }
 
 .home-board-heading { min-height: 88px; padding: 19px 4px; border-top: 1px solid var(--site-border); display: flex; justify-content: space-between; gap: 24px; align-items: flex-end; }
 .home-board-heading > div > span { display: block; margin-bottom: 4px; color: var(--site-accent); font: 8px "DM Mono", monospace; letter-spacing: .08em; }
@@ -77,6 +83,8 @@
 .home-result-signals { min-width: 0; display: flex; gap: 9px; align-items: center; overflow: hidden; }
 .home-result-signals span { color: var(--site-muted); font: 9px "DM Mono", monospace; white-space: nowrap; }
 .home-result-signals strong { display: flex; align-items: center; gap: 6px; color: var(--site-copy); font: 500 9px "DM Mono", monospace; font-weight: 500; white-space: nowrap; text-transform: uppercase; }
+.home-result-kind { padding: 3px 7px; border: 1px solid var(--site-border); border-radius: 999px; flex: none; color: var(--site-muted-soft); font: 500 8px "DM Mono", monospace; font-style: normal; white-space: nowrap; text-transform: uppercase; }
+.home-result-kind[data-kind="recipe"] { border-color: var(--site-border-strong); color: var(--site-accent-strong); }
 .home-result-signals strong i { width: 7px; height: 7px; border-radius: 50%; background: var(--site-accent); box-shadow: 0 0 0 3px rgb(237 106 75 / 12%); }
 .home-result-copy .copy-button { width: auto; min-width: 80px; min-height: 30px; padding: 0; border: 0; position: absolute; top: 18px; right: 2px; justify-content: flex-end; gap: 6px; background: transparent; color: var(--site-accent); font: 600 9px "DM Mono", monospace; }
 .home-result-copy .copy-button:hover { color: var(--site-accent-strong); }
@@ -87,7 +95,7 @@
 .home-result-row[data-featured="true"] .home-result-rank { width: 38px; min-height: 28px; border-radius: 999px; display: grid; place-items: center; background: var(--site-accent); color: var(--site-on-accent); font-weight: 600; }
 .home-result-row[data-featured="true"] .home-result-media { width: 150px; height: 110px; border-color: var(--site-border); border-radius: 17px; background: var(--site-surface); }
 .home-result-row[data-featured="true"] .home-result-copy { padding-right: 0; }
-.home-result-row[data-featured="true"] .home-result-meta { justify-content: space-between; }
+.home-result-row[data-featured="true"] .home-result-meta > span { margin-left: auto; }
 .home-result-row[data-featured="true"] .home-result-copy h2 { margin-top: 5px; font-size: 21px; white-space: normal; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
 .home-result-row[data-featured="true"] .home-result-copy > p { margin-top: 5px; white-space: normal; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
 .home-result-row[data-featured="true"] .home-result-copy footer { margin-top: 6px; justify-content: space-between; }
@@ -124,6 +132,9 @@
   .home-category-filter { width: calc(100% + 34px); margin-right: -17px; margin-left: -17px; padding: 0 17px; justify-content: flex-start; }
   .home-category-filter button { min-height: 37px; padding: 0 14px; }
   .home-active-filter { max-width: 160px; min-height: 34px; margin-left: auto; padding: 0 10px; }
+  .home-recipe-filter { min-height: 34px; margin-left: 0; padding: 0 12px; font-size: 11px; }
+  .home-recipe-filter + .home-active-filter { margin-left: auto; }
+  .home-result-kind { padding: 2px 6px; font-size: 7px; }
   .home-active-filter span { display: none; }
   .home-board-heading { min-height: 76px; padding: 16px 0; align-items: flex-end; }
   .home-board-heading h2 { font-size: 22px; }

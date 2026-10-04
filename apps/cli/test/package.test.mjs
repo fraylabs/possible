@@ -22,7 +22,10 @@ test("installed npm package authors and validates current and legacy Outcomes", 
 
     await run("create", "product-result", "--product", "example/product");
     await run("create", "skill-result", "--skill", "example/skills", "skills/cad", "a".repeat(40));
-    assert.equal((await run("validate")).stdout, "Validated 2 Outcomes.\n");
+    await assert.rejects(run("validate"), (error) => error.code === 1 && /recipe\.steps\[0\] is incomplete/.test(error.stderr));
+    const skillPath = join(directory, "outcomes", "skill-result", "outcome.json");
+    const { recipe: _placeholder, ...promptOnly } = JSON.parse(await readFile(skillPath, "utf8"));
+    await writeFile(skillPath, JSON.stringify(promptOnly));
 
     const path = join(directory, "outcomes", "product-result", "outcome.json");
     const manifest = JSON.parse(await readFile(path, "utf8"));

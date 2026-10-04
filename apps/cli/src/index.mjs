@@ -6,6 +6,7 @@ import { runCaptureCommand } from "./capture.mjs";
 import { runBookmarkCommand } from "./bookmarks.mjs";
 import { fetchOutcome, formatSearchResults, searchOutcomes } from "./directory.mjs";
 import { addOutcomeSource, createOutcome, publishOutcomeSource, useOutcome, validateOutcomes } from "./outcome-commands.mjs";
+import { hasRecipe, recipeText, sourceRecipeOutcome } from "./recipe-text.mjs";
 
 const HELP = `Possible CLI
 
@@ -15,25 +16,36 @@ Usage:
   possible validate [directory]
   possible publish [owner/repository | https://publisher.example]
   possible search <ordinary-language query>
-  possible fetch <outcome-id> [--json]
+  possible fetch <outcome-id> [--prompt | --json]
   possible add <owner/repository | https://publisher.example>
-  possible use <source>@<slug> [--json]
+  possible use <source>@<slug> [--prompt | --json]
   possible capture <claude-code|turnless|codex> <local-file> --out <private-draft> [--thread <id>]
   possible capture review <private-draft>
   possible capture export <private-draft> --out <new-local-publisher>
   possible bookmark <command>
 
 Commands:
-  create    Create one Outcome with its required primary Product or Skill
+  create    Create one Outcome with its primary Product or Skill and a recipe to fill
   validate  Validate every Outcome folder below a directory
   publish   Validate and submit one public publisher source; no account required
   search    Find relevant Outcomes in the live public directory
-  fetch     Print a prompt; --json includes the recipe and provenance
+  fetch     Print the recipe (or the prompt if none); --prompt for prompt only
   add       Discover a public source and save it to .possible/sources.json
-  use       Print a source prompt; --json includes its manifest and recipe
+  use       Print a source recipe (or prompt if none); --prompt for prompt only
   capture   Draft locally; creator-attested review before export (not authenticated)
   bookmark  add | list | remove locally saved Outcome slugs
+
+Output:
+  fetch and use print the recipe text kit when the Outcome has one: its models,
+  agent, skills, references, tools, ordered steps and the exact published
+  prompt. --prompt prints only the exact prompt. --json prints the full record.
 `;
+
+// The recipe is the default when one was published; otherwise the prompt.
+const outputMode = (flag) => (flag === undefined ? "default" : flag === "--json" ? "json" : flag === "--prompt" ? "prompt" : null);
+const formatOutcome = (mode, record, recipeOutcome) => mode === "json"
+  ? `${JSON.stringify(visibleValue(record), null, 2)}\n`
+  : `${visibleText(mode === "default" && hasRecipe(recipeOutcome) ? recipeText(recipeOutcome) : record.prompt)}\n`;
 
 const args = process.argv.slice(2);
 if (args.length === 0 || args.includes("--help") || args.includes("-h")) {
@@ -58,10 +70,10 @@ if (args.length === 0 || args.includes("--help") || args.includes("-h")) {
     process.stderr.write(`${error instanceof Error ? error.message : String(error)}\n`);
     process.exitCode = 1;
   }
-} else if (args[0] === "fetch" && (args.length === 2 || (args.length === 3 && args[2] === "--json"))) {
+} else if (args[0] === "fetch" && (args.length === 2 || args.length === 3) && outputMode(args[2])) {
   try {
     const outcome = await fetchOutcome(args[1]);
-    process.stdout.write(args[2] === "--json" ? `${JSON.stringify(visibleValue(outcome), null, 2)}\n` : `${visibleText(outcome.prompt)}\n`);
+    process.stdout.write(formatOutcome(outputMode(args[2]), outcome, outcome));
   } catch (error) {
     process.stderr.write(`${error instanceof Error ? error.message : String(error)}\n`);
     process.exitCode = 1;
@@ -72,7 +84,7 @@ if (args.length === 0 || args.includes("--help") || args.includes("-h")) {
       ? { kind: "product", id: args[3] }
       : { kind: "skill", repository: args[3], directory: args[4], lastReviewedCommit: args[5] };
     const folder = await createOutcome(args[1], { primary });
-    process.stdout.write(`Created ${folder}\n`);
+    process.stdout.write(`Created ${folder}\nFill in the placeholder recipe steps in outcome.json, or remove the optional recipe to publish the prompt alone.\n`);
   } catch (error) {
     process.stderr.write(`${error instanceof Error ? error.message : String(error)}\n`);
     process.exitCode = 1;
@@ -93,10 +105,10 @@ if (args.length === 0 || args.includes("--help") || args.includes("-h")) {
     process.stderr.write(`${error instanceof Error ? error.message : String(error)}\n`);
     process.exitCode = 1;
   }
-} else if (args[0] === "use" && (args.length === 2 || (args.length === 3 && args[2] === "--json"))) {
+} else if (args[0] === "use" && (args.length === 2 || args.length === 3) && outputMode(args[2])) {
   try {
     const result = await useOutcome(args[1]);
-    process.stdout.write(args[2] === "--json" ? `${JSON.stringify(visibleValue(result.outcome), null, 2)}\n` : `${visibleText(result.outcome.prompt)}\n`);
+    process.stdout.write(formatOutcome(outputMode(args[2]), result.outcome, sourceRecipeOutcome(result.discovery, result.outcome)));
   } catch (error) {
     process.stderr.write(`${error instanceof Error ? error.message : String(error)}\n`);
     process.exitCode = 1;

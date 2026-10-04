@@ -2,7 +2,7 @@ import { execFile } from "node:child_process";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { promisify } from "node:util";
-import { discoverLocalOutcomes } from "./outcome-format.mjs";
+import { discoverLocalOutcomes, RECIPE_PLACEHOLDER_PREFIX } from "./outcome-format.mjs";
 import { discoverOutcomeSource } from "./sources.mjs";
 
 const execFileAsync = promisify(execFile);
@@ -37,6 +37,14 @@ export async function createOutcome(slug, { directory = process.cwd(), primary }
     models: [{ provider: "Replace with provider", model: "Replace with model", role: "execution" }],
     requirements: [],
     primary,
+    // Optional: fill in how the result was made, or delete this block to
+    // publish the prompt alone. Validation fails while placeholders remain.
+    recipe: {
+      steps: [
+        { title: `${RECIPE_PLACEHOLDER_PREFIX} The first step`, instructions: `${RECIPE_PLACEHOLDER_PREFIX} What you or your agent did, including any skill, reference or tool it used.` },
+        { title: `${RECIPE_PLACEHOLDER_PREFIX} The next step`, instructions: `${RECIPE_PLACEHOLDER_PREFIX} How the result was checked or refined. Add or remove steps as needed.` },
+      ],
+    },
   };
   await writeFile(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`, { flag: "wx" });
   await writeFile(join(folder, "outcome.md"), `# Replace with Outcome name\n\nDescribe the concrete result in one clear opening paragraph.\n`, { flag: "wx" });

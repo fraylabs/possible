@@ -110,6 +110,7 @@ function OutcomeResult({ outcome, rank, priority, featured, onSelectSource }: { 
       <div className="home-result-copy">
         <div className="home-result-meta">
           <OutcomeSource outcome={outcome} onSelect={onSelectSource} />
+          <em className="home-result-kind" data-kind={outcome.recipe ? "recipe" : "prompt"}>{outcome.recipe ? "Recipe" : "Prompt only"}</em>
           <span>{outcome.publicationKind === "official" ? "Official · " : ""}{outcomeCategoryLabels[outcome.category]}</span>
         </div>
         <h2><a href={outcome.href} target={external ? "_blank" : undefined} rel={external ? "noreferrer" : undefined}>{outcome.title}</a></h2>
@@ -119,7 +120,9 @@ function OutcomeResult({ outcome, rank, priority, featured, onSelectSource }: { 
             <strong><i aria-hidden="true" /> {copyCountLabel(useCount)}</strong>
             <OutcomeReactions outcomeId={outcome.databaseId} likeCount={outcome.likeCount} />
           </div>
-          <CopyButton label="Copy prompt" value={outcome.prompt} onCopied={recordCopy} />
+          {outcome.recipe
+            ? <CopyButton label="Copy recipe" ariaLabel={`Copy recipe for ${outcome.title}`} value={outcome.recipe} onCopied={recordCopy} />
+            : <CopyButton label="Copy prompt" ariaLabel={`Copy prompt for ${outcome.title}`} value={outcome.prompt} onCopied={recordCopy} />}
         </footer>
       </div>
     </article>
@@ -147,36 +150,38 @@ export function OutcomesPage({ outcomesFixture }: { outcomesFixture?: DiscoveryO
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState<OutcomeCategory | "all">("all");
   const [sourceFilter, setSourceFilter] = useState<string | null>(null);
+  const [recipesOnly, setRecipesOnly] = useState(false);
   const [page, setPage] = useState(1);
   const searchRef = useRef<HTMLInputElement>(null);
   const normalizedQuery = query.trim();
   const hasUsageRanking = outcomes.some((outcome) => outcome.useCount > 0);
+  const hasRecipes = outcomes.some((outcome) => outcome.recipe !== undefined);
   const availableCategories = useMemo(() => outcomeCategories.filter((candidate) => outcomes.some((outcome) => outcome.category === candidate)), [outcomes]);
   const activeSource = useMemo(() => outcomes.flatMap((outcome) => outcome.sources).find((source) => sourceFilterKey(source) === sourceFilter), [outcomes, sourceFilter]);
   const directoryTitle = normalizedQuery
     ? "Search results"
     : activeSource
-      ? `${activeSource.name} Outcomes`
+      ? `${activeSource.name} ${recipesOnly ? "recipes" : "Outcomes"}`
       : category === "all"
-        ? "All Outcomes"
-        : `${outcomeCategoryLabels[category]} Outcomes`;
+        ? recipesOnly ? "Outcomes with recipes" : "All Outcomes"
+        : `${outcomeCategoryLabels[category]} ${recipesOnly ? "recipes" : "Outcomes"}`;
   const directoryContext = normalizedQuery
     ? "Ranked by relevance, then copies"
-    : sourceFilter || category !== "all"
+    : sourceFilter || category !== "all" || recipesOnly
       ? "Filtered directory"
       : hasUsageRanking
         ? "Ranked by copies"
         : "Latest published";
 
   const filteredOutcomes = useMemo(() => {
-    const matches = searchDiscoveryOutcomes(outcomes, query, category, sourceFilter);
+    const matches = searchDiscoveryOutcomes(outcomes, query, category, sourceFilter, recipesOnly);
     if (normalizedQuery || hasUsageRanking) return matches;
     return [...matches].sort((left, right) => {
       const byDate = Date.parse(right.publishedAt ?? "") - Date.parse(left.publishedAt ?? "");
       if (Number.isFinite(byDate) && byDate !== 0) return byDate;
       return left.catalogNumber - right.catalogNumber;
     });
-  }, [category, hasUsageRanking, normalizedQuery, outcomes, query, sourceFilter]);
+  }, [category, hasUsageRanking, normalizedQuery, outcomes, query, recipesOnly, sourceFilter]);
 
   const pageCount = Math.max(1, Math.ceil(filteredOutcomes.length / pageSize));
   const currentPage = Math.min(page, pageCount);
@@ -199,6 +204,7 @@ export function OutcomesPage({ outcomesFixture }: { outcomesFixture?: DiscoveryO
       setQuery(parameters.get("q") ?? "");
       setCategory(isOutcomeCategory(urlCategory) ? urlCategory : "all");
       setSourceFilter(parameters.get("uses"));
+      setRecipesOnly(parameters.get("recipe") === "1");
       setPage(Number.isFinite(urlPage) ? Math.max(urlPage, 1) : 1);
     };
     syncFromUrl();
@@ -249,6 +255,15 @@ export function OutcomesPage({ outcomesFixture }: { outcomesFixture?: DiscoveryO
     }, "push");
   }
 
+  function changeRecipesOnly(next: boolean) {
+    setRecipesOnly(next);
+    updateLocation((url) => {
+      if (next) url.searchParams.set("recipe", "1");
+      else url.searchParams.delete("recipe");
+      resetPage(url);
+    });
+  }
+
   function changePage(nextPage: number) {
     const bounded = Math.min(Math.max(nextPage, 1), pageCount);
     setPage(bounded);
@@ -289,6 +304,9 @@ export function OutcomesPage({ outcomesFixture }: { outcomesFixture?: DiscoveryO
             <button type="button" aria-pressed={category === "all"} onClick={() => changeCategory("all")}>All</button>
             {availableCategories.map((candidate) => <button type="button" aria-pressed={category === candidate} onClick={() => changeCategory(candidate)} key={candidate}>{outcomeCategoryLabels[candidate]}</button>)}
           </nav>
+          {hasRecipes || recipesOnly ? <button className="home-recipe-filter" type="button" aria-pressed={recipesOnly} onClick={() => changeRecipesOnly(!recipesOnly)}>
+            <i aria-hidden="true" />Recipes only
+          </button> : null}
           {sourceFilter ? <button className="home-active-filter" type="button" onClick={() => changeSource(null)} aria-label="Clear Product or Skill filter">
             <span>{activeSource?.kind ?? sourceFilter.split(":", 1)[0]}</span>
             <strong>{activeSource?.name ?? sourceFilter.slice(sourceFilter.indexOf(":") + 1)}</strong>

@@ -127,6 +127,8 @@ a { color: inherit; text-decoration: none; }
 .eyebrow { margin: 0; color: var(--site-accent); font: 500 9px "DM Mono", monospace; letter-spacing: .1em; text-transform: uppercase; }
 .copy-button { width: 100%; min-height: 46px; padding: 0 16px; border: 1px solid var(--site-text); border-radius: 999px; display: flex; justify-content: space-between; align-items: center; gap: 18px; background: var(--site-text); color: var(--site-background); cursor: pointer; font: 500 9px "DM Mono", monospace; text-transform: uppercase; transition: transform .16s ease, background .16s ease; }
 .copy-button:hover { filter: brightness(1.12); transform: translateY(-1px); }
+.copy-button--secondary { border-color: var(--site-border-strong); background: var(--site-surface); color: var(--site-text); }
+.copy-button--secondary:hover { filter: none; border-color: var(--site-text); }
 .button-link { width: fit-content; min-width: 230px; min-height: 48px; padding: 0 18px; border: 1px solid var(--site-text); border-radius: 999px; display: flex; justify-content: space-between; align-items: center; gap: 35px; font: 500 9px "DM Mono", monospace; text-transform: uppercase; transition: background .18s ease, color .18s ease; }
 .button-link:hover, .button-link:focus-visible { background: var(--site-text); color: var(--site-background); }
 

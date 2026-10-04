@@ -1,6 +1,5 @@
-import { visibleValue } from "../../cli/src/text-safety.mjs";
+import { modelDescriptions, recipeOrigin, recipeText, skillUrl } from "../../cli/src/recipe-text.mjs";
 import type { ReactNode } from "react";
-import type { SkillReference } from "@possible/catalog";
 import type { DirectoryOutcomeDetail } from "./dynamic-outcome-detail";
 import { recordOutcomeUse } from "./discovery-data";
 import { CopyButton } from "./shared";
@@ -12,35 +11,6 @@ function safeUrl(url?: string): string | undefined {
 function SourceLink({ url, children }: { url?: string | undefined; children: ReactNode }) {
   const href = safeUrl(url);
   return href ? <a href={href} target="_blank" rel="noopener noreferrer">{children} ↗</a> : <span>{children}</span>;
-}
-function skillUrl(skill: SkillReference): string {
-  return `https://github.com/${skill.repository.split("/").map(encodeURIComponent).join("/")}/tree/${encodeURIComponent(skill.lastReviewedCommit)}/${skill.directory.split("/").map(encodeURIComponent).join("/")}`;
-}
-function modelDescriptions(outcome: DirectoryOutcomeDetail): string[] {
-  if (outcome.models?.length) return outcome.models.map((model) => `${model.model} · ${model.provider} · ${model.role}${model.agent ? ` · ${model.agent}` : ""}`);
-  return outcome.model || outcome.provider || outcome.agent ? [[outcome.model, outcome.provider, outcome.agent].filter(Boolean).join(" · ")] : [];
-}
-export function recipeOrigin(outcome: DirectoryOutcomeDetail): string {
-  if (!outcome.recipe) return "Prompt only";
-  if (outcome.recipe.provenance?.method === "recorded") return "Recorded from session";
-  if (outcome.recipe.provenance?.method === "reconstructed") return "Reconstructed";
-  return "Published recipe";
-}
-export function recipeText(rawOutcome: DirectoryOutcomeDetail): string {
-  const outcome = visibleValue(rawOutcome);
-  const recipe = outcome.recipe;
-  const lines = [outcome.title, `Source: ${outcome.source_url}`, "", recipe ? `${recipeOrigin(outcome)} — How it was made` : "Prompt only — no recipe was published.", "Only recorded details are included; unlisted ingredients and steps are unknown."];
-  for (const note of recipe?.notes ?? []) lines.push(`Note: ${note}`);
-  for (const model of modelDescriptions(outcome)) lines.push(`Model: ${model}`);
-  if (recipe?.agent) lines.push(`Agent: ${recipe.agent.name}${recipe.agent.version ? ` (${recipe.agent.version})` : ""}${safeUrl(recipe.agent.url) ? ` — ${safeUrl(recipe.agent.url)}` : ""}`);
-  for (const skill of recipe?.skills ?? []) lines.push(`Skill: ${skill.repository}/${skill.directory}\nPinned commit: ${skill.lastReviewedCommit}\n${skillUrl(skill)}`);
-  for (const reference of recipe?.references ?? []) lines.push(`Reference (${reference.kind}): ${reference.label}${safeUrl(reference.url) ? ` — ${safeUrl(reference.url)}` : ""}${reference.purpose ? `\nPurpose: ${reference.purpose}` : ""}`);
-  for (const tool of recipe?.tools ?? []) lines.push(`Tool/API: ${tool.name}${safeUrl(tool.url) ? ` — ${safeUrl(tool.url)}` : ""}\nPurpose: ${tool.purpose}`);
-  if (outcome.requirements.length) lines.push("", "Requirements", ...outcome.requirements.map((requirement) => `- ${requirement}`));
-  for (const input of outcome.inputs) lines.push(`Input: ${input.label}${safeUrl(input.src) ? ` — ${safeUrl(input.src)}` : ""}`);
-  if (recipe?.steps?.length) lines.push("", "Ordered steps", ...recipe.steps.map((step, index) => `${index + 1}. ${step.title}\n${step.instructions}${step.prompt ? `\nStep prompt:\n${step.prompt}` : ""}`));
-  lines.push("", "Exact published prompt", outcome.prompt);
-  return lines.join("\n");
 }
 export function OutcomeRecipePanel({ outcome }: { outcome: DirectoryOutcomeDetail }) {
   const recipe = outcome.recipe;

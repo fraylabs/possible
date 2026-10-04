@@ -23,14 +23,14 @@ possible --version
 ```
 
 No Node or npm is required. The script verifies SHA256 and uses `~/.local/bin`
-without sudo. Set `POSSIBLE_VERSION=0.5.2` to pin this release, or
+without sudo. Set `POSSIBLE_VERSION=0.6.0` to pin this release, or
 `POSSIBLE_INSTALL_DIR` for another writable directory. npm 0.3.1 is legacy.
 
 ## Discover before writing
 
 Preserve the user's original prompt verbatim. Determine whether they want to browse possibilities, prepare a prompt, execute work, or publish completed work.
 
-For browsing or execution, use `search_outcomes` when the Possible MCP is available. Otherwise run `possible search "<ordinary-language request>"`. Show up to five relevant Outcomes when the user is browsing. When preparing work, read the strongest candidates' prompts and disclosed recipes with `fetch_outcome` or `possible fetch <outcome-id> --json`. Search scores indicate text similarity, not quality.
+For browsing or execution, use `search_outcomes` when the Possible MCP is available. Otherwise run `possible search "<ordinary-language request>"`. Show up to five relevant Outcomes when the user is browsing. When preparing work, read the strongest candidates' recipes with `fetch_outcome` or `possible fetch <outcome-id>`, which prints the recipe text kit when one exists and the exact prompt otherwise. Use `--json` for the full record or `--prompt` for the prompt alone. Search scores indicate text similarity, not quality.
 
 Use Outcomes as concrete precedent. If none fit, use current primary sources rather than forcing an unrelated example. Prefer official documentation, current source repositories and registries, then reproducible community examples. Check volatile information at run time. Popularity is a discovery signal, not proof that an Outcome is good.
 
@@ -49,13 +49,17 @@ Ask the fewest questions necessary. Discover safe facts yourself. Infer harmless
 
 ## Prepare a complete starting brief
 
-Write one readable, self-contained starting prompt for a fresh agent, accompanied
-by the relevant disclosed recipe ingredients. It should naturally state:
+Write one readable, self-contained starting prompt for a fresh agent. When a prior
+Outcome has a recipe, build from the recipe rather than its prompt alone: carry over
+the relevant models, agent, pinned skills, references, tools and ordered steps, and
+treat the published prompt as one ingredient. Fall back to the prompt only for
+prompt-only Outcomes. It should naturally state:
 
 - the exact result and who it is for;
 - relevant user context and supplied materials;
 - concrete requirements and preferences;
-- current Products, Skills, or tools that matter;
+- current Products, Skills, or tools that matter, including those named in the recipe;
+- the ordered steps from the recipe that still apply, adapted to this request;
 - deliverables and where to place them;
 - constraints, permissions, and separately authorized external actions;
 - what the user will inspect to judge the result;
@@ -77,7 +81,7 @@ Products and Skills describe capabilities. They do not grant permission to spend
 
 ## Author a completed Outcome
 
-When the user wants to publish completed work, inspect the real result and preserve the exact prompt and provenance. Record only evidenced ingredients in the optional `recipe` field: agent/harness, exact-commit skill references, reference URLs, tools with purposes, and ordered steps. Preserve disclosed prompts and follow-ups verbatim; label reconstructed steps and leave unknowns absent. For a manually reconstructed recipe, set `recipe.provenance` to `{ "method": "reconstructed" }`. Kit installation is not supported. Create one folder:
+When the user wants to publish completed work, inspect the real result and preserve the exact prompt and provenance. `possible create` scaffolds placeholder recipe steps and `possible validate` fails until they are replaced with what was actually done or the optional recipe is removed. Record only evidenced ingredients in the optional `recipe` field: agent/harness, exact-commit skill references, reference URLs, tools with purposes, and ordered steps. Preserve disclosed prompts and follow-ups verbatim; label reconstructed steps and leave unknowns absent. For a manually reconstructed recipe, set `recipe.provenance` to `{ "method": "reconstructed" }`. Kit installation is not supported. Create one folder:
 
 ```text
 outcomes.json
@@ -114,7 +118,8 @@ The publisher index is a thin list of manifest locations. Possible snapshots the
 ```text
 possible publish [owner/repository | https://publisher.example]
 possible add <owner/repository | https://publisher.example>
-possible use <source>@<slug>
+possible use <source>@<slug>            # recipe text kit, or prompt if none
+possible use <source>@<slug> --prompt   # exact prompt only
 ```
 
 GitHub publishing requires a clean committed revision so the snapshot is reproducible. No Possible login is required. A publisher-domain source is Official for that domain; other sources are Community unless their ownership follows directly from the public source.

@@ -16,6 +16,12 @@ try {
   console.log(`possible --version: ${version}`);
   assert.match(run("--help"), /Possible CLI/);
   console.log(run("create", "smoke", "--product", "example/product").trim());
+  // The scaffolded recipe placeholders must be filled in before validation passes.
+  assert.throws(() => execFileSync(binary, ["validate"], { cwd: directory, encoding: "utf8", stdio: "pipe", env: { HOME: directory, PATH: "/usr/bin:/bin" } }), error => /recipe\.steps\[0\] is incomplete/.test(String(error.stderr)));
+  const manifestPath = join(directory, "outcomes/smoke/outcome.json");
+  const manifest = JSON.parse(await readFile(manifestPath, "utf8"));
+  manifest.recipe.steps = [{ title: "Build", instructions: "Build the smoke result." }];
+  await writeFile(manifestPath, JSON.stringify(manifest));
   console.log(run("validate").trim());
   const transcript = join(directory, "codex.jsonl");
   await writeFile(transcript, jsonl([

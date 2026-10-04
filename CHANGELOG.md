@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+### CLI 0.6.0 and site: the recipe is the default
+
+- Outcome pages lead with **Copy recipe** when a recipe exists, with **Copy prompt** as the secondary action. Prompt-only Outcomes are unchanged.
+- Directory cards are marked **Recipe** or **Prompt only**, copy the recipe when there is one, and can be filtered with **Recipes only** (`?recipe=1`).
+- Plain `possible fetch` and `possible use` print the recipe text kit (the same text as the site's Copy recipe) when an Outcome has a recipe, and the exact prompt otherwise. `--prompt` restores prompt-only output; `--json` is unchanged.
+- `possible create` scaffolds an optional recipe with placeholder steps; `possible validate` reports `recipe.steps[n] is incomplete` until they are filled in or the recipe is removed.
+- Copies of either the recipe or the prompt still count as uses.
+
 ### CLI 0.5.2
 
 - `possible capture` produces useful recipes from real sessions: meaningful programs, packages and libraries from nested exec and shell calls (no runtimes, text utilities or standard-library modules), detected skills, harness envelopes and attachments omitted, descriptive step titles with acknowledgement turns folded in.
