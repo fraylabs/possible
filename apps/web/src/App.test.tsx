@@ -1,14 +1,17 @@
 import { cleanup, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { axe } from "vitest-axe";
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { AuthoringDocsPage, DocsPage, DynamicOutcomeDetailPage, OutcomesPage, PublishPage } from "./App";
 import type { DirectoryOutcomeDetail } from "./dynamic-outcome-detail";
+import { fetchDiscoveryOutcomes } from "./discovery-data";
 import type { DiscoveryOutcome } from "./discovery-data";
 import { normalizeSource } from "./publish";
 
 afterEach(() => {
   cleanup();
+  vi.unstubAllEnvs();
+  vi.unstubAllGlobals();
   window.history.pushState({}, "", "/");
   window.localStorage.removeItem("possible-theme");
   document.documentElement.removeAttribute("data-theme");
@@ -32,6 +35,8 @@ const baseOutcome: DiscoveryOutcome = {
   publishedAt: "2026-08-24T00:00:00Z",
   catalogNumber: 1,
 };
+
+const heroActions = () => within(screen.getByRole("group", { name: "Use this Outcome" }));
 
 const seedOutcomes: DiscoveryOutcome[] = [
   baseOutcome,
@@ -196,21 +201,21 @@ describe("Possible website", () => {
     expect(within(panel).getByText("Renders the final film.")).toBeInTheDocument();
     expect(Array.from(panel.querySelectorAll("ol h4")).map((element) => element.textContent)).toEqual(["Storyboard", "Render"]);
     for (const link of panel.querySelectorAll("a")) expect(link).toHaveAttribute("rel", "noopener noreferrer");
-    await user.click(screen.getByRole("button", { name: "Copy recipe" }));
+    await user.click(heroActions().getByRole("button", { name: "Copy recipe" }));
     const kit = await navigator.clipboard.readText();
     expect(kit).toContain(commit);
     expect(kit).toContain("Claude · Anthropic · review · Claude Code");
     expect(kit).toContain("1. Storyboard\nPlan three scenes.\nStep prompt:\nDraft the opening scene.");
     expect(kit).toContain("2. Render\nRender and inspect the result.");
     expect(kit).toContain("Exact published prompt\nCreate a launch film.");
-    await user.click(screen.getByRole("button", { name: "Copy prompt" }));
+    await user.click(heroActions().getByRole("button", { name: "Copy prompt" }));
     expect(await navigator.clipboard.readText()).toBe(outcome.prompt);
     await user.click(screen.getByRole("button", { name: "Remix prompt" }));
     await user.clear(screen.getByRole("textbox", { name: "Remix prompt" }));
     await user.type(screen.getByRole("textbox", { name: "Remix prompt" }), "Make a shorter film.");
     await user.click(screen.getByRole("button", { name: "Copy remixed prompt" }));
     expect(await navigator.clipboard.readText()).toBe("Make a shorter film.");
-    await user.click(screen.getByRole("button", { name: "Copy recipe" }));
+    await user.click(within(panel).getByRole("button", { name: "Copy recipe" }));
     expect(await navigator.clipboard.readText()).toContain("Exact published prompt\nCreate a launch film.");
     expect((await axe(container)).violations).toHaveLength(0);
   });
@@ -231,9 +236,9 @@ describe("Possible website", () => {
     const { container } = render(<DynamicOutcomeDetailPage outcomeFixture={outcome} />);
     expect(screen.getByRole("note")).toHaveTextContent("hidden characters");
     expect(container.textContent).not.toContain(hidden);
-    await user.click(screen.getByRole("button", { name: "Copy prompt" }));
+    await user.click(heroActions().getByRole("button", { name: "Copy prompt" }));
     expect(await navigator.clipboard.readText()).toBe("Draw a planet.\\u{e0041}");
-    await user.click(screen.getByRole("button", { name: "Copy recipe" }));
+    await user.click(heroActions().getByRole("button", { name: "Copy recipe" }));
     expect(await navigator.clipboard.readText()).toContain("Add rings.\\u{e0041}");
     expect(await navigator.clipboard.readText()).not.toContain(hidden);
   });
@@ -248,7 +253,7 @@ describe("Possible website", () => {
     render(<DynamicOutcomeDetailPage outcomeFixture={recorded} />);
     expect(screen.getByText("Recorded from session")).toBeInTheDocument();
     expect(screen.getByText(/not an unedited transcript/)).toBeInTheDocument();
-    await user.click(screen.getByRole("button", { name: "Copy recipe" }));
+    await user.click(heroActions().getByRole("button", { name: "Copy recipe" }));
     expect(await navigator.clipboard.readText()).toContain("Some source details were removed for privacy.");
     expect(await navigator.clipboard.readText()).toContain("Recorded from session");
     cleanup();
@@ -279,6 +284,102 @@ describe("Possible website", () => {
     expect(within(panel).getByText("Offline editor")).toBeInTheDocument();
     expect(within(panel).queryByRole("link")).not.toBeInTheDocument();
     expect(panel).toHaveTextContent("Unlisted details are unknown.");
+  });
+
+  it("makes Copy recipe the hero's primary action when a recipe exists, with Copy prompt secondary", async () => {
+    const user = userEvent.setup();
+    const outcome: DirectoryOutcomeDetail = { ...detailFixture, recipe: { steps: [{ title: "Storyboard", instructions: "Plan three scenes." }] } };
+    const { container } = render(<DynamicOutcomeDetailPage outcomeFixture={outcome} />);
+    const buttons = heroActions().getAllByRole("button");
+    expect(buttons.map((button) => button.textContent?.replace(/[↗✓]/g, "").trim())).toEqual(["Copy recipe", "Copy prompt"]);
+    expect(buttons[0]).not.toHaveClass("copy-button--secondary");
+    expect(buttons[1]).toHaveClass("copy-button--secondary");
+    expect(heroActions().getByRole("link", { name: "Remix" })).toHaveAttribute("href", "#exact-prompt");
+    await user.click(buttons[0]!);
+    const kit = await navigator.clipboard.readText();
+    expect(kit).toMatch(/^Possible Launch Film\nSource: https:\/\/github\.com\/fraylabs\/possible-outcomes\n\nPublished recipe — How it was made/);
+    expect(kit).toContain("1. Storyboard\nPlan three scenes.");
+    expect(kit.endsWith("Exact published prompt\nCreate a launch film.")).toBe(true);
+    await user.click(buttons[1]!);
+    expect(await navigator.clipboard.readText()).toBe("Create a launch film.");
+    expect((await axe(container)).violations).toHaveLength(0);
+  });
+
+  it("keeps Copy prompt as the only hero copy action for prompt-only Outcomes", async () => {
+    const user = userEvent.setup();
+    render(<DynamicOutcomeDetailPage outcomeFixture={detailFixture} />);
+    expect(heroActions().getAllByRole("button").map((button) => button.textContent?.replace(/[↗✓]/g, "").trim())).toEqual(["Copy prompt"]);
+    expect(heroActions().getByRole("button", { name: "Copy prompt" })).not.toHaveClass("copy-button--secondary");
+    expect(heroActions().queryByRole("button", { name: "Copy recipe" })).not.toBeInTheDocument();
+    await user.click(heroActions().getByRole("button", { name: "Copy prompt" }));
+    expect(await navigator.clipboard.readText()).toBe(detailFixture.prompt);
+  });
+
+  it("records a use for hero copies of either the recipe or the prompt", async () => {
+    const user = userEvent.setup();
+    vi.stubEnv("NEXT_PUBLIC_CONVEX_SITE_URL", "https://directory.example");
+    const uses: string[] = [];
+    vi.stubGlobal("fetch", vi.fn(async (url: string, init?: RequestInit) => {
+      if (String(url).endsWith("/api/outcomes/use")) uses.push(JSON.parse(String(init?.body)).outcomeId);
+      return new Response(JSON.stringify({ counted: true }));
+    }));
+    render(<DynamicOutcomeDetailPage outcomeFixture={{ ...detailFixture, recipe: { steps: [{ title: "Plan", instructions: "Plan it." }] } }} />);
+    await user.click(heroActions().getByRole("button", { name: "Copy recipe" }));
+    await user.click(heroActions().getByRole("button", { name: "Copy prompt" }));
+    await vi.waitFor(() => expect(uses).toEqual([detailFixture.id, detailFixture.id]));
+  });
+
+  it("marks catalog cards as Recipe or Prompt only and copies the recipe when one exists", async () => {
+    const user = userEvent.setup();
+    const kit = "Possible Launch Film\n\nPublished recipe — How it was made\n\nExact published prompt\nCreate a launch film.";
+    const outcomes = [{ ...seedOutcomes[0]!, recipe: kit }, seedOutcomes[1]!];
+    const { container } = render(<OutcomesPage outcomesFixture={outcomes} />);
+    const [withRecipe, promptOnly] = screen.getAllByRole("article");
+    expect(within(withRecipe!).getByText("Recipe")).toHaveAttribute("data-kind", "recipe");
+    expect(within(promptOnly!).getByText("Prompt only")).toHaveAttribute("data-kind", "prompt");
+    expect(within(withRecipe!).queryByRole("button", { name: /Copy prompt/ })).not.toBeInTheDocument();
+    await user.click(within(withRecipe!).getByRole("button", { name: "Copy recipe for Possible Launch Film" }));
+    expect(await navigator.clipboard.readText()).toBe(kit);
+    await user.click(within(promptOnly!).getByRole("button", { name: "Copy prompt for Lantern Rain: Quiet Soundtrack" }));
+    expect(await navigator.clipboard.readText()).toBe("Compose a quiet soundtrack.");
+    expect((await axe(container)).violations).toHaveLength(0);
+  });
+
+  it("filters the catalog to Outcomes with recipes and keeps the filter in the URL", async () => {
+    const user = userEvent.setup();
+    const outcomes = [{ ...seedOutcomes[0]!, recipe: "kit" }, seedOutcomes[1]!, seedOutcomes[2]!];
+    render(<OutcomesPage outcomesFixture={outcomes} />);
+    const toggle = screen.getByRole("button", { name: "Recipes only" });
+    expect(toggle).toHaveAttribute("aria-pressed", "false");
+    await user.click(toggle);
+    expect(toggle).toHaveAttribute("aria-pressed", "true");
+    expect(window.location.search).toContain("recipe=1");
+    expect(screen.getByRole("heading", { name: "Outcomes with recipes", level: 2 })).toBeInTheDocument();
+    expect(screen.getAllByRole("article")).toHaveLength(1);
+    expect(screen.getByRole("heading", { name: "Possible Launch Film" })).toBeInTheDocument();
+    await user.click(toggle);
+    expect(window.location.search).not.toContain("recipe=1");
+    expect(screen.getAllByRole("article")).toHaveLength(3);
+    cleanup();
+    window.history.pushState({}, "", "/?recipe=1");
+    render(<OutcomesPage outcomesFixture={outcomes} />);
+    expect(screen.getByRole("button", { name: "Recipes only" })).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getAllByRole("article")).toHaveLength(1);
+  });
+
+  it("hides the recipe filter when no Outcome has a recipe", () => {
+    render(<OutcomesPage outcomesFixture={seedOutcomes} />);
+    expect(screen.queryByRole("button", { name: "Recipes only" })).not.toBeInTheDocument();
+    expect(screen.getAllByText("Prompt only")).toHaveLength(3);
+  });
+
+  it("builds the card recipe kit from directory rows that publish a recipe", async () => {
+    vi.stubEnv("NEXT_PUBLIC_CONVEX_SITE_URL", "https://directory.example");
+    const row = { id: "row-1", slug: "film", title: "Film", summary: "A film.", prompt: "Make the film.", result_media_url: null, poster_url: null, provider: "OpenAI", model: "GPT-6", author_name: null, requirements: ["A brief"], published_at: "2026-10-01T00:00:00Z", publication_kind: "community", source_url: "https://github.com/maker/outcomes", primary_attribution: null, secondary_attributions: [], use_count: 0, like_count: 0, models: [{ provider: "OpenAI", model: "GPT-6", role: "execution" }], inputs: [] };
+    vi.stubGlobal("fetch", vi.fn(async () => new Response(JSON.stringify({ outcomes: [{ ...row, recipe: { steps: [{ title: "Cut", instructions: "Cut the film." }] } }, { ...row, id: "row-2", recipe: null }] }))));
+    const [withRecipe, promptOnly] = await fetchDiscoveryOutcomes();
+    expect(withRecipe?.recipe).toBe("Film\nSource: https://github.com/maker/outcomes\n\nPublished recipe — How it was made\nOnly recorded details are included; unlisted ingredients and steps are unknown.\nModel: GPT-6 · OpenAI · execution\n\nRequirements\n- A brief\n\nOrdered steps\n1. Cut\nCut the film.\n\nExact published prompt\nMake the film.");
+    expect(promptOnly?.recipe).toBeUndefined();
   });
 
   it("documents the same small public contract", () => {

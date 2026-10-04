@@ -55,11 +55,13 @@ Steps run in array order; `instructions` describes the action, and optional
 instructions; never present them as a transcript. Creator demos remain prompt-only
 unless the creator disclosed more.
 
-The directory API and MCP return `recipe` when available. `possible fetch <id>
---json` includes it alongside the prompt; `possible use <source>@<slug> --json`
-returns the source document with `manifest.recipe`. Without `--json`, both commands
-still print the prompt. The website shows known ingredients and copies a text kit;
-copying does not install skills. CLI 0.5.0 can capture a local finished session.
+The directory API and MCP return `recipe` when available. Since CLI 0.6.0, plain
+`possible fetch <id>` and `possible use <source>@<slug>` print the recipe text kit
+when one exists and the exact prompt otherwise; `--prompt` prints only the prompt.
+`fetch --json` includes the recipe alongside the prompt; `use --json` returns the
+source document with `manifest.recipe`. The website makes Copy recipe the primary
+action for recipe Outcomes and copies the same text kit; copying does not install
+skills. CLI 0.5.0 can capture a local finished session.
 
 
 ## Recipe origin (CLI 0.5.0)

@@ -13,7 +13,7 @@ const navigationItems = [
   { label: "DOCS", href: "/docs", external: false },
   { label: "PUBLISH", href: "/publish", external: false },
 ] as const;
-export function CopyButton({ label, value, onCopied, ariaLabel }: { label: string; value: string; onCopied?: () => void | Promise<unknown>; ariaLabel?: string }) {
+export function CopyButton({ label, value, onCopied, ariaLabel, secondary = false }: { label: string; value: string; onCopied?: () => void | Promise<unknown>; ariaLabel?: string; secondary?: boolean }) {
   const [state, setState] = useState<CopyState>("idle");
 
   async function copy() {
@@ -28,7 +28,7 @@ export function CopyButton({ label, value, onCopied, ariaLabel }: { label: strin
   }
 
   return (
-    <button className="copy-button" type="button" onClick={copy} aria-label={ariaLabel ?? label}>
+    <button className={secondary ? "copy-button copy-button--secondary" : "copy-button"} type="button" onClick={copy} aria-label={ariaLabel ?? label}>
       <span aria-live="polite">{state === "copied" ? "Copied" : state === "failed" ? "Copy failed" : label}</span>
       <span aria-hidden="true">{state === "copied" ? "✓" : "↗"}</span>
     </button>

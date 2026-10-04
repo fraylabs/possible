@@ -47,7 +47,34 @@ test("create and validate use the three-file Outcome contract", async () => {
   assert.ok((await readFile(join(folder, "prompt.md"), "utf8")).trim());
   const publisherIndex = JSON.parse(await readFile(join(project, "outcomes.json"), "utf8"));
   assert.deepEqual(publisherIndex.outcomes, [{ slug: "quiet-launch-film", url: "./outcomes/quiet-launch-film/outcome.json" }]);
+  assert.equal((await execute(process.execPath, [cli, "validate"], { cwd: project }).catch((error) => error)).code, 1);
+  delete manifest.recipe;
+  await writeFile(join(folder, "outcome.json"), JSON.stringify(manifest));
   assert.equal((await execute(process.execPath, [cli, "validate"], { cwd: project })).stdout, "Validated 1 Outcome.\n");
+});
+
+test("create scaffolds an optional recipe that validates only once its steps are filled", async () => {
+  const project = await fixture();
+  const created = await execute(process.execPath, [cli, "create", "quiet-launch-film", "--product", "example/film-maker"], { cwd: project });
+  assert.match(created.stdout, /placeholder recipe steps/);
+  const path = join(project, "outcomes", "quiet-launch-film", "outcome.json");
+  const manifest = JSON.parse(await readFile(path, "utf8"));
+  assert.ok(manifest.recipe.steps.length >= 2);
+  assert.ok(manifest.recipe.steps.every((step) => step.title.startsWith("[Fill in]") && step.instructions.startsWith("[Fill in]")));
+  const incomplete = await execute(process.execPath, [cli, "validate"], { cwd: project }).catch((error) => error);
+  assert.equal(incomplete.code, 1);
+  assert.match(incomplete.stderr, /recipe\.steps\[0\] is incomplete/);
+
+  manifest.recipe.steps[0] = { title: "Block the shots", instructions: "Sketch the six beats from the brief." };
+  await writeFile(path, JSON.stringify(manifest));
+  assert.match((await execute(process.execPath, [cli, "validate"], { cwd: project }).catch((error) => error)).stderr, /recipe\.steps\[1\] is incomplete/);
+
+  manifest.recipe.steps[1] = { title: "Review", instructions: "Watch the export end to end." };
+  await writeFile(path, JSON.stringify(manifest));
+  assert.equal((await execute(process.execPath, [cli, "validate"], { cwd: project })).stdout, "Validated 1 Outcome.\n");
+  assert.throws(() => validateOutcomeManifest({ ...manifest, recipe: { steps: [{ title: "Build", instructions: "Build it.", prompt: "[Fill in] the step prompt" }] } }), /incomplete/);
+  // Ordinary text that merely starts with "Replace with" is a real step, not a placeholder.
+  assert.doesNotThrow(() => validateOutcomeManifest({ ...manifest, recipe: { steps: [{ title: "Replace with the approved logo", instructions: "Replace with the approved logo.", prompt: "Replace with the approved logo." }] } }));
 });
 
 test("version 4 requires one unique primary attribution", () => {

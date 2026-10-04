@@ -109,6 +109,11 @@ export function normalizeOutcomeAttributions(manifest) {
   };
 }
 
+// `possible create` scaffolds recipe steps with this scaffold-only marker; they
+// must be filled in (or the optional recipe removed) before the Outcome validates.
+export const RECIPE_PLACEHOLDER_PREFIX = "[Fill in]";
+const isRecipePlaceholder = (value) => typeof value === "string" && value.trim().startsWith(RECIPE_PLACEHOLDER_PREFIX);
+
 export function validateOutcomeRecipe(value, context = "recipe") {
   const recipe = asObject(value, context);
   exactKeys(recipe, new Set(["agent", "skills", "references", "tools", "steps", "provenance", "notes"]), context);
@@ -158,6 +163,7 @@ export function validateOutcomeRecipe(value, context = "recipe") {
         string(item.title, `${path}.title`);
         string(item.instructions, `${path}.instructions`);
         if (item.prompt !== undefined) string(item.prompt, `${path}.prompt`);
+        if ([item.title, item.instructions, item.prompt].some(isRecipePlaceholder)) throw new Error(`${path} is incomplete: replace the placeholder step with what was actually done, or remove the optional recipe`);
       }
     });
     if (key === "skills") {

@@ -11,7 +11,7 @@
 .outcome-hero > p { max-width: 680px; margin: 0; color: var(--site-muted); font-size: 17px; line-height: 1.55; }
 .outcome-byline { margin-top: 17px; display: flex; flex-wrap: wrap; gap: 8px 20px; color: var(--site-muted-soft); font-size: 11px; }
 .outcome-byline a { color: var(--site-accent-strong); font-weight: 700; }
-.outcome-hero-actions { margin-top: 24px; display: flex; gap: 8px; }
+.outcome-hero-actions { margin-top: 24px; display: flex; flex-wrap: wrap; gap: 8px; }
 .outcome-hero-actions .copy-button { width: 168px; min-height: 42px; }
 .outcome-hero-actions > a { min-width: 94px; min-height: 42px; padding: 0 15px; border: 1px solid var(--site-border-strong); border-radius: 999px; display: grid; place-items: center; background: var(--site-surface); font: 500 8px "DM Mono", monospace; text-transform: uppercase; }
 .outcome-reactions { display: flex; gap: 6px; }
@@ -93,6 +93,7 @@
   .outcome-hero h1 { font-size: 38px; }
   .outcome-hero > p { font-size: 15px; }
   .outcome-hero-actions .copy-button { width: 150px; }
+  .outcome-hero-actions.has-recipe .copy-button { width: auto; min-width: 0; padding: 0 14px; flex: 1 1 0; gap: 10px; }
   .outcome-gallery { width: calc(100% + 12px); margin-left: -6px; padding: 6px; }
   .outcome-gallery-stage { min-height: 220px; max-height: 440px; }
   .outcome-gallery-stage > img, .outcome-gallery-stage > video { max-height: 440px; }

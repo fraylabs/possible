@@ -1,3 +1,5 @@
+import { recipeText } from "../../cli/src/recipe-text.mjs";
+import type { RecipeTextOutcome } from "../../cli/src/recipe-text.mjs";
 import { visibleValue } from "../../cli/src/text-safety.mjs";
 import { outcomeApiUrl } from "./backend";
 
@@ -41,6 +43,8 @@ export interface DiscoveryOutcome {
   title: string;
   summary: string;
   prompt: string;
+  /** The copyable recipe text kit; absent for prompt-only Outcomes. */
+  recipe?: string;
   href: string;
   sourceUrl?: string;
   category: OutcomeCategory;
@@ -70,6 +74,10 @@ interface PublicOutcomeRow {
   published_at: string;
   publication_kind: "official" | "community";
   source_url: string;
+  recipe?: RecipeTextOutcome["recipe"];
+  models?: RecipeTextOutcome["models"];
+  agent?: string | null;
+  inputs?: RecipeTextOutcome["inputs"];
   primary_attribution: AttributionRow | null;
   secondary_attributions: AttributionRow[];
   use_count: number;
@@ -204,6 +212,7 @@ function fromPublicRow(
     catalogNumber,
   };
   if (media) outcome.media = media;
+  if (row.recipe) outcome.recipe = recipeText(row);
   outcome.sourceUrl = row.source_url;
   if (row.slug) outcome.slug = row.slug;
   if (source) outcome.source = source;
@@ -237,10 +246,12 @@ export function searchDiscoveryOutcomes(
   query: string,
   category: OutcomeCategory | "all",
   source: string | null = null,
+  recipesOnly = false,
 ): DiscoveryOutcome[] {
   const terms = expandedTerms(query.trim());
   return outcomes
     .filter((outcome) => category === "all" || outcome.category === category)
+    .filter((outcome) => !recipesOnly || outcome.recipe !== undefined)
     .filter((outcome) => source === null || outcome.sources.some((item) => sourceFilterKey(item) === source))
     .map((outcome) => {
       if (terms.length === 0) return { outcome, score: 0 };

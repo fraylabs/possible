@@ -37,13 +37,14 @@ The script verifies SHA256 and installs to `~/.local/bin` without sudo. Use
 pin a release, for example:
 
 ```sh
-curl -fsSL https://possible.sh/install.sh | POSSIBLE_VERSION=0.5.2 POSSIBLE_INSTALL_DIR="$HOME/bin" sh
+curl -fsSL https://possible.sh/install.sh | POSSIBLE_VERSION=0.6.0 POSSIBLE_INSTALL_DIR="$HOME/bin" sh
 possible --version
 ```
 
 ```bash
 possible search "make a launch video"
-possible fetch <outcome-id> --json
+possible fetch <outcome-id>            # the recipe, or the prompt if none
+possible fetch <outcome-id> --prompt   # the exact prompt only
 possible create my-outcome --product owner/product
 possible validate
 possible publish owner/repository
@@ -69,10 +70,19 @@ remain attribution, not a limit on the recipe's ingredients.
 
 [Recipe format and example](packages/catalog/README.md#optional-recipes-cli-040) · [JSON Schema](packages/catalog/src/outcome.schema.json)
 
-The site shows **How it was made**, with **Copy recipe** for handing the disclosed
-instructions to an agent. Entries without a recipe say **Prompt only**. Missing
-information remains unknown. Copying does not install tools, grant access or guarantee reproduction. `fetch --json` and `use --json` retain the recipe;
-plain `fetch` and `use` continue printing only the unchanged prompt.
+Wherever an Outcome has a recipe, the recipe is the default thing to copy. Its page
+leads with **Copy recipe**, with **Copy prompt** beside it; directory cards are marked
+**Recipe** or **Prompt only**, copy the recipe when there is one, and can be filtered
+to **Recipes only**. Prompt-only Outcomes keep **Copy prompt**. **How it was made**
+lists the disclosed ingredients and steps. Missing information remains unknown.
+Copying does not install tools, grant access or guarantee reproduction.
+
+Plain `possible fetch` and `possible use` print the same recipe text kit as the site
+(models, agent, pinned skills, references, tools, ordered steps and the exact
+published prompt) when an Outcome has a recipe, and the prompt otherwise. Add
+`--prompt` for the exact prompt alone. `--json` is unchanged and includes the recipe.
+`possible create` scaffolds placeholder recipe steps; `possible validate` reports the
+recipe as incomplete until you fill them in or remove the optional recipe.
 
 ## Repository
 
@@ -94,7 +104,7 @@ npm run check
 
 Local backend development uses `npx convex dev`. Publishing remains account-free and source-owned; a reader may sign in with GitHub only when they want to like or save an Outcome.
 
-CLI 0.5.2 is available as [standalone GitHub release binaries](https://github.com/fraylabs/possible/releases/tag/v0.5.2). The npm registry version 0.3.1 is legacy and remains unchanged. See [release packaging](scripts/sea/README.md) for the automated build and tap update path.
+CLI 0.6.0 is available as [standalone GitHub release binaries](https://github.com/fraylabs/possible/releases/tag/v0.6.0). The npm registry version 0.3.1 is legacy and remains unchanged. See [release packaging](scripts/sea/README.md) for the automated build and tap update path.
 
 ### Page-view counts
 
