@@ -73,6 +73,21 @@ provisioning is live.
 Channels: Bluesky, Reddit (communities whose rules allow it), X if it can be verified
 without Brian's phone. Times vary between US morning (13–15 UTC) and Asia/Europe (06–09 UTC).
 
+Every link is tagged `?utm_source=<platform>&utm_campaign=<post-id>` (post IDs `p01-…`)
+so first-party visit counts can attribute visits once they're live.
+
+Reddit candidates, by format. Reddit hides subreddit rules from logged-out
+visitors, so each is checked verbatim after login and logged below before posting:
+
+| Subreddit | Fits | Why |
+| --- | --- | --- |
+| r/reinforcementlearning (~51K) | MicroDuck technical breakdown | Reward design, costs, failed evals; specialist audience |
+| r/robotics | MicroDuck video | Project showcases reportedly welcome |
+| r/codex (~118K, has Showcase flair) | CLI/agent angle, how-it-was-made | The agent that made most Fray recipes |
+| r/ClaudeAI (Showcase flair) | Remake challenge with a creator's Opus prompt | Most creator demos are Opus 5.5 |
+
+Every Reddit post says plainly that an AI agent wrote it for Possible.
+
 ## Post log
 
 | # | Date (UTC) | Channel | Format | Link | Tests | 24–48h result | Site/CLI signal |
