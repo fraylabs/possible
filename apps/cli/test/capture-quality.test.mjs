@@ -34,7 +34,7 @@ test('nested exec extracts only program/package names and API inputs, omitting c
     ...['exec', 'wait', 'spawn_agent', 'send_message', 'list_agents', 'wait_agent', 'collaboration.followup_task', 'functions.update_plan'].map(name => ({ type: 'response_item', payload: { type: 'function_call', name, arguments: '{}' } })),
     { type: 'response_item', payload: { type: 'custom_tool_call_output', output: 'OUTPUT_PRIVATE_SENTINEL' } },
   ]));
-  assert.deepEqual([...new Set(result.tools.map(t => t.name))], ['uv', 'numpy', 'matplotlib', 'python', 'npx', 'playwright', 'npm', 'vite', '@example/charts', 'curl', 'web__run']);
+  assert.deepEqual([...new Set(result.tools.map(t => t.name))], ['numpy', 'matplotlib', 'playwright', 'vite', '@example/charts', 'web__run']);
   assert.doesNotMatch(JSON.stringify(result), /PRIVATE_SENTINEL/);
   assert.deepEqual(result.references, [{ kind: 'web', label: 'Web search query', purpose: 'animated charts' }]);
 });
@@ -56,7 +56,7 @@ test('exec inspection is static: strings, comments, dynamic arguments and file-w
 test('executed heredocs expose imported libraries but never string payloads or outputs', () => {
   const command = "python3 - <<'PY'\nimport numpy, scipy as sp\nfrom PIL import Image\nprint('OUTPUT_PRIVATE_SENTINEL')\nPY\nnode -e \"const x = require('three'); console.log('OUTPUT_PRIVATE_SENTINEL')\"";
   const result = parseCodexSession(session([user('Make a chart.'), exec(`await tools.exec_command({cmd:${JSON.stringify(command)}});`)]));
-  assert.deepEqual([...new Set(result.tools.map(t => t.name))], ['numpy', 'scipy', 'PIL', 'python3', 'node', 'three']);
+  assert.deepEqual([...new Set(result.tools.map(t => t.name))], ['numpy', 'scipy', 'PIL', 'three']);
   assert.doesNotMatch(JSON.stringify(result), /PRIVATE_SENTINEL/);
 });
 
@@ -165,4 +165,22 @@ test('streamed files preserve safe errors and bound individual records and retai
   await assert.rejects(readCaptureSource({ source: 'codex', file }), { code: 'SESSION_LIMIT' });
   await writeFile(file, session(Array.from({ length: 1001 }, () => user('Make a chart.'))));
   await assert.rejects(readCaptureSource({ source: 'codex', file }), { code: 'SESSION_LIMIT' });
+});
+
+test('acknowledgement sentences fold into the prior step, leading skill tokens leave titles, tools are unique, plumbing and standard modules are omitted', async t => {
+  const root = await directory(t);
+  const file = join(root, 'synthetic.jsonl');
+  await writeFile(file, session([
+    user('$possible\n\nI want to make a paper lantern.'),
+    user('Yes, proceed with this pack.'),
+    user('Continue from my previous answer.'),
+    user('Render it at dusk.'),
+    exec('await tools.exec_command({ cmd: "git status && rg lantern && python3 -c \'import os, math, json\\nimport trimesh\' && python3 -m json.tool x && blender -b && blender -b" });'),
+  ]));
+  const out = join(root, 'draft');
+  await createCaptureDraft({ source: 'codex', file, out });
+  const draft = JSON.parse(await readFile(join(out, 'draft.json'), 'utf8'));
+  assert.deepEqual(draft.manifest.recipe.steps.map(s => s.title), ['Make a paper lantern', 'Render it at dusk']);
+  assert.match(draft.manifest.recipe.steps[0].prompt, /Yes, proceed with this pack\.\n\nContinue from my previous answer\.$/);
+  assert.deepEqual(draft.manifest.recipe.tools.map(t => t.name), ['trimesh', 'blender']);
 });

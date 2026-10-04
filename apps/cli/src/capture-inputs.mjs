@@ -6,7 +6,13 @@ const shellNames = new Set(['exec_command', 'shell', 'shell_command', 'run_comma
 const harnessNames = new Set(['exec', 'wait', 'spawn_agent', 'send_message', 'list_agents', 'wait_agent', 'followup_task', 'interrupt_agent', 'yield_control', 'write_stdin', 'update_plan', 'apply_patch']);
 export const shortToolName = name => name.split('.').filter(Boolean).at(-1);
 export const isHarnessTool = name => harnessNames.has(shortToolName(name));
-const programNames = new Set('python python3 jj node npm npx pnpm yarn bun uv pip pip3 git gh curl wget rg sed awk jq ffmpeg ffprobe convert magick blender openscad cadquery pytest tsc vite vitest playwright docker make cmake cargo rustc go ruby deno swift xcodebuild'.split(' '));
+// Only programs that say something about how a result was made. Generic
+// runtimes, package managers and text utilities are plumbing, not ingredients.
+const programNames = new Set('ffmpeg ffprobe convert magick blender openscad cadquery kicad-cli freecadcmd pytest vite vitest playwright docker remotion manim yt-dlp sox imagemagick inkscape gltf-transform xcodebuild'.split(' '));
+// Standard-library modules are never recipe ingredients.
+const standardModules = new Set(('abc argparse array ast asyncio base64 bisect builtins collections concurrent contextlib copy csv dataclasses datetime decimal difflib enum fnmatch fractions functools gc getpass glob gzip hashlib heapq hmac html http importlib inspect io ipaddress itertools json logging math mimetypes multiprocessing operator os pathlib pickle platform pprint queue random re secrets select shlex shutil signal socket sqlite3 statistics string struct subprocess sys tarfile tempfile textwrap threading time timeit traceback types typing unicodedata unittest urllib uuid warnings weakref xml zipfile zlib __future__ '
+  + 'assert buffer child_process crypto events fs module net os path process readline stream timers tty url util vm worker_threads zlib').split(' '));
+const notStandard = name => !name.startsWith('node:') && !standardModules.has(name.split(/[./]/)[0]);
 const nameOnly = value => typeof value === 'string' && /^[a-zA-Z][a-zA-Z0-9_.-]{0,79}$/.test(value);
 const packageOnly = value => typeof value === 'string' && /^(?:@[a-z0-9_.-]+\/)?[a-z][a-z0-9_.-]{0,79}$/i.test(value);
 
@@ -82,7 +88,7 @@ function imports(code, language, ingredient) {
       if (node.type === 'CallExpression' && node.callee.type === 'Identifier' && node.callee.name === 'require') names.push(literal(node.arguments[0], new Map()));
     });
   }
-  for (const name of names) if (packageOnly(name)) ingredient(name, 'Library imported by an executed script; creator must confirm its purpose.');
+  for (const name of names) if (packageOnly(name) && notStandard(name)) ingredient(name, 'Library imported by an executed script; creator must confirm its purpose.');
 }
 function packageArguments(words, runner = false) {
   const values = [];
@@ -120,7 +126,6 @@ export function inspectShell(name, input, { ingredient, skill }) {
     while (words.length && /^(?:[a-zA-Z_]\w*=|sudo$|env$)/.test(words[0])) words = words.slice(1);
     // uv run options may name packages and wrap another executable.
     if (words[0] === 'uv' && words[1] === 'run') {
-      ingredient('uv', 'Program invoked in a shell command; creator must confirm its purpose.');
       let i = 2;
       const valueOptions = new Set(['--python', '--project', '--directory', '--with-editable', '--env-file']);
       while (i < words.length && words[i].startsWith('-')) {
@@ -161,7 +166,7 @@ export function inspectShell(name, input, { ingredient, skill }) {
       const index = words.indexOf(program === 'node' ? '-e' : '-c');
       if (index >= 0 && words[index + 1]) imports(words[index + 1], program === 'node' ? 'javascript' : 'python', ingredient);
       // python -m names an imported module, not a script path.
-      if (program !== 'node' && words[1] === '-m' && nameOnly(words[2])) ingredient(words[2].split('.')[0], 'Python module invoked by the interpreter; creator must confirm its purpose.');
+      if (program !== 'node' && words[1] === '-m' && nameOnly(words[2]) && words[2] !== 'pip' && notStandard(words[2])) ingredient(words[2].split('.')[0], 'Python module invoked by the interpreter; creator must confirm its purpose.');
     }
     let packages = [];
     if (['pip', 'pip3', 'npm', 'pnpm', 'yarn', 'bun'].includes(program) || (['python', 'python3'].includes(program) && words[1] === '-m' && words[2] === 'pip') || (program === 'uv' && words[1] === 'pip')) {
@@ -171,7 +176,8 @@ export function inspectShell(name, input, { ingredient, skill }) {
     if (program === 'npx' || (program === 'pnpm' && words[1] === 'dlx') || (program === 'uv' && words[1] === 'tool' && words[2] === 'run')) packages = packageArguments(words.slice(program === 'npx' ? 1 : program === 'pnpm' ? 2 : 3), true);
     for (let pkg of packages) {
       pkg = pkg.replace(/(?<!^)@[^/]*$|[<>=!~].*$/, '');
-      if (packageOnly(pkg)) ingredient(pkg, 'Package named in an install or runner command; creator must confirm its purpose.');
+      // The skills installer is recorded through the skills it adds, not as a tool.
+      if (packageOnly(pkg) && pkg !== 'skills') ingredient(pkg, 'Package named in an install or runner command; creator must confirm its purpose.');
     }
   }
 }
