@@ -252,3 +252,14 @@ test('draft symlinks and malformed draft content are refused without echoing raw
   await writeFile(draftPath, 'MALFORMED_PRIVATE_SENTINEL');
   await assert.rejects(review(t, folder), error => /not valid JSON/.test(error.message) && !error.message.includes('PRIVATE_SENTINEL'));
 });
+
+test('automatically detected tool names block review until the creator describes them', { timeout: 5000 }, async t => {
+  const { folder } = await fixture(t);
+  const draft = await editForReview(folder);
+  draft.manifest.recipe.tools = [{ name: 'acme_secret_pricing', purpose: 'Library imported by an executed script; creator must confirm its purpose.' }];
+  await writeDraft(folder, draft);
+  const streams = terminal();
+  t.after(() => streams.close());
+  await assert.rejects(reviewCaptureDraft(folder, streams), /Describe each tool/);
+  await missing(join(folder, 'approval.json'));
+});

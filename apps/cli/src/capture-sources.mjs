@@ -1,5 +1,6 @@
 import { open } from 'node:fs/promises';
-import { constants } from 'node:fs';
+import { constants, readSync } from 'node:fs';
+import { isHarnessTool, shortToolName, nestedExecCalls, inspectShell } from './capture-inputs.mjs';
 
 export const CAPTURE_LIMITS = Object.freeze({ bytes: 32 * 1024 * 1024, records: 100000 });
 export class CaptureSourceError extends Error {
@@ -11,7 +12,25 @@ const string = value => typeof value === 'string' && value.trim().length > 0;
 const active = value => ['running', 'pending', 'starting', 'connecting', 'inProgress', 'in_progress'].includes(value);
 const unique = values => [...new Map(values.map(value => [JSON.stringify(value), value])).values()];
 function empty(source) {
-  return { source, models: [], prompts: [], tools: [], references: [], skills: [], unknowns: [] };
+  // Bound retained evidence independently of transcript size. Deduplicate
+  // metadata as it arrives, rather than retaining thousands of model repeats.
+  let bytes = 0;
+  const list = (deduplicate = true) => {
+    const values = [];
+    const seen = new Set();
+    Object.defineProperty(values, 'push', { value(...items) {
+      for (const item of items) {
+        const key = JSON.stringify(item);
+        if (deduplicate && seen.has(key)) continue;
+        if (values.length >= 1000 || (bytes += Buffer.byteLength(key)) > 2_000_000) fail('SESSION_LIMIT', 'Retained capture evidence exceeds the safe draft limit.');
+        if (deduplicate) seen.add(key);
+        Array.prototype.push.call(values, item);
+      }
+      return values.length;
+    } });
+    return values;
+  };
+  return { source, models: list(), prompts: list(false), tools: list(), references: list(), skills: list(), unknowns: list() };
 }
 function finish(out) {
   for (const key of ['models', 'tools', 'references', 'skills', 'unknowns']) out[key] = unique(out[key]);
@@ -46,7 +65,10 @@ function userText(value) {
   // Turnless appends role and selected-skill context after the creator's prose.
   value = value.replace(/(?:^|\r?\n)Turnless (?:role|selected skills):[\s\S]*$/i, '');
   if (/^\s*(?:# AGENTS\.md instructions|This session is being continued from a previous conversation|\[Request interrupted by user|<local-command-caveat>|<command-name>|<task-notification>|<subagent_notification>)/i.test(value)) return '';
-  const envelopes = 'system-reminder|environment_context|INSTRUCTIONS|user_instructions|developer_instructions|developer_message|permissions instructions|collaboration_mode|local-command-stdout|task-notification|subagent_notification|tool_result|file_contents';
+  const envelopes = 'recommended_plugins|skills_instructions|available_skills|skill|subagents|system-reminder|environment_context|INSTRUCTIONS|user_instructions|developer_instructions|developer_message|permissions instructions|collaboration_mode|local-command-stdout|task-notification|subagent_notification|tool_result|file_contents';
+  // Attachment metadata is opaque. Keep surrounding creator prose.
+  value = value.replace(/<(appshot|image|attachment|attached_image)\b[^>]*>[\s\S]*?<\/\1>/gi, '');
+  if (/<(?:appshot|image|attachment|attached_image)\b/i.test(value)) return '';
   const cleaned = value.replace(new RegExp(`<(${envelopes})\\b[^>]*>[\\s\\S]*?<\\/\\1>`, 'gi'), '').trim();
   // An incomplete envelope is unsafe to attribute to the creator.
   if (new RegExp(`<(${envelopes})\\b`, 'i').test(cleaned)) return '';
@@ -56,6 +78,7 @@ function prompt(out, text) {
   text = userText(text);
   if (!text) return;
   out.prompts.push({ text });
+  for (const match of text.matchAll(/(?:^|\s)\$([a-zA-Z][a-zA-Z0-9_-]*(?::[a-zA-Z][a-zA-Z0-9_-]*)?)\b/g)) out.skills.push({ name: match[1] });
   for (const match of text.matchAll(/https?:\/\/[^\s<>"`]+/g)) {
     out.references.push({ kind: 'web', label: 'Reference in user prompt', url: match[0].replace(/[),.;]+$/, '') });
   }
@@ -69,11 +92,31 @@ function inputObject(value) {
   if (typeof value === 'string') { try { const parsed = JSON.parse(value); return object(parsed) ? parsed : {}; } catch {} }
   return {};
 }
-function tool(out, name, input) {
-  if (!string(name)) return;
-  out.tools.push({ name, purpose: 'Observed in the session; creator must describe its purpose.' });
-  // Never traverse command strings, tool outputs, arbitrary data, or file contents.
+function tool(out, name, input, depth = 0) {
+  if (!string(name) || depth > 8) return;
+  const shortName = shortToolName(name);
+  if (shortName === 'exec') {
+    for (const call of nestedExecCalls(input)) tool(out, call.name, call.input, depth + 1);
+    return;
+  }
+  if (isHarnessTool(name)) return;
+  const shellTool = ['exec_command', 'shell', 'shell_command', 'run_command', 'bash', 'Bash'].includes(shortName);
+  if (!shellTool) out.tools.push({ name, purpose: 'Observed in the session; creator must describe its purpose.' });
   const args = inputObject(input);
+  inspectShell(name, typeof input === 'string' && !Object.keys(args).length ? input : args, {
+    ingredient: (name, purpose) => out.tools.push({ name, purpose }),
+    skill: (path, coordinates = {}) => {
+      const skill = { ...coordinates };
+      if (string(path)) {
+        skill.directory = path.replace(/[/\\]?SKILL\.md$/i, '') || '.';
+        skill.name = skill.directory.split(/[/\\]/).filter(Boolean).at(-1);
+      }
+      out.skills.push(skill);
+    },
+  });
+  // Only documented input fields are inspected. Outputs and arbitrary data
+  // objects never enter the evidence projection.
+
   const webReference = (value, label = 'Reference in tool input') => {
     if (typeof value === 'string' && /^https?:\/\//.test(value)) out.references.push({ kind: 'web', label, url: value });
   };
@@ -122,16 +165,22 @@ function tool(out, name, input) {
 }
 function blocks(content) { return Array.isArray(content) ? content : []; }
 
-export function parseClaudeSession(text) {
-  const rows = records(text);
-  oneSession(rows.map(row => row.sessionId ?? row.session_id));
+export function parseClaudeSession(text) { return parseClaudeRows(records(text)); }
+function parseClaudeRows(rows) {
+  let sessionId;
   const out = empty('claude-code');
   let state = 'unknown';
   const seen = new Set();
   for (const row of rows) {
+    const id = row.sessionId ?? row.session_id;
+    oneSession([sessionId, id]);
+    if (string(id)) sessionId = id;
     if (row.isSidechain) { out.unknowns.push('Sidechain records were omitted; capture each agent session separately.'); continue; }
     if (row.uuid && seen.has(row.uuid)) continue;
-    if (row.uuid) seen.add(row.uuid);
+    if (row.uuid) {
+      if (seen.size >= CAPTURE_LIMITS.records) fail('SESSION_LIMIT', 'Session exceeds the replay tracking limit.');
+      seen.add(row.uuid);
+    }
     if (row.type === 'user' && !row.isMeta && !row.isCompactSummary && row.toolUseResult === undefined && (!row.message?.role || row.message.role === 'user')) {
       const content = row.message?.content;
       const texts = typeof content === 'string' ? [content] : blocks(content).filter(b => b.type === 'text').map(b => b.text);
@@ -155,15 +204,32 @@ export function parseClaudeSession(text) {
   return finish(out);
 }
 
+function codexScan() {
+  let meta = {};
+  let id;
+  let canonicalPrompts = false;
+  return {
+    row(row) {
+      if (row.type === 'session_meta') {
+        const p = row.payload ?? {};
+        oneSession([id, p.id ?? p.session_id]);
+        if (string(p.id ?? p.session_id)) id = p.id ?? p.session_id;
+        if (p.forked_from_id || p.parent_thread_id || object(p.source?.subagent)) fail('AMBIGUOUS_SESSION', 'Forked/subagent rollouts contain inherited history; provide an isolated transcript.');
+        meta = { model_provider: p.model_provider };
+      }
+      if (row.type === 'event_msg' && row.payload?.type === 'user_message') canonicalPrompts = true;
+    },
+    result() { return { meta, canonicalPrompts }; },
+  };
+}
 export function parseCodexSession(text) {
   const rows = records(text);
-  oneSession(rows.filter(row => row.type === 'session_meta').map(row => row.payload?.id ?? row.payload?.session_id));
+  const scan = codexScan();
+  for (const row of rows) scan.row(row);
+  return parseCodexRows(rows, scan.result());
+}
+function parseCodexRows(rows, { meta, canonicalPrompts }) {
   const out = empty('codex');
-  const meta = rows.find(row => row.type === 'session_meta')?.payload ?? {};
-  // Fork copies are not distinguishable reliably across versions; do not merge
-  // inherited prompts with the chosen session based on timestamp heuristics.
-  if (meta.forked_from_id || meta.parent_thread_id || object(meta.source?.subagent)) fail('AMBIGUOUS_SESSION', 'Forked/subagent rollouts contain inherited history; provide an isolated transcript.');
-  const canonicalPrompts = rows.some(row => row.type === 'event_msg' && row.payload?.type === 'user_message');
   let state = 'unknown';
   for (const row of rows) {
     const p = row.payload;
@@ -181,7 +247,7 @@ export function parseCodexSession(text) {
         state = 'active';
       }
       if (p.type === 'message' && p.role === 'assistant' && p.phase === 'final_answer') state = 'finished';
-      if (['function_call', 'custom_tool_call'].includes(p.type)) tool(out, p.name, p.arguments);
+      if (['function_call', 'custom_tool_call'].includes(p.type)) tool(out, p.name, p.type === 'custom_tool_call' ? p.input ?? p.arguments : p.arguments);
       if (p.type === 'web_search_call') tool(out, 'web_search', {});
     }
   }
@@ -239,25 +305,60 @@ export function parseTurnlessSession(data) {
   return finish(out);
 }
 
-async function readText(file) {
+// Total file size is unrestricted; each record and retained projection are
+// bounded. Scan Codex metadata once, then replay through the same reducers used
+// by synthetic string fixtures. Never retain raw records across iterations.
+function parsedRecord(line, index) {
+  let value;
+  try { value = JSON.parse(line); } catch { fail('MALFORMED_SESSION', `Invalid session JSON at record ${index}.`); }
+  if (!object(value)) fail('MALFORMED_SESSION', `Invalid session record at record ${index}.`);
+  return value;
+}
+function* fileRecords(handle, size) {
+  // Synchronous positional reads let the shared synchronous reducers consume a
+  // lazy iterator. The open/stat lifecycle remains asynchronous and read-only.
+  const buffer = Buffer.alloc(64 * 1024);
+  let pieces = [];
+  let length = 0;
+  let offset = 0;
+  let index = 0;
+  while (offset < size) {
+    const bytes = readSync(handle.fd, buffer, 0, Math.min(buffer.length, size - offset), offset);
+    if (!bytes) fail('ACTIVE_SESSION', 'Session changed during capture; retry after it finishes.');
+    offset += bytes;
+    let start = 0;
+    for (let i = 0; i < bytes; i++) if (buffer[i] === 10) {
+      length += i - start;
+      if (length > CAPTURE_LIMITS.bytes) fail('SESSION_LIMIT', 'Session record exceeds the 32 MiB capture limit.');
+      pieces.push(Buffer.from(buffer.subarray(start, i)));
+      const line = Buffer.concat(pieces, length).toString('utf8');
+      pieces = []; length = 0; start = i + 1;
+      if (line.trim()) yield parsedRecord(line, ++index);
+    }
+    length += bytes - start;
+    if (length > CAPTURE_LIMITS.bytes) fail('SESSION_LIMIT', 'Session record exceeds the 32 MiB capture limit.');
+    if (start < bytes) pieces.push(Buffer.from(buffer.subarray(start, bytes)));
+  }
+  if (length) {
+    const line = Buffer.concat(pieces, length).toString('utf8');
+    if (line.trim()) yield parsedRecord(line, ++index);
+  }
+}
+async function readJsonl(file, source) {
   let handle;
   try {
-    // Nonblocking open prevents FIFOs from hanging before the file-type check.
     handle = await open(file, constants.O_RDONLY | (constants.O_NONBLOCK ?? 0));
     const before = await handle.stat();
     if (!before.isFile()) fail('INVALID_INPUT', 'Provide an explicit regular session file.');
-    if (before.size > CAPTURE_LIMITS.bytes) fail('SESSION_LIMIT', 'Session exceeds the 32 MiB capture limit.');
-    // Bounded read also protects against a file growing after stat().
-    const buffer = Buffer.alloc(before.size + 1);
-    let offset = 0;
-    while (offset < buffer.length) {
-      const { bytesRead } = await handle.read(buffer, offset, buffer.length - offset, offset);
-      if (!bytesRead) break;
-      offset += bytesRead;
-    }
+    let result;
+    if (source === 'codex') {
+      const scan = codexScan();
+      for (const row of fileRecords(handle, before.size)) scan.row(row);
+      result = parseCodexRows(fileRecords(handle, before.size), scan.result());
+    } else result = parseClaudeRows(fileRecords(handle, before.size));
     const after = await handle.stat();
-    if (before.size !== after.size || before.mtimeMs !== after.mtimeMs || offset > before.size) fail('ACTIVE_SESSION', 'Session changed during capture; retry after it finishes.');
-    return buffer.subarray(0, offset).toString('utf8');
+    if (before.size !== after.size || before.mtimeMs !== after.mtimeMs || before.ctimeMs !== after.ctimeMs) fail('ACTIVE_SESSION', 'Session changed during capture; retry after it finishes.');
+    return result;
   } catch (error) {
     if (error instanceof CaptureSourceError) throw error;
     fail('READ_FAILED', 'Could not read the explicit session file.');
@@ -322,6 +423,5 @@ export async function readCaptureSource({ source, file, thread } = {}) {
   if (!string(file)) fail('FILE_REQUIRED', 'Capture requires an explicit input file.');
   if (source === 'turnless') return readTurnless(file, thread);
   if (thread !== undefined) fail('INVALID_INPUT', '--thread applies to Turnless databases; select one JSONL session file for this source.');
-  const text = await readText(file);
-  return source === 'claude-code' ? parseClaudeSession(text) : parseCodexSession(text);
+  return readJsonl(file, source);
 }

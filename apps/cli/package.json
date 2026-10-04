@@ -1,6 +1,6 @@
 {
   "name": "@fraylabs/possible",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "Create, publish, discover, and reuse source-owned AI Outcomes",
   "keywords": [
     "codex",
@@ -36,5 +36,8 @@
   "license": "MIT",
   "publishConfig": {
     "access": "public"
+  },
+  "dependencies": {
+    "acorn": "^8.18.0"
   }
 }

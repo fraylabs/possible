@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+### CLI 0.5.2
+
+- `possible capture` produces useful recipes from real sessions: meaningful programs, packages and libraries from nested exec and shell calls (no runtimes, text utilities or standard-library modules), detected skills, harness envelopes and attachments omitted, descriptive step titles with acknowledgement turns folded in.
+- Sessions of any size are streamed with bounded memory; long commands are inspected in linear time.
+- Every automatically detected tool must be described or removed by the creator before review.
+
 ### CLI 0.3.1 release candidate
 
 - Accept the current schema v4 `primary` and optional `secondary` attribution fields while retaining schema v3 compatibility.

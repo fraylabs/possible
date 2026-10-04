@@ -1,6 +1,7 @@
 # Standalone CLI releases
 
-The CLI source stays dependency-free JavaScript. Users install an executable with
+The CLI uses Acorn to inspect exec wrappers without evaluating session code.
+The parser is bundled into the executable with its MIT license. Users install an executable with
 its own Node runtime; npm 0.3.1 remains legacy and is never published by this pipeline.
 
 `CLI binaries` runs the CLI tests before native builds on macOS arm64/x86_64 and
@@ -13,7 +14,7 @@ Following [Node's SEA procedure](https://nodejs.org/download/release/v22.23.3/do
 the build creates a preparation blob without snapshots or code cache, copies the
 same Node binary, removes its existing macOS signature, injects the blob, then
 ad-hoc signs and verifies the macOS executable. Archives contain `possible`, its
-MIT license, and the embedded Node distribution's license notices. Linux uses
+MIT license, the Acorn license, and the embedded Node distribution's license notices. Linux uses
 the official glibc Node distribution (glibc 2.28+); Alpine/musl is not supported.
 
 Every platform runs the built executable in a clean environment without Node on
@@ -25,7 +26,7 @@ publication is involved in these checks.
 
 1. Change `apps/cli/package.json` and its root lockfile entry to the new version.
 2. Open a branch/PR. Merge after CI and all four native packaging jobs pass.
-3. Push a matching version tag, for example `v0.5.1`.
+3. Push a matching version tag, for example `v0.5.2`.
 
 The workflow publishes four `possible-v<VERSION>-<OS>-<ARCH>.tar.gz` assets and
 `SHA256SUMS` at the matching GitHub release, then the tap-owned updater generates `Formula/possible.rb`
@@ -59,10 +60,11 @@ archive against `SHA256SUMS`, and atomically installs into `~/.local/bin` or
 With the pinned official Node distribution on PATH:
 
 ```sh
+npm ci --workspace @fraylabs/possible --include-workspace-root=false --ignore-scripts --no-audit --no-fund
 npm ci --prefix scripts/sea --ignore-scripts --no-audit --no-fund
 node scripts/sea/build.mjs
 node scripts/sea/smoke.mjs
 ```
 
-The npm invocation installs build tools only. The resulting binary needs neither
+These commands install the CLI parser and packaging tools. The resulting binary needs neither
 Node nor npm on the user's system.

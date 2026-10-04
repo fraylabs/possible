@@ -18,6 +18,30 @@ async function privateDirectory(folder) {
 }
 const privateWrite = (path, text) => writeFile(path, text, { flag: "wx", mode: 0o600 });
 
+// Titles and collapsed turns are derived only after redaction, so a short
+// title cannot reintroduce a secret removed from the recorded prompt.
+function recipeSteps(prompts) {
+  const steps = [];
+  // Short acknowledgements ("Yes, proceed with this pack.", "Continue from my
+  // previous answer.") carry no new instruction; fold them into the prior step.
+  const trivial = text => {
+    const words = text.trim().split(/\s+/);
+    return words.length <= 8 && /^(?:yes|yep|yeah|ok|okay|sure|continue|proceed|go ahead|please continue|please proceed|sounds good|looks good|lgtm)\b/i.test(text.trim());
+  };
+  for (const { text } of prompts) {
+    if (trivial(text) && steps.length) {
+      steps.at(-1).prompt += `\n\n${text}`;
+      continue;
+    }
+    const prose = text.replace(/\[REDACTED[^\]]*\]/g, '').replace(/^[#>*\s]+/, '').replace(/^(?:\$[a-zA-Z][\w:-]*\s+)+/, '')
+      .replace(/^(?:please\s+|can you\s+|could you\s+|I (?:want|would like) (?:you )?to\s+)/i, '').trim();
+    const words = prose.split(/[\n.!?]/, 1)[0].trim().split(/\s+/).filter(Boolean).slice(0, 9).join(' ');
+    const title = words ? words[0].toUpperCase() + words.slice(1, 80) : 'Review redacted instructions';
+    steps.push({ title, instructions: title, prompt: text });
+  }
+  return steps;
+}
+
 function editableDraft(capture, findings) {
   const notes = [...new Set([
     "Recorded from a local session; privacy redactions and creator edits may change the wording.",
@@ -26,6 +50,7 @@ function editableDraft(capture, findings) {
     ...(capture.references.length ? [`${capture.references.length} reference ingredients were detected; only shareable URLs retained below are included.`] : []),
     ...(capture.skills.length ? [`${capture.skills.length} skill loads were detected; only complete, shareable repository and version coordinates retained below are included.`] : []),
   ])];
+  const steps = recipeSteps(capture.prompts);
   const recipe = {
     provenance: { method: "recorded", source: capture.source },
     notes,
@@ -38,8 +63,10 @@ function editableDraft(capture, findings) {
   const references = capture.references.filter(reference => reference.url?.startsWith("https://"))
     .map(({ kind, label, url, purpose }) => ({ kind, label, url, ...(purpose ? { purpose } : {}) }));
   if (references.length) recipe.references = references;
-  if (capture.tools.length) recipe.tools = capture.tools;
-  if (capture.prompts.length) recipe.steps = capture.prompts.map(({ text }, index) => ({ title: `User prompt ${index + 1}`, instructions: "User message recorded in session order; inspect any privacy edits before reuse.", prompt: text }));
+  // One entry per tool name; the first observed purpose wins.
+  const tools = capture.tools.filter((tool, index) => capture.tools.findIndex(other => other.name === tool.name) === index);
+  if (tools.length) recipe.tools = tools;
+  if (steps.length) recipe.steps = steps;
   else recipe.notes.push("No user prompts could be determined. Supply an appropriate public prompt before export.");
   return {
     schemaVersion: 1,
@@ -50,7 +77,7 @@ function editableDraft(capture, findings) {
       requirements: [], primary: { kind: "product", id: "choose/product" }, recipe,
     },
     about: "# REQUIRED: Outcome title\n\nREQUIRED: Describe the result and add only public previews or artifact links to the manifest.\n",
-    prompt: capture.prompts.map(({ text }, index) => `User prompt ${index + 1}:\n${text}`).join("\n\n"),
+    prompt: steps.map(({ title, prompt }) => `${title}:\n${prompt}`).join("\n\n"),
     ingredientsToReview: { references: capture.references, skills: capture.skills },
     findings,
   };
@@ -92,7 +119,7 @@ function prepareReview(draft, reviewedAt) {
   try { validateOutcomeManifest(manifest); parseOutcomeMarkdown(draft.about); }
   catch { throw new Error("Draft metadata or outcome description is invalid. Check the Outcome format; no draft content was printed."); }
   if (!draft.prompt.trim()) throw new Error("Provide a public prompt before review.");
-  if (manifest.recipe.tools?.some(tool => tool.purpose === "Observed in the session; creator must describe its purpose.")) throw new Error("Describe each tool’s actual purpose or remove it before review.");
+  if (manifest.recipe.tools?.some(tool => /creator must (?:describe|confirm) its purpose\.$/.test(tool.purpose ?? ""))) throw new Error("Describe each tool’s actual purpose or remove it before review. Automatically detected names may be private.");
   const findings = inspectReviewText(serialized);
   findings.push({ category: "ingredient-names", severity: "review", message: "Confirm model, provider and tool names are public; private deployment names and internal MCP names may not look like secrets." });
   if (findings.some(finding => finding.severity === "block")) {

@@ -29,7 +29,7 @@ if [ -z "$version" ]; then
   version=${latest##*/}
 fi
 version=${version#v}
-printf '%s\n' "$version" | LC_ALL=C grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$' || fail 'POSSIBLE_VERSION must be a version such as 0.5.1 or v0.5.1.'
+printf '%s\n' "$version" | LC_ALL=C grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$' || fail 'POSSIBLE_VERSION must be a version such as 0.5.2 or v0.5.2.'
 install_dir=${POSSIBLE_INSTALL_DIR:-${HOME:?HOME must be set}/.local/bin}
 case "$install_dir" in /*) ;; *) install_dir=$(pwd)/$install_dir ;; esac
 archive=possible-v$version-$os-$arch.tar.gz
