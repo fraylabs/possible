@@ -17,9 +17,15 @@ if (frontmatter) {
   const keys = [...frontmatter[1].matchAll(/^([a-z]+):/gm)].map((match) => match[1]).sort();
   check(JSON.stringify(keys) === JSON.stringify(["description", "name"]), "frontmatter must contain only name and description");
 }
-for (const phrase of ["search_outcomes", "fetch_outcome", "possible@0.3.0 search", "possible@0.3.0 fetch", "original prompt", "execution prompt", "fresh subagent", "official documentation", "@fraylabs/possible@0.3.0 create", "@fraylabs/possible@0.3.0 publish", "@fraylabs/possible@0.3.0 bookmark add"]) {
+for (const phrase of ["search_outcomes", "fetch_outcome", "original prompt", "execution prompt", "fresh subagent", "official documentation"]) {
   check(skill.toLowerCase().includes(phrase.toLowerCase()), `SKILL.md must include '${phrase}'`);
 }
+for (const command of ["search", "fetch", "create", "publish", "bookmark add"]) {
+  check(skill.includes(`possible ${command}`), `SKILL.md must include a standalone CLI ${command} command`);
+}
+check(skill.includes("curl -fsSL https://possible.sh/install.sh | sh"), "SKILL.md must include the standalone installer");
+check(skill.includes("brew install fraylabs/tap/possible"), "SKILL.md must include Homebrew installation");
+check(!/npx (?:@fraylabs\/possible|https:\/\/github.com\/fraylabs\/possible\/releases)/.test(skill), "SKILL.md must not install the CLI through npm");
 for (const forbidden of ["Outcome Pack", "authored expectations", "trust status", "workstreams"]) {
   check(!skill.toLowerCase().includes(forbidden.toLowerCase()), `SKILL.md must not include '${forbidden}'`);
 }
