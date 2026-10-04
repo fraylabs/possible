@@ -1,5 +1,11 @@
 # Possible organic posting experiment, Oct 4–18 2026
 
+**On hold by Brian, Oct 4:** no posts were made. Bluesky is deprioritized because its
+community is strongly anti-AI; if this resumes, prefer X, Reddit and developer communities.
+Bluesky and Reddit signups were stopped at their captchas and not completed. Drafts
+(MicroDuck for Bluesky and Reddit, the CLI clip and its VHS tape, profile bios) are in
+[drafts/](drafts/).
+
 Goal: learn what organic posting works for Possible, not volume. Each post tests one
 thing on purpose. Organic only: no spend, DMs, cold outreach, vote asking or
 sockpuppets. Posts never speak as Brian or for Fray Labs as a company.
@@ -47,8 +53,8 @@ connection is in prod:/actas. Accounts are created in a dedicated Chrome profile
 | Channel | Handle | Email used | Status (2026-10-04) |
 | --- | --- | --- | --- |
 | Hacker News | `possiblesh` | none (HN needs no email) | Created; not used for posting (see rules) |
-| Bluesky | `possiblesh.bsky.social` → `@possible.sh` planned | ActAs inbox `agent-4b17e6db66da5522165e1c36@mail.actas.dev` | Form filled; stopped at hCaptcha, needs a human |
-| Reddit | `possiblesh` planned | ActAs inbox | Registration opens with a "prove your humanity" challenge; needs a human |
+| Bluesky | `possiblesh.bsky.social` → `@possible.sh` planned | ActAs inbox `agent-4b17e6db66da5522165e1c36@mail.actas.dev` | Not created: stopped at hCaptcha, then put on hold |
+| Reddit | `possiblesh` planned | ActAs inbox | Not created: stopped at "prove your humanity", then put on hold |
 | X | — | ActAs inbox | Signup requires a phone number; not created (brief: no Brian phone) |
 
 The ActAs address is temporary; accounts move to an ActAs identity once delegated
