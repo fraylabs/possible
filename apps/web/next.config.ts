@@ -8,6 +8,7 @@ if (existsSync(workspaceEnvPath)) process.loadEnvFile(workspaceEnvPath);
 const nextConfig: NextConfig = {
   output: "export",
   trailingSlash: true,
+  experimental: { cpus: 4 },
   turbopack: {
     root: path.resolve(import.meta.dirname, "../.."),
   },
