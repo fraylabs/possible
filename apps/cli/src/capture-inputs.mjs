@@ -104,16 +104,40 @@ function packageArguments(words, runner = false) {
   }
   return values;
 }
+// Line-based so cost stays linear in command length (a single regex over the
+// whole command was quadratic on long one-line commands). Unterminated
+// heredocs are left in place, as before.
+function stripHeredocs(command, onBody) {
+  if (!command.includes('<<')) return command;
+  const lines = command.split('\n');
+  const positions = new Map();
+  lines.forEach((line, index) => {
+    if (!positions.has(line)) positions.set(line, []);
+    positions.get(line).push(index);
+  });
+  const out = [];
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    const match = line.includes('<<') ? line.match(/<<-?[ \t]*(['"]?)([a-zA-Z_]\w*)\1/) : null;
+    const end = match && (positions.get(match[2]) ?? []).find(index => index > i);
+    if (!match || end === undefined) { out.push(line); continue; }
+    const head = line.slice(0, match.index);
+    onBody(head, lines.slice(i + 1, end).join('\n'));
+    out.push(head);
+    i = end;
+  }
+  return out.join('\n');
+}
+
 export function inspectShell(name, input, { ingredient, skill }) {
   if (!shellNames.has(shortToolName(name))) return;
   const command = typeof input === 'string' ? input : input?.cmd ?? input?.command;
   if (typeof command !== 'string' || command.length > MAX_CODE) return;
   // Executed heredocs are inspected for imports, but their body is never copied
   // or scanned as shell commands. File-writing heredocs remain opaque.
-  const shell = command.replace(/([^\n]*)<<-?\s*(['"]?)([a-zA-Z_]\w*)\2[^\n]*\n([\s\S]*?)\n\3(?=\n|$)/g, (_all, head, _quote, _marker, body) => {
+  const shell = stripHeredocs(command, (head, body) => {
     if (/\bpython(?:3)?\b/.test(head)) imports(body, 'python', ingredient);
     if (/\bnode\b/.test(head)) imports(body, 'javascript', ingredient);
-    return head;
   });
   const segments = [];
   let segment = [];

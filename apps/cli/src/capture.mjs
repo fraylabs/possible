@@ -119,7 +119,7 @@ function prepareReview(draft, reviewedAt) {
   try { validateOutcomeManifest(manifest); parseOutcomeMarkdown(draft.about); }
   catch { throw new Error("Draft metadata or outcome description is invalid. Check the Outcome format; no draft content was printed."); }
   if (!draft.prompt.trim()) throw new Error("Provide a public prompt before review.");
-  if (manifest.recipe.tools?.some(tool => tool.purpose === "Observed in the session; creator must describe its purpose.")) throw new Error("Describe each tool’s actual purpose or remove it before review.");
+  if (manifest.recipe.tools?.some(tool => /creator must (?:describe|confirm) its purpose\.$/.test(tool.purpose ?? ""))) throw new Error("Describe each tool’s actual purpose or remove it before review. Automatically detected names may be private.");
   const findings = inspectReviewText(serialized);
   findings.push({ category: "ingredient-names", severity: "review", message: "Confirm model, provider and tool names are public; private deployment names and internal MCP names may not look like secrets." });
   if (findings.some(finding => finding.severity === "block")) {

@@ -184,3 +184,16 @@ test('acknowledgement sentences fold into the prior step, leading skill tokens l
   assert.match(draft.manifest.recipe.steps[0].prompt, /Yes, proceed with this pack\.\n\nContinue from my previous answer\.$/);
   assert.deepEqual(draft.manifest.recipe.tools.map(t => t.name), ['trimesh', 'blender']);
 });
+
+test('long one-line and unterminated-heredoc commands are inspected in linear time', () => {
+  for (const cmd of ['echo ' + 'a'.repeat(256 * 1024 - 10), 'python3 - <<EOF\n' + 'a'.repeat(250 * 1024), ('cat <<X\n').repeat(20000)]) {
+    const started = performance.now();
+    parseCodexSession(session([user("Go."), exec(`await tools.exec_command({ cmd: ${JSON.stringify(cmd)} });`)]));
+    assert.ok(performance.now() - started < 1000, `took ${Math.round(performance.now() - started)}ms`);
+  }
+});
+
+test('terminated heredocs still expose imports', () => {
+  const result = parseCodexSession(session([user("Go."), exec(`await tools.exec_command({ cmd: ${JSON.stringify("python3 - <<'PY'\nimport trimesh\nPY\nls")} });`)]));
+  assert.deepEqual(result.tools.map(t => t.name), ['trimesh']);
+});
