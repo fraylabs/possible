@@ -7,6 +7,51 @@ import { auth } from "./auth";
 const http = httpRouter();
 auth.addHttpRoutes(http);
 
+const visitCors = {
+  "access-control-allow-origin": "https://possible.sh",
+  "access-control-allow-headers": "content-type",
+  "access-control-allow-methods": "POST,OPTIONS",
+  "cache-control": "no-store",
+  "vary": "Origin",
+};
+http.route({ path: "/api/visits", method: "OPTIONS", handler: httpAction(async () => new Response(null, { status: 204, headers: visitCors })) });
+http.route({
+  path: "/api/visits", method: "POST",
+  handler: httpAction(async (ctx, request) => {
+    if (request.headers.get("origin") !== "https://possible.sh") return new Response(null, { status: 403 });
+    if (request.headers.get("dnt") === "1" || request.headers.get("sec-gpc") === "1") return new Response(null, { status: 204, headers: visitCors });
+    if (!request.headers.get("content-type")?.startsWith("application/json")) return new Response(null, { status: 415, headers: visitCors });
+    // Bound the actual stream, even when content-length is missing or forged.
+    const reader = request.body?.getReader();
+    if (!reader) return new Response(null, { status: 400, headers: visitCors });
+    let text = "";
+    let bytes = 0;
+    const decoder = new TextDecoder();
+    try {
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        bytes += value.byteLength;
+        if (bytes > 1024) {
+          await reader.cancel();
+          return new Response(null, { status: 413, headers: visitCors });
+        }
+        text += decoder.decode(value, { stream: true });
+      }
+      text += decoder.decode();
+      const body = JSON.parse(text);
+      const keys = ["path", "referrerHost", "utmSource", "utmMedium", "utmCampaign"];
+      if (!body || typeof body !== "object" || Object.keys(body).length !== keys.length || !keys.every((key) => typeof body[key] === "string")) return new Response(null, { status: 400, headers: visitCors });
+      const counted = await ctx.runMutation(internal.visits.record, {
+        path: body.path, referrerHost: body.referrerHost, utmSource: body.utmSource, utmMedium: body.utmMedium, utmCampaign: body.utmCampaign,
+      });
+      return new Response(JSON.stringify({ counted }), { headers: { ...visitCors, "content-type": "application/json" } });
+    } catch {
+      return new Response(null, { status: 400, headers: visitCors });
+    }
+  }),
+});
+
 type PublicOutcome = {
   id: string;
   title: string;

@@ -94,6 +94,32 @@ npm run check
 
 Local backend development uses `npx convex dev`. Publishing remains account-free and source-owned; a reader may sign in with GitHub only when they want to like or save an Outcome.
 
+### Page-view counts
+
+possible.sh counts page views by page and referring site; no cookies or personal data.
+Counts are UTC daily aggregates of a known page path, referring hostname, and optional
+`utm_source`, `utm_medium`, and `utm_campaign`. The browser skips DNT, Global Privacy
+Control, localhost and preview hosts; requests omit credentials and the HTTP referrer.
+No visitor identifiers, IPs, user agents, full referrer URLs or other query parameters
+are stored. UTM labels accept up to 64 letters, digits, dots, underscores or hyphens;
+invalid labels are omitted. Use campaign labels, never personal information.
+
+With the existing Convex CLI login authorized for `lim-brian/possible`, read production
+counts (including today; 1–31 days) from the repository root:
+
+```sh
+npm run visits -- --days 7
+# Equivalent:
+npx convex run --deployment reminiscent-lark-333 visits:daily '{"days":7}'
+```
+
+The read query and recording mutation are internal; only the origin-restricted HTTP
+endpoint accepts browser writes. Counts measure page views, not unique visitors.
+Global guards allow at most 120 writes per minute, 100,000 per UTC day and 1,000
+distinct buckets per day. Origin checks can be spoofed by non-browser clients;
+counts can include bots and undercount during bursts or tracking failures. Existing
+Outcome usage/reputation tracking is separate and unchanged.
+
 CLI 0.5.1 is available as [standalone GitHub release binaries](https://github.com/fraylabs/possible/releases/tag/v0.5.1). The npm registry version 0.3.1 is legacy and remains unchanged. See [release packaging](scripts/sea/README.md) for the automated build and tap update path.
 
 ## Capture a finished session locally
