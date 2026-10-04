@@ -1,0 +1,9 @@
+{
+  "name": "possible-sea-build",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "esbuild": "0.28.1",
+    "postject": "1.0.0-alpha.6"
+  }
+}

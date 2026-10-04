@@ -4,15 +4,11 @@ import { fileURLToPath } from "node:url";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const directory = join(root, "skills", "possible");
-const [skill, metadata, entries, packageText] = await Promise.all([
+const [skill, metadata, entries] = await Promise.all([
   readFile(join(directory, "SKILL.md"), "utf8"),
   readFile(join(directory, "agents", "openai.yaml"), "utf8"),
   readdir(directory),
-  readFile(join(root, "apps", "cli", "package.json"), "utf8"),
 ]);
-const version = JSON.parse(packageText).version;
-const cliPackage = `@fraylabs/possible@${version}`;
-const cliRelease = `https://github.com/fraylabs/possible/releases/download/v${version}/fraylabs-possible-${version}.tgz`;
 const errors = [];
 const check = (condition, message) => { if (!condition) errors.push(message); };
 const frontmatter = skill.match(/^---\n([\s\S]*?)\n---\n/);
@@ -25,8 +21,11 @@ for (const phrase of ["search_outcomes", "fetch_outcome", "original prompt", "ex
   check(skill.toLowerCase().includes(phrase.toLowerCase()), `SKILL.md must include '${phrase}'`);
 }
 for (const command of ["search", "fetch", "create", "publish", "bookmark add"]) {
-  check([cliPackage, cliRelease].some(source => skill.includes(`npx ${source} ${command}`)), `SKILL.md must include a versioned CLI ${command} command`);
+  check(skill.includes(`possible ${command}`), `SKILL.md must include a standalone CLI ${command} command`);
 }
+check(skill.includes("curl -fsSL https://possible.sh/install.sh | sh"), "SKILL.md must include the standalone installer");
+check(skill.includes("brew install fraylabs/tap/possible"), "SKILL.md must include Homebrew installation");
+check(!/npx (?:@fraylabs\/possible|https:\/\/github.com\/fraylabs\/possible\/releases)/.test(skill), "SKILL.md must not install the CLI through npm");
 for (const forbidden of ["Outcome Pack", "authored expectations", "trust status", "workstreams"]) {
   check(!skill.toLowerCase().includes(forbidden.toLowerCase()), `SKILL.md must not include '${forbidden}'`);
 }

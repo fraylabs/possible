@@ -1,0 +1,124 @@
+name: CLI binaries
+
+on:
+  push:
+    tags: ['v*']
+  pull_request:
+    paths:
+      - 'apps/cli/**'
+      - 'scripts/sea/**'
+      - 'apps/web/public/install.sh'
+      - '.github/workflows/release-cli.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: possible-cli-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  NODE_VERSION: '22.23.3'
+
+jobs:
+  test:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - name: Verify release version
+        if: startsWith(github.ref, 'refs/tags/')
+        run: node -e 'const p = require("./apps/cli/package.json"); if (process.env.GITHUB_REF_NAME !== "v" + p.version) throw new Error("Tag must match CLI version");'
+      - name: Test unchanged CLI source
+        working-directory: apps/cli
+        run: node --test test/*.test.mjs
+      - run: sh -n apps/web/public/install.sh
+
+  build:
+    needs: test
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: macos-15
+            platform: darwin-arm64
+          - runner: macos-15-intel
+            platform: darwin-x64
+          - runner: ubuntu-22.04
+            platform: linux-x64
+          - runner: ubuntu-22.04-arm
+            platform: linux-arm64
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - name: Install pinned build tools (CLI has no dependencies)
+        run: npm ci --prefix scripts/sea --ignore-scripts --no-audit --no-fund
+      - name: Build SEA and ad-hoc sign macOS after injection
+        run: node scripts/sea/build.mjs
+      - name: Verify native binary without Node on PATH
+        run: node scripts/sea/smoke.mjs
+      - name: Verify installer and checksum failure behavior
+        run: node scripts/sea/install-smoke.mjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: possible-${{ matrix.platform }}
+          path: dist/sea/*.tar.gz
+          if-no-files-found: error
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/')
+    needs: build
+    runs-on: ubuntu-22.04
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: possible-*
+          path: dist/release
+          merge-multiple: true
+      - name: Generate release checksums
+        working-directory: dist/release
+        run: sha256sum possible-*.tar.gz > SHA256SUMS
+      - name: Publish GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          cat > /tmp/release-notes.md <<'NOTES'
+          Standalone Possible CLI for macOS and Linux (arm64 and x86_64). Node is embedded; no Node or npm installation is required. Capture and redaction behavior is unchanged from 0.5.0.
+
+          Install: `curl -fsSL https://possible.sh/install.sh | sh`
+
+          Homebrew: `brew install fraylabs/tap/possible`
+
+          Set `POSSIBLE_VERSION` to pin a release and `POSSIBLE_INSTALL_DIR` to choose a writable directory. The default is `~/.local/bin`. All archives are covered by SHA256SUMS. npm 0.3.1 is legacy and is not updated.
+          NOTES
+          if gh release view "$TAG" --json isDraft --jq .isDraft > /tmp/release-draft; then
+            if [ "$(cat /tmp/release-draft)" = true ]; then
+              gh release upload "$TAG" dist/release/* --clobber
+            else
+              mkdir /tmp/published
+              gh release download "$TAG" --pattern SHA256SUMS --dir /tmp/published
+              cmp dist/release/SHA256SUMS /tmp/published/SHA256SUMS
+            fi
+          else
+            gh release create "$TAG" dist/release/* --draft --verify-tag --title "Possible CLI $TAG" --notes-file /tmp/release-notes.md
+          fi
+          gh release edit "$TAG" --draft=false --latest

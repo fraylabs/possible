@@ -65,7 +65,7 @@ export function PublishPage() {
 
         <section className="source-publish-contract">
           <div><span>01</span><h2>Author one folder per Outcome.</h2><pre>{"outcomes.json\noutcomes/<slug>/\n  outcome.json\n  outcome.md\n  prompt.md\n  media/       optional"}</pre></div>
-          <div><span>02</span><h2>Validate and publish.</h2><p>Replace owner/product with the main product used. The CLI creates the folder, checks the public contract, and submits the source URL.</p><CopyButton label="Copy CLI commands" value={"npx https://github.com/fraylabs/possible/releases/download/v0.4.0/fraylabs-possible-0.4.0.tgz create my-outcome --product owner/product\nnpx https://github.com/fraylabs/possible/releases/download/v0.4.0/fraylabs-possible-0.4.0.tgz validate\nnpx https://github.com/fraylabs/possible/releases/download/v0.4.0/fraylabs-possible-0.4.0.tgz publish"} /></div>
+          <div><span>02</span><h2>Validate and publish.</h2><p>Replace owner/product with the main product used. The CLI creates the folder, checks the public contract, and submits the source URL.</p><CopyButton label="Copy CLI commands" value={"curl -fsSL https://possible.sh/install.sh | sh\nexport PATH=\"$HOME/.local/bin:$PATH\"\npossible create my-outcome --product owner/product\npossible validate\npossible publish"} /></div>
         </section>
       </section>
     </SiteShell>
