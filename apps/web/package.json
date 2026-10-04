@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "test": "vitest run src/App.test.tsx",
+    "test": "vitest run src/App.test.tsx src/page-visits.test.tsx",
     "test:watch": "vitest src/App.test.tsx"
   },
   "dependencies": {

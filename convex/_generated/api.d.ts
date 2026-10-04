@@ -16,6 +16,8 @@ import type * as registry from "../registry.js";
 import type * as sourceDiagnostics from "../sourceDiagnostics.js";
 import type * as sourceRegistration from "../sourceRegistration.js";
 import type * as usage from "../usage.js";
+import type * as visitValidation from "../visitValidation.js";
+import type * as visits from "../visits.js";
 
 import type {
   ApiFromModules,
@@ -32,6 +34,8 @@ declare const fullApi: ApiFromModules<{
   sourceDiagnostics: typeof sourceDiagnostics;
   sourceRegistration: typeof sourceRegistration;
   usage: typeof usage;
+  visitValidation: typeof visitValidation;
+  visits: typeof visits;
 }>;
 
 /**

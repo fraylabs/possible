@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { siteDescription, siteUrl } from "./_metadata";
 import { possibleVersion } from "../src/public-content";
 import { BackendProvider } from "../src/backend-provider";
+import { PageVisits } from "../src/page-visits";
 import "../src/styles.css";
 
 export const metadata: Metadata = {
@@ -79,6 +80,7 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
     <html lang="en" suppressHydrationWarning>
       <head><script dangerouslySetInnerHTML={{ __html: themeScript }} /></head>
       <body>
+        <PageVisits />
         <BackendProvider>{children}</BackendProvider>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(discoveryGraph) }} />
       </body>

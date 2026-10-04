@@ -9,6 +9,7 @@
     "packages/*"
   ],
   "scripts": {
+    "visits": "node scripts/visits.mjs",
     "build": "npm run build -w @possible/catalog && npm run build:consumers && node scripts/prepare-sites-dist.mjs",
     "build:consumers": "npm run build -w @fraylabs/possible && npm run build -w @possible/mcp && npm run build -w @possible/web",
     "lint": "oxlint --config oxlint.config.json .",

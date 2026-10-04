@@ -4,6 +4,13 @@ import { v } from "convex/values";
 
 export default defineSchema({
   ...authTables,
+  pageVisits: defineTable({
+    date: v.string(), path: v.string(), referrerHost: v.string(),
+    utmSource: v.string(), utmMedium: v.string(), utmCampaign: v.string(), count: v.number(),
+  }).index("by_bucket", ["date", "path", "referrerHost", "utmSource", "utmMedium", "utmCampaign"]),
+  pageVisitBudgets: defineTable({
+    date: v.string(), minute: v.number(), minuteCount: v.number(), count: v.number(), buckets: v.number(),
+  }).index("by_date", ["date"]),
   outcomeSources: defineTable({
     sourceType: v.union(v.literal("github"), v.literal("well-known")),
     locator: v.string(),
