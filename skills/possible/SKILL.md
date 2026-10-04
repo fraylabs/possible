@@ -23,7 +23,7 @@ possible --version
 ```
 
 No Node or npm is required. The script verifies SHA256 and uses `~/.local/bin`
-without sudo. Set `POSSIBLE_VERSION=0.5.1` to pin this release, or
+without sudo. Set `POSSIBLE_VERSION=0.5.2` to pin this release, or
 `POSSIBLE_INSTALL_DIR` for another writable directory. npm 0.3.1 is legacy.
 
 ## Discover before writing
@@ -134,7 +134,7 @@ Bookmarks are stored locally in `.possible` and do not require an account.
 
 ## Capture a finished session
 
-When the user asks to capture their completed work, use the standalone CLI 0.5.1 or later.
+When the user asks to capture their completed work, use the standalone CLI 0.5.2 or later.
 Ask for the specific local session file if it is not known; never crawl their
 history or read unrelated threads. Supported sources: Claude Code JSONL,
 Turnless/T3 SQLite with an exact thread ID, then Codex JSONL.

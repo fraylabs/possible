@@ -26,7 +26,7 @@ publication is involved in these checks.
 
 1. Change `apps/cli/package.json` and its root lockfile entry to the new version.
 2. Open a branch/PR. Merge after CI and all four native packaging jobs pass.
-3. Push a matching version tag, for example `v0.5.1`.
+3. Push a matching version tag, for example `v0.5.2`.
 
 The workflow publishes four `possible-v<VERSION>-<OS>-<ARCH>.tar.gz` assets and
 `SHA256SUMS` at the matching GitHub release, then the tap-owned updater generates `Formula/possible.rb`
