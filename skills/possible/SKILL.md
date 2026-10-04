@@ -11,11 +11,26 @@ and ordered steps. Simple Outcomes may contain only a prompt.
 
 An Outcome is precedent to inspect and remix, not a rigid workflow. Preserve useful creative freedom while giving a fresh agent the context, current methods, and concrete inputs it needs.
 
+## Install the CLI
+
+When the Possible MCP is unavailable, install the standalone CLI once:
+
+```sh
+curl -fsSL https://possible.sh/install.sh | sh
+export PATH="$HOME/.local/bin:$PATH"
+# Or: brew install fraylabs/tap/possible
+possible --version
+```
+
+No Node or npm is required. The script verifies SHA256 and uses `~/.local/bin`
+without sudo. Set `POSSIBLE_VERSION=0.5.1` to pin this release, or
+`POSSIBLE_INSTALL_DIR` for another writable directory. npm 0.3.1 is legacy.
+
 ## Discover before writing
 
 Preserve the user's original prompt verbatim. Determine whether they want to browse possibilities, prepare a prompt, execute work, or publish completed work.
 
-For browsing or execution, use `search_outcomes` when the Possible MCP is available. Otherwise run `npx https://github.com/fraylabs/possible/releases/download/v0.5.0/fraylabs-possible-0.5.0.tgz search "<ordinary-language request>"`. Show up to five relevant Outcomes when the user is browsing. When preparing work, read the strongest candidates' prompts and disclosed recipes with `fetch_outcome` or `npx https://github.com/fraylabs/possible/releases/download/v0.5.0/fraylabs-possible-0.5.0.tgz fetch <outcome-id> --json`. Search scores indicate text similarity, not quality.
+For browsing or execution, use `search_outcomes` when the Possible MCP is available. Otherwise run `possible search "<ordinary-language request>"`. Show up to five relevant Outcomes when the user is browsing. When preparing work, read the strongest candidates' prompts and disclosed recipes with `fetch_outcome` or `possible fetch <outcome-id> --json`. Search scores indicate text similarity, not quality.
 
 Use Outcomes as concrete precedent. If none fit, use current primary sources rather than forcing an unrelated example. Prefer official documentation, current source repositories and registries, then reproducible community examples. Check volatile information at run time. Popularity is a discovery signal, not proof that an Outcome is good.
 
@@ -82,9 +97,9 @@ Do not reconstruct absent provenance as fact. Mark unknown values honestly. The 
 Use the CLI to scaffold and validate:
 
 ```text
-npx https://github.com/fraylabs/possible/releases/download/v0.5.0/fraylabs-possible-0.5.0.tgz create <slug> --product <owner/product>
-npx https://github.com/fraylabs/possible/releases/download/v0.5.0/fraylabs-possible-0.5.0.tgz create <slug> --skill <owner/repository> <directory> <commit>
-npx https://github.com/fraylabs/possible/releases/download/v0.5.0/fraylabs-possible-0.5.0.tgz validate [directory]
+possible create <slug> --product <owner/product>
+possible create <slug> --skill <owner/repository> <directory> <commit>
+possible validate [directory]
 ```
 
 ## Publish from the owner's source
@@ -97,9 +112,9 @@ Possible does not host publisher accounts or own the canonical files. A publishe
 The publisher index is a thin list of manifest locations. Possible snapshots the public source revision and displays it; changing the source creates a new revision rather than rewriting history.
 
 ```text
-npx https://github.com/fraylabs/possible/releases/download/v0.5.0/fraylabs-possible-0.5.0.tgz publish [owner/repository | https://publisher.example]
-npx https://github.com/fraylabs/possible/releases/download/v0.5.0/fraylabs-possible-0.5.0.tgz add <owner/repository | https://publisher.example>
-npx https://github.com/fraylabs/possible/releases/download/v0.5.0/fraylabs-possible-0.5.0.tgz use <source>@<slug>
+possible publish [owner/repository | https://publisher.example]
+possible add <owner/repository | https://publisher.example>
+possible use <source>@<slug>
 ```
 
 GitHub publishing requires a clean committed revision so the snapshot is reproducible. No Possible login is required. A publisher-domain source is Official for that domain; other sources are Community unless their ownership follows directly from the public source.
@@ -109,9 +124,9 @@ GitHub publishing requires a clean committed revision so the snapshot is reprodu
 Use bookmarks only when the user asks:
 
 ```text
-npx https://github.com/fraylabs/possible/releases/download/v0.5.0/fraylabs-possible-0.5.0.tgz bookmark add <outcome-slug>
-npx https://github.com/fraylabs/possible/releases/download/v0.5.0/fraylabs-possible-0.5.0.tgz bookmark list
-npx https://github.com/fraylabs/possible/releases/download/v0.5.0/fraylabs-possible-0.5.0.tgz bookmark remove <outcome-slug>
+possible bookmark add <outcome-slug>
+possible bookmark list
+possible bookmark remove <outcome-slug>
 ```
 
 Bookmarks are stored locally in `.possible` and do not require an account.
@@ -119,13 +134,13 @@ Bookmarks are stored locally in `.possible` and do not require an account.
 
 ## Capture a finished session
 
-When the user asks to capture their completed work, use CLI 0.5.0 with Node 22.13+.
+When the user asks to capture their completed work, use the standalone CLI 0.5.1 or later.
 Ask for the specific local session file if it is not known; never crawl their
 history or read unrelated threads. Supported sources: Claude Code JSONL,
 Turnless/T3 SQLite with an exact thread ID, then Codex JSONL.
 
 ```sh
-npx https://github.com/fraylabs/possible/releases/download/v0.5.0/fraylabs-possible-0.5.0.tgz capture claude-code <session.jsonl> --out <private-draft>
+possible capture claude-code <session.jsonl> --out <private-draft>
 # Turnless: capture turnless <state.sqlite> --thread <thread-id> --out <private-draft>
 # Codex: capture codex <rollout.jsonl> --out <private-draft>
 ```

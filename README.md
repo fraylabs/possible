@@ -23,14 +23,32 @@ The repository or domain is the identity. A GitHub publisher keeps `outcomes.jso
 
 ## CLI
 
+Install the standalone binary (macOS or Linux, arm64 or x86_64; no Node or npm needed):
+
+```sh
+curl -fsSL https://possible.sh/install.sh | sh
+export PATH="$HOME/.local/bin:$PATH"
+# Or:
+brew install fraylabs/tap/possible
+```
+
+The script verifies SHA256 and installs to `~/.local/bin` without sudo. Use
+`POSSIBLE_INSTALL_DIR` for another writable directory and `POSSIBLE_VERSION` to
+pin a release, for example:
+
+```sh
+curl -fsSL https://possible.sh/install.sh | POSSIBLE_VERSION=0.5.1 POSSIBLE_INSTALL_DIR="$HOME/bin" sh
+possible --version
+```
+
 ```bash
-npx https://github.com/fraylabs/possible/releases/download/v0.5.0/fraylabs-possible-0.5.0.tgz search "make a launch video"
-npx https://github.com/fraylabs/possible/releases/download/v0.5.0/fraylabs-possible-0.5.0.tgz fetch <outcome-id> --json
-npx https://github.com/fraylabs/possible/releases/download/v0.5.0/fraylabs-possible-0.5.0.tgz create my-outcome --product owner/product
-npx https://github.com/fraylabs/possible/releases/download/v0.5.0/fraylabs-possible-0.5.0.tgz validate
-npx https://github.com/fraylabs/possible/releases/download/v0.5.0/fraylabs-possible-0.5.0.tgz publish owner/repository
-npx https://github.com/fraylabs/possible/releases/download/v0.5.0/fraylabs-possible-0.5.0.tgz add owner/repository
-npx https://github.com/fraylabs/possible/releases/download/v0.5.0/fraylabs-possible-0.5.0.tgz use owner/repository@my-outcome
+possible search "make a launch video"
+possible fetch <outcome-id> --json
+possible create my-outcome --product owner/product
+possible validate
+possible publish owner/repository
+possible add owner/repository
+possible use owner/repository@my-outcome
 ```
 
 Install the optional `$possible` Skill through the standard agent-skill ecosystem:
@@ -76,11 +94,11 @@ npm run check
 
 Local backend development uses `npx convex dev`. Publishing remains account-free and source-owned; a reader may sign in with GitHub only when they want to like or save an Outcome.
 
-CLI 0.5.0 is available as the [verified GitHub release package](https://github.com/fraylabs/possible/releases/tag/v0.5.0). The commands above use that package directly. The npm registry remains on 0.3.1 until publisher authentication is restored.
+CLI 0.5.1 is available as [standalone GitHub release binaries](https://github.com/fraylabs/possible/releases/tag/v0.5.1). The npm registry version 0.3.1 is legacy and remains unchanged. See [release packaging](scripts/sea/README.md) for the automated build and tap update path.
 
 ## Capture a finished session locally
 
-CLI 0.5.0 requires Node 22.13 or later. Capture reads only the explicit file you
+The standalone CLI includes its Node runtime. Capture reads only the explicit file you
 choose; it does not discover or upload your session history.
 
 ```sh
