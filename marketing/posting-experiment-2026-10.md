@@ -39,6 +39,21 @@ Own test runs use `POSSIBLE_TELEMETRY=0` so they don't count as uses.
   100 clones / 69 unique. `fraylabs/possible-outcomes`: 0 stars, 0 views, 138 clones / 84 unique
   (clones are mostly the Possible indexer and CI, not people).
 
+## Accounts
+
+Credentials live only in Infisical project `possible`, prod:/marketing. The inbox
+connection is in prod:/actas. Accounts are created in a dedicated Chrome profile, not Brian's.
+
+| Channel | Handle | Email used | Status (2026-10-04) |
+| --- | --- | --- | --- |
+| Hacker News | `possiblesh` | none (HN needs no email) | Created; not used for posting (see rules) |
+| Bluesky | `possiblesh.bsky.social` → `@possible.sh` planned | ActAs inbox `agent-4b17e6db66da5522165e1c36@mail.actas.dev` | Form filled; stopped at hCaptcha, needs a human |
+| Reddit | `possiblesh` planned | ActAs inbox | Registration opens with a "prove your humanity" challenge; needs a human |
+| X | — | ActAs inbox | Signup requires a phone number; not created (brief: no Brian phone) |
+
+The ActAs address is temporary; accounts move to an ActAs identity once delegated
+provisioning is live.
+
 ## Community rules checked
 
 | Channel | Checked | Rule that matters | Decision |
