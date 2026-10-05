@@ -37,7 +37,7 @@ The script verifies SHA256 and installs to `~/.local/bin` without sudo. Use
 pin a release, for example:
 
 ```sh
-curl -fsSL https://possible.sh/install.sh | POSSIBLE_VERSION=0.6.1 POSSIBLE_INSTALL_DIR="$HOME/bin" sh
+curl -fsSL https://possible.sh/install.sh | POSSIBLE_VERSION=0.6.2 POSSIBLE_INSTALL_DIR="$HOME/bin" sh
 possible --version
 ```
 
@@ -104,7 +104,7 @@ npm run check
 
 Local backend development uses `npx convex dev`. Publishing remains account-free and source-owned; a reader may sign in with GitHub only when they want to like or save an Outcome.
 
-CLI 0.6.1 is available as [standalone GitHub release binaries](https://github.com/fraylabs/possible/releases/tag/v0.6.1). The npm registry version 0.3.1 is legacy and remains unchanged. See [release packaging](scripts/sea/README.md) for the automated build and tap update path.
+CLI 0.6.2 is available as [standalone GitHub release binaries](https://github.com/fraylabs/possible/releases/tag/v0.6.2). The npm registry version 0.3.1 is legacy and remains unchanged. See [release packaging](scripts/sea/README.md) for the automated build and tap update path.
 
 ### Page-view counts
 
