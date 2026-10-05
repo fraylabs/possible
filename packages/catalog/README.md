@@ -67,8 +67,8 @@ skills. CLI 0.5.0 can capture a local finished session.
 ## Recipe origin (CLI 0.5.0)
 
 Optional `recipe.provenance` distinguishes `{ "method": "reconstructed" }` from
-captured records. A captured record uses `method: "recorded"`, `source` (`claude-code`,
-`turnless`, or `codex`), `reviewedAt` (UTC ISO timestamp), and `reviewDigest` (SHA-256).
+captured records. A captured record uses `method: "recorded"`, `source` (`claude-code`
+or `codex`), `reviewedAt` (UTC ISO timestamp), and `reviewDigest` (SHA-256).
 Use `possible capture review` and `capture export` to create these fields; never
 claim an unreviewed session was approved. Optional `recipe.notes` is a nonempty
 array of plain strings disclosing omissions and uncertainty. Existing recipes

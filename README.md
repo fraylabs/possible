@@ -141,7 +141,6 @@ choose; it does not discover or upload your session history.
 
 ```sh
 possible capture claude-code /path/to/session.jsonl --out ./private-draft
-# Or: possible capture turnless /path/to/state.sqlite --thread THREAD_ID --out ./private-draft
 # Or: possible capture codex /path/to/rollout.jsonl --out ./private-draft
 ```
 
@@ -186,18 +185,12 @@ is not a signature or proof of who reviewed the content. Approval is creator-att
 and unauthenticated: a terminal can be automated, so the check prevents accidental
 export, not deliberate automation. Session formats vary;
 Claude/Codex files cannot prove the agent process has stopped, so confirm the
-session is finished. Turnless requires an inactive exact thread in a local SQLite
-database; its historical requested model may differ from an unrecorded provider
-override. Do not use capture to infer details absent from the session.
+session is finished. Do not use capture to infer details absent from the session.
 
 The site labels captured recipes **Recorded from session**, manually reconstructed
 ones **Reconstructed**, and older prompt-only Outcomes **Prompt only**. Recorded
 recipes can contain creator edits and privacy redactions; they are not raw transcripts.
 
-
-Turnless uses SQLite's consistent read-only transaction. SQLite may create WAL/SHM
-coordination files beside the database even though no stored records are changed;
-do not use an immutable/raw file copy while the application may be writing.
 The current thread-message schema cannot authenticate which user-role messages
 were typed by the creator versus relayed by an agent; known server envelopes are
 excluded and the creator must review remaining authorship. On Windows, draft

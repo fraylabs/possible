@@ -1,7 +1,6 @@
 # CLI 0.5.0 — local recipe capture
 
-Capture a finished Claude Code JSONL session, one inactive Turnless/T3 SQLite
-thread, or a Codex JSONL session into an editable private draft. Node22.13+ is
+Capture a finished Claude Code or Codex JSONL session into an editable private draft. Node22.13+ is
 required. Capture omits tool outputs and file contents, flags/redacts sensitive
 text, and preserves unknown provenance as unknown.
 
