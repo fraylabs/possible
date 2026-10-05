@@ -54,6 +54,30 @@ test("GitHub source discovery follows its root index at an exact commit", async 
   assert.match(discovery.outcomes[0].contentHash, /^sha256:[0-9a-f]{64}$/);
 });
 
+function withRateLimitedApi(refs) {
+  const fixture = globalThis.fetch;
+  globalThis.fetch = async (url, options) => {
+    const value = String(url);
+    if (value.startsWith("https://api.github.com/")) return response({ message: "API rate limit exceeded" }, 403);
+    if (value === "https://github.com/example/outcomes.git/info/refs?service=git-upload-pack") return refs();
+    return fixture(url, options);
+  };
+}
+
+test("GitHub discovery falls back to git HTTP refs when the API is rate limited", async () => {
+  installGitHubFixture();
+  withRateLimitedApi(() => response(`001e# service=git-upload-pack\n0000015a${revision} HEAD\0multi_ack symref=HEAD:refs/heads/main\n003f${revision} refs/heads/main\n0000`));
+  const discovery = await discoverOutcomeSource("example/outcomes");
+  assert.equal(discovery.revision, revision);
+  assert.equal(discovery.outcomes[0].slug, "quiet-launch-film");
+});
+
+test("the git HTTP fallback refuses private or missing repositories", async () => {
+  installGitHubFixture();
+  withRateLimitedApi(() => response("Authentication required", 401));
+  await assert.rejects(discoverOutcomeSource("example/outcomes"), /not a public GitHub repository/);
+});
+
 test("GitHub source discovery accepts the primary-attribution contract", async () => {
   installGitHubFixture("./outcomes/quiet-launch-film/outcome.json", {
     ...manifest,
