@@ -408,6 +408,15 @@ test('credentials in text attachments block check and review without printing th
   await missing(join(folder, 'approval.json'));
 });
 
+test('a large generated text artifact does not trip the pasted-prose size rule', async t => {
+  const { folder } = await fixture(t);
+  await editForReview(folder);
+  await attach(folder);
+  await writeFile(join(folder, 'artifacts/index.html'), '<!doctype html><script>\n' + 'const cell = 1;'.repeat(2000) + '\n</script>');
+  await runCaptureCommand(['check', folder]);
+  await missing(join(folder, 'approval.json'));
+});
+
 test('public help advertises check and only Claude Code and Codex sources', async () => {
   const { stdout } = await execute(process.execPath, [cli, '--help']);
   assert.match(stdout, /capture check/);

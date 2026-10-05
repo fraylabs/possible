@@ -140,7 +140,7 @@ function prepareReview(draft, reviewedAt, files = []) {
   const findings = inspectReviewText(serialized);
   for (const file of files) {
     const text = file.bytes.toString('utf8');
-    if (!text.includes('\0') && Buffer.from(text).equals(file.bytes)) findings.push(...inspectReviewText(text));
+    if (!text.includes('\0') && Buffer.from(text).equals(file.bytes)) findings.push(...inspectReviewText(text, { checkSize: false }));
   }
   if (files.length) findings.push({ category: "attachments", severity: "review", message: "Inspect every attached file yourself, including embedded metadata. Binary media is not automatically redacted or inspected for secrets." });
   findings.push({ category: "ingredient-names", severity: "review", message: "Confirm model, provider and tool names are public; private deployment names and internal MCP names may not look like secrets." });
