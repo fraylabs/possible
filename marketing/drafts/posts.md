@@ -59,7 +59,7 @@ Tests: does a technical, honest breakdown earn discussion in a specialist commun
 
 ## p03-cli · Bluesky · CLI clip (format B)
 
-Video: media/cli-search.mp4
+Video: marketing/drafts/cli-recipe.mp4 (or .gif)
 Alt: A terminal. "possible search 'teach a robot duck a dance'" returns the MicroDuck Outcome first; "possible fetch <id>" prints its full prompt.
 
 Text:
