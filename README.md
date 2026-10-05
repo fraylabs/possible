@@ -37,7 +37,7 @@ The script verifies SHA256 and installs to `~/.local/bin` without sudo. Use
 pin a release, for example:
 
 ```sh
-curl -fsSL https://possible.sh/install.sh | POSSIBLE_VERSION=0.6.0 POSSIBLE_INSTALL_DIR="$HOME/bin" sh
+curl -fsSL https://possible.sh/install.sh | POSSIBLE_VERSION=0.6.1 POSSIBLE_INSTALL_DIR="$HOME/bin" sh
 possible --version
 ```
 
@@ -104,7 +104,7 @@ npm run check
 
 Local backend development uses `npx convex dev`. Publishing remains account-free and source-owned; a reader may sign in with GitHub only when they want to like or save an Outcome.
 
-CLI 0.6.0 is available as [standalone GitHub release binaries](https://github.com/fraylabs/possible/releases/tag/v0.6.0). The npm registry version 0.3.1 is legacy and remains unchanged. See [release packaging](scripts/sea/README.md) for the automated build and tap update path.
+CLI 0.6.1 is available as [standalone GitHub release binaries](https://github.com/fraylabs/possible/releases/tag/v0.6.1). The npm registry version 0.3.1 is legacy and remains unchanged. See [release packaging](scripts/sea/README.md) for the automated build and tap update path.
 
 ### Page-view counts
 
@@ -158,8 +158,10 @@ dynamic code and libraries loaded only by external files remain unknown. Skill
 reads and `$skill` mentions provide ingredient hints; repository revisions are
 kept only when explicitly recorded, never taken from the current checkout.
 Harness envelopes and inline attachment metadata are omitted while surrounding
-request text is kept. Step titles come from sanitized prompts; brief continuation
-turns join the preceding step.
+request text is kept. Step titles come from redacted prompts, skip leading acknowledgements and filler,
+and stop at a natural boundary within nine words. Brief continuation turns join
+the preceding step. prompt.md contains only the full prompts in order, separated
+by blank lines.
 
 JSONL files stream without a whole-file size limit. Individual records remain
 limited to 32 MiB, and retained evidence to 1,000 items per category and 2 MB total.
@@ -167,10 +169,24 @@ These bounds protect memory even when a rollout contains large tool outputs.
 
 
 ```sh
+possible capture check ./private-draft
 possible capture review ./private-draft
 possible capture export ./private-draft --out ./reviewed-outcome
 possible validate ./reviewed-outcome
 ```
+
+Optionally place public files in `private-draft/media/` and
+`private-draft/artifacts/`, and reference their relative paths in draft.json.
+Export copies these folders into the Outcome. Limits: 16 MiB per file, 64 MiB
+combined, 256 files, 512 entries and 16 directory levels. Symlinks, special files
+and paths outside the draft folder are rejected. Review includes every path,
+size and SHA-256 hash in the digest; adding, removing, renaming or changing a file
+requires a new review. Inspect files and embedded metadata yourself: binary
+media is not automatically redacted or scanned for secrets. Text files are scanned.
+
+`capture check` reports missing fields, undescribed tools and privacy findings
+without interaction. It exits non-zero on blockers, never writes a receipt and
+never approves anything.
 
 Review prints the exact export and requires the creator to type its approval code
 in an interactive terminal. There is no `--yes` option. Editing the draft or an

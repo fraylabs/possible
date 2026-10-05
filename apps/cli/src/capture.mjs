@@ -7,6 +7,7 @@ import { readCaptureSource } from "./capture-sources.mjs";
 import { redactCapture, inspectReviewText } from "./capture-redaction.mjs";
 import { canonicalJson, captureReviewDigest, verifyCaptureReview } from "./capture-integrity.mjs";
 import { validateOutcomeManifest, parseOutcomeMarkdown } from "./outcome-format.mjs";
+import { readCaptureFiles, fileInventory } from "./capture-files.mjs";
 
 const MAX_DRAFT = 1024 * 1024;
 const SOURCES = new Set(["claude-code", "turnless", "codex"]);
@@ -18,6 +19,24 @@ async function privateDirectory(folder) {
 }
 const privateWrite = (path, text) => writeFile(path, text, { flag: "wx", mode: 0o600 });
 
+function stepTitle(text) {
+  let prose = text.replace(/\[REDACTED[^\]]*\]/g, '').replace(/^[#>*\s]+/, '').replace(/^(?:\$[a-zA-Z][\w:-]*\s+)+/, '').trim();
+  // Remove whole acknowledgement sentences, retaining them in the full prompt.
+  prose = prose.replace(/^(?:(?:works nicely|looks (?:great|good)|sounds good|great|thanks|thank you|yes|yep|okay|ok)[.!?]+\s*)+/i, '');
+  prose = prose.replace(/^(?:(?:now|next|also)[,:]?\s+|please\s+|can you\s+|could you\s+|I (?:want|would like) (?:you )?to\s+)+/i, '');
+  const sentence = prose.split(/[\n.!?]/, 1)[0].trim().replace(/\s+/g, ' ');
+  // Prefer the complete first sentence. For longer requests, only end before
+  // explicit clause/phrase boundaries; never truncate a noun phrase at word 9.
+  const candidates = [sentence];
+  const boundaries = /[,;:—]|\s+(?:and|then|so|because|while|which|that|using|with|without|as|for|to|into|from|in|on|at)\s+/gi;
+  for (const match of sentence.matchAll(boundaries)) candidates.push(sentence.slice(0, match.index).trim().replace(/[,;:—]+$/, ''));
+  const title = candidates.filter(candidate => {
+    const words = candidate.split(/\s+/).filter(Boolean);
+    return words.length >= 2 && words.length <= 9 && !/\b(?:a|an|the|as|and|or|to|with|of|one|self-contained)$/i.test(candidate);
+  }).sort((a, b) => b.length - a.length)[0];
+  return title ? title[0].toUpperCase() + title.slice(1) : 'Review redacted instructions';
+}
+
 // Titles and collapsed turns are derived only after redaction, so a short
 // title cannot reintroduce a secret removed from the recorded prompt.
 function recipeSteps(prompts) {
@@ -26,17 +45,14 @@ function recipeSteps(prompts) {
   // previous answer.") carry no new instruction; fold them into the prior step.
   const trivial = text => {
     const words = text.trim().split(/\s+/);
-    return words.length <= 8 && /^(?:yes|yep|yeah|ok|okay|sure|continue|proceed|go ahead|please continue|please proceed|sounds good|looks good|lgtm)\b/i.test(text.trim());
+    return words.length <= 8 && /^(?:(?:yes|yep|yeah|ok|okay|sure|continue|proceed|go ahead|please continue|please proceed|lgtm)\b|(?:sounds good|looks good|looks great|works nicely)[.!?]*$)/i.test(text.trim());
   };
   for (const { text } of prompts) {
     if (trivial(text) && steps.length) {
       steps.at(-1).prompt += `\n\n${text}`;
       continue;
     }
-    const prose = text.replace(/\[REDACTED[^\]]*\]/g, '').replace(/^[#>*\s]+/, '').replace(/^(?:\$[a-zA-Z][\w:-]*\s+)+/, '')
-      .replace(/^(?:please\s+|can you\s+|could you\s+|I (?:want|would like) (?:you )?to\s+)/i, '').trim();
-    const words = prose.split(/[\n.!?]/, 1)[0].trim().split(/\s+/).filter(Boolean).slice(0, 9).join(' ');
-    const title = words ? words[0].toUpperCase() + words.slice(1, 80) : 'Review redacted instructions';
+    const title = stepTitle(text);
     steps.push({ title, instructions: title, prompt: text });
   }
   return steps;
@@ -77,7 +93,7 @@ function editableDraft(capture, findings) {
       requirements: [], primary: { kind: "product", id: "choose/product" }, recipe,
     },
     about: "# REQUIRED: Outcome title\n\nREQUIRED: Describe the result and add only public previews or artifact links to the manifest.\n",
-    prompt: steps.map(({ title, prompt }) => `${title}:\n${prompt}`).join("\n\n"),
+    prompt: steps.map(({ prompt }) => prompt).join("\n\n"),
     ingredientsToReview: { references: capture.references, skills: capture.skills },
     findings,
   };
@@ -93,7 +109,7 @@ export async function createCaptureDraft({ source, file, thread, out }) {
   await chmod(folder, 0o700);
   await privateWrite(join(folder, ".gitignore"), "*\n");
   await privateWrite(join(folder, "draft.json"), `${JSON.stringify(draft, null, 2)}\n`);
-  await privateWrite(join(folder, "REVIEW.md"), "# Private capture draft\n\nNothing was uploaded. Edit draft.json: supply a title, result summary, public author and primary attribution. Inspect every prompt, tool and reference. Add only verified public references or skill coordinates omitted for privacy; do not infer historical versions. Add public result previews before review.\n\nRun `possible capture review <this-directory>` in your own terminal. Approval is tied to the exact draft; edits require a new review. Then `possible capture export <this-directory> --out <new-directory>` writes an unpublished Outcome. Publication is a separate explicit action.\n\nApproval is creator-attested and unauthenticated. A terminal can be automated; the check prevents accidental export, not deliberate automation.\n\nAutomated redaction is incomplete: names, private business context and uncommon secrets need your review. Do not approve on someone else’s behalf.\n");
+  await privateWrite(join(folder, "REVIEW.md"), "# Private capture draft\n\nNothing was uploaded. Edit draft.json: supply a title, result summary, public author and primary attribution. Inspect every prompt, tool and reference. Add only verified public references or skill coordinates omitted for privacy; do not infer historical versions. Add public result previews before review.\n\nOptional `media/` and `artifacts/` folders carry public previews and result files into the exported Outcome. Use relative media/artifacts paths in the manifest. Limits: 16 MiB per file, 64 MiB combined, 256 files, 512 entries and 16 directory levels. Symlinks, special files and paths outside this folder are refused. Inspect every file and its embedded metadata yourself; binary media is not automatically redacted. Review lists file paths, sizes and SHA-256 hashes; adding, removing, renaming or editing files requires a new review.\n\nRun `possible capture check <this-directory>` to report blockers and privacy findings without approving or writing anything. Run `possible capture review <this-directory>` in your own terminal. Approval is tied to the exact draft; edits require a new review. Then `possible capture export <this-directory> --out <new-directory>` writes an unpublished Outcome. Publication is a separate explicit action.\n\nApproval is creator-attested and unauthenticated. A terminal can be automated; the check prevents accidental export, not deliberate automation.\n\nAutomated redaction is incomplete: names, private business context and uncommon secrets need your review. Do not approve on someone else’s behalf.\n");
   return { folder, findingCount: findings.length };
 }
 
@@ -108,32 +124,52 @@ async function loadDraft(folder) {
   return draft;
 }
 
-function prepareReview(draft, reviewedAt) {
+function prepareReview(draft, reviewedAt, files = []) {
   const manifest = structuredClone(draft.manifest);
-  manifest.recipe.provenance = { method: "recorded", source: manifest.recipe.provenance.source, reviewedAt, reviewDigest: "0".repeat(64) };
+  manifest.recipe.provenance = { method: "recorded", source: manifest.recipe.provenance.source, reviewedAt, reviewDigest: "0".repeat(64), ...(files.length ? { files: fileInventory(files) } : {}) };
   const content = { manifest, about: draft.about, prompt: draft.prompt };
   const inspection = structuredClone(content);
   delete inspection.manifest.recipe.provenance;
-  const serialized = JSON.stringify(inspection, null, 2);
-  if (/REQUIRED:|choose-outcome-slug|choose\/product/.test(serialized) || manifest.author?.url === "https://example.com") throw new Error("Complete the result title, summary, author and primary attribution in draft.json before review.");
+  const serialized = JSON.stringify({ ...inspection, files: fileInventory(files) }, null, 2);
+  const blockers = [];
+  if (/REQUIRED:|choose-outcome-slug|choose\/product/.test(serialized) || manifest.author?.url === "https://example.com") blockers.push("Complete the result title, summary, author and primary attribution in draft.json before review.");
   try { validateOutcomeManifest(manifest); parseOutcomeMarkdown(draft.about); }
-  catch { throw new Error("Draft metadata or outcome description is invalid. Check the Outcome format; no draft content was printed."); }
-  if (!draft.prompt.trim()) throw new Error("Provide a public prompt before review.");
-  if (manifest.recipe.tools?.some(tool => /creator must (?:describe|confirm) its purpose\.$/.test(tool.purpose ?? ""))) throw new Error("Describe each tool’s actual purpose or remove it before review. Automatically detected names may be private.");
+  catch { blockers.push("Draft metadata or outcome description is invalid. Check the Outcome format; no draft content was printed."); }
+  if (!draft.prompt.trim()) blockers.push("Provide a public prompt before review.");
+  if (Array.isArray(manifest.recipe.tools) && manifest.recipe.tools.some(tool => typeof tool?.purpose !== 'string' || !tool.purpose.trim() || /creator must (?:describe|confirm) its purpose\.$/.test(tool.purpose))) blockers.push("Describe each tool’s actual purpose or remove it before review. Automatically detected names may be private.");
   const findings = inspectReviewText(serialized);
+  for (const file of files) {
+    const text = file.bytes.toString('utf8');
+    if (!text.includes('\0') && Buffer.from(text).equals(file.bytes)) findings.push(...inspectReviewText(text));
+  }
+  if (files.length) findings.push({ category: "attachments", severity: "review", message: "Inspect every attached file yourself, including embedded metadata. Binary media is not automatically redacted or inspected for secrets." });
   findings.push({ category: "ingredient-names", severity: "review", message: "Confirm model, provider and tool names are public; private deployment names and internal MCP names may not look like secrets." });
   if (findings.some(finding => finding.severity === "block")) {
-    throw new Error(`Privacy review found content that must be removed first: ${[...new Set(findings.filter(f => f.severity === "block").map(f => f.category))].join(", ")}. Edit the draft and review again.`);
+    blockers.push(`Privacy review found content that must be removed first: ${[...new Set(findings.filter(f => f.severity === "block").map(f => f.category))].join(", ")}. Edit the draft and review again.`);
   }
   manifest.recipe.provenance.reviewDigest = captureReviewDigest(manifest, draft.about, draft.prompt);
-  return { content, findings };
+  return { content, findings, blockers };
+}
+
+export async function checkCaptureDraft(folder) {
+  const draft = await loadDraft(folder);
+  const review = prepareReview(draft, new Date().toISOString(), await readCaptureFiles(folder));
+  review.findings = [...(Array.isArray(draft.findings) ? draft.findings : []), ...review.findings];
+  return review;
+}
+
+function requireReviewable(review) {
+  if (review.blockers.length) throw new Error(review.blockers.join('\n'));
+  return review;
 }
 
 export async function reviewCaptureDraft(folder, { input = process.stdin, output = process.stdout } = {}) {
   if (!input.isTTY || !output.isTTY) throw new Error("Privacy review requires the creator’s interactive terminal. Piped input and --yes approval are not supported.");
   const draft = await loadDraft(folder);
   const initialHash = sha(draft);
-  const { content, findings } = prepareReview(draft, new Date().toISOString());
+  const files = await readCaptureFiles(folder);
+  const initialFilesHash = sha(fileInventory(files));
+  const { content, findings } = requireReviewable(prepareReview(draft, new Date().toISOString(), files));
   // Transcript control sequences must not hide content or spoof a terminal prompt.
   const displayed = visibleText(JSON.stringify(content, null, 2));
   output.write(`\nPRIVATE LOCAL REVIEW — nothing will be uploaded\n${displayed}\n\n`);
@@ -151,6 +187,7 @@ export async function reviewCaptureDraft(folder, { input = process.stdin, output
   finally { readline.close(); }
   if (answer !== expected) throw new Error("Review cancelled. Nothing was exported or published.");
   if (sha(await loadDraft(folder)) !== initialHash) throw new Error("Draft changed during review. Review again.");
+  if (sha(fileInventory(await readCaptureFiles(folder))) !== initialFilesHash) throw new Error("Capture files changed during review. Review again.");
   const receipt = { schemaVersion: 1, draftHash: initialHash, ...content };
   const approvalPath = join(resolve(folder), "approval.json");
   const temporaryPath = join(resolve(folder), `.approval-${randomUUID()}.tmp`);
@@ -165,6 +202,7 @@ export async function reviewCaptureDraft(folder, { input = process.stdin, output
 export async function exportCaptureDraft(folder, out) {
   if (!out) throw new Error("Export requires --out with a new local directory.");
   const draft = await loadDraft(folder);
+  const files = await readCaptureFiles(folder);
   let receipt;
   try {
     const receiptPath = join(resolve(folder), "approval.json");
@@ -175,7 +213,7 @@ export async function exportCaptureDraft(folder, out) {
   catch { throw new Error("Creator review is required. Run possible capture review first."); }
   if (receipt.schemaVersion !== 1 || receipt.draftHash !== sha(draft)) throw new Error("Draft was not approved or changed after review. Review it again.");
   const reviewedAt = receipt.manifest?.recipe?.provenance?.reviewedAt;
-  const expected = prepareReview(draft, reviewedAt).content;
+  const expected = requireReviewable(prepareReview(draft, reviewedAt, files)).content;
   if (canonicalJson(expected) !== canonicalJson({ manifest: receipt.manifest, about: receipt.about, prompt: receipt.prompt })) throw new Error("Approval does not match this draft. Review again.");
   verifyCaptureReview(receipt.manifest, receipt.about, receipt.prompt);
   const slug = receipt.manifest.slug;
@@ -187,6 +225,11 @@ export async function exportCaptureDraft(folder, out) {
   await privateWrite(join(destination, "outcome.json"), `${JSON.stringify(receipt.manifest, null, 2)}\n`);
   await privateWrite(join(destination, "outcome.md"), `${receipt.about.trim()}\n`);
   await privateWrite(join(destination, "prompt.md"), `${receipt.prompt.trim()}\n`);
+  for (const file of files) {
+    const path = join(destination, file.path);
+    await mkdir(resolve(path, '..'), { recursive: true, mode: 0o700 });
+    await privateWrite(path, file.bytes);
+  }
   await privateWrite(join(root, "outcomes.json"), `${JSON.stringify({ schemaVersion: 1, publisher: receipt.manifest.author, outcomes: [{ slug, url: `./outcomes/${slug}/outcome.json` }] }, null, 2)}\n`);
   return { folder: root, slug };
 }
@@ -199,6 +242,13 @@ export async function runCaptureCommand(args) {
     options[rest[i]] = rest[i + 1];
   }
   if (!file) throw new Error("Capture requires an explicit local input or draft directory.");
+  if (action === "check") {
+    if (rest.length) throw new Error("Check accepts only the draft directory; no approval or bypass flags.");
+    const { blockers, findings } = await checkCaptureDraft(file);
+    const messages = findings.map(({ category, severity, message }) => JSON.stringify({ category, severity, message }));
+    if (blockers.length) throw new Error(['Capture check blocked:', ...blockers, ...messages].join('\n'));
+    return ['Capture check passed. Creator interactive review is still required; nothing was approved or written.', ...messages].join('\n');
+  }
   if (action === "review") {
     if (rest.length) throw new Error("Review accepts only the draft directory; no bypass flags.");
     await reviewCaptureDraft(file);

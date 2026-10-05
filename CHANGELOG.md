@@ -1,5 +1,12 @@
 # Changelog
 
+## CLI 0.6.1
+
+- Capture titles skip leading acknowledgements and filler and end at natural boundaries within nine words; full prompts keep their wording and order without repeated title lines.
+- Optional draft `media/` and `artifacts/` folders are copied into the Outcome. Review binds every file path, size and SHA-256 hash; file changes invalidate approval. Bounded local reads reject symlinks, special files and unsafe paths.
+- `possible capture check <draft>` reports review blockers and privacy findings without interaction, approval, receipts or network access. Interactive creator review remains required.
+- Public capture help and documentation list only Claude Code and Codex.
+
 ## Unreleased
 
 ### CLI 0.6.0 and site: the recipe is the default

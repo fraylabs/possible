@@ -138,6 +138,32 @@ test('split credentials remain redacted before creating any derived step title',
   assert.match(text, /Review redacted instructions/);
 });
 
+test('titles drop acknowledgements and filler, end before long phrases, and prompts have no title prefixes', async t => {
+  const root = await directory(t);
+  const file = join(root, 'synthetic.jsonl');
+  const prompts = [
+    'Works nicely. Now create a lantern display as one self-contained scene with soft lighting.',
+    'Looks great! Next make the Seed scene look good as a colourful garden.',
+    'Also add warm lights, and render a long panoramic view of the entire scene.',
+    'Build an intricately decorated enormous luminous fantastical ceremonial paper lantern installation.',
+    'Looks great!',
+    'Works nicely.',
+  ];
+  await writeFile(file, session(prompts.map(user)));
+  const out = join(root, 'draft');
+  await createCaptureDraft({ source: 'codex', file, out });
+  const draft = JSON.parse(await readFile(join(out, 'draft.json'), 'utf8'));
+  assert.deepEqual(draft.manifest.recipe.steps.map(s => s.title), [
+    'Create a lantern display as one self-contained scene', 'Make the Seed scene look good', 'Add warm lights', 'Review redacted instructions',
+  ]);
+  assert.ok(draft.manifest.recipe.steps.every(s => s.title.split(/\s+/).length <= 9));
+  assert.equal(draft.prompt, prompts.join('\n\n'));
+  assert.doesNotMatch(draft.prompt, /Create a lantern display:\n|Make the Seed scene look good:\n/);
+  const again = join(root, 'again');
+  await createCaptureDraft({ source: 'codex', file, out: again });
+  assert.deepEqual(JSON.parse(await readFile(join(again, 'draft.json'), 'utf8')).manifest.recipe.steps, draft.manifest.recipe.steps);
+});
+
 test('large files stream under a small heap and match the string parser without loading outputs', { timeout: 30000 }, async t => {
   const root = await directory(t);
   const file = join(root, 'large.jsonl');

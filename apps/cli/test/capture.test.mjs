@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { mkdtemp, readFile, writeFile, readdir, rm, stat, lstat, symlink, unlink } from 'node:fs/promises';
+import { mkdtemp, readFile, writeFile, readdir, rm, stat, lstat, symlink, unlink, mkdir, rename, truncate } from 'node:fs/promises';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { PassThrough, Writable } from 'node:stream';
@@ -9,7 +9,9 @@ import { promisify } from 'node:util';
 import { fileURLToPath } from 'node:url';
 const execute = promisify(execFile);
 const cli = fileURLToPath(new URL('../src/index.mjs', import.meta.url));
-import { createCaptureDraft, reviewCaptureDraft, exportCaptureDraft, runCaptureCommand } from '../src/capture.mjs';
+import { createCaptureDraft, reviewCaptureDraft, exportCaptureDraft, runCaptureCommand, checkCaptureDraft } from '../src/capture.mjs';
+import { CAPTURE_FILE_LIMITS } from '../src/capture-files.mjs';
+import { createHash } from 'node:crypto';
 import { readOutcomeFolder } from '../src/outcome-format.mjs';
 
 const session = [
@@ -262,4 +264,153 @@ test('automatically detected tool names block review until the creator describes
   t.after(() => streams.close());
   await assert.rejects(reviewCaptureDraft(folder, streams), /Describe each tool/);
   await missing(join(folder, 'approval.json'));
+});
+
+test('check collects missing fields, tool-purpose blockers and privacy findings without approval, writes or network', async t => {
+  t.mock.method(globalThis, 'fetch', () => { throw new Error('No network allowed'); });
+  const { folder, root } = await fixture(t);
+  const draft = await readDraft(folder);
+  draft.prompt = 'Use API_KEY=sk-syntheticTESTcredential987654321.';
+  await writeDraft(folder, draft);
+  const before = await readFile(join(folder, 'draft.json'));
+  const checked = await checkCaptureDraft(folder);
+  assert.ok(checked.blockers.some(s => /Complete the result title/.test(s)));
+  assert.ok(checked.blockers.some(s => /Describe each tool/.test(s)));
+  assert.ok(checked.blockers.some(s => /credential/.test(s)));
+  await assert.rejects(execute(process.execPath, [cli, 'capture', 'check', folder], { cwd: root }), e => e.code === 1 && /Complete the result title/.test(e.stderr) && /Describe each tool/.test(e.stderr) && /credential/.test(e.stderr) && !e.stderr.includes('syntheticTESTcredential'));
+  assert.deepEqual(await readFile(join(folder, 'draft.json')), before);
+  await missing(join(folder, 'approval.json'));
+  await editForReview(folder);
+  const { stdout } = await execute(process.execPath, [cli, 'capture', 'check', folder]);
+  assert.match(stdout, /check passed.*interactive review is still required/);
+  await assert.rejects(exportCaptureDraft(folder, join(root, 'unapproved')), /Creator review is required/);
+  await missing(join(folder, 'approval.json'));
+  await review(t, folder);
+  const receipt = await readFile(join(folder, 'approval.json'));
+  await checkCaptureDraft(folder);
+  assert.deepEqual(await readFile(join(folder, 'approval.json')), receipt);
+  for (const flag of ['--yes', '--out', '--thread']) await assert.rejects(runCaptureCommand(['check', folder, flag, 'true']));
+});
+
+async function attach(folder) {
+  await mkdir(join(folder, 'media', 'nested'), { recursive: true });
+  await mkdir(join(folder, 'artifacts'));
+  await writeFile(join(folder, 'media', 'nested', 'diagram.bin'), Buffer.from([0, 1, 2, 3]));
+  await writeFile(join(folder, 'artifacts', 'result.txt'), 'Synthetic result.');
+}
+
+test('review binds attachment inventory and hashes, export copies exact bytes and local validation rejects changed files', async t => {
+  t.mock.method(globalThis, 'fetch', () => { throw new Error('No network allowed'); });
+  const { folder, root } = await fixture(t);
+  await editForReview(folder);
+  await attach(folder);
+  assert.match(await readFile(join(folder, 'REVIEW.md'), 'utf8'), /media\/.*artifacts\//);
+  const { result, displayed } = await review(t, folder);
+  const receipt = JSON.parse(await readFile(join(folder, 'approval.json'), 'utf8'));
+  const inventory = receipt.manifest.recipe.provenance.files;
+  assert.deepEqual(inventory.map(f => f.path), ['artifacts/result.txt', 'media/nested/diagram.bin']);
+  assert.equal(inventory[0].sha256, createHash('sha256').update('Synthetic result.').digest('hex'));
+  assert.equal(inventory[0].size, 17);
+  assert.match(displayed, /media\/nested\/diagram.bin/);
+  assert.match(displayed, /embedded metadata/);
+  await exportCaptureDraft(folder, join(root, 'export'));
+  const outcomeFolder = join(root, 'export', 'outcomes', 'clean-diagram');
+  assert.deepEqual(await readFile(join(outcomeFolder, 'media/nested/diagram.bin')), Buffer.from([0, 1, 2, 3]));
+  assert.equal((await readOutcomeFolder(outcomeFolder)).manifest.recipe.provenance.reviewDigest, result.digest);
+  await writeFile(join(outcomeFolder, 'artifacts/result.txt'), 'Changed result.');
+  await assert.rejects(readOutcomeFolder(outcomeFolder), /files changed after privacy review/);
+});
+
+test('adding, editing, renaming and deleting files invalidate approval and each new review changes the digest', async t => {
+  const { folder, root } = await fixture(t);
+  await editForReview(folder);
+  let previous = (await review(t, folder)).result.digest;
+  const path = join(folder, 'media', 'image.bin');
+  await mkdir(join(folder, 'media'));
+  const mutations = [
+    () => writeFile(path, Buffer.from([0, 1])),
+    () => writeFile(path, Buffer.from([0, 2])),
+    () => rename(path, join(folder, 'media', 'renamed.bin')),
+    () => unlink(join(folder, 'media', 'renamed.bin')),
+  ];
+  for (const mutate of mutations) {
+    await mutate();
+    await assert.rejects(exportCaptureDraft(folder, join(root, 'blocked')), /Approval does not match/);
+    await missing(join(root, 'blocked'));
+    const digest = (await review(t, folder)).result.digest;
+    assert.notEqual(digest, previous);
+    previous = digest;
+  }
+});
+
+test('attachment changes during approval require another interactive review', async t => {
+  const { folder } = await fixture(t);
+  await editForReview(folder);
+  await attach(folder);
+  await assert.rejects(review(t, folder, { beforeAnswer: () => writeFile(join(folder, 'artifacts/result.txt'), 'Changed during review.') }), /files changed during review/);
+  await missing(join(folder, 'approval.json'));
+});
+
+test('attachment symlinks, root symlinks, special files and oversize files are rejected', async t => {
+  const { folder, root } = await fixture(t);
+  await editForReview(folder);
+  await symlink(root, join(folder, 'media'));
+  await assert.rejects(checkCaptureDraft(folder), /symlinks/);
+  await unlink(join(folder, 'media'));
+  await mkdir(join(folder, 'media'));
+  const outside = join(root, 'outside.txt');
+  await writeFile(outside, 'Private outside file.');
+  await symlink(outside, join(folder, 'media', 'outside.txt'));
+  await assert.rejects(review(t, folder), /symlinks/);
+  await unlink(join(folder, 'media', 'outside.txt'));
+  const fifo = join(folder, 'media', 'fifo');
+  await execute('mkfifo', [fifo]);
+  await assert.rejects(checkCaptureDraft(folder), /special files/);
+  await unlink(fifo);
+  const big = join(folder, 'media', 'big.bin');
+  await writeFile(big, '');
+  await truncate(big, CAPTURE_FILE_LIMITS.fileBytes + 1);
+  await assert.rejects(checkCaptureDraft(folder), /exceed limits/);
+  await unlink(big);
+  const alias = join(root, 'alias');
+  await symlink(folder, alias);
+  await assert.rejects(checkCaptureDraft(alias), /symlinks/);
+  await missing(join(folder, 'approval.json'));
+});
+
+test('file count, directory depth and combined attachment bytes are bounded', async t => {
+  const { folder } = await fixture(t);
+  await editForReview(folder);
+  const media = join(folder, 'media');
+  await mkdir(media);
+  for (let i = 0; i <= CAPTURE_FILE_LIMITS.files; i++) await writeFile(join(media, `${i}.bin`), '');
+  await assert.rejects(checkCaptureDraft(folder), /exceed limits/);
+  await rm(media, { recursive: true });
+  await mkdir(join(media, ...Array(17).fill('nested')), { recursive: true });
+  await assert.rejects(checkCaptureDraft(folder), /exceed limits/);
+  await rm(media, { recursive: true });
+  await mkdir(media);
+  for (let i = 0; i < 5; i++) {
+    const path = join(media, `${i}.bin`);
+    await writeFile(path, '');
+    await truncate(path, CAPTURE_FILE_LIMITS.fileBytes);
+  }
+  await assert.rejects(checkCaptureDraft(folder), /exceed limits/);
+});
+
+test('credentials in text attachments block check and review without printing their values', async t => {
+  const { folder } = await fixture(t);
+  await editForReview(folder);
+  await attach(folder);
+  await writeFile(join(folder, 'artifacts/result.txt'), 'API_KEY=sk-syntheticTESTcredential987654321');
+  await assert.rejects(runCaptureCommand(['check', folder]), e => /credential/.test(e.message) && !e.message.includes('syntheticTESTcredential'));
+  await assert.rejects(review(t, folder), /credential/);
+  await missing(join(folder, 'approval.json'));
+});
+
+test('public help advertises check and only Claude Code and Codex sources', async () => {
+  const { stdout } = await execute(process.execPath, [cli, '--help']);
+  assert.match(stdout, /capture check/);
+  assert.match(stdout, /claude-code\|codex/);
+  assert.doesNotMatch(stdout, /turnless/i);
 });

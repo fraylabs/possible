@@ -18,7 +18,7 @@ MIT license, the Acorn license, and the embedded Node distribution's license not
 the official glibc Node distribution (glibc 2.28+); Alpine/musl is not supported.
 
 Every platform runs the built executable in a clean environment without Node on
-PATH. Smoke checks cover version, help, create/validate, synthetic Codex capture,
+PATH. Smoke checks cover version, help, create/validate, synthetic Codex capture/check,
 and synthetic SQLite capture. No private transcript, creator review, or network
 publication is involved in these checks.
 
@@ -26,7 +26,7 @@ publication is involved in these checks.
 
 1. Change `apps/cli/package.json` and its root lockfile entry to the new version.
 2. Open a branch/PR. Merge after CI and all four native packaging jobs pass.
-3. Push a matching version tag, for example `v0.5.2`.
+3. Push a matching version tag, for example `v0.6.1`.
 
 The workflow publishes four `possible-v<VERSION>-<OS>-<ARCH>.tar.gz` assets and
 `SHA256SUMS` at the matching GitHub release, then the tap-owned updater generates `Formula/possible.rb`

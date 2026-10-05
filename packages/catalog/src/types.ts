@@ -87,7 +87,7 @@ export type OutcomeAttribution = ProductAttribution | SkillAttribution;
 
 /** Disclosed ingredients only. Omission means unknown, not unused. */
 export interface OutcomeRecipe {
-  provenance?: { method: "reconstructed" } | { method: "recorded"; source: "claude-code" | "turnless" | "codex"; reviewedAt: string; reviewDigest: string };
+  provenance?: { method: "reconstructed" } | { method: "recorded"; source: "claude-code" | "turnless" | "codex"; reviewedAt: string; reviewDigest: string; files?: { path: string; size: number; sha256: string }[] };
   notes?: string[];
   agent?: { name: string; version?: string; url?: string };
   skills?: SkillReference[];
