@@ -77,6 +77,12 @@ is unknown. Outcomes without any recipe remain Prompt only.
 
 The digest covers canonical sorted-key manifest JSON (excluding reviewDigest),
 a NUL separator, trimmed outcome.md, a NUL separator and trimmed prompt.md, with CRLF normalized to LF.
+CLI 0.6.1 optionally records `provenance.files`: a nonempty list of `{path, size,
+sha256}` for media/artifacts copied from a capture draft. Paths are relative to
+the Outcome folder. This inventory is part of the manifest digest; local
+validation also compares the bytes and exact file list. Limits are 16 MiB per
+file, 64 MiB combined, 256 files, 512 entries and 16 directory levels.
+
 Local and remote source readers reject recorded content changed after review.
 This detects accidental edits; it is not an authenticated human signature.
 The editable private capture draft is not an Outcome publisher and must not be

@@ -2,6 +2,8 @@ import { assertVisibleText } from "./text-safety.mjs";
 import { readFile, readdir } from "node:fs/promises";
 import { basename, join, relative, resolve } from "node:path";
 import { verifyCaptureReview } from "./capture-integrity.mjs";
+import { readCaptureFiles, fileInventory, validateCaptureFileInventory } from "./capture-files.mjs";
+import { canonicalJson } from "./capture-integrity.mjs";
 
 const SAFE_SLUG = /^[a-z0-9][a-z0-9-]*$/;
 const EXACT_REVISION = /^(?:[0-9a-f]{40}|[0-9a-f]{64})$/;
@@ -120,12 +122,13 @@ export function validateOutcomeRecipe(value, context = "recipe") {
   if (Object.keys(recipe).length === 0) throw new Error(`${context} must have at least one disclosed ingredient`);
   if (recipe.provenance !== undefined) {
     const provenance = asObject(recipe.provenance, `${context}.provenance`);
-    exactKeys(provenance, new Set(["method", "source", "reviewedAt", "reviewDigest"]), `${context}.provenance`);
+    exactKeys(provenance, new Set(["method", "source", "reviewedAt", "reviewDigest", "files"]), `${context}.provenance`);
     if (!["recorded", "reconstructed"].includes(provenance.method)) throw new Error(`${context}.provenance.method is unsupported`);
     if (provenance.method === "recorded") {
       if (!["claude-code", "turnless", "codex"].includes(provenance.source)) throw new Error(`${context}.provenance.source is required for recorded recipes`);
       if (typeof provenance.reviewDigest !== "string" || !/^[a-f0-9]{64}$/.test(provenance.reviewDigest)) throw new Error(`${context}.provenance requires a privacy review digest`);
       if (typeof provenance.reviewedAt !== "string" || !/^\d{4}-\d{2}-\d{2}T.*Z$/.test(provenance.reviewedAt) || !Number.isFinite(Date.parse(provenance.reviewedAt))) throw new Error(`${context}.provenance requires a privacy review timestamp`);
+      if (provenance.files !== undefined) validateCaptureFileInventory(provenance.files);
     } else if (Object.keys(provenance).some(key => key !== "method")) throw new Error(`${context}.provenance reconstructed recipes only record method`);
   }
   if (recipe.notes !== undefined) {
@@ -296,6 +299,7 @@ export async function readOutcomeFolder(folder) {
   assertVisibleText(promptText);
   const executionPrompt = string(promptText, `${manifest.slug}/prompt.md`).trim();
   verifyCaptureReview(manifest, aboutText, promptText);
+  if (manifest.recipe?.provenance?.files !== undefined && canonicalJson(fileInventory(await readCaptureFiles(folder))) !== canonicalJson(manifest.recipe.provenance.files)) throw new Error("Captured Outcome files changed after privacy review. Review again.");
   return { slug: manifest.slug, folder, manifest, about, executionPrompt };
 }
 

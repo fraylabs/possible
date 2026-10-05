@@ -34,6 +34,16 @@ try {
   assert.match(draft, /Make a diagram/);
   assert.ok(JSON.parse(draft).manifest.recipe.tools.some(tool => tool.name === "numpy"));
   assert.doesNotMatch(draft, /ASSISTANT_SECRET|OUTPUT_SECRET|BASE_SECRET|COMMAND_SECRET/);
+  assert.throws(() => run('capture', 'check', join(directory, 'codex-draft')), error => error.status === 1 && /Complete the result title/.test(String(error.stderr)));
+  const checkDraft = JSON.parse(draft);
+  checkDraft.manifest.slug = 'synthetic-check';
+  checkDraft.manifest.author = { name: 'Synthetic Studio', url: 'https://studio.example' };
+  checkDraft.manifest.primary = { kind: 'product', id: 'example/product' };
+  for (const tool of checkDraft.manifest.recipe.tools ?? []) tool.purpose = 'Create the synthetic diagram.';
+  checkDraft.about = '# Synthetic diagram\n\nA simple synthetic test result.\n';
+  await writeFile(join(directory, 'codex-draft/draft.json'), JSON.stringify(checkDraft));
+  console.log(run('capture', 'check', join(directory, 'codex-draft')).trim());
+  await assert.rejects(readFile(join(directory, 'codex-draft/approval.json')), { code: 'ENOENT' });
 
   // Exercise the dynamically imported node:sqlite inside the executable as well.
   const databasePath = join(directory, "turnless.sqlite");
@@ -51,7 +61,7 @@ try {
   db.close();
   console.log(run("capture", "turnless", databasePath, "--thread", "selected", "--out", join(directory, "sqlite-draft")).trim());
   assert.match(await readFile(join(directory, "sqlite-draft/draft.json"), "utf8"), /Make a diagram/);
-  console.log("SEA smoke passed (authoring, Codex capture, SQLite capture; clean environment)");
+  console.log("SEA smoke passed (authoring, Codex capture/check, SQLite capture; clean environment)");
 } finally {
   await rm(directory, { recursive: true, force: true });
 }

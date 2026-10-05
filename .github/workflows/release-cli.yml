@@ -106,7 +106,7 @@ jobs:
           TAG: ${{ github.ref_name }}
         run: |
           cat > /tmp/release-notes.md <<'NOTES'
-          Standalone Possible CLI for macOS and Linux (arm64 and x86_64). Node is embedded; no Node or npm installation is required. Capture and redaction behavior is unchanged from 0.5.0.
+          Standalone Possible CLI for macOS and Linux (arm64 and x86_64). Node is embedded; no Node or npm installation is required. CLI 0.6.1 improves capture titles, exports reviewed media/artifacts, and adds non-interactive `possible capture check`. Interactive creator approval is still required.
 
           Install: `curl -fsSL https://possible.sh/install.sh | sh`
 

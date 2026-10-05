@@ -23,7 +23,7 @@ possible --version
 ```
 
 No Node or npm is required. The script verifies SHA256 and uses `~/.local/bin`
-without sudo. Set `POSSIBLE_VERSION=0.6.0` to pin this release, or
+without sudo. Set `POSSIBLE_VERSION=0.6.1` to pin this release, or
 `POSSIBLE_INSTALL_DIR` for another writable directory. npm 0.3.1 is legacy.
 
 ## Discover before writing
@@ -139,7 +139,7 @@ Bookmarks are stored locally in `.possible` and do not require an account.
 
 ## Capture a finished session
 
-When the user asks to capture their completed work, use the standalone CLI 0.5.2 or later.
+When the user asks to capture their completed work, use the standalone CLI 0.6.1 or later.
 Ask for the specific local session file if it is not known; never crawl their
 history or read unrelated threads. Supported sources: Claude Code JSONL and Codex JSONL.
 
@@ -154,6 +154,15 @@ Use ingredientsToReview only as sanitized hints; restore references only when th
 creator confirms they can be shared. Never invent missing skill pins or models.
 Explain removed/unknown details. Do not claim that automated redaction guarantees
 privacy. The creator must inspect private context, names and unusual secrets.
+
+Optionally add public `media/` and `artifacts/` folders to the private draft and
+reference their relative paths in draft.json. Export copies them into the Outcome.
+Limits: 16 MiB per file, 64 MiB combined, 256 files, 512 entries and 16 directory
+levels; no symlinks, special files or paths outside the folder. Inspect every file
+and embedded metadata; binary files are not automatically redacted. The digest
+binds paths, sizes and SHA-256 hashes; any file change needs a new review.
+Run `possible capture check <private-draft>` to report blockers and privacy
+findings without interaction or writes. A passing check grants no approval.
 
 The creator runs `possible capture review <private-draft>` in their own terminal
 and types the displayed approval code. Never enter approval on their behalf,
