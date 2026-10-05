@@ -40,6 +40,18 @@ our own; treat single-digit moves as noise.
 | Awesome lists, directories, Discussions | Not posted | Company rule: GitHub writes only as BrianLYS and never post or comment as BrianLYS, so listing PRs/issues and Discussion posts need a Possible GitHub account. Asked Possible Owner for a one-minute human step to create one. |
 | Possible's own repos | Done | Description and topics only (metadata, not posts). |
 
+## Directory rules checked (2026-10-05)
+
+| Directory | Submission | Rule that matters | Decision |
+| --- | --- | --- | --- |
+| hesreallyhim/awesome-claude-code (55k) | Web issue form only | "resource recommendations must be created by human beings"; no `gh` CLI | **Do not submit** (agent). Human-only option, copy ready. |
+| travisvn/awesome-claude-skills (15k) | PR | AI-assisted PRs "closed without comment" | **Do not submit** |
+| agarrharr/awesome-cli-apps (20k) | PR | "AI-generated PRs are not welcome"; >3 months, >20 stars | **Do not submit** |
+| RoggeOhta/awesome-codex-cli, milisp/awesome-codex-cli, ai-for-developers/awesome-ai-coding-tools | PR | Relevance, real value, one-line format | Qualifies; needs a Possible GitHub account |
+| VoltAgent/awesome-agent-skills (35k) | PR | "Brand new skills … are not accepted" | Later |
+| Terminal Trove | Web form | Image preview, author confirmation; reCAPTCHA on the form | Needs one human checkbox |
+| skills.sh / claudemarketplaces.com | Automatic from `npx skills add` telemetry | — | Listed, but showing the old "Outcome Packs" SKILL.md and one Snyk WARN. One scratch install of ours on Oct 5 did not refresh it yet. Flagged to Possible Owner. |
+
 ---
 
 # Oct 4 plan (on hold, kept for reference)
