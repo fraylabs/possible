@@ -81,3 +81,21 @@ One line (awesome lists):
 Short (≤160): Find AI-made results and the recipe behind them, capture your own Claude Code or Codex session as a recipe, and publish it from your repo.
 
 Skill entry: possible: before your agent starts, finds earlier results that match the task and builds one complete starting prompt from their recipes. Install: npx skills add https://github.com/fraylabs/possible/tree/skill/skills/possible --skill possible
+
+## Terminal Trove submission copy (Oct 5)
+
+Categories: cli, ai, llm, coding-agents · Language: javascript · Licence: MIT · Open source · Author: yes (Possible ActAs inbox)
+Install: macOS brew install fraylabs/tap/possible, or curl -fsSL https://possible.sh/install.sh | sh; Linux: the same two.
+
+- name: Possible
+- url: possible.sh
+- tagline: Search AI-made results and get the recipe behind them: prompts, skills, tools and steps.
+- source_code: https://github.com/fraylabs/possible
+- desc_1: Possible is a CLI for AI recipes. possible search finds results people made with coding agents, and possible fetch prints the recipe behind one: prompts, pinned skills, references, tools and ordered steps. possible capture turns your own finished Claude Code or Codex session into a recipe draft, locally.
+- desc_2: Search a live directory of AI-made results in plain language. Print a recipe as text to hand to your agent, or as JSON. Capture a finished Claude Code or Codex session into a draft you review in the terminal before anything is exported; nothing is uploaded. Publish recipes from your own GitHub repo, no account needed.
+- differentiator: Prompt collections give you text without the result or the context. Possible pairs each result with how it was made and says what is unknown: every recipe is labelled Recorded from session, Reconstructed or Prompt only. Capture is local, the creator approves the exact export, and publishing is a separate step from a repo you own.
+- desc_3: Standalone binary with its own runtime for macOS and Linux (arm64 and x86_64); the install script verifies SHA256 and needs no sudo. Optional agent skill via npx skills add. Local bookmarks without an account.
+- desc_4: Developers using Claude Code, Codex or other coding agents who want to start from something that already worked, or share how they made something without writing it up by hand.
+- private_note: Submitted by the Possible project. This submission was prepared with AI help; the preview is a real recording of possible 0.6.0.
+- preview_gif: https://raw.githubusercontent.com/fraylabs/possible/main/marketing/drafts/cli-recipe.gif
+- preview_png: https://raw.githubusercontent.com/fraylabs/possible/main/marketing/drafts/cli-recipe.png
