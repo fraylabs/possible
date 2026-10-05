@@ -97,14 +97,33 @@ function resolvedRemoteOutcome({ manifestText, aboutText, promptText, manifestUr
   };
 }
 
+// Reads HEAD from git smart HTTP; GitHub answers 401 for private or missing
+// repositories, so success also establishes that the repository is public.
+async function gitHeadRevision(locator) {
+  const response = await fetch(`https://github.com/${locator}.git/info/refs?service=git-upload-pack`, { headers: { "user-agent": "possible-cli" }, redirect: "error" });
+  if (response.status === 401 || response.status === 404) throw new Error(`${locator} is not a public GitHub repository`);
+  const text = await responseText(response, `GitHub refs ${locator}`);
+  const match = text.match(/([0-9a-f]{40}) HEAD\0/);
+  if (!match) throw new Error(`GitHub did not return an exact revision for ${locator}`);
+  return match[1];
+}
+
 async function discoverGitHub(source, options) {
   const headers = { "user-agent": "possible-cli" };
   const token = options.githubToken ?? process.env.GITHUB_TOKEN ?? process.env.GH_TOKEN;
   if (token) headers.authorization = `Bearer ${token}`;
-  const repository = await fetchJson(`https://api.github.com/repos/${source.locator}`, `GitHub repository ${source.locator}`, headers);
-  if (repository.private !== false) throw new Error(`${source.locator} is not a public GitHub repository`);
-  const revisionRecord = await fetchJson(`https://api.github.com/repos/${source.locator}/commits/${encodeURIComponent(repository.default_branch)}`, `GitHub revision ${source.locator}`, headers);
-  const revision = String(revisionRecord.sha ?? "");
+  let revision;
+  try {
+    const repository = await fetchJson(`https://api.github.com/repos/${source.locator}`, `GitHub repository ${source.locator}`, headers);
+    if (repository.private !== false) throw new Error(`${source.locator} is not a public GitHub repository`);
+    const revisionRecord = await fetchJson(`https://api.github.com/repos/${source.locator}/commits/${encodeURIComponent(repository.default_branch)}`, `GitHub revision ${source.locator}`, headers);
+    revision = String(revisionRecord.sha ?? "");
+  } catch (error) {
+    // Anonymous API calls share a small per-address limit on hosted servers.
+    // Git's own HTTP endpoint answers for public repositories without it.
+    if (!/returned HTTP (?:403|429)$/.test(error.message)) throw error;
+    revision = await gitHeadRevision(source.locator);
+  }
   if (!/^[0-9a-f]{40}$/.test(revision)) throw new Error(`GitHub did not return an exact revision for ${source.locator}`);
   const rawBase = `https://raw.githubusercontent.com/${source.locator}/${revision}/`;
   const indexUrl = new URL("outcomes.json", rawBase).toString();
