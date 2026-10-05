@@ -9,6 +9,10 @@
 
 ## Unreleased
 
+### CLI 0.6.2
+
+- Large generated artifacts (for example a single-file index.html) no longer fail review as pasted content; credentials, local paths and hidden text in attachments still block.
+
 ### CLI 0.6.0 and site: the recipe is the default
 
 - Outcome pages lead with **Copy recipe** when a recipe exists, with **Copy prompt** as the secondary action. Prompt-only Outcomes are unchanged.
