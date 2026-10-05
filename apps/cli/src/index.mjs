@@ -19,7 +19,7 @@ Usage:
   possible fetch <outcome-id> [--prompt | --json]
   possible add <owner/repository | https://publisher.example>
   possible use <source>@<slug> [--prompt | --json]
-  possible capture <claude-code|turnless|codex> <local-file> --out <private-draft> [--thread <id>]
+  possible capture <claude-code|codex> <session.jsonl> --out <private-draft>
   possible capture review <private-draft>
   possible capture export <private-draft> --out <new-local-publisher>
   possible bookmark <command>

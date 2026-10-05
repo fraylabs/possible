@@ -141,12 +141,10 @@ Bookmarks are stored locally in `.possible` and do not require an account.
 
 When the user asks to capture their completed work, use the standalone CLI 0.5.2 or later.
 Ask for the specific local session file if it is not known; never crawl their
-history or read unrelated threads. Supported sources: Claude Code JSONL,
-Turnless/T3 SQLite with an exact thread ID, then Codex JSONL.
+history or read unrelated threads. Supported sources: Claude Code JSONL and Codex JSONL.
 
 ```sh
 possible capture claude-code <session.jsonl> --out <private-draft>
-# Turnless: capture turnless <state.sqlite> --thread <thread-id> --out <private-draft>
 # Codex: capture codex <rollout.jsonl> --out <private-draft>
 ```
 
