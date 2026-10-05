@@ -1,4 +1,39 @@
-# Possible organic posting experiment, Oct 4–18 2026
+# Possible organic posting experiment, Oct 2026
+
+**Resumed Oct 5** with a narrower goal: real builders install the CLI, capture their own
+sessions and publish recipes. Primary measures are those three; views are context only.
+HN and Bluesky stay off (see below). Reddit and X wait on accounts, so the first moves
+use channels that need no new human-verified account: Possible's GitHub presence and
+directories whose maintainers accept submissions.
+
+## Baseline — 2026-10-05 05:25 UTC
+
+| Measure | Value | Source |
+| --- | --- | --- |
+| CLI release downloads (binaries) | v0.6.0: 1 (darwin-arm64) · v0.5.2: 1 · v0.5.1: 3 · v0.5.0 tgz: 2 · v0.4.0 tgz: 3 | `node marketing/snapshot.mjs` |
+| npm `@fraylabs/possible` (legacy 0.3.1) | 20 / week | same |
+| Outside publishers (sources not `fraylabs/*`) | **0** | `outcomes:listPublic`, `source_locator` |
+| Published Outcomes | 21, all from `fraylabs/possible-outcomes` | same |
+| Captured recipes (Recorded from session) | **0** (10 Reconstructed, 11 prompt-only) | same, `recipe.provenance.method` |
+| Site visits, 7 days | 1 (our own `utm_source=test`) | `npm run visits -- --days 7` |
+| Uses all-time / likes | 19 / 0 (unchanged since Oct 4) | snapshot |
+| GitHub `fraylabs/possible` | 11 stars, 2 views/14d | snapshot |
+
+Downloads count every install (brew and install.sh both fetch release assets), including
+our own; treat single-digit moves as noise.
+
+## Oct 5 changes (no new account needed)
+
+- `fraylabs/possible` description was stale ("Outcome Packs … with Codex"). Now: "See what
+  AI made and the recipe behind it…". Topics: dropped outcome-packs, verification,
+  agentic-workflows; added claude-code, claude-skills, prompts, prompt-library, recipes,
+  cli, ai-tools.
+- `fraylabs/possible-outcomes`: added description, homepage and topics
+  (possible-recipes, prompts, recipes, claude-code, codex, ai-agents).
+
+---
+
+# Oct 4 plan (on hold, kept for reference)
 
 **On hold by Brian, Oct 4:** no posts were made. Bluesky is deprioritized because its
 community is strongly anti-AI; if this resumes, prefer X, Reddit and developer communities.
