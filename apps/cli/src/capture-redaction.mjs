@@ -296,7 +296,9 @@ function redact(normalized) {
  * Accepts text, serialized JSON, or an ordered string array. Keep related prompt
  * fragments in the same call so boundary-spanning credentials can be checked.
  */
-export function inspectReviewText(input) {
+// Attached result files are whole generated artifacts, so the pasted-prose size
+// rule does not apply to them; every other check still does.
+export function inspectReviewText(input, { checkSize = true } = {}) {
   const invalidFinding = () => [{ category: 'invalid-content', location: 'draft', message: 'Draft content could not be safely inspected.', severity: 'block' }];
   const fields = [];
   const prompts = [];
@@ -364,7 +366,7 @@ export function inspectReviewText(input) {
       } catch { add('url', 'Malformed URL requires creator review.', 'review'); }
     }
   };
-  for (const value of fields) scan(value);
+  for (const value of fields) scan(value, { checkSize });
   if (serialized !== undefined) scan(serialized, { checkSize: false });
   // Delimiters inserted by JSON must not break the check for a credential split
   // across consecutive prompt strings, including Unicode escape fragments.
