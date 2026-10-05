@@ -31,6 +31,15 @@ our own; treat single-digit moves as noise.
 - `fraylabs/possible-outcomes`: added description, homepage and topics
   (possible-recipes, prompts, recipes, claude-code, codex, ai-agents).
 
+## Channel status (Oct 5)
+
+| Channel | Status | Blocker / next step |
+| --- | --- | --- |
+| Reddit, X | No account | ActAs sign-in tool's hardened release first; it hands the one-time captcha/phone step to a human. Possible is on ActAs's list. |
+| dev.to | No account | Email signup has reCAPTCHA. GitHub sign-in would avoid it once Possible has its own GitHub account. |
+| Awesome lists, directories, Discussions | Not posted | Company rule: GitHub writes only as BrianLYS and never post or comment as BrianLYS, so listing PRs/issues and Discussion posts need a Possible GitHub account. Asked Possible Owner for a one-minute human step to create one. |
+| Possible's own repos | Done | Description and topics only (metadata, not posts). |
+
 ---
 
 # Oct 4 plan (on hold, kept for reference)

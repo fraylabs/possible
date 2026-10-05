@@ -72,3 +72,12 @@ You get the exact prompt that produced the result, ready to hand to Codex or Cla
 
 brew install fraylabs/tap/possible
 [link → possible.sh, utm_source=bluesky&utm_campaign=p03-cli]
+
+## Directory entry copy (Oct 5)
+
+One line (awesome lists):
+- [Possible](https://github.com/fraylabs/possible) - Searchable AI-made results with the recipe behind each one (prompts, pinned skills, tools, steps). Its CLI turns a finished Claude Code or Codex session into a recipe locally, for you to review before publishing from your own repo.
+
+Short (≤160): Find AI-made results and the recipe behind them, capture your own Claude Code or Codex session as a recipe, and publish it from your repo.
+
+Skill entry: possible: before your agent starts, finds earlier results that match the task and builds one complete starting prompt from their recipes. Install: npx skills add https://github.com/fraylabs/possible/tree/skill/skills/possible --skill possible
