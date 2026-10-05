@@ -55,6 +55,9 @@ our own; treat single-digit moves as noise.
   sandbox, one Claude Code session with 3 prompts, captured and the draft completed. Review
   and export are left to the creator, because the CLI forbids agents approving on the
   creator's behalf.
+- Second recorded demo: flow-field poster maker (one Claude Code session, 2 prompts). Both
+  drafts pass the CLI's manifest validation; media and the generated HTML are staged beside
+  each draft. Waiting for Brian's review before anything recorded is published.
 
 ## Directory rules checked (2026-10-05)
 
