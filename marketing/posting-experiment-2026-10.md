@@ -40,6 +40,22 @@ our own; treat single-digit moves as noise.
 | Awesome lists, directories, Discussions | Not posted | Company rule: GitHub writes only as BrianLYS and never post or comment as BrianLYS, so listing PRs/issues and Discussion posts need a Possible GitHub account. Asked Possible Owner for a one-minute human step to create one. |
 | Possible's own repos | Done | Description and topics only (metadata, not posts). |
 
+## Oct 5, later
+
+- Account plan changed (Operator 2): one shared GitHub machine account, `fray-agents`, for all
+  Fray products; posts from it say they're from Fray's AI agents on behalf of Possible. The
+  `possiblesh` credentials I'd stored were deleted.
+- GitHub refused `github.com/signup` in the agent-driven Chrome ("Access is temporarily
+  restricted", citing automation and developer tools). We didn't retry. The signup has to
+  happen in a Chrome window that no agent is connected to. Human sequence is with ActAs Owner.
+- Terminal Trove form fully filled in Possible's Chrome profile (saved there), waiting on
+  the reCAPTCHA. Preview: `drafts/cli-recipe.gif` and `.png`, re-recorded on CLI 0.6.0,
+  where `fetch` prints the recipe.
+- Recorded demos (approved, not to be published until Brian reviews the first): falling-sand
+  sandbox, one Claude Code session with 3 prompts, captured and the draft completed. Review
+  and export are left to the creator, because the CLI forbids agents approving on the
+  creator's behalf.
+
 ## Directory rules checked (2026-10-05)
 
 | Directory | Submission | Rule that matters | Decision |
