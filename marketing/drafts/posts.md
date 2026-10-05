@@ -99,3 +99,27 @@ Install: macOS brew install fraylabs/tap/possible, or curl -fsSL https://possibl
 - private_note: Submitted by the Possible project. This submission was prepared with AI help; the preview is a real recording of possible 0.6.0.
 - preview_gif: https://raw.githubusercontent.com/fraylabs/possible/main/marketing/drafts/cli-recipe.gif
 - preview_png: https://raw.githubusercontent.com/fraylabs/possible/main/marketing/drafts/cli-recipe.png
+
+## First posts once fray-agents exists (drafted Oct 5)
+
+Every post from fray-agents says it's from Fray's AI agents on behalf of Possible. One PR per list, one at a time, 24-48h apart.
+Recorded recipes (live): falling sand kh7024axj2cksgg0hetxgdfy9n8fpryd · flow field kh76caapj64dkt1w44t7txmdb98fpqva · robot snake kh71eba7mm80pnbj1b7x6hwcmh8fptge
+
+### p04 · PR · RoggeOhta/awesome-codex-cli (then p05 milisp/awesome-codex-cli)
+Entry: - [fraylabs/possible](https://github.com/fraylabs/possible) - Turn a finished Codex or Claude Code session into a reviewed, shareable recipe (prompts, tools, steps), and search other people's. ![GitHub stars](https://img.shields.io/github/stars/fraylabs/possible?style=flat-square)
+PR body: Adds Possible, an MIT CLI. `possible capture codex <rollout.jsonl>` turns a finished Codex session into a recipe draft locally (nothing uploaded); the creator reviews it in the terminal before export. `possible search` / `possible fetch` find and print other people's recipes. Disclosure: this PR was opened by Fray's AI agents on behalf of Possible, the project's maintainers.
+Tests: does a Codex-specific list send installs?
+
+### p06 · PR · ai-for-developers/awesome-ai-coding-tools ("CLI Tools")
+Entry: - **[Possible](https://possible.sh/?utm_source=github&utm_campaign=p06-ai-coding-tools)** – Search AI-made results with the recipe behind them, and turn your own Claude Code or Codex session into a recipe.
+Tests: does a general AI coding-tools list send visits that become installs?
+
+### p07 · Discussions · fraylabs/possible "Show and tell" (pinned)
+Title: Recorded recipes: three agent sessions you can remake
+Body: Three recipes on Possible are now recorded from real Claude Code sessions with `possible capture`, not reconstructed: a falling-sand sandbox in one HTML file (3 prompts), a flow-field poster maker (2 prompts) and a slithering robot snake prototype. Each page shows the exact prompts and tools, and has a link to the generated result. [links with utm_source=github&utm_campaign=p07-discussions]. Captured one of your own? Post it here with your outcomes.json repo and we'll take a look. Posted by Fray's AI agents on behalf of Possible.
+Tests: does an open invitation produce outside publishers?
+
+### p08 · dev.to article (after GitHub sign-in)
+Title: I recorded a Claude Code session as a recipe anyone can rerun
+Angle: the falling-sand build, step by step: the 3 prompts, what the agent did, `possible capture claude-code session.jsonl`, the review screen, what gets left out (tool outputs, file contents, paths), and the live page. Clear disclosure at the top: written by Fray's AI agents for Possible. Tag: #ai #claude #productivity #webdev. Link utm_source=devto&utm_campaign=p08-devto.
+Tests: does a how-to aimed at Claude Code users lead to captures?

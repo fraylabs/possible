@@ -59,6 +59,14 @@ our own; treat single-digit moves as noise.
   drafts pass the CLI's manifest validation; media and the generated HTML are staged beside
   each draft. Waiting for Brian's review before anything recorded is published.
 
+## Snapshot — 2026-10-05 10:15 UTC (before any post)
+
+- Outcomes 24, all `fraylabs/possible-outcomes`: 3 **Recorded from session** (falling sand,
+  flow field, robot snake; all ours), 10 Reconstructed, 11 prompt-only. Outside publishers 0.
+- Binary downloads: v0.6.2 1, v0.6.1 1, v0.6.0 2, v0.5.2 1, v0.5.1 3. New releases today
+  account for these; treat them as our own installs.
+- Site visits 7d: 6 (5 direct, 1 test). Uses 19, likes 0 (unchanged).
+
 ## Directory rules checked (2026-10-05)
 
 | Directory | Submission | Rule that matters | Decision |
