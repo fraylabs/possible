@@ -2,9 +2,16 @@
 
 **Resumed Oct 5** with a narrower goal: real builders install the CLI, capture their own
 sessions and publish recipes. Primary measures are those three; views are context only.
-HN and Bluesky stay off (see below). Reddit and X wait on accounts, so the first moves
+Social is X, Instagram and TikTok only (rule below). Those wait on accounts, so the first moves
 use channels that need no new human-verified account: Possible's GitHub presence and
 directories whose maintainers accept submissions.
+
+**Rule, Brian Oct 6:** social is only X, Instagram and TikTok, on Possible's own accounts,
+through the shared posting tool once it's announced. No Reddit, LinkedIn, Bluesky, Hacker News
+or dev.to: the Reddit drafts, subreddit shortlist and dev.to how-to were removed. Still allowed,
+because they're directory listings and our own repo rather than social posting: one honest
+awesome-list PR per list and a Discussions post in fraylabs/possible, both through the GitHub
+API from `fray-agents`. API first: browsers only for one-time sign-ins.
 
 ## Baseline — 2026-10-05 05:25 UTC
 
@@ -35,8 +42,8 @@ our own; treat single-digit moves as noise.
 
 | Channel | Status | Blocker / next step |
 | --- | --- | --- |
-| Reddit, X | No account | ActAs sign-in tool's hardened release first; it hands the one-time captcha/phone step to a human. Possible is on ActAs's list. |
-| dev.to | No account | Email signup has reCAPTCHA. GitHub sign-in would avoid it once Possible has its own GitHub account. |
+| X, Instagram, TikTok | No account yet | Posted through the shared posting tool (Fray in Public Owner) once it's announced. |
+| Reddit, dev.to | Dropped Oct 6 | Not allowed (see the rule at the top). |
 | Awesome lists, directories, Discussions | Not posted | Company rule: GitHub writes only as BrianLYS and never post or comment as BrianLYS, so listing PRs/issues and Discussion posts need a Possible GitHub account. Asked Possible Owner for a one-minute human step to create one. |
 | Possible's own repos | Done | Description and topics only (metadata, not posts). |
 
@@ -137,7 +144,7 @@ connection is in prod:/actas. Accounts are created in a dedicated Chrome profile
 | --- | --- | --- | --- |
 | Hacker News | `possiblesh` | none (HN needs no email) | Created; not used for posting (see rules) |
 | Bluesky | `possiblesh.bsky.social` → `@possible.sh` planned | ActAs inbox `agent-4b17e6db66da5522165e1c36@mail.actas.dev` | Not created: stopped at hCaptcha, then put on hold |
-| Reddit | `possiblesh` planned | ActAs inbox | Not created: stopped at "prove your humanity", then put on hold |
+| Reddit | `possiblesh` planned | ActAs inbox | Not created; Reddit dropped Oct 6 |
 | X | — | ActAs inbox | Signup requires a phone number; not created (brief: no Brian phone) |
 
 The ActAs address is temporary; accounts move to an ActAs identity once delegated
@@ -165,17 +172,7 @@ without Brian's phone. Times vary between US morning (13–15 UTC) and Asia/Euro
 Every link is tagged `?utm_source=<platform>&utm_campaign=<post-id>` (post IDs `p01-…`)
 so first-party visit counts can attribute visits once they're live.
 
-Reddit candidates, by format. Reddit hides subreddit rules from logged-out
-visitors, so each is checked verbatim after login and logged below before posting:
-
-| Subreddit | Fits | Why |
-| --- | --- | --- |
-| r/reinforcementlearning (~51K) | MicroDuck technical breakdown | Reward design, costs, failed evals; specialist audience |
-| r/robotics | MicroDuck video | Project showcases reportedly welcome |
-| r/codex (~118K, has Showcase flair) | CLI/agent angle, how-it-was-made | The agent that made most Fray recipes |
-| r/ClaudeAI (Showcase flair) | Remake challenge with a creator's Opus prompt | Most creator demos are Opus 5.5 |
-
-Every Reddit post says plainly that an AI agent wrote it for Possible.
+Subreddit shortlist removed Oct 6 (Reddit is off; see the rule at the top).
 
 ## Post log
 

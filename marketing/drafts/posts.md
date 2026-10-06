@@ -3,75 +3,59 @@
 Link pattern: https://possible.sh/outcomes/view/?id=<ID>&utm_source=<platform>&utm_campaign=<post-id>
 MicroDuck ID: kh79hk92ss2q5d96kb9f6h0aan8dnzdt
 
+Social channels (Brian, Oct 6): only X, Instagram and TikTok, on Possible's own accounts, posted through the shared posting tool once it's announced. No Reddit, LinkedIn, Bluesky, Hacker News or dev.to. Every profile says it's run with AI help.
+
 ## Profiles
 
-Bluesky display name: Possible
-Bluesky bio (≤256): See what AI can make, and the recipe behind it: exact prompts, skills, tools and steps. Reuse them with your agent. possible.sh
-This account is run by an AI agent for the Possible team.
+X / Instagram / TikTok name: Possible
+Bio (≤150): AI-made things and the recipe behind them: prompts, skills, tools, steps. Remake them with your agent. Run with AI help. possible.sh
 
-Reddit u/possiblesh bio: Possible (possible.sh): AI-made results with the exact prompts, skills and steps behind them. Posts are written by an AI agent for the Possible team.
+## p01-microduck · X · video
 
-## p01-microduck · Bluesky · video (format A)
-
-Video: happy-shuffle-preview.mp4 (16 s, 640×640, 50 fps)
+Video: MicroDuck happy-shuffle preview (16 s)
 Alt: A small two-legged robot duck in a simulator steps left and right in place, swaying its body and head, without falling.
 
 Text:
 An AI agent taught a robot duck a happy little shuffle.
 
-Codex wrote a reinforcement-learning task for Pollen Robotics' MicroDuck and trained it on one cloud GPU: 4,096 simulated ducks, 2.5 hours, $2.86.
+Codex wrote a reinforcement-learning task for Pollen Robotics' MicroDuck and trained it on one cloud GPU: 4,096 simulated ducks, 2.5 hours, $2.86. Simulation only for now.
 
-Simulation only for now. The exact prompt and how it was made:
-[link facet → possible.sh/…microduck, utm_source=bluesky&utm_campaign=p01-microduck]
+The prompt and how it was made (reconstructed from the run report): possible.sh/outcomes/view/?id=kh79hk92ss2q5d96kb9f6h0aan8dnzdt&utm_source=x&utm_campaign=p01-microduck
 
-Tests: concrete, surprising result + cost hook, native video, US-morning slot.
+Tests: does a concrete, surprising result with a cost hook travel?
 
-## p02-microduck · Reddit · r/reinforcementlearning (or r/robotics, pending rule check) · breakdown (format D-style, technical)
+## p02-falling-sand · X, Instagram Reels, TikTok · video
 
-Title: A coding agent trained a MicroDuck "happy shuffle" with PPO for $2.86: reward design, failed evals and caveats
+Video: the falling-sand preview, re-rendered vertical 9:16 for Reels/TikTok (the published preview is landscape).
+Text (X):
+Three prompts to Claude Code: a falling-sand game in one HTML file. Sand, water, fire, plants, lava, steam.
 
-Body:
-Setup: Codex (GPT-5.6) got a clean checkout of Pollen Robotics' official microduck_rl repo and one prompt: make MicroDuck learn a stable side-to-side "happy shuffle" with RL, no hard-coded trajectory, and don't reward-hack.
+Recorded straight from the session, so you can see every prompt and remake it with your own agent:
+possible.sh/outcomes/view/?id=kh7024axj2cksgg0hetxgdfy9n8fpryd&utm_source=x&utm_campaign=p02-falling-sand
+Caption (IG/TikTok): One HTML file, three prompts, no hand edits. The recipe is on possible.sh (link in bio). #claudecode #gamedev #pixelart #ai
+Tests: does a recorded, remakeable build lead to installs and captures more than a showcase does?
 
-What it built
-- A registered task (`Mjlab-HappyShuffle-Flat-MicroDuck`) with an 8-second, four-count phase command: left-out, right-close, right-out, left-close
-- State-based rewards for alternating foot contacts, body-relative lateral foot motion, lateral body rhythm, and a curriculum-gated head sway. No target joint trajectory.
-- Costs for unintended travel/yaw, slip, self-collision, feet tilt, joint-limit proximity, torque, leg speed, neck thrash and action changes, plus fall/NaN termination
-- Kept the production walking task's 61-D observation, actuator model, noise/delay, domain randomization and pushes
-- 6 focused tests, and the full suite (172 passed, 1 skipped)
+## p03-cli · X · CLI clip
 
-Training: PPO, 4,096 envs, 3,500 iterations on one A10G (Hugging Face Jobs), about 2.5 hours.
-
-Evaluation (16 s, nominal / 32 randomized envs with pushes): upright 100% / 100%, no early terminations, no self-collisions, max travel 6.2 cm / 5.7 cm, contact-sequence score 0.76 / 0.76.
-
-Cost: $2.86 total, derived from job runtimes. That includes $2.48 for the main run and two evaluation jobs that failed on harness bugs (EGL selection, a scene-site config). Both were fixed without touching the policy.
-
-What it doesn't show
-- Simulation only (MuJoCo Warp); no sim-to-real
-- It's a compact step-and-sway, not an exaggerated dance. "Happy" is a human judgment.
-- The two 8-second phrases aren't action-identical (repeat RMSE 0.446)
-
-The full prompt, the run report and a step-by-step recipe are here: [link, utm_source=reddit&utm_campaign=p02-microduck]. The recipe is reconstructed from the run report, not a recorded transcript.
-
-Disclosure: I'm an AI agent posting for Possible (possible.sh), a directory of AI-made results with the prompts behind them. Happy to answer questions about the reward terms or the run.
-
-Tests: does a technical, honest breakdown earn discussion in a specialist community? (Reddit, Asia evening / US morning.)
-
-## p03-cli · Bluesky · CLI clip (format B)
-
-Video: marketing/drafts/cli-recipe.mp4 (or .gif)
-Alt: A terminal. "possible search 'teach a robot duck a dance'" returns the MicroDuck Outcome first; "possible fetch <id>" prints its full prompt.
+Video: marketing/drafts/cli-recipe.mp4
+Alt: A terminal. "possible search 'teach a robot duck a dance'" finds the MicroDuck Outcome; "possible fetch <id>" prints how it was made: model, agent, references, tools, requirements and steps.
 
 Text:
-Before you prompt your agent, see if someone already made the thing.
+Before you prompt your agent, check whether someone already made the thing.
 
 possible search "teach a robot duck a dance"
 possible fetch <id>
 
-You get the exact prompt that produced the result, ready to hand to Codex or Claude Code.
-
+You get the recipe behind the result, ready to hand to Codex or Claude Code.
 brew install fraylabs/tap/possible
-[link → possible.sh, utm_source=bluesky&utm_campaign=p03-cli]
+possible.sh/?utm_source=x&utm_campaign=p03-cli
+Tests: do developers respond to the CLI angle?
+
+## p04-flow-field · X, Instagram, TikTok · video + carousel
+
+Media: flow-field preview video; for Instagram, a 4-image carousel of posters (paper and ink, risograph, ocean, neon).
+Text (X): Two prompts, one HTML file: a generative poster maker. Every poster can be reproduced from its URL. Recorded session and prompts: possible.sh/outcomes/view/?id=kh76caapj64dkt1w44t7txmdb98fpqva&utm_source=x&utm_campaign=p04-flow-field
+Tests: does generative art drive saves and shares on Instagram?
 
 ## Directory entry copy (Oct 5)
 
@@ -100,26 +84,21 @@ Install: macOS brew install fraylabs/tap/possible, or curl -fsSL https://possibl
 - preview_gif: https://raw.githubusercontent.com/fraylabs/possible/main/marketing/drafts/cli-recipe.gif
 - preview_png: https://raw.githubusercontent.com/fraylabs/possible/main/marketing/drafts/cli-recipe.png
 
-## First posts once fray-agents exists (drafted Oct 5)
+## GitHub posts once fray-agents exists (via the GitHub API)
 
 Every post from fray-agents says it's from Fray's AI agents on behalf of Possible. One PR per list, one at a time, 24-48h apart.
 Recorded recipes (live): falling sand kh7024axj2cksgg0hetxgdfy9n8fpryd · flow field kh76caapj64dkt1w44t7txmdb98fpqva · robot snake kh71eba7mm80pnbj1b7x6hwcmh8fptge
 
-### p04 · PR · RoggeOhta/awesome-codex-cli (then p05 milisp/awesome-codex-cli)
+### g01 · PR · RoggeOhta/awesome-codex-cli (then g02 milisp/awesome-codex-cli)
 Entry: - [fraylabs/possible](https://github.com/fraylabs/possible) - Turn a finished Codex or Claude Code session into a reviewed, shareable recipe (prompts, tools, steps), and search other people's. ![GitHub stars](https://img.shields.io/github/stars/fraylabs/possible?style=flat-square)
 PR body: Adds Possible, an MIT CLI. `possible capture codex <rollout.jsonl>` turns a finished Codex session into a recipe draft locally (nothing uploaded); the creator reviews it in the terminal before export. `possible search` / `possible fetch` find and print other people's recipes. Disclosure: this PR was opened by Fray's AI agents on behalf of Possible, the project's maintainers.
 Tests: does a Codex-specific list send installs?
 
-### p06 · PR · ai-for-developers/awesome-ai-coding-tools ("CLI Tools")
-Entry: - **[Possible](https://possible.sh/?utm_source=github&utm_campaign=p06-ai-coding-tools)** – Search AI-made results with the recipe behind them, and turn your own Claude Code or Codex session into a recipe.
+### g03 · PR · ai-for-developers/awesome-ai-coding-tools ("CLI Tools")
+Entry: - **[Possible](https://possible.sh/?utm_source=github&utm_campaign=g03-ai-coding-tools)** – Search AI-made results with the recipe behind them, and turn your own Claude Code or Codex session into a recipe.
 Tests: does a general AI coding-tools list send visits that become installs?
 
-### p07 · Discussions · fraylabs/possible "Show and tell" (pinned)
+### g04 · Discussions · fraylabs/possible "Show and tell" (pinned)
 Title: Recorded recipes: three agent sessions you can remake
-Body: Three recipes on Possible are now recorded from real Claude Code sessions with `possible capture`, not reconstructed: a falling-sand sandbox in one HTML file (3 prompts), a flow-field poster maker (2 prompts) and a slithering robot snake prototype. Each page shows the exact prompts and tools, and has a link to the generated result. [links with utm_source=github&utm_campaign=p07-discussions]. Captured one of your own? Post it here with your outcomes.json repo and we'll take a look. Posted by Fray's AI agents on behalf of Possible.
+Body: Three recipes on Possible are now recorded from real Claude Code sessions with `possible capture`, not reconstructed: a falling-sand sandbox in one HTML file (3 prompts), a flow-field poster maker (2 prompts) and a slithering robot snake prototype. Also worth a look: donald’s "Upping My P(doom)" music video (kh778zkt08dmv6hyma80959s818fp9wk). Each page shows the exact prompts and tools, and has a link to the generated result. [links with utm_source=github&utm_campaign=g04-discussions]. Captured one of your own? Post it here with your outcomes.json repo and we'll take a look. Posted by Fray's AI agents on behalf of Possible.
 Tests: does an open invitation produce outside publishers?
-
-### p08 · dev.to article (after GitHub sign-in)
-Title: I recorded a Claude Code session as a recipe anyone can rerun
-Angle: the falling-sand build, step by step: the 3 prompts, what the agent did, `possible capture claude-code session.jsonl`, the review screen, what gets left out (tool outputs, file contents, paths), and the live page. Clear disclosure at the top: written by Fray's AI agents for Possible. Tag: #ai #claude #productivity #webdev. Link utm_source=devto&utm_campaign=p08-devto.
-Tests: does a how-to aimed at Claude Code users lead to captures?
