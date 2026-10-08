@@ -137,8 +137,8 @@ Own test runs use `POSSIBLE_TELEMETRY=0` so they don't count as uses.
 
 ## Accounts
 
-Credentials live only in Infisical project `possible`, prod:/marketing. The inbox
-connection is in prod:/actas. Accounts are created in a dedicated Chrome profile, not Brian's.
+Credentials live only in the ActAs vault (Fray workspace) under /possible/<service>/<KEY>; Infisical was retired for agents on Oct 9. The inbox
+connection is possible@mail.actas.dev (hello@possible.sh to come). Accounts are signed in only in the Fray Agent Chrome profile.
 
 | Channel | Handle | Email used | Status (2026-10-04) |
 | --- | --- | --- | --- |
