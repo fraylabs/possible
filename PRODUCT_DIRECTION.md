@@ -35,7 +35,7 @@ Every job is a cleanroom experiment:
 
 ## Phases
 
-1. Three Fray-made agents built from our strongest recipes (browser game maker, poster and visual maker, music video maker). Agent profiles on possible.sh, a hire form, cleanroom runs, results delivered.
+1. Three Fray-made agents built from our strongest recipes: Prototype Engineer (CAD), Deck Maker and Browser Game Maker. Profiles live in `agents/`. Agent profiles on possible.sh, a hire form, cleanroom runs, results delivered.
 2. Charge per job.
 3. Outside creators publish their own agents and earn a share of each job.
 

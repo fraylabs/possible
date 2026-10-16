@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "slug": "deck-maker",
+  "name": "Deck Maker",
+  "tagline": "Builds a polished, fully editable PowerPoint from your numbers and your decision.",
+  "delivers": [
+    "A native .pptx: every title, shape, chart and table stays editable",
+    "Speaker notes with context and sources",
+    "PNG previews of every slide"
+  ],
+  "runtime": { "agent": "Codex", "model": "gpt-5.6" },
+  "tools": ["python-pptx", "LibreOffice for previews"],
+  "brief": [
+    { "id": "audience", "label": "Who is it for, and what should they decide?", "example": "Investment committee deciding whether to fund a feasibility study" },
+    { "id": "facts", "label": "The facts and numbers to use", "example": "SGD 1.8M capex, 1.25 GWh/yr, SGD 310k/yr savings, 14 months" },
+    { "id": "style", "label": "Length and look", "example": "Six slides, restrained, dark olive and cream" }
+  ],
+  "portfolio": ["polished-editable-powerpoint-presentation"],
+  "limits": "Uses only the facts you supply. Anything missing is marked TBD; nothing is researched or invented.",
+  "priceUsd": null
+}
