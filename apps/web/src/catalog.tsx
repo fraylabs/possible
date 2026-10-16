@@ -32,7 +32,7 @@ function updateLocation(mutator: (url: URL) => void, mode: "push" | "replace" = 
   );
 }
 
-function OutcomeMedia({ outcome, priority = false }: { outcome: DiscoveryOutcome; priority?: boolean }) {
+export function OutcomeMedia({ outcome, priority = false }: { outcome: DiscoveryOutcome; priority?: boolean }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const media = outcome.media;
   if (!media) {

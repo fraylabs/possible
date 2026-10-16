@@ -1,10 +1,13 @@
 import type { MetadataRoute } from "next";
+import { agentProfiles } from "../src/agents-data";
 
 const baseUrl = "https://possible.sh";
 const siteUpdatedAt = "2026-08-21";
 export const dynamic = "force-static";
 const staticPaths = [
   "/",
+  "/agents/",
+  ...agentProfiles.map((agent) => `/agents/${agent.slug}/`),
   "/publish/",
   "/docs/",
   "/docs/how-to-use/",

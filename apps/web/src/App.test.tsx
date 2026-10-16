@@ -93,7 +93,7 @@ describe("Possible website", () => {
     expect(screen.getByText("Inspect real results. Take the recipe to your agent.")).toBeInTheDocument();
     expect(screen.getByText("Ranked by copies")).toBeInTheDocument();
     expect(screen.getByText("12 copies")).toBeInTheDocument();
-    expect(Array.from(container.querySelectorAll(".nav-links a")).map((link) => link.textContent)).toEqual(["DOCS", "PUBLISH"]);
+    expect(Array.from(container.querySelectorAll(".nav-links a")).map((link) => link.textContent)).toEqual(["AGENTS", "DOCS", "PUBLISH"]);
     expect(screen.queryByRole("heading", { name: "Most copied Outcomes" })).not.toBeInTheDocument();
     expect(container.querySelectorAll(".home-outcome-fallback").length).toBeGreaterThan(0);
     expect(screen.getAllByText("HyperFrames").length).toBeGreaterThan(0);

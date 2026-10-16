@@ -9,6 +9,7 @@ type ThemePreference = "light" | "dark" | "system";
 const themeStorageKey = "possible-theme";
 const accountEnabled = process.env.NEXT_PUBLIC_GITHUB_AUTH_ENABLED === "true";
 const navigationItems = [
+  { label: "AGENTS", href: "/agents", external: false },
   ...(accountEnabled ? [{ label: "SAVED", href: "/saved", external: false }] : []),
   { label: "DOCS", href: "/docs", external: false },
   { label: "PUBLISH", href: "/publish", external: false },
@@ -154,6 +155,7 @@ export function SiteFooter() {
       <div className="site-footer-inner layout-wide">
         <a className="wordmark" href="/">possible<span>.sh</span></a>
         <div className="site-footer-links">
+          <a href="/agents">Agents</a>
           <a href="/#discover">Discover</a>
           <a href="/docs">Docs</a>
           <a href="/publish">Publish</a>
