@@ -1,71 +1,47 @@
 # Possible product direction
 
-Possible is a public directory of Outcomes: visible results paired with exact reusable prompts.
+Possible is a place to hire AI agents that deliver outcomes.
 
-> See what agents can make. Copy the prompt. Remix it.
+> Pick an agent. Describe the job. Get the result.
+
+Each agent has a profile, like a character on Character.ai, but it is hired for work rather than chat. A profile shows what the agent delivers, its portfolio of past results, the model it runs on and its price.
 
 ## The user loop
 
 ```text
-find a desired result
-  -> judge the visible Outcome
-  -> inspect its exact prompt and requirements
-  -> copy or remix it
-  -> continue in the relevant agent or Product
+browse agents
+  -> judge an agent by its portfolio
+  -> describe a job
+  -> the agent runs it in a cleanroom
+  -> receive the result, with the recording of how it was made
 ```
-The Outcome is the ranking unit because it is the thing a person can inspect and reuse. Products and Skills receive visible “Made with” attribution and downstream reputation from the Outcomes they enable.
 
-## Source-owned publishing
+## Possible runs the agents
 
-Possible does not host publisher accounts or canonical Outcome files.
+Possible hosts every agent and runs every job. People do not download agents or bring their own model.
 
-A publisher owns either:
+Every job is a cleanroom experiment:
 
-- a public GitHub repository; or
-- a domain with `/.well-known/possible/outcomes.json`.
+- a fresh, isolated machine per job, wiped afterwards;
+- nothing on it but the agent's instructions, its declared tools and the customer's brief;
+- no Fray state, credentials or other customers' data;
+- the whole session recorded with `possible capture`, so the result comes with an honest account of how it was made.
 
-Each Outcome contains required `outcome.json`, `outcome.md`, and `prompt.md` files. Possible independently reads the public source, validates it, stores an immutable snapshot, and updates the current listing. A removed Outcome becomes hidden; historical snapshots remain intact.
+## What carries over from the recipe library
 
-Domain sources are Official for that domain. GitHub Outcomes are Community unless the repository directly owns a referenced Skill. Official means source ownership, not Possible endorsement or quality.
-
-## Discovery and reputation
-
-Possible has one organic leaderboard: **Most used Outcomes — All time**. Deduplicated uses and account likes support discovery but never prove universal fit. Raw anonymous installation identifiers are hashed before storage; bookmarks are private.
-
-The optional `$possible` Skill searches current Outcomes, checks current primary sources, resolves consequential unknowns, and prepares one complete prompt for a fresh agent.
-
-## Revenue path
-
-Organic rank and Official identity cannot be purchased. If paid discovery is introduced, it is a small, clearly labelled Sponsored Outcomes surface with at most three placements.
-
-Do not build bidding until organic repeat use exists.
+- **What makes a good prompt** becomes each agent's standing instructions: a precise spec, few follow-ups, a clear finish line.
+- **Outcomes** become portfolios. Every published Outcome belongs to the agent that made it.
+- **Capture** records each finished job; with the customer's approval it joins the agent's portfolio.
 
 ## Phases
 
-1. Prove six to ten excellent visual Outcomes, source publishing, prompt use, likes, bookmarks, and reliable search.
-2. Get outside publishers to expose public repositories or domain indexes.
-3. Learn from successful searches, uses, and remixes; improve retrieval.
-4. Consider sponsored placement, publisher analytics, APIs, and additional leaderboard windows only when use supports them.
+1. Three Fray-made agents built from our strongest recipes (browser game maker, poster and visual maker, music video maker). Agent profiles on possible.sh, a hire form, cleanroom runs, results delivered.
+2. Charge per job.
+3. Outside creators publish their own agents and earn a share of each job.
 
 ## Do not build yet
 
-- Possible publisher accounts or publisher OAuth;
-- hosted authoring or canonical prompt storage;
-- passive gallery scraping or bulk import queues;
-- claims, handoffs, or ownership-transfer workflows;
-- Product or Skill leaderboards;
-- wallets, checkout, or hosted model execution;
-- structured prompt compilers, expectations, workstreams, or trust ceremony.
-
-## Immediate milestone
-
-```text
-publisher exposes a real Outcome
-  -> Possible snapshots the source
-  -> user discovers and judges the result
-  -> user copies or remixes the exact prompt
-  -> Products and Skills receive attribution
-  -> deduplicated usage and likes improve discovery
-```
-
-Reader GitHub sign-in is deliberately narrower than a publisher account: it exists only for likes and private bookmarks and grants no publishing or ownership authority.
+- chat-style personalities;
+- creator accounts or creator payouts;
+- customer-supplied models or keys;
+- bidding or sponsored placement.
