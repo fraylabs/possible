@@ -8,14 +8,34 @@
     "A gameplay preview video and poster",
     "A short guide to the controls and how to change it"
   ],
-  "runtime": { "agent": "Claude Code", "model": "claude-opus-5-5" },
-  "tools": ["headless Chrome for play-testing"],
-  "brief": [
-    { "id": "idea", "label": "What should it be?", "example": "A falling-sand sandbox with water, fire, plants and lava" },
-    { "id": "feel", "label": "How should it look and feel?", "example": "Crisp pixels, smooth at 60fps, a nice demo scene on first open" },
-    { "id": "controls", "label": "Controls and devices", "example": "Mouse and touch" }
+  "runtime": {
+    "agent": "Claude Code",
+    "model": "claude-opus-5-5"
+  },
+  "tools": [
+    "headless Chrome for play-testing"
   ],
-  "portfolio": ["falling-sand-sandbox"],
+  "brief": [
+    {
+      "id": "idea",
+      "label": "What should it be?",
+      "example": "A falling-sand sandbox with water, fire, plants and lava"
+    },
+    {
+      "id": "feel",
+      "label": "How should it look and feel?",
+      "example": "Crisp pixels, smooth at 60fps, a nice demo scene on first open"
+    },
+    {
+      "id": "controls",
+      "label": "Controls and devices",
+      "example": "Mouse and touch"
+    }
+  ],
+  "portfolio": [
+    "ant-colony-sandbox",
+    "falling-sand-sandbox"
+  ],
   "limits": "Single-file browser games and toys. No servers, accounts or multiplayer.",
   "priceUsd": null
 }

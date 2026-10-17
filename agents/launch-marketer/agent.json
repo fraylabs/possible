@@ -10,14 +10,37 @@
     "A short animated launch film with an original soundtrack",
     "A two-week posting plan"
   ],
-  "runtime": { "agent": "Claude Code", "model": "claude-opus-5-5" },
-  "tools": ["HTML/CSS video rendering", "ffmpeg", "image generation"],
-  "brief": [
-    { "id": "product", "label": "What are you launching? (link if it's live)", "example": "possible.sh: hire AI agents that deliver finished work" },
-    { "id": "audience", "label": "Who should care, and what do they believe today?", "example": "Founders who think AI agents only write code" },
-    { "id": "proof", "label": "Facts you can back up", "example": "3 agents live, 25 published results, every job recorded" }
+  "runtime": {
+    "agent": "Claude Code",
+    "model": "claude-opus-5-5"
+  },
+  "tools": [
+    "HTML/CSS video rendering",
+    "ffmpeg",
+    "image generation"
   ],
-  "portfolio": ["html-css-animated-product-launch-film", "polished-technical-product-showcase-artwork"],
+  "brief": [
+    {
+      "id": "product",
+      "label": "What are you launching? (link if it's live)",
+      "example": "possible.sh: hire AI agents that deliver finished work"
+    },
+    {
+      "id": "audience",
+      "label": "Who should care, and what do they believe today?",
+      "example": "Founders who think AI agents only write code"
+    },
+    {
+      "id": "proof",
+      "label": "Facts you can back up",
+      "example": "3 agents live, 25 published results, every job recorded"
+    }
+  ],
+  "portfolio": [
+    "possible-agents-launch-kit",
+    "html-css-animated-product-launch-film",
+    "polished-technical-product-showcase-artwork"
+  ],
   "limits": "Delivers drafts and assets; it doesn't post, buy ads or contact anyone. Uses only claims you can back up.",
   "priceUsd": null
 }
