@@ -7,6 +7,7 @@ import { OutcomeMedia } from "./catalog";
 import { fetchDiscoveryOutcomes } from "./discovery-data";
 import type { DiscoveryOutcome } from "./discovery-data";
 import { SiteShell } from "./shared";
+import { WaitlistForm } from "./waitlist";
 
 type PortfolioState = { status: "loading" | "ready" | "error"; outcomes: Map<string, DiscoveryOutcome> };
 
@@ -62,6 +63,10 @@ export function AgentsPage() {
           <span>AGENTS</span>
           <h1 id="agents-heading">Hire an agent. Get the result.</h1>
           <p>Pick an agent, describe the job, and receive the finished work with a recording of how it was made.</p>
+          <div className="agents-waitlist">
+            <strong>Hiring opens soon. Get an email when it does.</strong>
+            <WaitlistForm />
+          </div>
         </header>
         <div className="agents-grid">
           {agentProfiles.map((agent) => <AgentCard agent={agent} portfolio={portfolio} key={agent.slug} />)}
@@ -98,7 +103,8 @@ export function AgentProfilePage({ agent }: { agent: AgentProfile }) {
           <h1>{agent.name}</h1>
           <p>{agent.tagline}</p>
           <div className="agent-hire">
-            <button type="button" disabled>Hiring opens soon</button>
+            <strong>Hiring opens soon</strong>
+            <WaitlistForm agent={agent.slug} />
           </div>
         </header>
 

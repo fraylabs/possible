@@ -11,6 +11,12 @@ export default defineSchema({
   pageVisitBudgets: defineTable({
     date: v.string(), minute: v.number(), minuteCount: v.number(), count: v.number(), buckets: v.number(),
   }).index("by_date", ["date"]),
+  waitlist: defineTable({
+    email: v.string(), agent: v.string(), source: v.string(), createdAt: v.number(),
+  }).index("by_email", ["email"]),
+  waitlistBudgets: defineTable({
+    date: v.string(), minute: v.number(), minuteCount: v.number(), count: v.number(),
+  }).index("by_date", ["date"]),
   outcomeSources: defineTable({
     sourceType: v.union(v.literal("github"), v.literal("well-known")),
     locator: v.string(),

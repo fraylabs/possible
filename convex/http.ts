@@ -7,6 +7,31 @@ import { auth } from "./auth";
 const http = httpRouter();
 auth.addHttpRoutes(http);
 
+// Bound the actual stream, even when content-length is missing or forged.
+const tooLarge = Symbol("tooLarge");
+async function readBoundedText(request: Request, limit = 1024): Promise<string | null | typeof tooLarge> {
+  const reader = request.body?.getReader();
+  if (!reader) return null;
+  let text = "";
+  let bytes = 0;
+  const decoder = new TextDecoder();
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      bytes += value.byteLength;
+      if (bytes > limit) {
+        await reader.cancel();
+        return tooLarge;
+      }
+      text += decoder.decode(value, { stream: true });
+    }
+    return text + decoder.decode();
+  } catch {
+    return null;
+  }
+}
+
 const visitCors = {
   "access-control-allow-origin": "https://possible.sh",
   "access-control-allow-headers": "content-type",
@@ -21,24 +46,10 @@ http.route({
     if (request.headers.get("origin") !== "https://possible.sh") return new Response(null, { status: 403 });
     if (request.headers.get("dnt") === "1" || request.headers.get("sec-gpc") === "1") return new Response(null, { status: 204, headers: visitCors });
     if (!request.headers.get("content-type")?.startsWith("application/json")) return new Response(null, { status: 415, headers: visitCors });
-    // Bound the actual stream, even when content-length is missing or forged.
-    const reader = request.body?.getReader();
-    if (!reader) return new Response(null, { status: 400, headers: visitCors });
-    let text = "";
-    let bytes = 0;
-    const decoder = new TextDecoder();
+    const text = await readBoundedText(request);
+    if (text === null) return new Response(null, { status: 400, headers: visitCors });
+    if (text === tooLarge) return new Response(null, { status: 413, headers: visitCors });
     try {
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        bytes += value.byteLength;
-        if (bytes > 1024) {
-          await reader.cancel();
-          return new Response(null, { status: 413, headers: visitCors });
-        }
-        text += decoder.decode(value, { stream: true });
-      }
-      text += decoder.decode();
       const body = JSON.parse(text);
       const keys = ["path", "referrerHost", "utmSource", "utmMedium", "utmCampaign"];
       if (!body || typeof body !== "object" || Object.keys(body).length !== keys.length || !keys.every((key) => typeof body[key] === "string")) return new Response(null, { status: 400, headers: visitCors });
@@ -46,6 +57,28 @@ http.route({
         path: body.path, referrerHost: body.referrerHost, utmSource: body.utmSource, utmMedium: body.utmMedium, utmCampaign: body.utmCampaign,
       });
       return new Response(JSON.stringify({ counted }), { headers: { ...visitCors, "content-type": "application/json" } });
+    } catch {
+      return new Response(null, { status: 400, headers: visitCors });
+    }
+  }),
+});
+
+http.route({ path: "/api/waitlist", method: "OPTIONS", handler: httpAction(async () => new Response(null, { status: 204, headers: visitCors })) });
+http.route({
+  path: "/api/waitlist", method: "POST",
+  handler: httpAction(async (ctx, request) => {
+    if (request.headers.get("origin") !== "https://possible.sh") return new Response(null, { status: 403 });
+    if (!request.headers.get("content-type")?.startsWith("application/json")) return new Response(null, { status: 415, headers: visitCors });
+    const text = await readBoundedText(request);
+    if (text === null) return new Response(null, { status: 400, headers: visitCors });
+    if (text === tooLarge) return new Response(null, { status: 413, headers: visitCors });
+    try {
+      const body = JSON.parse(text);
+      const keys = ["email", "agent", "source"];
+      if (!body || typeof body !== "object" || Object.keys(body).length !== keys.length || !keys.every((key) => typeof body[key] === "string")) return new Response(null, { status: 400, headers: visitCors });
+      const result = await ctx.runMutation(internal.waitlist.join, { email: body.email, agent: body.agent, source: body.source });
+      const status = result === "ok" ? 200 : result === "busy" ? 429 : 400;
+      return new Response(JSON.stringify({ ok: result === "ok" }), { status, headers: { ...visitCors, "content-type": "application/json" } });
     } catch {
       return new Response(null, { status: 400, headers: visitCors });
     }

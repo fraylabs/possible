@@ -18,6 +18,7 @@ import type * as sourceRegistration from "../sourceRegistration.js";
 import type * as usage from "../usage.js";
 import type * as visitValidation from "../visitValidation.js";
 import type * as visits from "../visits.js";
+import type * as waitlist from "../waitlist.js";
 
 import type {
   ApiFromModules,
@@ -36,6 +37,7 @@ declare const fullApi: ApiFromModules<{
   usage: typeof usage;
   visitValidation: typeof visitValidation;
   visits: typeof visits;
+  waitlist: typeof waitlist;
 }>;
 
 /**

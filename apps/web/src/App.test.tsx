@@ -7,6 +7,7 @@ import type { DirectoryOutcomeDetail } from "./dynamic-outcome-detail";
 import { fetchDiscoveryOutcomes } from "./discovery-data";
 import type { DiscoveryOutcome } from "./discovery-data";
 import { normalizeSource } from "./publish";
+import { WaitlistForm } from "./waitlist";
 
 afterEach(() => {
   cleanup();
@@ -400,5 +401,31 @@ describe("Possible website", () => {
   it("normalizes publisher sources without inventing account state", () => {
     expect(normalizeSource(" https://example.com/ ")).toBe("https://example.com");
     expect(normalizeSource("owner/repository")).toBe("owner/repository");
+  });
+
+  it("joins the waitlist with the agent slug and utm_source", async () => {
+    vi.stubEnv("NEXT_PUBLIC_CONVEX_SITE_URL", "https://directory.example");
+    window.history.pushState({}, "", "/agents/launch-marketer/?utm_source=x");
+    const fetchMock = vi.fn(async () => new Response(JSON.stringify({ ok: true }), { status: 200 }));
+    vi.stubGlobal("fetch", fetchMock);
+    render(<WaitlistForm agent="launch-marketer" />);
+    expect(screen.getByText("We'll only email you about hiring opening. No sharing, unsubscribe anytime.")).toBeInTheDocument();
+    await userEvent.type(screen.getByRole("textbox", { name: "Email address" }), "person@example.com");
+    await userEvent.click(screen.getByRole("button", { name: "Join the waitlist" }));
+    expect(await screen.findByRole("status")).toHaveTextContent("You're on the list. We'll email you when hiring opens.");
+    expect(fetchMock).toHaveBeenCalledWith("https://directory.example/api/waitlist", expect.objectContaining({ method: "POST" }));
+    expect(JSON.parse((fetchMock.mock.calls[0] as unknown as [string, RequestInit])[1].body as string)).toEqual({ email: "person@example.com", agent: "launch-marketer", source: "x" });
+  });
+
+  it("shows a clear error when the waitlist backend is unavailable", async () => {
+    vi.stubEnv("NEXT_PUBLIC_CONVEX_SITE_URL", "https://directory.example");
+    vi.stubGlobal("fetch", vi.fn(async () => new Response(null, { status: 404 })));
+    render(<WaitlistForm />);
+    await userEvent.type(screen.getByRole("textbox", { name: "Email address" }), "person@example.com");
+    await userEvent.click(screen.getByRole("button", { name: "Join the waitlist" }));
+    expect(await screen.findByRole("alert")).toHaveTextContent("We couldn't add you right now. Try again shortly.");
+    vi.stubGlobal("fetch", vi.fn(async () => { throw new TypeError("Failed to fetch"); }));
+    await userEvent.click(screen.getByRole("button", { name: "Join the waitlist" }));
+    expect(await screen.findByRole("alert")).toHaveTextContent("We couldn't add you right now.");
   });
 });
