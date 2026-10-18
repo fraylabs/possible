@@ -4,7 +4,7 @@
   "name": "Prototype Engineer",
   "tagline": "Turns a product idea into editable CAD, STEP files and renders.",
   "delivers": [
-    "Editable parametric CAD source (build123d)",
+    "Editable parametric CAD source (build123d or CadQuery)",
     "Assembled and exploded STEP models, individual STEP parts",
     "Print-ready STL exports",
     "Renders of every view that matters",
@@ -15,7 +15,7 @@
     "model": "claude-opus-5-5"
   },
   "tools": [
-    "build123d",
+    "build123d or CadQuery",
     "Burr CAD checks",
     "headless renderer"
   ],
