@@ -10,14 +10,34 @@
     "Renders of every view that matters",
     "A short report: dimensions, checks run, and what still needs physical testing"
   ],
-  "runtime": { "agent": "Claude Code", "model": "claude-opus-5-5" },
-  "tools": ["build123d", "Burr CAD checks", "headless renderer"],
+  "runtime": {
+    "agent": "Claude Code",
+    "model": "claude-opus-5-5"
+  },
+  "tools": [
+    "build123d",
+    "Burr CAD checks",
+    "headless renderer"
+  ],
   "brief": [
-    { "id": "what", "label": "What should it be?", "example": "A fold-flat travel hanger that locks open and fits in a laptop bag" },
-    { "id": "constraints", "label": "Sizes, loads and limits", "example": "430-450 mm wide open, under 230 x 90 x 30 mm folded, prints on a 256 mm bed" },
-    { "id": "manufacture", "label": "How will it be made?", "example": "FDM printing, no glue or screws" }
+    {
+      "id": "what",
+      "label": "What should it be?",
+      "example": "A fold-flat travel hanger that locks open and fits in a laptop bag"
+    },
+    {
+      "id": "constraints",
+      "label": "Sizes, loads and limits",
+      "example": "430-450 mm wide open, under 230 x 90 x 30 mm folded, prints on a 256 mm bed"
+    },
+    {
+      "id": "manufacture",
+      "label": "How will it be made?",
+      "example": "FDM printing, no glue or screws"
+    }
   ],
   "portfolio": [
+    "two-angle-phone-stand",
     "fold-flat-travel-hanger",
     "functional-hardware-prototype",
     "robot-digital-prototype",
