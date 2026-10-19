@@ -2,6 +2,7 @@ import browserGameMaker from "../../../agents/browser-game-maker/agent.json" wit
 import deckMaker from "../../../agents/deck-maker/agent.json" with { type: "json" };
 import prototypeEngineer from "../../../agents/prototype-engineer/agent.json" with { type: "json" };
 import launchMarketer from "../../../agents/launch-marketer/agent.json" with { type: "json" };
+import competitorAnalyst from "../../../agents/competitor-analyst/agent.json" with { type: "json" };
 
 export interface AgentBriefField {
   id: string;
@@ -23,7 +24,7 @@ export interface AgentProfile {
   priceUsd: number | null;
 }
 
-export const agentProfiles: readonly AgentProfile[] = [launchMarketer, prototypeEngineer, deckMaker, browserGameMaker];
+export const agentProfiles: readonly AgentProfile[] = [launchMarketer, competitorAnalyst, prototypeEngineer, deckMaker, browserGameMaker];
 
 export function findAgentProfile(slug: string): AgentProfile | undefined {
   return agentProfiles.find((agent) => agent.slug === slug);
