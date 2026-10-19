@@ -34,7 +34,9 @@
       "example": "Which of their channels we should copy first with a small budget"
     }
   ],
-  "portfolio": [],
+  "portfolio": [
+    "agentmail-teardown-for-actas"
+  ],
   "limits": "Public evidence only: no logins, scraping behind sign-in or spend estimates a source doesn't state. Anything it couldn't see is listed as unknown with a link to check it yourself.",
   "priceUsd": null
 }
