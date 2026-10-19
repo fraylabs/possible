@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "slug": "competitor-analyst",
+  "name": "Competitor Analyst",
+  "tagline": "Reverse engineers how a competitor gets customers and turns it into your playbook.",
+  "delivers": [
+    "A teardown report: paid, organic, SEO and AI search, community, funnel and positioning history, every fact cited to evidence",
+    "The raw evidence bundle (evidence.json) behind every citation",
+    "A side-by-side of their funnel and yours",
+    "A ranked playbook: 5 to 10 concrete moves for your product, each tied to evidence"
+  ],
+  "runtime": {
+    "agent": "Claude Code",
+    "model": "claude-opus-5-5"
+  },
+  "tools": [
+    "REM (Reverse Engineer Marketing, MIT)",
+    "web fetch"
+  ],
+  "brief": [
+    {
+      "id": "competitor",
+      "label": "Which competitor? (website, App Store or Google Play link)",
+      "example": "agentmail.to"
+    },
+    {
+      "id": "you",
+      "label": "Your product, and who you sell to",
+      "example": "actas.dev: email, logins and 2FA codes for AI agents, US$12/month, sold to developers"
+    },
+    {
+      "id": "question",
+      "label": "What do you want to decide?",
+      "example": "Which of their channels we should copy first with a small budget"
+    }
+  ],
+  "portfolio": [],
+  "limits": "Public evidence only: no logins, scraping behind sign-in or spend estimates a source doesn't state. Anything it couldn't see is listed as unknown with a link to check it yourself.",
+  "priceUsd": null
+}
