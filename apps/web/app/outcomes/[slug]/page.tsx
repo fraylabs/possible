@@ -6,6 +6,7 @@ import { pageMetadata } from "../../_metadata";
 
 type Props = { params: Promise<{ slug: string }> };
 export const dynamicParams = false;
+export const dynamic = "force-static";
 
 export async function generateStaticParams() {
   return outcomeRoutes(await publishedOutcomes()).map(({ slug }) => ({ slug }));

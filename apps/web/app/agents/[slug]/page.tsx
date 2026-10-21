@@ -8,6 +8,7 @@ import { pageMetadata } from "../../_metadata";
 type AgentPageProps = { params: Promise<{ slug: string }> };
 
 export const dynamicParams = false;
+export const dynamic = "force-static";
 
 export function generateStaticParams() {
   return agentProfiles.map((agent) => ({ slug: agent.slug }));

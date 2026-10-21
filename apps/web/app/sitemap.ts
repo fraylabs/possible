@@ -3,7 +3,7 @@ import { outcomeRoutes, publishedOutcomes } from "../src/static-outcomes";
 import { agentProfiles } from "../src/agents-data";
 
 const baseUrl = "https://possible.sh";
-const siteUpdatedAt = "2026-08-21";
+const siteUpdatedAt = "2026-10-21";
 export const dynamic = "force-static";
 const staticPaths = [
   "/",
