@@ -101,7 +101,11 @@ export function DynamicOutcomeDetailPage({ outcomeFixture, attributionsFixture =
   const [rawOutcome, setOutcome] = useState<DirectoryOutcomeDetail | null | undefined>(outcomeFixture);
   const outcome = useMemo(() => visibleValue(rawOutcome), [rawOutcome]);
   const hiddenText = rawOutcome ? hasInvisibleText(JSON.stringify(rawOutcome)) : false;
-  const [attributions, setAttributions] = useState<OutcomeAttribution[]>(attributionsFixture);
+  const [attributions, setAttributions] = useState<OutcomeAttribution[]>(attributionsFixture.length ? attributionsFixture : outcomeFixture ? [
+    ...(outcomeFixture.primary_attribution ? [displayAttribution(visibleValue(outcomeFixture.primary_attribution), "primary")] : []),
+    ...(outcomeFixture.secondary_attributions ?? []).map((item) => displayAttribution(visibleValue(item), "secondary")),
+  ] : attributionsFixture);
+  const [canonicalPath, setCanonicalPath] = useState<string>();
   const [draft, setDraft] = useState(visibleText(outcomeFixture?.prompt ?? ""));
   useEffect(() => {
     if (outcomeFixture !== undefined) return;
@@ -115,7 +119,15 @@ export function DynamicOutcomeDetailPage({ outcomeFixture, attributionsFixture =
       if (!response.ok) { setOutcome(null); return; }
       const body = await response.json() as { outcome?: DirectoryOutcomeDetail | null };
       if (!body.outcome) { setOutcome(null); return; }
-      const next = body.outcome; setOutcome(next); setDraft(visibleText(next.prompt));
+      const next = body.outcome;
+      // A newly published outcome may not have a static page until the next
+      // deployment. Keep the legacy view usable even if the route map fails.
+      void fetch("/outcome-paths.json").then(async (response) => {
+        if (!response.ok) return;
+        const paths = await response.json() as Record<string, string>;
+        if (!cancelled && paths[next.id]) setCanonicalPath(paths[next.id]);
+      }).catch(() => {});
+      setOutcome(next); setDraft(visibleText(next.prompt));
       setAttributions([...(next.primary_attribution ? [displayAttribution(visibleValue(next.primary_attribution), "primary")] : []), ...(next.secondary_attributions ?? []).map((item) => displayAttribution(visibleValue(item), "secondary"))]);
     })();
     return () => { cancelled = true; };
@@ -123,7 +135,7 @@ export function DynamicOutcomeDetailPage({ outcomeFixture, attributionsFixture =
   if (outcome === undefined) return <SiteShell className="pack-detail-page"><p className="dynamic-outcome-loading layout-reading">Loading Outcome…</p></SiteShell>;
   if (!outcome) return <SiteShell className="pack-detail-page"><section className="dynamic-outcome-missing layout-reading"><span>OUTCOME NOT FOUND</span><h1>This Outcome is not available.</h1><a href="/#discover">Browse Outcomes →</a></section></SiteShell>;
   const skills = attributions.filter((item) => item.kind === "Skill");
-  return <SiteShell className="pack-detail-page"><article className="outcome-detail layout-reading">
+  return <SiteShell className="pack-detail-page">{canonicalPath ? <link rel="canonical" href={`https://possible.sh${canonicalPath}`} /> : null}<article className="outcome-detail layout-reading">
     <header className="outcome-hero"><nav aria-label="Breadcrumb"><a href="/#discover">← All Outcomes</a></nav><div className="outcome-meta"><span>{attributions[0]?.kind ?? "Outcome"}</span><span>{outcome.publication_kind}</span>{outcome.model ? <span aria-label={`Model: ${outcome.model}`}>{outcome.model}</span> : null}<OutcomeReactions outcomeId={outcome.id} likeCount={outcome.like_count ?? 0} /></div><h1>{outcome.title}</h1><p>{outcome.summary}</p><div className="outcome-byline"><span>By <a href={outcome.author_url ?? outcome.source_url} target="_blank" rel="noreferrer">{outcome.author_name ?? outcome.source_locator}</a></span>{attributions.length ? <span>Made with {attributions.map((item, index) => <span key={item.id}>{index ? ", " : ""}<a href={item.href}>{item.name}</a></span>)}</span> : null}</div><div className={outcome.recipe ? "outcome-hero-actions has-recipe" : "outcome-hero-actions"} role="group" aria-label="Use this Outcome">{outcome.recipe ? <><CopyButton label="Copy recipe" value={recipeText(outcome)} onCopied={() => recordOutcomeUse(outcome.id)} /><CopyButton label="Copy prompt" value={draft} onCopied={() => recordOutcomeUse(outcome.id)} secondary /></> : <CopyButton label="Copy prompt" value={draft} onCopied={() => recordOutcomeUse(outcome.id)} />}<a href="#exact-prompt">Remix</a></div></header>
     {hiddenText ? <p role="note">This Outcome contains hidden characters. They are shown and copied as visible Unicode escapes so you can inspect them before reuse.</p> : null}
     <OutcomeGallery outcome={outcome} />

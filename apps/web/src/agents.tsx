@@ -82,17 +82,19 @@ const howItWorks = [
   { title: "Recorded end to end", text: "The whole session is recorded and delivered with the result, so you can see exactly how it was made." },
 ];
 
-function PortfolioItem({ slug, outcome, status }: { slug: string; outcome: DiscoveryOutcome | undefined; status: PortfolioState["status"] }) {
-  const title = outcome?.title ?? portfolioSlugLabel(slug);
+type StaticPortfolioEntry = { slug: string; title: string; path: string };
+
+function PortfolioItem({ slug, outcome, status, staticEntry }: { slug: string; outcome: DiscoveryOutcome | undefined; status: PortfolioState["status"]; staticEntry?: StaticPortfolioEntry | undefined }) {
+  const title = outcome?.title ?? staticEntry?.title ?? portfolioSlugLabel(slug);
   const body = <>
     <span className="agent-portfolio-media" data-fit={outcome?.media?.fit ?? "cover"}><PortfolioThumbnail outcome={outcome} label={title} /></span>
     <strong>{title}</strong>
-    <small>{outcome ? "View Outcome →" : status === "loading" ? "Loading…" : "Not in the public directory yet"}</small>
+    <small>{outcome || staticEntry ? "View Outcome →" : status === "loading" ? "Loading…" : "Not in the public directory yet"}</small>
   </>;
-  return <li>{outcome ? <a href={outcome.href}>{body}</a> : <div>{body}</div>}</li>;
+  return <li>{outcome || staticEntry ? <a href={staticEntry?.path ?? outcome?.href}>{body}</a> : <div>{body}</div>}</li>;
 }
 
-export function AgentProfilePage({ agent }: { agent: AgentProfile }) {
+export function AgentProfilePage({ agent, staticPortfolio = [] }: { agent: AgentProfile; staticPortfolio?: StaticPortfolioEntry[] }) {
   const portfolio = usePortfolioOutcomes();
   return (
     <SiteShell className="agent-profile-page">
@@ -122,7 +124,7 @@ export function AgentProfilePage({ agent }: { agent: AgentProfile }) {
           <h2 id="agent-portfolio-heading">Portfolio</h2>
           {portfolio.status === "error" ? <p className="agent-note" role="alert">The portfolio is unavailable right now. Try again shortly.</p> : null}
           <ul className="agent-portfolio">
-            {agent.portfolio.map((slug) => <PortfolioItem slug={slug} outcome={portfolio.outcomes.get(slug)} status={portfolio.status} key={slug} />)}
+            {agent.portfolio.map((slug) => <PortfolioItem slug={slug} outcome={portfolio.outcomes.get(slug)} status={portfolio.status} staticEntry={staticPortfolio.find((entry) => entry.slug === slug)} key={slug} />)}
           </ul>
         </section>
 
