@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "slug": "procedural-film-maker",
+  "name": "Procedural Film Maker",
+  "tagline": "Builds a world from pure code and films it: a cinematic short with its own synthesized soundtrack, no assets.",
+  "delivers": [
+    "The film: an ultra-wide MP4 with a synthesized nature bed and score",
+    "Stills of every shot",
+    "The full source in Python and GLSL: terrain, water, foliage, sky, camera, grade and audio, all generated, with no textures, meshes, HDRIs or samples",
+    "A guide to re-rendering at higher quality and changing shots, light and music"
+  ],
+  "runtime": {
+    "agent": "Claude Code",
+    "model": "claude-opus-5-5"
+  },
+  "tools": [
+    "Python, numpy, scipy",
+    "GLSL ray marching via moderngl (headless EGL)",
+    "ffmpeg"
+  ],
+  "brief": [
+    {
+      "id": "place",
+      "label": "What place should it build?",
+      "example": "An alpine lake valley: glacial trough, conifer forest, a twin waterfall, granite boulders on the shore"
+    },
+    {
+      "id": "refs",
+      "label": "Reference photos or a mood (optional)",
+      "example": "Clear morning light, turquoise water, not too grey"
+    },
+    {
+      "id": "film",
+      "label": "The film: length, aspect, pacing, music",
+      "example": "30 seconds, 21:9, drone-like moves, a new place every 6 seconds, calm nature sounds and an epic score"
+    }
+  ],
+  "portfolio": [],
+  "limits": "Landscapes and environments rendered offline from code. No characters, dialogue or real-time games. Quality and length scale with render time.",
+  "priceUsd": null
+}
