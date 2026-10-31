@@ -161,6 +161,9 @@ export function SiteFooter() {
           <a href="/publish">Publish</a>
           {accountEnabled ? <a href="/saved">Saved</a> : null}
           <a href={githubUrl} target="_blank" rel="noreferrer">GitHub ↗</a>
+          <a href="/terms/">Terms</a>
+          <a href="/privacy/">Privacy</a>
+          <a href="/refunds/">Refunds</a>
         </div>
         <span>OPEN SOURCE / 2026</span>
       </div>

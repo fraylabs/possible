@@ -14,6 +14,9 @@ const staticPaths = [
   "/docs/how-to-use/",
   "/docs/authoring/",
   "/docs/reference/",
+  "/terms/",
+  "/privacy/",
+  "/refunds/",
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

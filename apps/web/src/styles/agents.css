@@ -87,3 +87,18 @@
   .agent-runtime > div { grid-template-columns: 90px minmax(0, 1fr); }
   .waitlist-row { flex-direction: column; }
 }
+
+.teardown-price { max-width: 620px; margin-top: 22px; padding: 18px; border: 1px solid var(--site-border); border-radius: var(--site-radius); display: grid; gap: 12px; justify-items: start; background: var(--site-surface); }
+.teardown-price p { margin: 0; color: var(--site-copy); font-size: 14px; line-height: 1.55; }
+.teardown-price p strong { color: var(--site-text); font-size: 24px; letter-spacing: -.035em; }
+.teardown-price .teardown-guarantee { color: var(--site-muted); font-size: 12px; }
+.teardown-buy { min-height: 42px; padding: 0 18px; border: 1px solid var(--site-text); border-radius: 999px; display: inline-flex; align-items: center; background: var(--site-text); color: var(--site-background); cursor: pointer; font: 500 9px "DM Mono", monospace; text-transform: uppercase; white-space: nowrap; }
+.teardown-buy:disabled { cursor: not-allowed; opacity: .5; }
+.agent-list li a { color: var(--site-accent-strong); }
+
+.legal-article { padding: 48px 0 88px; color: var(--site-copy); font-size: 15px; line-height: 1.7; }
+.legal-article h1 { margin: 0 0 12px; color: var(--site-text); font-size: clamp(34px, 4.5vw, 44px); line-height: 1.08; letter-spacing: -.045em; }
+.legal-article h2 { margin: 36px 0 10px; color: var(--site-text); font-size: 21px; letter-spacing: -.03em; }
+.legal-article h3 { margin: 24px 0 8px; color: var(--site-text); font-size: 16px; }
+.legal-article p, .legal-article ul, .legal-article ol { max-width: 720px; margin: 0 0 14px; }
+.legal-article a { color: var(--site-accent-strong); text-decoration: underline; }

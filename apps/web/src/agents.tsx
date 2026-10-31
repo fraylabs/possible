@@ -7,6 +7,7 @@ import { OutcomeMedia } from "./catalog";
 import { fetchDiscoveryOutcomes } from "./discovery-data";
 import type { DiscoveryOutcome } from "./discovery-data";
 import { SiteShell } from "./shared";
+import { TeardownOffer } from "./teardown-offer";
 import { WaitlistForm } from "./waitlist";
 
 type PortfolioState = { status: "loading" | "ready" | "error"; outcomes: Map<string, DiscoveryOutcome> };
@@ -110,15 +111,19 @@ export function AgentProfilePage({ agent, staticPortfolio = [] }: { agent: Agent
           </div>
         </header>
 
-        <section className="agent-section" aria-labelledby="agent-delivers-heading">
-          <h2 id="agent-delivers-heading">What you get</h2>
-          <ul className="agent-list">{agent.delivers.map((item) => <li key={item}>{item}</li>)}</ul>
-        </section>
+        {agent.priceUsd !== null ? <TeardownOffer priceUsd={agent.priceUsd} /> : (
+          <>
+            <section className="agent-section" aria-labelledby="agent-delivers-heading">
+              <h2 id="agent-delivers-heading">What you get</h2>
+              <ul className="agent-list">{agent.delivers.map((item) => <li key={item}>{item}</li>)}</ul>
+            </section>
 
-        <section className="agent-section" aria-labelledby="agent-how-heading">
-          <h2 id="agent-how-heading">How it works</h2>
-          <ol className="agent-steps">{howItWorks.map((step, index) => <li key={step.title}><span aria-hidden="true">{String(index + 1).padStart(2, "0")}</span><div><strong>{step.title}</strong><p>{step.text}</p></div></li>)}</ol>
-        </section>
+            <section className="agent-section" aria-labelledby="agent-how-heading">
+              <h2 id="agent-how-heading">How it works</h2>
+              <ol className="agent-steps">{howItWorks.map((step, index) => <li key={step.title}><span aria-hidden="true">{String(index + 1).padStart(2, "0")}</span><div><strong>{step.title}</strong><p>{step.text}</p></div></li>)}</ol>
+            </section>
+          </>
+        )}
 
         <section className="agent-section" aria-labelledby="agent-portfolio-heading">
           <h2 id="agent-portfolio-heading">Portfolio</h2>
@@ -135,10 +140,12 @@ export function AgentProfilePage({ agent, staticPortfolio = [] }: { agent: Agent
           </dl>
         </section>
 
-        <section className="agent-section" aria-labelledby="agent-limits-heading">
-          <h2 id="agent-limits-heading">Limits</h2>
-          <p className="agent-note">{agent.limits}</p>
-        </section>
+        {agent.priceUsd === null ? (
+          <section className="agent-section" aria-labelledby="agent-limits-heading">
+            <h2 id="agent-limits-heading">Limits</h2>
+            <p className="agent-note">{agent.limits}</p>
+          </section>
+        ) : null}
 
         <section className="agent-section" aria-labelledby="agent-runtime-heading">
           <h2 id="agent-runtime-heading">Runtime</h2>
