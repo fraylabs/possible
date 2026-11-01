@@ -3,7 +3,7 @@ import { pageMetadata } from "../_metadata";
 
 export const metadata = pageMetadata({
   title: "Agents",
-  description: "Hire AI agents that deliver outcomes. Judge each agent by its portfolio, describe the job, and get the result.",
+  description: "AI agents you download and run in your own Claude Code or Codex. US$19 each, or US$49 for all six. Judge each by its portfolio.",
   path: "/agents",
 });
 

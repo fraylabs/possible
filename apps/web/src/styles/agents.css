@@ -31,21 +31,7 @@
 .agent-hero > nav a:hover { color: var(--site-accent-strong); }
 .agent-hero h1 { max-width: 760px; margin: 18px 0 12px; font-size: clamp(38px, 5.2vw, 54px); line-height: 1; letter-spacing: -.055em; text-wrap: balance; }
 .agent-hero > p { max-width: 680px; margin: 0; color: var(--site-muted); font-size: 17px; line-height: 1.55; }
-.agent-hire { margin-top: 24px; }
-.agent-hire > strong, .agents-waitlist > strong { display: block; margin-bottom: 10px; color: var(--site-accent); font: 500 9px "DM Mono", monospace; letter-spacing: .08em; text-transform: uppercase; }
-.agents-waitlist { max-width: 620px; margin-top: 26px; padding: 18px; border: 1px solid var(--site-border); border-radius: var(--site-radius); background: var(--site-surface); }
-.agents-waitlist > strong { color: var(--site-text); font-size: 15px; font-weight: 700; font-family: inherit; letter-spacing: -.015em; text-transform: none; }
 
-.waitlist { max-width: 560px; }
-.waitlist-row { display: flex; gap: 8px; }
-.waitlist input { min-width: 0; min-height: 42px; flex: 1; padding: 0 16px; border: 1px solid var(--site-border-strong); border-radius: 999px; background: var(--site-background); color: var(--site-text); font: inherit; font-size: 14px; }
-.waitlist input:focus-visible { outline: 2px solid var(--site-accent); outline-offset: 2px; }
-.waitlist button { min-height: 42px; padding: 0 18px; border: 1px solid var(--site-text); border-radius: 999px; background: var(--site-text); color: var(--site-background); cursor: pointer; font: 500 9px "DM Mono", monospace; text-transform: uppercase; white-space: nowrap; transition: opacity .18s ease; }
-.waitlist button:hover { opacity: .85; }
-.waitlist button:disabled { cursor: progress; opacity: .6; }
-.waitlist-note { margin: 10px 0 0; color: var(--site-muted-soft); font-size: 12px; line-height: 1.5; }
-.waitlist-error { margin: 10px 0 0; color: var(--site-danger); font-size: 13px; line-height: 1.5; }
-.waitlist-message { margin: 0; color: var(--site-copy); font-size: 15px; line-height: 1.55; }
 
 .agent-section { margin-top: 40px; padding-top: 38px; border-top: 1px solid var(--site-border); }
 .agent-section h2 { margin: 0 0 14px; font-size: 23px; letter-spacing: -.035em; }
@@ -85,15 +71,14 @@
 @media (max-width: 760px) {
   .agents-grid, .agent-steps { grid-template-columns: minmax(0, 1fr); }
   .agent-runtime > div { grid-template-columns: 90px minmax(0, 1fr); }
-  .waitlist-row { flex-direction: column; }
 }
 
-.teardown-price { max-width: 620px; margin-top: 22px; padding: 18px; border: 1px solid var(--site-border); border-radius: var(--site-radius); display: grid; gap: 12px; justify-items: start; background: var(--site-surface); }
-.teardown-price p { margin: 0; color: var(--site-copy); font-size: 14px; line-height: 1.55; }
-.teardown-price p strong { color: var(--site-text); font-size: 24px; letter-spacing: -.035em; }
-.teardown-price .teardown-guarantee { color: var(--site-muted); font-size: 12px; }
-.teardown-buy { min-height: 42px; padding: 0 18px; border: 1px solid var(--site-text); border-radius: 999px; display: inline-flex; align-items: center; background: var(--site-text); color: var(--site-background); cursor: pointer; font: 500 9px "DM Mono", monospace; text-transform: uppercase; white-space: nowrap; }
-.teardown-buy:disabled { cursor: not-allowed; opacity: .5; }
+.buy-box { max-width: 620px; margin-top: 22px; padding: 18px; border: 1px solid var(--site-border); border-radius: var(--site-radius); display: grid; gap: 12px; justify-items: start; background: var(--site-surface); }
+.buy-box p { margin: 0; color: var(--site-copy); font-size: 14px; line-height: 1.55; }
+.buy-box p strong { color: var(--site-text); font-size: 24px; letter-spacing: -.035em; }
+.buy-box .buy-note { color: var(--site-muted); font-size: 12px; }
+.buy-button { min-height: 42px; padding: 0 18px; border: 1px solid var(--site-text); border-radius: 999px; display: inline-flex; align-items: center; background: var(--site-text); color: var(--site-background); cursor: pointer; font: 500 9px "DM Mono", monospace; text-transform: uppercase; white-space: nowrap; }
+.buy-button:disabled { cursor: not-allowed; opacity: .5; }
 .agent-list li a { color: var(--site-accent-strong); }
 
 .legal-article { padding: 48px 0 88px; color: var(--site-copy); font-size: 15px; line-height: 1.7; }
@@ -102,3 +87,7 @@
 .legal-article h3 { margin: 24px 0 8px; color: var(--site-text); font-size: 16px; }
 .legal-article p, .legal-article ul, .legal-article ol { max-width: 720px; margin: 0 0 14px; }
 .legal-article a { color: var(--site-accent-strong); text-decoration: underline; }
+
+.agents-bundle { max-width: 620px; margin-top: 26px; }
+.agents-bundle > strong { display: block; margin-bottom: 10px; color: var(--site-text); font-size: 15px; font-weight: 700; letter-spacing: -.015em; }
+.agents-bundle .buy-box { margin-top: 0; }

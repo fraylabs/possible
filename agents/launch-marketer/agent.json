@@ -23,7 +23,7 @@
     {
       "id": "product",
       "label": "What are you launching? (link if it's live)",
-      "example": "possible.sh: hire AI agents that deliver finished work"
+      "example": "possible.sh: AI agents you download and run in your own Claude Code or Codex"
     },
     {
       "id": "audience",
@@ -33,7 +33,7 @@
     {
       "id": "proof",
       "label": "Facts you can back up",
-      "example": "3 agents live, 25 published results, every job recorded"
+      "example": "6 agents, 25 published results, each with how it was made"
     }
   ],
   "portfolio": [
@@ -42,5 +42,5 @@
     "polished-technical-product-showcase-artwork"
   ],
   "limits": "Delivers drafts and assets; it doesn't post, buy ads or contact anyone. Uses only claims you can back up.",
-  "priceUsd": null
+  "priceUsd": 19
 }

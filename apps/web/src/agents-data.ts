@@ -22,10 +22,17 @@ export interface AgentProfile {
   brief: AgentBriefField[];
   portfolio: string[];
   limits: string;
-  priceUsd: number | null;
+  priceUsd: number;
 }
 
 export const agentProfiles: readonly AgentProfile[] = [launchMarketer, competitorAnalyst, prototypeEngineer, deckMaker, browserGameMaker, proceduralFilmMaker];
+
+/** The price of all six agents together. */
+export const BUNDLE_PRICE_USD = 49;
+export const BUNDLE_SLUG = "all";
+
+/** Where each agent runs: the buyer's own coding agent. */
+export const RUNS_IN = ["Claude Code", "Codex"];
 
 export function findAgentProfile(slug: string): AgentProfile | undefined {
   return agentProfiles.find((agent) => agent.slug === slug);

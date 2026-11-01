@@ -1,47 +1,40 @@
 # Possible product direction
 
-Possible is a place to hire AI agents that deliver outcomes.
+Possible sells AI agents as downloadable prompts (d-192).
 
-> Pick an agent. Describe the job. Get the result.
+> Pick an agent. Download it. Your own agent makes the result.
 
-Each agent has a profile, like a character on Character.ai, but it is hired for work rather than chat. A profile shows what the agent delivers, its portfolio of past results, the model it runs on and its price.
+Each agent has a profile that shows what it makes, its portfolio of past results, and the tools it uses. Buyers run it on their own machine, in their own Claude Code or Codex. Possible runs nothing for them.
 
-## The user loop
+## The buyer loop
 
 ```text
 browse agents
   -> judge an agent by its portfolio
-  -> describe a job
-  -> the agent runs it in a cleanroom
-  -> receive the result, with the recording of how it was made
+  -> buy it (US$19, or US$49 for all six)
+  -> download a zip: a Claude Code / Codex skill, a blank brief, a short guide
+  -> fill in the brief and run it in their own agent
+  -> the result lands in ./out on their machine
 ```
 
-## Possible runs the agents
+## What is sold, and where it lives
 
-Possible hosts every agent and runs every job. People do not download agents or bring their own model.
+- **One skill per agent**: `SKILL.md` (name, description and the instructions), `BRIEF.md` (the agent's brief questions), `README.md` (install and use) and `LICENSE.md` (written by Legal).
+- **Paid source stays private.** The instructions and the zip build live in the private repo `fraylabs/possible-prompts`. This public repo keeps only each agent's profile (`agents/<slug>/agent.json`) for the site.
+- **Payment** goes through Stripe Payment Links on the Fray Labs account, once ActAs live is working. `apps/web/src/payment-links.json` is the switch: an empty link means Buy reads "Opening soon", and no download page ships.
+- **Delivery**: each Payment Link redirects to an unlisted thanks page with the download. Its path is secret and lives only in the private repo.
 
-Every job is a cleanroom experiment:
+## Portfolios
 
-- a fresh, isolated machine per job, wiped afterwards;
-- nothing on it but the agent's instructions, its declared tools and the customer's brief;
-- no Fray state, credentials or other customers' data;
-- the whole session recorded with `possible capture`, so the result comes with an honest account of how it was made.
+Every published Outcome belongs to the agent that made it. The portfolio is the proof: the competitor teardowns stay as free samples for the Competitor Analyst.
 
-## What carries over from the recipe library
+## Agents
 
-- **What makes a good prompt** becomes each agent's standing instructions: a precise spec, few follow-ups, a clear finish line.
-- **Outcomes** become portfolios. Every published Outcome belongs to the agent that made it.
-- **Capture** records each finished job; with the customer's approval it joins the agent's portfolio.
-
-## Phases
-
-1. Four Fray-made agents built from our strongest recipes: Launch Marketer (the money-maker: materials only, it never posts), Prototype Engineer (CAD), Deck Maker and Browser Game Maker. Profiles live in `agents/`. Agent profiles on possible.sh, a hire form, cleanroom runs, results delivered.
-2. Charge per job.
-3. Outside creators publish their own agents and earn a share of each job.
+Six Fray-made agents: Launch Marketer, Competitor Analyst, Prototype Engineer, Deck Maker, Browser Game Maker and Procedural Film Maker. Their profiles live in `agents/`.
 
 ## Do not build yet
 
-- chat-style personalities;
+- hosted runs, jobs or a hire flow;
+- accounts or a buyer library (the thanks page link is the download);
 - creator accounts or creator payouts;
-- customer-supplied models or keys;
 - bidding or sponsored placement.

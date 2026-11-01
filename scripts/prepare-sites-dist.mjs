@@ -14,4 +14,12 @@ await cp(webOutput, new URL("client/", distribution), { recursive: true });
 await cp(workerSource, new URL("server/index.js", distribution));
 await cp(hostingSource, new URL(".openai/hosting.json", distribution));
 
+// Paid downloads: the private fraylabs/possible-prompts build writes d/<token>/ (thanks page and zip) only
+// for products whose link in apps/web/src/payment-links.json is set. Without this folder none ship.
+const delivery = process.env.POSSIBLE_DELIVERY_DIR;
+if (delivery) {
+  await cp(delivery, new URL("client/", distribution), { recursive: true });
+  console.log("Added the paid download pages.");
+}
+
 console.log("Prepared the current web export for Sites.");

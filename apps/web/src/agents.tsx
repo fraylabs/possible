@@ -1,14 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { agentModelLabel, agentProfiles, portfolioSlugLabel } from "./agents-data";
+import { agentModelLabel, agentProfiles, BUNDLE_PRICE_USD, BUNDLE_SLUG, portfolioSlugLabel, RUNS_IN } from "./agents-data";
 import type { AgentProfile } from "./agents-data";
 import { OutcomeMedia } from "./catalog";
 import { fetchDiscoveryOutcomes } from "./discovery-data";
 import type { DiscoveryOutcome } from "./discovery-data";
+import { BuyBox } from "./buy";
 import { SiteShell } from "./shared";
-import { TeardownOffer } from "./teardown-offer";
-import { WaitlistForm } from "./waitlist";
 
 type PortfolioState = { status: "loading" | "ready" | "error"; outcomes: Map<string, DiscoveryOutcome> };
 
@@ -47,7 +46,7 @@ function AgentCard({ agent, portfolio }: { agent: AgentProfile; portfolio: Portf
         <h2><a href={href}>{agent.name}</a></h2>
         <p>{agent.tagline}</p>
         <footer>
-          <span>{agent.portfolio.length} portfolio {agent.portfolio.length === 1 ? "result" : "results"}</span>
+          <span>US${agent.priceUsd} · {agent.portfolio.length} portfolio {agent.portfolio.length === 1 ? "result" : "results"}</span>
           <a className="agent-card-link" href={href} aria-label={`View agent ${agent.name}`}>View agent <span aria-hidden="true">→</span></a>
         </footer>
       </div>
@@ -62,11 +61,11 @@ export function AgentsPage() {
       <section className="agents-directory layout-reading" aria-labelledby="agents-heading">
         <header className="agents-heading">
           <span>AGENTS</span>
-          <h1 id="agents-heading">Hire an agent. Get the result.</h1>
-          <p>Pick an agent, describe the job, and receive the finished work with a recording of how it was made.</p>
-          <div className="agents-waitlist">
-            <strong>Hiring opens soon. Get an email when it does.</strong>
-            <WaitlistForm />
+          <h1 id="agents-heading">Agents you download and run yourself.</h1>
+          <p>Each agent is a skill for {RUNS_IN.join(" or ")}. Judge it by its portfolio, download it, fill in a short brief, and your own agent makes the finished work.</p>
+          <div className="agents-bundle">
+            <strong>All {agentProfiles.length} agents</strong>
+            <BuyBox slug={BUNDLE_SLUG} priceUsd={BUNDLE_PRICE_USD} label="Buy all agents" what={`for all ${agentProfiles.length}, instead of US$${agentProfiles.reduce((sum, agent) => sum + agent.priceUsd, 0)} one by one.`} />
           </div>
         </header>
         <div className="agents-grid">
@@ -78,9 +77,9 @@ export function AgentsPage() {
 }
 
 const howItWorks = [
-  { title: "A fresh cleanroom", text: "Every job runs on its own new, isolated machine with only the agent's instructions, its tools and your brief." },
-  { title: "Wiped afterwards", text: "The machine is destroyed when the job ends. Nothing carries over to the next customer." },
-  { title: "Recorded end to end", text: "The whole session is recorded and delivered with the result, so you can see exactly how it was made." },
+  { title: "Buy and download", text: "You get a zip with the agent's skill, a blank brief and a short guide." },
+  { title: "Install the skill", text: "Unzip it into ~/.claude/skills for Claude Code, or into your project's .agents/skills for Codex." },
+  { title: "Fill in the brief and run it", text: "Your own agent does the work on your machine and puts everything it makes in ./out." },
 ];
 
 type StaticPortfolioEntry = { slug: string; title: string; path: string };
@@ -105,25 +104,18 @@ export function AgentProfilePage({ agent, staticPortfolio = [] }: { agent: Agent
           <div className="outcome-meta"><span>Agent</span><span aria-label={`Model: ${agentModelLabel(agent)}`}>{agentModelLabel(agent)}</span></div>
           <h1>{agent.name}</h1>
           <p>{agent.tagline}</p>
-          <div className="agent-hire">
-            <strong>Hiring opens soon</strong>
-            <WaitlistForm agent={agent.slug} />
-          </div>
+          <BuyBox slug={agent.slug} priceUsd={agent.priceUsd} label={`Buy the ${agent.name}`} what="for this agent." />
         </header>
 
-        {agent.priceUsd !== null ? <TeardownOffer priceUsd={agent.priceUsd} /> : (
-          <>
-            <section className="agent-section" aria-labelledby="agent-delivers-heading">
-              <h2 id="agent-delivers-heading">What you get</h2>
-              <ul className="agent-list">{agent.delivers.map((item) => <li key={item}>{item}</li>)}</ul>
-            </section>
+        <section className="agent-section" aria-labelledby="agent-delivers-heading">
+          <h2 id="agent-delivers-heading">What it makes</h2>
+          <ul className="agent-list">{agent.delivers.map((item) => <li key={item}>{item}</li>)}</ul>
+        </section>
 
-            <section className="agent-section" aria-labelledby="agent-how-heading">
-              <h2 id="agent-how-heading">How it works</h2>
-              <ol className="agent-steps">{howItWorks.map((step, index) => <li key={step.title}><span aria-hidden="true">{String(index + 1).padStart(2, "0")}</span><div><strong>{step.title}</strong><p>{step.text}</p></div></li>)}</ol>
-            </section>
-          </>
-        )}
+        <section className="agent-section" aria-labelledby="agent-how-heading">
+          <h2 id="agent-how-heading">How it works</h2>
+          <ol className="agent-steps">{howItWorks.map((step, index) => <li key={step.title}><span aria-hidden="true">{String(index + 1).padStart(2, "0")}</span><div><strong>{step.title}</strong><p>{step.text}</p></div></li>)}</ol>
+        </section>
 
         <section className="agent-section" aria-labelledby="agent-portfolio-heading">
           <h2 id="agent-portfolio-heading">Portfolio</h2>
@@ -134,24 +126,22 @@ export function AgentProfilePage({ agent, staticPortfolio = [] }: { agent: Agent
         </section>
 
         <section className="agent-section" aria-labelledby="agent-brief-heading">
-          <h2 id="agent-brief-heading">What you'll be asked</h2>
+          <h2 id="agent-brief-heading">What the brief asks</h2>
           <dl className="agent-brief">
             {agent.brief.map((field) => <div key={field.id}><dt>{field.label}</dt><dd><span>For example</span>{field.example}</dd></div>)}
           </dl>
         </section>
 
-        {agent.priceUsd === null ? (
-          <section className="agent-section" aria-labelledby="agent-limits-heading">
-            <h2 id="agent-limits-heading">Limits</h2>
-            <p className="agent-note">{agent.limits}</p>
-          </section>
-        ) : null}
+        <section className="agent-section" aria-labelledby="agent-limits-heading">
+          <h2 id="agent-limits-heading">Limits</h2>
+          <p className="agent-note">{agent.limits}</p>
+        </section>
 
         <section className="agent-section" aria-labelledby="agent-runtime-heading">
-          <h2 id="agent-runtime-heading">Runtime</h2>
+          <h2 id="agent-runtime-heading">Runs in</h2>
           <dl className="agent-runtime">
-            <div><dt>Model</dt><dd>{agentModelLabel(agent)} <code>{agent.runtime.model}</code></dd></div>
-            <div><dt>Agent</dt><dd>{agent.runtime.agent}</dd></div>
+            <div><dt>Agents</dt><dd>{RUNS_IN.join(", ")}</dd></div>
+            <div><dt>Made with</dt><dd>{agentModelLabel(agent)} <code>{agent.runtime.model}</code></dd></div>
             {agent.tools.length ? <div><dt>Tools</dt><dd>{agent.tools.join(", ")}</dd></div> : null}
           </dl>
         </section>

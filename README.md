@@ -2,7 +2,11 @@
 
 See what AI can make, explore how it was made, and reuse the recipe.
 
-[Browse Outcomes](https://possible.sh) · [Read the docs](https://possible.sh/docs)
+[Browse Outcomes](https://possible.sh) · [Read the docs](https://possible.sh/docs) · [Agents](https://possible.sh/agents/)
+
+## Agents
+
+possible.sh also sells Fray's agents as downloadable prompts (see `PRODUCT_DIRECTION.md`): US$19 each, or US$49 for all six. Each one is a skill that runs in the buyer's own Claude Code or Codex. This repo keeps only the public profiles (`agents/<slug>/agent.json`). The paid instructions and the zip build are in the private `fraylabs/possible-prompts` repo. `apps/web/src/payment-links.json` turns Buy on, one link per agent. To ship the download pages, build them there and set `POSSIBLE_DELIVERY_DIR` when building this site.
 
 ## One public contract
 
