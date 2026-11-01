@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "slug": "motion-designer",
+  "name": "Motion Designer",
+  "tagline": "Makes a short motion film from code and checks it like an engineer: real brand facts, frame-by-frame contact sheets, measured colour and sound.",
+  "delivers": [
+    "The film: a 1080p H.264 MP4 with mastered sound, and a poster frame",
+    "Contact sheets from every review round",
+    "CHECKS.md with every measurement and its result: brand colour, contact, loop seams, audio sync and the shipped file",
+    "The full source and a guide to re-rendering and changing copy, colours, timing and music"
+  ],
+  "runtime": {
+    "agent": "Claude Code",
+    "model": "claude-opus-5-5"
+  },
+  "tools": [
+    "three.js or Blender (bpy) for 3D",
+    "GSAP or Remotion for UI motion",
+    "Puppeteer to render browser frames",
+    "NumPy and Numba for simulation",
+    "Tone.js or SciPy for sound, Pedalboard and pyloudnorm for mastering",
+    "faster-whisper for captions",
+    "OpenCV and Pillow for checks and contact sheets",
+    "ffmpeg"
+  ],
+  "brief": [
+    {
+      "id": "facts",
+      "label": "What is the film for, and the facts: exact copy, logos, brand colours as hex",
+      "example": "A launch clip for our note app: the line \"Notes that write themselves\", logo.svg in ./ref, brand #1F6FEB"
+    },
+    {
+      "id": "refs",
+      "label": "References: films or styles to learn from",
+      "example": "The pacing of Apple's product reveals, soft studio light, one slow camera move"
+    },
+    {
+      "id": "film",
+      "label": "Length, aspect and music",
+      "example": "20 seconds, 9:16 for social, upbeat electronic, hits on every cut"
+    }
+  ],
+  "portfolio": [],
+  "limits": "Short films up to about 60 seconds made in code. No live footage or real people.",
+  "priceUsd": 19
+}

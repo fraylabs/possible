@@ -11,7 +11,7 @@ Each agent has a profile that shows what it makes, its portfolio of past results
 ```text
 browse agents
   -> judge an agent by its portfolio
-  -> buy it (US$19, or US$49 for all six)
+  -> buy it (US$19, or US$49 for all seven)
   -> download a zip: a Claude Code / Codex skill, a blank brief, a short guide
   -> fill in the brief and run it in their own agent
   -> the result lands in ./out on their machine
@@ -30,7 +30,7 @@ Every published Outcome belongs to the agent that made it. The portfolio is the 
 
 ## Agents
 
-Six Fray-made agents: Launch Marketer, Competitor Analyst, Prototype Engineer, Deck Maker, Browser Game Maker and Procedural Film Maker. Their profiles live in `agents/`.
+Seven Fray-made agents: Launch Marketer, Competitor Analyst, Prototype Engineer, Deck Maker, Browser Game Maker, Procedural Film Maker and Motion Designer. Their profiles live in `agents/`.
 
 ## Do not build yet
 
