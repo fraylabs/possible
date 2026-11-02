@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "slug": "customer-profiler",
+  "name": "Customer Profiler",
+  "tagline": "Finds out who your customers really are from what they say, do and pay, and writes the ICP your landing page, ads and roadmap run on.",
+  "delivers": [
+    "ICP.md: one SPICED block per pain segment, with verbatim quotes, the message, the main objection and its reply, a landing page angle, and good-fit and bad-fit signals",
+    "SOURCES.md: every source it could reach, and what each holds",
+    "The analysis joining answers, messages, events and payments, with its queries",
+    "Five onboarding questions and the missing analytics events, on a branch for you to review",
+    "A script that refreshes the ICP from new answers and payments, and a guide to deploying and running it"
+  ],
+  "runtime": {
+    "agent": "Claude Code",
+    "model": "claude-opus-5-5"
+  },
+  "tools": [
+    "Your product repo",
+    "PostHog or your analytics",
+    "Stripe or your payments"
+  ],
+  "brief": [
+    {
+      "id": "product",
+      "label": "Your product and its link",
+      "example": "Snapnote, a note app for field engineers: https://snapnote.example"
+    },
+    {
+      "id": "sources",
+      "label": "Sources you can give it access to: repo, analytics, payments, inbox",
+      "example": "This repo, PostHog read access, a restricted Stripe read key, and support@ exported as a folder of .eml files"
+    },
+    {
+      "id": "decide",
+      "label": "What you want to decide with it: landing page, ads, roadmap",
+      "example": "Which pain to lead the landing page with, and which of two features to build next"
+    }
+  ],
+  "portfolio": [],
+  "limits": "Works on products with real users. It builds the questions and tracking; you ship them and decide who gets contacted.",
+  "priceUsd": 19
+}

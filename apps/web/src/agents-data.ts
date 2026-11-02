@@ -5,6 +5,7 @@ import launchMarketer from "../../../agents/launch-marketer/agent.json" with { t
 import competitorAnalyst from "../../../agents/competitor-analyst/agent.json" with { type: "json" };
 import proceduralFilmMaker from "../../../agents/procedural-film-maker/agent.json" with { type: "json" };
 import motionDesigner from "../../../agents/motion-designer/agent.json" with { type: "json" };
+import customerProfiler from "../../../agents/customer-profiler/agent.json" with { type: "json" };
 
 export interface AgentBriefField {
   id: string;
@@ -26,7 +27,7 @@ export interface AgentProfile {
   priceUsd: number;
 }
 
-export const agentProfiles: readonly AgentProfile[] = [launchMarketer, competitorAnalyst, prototypeEngineer, deckMaker, browserGameMaker, proceduralFilmMaker, motionDesigner];
+export const agentProfiles: readonly AgentProfile[] = [launchMarketer, competitorAnalyst, prototypeEngineer, deckMaker, browserGameMaker, proceduralFilmMaker, motionDesigner, customerProfiler];
 
 /** The price of all the agents together. */
 export const BUNDLE_PRICE_USD = 49;
