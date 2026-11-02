@@ -1,32 +1,30 @@
 # Possible Privacy Policy
 
-**Last updated:** 1 November 2026
+**Last updated:** [date published]
 
-This policy explains how **BRAIN TRUST PRIVATE LIMITED**, a Singapore company (UEN 202416698H) ("**we**", "**us**"),
-collects, uses and discloses personal data through possible.sh and our paid teardown reports (the "**Service**"). We're responsible for that
-data under Singapore's Personal Data Protection Act 2012 (PDPA) and, where they apply, the EU and UK GDPR.
+This policy explains how **BRAIN TRUST PRIVATE LIMITED**, a Singapore company (UEN 202416698H) ("**we**", "**us**"), collects, uses and
+discloses personal data through possible.sh and the agent prompts you can buy there (the "**Service**"). We're responsible for that data under
+Singapore's Personal Data Protection Act 2012 (PDPA) and, where they apply, the EU and UK GDPR.
+
+Prompts run on your own agent and computer. We don't receive what you give your agent or what it produces.
 
 ## What we collect
 
-- **Order details**, such as your email address and name, and the brief you give us: a competitor link, a description of your product, and
-  your question.
-- **Payment information.** Our payment provider collects your payment details at checkout under its own privacy policy. We receive details
-  such as your name, email, billing country and payment status, but not your full card number.
+- **Order details.** Our payment provider collects your payment details at checkout under its own privacy policy. We receive details such as
+  your name, email address, billing country, what you bought and payment status, but not your full card number. We also keep a record of
+  your download.
 - **Waitlist email.** If you join a waitlist, your email address and which page you joined from.
 - **Communications**, such as messages you send us.
 - **Technical information** that our hosting provider processes to deliver and secure the site, such as IP address and browser type.
 
 Our page-visit counts are anonymous daily totals by page, referring site and campaign tag. They don't use cookies and don't identify you.
 
-**Reports about competitors.** To write a report, we research public sources about the business you name. Those sources may mention people,
-such as founders or staff, by name. We use only what's publicly available, and only to write the report.
-
 ## How we use it
 
 We use personal data to:
 
-- research, write and email your report, and handle refunds;
-- process payments and keep billing records;
+- deliver your download, help you with it and handle refunds;
+- process payments and keep billing and tax records;
 - email you about the agent you joined a waitlist for, which you can stop at any time;
 - reply to you;
 - protect the Service and prevent fraud and abuse;
@@ -40,8 +38,8 @@ We don't sell your personal data.
 
 ## Who we share it with
 
-- **Service providers** that help us run the Service: payment processing, hosting and content delivery, database, email delivery, and AI model
-  providers that help research and write reports. They may use the data only to provide their services to us.
+- **Service providers** that help us run the Service: payment processing, hosting and content delivery, database and email delivery. They may
+  use the data only to provide their services to us.
 - **Authorities and others**, where the law requires it, or where we believe it's needed to protect the rights, property or safety of Possible,
   our users or others.
 - **A buyer or successor**, if we sell or transfer all or part of our business.
@@ -56,9 +54,8 @@ standard contractual clauses.
 
 ## How long we keep it
 
-We keep personal data for as long as we need it for the purposes above, including to deliver your report, handle refunds, resolve disputes and
-meet legal, tax and accounting requirements. After that, we delete or anonymise it within a reasonable time. Copies may remain for a limited
-period in backups.
+We keep personal data for as long as we need it for the purposes above, including to handle refunds, resolve disputes and meet legal, tax and
+accounting requirements. After that, we delete or anonymise it within a reasonable time. Copies may remain for a limited period in backups.
 
 ## Security
 

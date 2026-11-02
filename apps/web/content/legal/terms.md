@@ -1,99 +1,102 @@
 # Possible Terms of Service
 
-**Last updated:** 1 November 2026
+**Last updated:** [date published]
 
-These terms govern your use of possible.sh and our paid teardown reports (the "**Service**"). The Service is provided by **BRAIN TRUST PRIVATE
-LIMITED**, a Singapore company (UEN 202416698H) ("**we**", "**us**"). By using the Service or buying a report, you agree to
-these terms, our [Refund Policy](/refunds) and our [Privacy Policy](/privacy). If you buy for an organisation, you agree for it, and "you"
-includes it. **These terms limit our liability.**
+These terms govern your use of possible.sh and the agent prompts you can buy there (the "**Service**"). The Service is provided by **BRAIN
+TRUST PRIVATE LIMITED**, a Singapore company (UEN 202416698H) ("**we**", "**us**"). By using the Service or buying a prompt, you agree to these
+terms, our [Refund Policy](/refunds) and our [Privacy Policy](/privacy). If you buy for an organisation, you agree for it, and "you" includes
+it. **These terms limit our liability.**
 
 ## 1. Who can buy
 
 You must be at least 18, and give accurate information when you buy.
 
-## 2. Teardown reports
+## 2. What you buy
 
-- **What you buy.** A one-off payment buys one written report about one competitor you name, answering the question you give us. It isn't a
-  subscription.
-- **How it's made.** An AI agent researches public sources only and writes the report. We don't use logins, paid ad-library tools or
-  non-public information, and we mark what public evidence can't show as unknown.
-- **Delivery.** We email the report to the address you give at checkout. We aim to deliver within 2 business days (Singapore), but this is a
-  target, not a guarantee. If we can't deliver, we refund you under our [Refund Policy](/refunds).
-- **Your brief.** You must give us a competitor (a website or app store link), a description of your product and your question. If the brief
-  is unclear, we may ask you about it, and delivery may take longer.
-- **We may decline an order** at our discretion, for example if it breaks section 3. If we do, we refund you in full.
-- **Using the report.** Once you've paid, you may use the report for your own business purposes, including sharing it within your organisation.
-  You may not resell it, or publish it as our work or as our statement about the competitor. We keep ownership of the report and of our methods,
-  and we may research and write about the same competitor for others or for ourselves.
+- **A download.** Each purchase is a one-off payment for a downloadable file of instructions (a "**prompt**") that you run with an AI coding
+  agent of your choice, such as Claude Code or Codex. A bundle is the set of prompts listed on the page when you buy it. It isn't a
+  subscription, and we don't run anything for you.
+- **Delivery.** After payment, you get a download link. Keep a copy: we don't promise the link will keep working.
+- **Updates.** We may release new versions, but we don't have to.
+- **Third-party tools.** Claude Code, Codex and other agents and models are made by other companies, under their own terms and fees. We're not
+  affiliated with them, and you need your own access to them. A prompt may tell your agent to download open-source tools, which come under
+  their own licences.
 
-## 3. Acceptable use
+## 3. Your licence
 
-You must not use the Service to break the law, infringe others' rights, send spam, harass or deceive anyone, distribute malware, or interfere
-with the Service, its security or other users. You must not:
+Once you've paid, we give you a non-exclusive, non-transferable, perpetual licence to use, copy and change each prompt you bought, for personal
+and commercial purposes. If you bought for an organisation, its employees and contractors may use it for that organisation's work. You may not
+share, publish, resell, sublicense or give away a prompt, or a changed version of it, outside those people, or offer it as part of a product or
+service that lets others use it. We and our licensors keep ownership of the prompts. The licence in each download (LICENSE.md) says the same
+thing.
 
-- ask us to research a private individual, or anything other than a business or product;
-- use a report to harass, defame or unlawfully compete with anyone;
-- send us others' confidential information, or personal data beyond what the brief needs.
+## 4. Your outputs
 
-We decide, in our reasonable judgement, whether a use breaks these rules.
+What you make by running a prompt is yours. We claim no rights in it, and we don't see it. You're responsible for it, including checking it and
+making sure your use of it is lawful.
 
-## 4. Your content
+## 5. Running a prompt is up to you
 
-You keep ownership of the brief and anything else you send us. You give us a worldwide, non-exclusive, royalty-free licence to host, store,
-copy, process and transmit it as needed to provide, secure and improve the Service, including through the service providers named by category
-in our Privacy Policy. You confirm you have the rights to send it.
+A prompt tells an AI agent what to do, and the agent can run commands, change files, use the internet and spend money on model usage on your
+computer and accounts. Read a prompt before you run it, and run it where you're comfortable with what the agent can reach. You're responsible
+for what your agent does, for the model and tool costs it creates, and for following the terms of the agents, models and websites you use.
 
-## 5. Our rights
+## 6. Acceptable use
 
-We and our licensors own the Service, including its software, design, reports and trademarks. You may not copy, resell or exploit any part of
+You must not use the Service or a prompt to break the law, infringe others' rights, send spam, harass or deceive anyone, distribute malware, or
+interfere with the Service, its security or other users. We decide, in our reasonable judgement, whether a use breaks these rules.
+
+## 7. Our rights
+
+We and our licensors own the Service, including its software, design, prompts and trademarks. You may not copy, resell or exploit any part of
 the Service except as these terms allow. If you send us feedback, we may use it freely without obligation to you.
 
-## 6. Payment
+## 8. Payment
 
 - The price is shown before you pay. You pay once, at checkout.
 - Our payment provider processes payments, and its terms apply to the payment.
 - Prices include any taxes we must collect, unless stated otherwise.
 - Refunds are covered by our [Refund Policy](/refunds). Otherwise, **fees are non-refundable, except where the law requires a refund.**
-- **Starting straight away.** When you buy, you ask us to start work on your report straight away. Where the law gives you a right to cancel a
-  purchase of a service or digital content, you agree that you lose that right once the report has been delivered to you.
+- **Immediate download.** When you buy, you ask for the download to be made available straight away. Where the law gives you a right to cancel
+  a purchase of digital content, you agree that you lose that right once the download is made available to you.
 
-## 7. Changes, suspension and termination
+## 9. Changes, suspension and termination
 
-- We may change, suspend or discontinue all or part of the Service at any time. This doesn't affect a report you've already paid for: we
-  deliver it or refund you.
-- We may suspend or end your access at any time, including if we believe you've broken these terms or your use creates risk for us or others.
-- Sections 2 ("Using the report"), 4, 5 and 8 to 11 survive termination.
+- We may change, suspend or discontinue all or part of the Service at any time. This doesn't affect your licence to prompts you've already
+  bought.
+- We may end your licence if you break section 3 or 6. If we do, you must stop using and delete the prompts concerned.
+- Sections 4, 5, 7 and 10 to 13 survive termination.
 
-## 8. Disclaimers
+## 10. Disclaimers
 
-The Service and every report are provided **"as is" and "as available"**, without warranties of any kind, express or implied, including
-warranties of merchantability, fitness for a particular purpose and non-infringement. Reports are written by an AI agent from public sources,
-which may be incomplete, out of date or wrong, and the agent may misread them. We don't promise that any report is accurate or complete, or
-that following its suggestions will get you any result. A report is general business information, not legal, financial, investment or other
-professional advice. Check anything important against the cited sources before relying on it. Your use of the Service is at your own risk.
+The Service and every prompt are provided **"as is" and "as available"**, without warranties of any kind, express or implied, including
+warranties of merchantability, fitness for a particular purpose and non-infringement. Results depend on the agent, model and settings you use,
+and on what you give it, and AI agents can make mistakes. We don't promise that a prompt will give any particular result, that its output will
+be accurate, complete or fit for your purpose, or that it will keep working as agents and models change. Output is not legal, financial,
+investment or other professional advice. Check anything important before relying on it. Your use of the Service is at your own risk.
 
-## 9. Limitation of liability
+## 11. Limitation of liability
 
 To the maximum extent the law allows:
 
 - we aren't liable for any indirect, incidental, special, consequential or punitive damages, or for any loss of profits, revenue, data,
-  goodwill or business opportunity, arising from or relating to the Service, any report or these terms, however caused and on any theory of
-  liability;
-- our total liability for all claims arising from or relating to the Service, any report or these terms is limited to the greater of the
-  amount you paid us in the 12 months before the claim and US$100.
+  goodwill or business opportunity, or for anything your agent does or any costs it creates, arising from or relating to the Service, any
+  prompt or these terms, however caused and on any theory of liability;
+- our total liability for all claims arising from or relating to the Service, any prompt or these terms is limited to the greater of the amount
+  you paid us in the 12 months before the claim and US$100.
 
 Nothing in these terms excludes or limits liability that can't be excluded or limited by law, such as liability for death or personal injury
 caused by negligence, or for fraud. If you're a consumer, you keep any rights the law where you live gives you that can't be excluded.
 
-## 10. Indemnity
+## 12. Indemnity
 
-You'll indemnify us against any claims, losses, liabilities and reasonable costs (including legal fees) arising from your brief, your use of a
-report, or your breach of these terms or the law.
+You'll indemnify us against any claims, losses, liabilities and reasonable costs (including legal fees) arising from your use of a prompt or its
+output, or your breach of these terms or the law.
 
-## 11. General
+## 13. General
 
 - **Changes to these terms.** We may update these terms. We'll post the new version here and update the date above. The terms in effect when
-  you buy a report apply to that purchase.
+  you buy a prompt apply to that purchase.
 - **Governing law.** These terms are governed by the laws of Singapore, and the courts of Singapore have exclusive jurisdiction.
 - **Transfer.** You may not transfer these terms without our consent. We may transfer them to an affiliate or a successor.
 - **Whole agreement.** These terms, the Refund Policy and the Privacy Policy are the whole agreement between you and us about the Service. If a

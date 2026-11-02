@@ -1,30 +1,32 @@
 # Possible Refund Policy
 
-**Last updated:** 1 November 2026
+**Last updated:** [date published]
 
-This policy covers teardown reports bought on possible.sh from **BRAIN TRUST PRIVATE LIMITED** (Singapore, UEN 202416698H). It forms part of our [Terms of Service](/terms).
+This policy covers agent prompts bought on possible.sh from **BRAIN TRUST PRIVATE LIMITED** (Singapore, UEN 202416698H). It forms part of our
+[Terms of Service](/terms).
 
-## When we refund you in full
+## When we refund you
 
-- **Not enough public evidence.** If we find there isn't enough public evidence to answer your question, we tell you and refund you in full
-  instead of sending a report.
-- **After delivery.** If you believe your report doesn't answer your question because there wasn't enough public evidence, email us within 14
-  days of delivery and say why. If we agree, we refund you in full. We decide in our reasonable judgement.
-- **We can't deliver, or we decline your order.** We refund you in full.
+- **It doesn't work as described.** If a prompt doesn't do what its page says when run with a supported agent, email us within 14 days of
+  buying it and tell us what happened. We'll help, or fix it, and if we can't, we refund you in full. We decide in our reasonable judgement.
+- **You can't download it.** If the download doesn't work and we can't fix it, we refund you in full.
+- **Double charge.** If you're charged twice for the same prompt or bundle, we refund the extra payment.
 
 ## Otherwise
 
-Other purchases are non-refundable once we've started work, except where the law requires a refund. A refund isn't available because you
-disagree with a report's conclusions, or because you changed your mind after delivery.
+Because a prompt is a download you keep, purchases are non-refundable once the download is made available, except where the law requires a
+refund. A refund isn't available because you changed your mind, didn't like the output, or because of the cost of running the prompt on your
+own agent or model.
 
 ## How refunds work
 
 Email **hello@possible.sh** from the address you used at checkout. Refunds go back to your original payment method through our payment
-provider. How long it takes to reach you depends on your bank or card issuer. Once we refund an order, you may no longer use that report.
+provider. How long it takes to reach you depends on your bank or card issuer. Once we refund an order, your licence to the prompts in it ends,
+and you must delete them.
 
 ## Your legal rights
 
-This policy doesn't affect any rights the law where you live gives you that can't be excluded.
+This policy doesn't affect any rights the law where you live gives you that can't be excluded, including rights when digital content is faulty.
 
 ---
 
