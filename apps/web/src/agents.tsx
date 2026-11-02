@@ -62,7 +62,7 @@ export function AgentsPage() {
         <header className="agents-heading">
           <span>AGENTS</span>
           <h1 id="agents-heading">Agents you download and run yourself.</h1>
-          <p>Each agent is a skill for {RUNS_IN.join(" or ")}. Judge it by its portfolio, download it, fill in a short brief, and your own agent makes the finished work.</p>
+          <p>Each agent is a skill for {RUNS_IN.join(" or ")}. See what it has made so far, download it, fill in a short brief, and your own agent makes the finished work.</p>
           <div className="agents-bundle">
             <strong>All {agentProfiles.length} agents</strong>
             <BuyBox slug={BUNDLE_SLUG} priceUsd={BUNDLE_PRICE_USD} label="Buy all agents" what={`for all ${agentProfiles.length}, instead of US$${agentProfiles.reduce((sum, agent) => sum + agent.priceUsd, 0)} one by one.`} />
@@ -120,9 +120,11 @@ export function AgentProfilePage({ agent, staticPortfolio = [] }: { agent: Agent
         <section className="agent-section" aria-labelledby="agent-portfolio-heading">
           <h2 id="agent-portfolio-heading">Portfolio</h2>
           {portfolio.status === "error" ? <p className="agent-note" role="alert">The portfolio is unavailable right now. Try again shortly.</p> : null}
-          <ul className="agent-portfolio">
-            {agent.portfolio.map((slug) => <PortfolioItem slug={slug} outcome={portfolio.outcomes.get(slug)} status={portfolio.status} staticEntry={staticPortfolio.find((entry) => entry.slug === slug)} key={slug} />)}
-          </ul>
+          {agent.portfolio.length ? (
+            <ul className="agent-portfolio">
+              {agent.portfolio.map((slug) => <PortfolioItem slug={slug} outcome={portfolio.outcomes.get(slug)} status={portfolio.status} staticEntry={staticPortfolio.find((entry) => entry.slug === slug)} key={slug} />)}
+            </ul>
+          ) : <p className="agent-note">No published results yet.</p>}
         </section>
 
         <section className="agent-section" aria-labelledby="agent-brief-heading">

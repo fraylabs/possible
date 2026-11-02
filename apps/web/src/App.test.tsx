@@ -418,6 +418,14 @@ describe("Possible website", () => {
     expect(document.body.textContent).not.toMatch(/hire|hiring|cleanroom|waitlist/i);
   });
 
+  it("says an agent with no portfolio has no published results yet", () => {
+    vi.stubGlobal("fetch", vi.fn(async () => new Response(JSON.stringify({ outcomes: [] }))));
+    render(<AgentProfilePage agent={findAgentProfile("customer-profiler")!} />);
+    expect(screen.getByRole("heading", { name: "Portfolio" })).toBeInTheDocument();
+    expect(screen.getByText("No published results yet.")).toBeInTheDocument();
+    expect(document.querySelector(".agent-portfolio")).toBeNull();
+  });
+
   it("keeps one payment link key per agent plus the bundle", () => {
     expect(Object.keys(paymentLinks).sort()).toEqual([...agentProfiles.map((agent) => agent.slug), BUNDLE_SLUG].sort());
   });
