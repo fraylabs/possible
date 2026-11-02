@@ -18,7 +18,8 @@ await cp(hostingSource, new URL(".openai/hosting.json", distribution));
 // for products whose link in apps/web/src/payment-links.json is set. Without this folder none ship.
 const delivery = process.env.POSSIBLE_DELIVERY_DIR;
 if (delivery) {
-  await cp(delivery, new URL("client/", distribution), { recursive: true });
+  // A delivery file with the same path as a site file fails the build instead of replacing it.
+  await cp(delivery, new URL("client/", distribution), { recursive: true, force: false, errorOnExist: true });
   console.log("Added the paid download pages.");
 }
 

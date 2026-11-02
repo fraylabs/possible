@@ -8,7 +8,8 @@ import { fetchDiscoveryOutcomes } from "./discovery-data";
 import type { DiscoveryOutcome } from "./discovery-data";
 import { normalizeSource } from "./publish";
 import { AgentProfilePage, AgentsPage } from "./agents";
-import { findAgentProfile } from "./agents-data";
+import { agentProfiles, BUNDLE_SLUG, findAgentProfile } from "./agents-data";
+import paymentLinks from "./payment-links.json" with { type: "json" };
 
 afterEach(() => {
   cleanup();
@@ -415,6 +416,24 @@ describe("Possible website", () => {
     const buyLegal = document.querySelector(".buy-box .buy-legal")!;
     expect([...buyLegal.querySelectorAll("a")].map((link) => link.getAttribute("href"))).toEqual(["/terms/", "/refunds/", "/privacy/"]);
     expect(document.body.textContent).not.toMatch(/hire|hiring|cleanroom|waitlist/i);
+  });
+
+  it("keeps one payment link key per agent plus the bundle", () => {
+    expect(Object.keys(paymentLinks).sort()).toEqual([...agentProfiles.map((agent) => agent.slug), BUNDLE_SLUG].sort());
+  });
+
+  it("turns Buy into the agent's payment link once it is set", async () => {
+    vi.resetModules();
+    vi.doMock("./payment-links.json", () => ({ default: { "competitor-analyst": "https://example.com/pay/competitor-analyst" } }));
+    try {
+      const { BuyBox } = await import("./buy");
+      render(<BuyBox slug="competitor-analyst" priceUsd={19} label="Buy this agent" what="for this agent." />);
+      expect(screen.getByRole("link", { name: "Buy this agent" })).toHaveAttribute("href", "https://example.com/pay/competitor-analyst");
+      expect(screen.queryByRole("button", { name: "Opening soon" })).toBeNull();
+    } finally {
+      vi.doUnmock("./payment-links.json");
+      vi.resetModules();
+    }
   });
 
   it("offers all agents as a US$49 bundle on the index", () => {
