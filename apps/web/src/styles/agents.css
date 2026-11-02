@@ -77,6 +77,8 @@
 .buy-box p { margin: 0; color: var(--site-copy); font-size: 14px; line-height: 1.55; }
 .buy-box p strong { color: var(--site-text); font-size: 24px; letter-spacing: -.035em; }
 .buy-box .buy-note { color: var(--site-muted); font-size: 12px; }
+.buy-box .buy-legal { color: var(--site-muted); font-size: 12px; }
+.buy-box .buy-legal a { color: inherit; }
 .buy-button { min-height: 42px; padding: 0 18px; border: 1px solid var(--site-text); border-radius: 999px; display: inline-flex; align-items: center; background: var(--site-text); color: var(--site-background); cursor: pointer; font: 500 9px "DM Mono", monospace; text-transform: uppercase; white-space: nowrap; }
 .buy-button:disabled { cursor: not-allowed; opacity: .5; }
 .agent-list li a { color: var(--site-accent-strong); }

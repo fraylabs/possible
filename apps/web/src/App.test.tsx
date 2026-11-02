@@ -412,6 +412,8 @@ describe("Possible website", () => {
     expect(screen.getByRole("button", { name: "Opening soon" })).toBeDisabled();
     expect(screen.getByText("Claude Code, Codex")).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Portfolio" })).toBeInTheDocument();
+    const buyLegal = document.querySelector(".buy-box .buy-legal")!;
+    expect([...buyLegal.querySelectorAll("a")].map((link) => link.getAttribute("href"))).toEqual(["/terms/", "/refunds/", "/privacy/"]);
     expect(document.body.textContent).not.toMatch(/hire|hiring|cleanroom|waitlist/i);
   });
 
@@ -419,6 +421,8 @@ describe("Possible website", () => {
     vi.stubGlobal("fetch", vi.fn(async () => new Response(JSON.stringify({ outcomes: [] }))));
     render(<AgentsPage />);
     expect(screen.getByText("US$49")).toBeInTheDocument();
+    const buyLegal = document.querySelector(".buy-box .buy-legal")!;
+    expect([...buyLegal.querySelectorAll("a")].map((link) => link.getAttribute("href"))).toEqual(["/terms/", "/refunds/", "/privacy/"]);
     expect(screen.getByRole("button", { name: "Opening soon" })).toBeDisabled();
     expect(document.body.textContent).not.toMatch(/hire|hiring|cleanroom|waitlist/i);
   });

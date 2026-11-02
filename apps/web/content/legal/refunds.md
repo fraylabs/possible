@@ -1,6 +1,6 @@
 # Possible Refund Policy
 
-**Last updated:** [date published]
+**Last updated:** 2026-11-03
 
 This policy covers agent prompts bought on possible.sh from **BRAIN TRUST PRIVATE LIMITED** (Singapore, UEN 202416698H). It forms part of our
 [Terms of Service](/terms).

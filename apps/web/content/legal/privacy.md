@@ -1,6 +1,6 @@
 # Possible Privacy Policy
 
-**Last updated:** [date published]
+**Last updated:** 2026-11-03
 
 This policy explains how **BRAIN TRUST PRIVATE LIMITED**, a Singapore company (UEN 202416698H) ("**we**", "**us**"), collects, uses and
 discloses personal data through possible.sh and the agent prompts you can buy there (the "**Service**"). We're responsible for that data under

@@ -16,6 +16,7 @@ export function BuyBox({ slug, priceUsd, label, what }: { slug: string; priceUsd
         ? <a className="buy-button" href={link}>{label}</a>
         : <button className="buy-button" type="button" disabled>Opening soon</button>}
       <p className="buy-note">One payment, then you download it. It runs on your own machine, in {RUNS_IN.join(" or ")}, with your own subscription.</p>
+      <p className="buy-legal"><a href="/terms/">Terms</a> · <a href="/refunds/">Refunds</a> · <a href="/privacy/">Privacy</a></p>
     </div>
   );
 }

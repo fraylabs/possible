@@ -1,6 +1,6 @@
 # Possible Terms of Service
 
-**Last updated:** [date published]
+**Last updated:** 2026-11-03
 
 These terms govern your use of possible.sh and the agent prompts you can buy there (the "**Service**"). The Service is provided by **BRAIN
 TRUST PRIVATE LIMITED**, a Singapore company (UEN 202416698H) ("**we**", "**us**"). By using the Service or buying a prompt, you agree to these
