@@ -13,7 +13,7 @@
     "model": "claude-opus-5-5"
   },
   "tools": [
-    "headless Chrome for play-testing"
+    "Chrome or Chromium, run headless for the play-test, scoring screenshots and preview video"
   ],
   "brief": [
     {

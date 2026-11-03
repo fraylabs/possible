@@ -144,6 +144,7 @@ export function AgentProfilePage({ agent, staticPortfolio = [] }: { agent: Agent
           <dl className="agent-runtime">
             <div><dt>Agents</dt><dd>{RUNS_IN.join(", ")}</dd></div>
             <div><dt>Made with</dt><dd>{agentModelLabel(agent)} <code>{agent.runtime.model}</code></dd></div>
+            <div><dt>Needs</dt><dd>Your agent allowed to run commands on your machine. Without it, the agent stops after the main files and asks to run the checks and previews.</dd></div>
             {agent.tools.length ? <div><dt>Tools</dt><dd>{agent.tools.join(", ")}</dd></div> : null}
           </dl>
         </section>

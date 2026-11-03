@@ -1,10 +1,15 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
+import { DM_Mono, Manrope, Newsreader } from "next/font/google";
 import { siteDescription, siteUrl } from "./_metadata";
 import { possibleVersion } from "../src/public-content";
 import { BackendProvider } from "../src/backend-provider";
 import { PageVisits } from "../src/page-visits";
 import "../src/styles.css";
+
+const manrope = Manrope({ subsets: ["latin"], weight: ["400", "500", "600", "700", "800"], variable: "--font-manrope" });
+const newsreader = Newsreader({ subsets: ["latin"], weight: ["400", "500"], variable: "--font-newsreader" });
+const dmMono = DM_Mono({ subsets: ["latin"], weight: ["400", "500"], variable: "--font-dm-mono" });
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -77,7 +82,7 @@ const discoveryGraph = {
 
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" className={`${manrope.variable} ${newsreader.variable} ${dmMono.variable}`} suppressHydrationWarning>
       <head><script dangerouslySetInnerHTML={{ __html: themeScript }} /></head>
       <body>
         <PageVisits />
