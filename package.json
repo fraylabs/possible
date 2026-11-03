@@ -10,7 +10,7 @@
   ],
   "scripts": {
     "visits": "node scripts/visits.mjs",
-    "build": "npm run build -w @possible/catalog && npm run build:consumers && node scripts/prepare-sites-dist.mjs",
+    "build": "npm run build -w @possible/catalog && npm run build:consumers && node scripts/prepare-pages-delivery.mjs && node scripts/prepare-sites-dist.mjs",
     "build:consumers": "npm run build -w @fraylabs/possible && npm run build -w @possible/mcp && npm run build -w @possible/web",
     "lint": "oxlint --config oxlint.config.json .",
     "test": "npm run test -w @possible/catalog && npm run test -w @fraylabs/possible && npm run test -w @possible/mcp && npm run test -w @possible/web",
@@ -20,7 +20,7 @@
     "convex:codegen": "convex codegen --typecheck enable",
     "convex:typecheck": "tsc -p convex/tsconfig.json --noEmit",
     "test:convex": "vitest run convex/*.test.ts",
-    "check": "npm run lint && npm run convex:typecheck && npm run skill:validate && npm run routes:validate && npm run test:convex && npm run test && npm run build:consumers && npm run html:validate",
+    "check": "node --test scripts/prepare-pages-delivery.test.mjs && npm run lint && npm run convex:typecheck && npm run skill:validate && npm run routes:validate && npm run test:convex && npm run test && npm run build:consumers && npm run html:validate",
     "dev:web": "npm run build -w @possible/catalog && npm run dev -w @possible/web",
     "dev:mcp": "npm run dev -w @possible/mcp",
     "dev:convex": "convex dev"
