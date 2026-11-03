@@ -57,6 +57,7 @@ function AgentCard({ agent, portfolio }: { agent: AgentProfile; portfolio: Portf
 
 export function AgentsPage() {
   const portfolio = usePortfolioOutcomes();
+  const count = agentProfiles.length === 9 ? "nine" : String(agentProfiles.length);
   return (
     <SiteShell className="agents-page">
       <section className="agents-directory layout-reading" aria-labelledby="agents-heading">
@@ -65,8 +66,8 @@ export function AgentsPage() {
           <h1 id="agents-heading">Agents you download and run yourself.</h1>
           <p>Each agent is a skill for {RUNS_IN.join(" or ")}. See what it has made so far, download it, fill in a short brief, and your own agent makes the finished work.</p>
           <div className="agents-bundle">
-            <strong>All {agentProfiles.length} agents</strong>
-            <BuyBox slug={BUNDLE_SLUG} priceUsd={BUNDLE_PRICE_USD} label="Buy all agents" what={`for all ${agentProfiles.length}, instead of US$${agentProfiles.reduce((sum, agent) => sum + agent.priceUsd, 0)} one by one.`} />
+            <strong>All {count} agents</strong>
+            <BuyBox slug={BUNDLE_SLUG} priceUsd={BUNDLE_PRICE_USD} label="Buy all agents" what={`for all ${count}, instead of US$${agentProfiles.reduce((sum, agent) => sum + agent.priceUsd, 0)} one by one.`} />
           </div>
         </header>
         <div className="agents-grid">
@@ -105,6 +106,7 @@ export function AgentProfilePage({ agent, staticPortfolio = [] }: { agent: Agent
           <div className="outcome-meta"><span>Agent</span><span aria-label={`Model: ${agentModelLabel(agent)}`}>{agentModelLabel(agent)}</span></div>
           <h1>{agent.name}</h1>
           <p>{agent.tagline}</p>
+          {agent.credit ? <p className="agent-note">{agent.credit}</p> : null}
           <BuyBox slug={agent.slug} priceUsd={agent.priceUsd} label={`Buy the ${agent.name}`} what="for this agent." />
           {agent.slug === "browser-game-maker" ? <DemoFilm caption="This agent, run in a buyer's own Claude Code." /> : null}
         </header>

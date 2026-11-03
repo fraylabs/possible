@@ -426,6 +426,19 @@ describe("Possible website", () => {
     expect(document.querySelector(".agent-portfolio")).toBeNull();
   });
 
+  it("lists the Animated Shorts Maker with its credit and the nine-agent bundle", () => {
+    vi.stubGlobal("fetch", vi.fn(async () => new Response(JSON.stringify({ outcomes: [] }))));
+    render(<AgentProfilePage agent={findAgentProfile("animated-shorts-maker")!} />);
+    expect(screen.getByRole("heading", { name: "Animated Shorts Maker" })).toBeInTheDocument();
+    expect(screen.getByText("Workflow inspired by mromidev/claude-animated-shorts (MIT)." )).toBeInTheDocument();
+    expect(screen.getByText("US$19")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Opening soon" })).toBeDisabled();
+    cleanup();
+    render(<AgentsPage />);
+    expect(screen.getByText("All nine agents")).toBeInTheDocument();
+    expect(screen.getByText("US$49")).toBeInTheDocument();
+  });
+
   it("keeps one payment link key per agent plus the bundle", () => {
     expect(Object.keys(paymentLinks).sort()).toEqual([...agentProfiles.map((agent) => agent.slug), BUNDLE_SLUG].sort());
   });

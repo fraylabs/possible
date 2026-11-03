@@ -7,6 +7,8 @@ import proceduralFilmMaker from "../../../agents/procedural-film-maker/agent.jso
 import motionDesigner from "../../../agents/motion-designer/agent.json" with { type: "json" };
 import customerProfiler from "../../../agents/customer-profiler/agent.json" with { type: "json" };
 
+import animatedShortsMaker from "../../../agents/animated-shorts-maker/agent.json" with { type: "json" };
+
 export interface AgentBriefField {
   id: string;
   label: string;
@@ -25,9 +27,10 @@ export interface AgentProfile {
   portfolio: string[];
   limits: string;
   priceUsd: number;
+  credit?: string;
 }
 
-export const agentProfiles: readonly AgentProfile[] = [launchMarketer, competitorAnalyst, prototypeEngineer, deckMaker, browserGameMaker, proceduralFilmMaker, motionDesigner, customerProfiler];
+export const agentProfiles: readonly AgentProfile[] = [launchMarketer, competitorAnalyst, prototypeEngineer, deckMaker, browserGameMaker, proceduralFilmMaker, motionDesigner, customerProfiler, animatedShortsMaker];
 
 /** The price of all the agents together. */
 export const BUNDLE_PRICE_USD = 49;

@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "slug": "animated-shorts-maker",
+  "name": "Animated Shorts Maker",
+  "tagline": "Makes an original vertical animated story short from code, with a moving camera, voice and an original sound mix.",
+  "delivers": [
+    "A 45–70 second vertical animated MP4 and a poster frame",
+    "SCRIPT.md with sources, STYLE_BIBLE.md and reference study reports",
+    "ROUNDS.md and CHECKS.md documenting visual review and final file checks",
+    "The source and GUIDE.md for rendering and changing the story, voice, colours, camera and music"
+  ],
+  "runtime": {
+    "agent": "Claude Code",
+    "model": "claude-opus-5-5"
+  },
+  "tools": [
+    "Remotion with @remotion/three",
+    "Canvas2D",
+    "Python with NumPy/SciPy for sound",
+    "faster-whisper",
+    "OpenCV and Pillow",
+    "ffmpeg",
+    "Chrome or Chromium (Remotion renders in it)"
+  ],
+  "brief": [
+    {
+      "id": "story",
+      "label": "Story topic and the facts to cover",
+      "example": "A surprising true story about how a bridge was built"
+    },
+    {
+      "id": "references",
+      "label": "Reference shorts you have the right to study, or a look to choose",
+      "example": "Links to two shorts whose pacing and look I like"
+    },
+    {
+      "id": "voice",
+      "label": "Voice, language and house rules",
+      "example": "My own English voice recording, no captions, quiet music"
+    }
+  ],
+  "portfolio": [],
+  "limits": "Makes a 45–70 second vertical animation from code. References are studied, never copied or shipped; no AI-video clips or stock footage. Review the script before production.",
+  "priceUsd": 19,
+  "credit": "Workflow inspired by mromidev/claude-animated-shorts (MIT)."
+}
