@@ -21,7 +21,8 @@ async function buildPrivate(folder,root,mapping){
  await exec(process.execPath,[join(folder,'scripts/build.mjs'),'--site',root],{...quiet,env:{PATH:process.env.PATH,POSSIBLE_DELIVERY_TOKENS_JSON:mapping}});
 }
 async function regular(path){const stat=await lstat(path);return stat.isFile()&&!stat.isSymbolicLink();}
-export async function preparePagesDelivery({root,tokenJson,repoToken,checkout=checkoutPrivate,build=buildPrivate}){
+export async function preparePagesDelivery({root,tokenJson,repoToken,siteDeliveryDir,checkout=checkoutPrivate,build=buildPrivate}){
+ if(siteDeliveryDir)return 'sites';
  const links=JSON.parse(await readFile(join(root,'apps/web/src/payment-links.json'),'utf8'));
  const live=Object.entries(links).filter(([,value])=>typeof value==='string'&&value.trim()!=='').map(([slug])=>slug);
  if(!tokenJson&&!repoToken){if(live.length)throw Error('Active payment links require delivery credentials.');return 'skipped';}
@@ -53,6 +54,6 @@ export async function preparePagesDelivery({root,tokenJson,repoToken,checkout=ch
 }
 if(process.argv[1]&&import.meta.url===pathToFileURL(resolve(process.argv[1])).href){
  const root=resolve(dirname(fileURLToPath(import.meta.url)),'..');
- try{const status=await preparePagesDelivery({root,tokenJson:process.env.POSSIBLE_DELIVERY_TOKENS_JSON,repoToken:process.env.POSSIBLE_PROMPTS_READ_TOKEN});console.log(status==='skipped'?'Paid delivery skipped: no active links.':'Paid delivery prepared.');}
+ try{const status=await preparePagesDelivery({root,tokenJson:process.env.POSSIBLE_DELIVERY_TOKENS_JSON,repoToken:process.env.POSSIBLE_PROMPTS_READ_TOKEN,siteDeliveryDir:process.env.POSSIBLE_DELIVERY_DIR});console.log(status==='sites'?'Paid delivery handled by Sites distribution.':status==='skipped'?'Paid delivery skipped: no active links.':'Paid delivery prepared.');}
  catch{console.error('Paid delivery preparation failed. Check the build configuration and credentials.');process.exitCode=1;}
 }

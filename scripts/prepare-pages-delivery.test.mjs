@@ -1,6 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {mkdtemp,mkdir,readFile,rm,writeFile,access} from 'node:fs/promises';
+import {mkdtemp,mkdir,readFile,rm,writeFile,access,symlink} from 'node:fs/promises';
 import {join} from 'node:path';
 import {tmpdir} from 'node:os';
 import {fileURLToPath} from 'node:url';
@@ -50,3 +50,21 @@ test('command-line failure does not print provided values',async()=>{
 });
 
 test('configured build rejects output when no links are active',async t=>{const root=await fixture(t,{demo:''});await assert.rejects(preparePagesDelivery(options(root,stub([[one,'demo']]))),/Delivery output does not match active products/);assert.equal(await preparePagesDelivery(options(root,stub([]))),'built');});
+
+test('Sites delivery remains responsible for active links when its directory is set',async t=>{
+ const root=await fixture(t,{demo:'https://example.test'});
+ assert.equal(await preparePagesDelivery({root,siteDeliveryDir:'/synthetic/sites-delivery',checkout:async()=>{throw Error('must not fetch')}}),'sites');
+ assert.equal(await exists(join(root,'apps/web/out/d')),false);
+});
+test('malformed output and invalid product slugs fail and private checkouts are cleaned',async t=>{
+ const root=await fixture(t,{demo:'https://example.test'}),base=options(root,stub([[one,'demo']]));
+ for(const kind of ['wrong-zip','extra-file','symlink']){
+  const build=async folder=>{const dir=join(folder,'dist/delivery/d',one);await mkdir(dir,{recursive:true});
+   if(kind==='symlink')await symlink('/nonexistent',join(dir,'index.html'));else await writeFile(join(dir,'index.html'),'synthetic');
+   await writeFile(join(dir,kind==='wrong-zip'?'wrong.zip':'demo.zip'),'zip');if(kind==='extra-file')await writeFile(join(dir,'extra'),'extra');};
+  await assert.rejects(preparePagesDelivery({...base,build}),/Invalid delivery output/);
+ }
+ let captured;await assert.rejects(preparePagesDelivery({...base,checkout:async folder=>{captured=folder;throw Error('synthetic checkout failure')}}),/synthetic checkout failure/);assert.equal(await exists(captured),false);
+ await writeFile(join(root,'apps/web/src/payment-links.json'),JSON.stringify({'../bad':'https://example.test'}));
+ await assert.rejects(preparePagesDelivery({...base,tokenJson:JSON.stringify({'../bad':one})}),/Invalid product name/);
+});
