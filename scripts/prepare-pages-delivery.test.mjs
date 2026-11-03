@@ -1,6 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {mkdtemp,mkdir,readFile,rm,writeFile,access,symlink,readdir} from 'node:fs/promises';
+import {mkdtemp,mkdir,readFile,rm,writeFile,access,symlink,readdir,copyFile,chmod} from 'node:fs/promises';
 import {join} from 'node:path';
 import {tmpdir} from 'node:os';
 import {fileURLToPath} from 'node:url';
@@ -45,16 +45,17 @@ test('rejects invalid mappings, unexpected output and overwrites',async t=>{
 });
 test('command-line failure does not print provided values',async()=>{
  const {spawnSync}=await import('node:child_process');
- const token='synthetic-private-value-do-not-log';
+ const token='synthetic_private_value_do_not_log_123';
  const result=spawnSync(process.execPath,[fileURLToPath(new URL('./prepare-pages-delivery.mjs',import.meta.url))],{encoding:'utf8',cwd:fileURLToPath(new URL('..',import.meta.url)),env:{PATH:process.env.PATH,POSSIBLE_PROMPTS_READ_TOKEN:token,POSSIBLE_DELIVERY_TOKENS_JSON:'{bad'}});
- assert.notEqual(result.status,0);assert.match(result.stderr,/Paid delivery preparation failed/);assert.doesNotMatch(result.stdout+result.stderr,/synthetic-private-value-do-not-log|\{bad/);
+ assert.notEqual(result.status,0);assert.match(result.stderr,/Invalid delivery mappings/);assert.doesNotMatch(result.stdout+result.stderr,/synthetic_private_value_do_not_log_123|\{bad/);
 });
 
 test('configured build does no private work when no links are active',async t=>{const root=await fixture(t,{demo:''});assert.equal(await preparePagesDelivery({...options(root,stub([[one,'demo']])),checkout:async()=>{throw Error('must not fetch')}}),'skipped');});
 
 test('Sites delivery remains responsible for active links when its directory is set',async t=>{
  const root=await fixture(t,{demo:'https://example.test'});
- assert.equal(await preparePagesDelivery({...options(root,stub([[one,'demo']])),siteDeliveryDir:'/synthetic/sites-delivery'}),'sites');
+ await assert.rejects(preparePagesDelivery({...options(root,stub([[one,'demo']])),siteDeliveryDir:'/synthetic/sites-delivery'}),/cannot be combined/);
+ assert.equal(await preparePagesDelivery({root,siteDeliveryDir:'/synthetic/sites-delivery',checkout:async()=>{throw Error('must not fetch')}}),'sites');
  assert.equal(await exists(join(root,'apps/web/out/d')),false);
 });
 test('malformed output and invalid product slugs fail and private checkouts are cleaned',async t=>{
@@ -73,3 +74,12 @@ test('malformed output and invalid product slugs fail and private checkouts are 
 test('rejects a symlinked delivery root',async t=>{const root=await fixture(t,{demo:'https://example.test'});const build=async folder=>{await mkdir(join(folder,'dist/delivery'),{recursive:true});await symlink(root,join(folder,'dist/delivery/d'));};await assert.rejects(preparePagesDelivery(options(root,build)),/Invalid delivery output/);});
 
 test('rejects symlinked delivery ancestors',async t=>{const root=await fixture(t,{demo:'https://example.test'});for(const segment of ['dist','delivery']){const build=async folder=>{if(segment==='dist')await symlink(root,join(folder,'dist'));else{await mkdir(join(folder,'dist'),{recursive:true});await symlink(root,join(folder,'dist/delivery'));}};await assert.rejects(preparePagesDelivery(options(root,build)),/Invalid delivery output/);}});
+
+test('child process failure does not reveal credentials or temporary paths',async t=>{
+ const root=await fixture(t,{demo:'https://example.test'}),bin=join(root,'bin');await mkdir(bin);await mkdir(join(root,'scripts'));
+ await copyFile(fileURLToPath(new URL('./prepare-pages-delivery.mjs',import.meta.url)),join(root,'scripts/prepare-pages-delivery.mjs'));
+ const git=join(bin,'git');await writeFile(git,'#!/bin/sh\nprintf "%s\n" "$GIT_CONFIG_VALUE_0" "$HOME" >&2\nexit 1\n');await chmod(git,0o700);
+ const {spawnSync}=await import('node:child_process');const token='synthetic_private_value_do_not_log_123';
+ const result=spawnSync(process.execPath,[join(root,'scripts/prepare-pages-delivery.mjs')],{cwd:root,encoding:'utf8',env:{PATH:bin+':'+process.env.PATH,POSSIBLE_PROMPTS_READ_TOKEN:token,POSSIBLE_DELIVERY_TOKENS_JSON:JSON.stringify({demo:one})}});
+ assert.notEqual(result.status,0);assert.match(result.stderr,/Paid delivery preparation failed/);assert.doesNotMatch(result.stdout+result.stderr,/synthetic_private_value_do_not_log_123|possible-delivery-/);
+});

@@ -23,7 +23,7 @@ async function buildPrivate(folder,root,mapping){
 }
 async function regular(path){const stat=await lstat(path);return stat.isFile()&&!stat.isSymbolicLink();}
 export async function preparePagesDelivery({root,tokenJson,repoToken,siteDeliveryDir,checkout=checkoutPrivate,build=buildPrivate}){
- if(siteDeliveryDir)return 'sites';
+ if(siteDeliveryDir){if(tokenJson||repoToken)throw new SafeDeliveryError('Sites and Pages delivery credentials cannot be combined.');return 'sites';}
  const links=JSON.parse(await readFile(join(root,'apps/web/src/payment-links.json'),'utf8'));
  const live=Object.entries(links).filter(([,value])=>typeof value==='string'&&value.trim()!=='').map(([slug])=>slug);
  if(!tokenJson&&!repoToken){if(live.length)throw new SafeDeliveryError('Active payment links require delivery credentials.');return 'skipped';}
