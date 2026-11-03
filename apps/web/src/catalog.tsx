@@ -12,6 +12,7 @@ import {
 } from "./discovery-data";
 import type { DiscoveryOutcome, DiscoverySource, OutcomeCategory } from "./discovery-data";
 import { OutcomeReactions } from "./outcome-reactions";
+import { DemoFilm } from "./demo-film";
 import { CopyButton, SiteShell } from "./shared";
 
 const pageSize = 10;
@@ -285,6 +286,8 @@ export function OutcomesPage({ outcomesFixture }: { outcomesFixture?: DiscoveryO
           </div>
           <strong>{directoryState === "loading" ? "—" : `${filteredOutcomes.length} ${filteredOutcomes.length === 1 ? "Outcome" : "Outcomes"}`}</strong>
         </header>
+
+        <DemoFilm caption="A buyer runs the Browser Game Maker in their own Claude Code." />
 
         <label className="home-search">
           <span aria-hidden="true">⌕</span>

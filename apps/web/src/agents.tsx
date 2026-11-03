@@ -7,6 +7,7 @@ import { OutcomeMedia } from "./catalog";
 import { fetchDiscoveryOutcomes } from "./discovery-data";
 import type { DiscoveryOutcome } from "./discovery-data";
 import { BuyBox } from "./buy";
+import { DemoFilm } from "./demo-film";
 import { SiteShell } from "./shared";
 
 type PortfolioState = { status: "loading" | "ready" | "error"; outcomes: Map<string, DiscoveryOutcome> };
@@ -105,6 +106,7 @@ export function AgentProfilePage({ agent, staticPortfolio = [] }: { agent: Agent
           <h1>{agent.name}</h1>
           <p>{agent.tagline}</p>
           <BuyBox slug={agent.slug} priceUsd={agent.priceUsd} label={`Buy the ${agent.name}`} what="for this agent." />
+          {agent.slug === "browser-game-maker" ? <DemoFilm caption="This agent, run in a buyer's own Claude Code." /> : null}
         </header>
 
         <section className="agent-section" aria-labelledby="agent-delivers-heading">

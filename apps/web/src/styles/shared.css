@@ -190,3 +190,7 @@ a { color: inherit; text-decoration: none; }
   .site-footer-inner > span { grid-row: 2; }
 }
 @media (min-width: 901px) { .nav-menu-trigger { display: none; } }
+
+.demo-film { margin: 28px 0 0; }
+.demo-film video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; border: 1px solid var(--site-border); border-radius: var(--site-radius-large); background: #000; }
+.demo-film figcaption { margin-top: 10px; color: var(--site-muted); font: 10px var(--font-dm-mono), monospace; }
