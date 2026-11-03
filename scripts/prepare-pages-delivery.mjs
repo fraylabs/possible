@@ -7,6 +7,7 @@ import {fileURLToPath,pathToFileURL} from 'node:url';
 
 // Update this single pin when a reviewed possible-prompts release is ready.
 export const PROMPTS_COMMIT = '05adb5235052b49ad0a743ac39edbc7b1c8575af';
+class SafeDeliveryError extends Error {}
 const exec=promisify(execFile);
 const quiet={encoding:'utf8',maxBuffer:1024*1024};
 async function checkoutPrivate(folder,credential){
@@ -15,7 +16,7 @@ async function checkoutPrivate(folder,credential){
  await exec('git',['-C',folder,'fetch','-q','--depth=1','https://github.com/fraylabs/possible-prompts.git',PROMPTS_COMMIT],{...quiet,env});
  await exec('git',['-C',folder,'checkout','-q','--detach','FETCH_HEAD'],{...quiet,env});
  const {stdout}=await exec('git',['-C',folder,'rev-parse','HEAD'],{...quiet,env});
- if(stdout.trim()!==PROMPTS_COMMIT)throw Error('Pinned revision mismatch');
+ if(stdout.trim()!==PROMPTS_COMMIT)throw new SafeDeliveryError('Pinned revision mismatch');
 }
 async function buildPrivate(folder,root,mapping){
  await exec(process.execPath,[join(folder,'scripts/build.mjs'),'--site',root],{...quiet,env:{PATH:process.env.PATH,POSSIBLE_DELIVERY_TOKENS_JSON:mapping}});
@@ -25,13 +26,14 @@ export async function preparePagesDelivery({root,tokenJson,repoToken,siteDeliver
  if(siteDeliveryDir)return 'sites';
  const links=JSON.parse(await readFile(join(root,'apps/web/src/payment-links.json'),'utf8'));
  const live=Object.entries(links).filter(([,value])=>typeof value==='string'&&value.trim()!=='').map(([slug])=>slug);
- if(!tokenJson&&!repoToken){if(live.length)throw Error('Active payment links require delivery credentials.');return 'skipped';}
- if(!tokenJson||!repoToken)throw Error('Both delivery credentials are required.');
- let mapping;try{mapping=JSON.parse(tokenJson)}catch{throw Error('Invalid delivery mappings.');}
- if(!mapping||typeof mapping!=='object'||Array.isArray(mapping))throw Error('Invalid delivery mappings.');
- if(live.some(slug=>!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)))throw Error('Invalid product name.');
+ if(!tokenJson&&!repoToken){if(live.length)throw new SafeDeliveryError('Active payment links require delivery credentials.');return 'skipped';}
+ if(!tokenJson||!repoToken)throw new SafeDeliveryError('Both delivery credentials are required.');
+ if(!/^[A-Za-z0-9_]{20,255}$/.test(repoToken))throw new SafeDeliveryError('Invalid delivery credentials.');
+ let mapping;try{mapping=JSON.parse(tokenJson)}catch{throw new SafeDeliveryError('Invalid delivery mappings.');}
+ if(!mapping||typeof mapping!=='object'||Array.isArray(mapping))throw new SafeDeliveryError('Invalid delivery mappings.');
+ if(live.some(slug=>!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)))throw new SafeDeliveryError('Invalid product name.');
  const allTokens=Object.keys(links).map(slug=>mapping[slug]);
- if(allTokens.some(t=>typeof t!=='string'||!/^[A-Za-z0-9_-]{20,128}$/.test(t))||new Set(allTokens).size!==allTokens.length)throw Error('Invalid delivery mappings.');
+ if(allTokens.some(t=>typeof t!=='string'||!/^[A-Za-z0-9_-]{20,128}$/.test(t))||new Set(allTokens).size!==allTokens.length)throw new SafeDeliveryError('Invalid delivery mappings.');
  const tokens=live.map(slug=>mapping[slug]);
  if(!live.length)return 'skipped';
  const folder=await mkdtemp(join(tmpdir(),'possible-delivery-'));
@@ -39,12 +41,12 @@ export async function preparePagesDelivery({root,tokenJson,repoToken,siteDeliver
   await checkout(folder,repoToken);await build(folder,root,tokenJson);
   const source=join(folder,'dist/delivery/d');
   {
-   const sourceStat=await lstat(source);if(!sourceStat.isDirectory()||sourceStat.isSymbolicLink())throw Error('Invalid delivery output.');
-   const names=await readdir(source);if(names.length!==tokens.length||names.some(n=>!tokens.includes(n)))throw Error('Delivery output does not match active products.');
+   for(const dir of [join(folder,'dist'),join(folder,'dist/delivery'),source]){const stat=await lstat(dir);if(!stat.isDirectory()||stat.isSymbolicLink())throw new SafeDeliveryError('Invalid delivery output.');}
+   const names=await readdir(source);if(names.length!==tokens.length||names.some(n=>!tokens.includes(n)))throw new SafeDeliveryError('Delivery output does not match active products.');
    for(const [index,slug] of live.entries()){
-    const dir=join(source,tokens[index]);const stat=await lstat(dir);if(!stat.isDirectory()||stat.isSymbolicLink())throw Error('Invalid delivery output.');
+    const dir=join(source,tokens[index]);const stat=await lstat(dir);if(!stat.isDirectory()||stat.isSymbolicLink())throw new SafeDeliveryError('Invalid delivery output.');
     const files=await readdir(dir);const zip=slug==='all'?'possible-all.zip':`${slug}.zip`;
-    if(files.length!==2||!files.includes('index.html')||!files.includes(zip)||!await regular(join(dir,'index.html'))||!await regular(join(dir,zip)))throw Error('Invalid delivery output.');
+    if(files.length!==2||!files.includes('index.html')||!files.includes(zip)||!await regular(join(dir,'index.html'))||!await regular(join(dir,zip)))throw new SafeDeliveryError('Invalid delivery output.');
    }
    const out=join(root,'apps/web/out/d');
    await cp(source,out,{recursive:true,force:false,errorOnExist:true});
@@ -55,5 +57,5 @@ export async function preparePagesDelivery({root,tokenJson,repoToken,siteDeliver
 if(process.argv[1]&&import.meta.url===pathToFileURL(resolve(process.argv[1])).href){
  const root=resolve(dirname(fileURLToPath(import.meta.url)),'..');
  try{const status=await preparePagesDelivery({root,tokenJson:process.env.POSSIBLE_DELIVERY_TOKENS_JSON,repoToken:process.env.POSSIBLE_PROMPTS_READ_TOKEN,siteDeliveryDir:process.env.POSSIBLE_DELIVERY_DIR});console.log(status==='sites'?'Paid delivery handled by Sites distribution.':status==='skipped'?'Paid delivery skipped: no active links.':'Paid delivery prepared.');}
- catch{console.error('Paid delivery preparation failed. Check the build configuration and credentials.');process.exitCode=1;}
+ catch(error){console.error(error instanceof SafeDeliveryError?'Paid delivery preparation failed: '+error.message:'Paid delivery preparation failed. Check the build configuration and credentials.');process.exitCode=1;}
 }
