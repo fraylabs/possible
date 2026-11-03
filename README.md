@@ -6,7 +6,7 @@ See what AI can make, explore how it was made, and reuse the recipe.
 
 ## Agents
 
-possible.sh also sells Fray's agents as downloadable prompts (see `PRODUCT_DIRECTION.md`): US$19 each, or US$49 for all nine. Each one is a skill that runs in the buyer's own Claude Code or Codex. This repo keeps only the public profiles (`agents/<slug>/agent.json`). The paid instructions and the zip build are in the private `fraylabs/possible-prompts` repo. `apps/web/src/payment-links.json` turns Buy on, one link per agent. To ship the download pages, build them there and set `POSSIBLE_DELIVERY_DIR` when building this site.
+possible.sh also sells Fray's agents as downloadable prompts (see `PRODUCT_DIRECTION.md`): US$19 each, or US$49 for all nine. Each one is a skill that runs in the buyer's own Claude Code or Codex. This repo keeps only the public profiles (`agents/<slug>/agent.json`). The paid instructions and the zip build are in the private `fraylabs/possible-prompts` repo. `apps/web/src/payment-links.json` turns Buy on, one link per agent. The Cloudflare Pages build reads `POSSIBLE_PROMPTS_READ_TOKEN` and `POSSIBLE_DELIVERY_TOKENS_JSON` from its encrypted build environment and copies the active download pages into `apps/web/out/d/`. Update the single `PROMPTS_COMMIT` pin in `scripts/prepare-pages-delivery.mjs` when the reviewed private package changes. `POSSIBLE_DELIVERY_DIR` remains supported for the separate Sites distribution route.
 
 ## One public contract
 

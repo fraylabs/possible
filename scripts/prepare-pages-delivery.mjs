@@ -35,7 +35,10 @@ export async function preparePagesDelivery({root,tokenJson,repoToken,checkout=ch
  try{
   await checkout(folder,repoToken);await build(folder,root,tokenJson);
   const source=join(folder,'dist/delivery/d');
-  if(live.length){
+  if(!live.length){
+   const names=await readdir(source).catch(error=>{if(error.code==='ENOENT')return [];throw error});
+   if(names.length)throw Error('Delivery output does not match active products.');
+  }else{
    const names=await readdir(source);if(names.length!==tokens.length||names.some(n=>!tokens.includes(n)))throw Error('Delivery output does not match active products.');
    for(const [index,slug] of live.entries()){
     const dir=join(source,tokens[index]);const stat=await lstat(dir);if(!stat.isDirectory()||stat.isSymbolicLink())throw Error('Invalid delivery output.');

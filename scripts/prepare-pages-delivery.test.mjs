@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {mkdtemp,mkdir,readFile,rm,writeFile,access} from 'node:fs/promises';
 import {join} from 'node:path';
 import {tmpdir} from 'node:os';
+import {fileURLToPath} from 'node:url';
 import {preparePagesDelivery} from './prepare-pages-delivery.mjs';
 const one='synthetic_token_11111111111111',two='synthetic_token_22222222222222';
 async function fixture(t,links){
@@ -18,13 +19,14 @@ function stub(slugs,addExtra=false){return async(folder)=>{
 const options=(root,build)=>({root,repoToken:'fixture-credential',tokenJson:JSON.stringify({demo:one,other:two,all:two}),checkout:async()=>{},build});
 test('skips only without credentials and active links',async t=>{
  const root=await fixture(t,{demo:'',all:''});assert.equal(await preparePagesDelivery({root}),'skipped');
- await assert.rejects(preparePagesDelivery({root,repoToken:'fixture'}));
- await assert.rejects(preparePagesDelivery({root,tokenJson:'{}'}));
+ await assert.rejects(preparePagesDelivery({root,repoToken:'fixture'}),/Both delivery credentials/);
+ await assert.rejects(preparePagesDelivery({root,tokenJson:'{}'}),/Both delivery credentials/);
  await writeFile(join(root,'apps/web/src/payment-links.json'),JSON.stringify({demo:'https://example.test'}));
- await assert.rejects(preparePagesDelivery({root}));
+ await assert.rejects(preparePagesDelivery({root}),/Active payment links require delivery credentials/);
 });
 test('copies only switched-on products into the static export',async t=>{
  const root=await fixture(t,{demo:'https://example.test',other:'',all:''});
+ await assert.rejects(preparePagesDelivery(options(root,stub([[one,'demo'],[two,'other']]))),/Delivery output does not match active products/);
  assert.equal(await preparePagesDelivery(options(root,stub([[one,'demo']]))),'built');
  assert.equal(await readFile(join(root,'apps/web/out/d',one,'index.html'),'utf8'),'synthetic page');
  assert.equal(await exists(join(root,'apps/web/out/d',one,'demo.zip')),true);
@@ -33,16 +35,18 @@ test('copies only switched-on products into the static export',async t=>{
 test('rejects invalid mappings, unexpected output and overwrites',async t=>{
  const root=await fixture(t,{demo:'https://example.test',all:'https://example.test'});
  const base=options(root,stub([[one,'demo'],[two,'all']]));
- await assert.rejects(preparePagesDelivery({...base,tokenJson:'{'}));
- await assert.rejects(preparePagesDelivery({...base,tokenJson:JSON.stringify({demo:one,all:one})}));
- await assert.rejects(preparePagesDelivery({...base,tokenJson:JSON.stringify({demo:'../unsafe',all:two})}));
- await assert.rejects(preparePagesDelivery({...base,build:stub([[one,'demo'],[two,'all']],true)}));
+ await assert.rejects(preparePagesDelivery({...base,tokenJson:'{'}),/Invalid delivery mappings/);
+ await assert.rejects(preparePagesDelivery({...base,tokenJson:JSON.stringify({demo:one,all:one})}),/Invalid delivery mappings/);
+ await assert.rejects(preparePagesDelivery({...base,tokenJson:JSON.stringify({demo:'../unsafe',all:two})}),/Invalid delivery mappings/);
+ await assert.rejects(preparePagesDelivery({...base,build:stub([[one,'demo'],[two,'all']],true)}),/Delivery output does not match active products/);
  await mkdir(join(root,'apps/web/out/d',one),{recursive:true});await writeFile(join(root,'apps/web/out/d',one,'index.html'),'existing');
- await assert.rejects(preparePagesDelivery(base));assert.equal(await readFile(join(root,'apps/web/out/d',one,'index.html'),'utf8'),'existing');
+ await assert.rejects(preparePagesDelivery(base),{code:'ERR_FS_CP_EEXIST'});assert.equal(await readFile(join(root,'apps/web/out/d',one,'index.html'),'utf8'),'existing');
 });
 test('command-line failure does not print provided values',async()=>{
  const {spawnSync}=await import('node:child_process');
  const token='synthetic-private-value-do-not-log';
- const result=spawnSync(process.execPath,['scripts/prepare-pages-delivery.mjs'],{encoding:'utf8',env:{PATH:process.env.PATH,POSSIBLE_PROMPTS_READ_TOKEN:token,POSSIBLE_DELIVERY_TOKENS_JSON:'{bad'}});
- assert.notEqual(result.status,0);assert.doesNotMatch(result.stdout+result.stderr,/synthetic-private-value-do-not-log|\{bad/);
+ const result=spawnSync(process.execPath,[fileURLToPath(new URL('./prepare-pages-delivery.mjs',import.meta.url))],{encoding:'utf8',cwd:fileURLToPath(new URL('..',import.meta.url)),env:{PATH:process.env.PATH,POSSIBLE_PROMPTS_READ_TOKEN:token,POSSIBLE_DELIVERY_TOKENS_JSON:'{bad'}});
+ assert.notEqual(result.status,0);assert.match(result.stderr,/Paid delivery preparation failed/);assert.doesNotMatch(result.stdout+result.stderr,/synthetic-private-value-do-not-log|\{bad/);
 });
+
+test('configured build rejects output when no links are active',async t=>{const root=await fixture(t,{demo:''});await assert.rejects(preparePagesDelivery(options(root,stub([[one,'demo']]))),/Delivery output does not match active products/);assert.equal(await preparePagesDelivery(options(root,stub([]))),'built');});
