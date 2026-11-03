@@ -30,16 +30,16 @@ export async function preparePagesDelivery({root,tokenJson,repoToken,siteDeliver
  let mapping;try{mapping=JSON.parse(tokenJson)}catch{throw Error('Invalid delivery mappings.');}
  if(!mapping||typeof mapping!=='object'||Array.isArray(mapping))throw Error('Invalid delivery mappings.');
  if(live.some(slug=>!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)))throw Error('Invalid product name.');
+ const allTokens=Object.keys(links).map(slug=>mapping[slug]);
+ if(allTokens.some(t=>typeof t!=='string'||!/^[A-Za-z0-9_-]{20,128}$/.test(t))||new Set(allTokens).size!==allTokens.length)throw Error('Invalid delivery mappings.');
  const tokens=live.map(slug=>mapping[slug]);
- if(tokens.some(t=>typeof t!=='string'||!/^[A-Za-z0-9_-]{20,128}$/.test(t))||new Set(tokens).size!==tokens.length)throw Error('Invalid delivery mappings.');
+ if(!live.length)return 'skipped';
  const folder=await mkdtemp(join(tmpdir(),'possible-delivery-'));
  try{
   await checkout(folder,repoToken);await build(folder,root,tokenJson);
   const source=join(folder,'dist/delivery/d');
-  if(!live.length){
-   const names=await readdir(source).catch(error=>{if(error.code==='ENOENT')return [];throw error});
-   if(names.length)throw Error('Delivery output does not match active products.');
-  }else{
+  {
+   const sourceStat=await lstat(source);if(!sourceStat.isDirectory()||sourceStat.isSymbolicLink())throw Error('Invalid delivery output.');
    const names=await readdir(source);if(names.length!==tokens.length||names.some(n=>!tokens.includes(n)))throw Error('Delivery output does not match active products.');
    for(const [index,slug] of live.entries()){
     const dir=join(source,tokens[index]);const stat=await lstat(dir);if(!stat.isDirectory()||stat.isSymbolicLink())throw Error('Invalid delivery output.');

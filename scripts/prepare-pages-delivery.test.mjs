@@ -5,7 +5,7 @@ import {join} from 'node:path';
 import {tmpdir} from 'node:os';
 import {fileURLToPath} from 'node:url';
 import {preparePagesDelivery} from './prepare-pages-delivery.mjs';
-const one='synthetic_token_11111111111111',two='synthetic_token_22222222222222';
+const one='synthetic_token_11111111111111',two='synthetic_token_22222222222222',three='synthetic_token_33333333333333';
 async function fixture(t,links){
  const root=await mkdtemp(join(tmpdir(),'possible-pages-test-'));t.after(()=>rm(root,{recursive:true,force:true}));
  await mkdir(join(root,'apps/web/src'),{recursive:true});await mkdir(join(root,'apps/web/out'),{recursive:true});
@@ -16,7 +16,7 @@ function stub(slugs,addExtra=false){return async(folder)=>{
  for(const [token,slug] of slugs){const dir=join(folder,'dist/delivery/d',token);await mkdir(dir,{recursive:true});await writeFile(join(dir,'index.html'),'synthetic page');await writeFile(join(dir,slug==='all'?'possible-all.zip':slug+'.zip'),'synthetic zip');}
  if(addExtra)await mkdir(join(folder,'dist/delivery/d','unexpected'),{recursive:true});
 };}
-const options=(root,build)=>({root,repoToken:'fixture-credential',tokenJson:JSON.stringify({demo:one,other:two,all:two}),checkout:async()=>{},build});
+const options=(root,build)=>({root,repoToken:'fixture-credential',tokenJson:JSON.stringify({demo:one,other:three,all:two}),checkout:async()=>{},build});
 test('skips only without credentials and active links',async t=>{
  const root=await fixture(t,{demo:'',all:''});assert.equal(await preparePagesDelivery({root}),'skipped');
  await assert.rejects(preparePagesDelivery({root,repoToken:'fixture'}),/Both delivery credentials/);
@@ -26,11 +26,11 @@ test('skips only without credentials and active links',async t=>{
 });
 test('copies only switched-on products into the static export',async t=>{
  const root=await fixture(t,{demo:'https://example.test',other:'',all:''});
- await assert.rejects(preparePagesDelivery(options(root,stub([[one,'demo'],[two,'other']]))),/Delivery output does not match active products/);
+ await assert.rejects(preparePagesDelivery(options(root,stub([[one,'demo'],[three,'other']]))),/Delivery output does not match active products/);
  assert.equal(await preparePagesDelivery(options(root,stub([[one,'demo']]))),'built');
  assert.equal(await readFile(join(root,'apps/web/out/d',one,'index.html'),'utf8'),'synthetic page');
  assert.equal(await exists(join(root,'apps/web/out/d',one,'demo.zip')),true);
- assert.equal(await exists(join(root,'apps/web/out/d',two)),false);
+ assert.equal(await exists(join(root,'apps/web/out/d',three)),false);
 });
 test('rejects invalid mappings, unexpected output and overwrites',async t=>{
  const root=await fixture(t,{demo:'https://example.test',all:'https://example.test'});
@@ -49,11 +49,11 @@ test('command-line failure does not print provided values',async()=>{
  assert.notEqual(result.status,0);assert.match(result.stderr,/Paid delivery preparation failed/);assert.doesNotMatch(result.stdout+result.stderr,/synthetic-private-value-do-not-log|\{bad/);
 });
 
-test('configured build rejects output when no links are active',async t=>{const root=await fixture(t,{demo:''});await assert.rejects(preparePagesDelivery(options(root,stub([[one,'demo']]))),/Delivery output does not match active products/);assert.equal(await preparePagesDelivery(options(root,stub([]))),'built');});
+test('configured build does no private work when no links are active',async t=>{const root=await fixture(t,{demo:''});assert.equal(await preparePagesDelivery({...options(root,stub([[one,'demo']])),checkout:async()=>{throw Error('must not fetch')}}),'skipped');});
 
 test('Sites delivery remains responsible for active links when its directory is set',async t=>{
  const root=await fixture(t,{demo:'https://example.test'});
- assert.equal(await preparePagesDelivery({root,siteDeliveryDir:'/synthetic/sites-delivery',checkout:async()=>{throw Error('must not fetch')}}),'sites');
+ assert.equal(await preparePagesDelivery({...options(root,stub([[one,'demo']])),siteDeliveryDir:'/synthetic/sites-delivery'}),'sites');
  assert.equal(await exists(join(root,'apps/web/out/d')),false);
 });
 test('malformed output and invalid product slugs fail and private checkouts are cleaned',async t=>{
@@ -68,3 +68,5 @@ test('malformed output and invalid product slugs fail and private checkouts are 
  await writeFile(join(root,'apps/web/src/payment-links.json'),JSON.stringify({'../bad':'https://example.test'}));
  await assert.rejects(preparePagesDelivery({...base,tokenJson:JSON.stringify({'../bad':one})}),/Invalid product name/);
 });
+
+test('rejects a symlinked delivery root',async t=>{const root=await fixture(t,{demo:'https://example.test'});const build=async folder=>{await mkdir(join(folder,'dist/delivery'),{recursive:true});await symlink(root,join(folder,'dist/delivery/d'));};await assert.rejects(preparePagesDelivery(options(root,build)),/Invalid delivery output/);});
