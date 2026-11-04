@@ -405,12 +405,13 @@ describe("Possible website", () => {
     expect(normalizeSource("owner/repository")).toBe("owner/repository");
   });
 
-  it("sells each agent as a US$19 download with Buy off until its payment link is set", () => {
+  it("sells each agent as a US$19 download through its payment link", () => {
     vi.stubGlobal("fetch", vi.fn(async () => new Response(JSON.stringify({ outcomes: [] }))));
     render(<AgentProfilePage agent={findAgentProfile("competitor-analyst")!} />);
     expect(screen.getByRole("heading", { name: "Competitor Analyst" })).toBeInTheDocument();
     expect(screen.getByText("US$19")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Opening soon" })).toBeDisabled();
+    expect(screen.getByRole("link", { name: "Buy the Competitor Analyst" })).toHaveAttribute("href", paymentLinks["competitor-analyst"]);
+    expect(document.querySelector(".buy-box .buy-terms")?.textContent).toBe("By buying, you agree to our Terms and Refund Policy. Your purchase is sold through Link, a Stripe company, which takes your payment.");
     expect(screen.getByText("Claude Code, Codex")).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Portfolio" })).toBeInTheDocument();
     const buyLegal = document.querySelector(".buy-box .buy-legal")!;
@@ -432,7 +433,7 @@ describe("Possible website", () => {
     expect(screen.getByRole("heading", { name: "Animated Shorts Maker" })).toBeInTheDocument();
     expect(screen.getByText("Workflow inspired by mromidev/claude-animated-shorts (MIT)." )).toBeInTheDocument();
     expect(screen.getByText("US$19")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Opening soon" })).toBeDisabled();
+    expect(screen.getByRole("link", { name: "Buy the Animated Shorts Maker" })).toHaveAttribute("href", paymentLinks["animated-shorts-maker"]);
     cleanup();
     render(<AgentsPage />);
     expect(screen.getByText("All nine agents")).toBeInTheDocument();
@@ -463,7 +464,7 @@ describe("Possible website", () => {
     expect(screen.getByText("US$49")).toBeInTheDocument();
     const buyLegal = document.querySelector(".buy-box .buy-legal")!;
     expect([...buyLegal.querySelectorAll("a")].map((link) => link.getAttribute("href"))).toEqual(["/terms/", "/refunds/", "/privacy/"]);
-    expect(screen.getByRole("button", { name: "Opening soon" })).toBeDisabled();
+    expect(screen.getByRole("link", { name: "Buy all agents" })).toHaveAttribute("href", paymentLinks[BUNDLE_SLUG]);
     expect(document.body.textContent).not.toMatch(/hire|hiring|cleanroom|waitlist/i);
   });
 });
