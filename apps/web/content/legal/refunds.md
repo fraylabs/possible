@@ -22,7 +22,7 @@ running the prompt on your own agent or model, unless Link's terms or the law gi
 
 Email **hello@possible.sh** from the address you used at checkout, or contact Link support from your receipt. Either we or Link can issue the
 refund. Refunds go back to your original payment method, including any tax you paid. How long it takes to reach you depends on your bank or
-card issuer. Once an order is refunded, your licence to the prompts in it ends, and you must delete them.
+card issuer. Once an order is refunded, your licence to the prompts in it ends, and you must delete them. Link may also refund a purchase itself, within 60 days, under its terms.
 
 ## Link's terms and your legal rights
 
