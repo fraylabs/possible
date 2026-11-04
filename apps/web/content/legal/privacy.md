@@ -1,6 +1,6 @@
 # Possible Privacy Policy
 
-**Last updated:** 2026-11-03
+**Last updated:** 2026-11-04
 
 This policy explains how **BRAIN TRUST PRIVATE LIMITED**, a Singapore company (UEN 202416698H) ("**we**", "**us**"), collects, uses and
 discloses personal data through possible.sh and the agent prompts you can buy there (the "**Service**"). We're responsible for that data under
@@ -10,10 +10,10 @@ Prompts run on your own agent and computer. We don't receive what you give your 
 
 ## What we collect
 
-- **Order details.** Our payment provider collects your payment details at checkout under its own privacy policy. We receive details such as
-  your name, email address, billing country, what you bought and payment status, but not your full card number. We also keep a record of
-  your download.
-- **Waitlist email.** If you join a waitlist, your email address and which page you joined from.
+- **Order details.** Link (Sold through Link, LLC, a Stripe company) sells you your purchase as merchant of record. It collects your payment
+  details, billing address and any tax information at checkout, and uses them as a separate controller under its own
+  [privacy policy](https://link.com/privacy). Link shares order details with us, such as your name, email address, billing country, what you
+  bought and payment status, but not your full card number. We also keep a record of your download.
 - **Communications**, such as messages you send us.
 - **Technical information** that our hosting provider processes to deliver and secure the site, such as IP address and browser type.
 
@@ -24,8 +24,7 @@ Our page-visit counts are anonymous daily totals by page, referring site and cam
 We use personal data to:
 
 - deliver your download, help you with it and handle refunds;
-- process payments and keep billing and tax records;
-- email you about the agent you joined a waitlist for, which you can stop at any time;
+- keep order and accounting records;
 - reply to you;
 - protect the Service and prevent fraud and abuse;
 - improve the Service;
@@ -38,8 +37,9 @@ We don't sell your personal data.
 
 ## Who we share it with
 
-- **Service providers** that help us run the Service: payment processing, hosting and content delivery, database and email delivery. They may
-  use the data only to provide their services to us.
+- **Link**, to handle your order, payment questions and refunds.
+- **Service providers** that help us run the Service: hosting and content delivery, database and email delivery. They may use the data only to
+  provide their services to us.
 - **Authorities and others**, where the law requires it, or where we believe it's needed to protect the rights, property or safety of Possible,
   our users or others.
 - **A buyer or successor**, if we sell or transfer all or part of our business.

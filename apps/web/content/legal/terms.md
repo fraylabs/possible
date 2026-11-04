@@ -1,11 +1,11 @@
 # Possible Terms of Service
 
-**Last updated:** 2026-11-03
+**Last updated:** 2026-11-04
 
 These terms govern your use of possible.sh and the agent prompts you can buy there (the "**Service**"). The Service is provided by **BRAIN
 TRUST PRIVATE LIMITED**, a Singapore company (UEN 202416698H) ("**we**", "**us**"). By using the Service or buying a prompt, you agree to these
 terms, our [Refund Policy](/refunds) and our [Privacy Policy](/privacy). If you buy for an organisation, you agree for it, and "you" includes
-it. **These terms limit our liability.**
+it. Purchases are sold through Link, which takes your payment (see section 8). **These terms limit our liability.**
 
 ## 1. Who can buy
 
@@ -51,14 +51,16 @@ interfere with the Service, its security or other users. We decide, in our reaso
 We and our licensors own the Service, including its software, design, prompts and trademarks. You may not copy, resell or exploit any part of
 the Service except as these terms allow. If you send us feedback, we may use it freely without obligation to you.
 
-## 8. Payment
+## 8. Buying through Link
 
-- The price is shown before you pay. You pay once, at checkout.
-- Our payment provider processes payments, and its terms apply to the payment.
-- Prices include any taxes we must collect, unless stated otherwise.
-- Refunds are covered by our [Refund Policy](/refunds). Otherwise, **fees are non-refundable, except where the law requires a refund.**
-- **Immediate download.** When you buy, you ask for the download to be made available straight away. Where the law gives you a right to cancel
-  a purchase of digital content, you agree that you lose that right once the download is made available to you.
+- **Who takes your payment.** Each purchase is sold through Link (Sold through Link, LLC, a Stripe company), which acts as merchant of
+  record. Link charges you, collects any sales tax or VAT, sends your receipt and invoice, and handles payment questions and the refund
+  requests you make to it. Your statement shows "LINK.COM*" followed by our name. Link's
+  [Sold through Link terms](https://link.com/terms#sold-through-link-terms) apply to the payment, and you accept them at checkout.
+- **What stays with us.** We make and provide the prompts. Your licence, and everything else in these terms, is between you and us.
+- **Price.** The price, including any tax and any currency conversion, is shown at checkout before you pay. You pay once.
+- **Refunds and cancellation.** Our [Refund Policy](/refunds) says when we refund you. Link's terms may give you further rights to a refund or
+  to cancel, and Link may refund you under them. Otherwise, **purchases are non-refundable, except where the law requires a refund.**
 
 ## 9. Changes, suspension and termination
 
@@ -83,7 +85,7 @@ To the maximum extent the law allows:
   goodwill or business opportunity, or for anything your agent does or any costs it creates, arising from or relating to the Service, any
   prompt or these terms, however caused and on any theory of liability;
 - our total liability for all claims arising from or relating to the Service, any prompt or these terms is limited to the greater of the amount
-  you paid us in the 12 months before the claim and US$100.
+  you paid for prompts in the 12 months before the claim and US$100.
 
 Nothing in these terms excludes or limits liability that can't be excluded or limited by law, such as liability for death or personal injury
 caused by negligence, or for fraud. If you're a consumer, you keep any rights the law where you live gives you that can't be excluded.
