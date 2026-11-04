@@ -458,6 +458,22 @@ describe("Possible website", () => {
     }
   });
 
+  it("keeps Buy off, with no purchase terms, while a payment link is empty", async () => {
+    vi.resetModules();
+    vi.doMock("./payment-links.json", () => ({ default: { "competitor-analyst": "" } }));
+    try {
+      const { BuyBox } = await import("./buy");
+      render(<BuyBox slug="competitor-analyst" priceUsd={19} label="Buy this agent" what="for this agent." />);
+      expect(screen.getByRole("button", { name: "Opening soon" })).toBeDisabled();
+      expect(screen.queryByRole("link", { name: "Buy this agent" })).toBeNull();
+      expect(document.querySelector(".buy-box .buy-terms")).toBeNull();
+      expect([...document.querySelectorAll(".buy-box .buy-legal a")].map((link) => link.getAttribute("href"))).toEqual(["/terms/", "/refunds/", "/privacy/"]);
+    } finally {
+      vi.doUnmock("./payment-links.json");
+      vi.resetModules();
+    }
+  });
+
   it("offers all agents as a US$49 bundle on the index", () => {
     vi.stubGlobal("fetch", vi.fn(async () => new Response(JSON.stringify({ outcomes: [] }))));
     render(<AgentsPage />);

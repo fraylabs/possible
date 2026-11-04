@@ -63,28 +63,6 @@ http.route({
   }),
 });
 
-http.route({ path: "/api/waitlist", method: "OPTIONS", handler: httpAction(async () => new Response(null, { status: 204, headers: visitCors })) });
-http.route({
-  path: "/api/waitlist", method: "POST",
-  handler: httpAction(async (ctx, request) => {
-    if (request.headers.get("origin") !== "https://possible.sh") return new Response(null, { status: 403 });
-    if (!request.headers.get("content-type")?.startsWith("application/json")) return new Response(null, { status: 415, headers: visitCors });
-    const text = await readBoundedText(request);
-    if (text === null) return new Response(null, { status: 400, headers: visitCors });
-    if (text === tooLarge) return new Response(null, { status: 413, headers: visitCors });
-    try {
-      const body = JSON.parse(text);
-      const keys = ["email", "agent", "source"];
-      if (!body || typeof body !== "object" || Object.keys(body).length !== keys.length || !keys.every((key) => typeof body[key] === "string")) return new Response(null, { status: 400, headers: visitCors });
-      const result = await ctx.runMutation(internal.waitlist.join, { email: body.email, agent: body.agent, source: body.source });
-      const status = result === "ok" ? 200 : result === "busy" ? 429 : 400;
-      return new Response(JSON.stringify({ ok: result === "ok" }), { status, headers: { ...visitCors, "content-type": "application/json" } });
-    } catch {
-      return new Response(null, { status: 400, headers: visitCors });
-    }
-  }),
-});
-
 type PublicOutcome = {
   id: string;
   title: string;
