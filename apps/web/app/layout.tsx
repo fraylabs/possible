@@ -65,7 +65,7 @@ const discoveryGraph = {
       description: siteDescription,
       url: `${siteUrl}/`,
       codeRepository: "https://github.com/fraylabs/possible",
-      downloadUrl: "https://www.npmjs.com/package/@fraylabs/possible",
+      downloadUrl: "https://possible.sh/install.sh",
       programmingLanguage: ["TypeScript", "JavaScript"],
       runtimePlatform: "Codex",
       softwareVersion: possibleVersion,
@@ -73,7 +73,6 @@ const discoveryGraph = {
       isAccessibleForFree: true,
       sameAs: [
         "https://github.com/fraylabs/possible",
-        "https://www.npmjs.com/package/@fraylabs/possible",
         "https://youtu.be/s35aGhVI2Eo",
       ],
     },
