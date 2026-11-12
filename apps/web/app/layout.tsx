@@ -14,7 +14,7 @@ const dmMono = DM_Mono({ subsets: ["latin"], weight: ["400", "500"], variable: "
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Possible — Discover what agents can do",
+    default: "Possible — Skills and their results",
     template: "%s — Possible",
   },
   description: siteDescription,
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   creator: "Fray Labs",
   publisher: "Fray Labs",
   category: "developer tools",
-  keywords: ["Codex", "AI agents", "prompts", "AI recipes", "AI outcomes", "agent skills", "developer tools"],
+  keywords: ["AI agent skills", "Claude Code skills", "Codex skills", "AI video", "prompts", "developer tools"],
   robots: {
     index: true,
     follow: true,

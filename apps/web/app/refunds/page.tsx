@@ -3,7 +3,7 @@ import { pageMetadata } from "../_metadata";
 
 export const metadata = pageMetadata({
   title: "Refund Policy",
-  description: "When and how we refund agent prompts bought on possible.sh.",
+  description: "When and how we refund skills bought on possible.sh.",
   path: "/refunds",
 });
 

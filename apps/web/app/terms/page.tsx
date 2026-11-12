@@ -3,7 +3,7 @@ import { pageMetadata } from "../_metadata";
 
 export const metadata = pageMetadata({
   title: "Terms of Service",
-  description: "The terms for using possible.sh and buying agent prompts.",
+  description: "The terms for using possible.sh and buying skills.",
   path: "/terms",
 });
 
