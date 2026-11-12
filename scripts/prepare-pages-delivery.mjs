@@ -6,7 +6,7 @@ import {dirname,join,resolve} from 'node:path';
 import {fileURLToPath,pathToFileURL} from 'node:url';
 
 // Update this single pin when a reviewed possible-prompts release is ready.
-export const PROMPTS_COMMIT = 'e63fb8ff2e1369aadb2807a5f756d4c2a606f994';
+export const PROMPTS_COMMIT = '3c23030f0aef457bc4add711719c3224f4654980';
 class SafeDeliveryError extends Error {}
 const exec=promisify(execFile);
 const quiet={encoding:'utf8',maxBuffer:1024*1024};
