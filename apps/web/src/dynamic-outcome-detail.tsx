@@ -68,8 +68,8 @@ function OutcomeGallery({ outcome }: { outcome: DirectoryOutcomeDetail }) {
       {item.kind === "image" ? <img src={item.src} alt={item.alt} /> : null}
       {item.kind === "audio" ? <div className="outcome-audio-stage">{item.poster ? <img src={item.poster} alt="" /> : <span aria-hidden="true">♫</span>}<audio controls preload="metadata"><source src={item.src} /></audio></div> : null}
       {item.kind === "cad" ? <div className="outcome-cad-stage">{item.poster ? <img src={item.poster} alt={item.caption ?? `${outcome.title} CAD preview`} /> : <span aria-hidden="true">CAD</span>}<div>{item.downloads.map((file) => <a href={file.src} key={file.src} download>{file.label ?? file.format.toUpperCase()} ↓</a>)}</div></div> : null}
-      {item.caption ? <figcaption>{item.caption}</figcaption> : null}
     </figure>
+    {item.caption ? <p className="outcome-gallery-caption">{item.caption}</p> : null}
     {items.length > 1 ? <div className="outcome-gallery-thumbnails" role="group" aria-label="Choose result media">{items.map((entry, index) => <button key={entry.id} type="button" aria-pressed={selected === index} aria-label={`Show ${entry.kind} ${index + 1}`} onClick={() => setSelected(index)}>{entry.kind === "image" ? <img src={entry.src} alt="" /> : entry.kind === "video" && entry.poster ? <img src={entry.poster} alt="" /> : entry.kind === "audio" && entry.poster ? <img src={entry.poster} alt="" /> : <span>{entry.kind}</span>}</button>)}</div> : null}
   </section>;
 }
@@ -90,7 +90,7 @@ function OutcomeSupportingInformation({ outcome, skills }: { outcome: DirectoryO
 }
 
 function OutcomeExecutionDetails({ outcome }: { outcome: DirectoryOutcomeDetail }) {
-  return <details className="outcome-details"><summary>Technical details and provenance <span aria-hidden="true">↓</span></summary><dl><div><dt>Provider</dt><dd>{outcome.provider ?? "Not specified"}</dd></div><div><dt>Model</dt><dd>{outcome.model ?? "Not specified"}</dd></div>{outcome.agent ? <div><dt>Agent</dt><dd>{outcome.agent}</dd></div> : null}<div><dt>Published</dt><dd><time dateTime={outcome.published_at}>{new Date(outcome.published_at).toLocaleDateString()}</time></dd></div><div><dt>Publication</dt><dd>{outcome.publication_kind}</dd></div><div><dt>Source</dt><dd><a href={outcome.source_url} target="_blank" rel="noreferrer">Original source ↗</a></dd></div></dl></details>;
+  return <details className="outcome-details"><summary>Technical details and provenance <span aria-hidden="true">↓</span></summary><dl><div><dt>Provider</dt><dd>{outcome.provider ?? "Not specified"}</dd></div><div><dt>Model</dt><dd>{outcome.model ?? "Not specified"}</dd></div>{outcome.agent ? <div><dt>Agent</dt><dd>{outcome.agent}</dd></div> : null}<div><dt>Published</dt><dd><time dateTime={outcome.published_at}>{new Date(outcome.published_at).toLocaleDateString()}</time></dd></div><div><dt>Publication</dt><dd>{isOwnResult(outcome) ? "Made by Possible" : outcome.publication_kind}</dd></div><div><dt>Source</dt><dd><a href={outcome.source_url} target="_blank" rel="noreferrer">Original source ↗</a></dd></div></dl></details>;
 }
 
 function OutcomePrompt({ outcome, draft, setDraft }: { outcome: DirectoryOutcomeDetail; draft: string; setDraft: (value: string) => void }) {
@@ -102,6 +102,11 @@ function OutcomePrompt({ outcome, draft, setDraft }: { outcome: DirectoryOutcome
   </section>;
 }
 
+
+/** Results Possible made itself, credited to Possible or Fray Labs in our own outcomes repo. */
+export function isOwnResult(outcome: Pick<DirectoryOutcomeDetail, "source_locator" | "author_name">): boolean {
+  return outcome.source_locator === "fraylabs/possible-outcomes" && (outcome.author_name === "Possible" || outcome.author_name === "Fray Labs");
+}
 export function DynamicOutcomeDetailPage({ outcomeFixture, attributionsFixture = [] }: { outcomeFixture?: DirectoryOutcomeDetail; attributionsFixture?: OutcomeAttribution[] } = {}) {
   const [rawOutcome, setOutcome] = useState<DirectoryOutcomeDetail | null | undefined>(outcomeFixture);
   const outcome = useMemo(() => visibleValue(rawOutcome), [rawOutcome]);
@@ -130,7 +135,10 @@ export function DynamicOutcomeDetailPage({ outcomeFixture, attributionsFixture =
       void fetch("/outcome-paths.json").then(async (response) => {
         if (!response.ok) return;
         const paths = await response.json() as Record<string, string>;
-        if (!cancelled && paths[next.id]) setCanonicalPath(paths[next.id]);
+        if (cancelled || !paths[next.id]) return;
+        setCanonicalPath(paths[next.id]);
+        // Show the result's own address, so a copied link shares this result's card.
+        window.history.replaceState(window.history.state, "", paths[next.id] + window.location.hash);
       }).catch(() => {});
       setOutcome(next); setDraft(visibleText(next.prompt));
       setAttributions([...(next.primary_attribution ? [displayAttribution(visibleValue(next.primary_attribution), "primary")] : []), ...(next.secondary_attributions ?? []).map((item) => displayAttribution(visibleValue(item), "secondary"))]);
@@ -143,7 +151,7 @@ export function DynamicOutcomeDetailPage({ outcomeFixture, attributionsFixture =
   const maker = agentProfiles.find((agent) => outcome.slug && agent.portfolio.includes(outcome.slug));
   return <SiteShell className="pack-detail-page">{canonicalPath ? <link rel="canonical" href={`https://possible.sh${canonicalPath}`} /> : null}<article className="outcome-detail layout-reading">
     <OutcomeGallery outcome={outcome} />
-    <header className="outcome-hero"><nav aria-label="Breadcrumb"><a href="/#discover">← All results</a></nav><div className="outcome-meta"><span>{attributions[0]?.kind ?? "Result"}</span><span>{outcome.publication_kind}</span>{outcome.model ? <span aria-label={`Model: ${outcome.model}`}>{outcome.model}</span> : null}<OutcomeReactions outcomeId={outcome.id} likeCount={outcome.like_count ?? 0} /></div><h1>{outcome.title}</h1><p>{outcome.summary}</p><div className="outcome-byline"><span>By <a href={outcome.author_url ?? outcome.source_url} target="_blank" rel="noreferrer">{outcome.author_name ?? outcome.source_locator}</a></span>{attributions.length ? <span>Made with {attributions.map((item, index) => <span key={item.id}>{index ? ", " : ""}<a href={item.href}>{item.name}</a></span>)}</span> : null}</div><div className={outcome.recipe ? "outcome-hero-actions has-recipe" : "outcome-hero-actions"} role="group" aria-label="Use this result">{outcome.recipe ? <><CopyButton label="Copy details" value={recipeText(outcome)} onCopied={() => recordOutcomeUse(outcome.id)} /><CopyButton label="Copy prompt" value={draft} onCopied={() => recordOutcomeUse(outcome.id)} secondary /></> : <CopyButton label="Copy prompt" value={draft} onCopied={() => recordOutcomeUse(outcome.id)} />}<a href="#exact-prompt">Remix</a></div></header>
+    <header className="outcome-hero"><nav aria-label="Breadcrumb"><a href="/#discover">← All results</a></nav><div className="outcome-meta"><span>{attributions[0]?.kind ?? "Result"}</span>{isOwnResult(outcome) ? null : <span>{outcome.publication_kind}</span>}{outcome.model ? <span aria-label={`Model: ${outcome.model}`}>{outcome.model}</span> : null}<OutcomeReactions outcomeId={outcome.id} likeCount={outcome.like_count ?? 0} /></div><h1>{outcome.title}</h1><p>{outcome.summary}</p><div className="outcome-byline"><span>By <a href={outcome.author_url ?? outcome.source_url} target="_blank" rel="noreferrer">{outcome.author_name ?? outcome.source_locator}</a></span>{attributions.length ? <span>Made with {attributions.map((item, index) => <span key={item.id}>{index ? ", " : ""}<a href={item.href}>{item.name}</a></span>)}</span> : null}</div><div className={outcome.recipe ? "outcome-hero-actions has-recipe" : "outcome-hero-actions"} role="group" aria-label="Use this result">{outcome.recipe ? <><CopyButton label="Copy details" value={recipeText(outcome)} onCopied={() => recordOutcomeUse(outcome.id)} /><CopyButton label="Copy prompt" value={draft} onCopied={() => recordOutcomeUse(outcome.id)} secondary /></> : <CopyButton label="Copy prompt" value={draft} onCopied={() => recordOutcomeUse(outcome.id)} />}<a href="#exact-prompt">Remix</a></div></header>
     {hiddenText ? <p role="note">This result contains hidden characters. They are shown and copied as visible Unicode escapes so you can inspect them before reuse.</p> : null}
     <OutcomeRecipePanel outcome={outcome} />
     {maker ? <section className="outcome-about"><h2>Made with the {maker.name} skill</h2><a href={`/skills/${maker.slug}/`}>See the skill</a><BuyBox slug={maker.slug} priceUsd={maker.priceUsd} label={`Buy the ${maker.name} skill`} what="for this skill." /></section> : null}

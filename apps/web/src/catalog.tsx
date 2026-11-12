@@ -136,7 +136,9 @@ function Pagination({ page, total, onPageChange, label = "Result pages" }: { pag
   );
 }
 
-export function OutcomesPage({ outcomesFixture, staticPortfolio = [] }: { outcomesFixture?: DiscoveryOutcome[]; staticPortfolio?: PortfolioPreview[] } = {}) {
+const noPortfolio: PortfolioPreview[] = [];
+
+export function OutcomesPage({ outcomesFixture, staticPortfolio = noPortfolio }: { outcomesFixture?: DiscoveryOutcome[]; staticPortfolio?: PortfolioPreview[] } = {}) {
   const [outcomes, setOutcomes] = useState<DiscoveryOutcome[]>(outcomesFixture ?? []);
   const [directoryState, setDirectoryState] = useState<"loading" | "ready" | "error">(outcomesFixture === undefined ? "loading" : "ready");
   const [query, setQuery] = useState("");
@@ -189,10 +191,16 @@ export function OutcomesPage({ outcomesFixture, staticPortfolio = [] }: { outcom
     if (outcomesFixture !== undefined) return;
     let cancelled = false;
     void fetchDiscoveryOutcomes()
-      .then((entries) => { if (!cancelled) { setOutcomes(entries); setDirectoryState("ready"); } })
+      .then((entries) => {
+        if (cancelled) return;
+        // Link each result to its own static page, whose HTML carries that result's share card.
+        const paths = new Map(staticPortfolio.map((entry) => [entry.slug, entry.path]));
+        setOutcomes(entries.map((entry) => entry.slug && paths.has(entry.slug) ? { ...entry, href: paths.get(entry.slug)! } : entry));
+        setDirectoryState("ready");
+      })
       .catch(() => { if (!cancelled) setDirectoryState("error"); });
     return () => { cancelled = true; };
-  }, [outcomesFixture]);
+  }, [outcomesFixture, staticPortfolio]);
 
   useEffect(() => {
     const syncFromUrl = () => {

@@ -21,7 +21,7 @@
 .outcome-gallery-stage { min-height: 280px; max-height: 520px; margin: 0; position: relative; overflow: hidden; border-radius: 9px; display: grid; place-items: center; background: var(--site-code); }
 .outcome-gallery-stage > img, .outcome-gallery-stage > video { width: auto; max-width: 100%; height: auto; max-height: 520px; display: block; object-fit: contain; }
 .outcome-gallery-stage.is-video > video { width: 100%; }
-.outcome-gallery-stage figcaption { max-width: calc(100% - 24px); padding: 7px 10px; position: absolute; right: 12px; bottom: 12px; border-radius: 7px; background: rgb(20 19 17 / 76%); color: var(--site-code-text); font-size: 10px; }
+.outcome-gallery-caption { margin: 8px 2px 0; color: var(--site-muted); font-size: 11px; line-height: 1.4; }
 .outcome-gallery-thumbnails { margin-top: 8px; display: flex; gap: 7px; overflow-x: auto; }
 .outcome-gallery-thumbnails button { width: 72px; height: 52px; padding: 0; border: 2px solid transparent; border-radius: 7px; flex: none; overflow: hidden; background: var(--site-code); color: var(--site-code-text); cursor: pointer; font: 7px var(--font-dm-mono), monospace; text-transform: uppercase; }
 .outcome-gallery-thumbnails button[aria-pressed="true"] { border-color: var(--site-accent); }

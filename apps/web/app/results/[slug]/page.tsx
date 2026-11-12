@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { DynamicOutcomeDetailPage } from "../../../src/dynamic-outcome-detail";
 import { outcomeRoutes, publishedOutcomes } from "../../../src/static-outcomes";
-import { pageMetadata } from "../../_metadata";
+import { oneLine, pageMetadata } from "../../_metadata";
 
 type Props = { params: Promise<{ slug: string }> };
 export const dynamicParams = false;
@@ -20,7 +20,7 @@ async function findOutcome(params: Props["params"]) {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const entry = await findOutcome(params);
   if (!entry) return {};
-  return pageMetadata({ title: entry.outcome.title, description: entry.outcome.summary, path: entry.path.slice(0, -1),
+  return pageMetadata({ title: entry.outcome.title, description: oneLine(entry.outcome.summary), path: entry.path.slice(0, -1),
     ...(entry.outcome.poster_url ? { socialImage: { url: entry.outcome.poster_url, alt: entry.outcome.title } } : {}) });
 }
 

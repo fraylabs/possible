@@ -13,6 +13,13 @@ type PageMetadataInput = {
   socialImage?: { url: string; width?: number; height?: number; alt: string } | null;
 };
 
+/** The first sentence of a longer summary, for a share card's one line. */
+export function oneLine(text: string): string {
+  const trimmed = text.trim();
+  const match = trimmed.match(/^.*?[.!?](?=\s|$)/);
+  return match ? match[0] : trimmed;
+}
+
 export function pageMetadata({ title, description, path, noIndex = false, alternates = {}, socialImage }: PageMetadataInput): Metadata {
   const canonical = path === "/" ? `${siteUrl}/` : `${siteUrl}${path}/`;
   const socialTitle = path === "/" ? title : `${title} — ${siteName}`;

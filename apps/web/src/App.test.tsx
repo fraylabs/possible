@@ -152,6 +152,18 @@ describe("Possible website", () => {
     expect(screen.getByRole("link", { name: "See the skill" })).toHaveAttribute("href", "/skills/motion-designer/");
   });
 
+  it("marks our own results as ours, not Community, and puts the film caption under the player", () => {
+    const { container } = render(<DynamicOutcomeDetailPage outcomeFixture={{ ...detailFixture, preview: { video: { src: "https://example.com/film.mp4", poster: "https://example.com/poster.jpg", caption: "The finished film." } } }} />);
+    expect(container.querySelector(".outcome-meta")?.textContent).not.toMatch(/community/i);
+    expect(screen.getByText("Made by Possible")).toBeInTheDocument();
+    const caption = screen.getByText("The finished film.");
+    expect(caption.closest("figure")).toBeNull();
+    expect(caption.previousElementSibling?.tagName).toBe("FIGURE");
+    cleanup();
+    const outside = render(<DynamicOutcomeDetailPage outcomeFixture={{ ...detailFixture, author_name: "Theo" }} />);
+    expect(outside.container.querySelector(".outcome-meta")?.textContent).toMatch(/community/);
+  });
+
   it("shows a source-owned preview, exact prompt, provenance, and artifacts", async () => {
     const outcomeWithGallery = {
       ...detailFixture,
