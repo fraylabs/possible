@@ -1,5 +1,6 @@
 import { AgentsPage } from "../../src/agents";
 import { pageMetadata } from "../_metadata";
+import { portfolioPreviews, publishedOutcomes } from "../../src/static-outcomes";
 
 export const metadata = pageMetadata({
   title: "Skills for Claude Code and Codex",
@@ -7,6 +8,6 @@ export const metadata = pageMetadata({
   path: "/skills",
 });
 
-export default function AgentsIndexPage() {
-  return <AgentsPage />;
+export default async function AgentsIndexPage() {
+  return <AgentsPage staticPortfolio={portfolioPreviews(await publishedOutcomes())} />;
 }

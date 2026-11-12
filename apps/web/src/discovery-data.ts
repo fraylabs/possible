@@ -36,6 +36,13 @@ export interface DiscoveryMedia {
   fit: "cover" | "contain";
 }
 
+export interface PortfolioPreview {
+  slug: string;
+  title: string;
+  path: string;
+  src?: string;
+}
+
 export interface DiscoveryOutcome {
   id: string;
   databaseId?: string;

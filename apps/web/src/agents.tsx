@@ -5,7 +5,7 @@ import { agentModelLabel, agentProfiles, BUNDLE_PRICE_USD, BUNDLE_SLUG, portfoli
 import type { AgentProfile } from "./agents-data";
 import { OutcomeMedia } from "./catalog";
 import { fetchDiscoveryOutcomes } from "./discovery-data";
-import type { DiscoveryOutcome } from "./discovery-data";
+import type { DiscoveryOutcome, PortfolioPreview } from "./discovery-data";
 import { BuyBox, paymentLink } from "./buy";
 import { DemoFilm } from "./demo-film";
 import { SiteShell } from "./shared";
@@ -29,18 +29,20 @@ function usePortfolioOutcomes(): PortfolioState {
   return state;
 }
 
-function PortfolioThumbnail({ outcome, label }: { outcome: DiscoveryOutcome | undefined; label: string }) {
+function PortfolioThumbnail({ outcome, label, preview }: { outcome: DiscoveryOutcome | undefined; label: string; preview?: PortfolioPreview | undefined }) {
+  if (preview?.src) return <img src={preview.src} alt={`${preview.title} result`} />;
   if (outcome) return <OutcomeMedia outcome={outcome} />;
   return <span className="agent-thumbnail-empty" aria-hidden="true">{label.slice(0, 1).toUpperCase()}</span>;
 }
 
-function AgentCard({ agent, portfolio }: { agent: AgentProfile; portfolio: PortfolioState }) {
+function AgentCard({ agent, portfolio, staticPortfolio }: { agent: AgentProfile; portfolio: PortfolioState; staticPortfolio: PortfolioPreview[] }) {
   const href = `/skills/${agent.slug}/`;
   const lead = agent.portfolio.map((slug) => portfolio.outcomes.get(slug)).find((outcome) => outcome?.media) ?? portfolio.outcomes.get(agent.portfolio[0] ?? "");
+  const preview = agent.portfolio.map((slug) => staticPortfolio.find((entry) => entry.slug === slug && entry.src)).find(Boolean);
   return (
     <article className="agent-card">
       <a className="agent-card-media" href={href} data-fit={lead?.media?.fit ?? "cover"} tabIndex={-1} aria-hidden="true">
-        <PortfolioThumbnail outcome={lead} label={agent.name} />
+        <PortfolioThumbnail outcome={lead} preview={preview} label={agent.name} />
       </a>
       <div className="agent-card-copy">
         <span className="agent-model">{agentModelLabel(agent)}</span>
@@ -55,7 +57,7 @@ function AgentCard({ agent, portfolio }: { agent: AgentProfile; portfolio: Portf
   );
 }
 
-export function AgentsPage() {
+export function AgentsPage({ staticPortfolio = [] }: { staticPortfolio?: PortfolioPreview[] } = {}) {
   const portfolio = usePortfolioOutcomes();
   return (
     <SiteShell className="agents-page">
@@ -70,7 +72,7 @@ export function AgentsPage() {
           </div>
         </header>
         <div className="agents-grid">
-          {[...agentProfiles].sort((a, b) => Number(Boolean(paymentLink(b.slug))) - Number(Boolean(paymentLink(a.slug)))).map((agent) => <AgentCard agent={agent} portfolio={portfolio} key={agent.slug} />)}
+          {[...agentProfiles].sort((a, b) => Number(Boolean(paymentLink(b.slug))) - Number(Boolean(paymentLink(a.slug)))).map((agent) => <AgentCard agent={agent} portfolio={portfolio} staticPortfolio={staticPortfolio} key={agent.slug} />)}
         </div>
       </section>
     </SiteShell>
@@ -83,19 +85,17 @@ const howItWorks = [
   { title: "Fill in the brief and run it", text: "Your own agent does the work on your machine and puts everything it makes in ./out." },
 ];
 
-type StaticPortfolioEntry = { slug: string; title: string; path: string };
-
-function PortfolioItem({ slug, outcome, status, staticEntry }: { slug: string; outcome: DiscoveryOutcome | undefined; status: PortfolioState["status"]; staticEntry?: StaticPortfolioEntry | undefined }) {
+function PortfolioItem({ slug, outcome, status, staticEntry }: { slug: string; outcome: DiscoveryOutcome | undefined; status: PortfolioState["status"]; staticEntry?: PortfolioPreview | undefined }) {
   const title = outcome?.title ?? staticEntry?.title ?? portfolioSlugLabel(slug);
   const body = <>
-    <span className="agent-portfolio-media" data-fit={outcome?.media?.fit ?? "cover"}><PortfolioThumbnail outcome={outcome} label={title} /></span>
+    <span className="agent-portfolio-media" data-fit={outcome?.media?.fit ?? "cover"}><PortfolioThumbnail outcome={outcome} preview={staticEntry} label={title} /></span>
     <strong>{title}</strong>
     <small>{outcome || staticEntry ? "View result →" : status === "loading" ? "Loading…" : "Not in the public directory yet"}</small>
   </>;
   return <li>{outcome || staticEntry ? <a href={staticEntry?.path ?? outcome?.href}>{body}</a> : <div>{body}</div>}</li>;
 }
 
-export function AgentProfilePage({ agent, staticPortfolio = [] }: { agent: AgentProfile; staticPortfolio?: StaticPortfolioEntry[] }) {
+export function AgentProfilePage({ agent, staticPortfolio = [] }: { agent: AgentProfile; staticPortfolio?: PortfolioPreview[] }) {
   const portfolio = usePortfolioOutcomes();
   return (
     <SiteShell className="agent-profile-page">

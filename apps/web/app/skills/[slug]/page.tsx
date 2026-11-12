@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { AgentProfilePage } from "../../../src/agents";
 import { agentProfiles, findAgentProfile } from "../../../src/agents-data";
-import { outcomeRoutes, publishedOutcomes } from "../../../src/static-outcomes";
+import { portfolioPreviews, publishedOutcomes } from "../../../src/static-outcomes";
 import { pageMetadata } from "../../_metadata";
 
 type AgentPageProps = { params: Promise<{ slug: string }> };
@@ -23,8 +23,6 @@ export async function generateMetadata({ params }: AgentPageProps): Promise<Meta
 export default async function AgentPage({ params }: AgentPageProps) {
   const agent = findAgentProfile((await params).slug);
   if (!agent) notFound();
-  const staticPortfolio = outcomeRoutes(await publishedOutcomes())
-    .filter(({ outcome }) => outcome.slug && agent.portfolio.includes(outcome.slug))
-    .map(({ path, outcome }) => ({ slug: outcome.slug!, title: outcome.title, path }));
+  const staticPortfolio = portfolioPreviews(await publishedOutcomes()).filter((entry) => agent.portfolio.includes(entry.slug));
   return <AgentProfilePage agent={agent} staticPortfolio={staticPortfolio} />;
 }

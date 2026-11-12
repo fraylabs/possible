@@ -1,10 +1,21 @@
 import { render, screen } from '@testing-library/react';
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
+import { renderToStaticMarkup } from 'react-dom/server';
 import { OutcomesPage } from './catalog';
+import { AgentProfilePage, AgentsPage } from './agents';
+import { findAgentProfile } from './agents-data';
 import paymentLinks from './payment-links.json' with { type: 'json' };
 
 describe('skills shop', () => {
+  it('renders portfolio previews in initial HTML without client fetches', () => {
+    const staticPortfolio = [{ slug: 'possible-launch-film', title: 'Possible Launch Film', path: '/results/possible-launch-film/', src: 'https://example.com/poster.png' }];
+    const motion = findAgentProfile('motion-designer')!;
+    for (const html of [renderToStaticMarkup(<OutcomesPage staticPortfolio={staticPortfolio} />), renderToStaticMarkup(<AgentsPage staticPortfolio={staticPortfolio} />), renderToStaticMarkup(<AgentProfilePage agent={motion} staticPortfolio={staticPortfolio} />)]) {
+      expect(html).toContain('https://example.com/poster.png');
+      expect(html).toContain('Possible Launch Film result');
+    }
+  });
   it('shows both actions and the bundle price on the home screen', () => {
     render(<OutcomesPage outcomesFixture={[]} />);
     expect(screen.getByRole('heading', { name: 'Skills our agents run. Yours can too.' })).toBeTruthy();

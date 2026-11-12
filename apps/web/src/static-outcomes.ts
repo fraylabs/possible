@@ -2,6 +2,7 @@ import { cache } from "react";
 import { get } from "node:https";
 import type { DirectoryOutcomeDetail } from "./dynamic-outcome-detail";
 import { outcomeApiUrl } from "./backend";
+import type { PortfolioPreview } from "./discovery-data";
 
 export type StaticOutcome = DirectoryOutcomeDetail & { slug: string | null };
 
@@ -41,5 +42,14 @@ export function outcomeRoutes(outcomes: StaticOutcome[]) {
   return outcomes.map((outcome) => {
     const slug = counts.get(base(outcome))! > 1 || base(outcome) === "view" ? `${base(outcome)}--${outcome.id}` : base(outcome);
     return { slug, path: `/results/${slug}/`, outcome };
+  });
+}
+
+/** Serializable public previews for the initial HTML, before client fetches. */
+export function portfolioPreviews(outcomes: StaticOutcome[]): PortfolioPreview[] {
+  return outcomeRoutes(outcomes).filter(({ outcome }) => outcome.slug).map(({ outcome, path }) => {
+    const src = outcome.poster_url ?? outcome.preview?.video?.poster ?? outcome.preview?.images?.[0]?.src ??
+      (outcome.result_media_url && /\.(?:png|jpe?g|webp|gif|avif)(?:$|\?)/i.test(outcome.result_media_url) ? outcome.result_media_url : undefined);
+    return { slug: outcome.slug!, title: outcome.title, path, ...(src ? { src } : {}) };
   });
 }

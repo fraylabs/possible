@@ -10,7 +10,7 @@ import {
   searchDiscoveryOutcomes,
   sourceFilterKey,
 } from "./discovery-data";
-import type { DiscoveryOutcome, DiscoverySource, OutcomeCategory } from "./discovery-data";
+import type { DiscoveryOutcome, DiscoverySource, OutcomeCategory, PortfolioPreview } from "./discovery-data";
 import { OutcomeReactions } from "./outcome-reactions";
 import { CopyButton, SiteShell } from "./shared";
 import { agentProfiles, cardTaglines, BUNDLE_PRICE_USD, BUNDLE_SLUG } from "./agents-data";
@@ -136,7 +136,7 @@ function Pagination({ page, total, onPageChange, label = "Result pages" }: { pag
   );
 }
 
-export function OutcomesPage({ outcomesFixture }: { outcomesFixture?: DiscoveryOutcome[] } = {}) {
+export function OutcomesPage({ outcomesFixture, staticPortfolio = [] }: { outcomesFixture?: DiscoveryOutcome[]; staticPortfolio?: PortfolioPreview[] } = {}) {
   const [outcomes, setOutcomes] = useState<DiscoveryOutcome[]>(outcomesFixture ?? []);
   const [directoryState, setDirectoryState] = useState<"loading" | "ready" | "error">(outcomesFixture === undefined ? "loading" : "ready");
   const [query, setQuery] = useState("");
@@ -284,8 +284,9 @@ export function OutcomesPage({ outcomesFixture }: { outcomesFixture?: DiscoveryO
       <section className="home-skill-grid layout-reading" aria-label="Skills">
         {[...agentProfiles].sort((a, b) => Number(Boolean(paymentLink(b.slug))) - Number(Boolean(paymentLink(a.slug)))).map((agent) => {
           const lead = agent.portfolio.map((slug) => outcomes.find((outcome) => outcome.slug === slug)).find(Boolean);
+          const preview = agent.portfolio.map((slug) => staticPortfolio.find((entry) => entry.slug === slug && entry.src)).find(Boolean);
           return <a className="home-skill-card" href={`/skills/${agent.slug}/`} key={agent.slug}>
-            {lead ? <span className="home-skill-media"><OutcomeMedia outcome={lead} /></span> : agent.slug === "browser-game-maker" ? <img src="/media/possible-demo-poster.png" alt="Browser Game Maker result" /> : null}
+            {preview?.src ? <span className="home-skill-media"><img src={preview.src} alt={`${preview.title} result`} /></span> : lead ? <span className="home-skill-media"><OutcomeMedia outcome={lead} /></span> : agent.slug === "browser-game-maker" ? <img src="/media/possible-demo-poster.png" alt="Browser Game Maker result" /> : null}
             <strong>{agent.name}</strong><span>{cardTaglines[agent.slug] ?? agent.tagline}</span><b>{paymentLink(agent.slug) ? "US$19" : "Opening soon"}</b>
           </a>;
         })}

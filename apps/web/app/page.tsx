@@ -1,5 +1,6 @@
 import { OutcomesPage } from "../src/App";
 import { pageMetadata } from "./_metadata";
+import { portfolioPreviews, publishedOutcomes } from "../src/static-outcomes";
 
 export const metadata = pageMetadata({
   title: "Skills our agents run. Yours can too.",
@@ -7,6 +8,6 @@ export const metadata = pageMetadata({
   path: "/",
 });
 
-export default function HomePage() {
-  return <OutcomesPage />;
+export default async function HomePage() {
+  return <OutcomesPage staticPortfolio={portfolioPreviews(await publishedOutcomes())} />;
 }
