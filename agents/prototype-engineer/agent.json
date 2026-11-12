@@ -37,13 +37,17 @@
     }
   ],
   "portfolio": [
-    "two-angle-phone-stand",
-    "fold-flat-travel-hanger",
-    "functional-hardware-prototype",
-    "robot-digital-prototype",
-    "split-vibrotactile-headrest-cad-package",
-    "digital-photo-frame"
+    "two-angle-phone-stand"
   ],
   "limits": "Digital pre-build only. Nothing is fabricated, and no strength, safety or fit claim is made without a physical test.",
-  "priceUsd": 19
+  "priceUsd": 19,
+  "checks": [
+    "Checks solids, fit, interference and build volume.",
+    "Renders assembled and exploded views.",
+    "Lists assumptions and required physical tests."
+  ],
+  "refuses": [
+    "Does not claim unmeasured strength or safety.",
+    "Does not purchase or fabricate parts."
+  ]
 }

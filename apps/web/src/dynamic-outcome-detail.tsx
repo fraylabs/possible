@@ -8,11 +8,13 @@ import { outcomeApiUrl } from "./backend";
 import { attributionDisplayName, recordOutcomeUse, sourceFilterHref } from "./discovery-data";
 import { recipeText } from "../../cli/src/recipe-text.mjs";
 import { OutcomeRecipePanel } from "./outcome-recipe";
+import { agentProfiles } from "./agents-data";
+import { BuyBox } from "./buy";
 import { OutcomeReactions } from "./outcome-reactions";
 import { CopyButton, SiteShell } from "./shared";
 
 export type DirectoryOutcomeDetail = {
-  id: string; title: string; summary: string; about_markdown: string; prompt: string; result_media_url: string | null; poster_url: string | null;
+  id: string; slug?: string | null; title: string; summary: string; about_markdown: string; prompt: string; result_media_url: string | null; poster_url: string | null;
   provider: string | null; agent: string | null; model: string | null; author_name: string | null; author_url: string | null;
   requirements: string[]; published_at: string; publication_kind: "official" | "community"; source_locator: string; source_url: string;
   recipe?: OutcomeRecipe | null; models?: OutcomeModel[];
@@ -55,9 +57,12 @@ function galleryItems(outcome: DirectoryOutcomeDetail): GalleryItem[] {
 function OutcomeGallery({ outcome }: { outcome: DirectoryOutcomeDetail }) {
   const items = useMemo(() => galleryItems(outcome), [outcome]);
   const [selected, setSelected] = useState(0);
-  if (!items.length) return <section className="outcome-gallery outcome-gallery--empty" aria-label="Outcome result"><span>RESULT PREVIEW</span><strong>No public preview was supplied.</strong><p>The exact prompt and downloadable result remain available below.</p></section>;
+  if (!items.length) {
+    const file = outcome.artifacts[0];
+    return <section className="outcome-gallery outcome-gallery--empty" aria-label="Result"><span>RESULT</span>{file ? <>{/\.pdf(?:$|\?)/i.test(file.src) ? <iframe sandbox="" title={`${outcome.title} first page`} src={`${file.src}#page=1`} /> : /\.(png|jpe?g|webp|gif)(?:$|\?)/i.test(file.src) ? <img src={file.src} alt={file.label} /> : null}<a href={file.src}>{file.label} ↗</a></> : <p>Result files are listed below.</p>}</section>;
+  }
   const item = items[Math.min(selected, items.length - 1)]!;
-  return <section className="outcome-gallery" aria-label="Outcome result">
+  return <section className="outcome-gallery" aria-label="Result">
     <figure className={`outcome-gallery-stage is-${item.kind}`}>
       {item.kind === "video" ? <video controls playsInline preload="metadata" poster={item.poster}><source src={item.src} /></video> : null}
       {item.kind === "image" ? <img src={item.src} alt={item.alt} /> : null}
@@ -85,7 +90,7 @@ function OutcomeSupportingInformation({ outcome, skills }: { outcome: DirectoryO
 }
 
 function OutcomeExecutionDetails({ outcome }: { outcome: DirectoryOutcomeDetail }) {
-  return <details className="outcome-details"><summary>Technical details and provenance <span aria-hidden="true">↓</span></summary><dl><div><dt>Provider</dt><dd>{outcome.provider ?? "Not specified"}</dd></div><div><dt>Model</dt><dd>{outcome.model ?? "Not specified"}</dd></div>{outcome.agent ? <div><dt>Agent</dt><dd>{outcome.agent}</dd></div> : null}<div><dt>Published</dt><dd><time dateTime={outcome.published_at}>{new Date(outcome.published_at).toLocaleDateString()}</time></dd></div><div><dt>Publication</dt><dd>{outcome.publication_kind}</dd></div><div><dt>Source</dt><dd><a href={outcome.source_url} target="_blank" rel="noreferrer">{outcome.source_locator} ↗</a></dd></div></dl></details>;
+  return <details className="outcome-details"><summary>Technical details and provenance <span aria-hidden="true">↓</span></summary><dl><div><dt>Provider</dt><dd>{outcome.provider ?? "Not specified"}</dd></div><div><dt>Model</dt><dd>{outcome.model ?? "Not specified"}</dd></div>{outcome.agent ? <div><dt>Agent</dt><dd>{outcome.agent}</dd></div> : null}<div><dt>Published</dt><dd><time dateTime={outcome.published_at}>{new Date(outcome.published_at).toLocaleDateString()}</time></dd></div><div><dt>Publication</dt><dd>{outcome.publication_kind}</dd></div><div><dt>Source</dt><dd><a href={outcome.source_url} target="_blank" rel="noreferrer">Original source ↗</a></dd></div></dl></details>;
 }
 
 function OutcomePrompt({ outcome, draft, setDraft }: { outcome: DirectoryOutcomeDetail; draft: string; setDraft: (value: string) => void }) {
@@ -132,14 +137,16 @@ export function DynamicOutcomeDetailPage({ outcomeFixture, attributionsFixture =
     })();
     return () => { cancelled = true; };
   }, [outcomeFixture]);
-  if (outcome === undefined) return <SiteShell className="pack-detail-page"><p className="dynamic-outcome-loading layout-reading">Loading Outcome…</p></SiteShell>;
-  if (!outcome) return <SiteShell className="pack-detail-page"><section className="dynamic-outcome-missing layout-reading"><span>OUTCOME NOT FOUND</span><h1>This Outcome is not available.</h1><a href="/#discover">Browse Outcomes →</a></section></SiteShell>;
+  if (outcome === undefined) return <SiteShell className="pack-detail-page"><p className="dynamic-outcome-loading layout-reading">Loading result…</p></SiteShell>;
+  if (!outcome) return <SiteShell className="pack-detail-page"><section className="dynamic-outcome-missing layout-reading"><span>RESULT NOT FOUND</span><h1>This result is not available.</h1><a href="/#discover">Browse results →</a></section></SiteShell>;
   const skills = attributions.filter((item) => item.kind === "Skill");
+  const maker = agentProfiles.find((agent) => outcome.slug && agent.portfolio.includes(outcome.slug));
   return <SiteShell className="pack-detail-page">{canonicalPath ? <link rel="canonical" href={`https://possible.sh${canonicalPath}`} /> : null}<article className="outcome-detail layout-reading">
-    <header className="outcome-hero"><nav aria-label="Breadcrumb"><a href="/#discover">← All Outcomes</a></nav><div className="outcome-meta"><span>{attributions[0]?.kind ?? "Outcome"}</span><span>{outcome.publication_kind}</span>{outcome.model ? <span aria-label={`Model: ${outcome.model}`}>{outcome.model}</span> : null}<OutcomeReactions outcomeId={outcome.id} likeCount={outcome.like_count ?? 0} /></div><h1>{outcome.title}</h1><p>{outcome.summary}</p><div className="outcome-byline"><span>By <a href={outcome.author_url ?? outcome.source_url} target="_blank" rel="noreferrer">{outcome.author_name ?? outcome.source_locator}</a></span>{attributions.length ? <span>Made with {attributions.map((item, index) => <span key={item.id}>{index ? ", " : ""}<a href={item.href}>{item.name}</a></span>)}</span> : null}</div><div className={outcome.recipe ? "outcome-hero-actions has-recipe" : "outcome-hero-actions"} role="group" aria-label="Use this Outcome">{outcome.recipe ? <><CopyButton label="Copy recipe" value={recipeText(outcome)} onCopied={() => recordOutcomeUse(outcome.id)} /><CopyButton label="Copy prompt" value={draft} onCopied={() => recordOutcomeUse(outcome.id)} secondary /></> : <CopyButton label="Copy prompt" value={draft} onCopied={() => recordOutcomeUse(outcome.id)} />}<a href="#exact-prompt">Remix</a></div></header>
-    {hiddenText ? <p role="note">This Outcome contains hidden characters. They are shown and copied as visible Unicode escapes so you can inspect them before reuse.</p> : null}
     <OutcomeGallery outcome={outcome} />
+    <header className="outcome-hero"><nav aria-label="Breadcrumb"><a href="/#discover">← All results</a></nav><div className="outcome-meta"><span>{attributions[0]?.kind ?? "Result"}</span><span>{outcome.publication_kind}</span>{outcome.model ? <span aria-label={`Model: ${outcome.model}`}>{outcome.model}</span> : null}<OutcomeReactions outcomeId={outcome.id} likeCount={outcome.like_count ?? 0} /></div><h1>{outcome.title}</h1><p>{outcome.summary}</p><div className="outcome-byline"><span>By <a href={outcome.author_url ?? outcome.source_url} target="_blank" rel="noreferrer">{outcome.author_name ?? outcome.source_locator}</a></span>{attributions.length ? <span>Made with {attributions.map((item, index) => <span key={item.id}>{index ? ", " : ""}<a href={item.href}>{item.name}</a></span>)}</span> : null}</div><div className={outcome.recipe ? "outcome-hero-actions has-recipe" : "outcome-hero-actions"} role="group" aria-label="Use this result">{outcome.recipe ? <><CopyButton label="Copy details" value={recipeText(outcome)} onCopied={() => recordOutcomeUse(outcome.id)} /><CopyButton label="Copy prompt" value={draft} onCopied={() => recordOutcomeUse(outcome.id)} secondary /></> : <CopyButton label="Copy prompt" value={draft} onCopied={() => recordOutcomeUse(outcome.id)} />}<a href="#exact-prompt">Remix</a></div></header>
+    {hiddenText ? <p role="note">This result contains hidden characters. They are shown and copied as visible Unicode escapes so you can inspect them before reuse.</p> : null}
     <OutcomeRecipePanel outcome={outcome} />
+    {maker ? <section className="outcome-about"><h2>Made with the {maker.name} skill</h2><a href={`/skills/${maker.slug}/`}>See the skill</a><BuyBox slug={maker.slug} priceUsd={maker.priceUsd} label={`Buy the ${maker.name} skill`} what="for this skill." /></section> : null}
     <section className="outcome-about"><h2>About</h2><ReactMarkdown>{outcome.about_markdown.replace(/^# .+\n+/, "")}</ReactMarkdown></section>
     <div id="exact-prompt"><OutcomePrompt outcome={outcome} draft={draft} setDraft={setDraft} /></div>
     <OutcomeSupportingInformation outcome={outcome} skills={skills} />

@@ -27,10 +27,24 @@ export interface AgentProfile {
   portfolio: string[];
   limits: string;
   priceUsd: number;
+  checks: string[];
+  refuses: string[];
   credit?: string;
 }
 
-export const agentProfiles: readonly AgentProfile[] = [launchMarketer, competitorAnalyst, prototypeEngineer, deckMaker, browserGameMaker, proceduralFilmMaker, motionDesigner, customerProfiler, animatedShortsMaker];
+export const agentProfiles: readonly AgentProfile[] = [browserGameMaker, animatedShortsMaker, motionDesigner, proceduralFilmMaker, launchMarketer, deckMaker, prototypeEngineer, competitorAnalyst, customerProfiler];
+
+export const cardTaglines: Readonly<Record<string, string>> = {
+  "browser-game-maker": "Makes a playable game in one HTML file.",
+  "animated-shorts-maker": "Makes an animated story short from code.",
+  "motion-designer": "Makes a short motion film from code.",
+  "procedural-film-maker": "Builds and films a world from code.",
+  "launch-marketer": "Makes a launch kit for your product.",
+  "deck-maker": "Builds an editable PowerPoint from your facts.",
+  "prototype-engineer": "Turns a product idea into editable CAD.",
+  "competitor-analyst": "Turns public competitor research into a playbook.",
+  "customer-profiler": "Builds a customer profile from real evidence.",
+};
 
 /** The price of all the agents together. */
 export const BUNDLE_PRICE_USD = 49;

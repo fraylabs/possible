@@ -7,9 +7,10 @@ const siteUpdatedAt = "2026-10-21";
 export const dynamic = "force-static";
 const staticPaths = [
   "/",
-  "/agents/",
-  ...agentProfiles.map((agent) => `/agents/${agent.slug}/`),
-  "/publish/",
+  "/skills/",
+  "/results/",
+  ...agentProfiles.map((agent) => `/skills/${agent.slug}/`),
+  "/docs/publish/",
   "/docs/",
   "/docs/how-to-use/",
   "/docs/authoring/",

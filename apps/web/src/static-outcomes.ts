@@ -40,6 +40,6 @@ export function outcomeRoutes(outcomes: StaticOutcome[]) {
   for (const outcome of outcomes) counts.set(base(outcome), (counts.get(base(outcome)) ?? 0) + 1);
   return outcomes.map((outcome) => {
     const slug = counts.get(base(outcome))! > 1 || base(outcome) === "view" ? `${base(outcome)}--${outcome.id}` : base(outcome);
-    return { slug, path: `/outcomes/${slug}/`, outcome };
+    return { slug, path: `/results/${slug}/`, outcome };
   });
 }

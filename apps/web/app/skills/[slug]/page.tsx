@@ -17,7 +17,7 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: AgentPageProps): Promise<Metadata> {
   const agent = findAgentProfile((await params).slug);
   if (!agent) return {};
-  return pageMetadata({ title: agent.name, description: agent.tagline, path: `/agents/${agent.slug}` });
+  return pageMetadata({ title: agent.name, description: agent.tagline, path: `/skills/${agent.slug}` });
 }
 
 export default async function AgentPage({ params }: AgentPageProps) {

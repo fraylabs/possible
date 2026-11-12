@@ -1,21 +1,10 @@
 # Possible product direction
 
-Possible sells AI agents as downloadable prompts (d-192).
-
-> Pick an agent. Download it. Your own agent makes the result.
-
-Each agent has a profile that shows what it makes, its portfolio of past results, and the tools it uses. Buyers run it on their own machine, in their own Claude Code or Codex. Possible runs nothing for them.
+Possible is a shop of skills our agents run, each shown by its results. Buyers download a skill and run it in their own Claude Code or Codex. Each costs US$19; every skill on sale costs US$49. The results list and Possible tool are the open part.
 
 ## The buyer loop
 
-```text
-browse agents
-  -> judge an agent by its portfolio
-  -> buy it (US$19, or US$49 for all nine)
-  -> download a zip: a Claude Code / Codex skill, a blank brief, a short guide
-  -> fill in the brief and run it in their own agent
-  -> the result lands in ./out on their machine
-```
+Browse skills, inspect their results, buy a skill or the bundle, then fill in the brief and run it on your own machine.
 
 ## What is sold, and where it lives
 

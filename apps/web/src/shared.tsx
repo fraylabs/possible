@@ -9,10 +9,10 @@ type ThemePreference = "light" | "dark" | "system";
 const themeStorageKey = "possible-theme";
 const accountEnabled = process.env.NEXT_PUBLIC_GITHUB_AUTH_ENABLED === "true";
 const navigationItems = [
-  { label: "AGENTS", href: "/agents", external: false },
+  { label: "Skills", href: "/skills/", external: false },
+  { label: "Results", href: "/#discover", external: false },
   ...(accountEnabled ? [{ label: "SAVED", href: "/saved", external: false }] : []),
-  { label: "DOCS", href: "/docs", external: false },
-  { label: "PUBLISH", href: "/publish", external: false },
+  { label: "Docs", href: "/docs/", external: false },
 ] as const;
 export function CopyButton({ label, value, onCopied, ariaLabel, secondary = false }: { label: string; value: string; onCopied?: () => void | Promise<unknown>; ariaLabel?: string; secondary?: boolean }) {
   const [state, setState] = useState<CopyState>("idle");
@@ -141,7 +141,7 @@ export function SiteNav() {
               ))}
             </ol>
             <ThemeSwitcher className="mobile-theme-switcher" />
-            <footer><span>POSSIBLE.SH</span><strong>MAKE OUTCOMES POSSIBLE.</strong></footer>
+            <footer><span>POSSIBLE.SH</span><strong>SKILLS AND THEIR RESULTS.</strong></footer>
           </div>
         </div>
       ) : null}
@@ -155,17 +155,16 @@ export function SiteFooter() {
       <div className="site-footer-inner layout-wide">
         <a className="wordmark" href="/">possible<span>.sh</span></a>
         <div className="site-footer-links">
-          <a href="/agents">Agents</a>
-          <a href="/#discover">Discover</a>
+          <a href="/skills/">Skills</a>
+          <a href="/#discover">Results</a>
           <a href="/docs">Docs</a>
-          <a href="/publish">Publish</a>
           {accountEnabled ? <a href="/saved">Saved</a> : null}
           <a href={githubUrl} target="_blank" rel="noreferrer">GitHub ↗</a>
           <a href="/terms/">Terms</a>
           <a href="/privacy/">Privacy</a>
           <a href="/refunds/">Refunds</a>
         </div>
-        <span>OPEN SOURCE / 2026</span>
+        <span>The Possible tool and file format are open source. Skills are sold under the <a href="/terms/">skill licence</a>.</span>
       </div>
     </footer>
   );
@@ -185,9 +184,9 @@ export function NotFoundPage() {
   return (
     <SiteShell className="not-found-page">
       <section className="not-found">
-        <p className="eyebrow">404 / OUTCOME NOT FOUND</p>
-        <h1>This outcome is<br /><em>not here.</em></h1>
-        <a className="button-link" href="/#discover">Browse Outcomes <span>→</span></a>
+        <p className="eyebrow">404 / RESULT NOT FOUND</p>
+        <h1>This result is<br /><em>not here.</em></h1>
+        <a className="button-link" href="/#discover">Browse results <span>→</span></a>
       </section>
     </SiteShell>
   );

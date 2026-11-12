@@ -37,5 +37,14 @@
     "falling-sand-sandbox"
   ],
   "limits": "Single-file browser games and toys. No servers, accounts or multiplayer.",
-  "priceUsd": 19
+  "priceUsd": 19,
+  "checks": [
+    "Play-tests controls and mechanics in a browser.",
+    "Checks for console errors and records a gameplay preview.",
+    "Reviews screenshots against the visual bar."
+  ],
+  "refuses": [
+    "Does not add a server or multiplayer.",
+    "Does not deliver a game requiring a build step."
+  ]
 }

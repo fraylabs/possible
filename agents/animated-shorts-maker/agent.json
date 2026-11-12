@@ -4,7 +4,7 @@
   "name": "Animated Shorts Maker",
   "tagline": "Makes an original vertical animated story short from code, with a moving camera, voice and an original sound mix.",
   "delivers": [
-    "A 45–70 second vertical animated MP4 and a poster frame",
+    "A 45\u201370 second vertical animated MP4 and a poster frame",
     "SCRIPT.md with sources, STYLE_BIBLE.md and reference study reports",
     "ROUNDS.md and CHECKS.md documenting visual review and final file checks",
     "The source and GUIDE.md for rendering and changing the story, voice, colours, camera and music"
@@ -40,7 +40,16 @@
     }
   ],
   "portfolio": [],
-  "limits": "Makes a 45–70 second vertical animation from code. References are studied, never copied or shipped; no AI-video clips or stock footage. Review the script before production.",
+  "limits": "Makes a 45\u201370 second vertical animation from code. References are studied, never copied or shipped; no AI-video clips or stock footage. Review the script before production.",
   "priceUsd": 19,
-  "credit": "Workflow inspired by mromidev/claude-animated-shorts (MIT)."
+  "credit": "Workflow inspired by mromidev/claude-animated-shorts (MIT).",
+  "checks": [
+    "Checks the script and sources before production.",
+    "Reviews each shot for readability and visual consistency.",
+    "Checks decoded frames and audio in the final file."
+  ],
+  "refuses": [
+    "Does not copy reference characters or scripts.",
+    "Does not use generated video clips or stock footage."
+  ]
 }

@@ -2,8 +2,8 @@ import { DocsReferencePage as DocsReferenceContent } from "../../../src/App";
 import { pageMetadata } from "../../_metadata";
 
 export const metadata = pageMetadata({
-  title: "Outcome reference",
-  description: "Reference the small Outcome JSON format and Possible's machine-readable interfaces.",
+  title: "result reference",
+  description: "Reference the small result JSON format and Possible's machine-readable interfaces.",
   path: "/docs/reference",
 });
 

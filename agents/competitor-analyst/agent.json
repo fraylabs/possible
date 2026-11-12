@@ -41,5 +41,14 @@
     "how-granola-gets-customers"
   ],
   "limits": "Public evidence only: no logins, scraping behind sign-in or spend estimates a source doesn't state. Anything it couldn't see is listed as unknown with a link to check it yourself.",
-  "priceUsd": 19
+  "priceUsd": 19,
+  "checks": [
+    "Checks public sources and records their dates.",
+    "Separates evidence from inference and unknowns.",
+    "Validates citations in the report."
+  ],
+  "refuses": [
+    "Does not sign in or contact competitors.",
+    "Does not invent spend or other numbers."
+  ]
 }

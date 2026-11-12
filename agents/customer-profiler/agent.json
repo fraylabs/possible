@@ -38,5 +38,15 @@
   ],
   "portfolio": [],
   "limits": "Works on products with real users. It builds the questions and tracking; you ship them and decide who gets contacted.",
-  "priceUsd": 19
+  "priceUsd": 19,
+  "checks": [
+    "Maps available customer data sources.",
+    "Checks customer statements against behaviour and payments.",
+    "Marks thin or inaccessible data and documents refresh steps."
+  ],
+  "refuses": [
+    "Does not contact customers itself.",
+    "Does not invent customer quotes or numbers.",
+    "Does not publish identifiable customer data."
+  ]
 }

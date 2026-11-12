@@ -27,15 +27,15 @@ function ConnectedSavedOutcomes() {
   }, [ids, outcomes]);
 
   if (isLoading) return <p className="saved-status">Loading account…</p>;
-  if (!isAuthenticated) return <section className="saved-empty"><h2>Keep your Outcomes together.</h2><p>Sign in with GitHub to save Outcomes across devices. Publishing still requires no account.</p><button type="button" onClick={() => void signIn("github", { redirectTo: window.location.href })}>Continue with GitHub</button></section>;
+  if (!isAuthenticated) return <section className="saved-empty"><h2>Keep your results together.</h2><p>Sign in with GitHub to save results across devices. Publishing still requires no account.</p><button type="button" onClick={() => void signIn("github", { redirectTo: window.location.href })}>Continue with GitHub</button></section>;
   return <>
     <div className="saved-account"><span>{saved.length} saved</span><button type="button" onClick={() => void signOut()}>Sign out</button></div>
-    {ids === undefined ? <p className="saved-status">Loading saved Outcomes…</p> : saved.length ? <ol className="saved-list">{saved.map((outcome) => <li key={outcome.id}><a href={outcome.href}><span>{outcome.source?.name ?? "Outcome"}</span><h2>{outcome.title}</h2><p>{outcome.summary}</p><strong>Open Outcome →</strong></a></li>)}</ol> : <section className="saved-empty"><h2>No saved Outcomes yet.</h2><p>Use Save on any Outcome to keep it here.</p><a href="/#discover">Browse Outcomes →</a></section>}
+    {ids === undefined ? <p className="saved-status">Loading saved results…</p> : saved.length ? <ol className="saved-list">{saved.map((outcome) => <li key={outcome.id}><a href={outcome.href}><span>{outcome.source?.name ?? "Result"}</span><h2>{outcome.title}</h2><p>{outcome.summary}</p><strong>Open result →</strong></a></li>)}</ol> : <section className="saved-empty"><h2>No saved results yet.</h2><p>Use Save on any result to keep it here.</p><a href="/#discover">Browse results →</a></section>}
   </>;
 }
 
 export function SavedOutcomesPage() {
   const available = useBackendAvailable();
   const authAvailable = useAuthAvailable();
-  return <SiteShell className="saved-page"><section className="saved-directory layout-reading"><header><span>YOUR ACCOUNT</span><h1>Saved Outcomes</h1></header>{available && authAvailable ? <ConnectedSavedOutcomes /> : <section className="saved-empty"><h2>Accounts are not connected.</h2><p>Configure GitHub authentication in this build or use local CLI bookmarks.</p></section>}</section></SiteShell>;
+  return <SiteShell className="saved-page"><section className="saved-directory layout-reading"><header><span>YOUR ACCOUNT</span><h1>Saved results</h1></header>{available && authAvailable ? <ConnectedSavedOutcomes /> : <section className="saved-empty"><h2>Accounts are not connected.</h2><p>Configure GitHub authentication in this build or use local CLI bookmarks.</p></section>}</section></SiteShell>;
 }

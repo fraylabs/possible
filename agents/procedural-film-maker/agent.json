@@ -37,5 +37,14 @@
   ],
   "portfolio": [],
   "limits": "Landscapes and environments rendered offline from code. No characters, dialogue or real-time games. Quality and length scale with render time.",
-  "priceUsd": 19
+  "priceUsd": 19,
+  "checks": [
+    "Plans shots against the brief.",
+    "Reviews stills and colour across scenes.",
+    "Checks camera paths and the finished render."
+  ],
+  "refuses": [
+    "Does not load external assets into the scene.",
+    "Does not render the final before still review."
+  ]
 }

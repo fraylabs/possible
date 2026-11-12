@@ -36,7 +36,7 @@ export function PublishPage() {
       const data = await response.json() as PublishResult & { error?: string };
       if (!response.ok || data.error) throw new Error(data.error ?? "Possible could not read this source.");
       setResult(data);
-      setNotice({ tone: "success", text: `${data.outcomes.length} Outcome${data.outcomes.length === 1 ? "" : "s"} published from the public source.` });
+      setNotice({ tone: "success", text: `${data.outcomes.length} result${data.outcomes.length === 1 ? "" : "s"} published from the public source.` });
     } catch (error) {
       setNotice({ tone: "error", text: error instanceof Error ? error.message : String(error) });
     } finally {
@@ -48,7 +48,7 @@ export function PublishPage() {
     <SiteShell className="publish-page">
       <section className="source-publish layout-reading">
         <header>
-          <span>PUBLISH OUTCOMES</span>
+          <span>PUBLISH RESULTS</span>
           <h1>Publish from your source.</h1>
           <p>Keep the canonical files in a public GitHub repository or on your domain. Possible reads and snapshots them—no account required.</p>
         </header>
@@ -61,10 +61,10 @@ export function PublishPage() {
 
         {!endpoint ? <p className="publish-notice error">Publishing is not connected in this local build. You can still use the CLI below.</p> : null}
         {notice ? <p className={`publish-notice ${notice.tone}`} role="status">{notice.text}</p> : null}
-        {result ? <section className="publish-result"><span>{result.source.publisherName}</span><strong>{result.source.locator}</strong><small>Revision {result.source.revision.slice(0, 12)}</small><ul>{result.outcomes.map((outcome) => <li key={outcome.id}><a href={`/outcomes/view/?id=${outcome.id}`}>{outcome.title}</a><span>{outcome.publicationKind}</span></li>)}</ul></section> : null}
+        {result ? <section className="publish-result"><span>{result.source.publisherName}</span><strong>{result.source.locator}</strong><small>Revision {result.source.revision.slice(0, 12)}</small><ul>{result.outcomes.map((outcome) => <li key={outcome.id}><a href={`/results/view/?id=${outcome.id}`}>{outcome.title}</a><span>{outcome.publicationKind}</span></li>)}</ul></section> : null}
 
         <section className="source-publish-contract">
-          <div><span>01</span><h2>Author one folder per Outcome.</h2><pre>{"outcomes.json\noutcomes/<slug>/\n  outcome.json\n  outcome.md\n  prompt.md\n  media/       optional"}</pre></div>
+          <div><span>01</span><h2>Author one folder per result.</h2><pre>{"outcomes.json\noutcomes/<slug>/\n  outcome.json\n  outcome.md\n  prompt.md\n  media/       optional"}</pre></div>
           <div><span>02</span><h2>Validate and publish.</h2><p>Replace owner/product with the main product used. The CLI creates the folder, checks the public contract, and submits the source URL.</p><CopyButton label="Copy CLI commands" value={"curl -fsSL https://possible.sh/install.sh | sh\nexport PATH=\"$HOME/.local/bin:$PATH\"\npossible create my-outcome --product owner/product\npossible validate\npossible publish"} /></div>
         </section>
       </section>

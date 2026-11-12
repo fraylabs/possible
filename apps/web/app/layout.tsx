@@ -19,6 +19,7 @@ export const metadata: Metadata = {
   },
   description: siteDescription,
   applicationName: "Possible",
+  icons: { icon: [{ url: "/favicon.ico", sizes: "32x32" }, { url: "/mark.svg", type: "image/svg+xml" }], apple: "/apple-touch-icon.png" },
   creator: "Fray Labs",
   publisher: "Fray Labs",
   category: "developer tools",

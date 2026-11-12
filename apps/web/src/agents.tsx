@@ -6,7 +6,7 @@ import type { AgentProfile } from "./agents-data";
 import { OutcomeMedia } from "./catalog";
 import { fetchDiscoveryOutcomes } from "./discovery-data";
 import type { DiscoveryOutcome } from "./discovery-data";
-import { BuyBox } from "./buy";
+import { BuyBox, paymentLink } from "./buy";
 import { DemoFilm } from "./demo-film";
 import { SiteShell } from "./shared";
 
@@ -35,7 +35,7 @@ function PortfolioThumbnail({ outcome, label }: { outcome: DiscoveryOutcome | un
 }
 
 function AgentCard({ agent, portfolio }: { agent: AgentProfile; portfolio: PortfolioState }) {
-  const href = `/agents/${agent.slug}/`;
+  const href = `/skills/${agent.slug}/`;
   const lead = agent.portfolio.map((slug) => portfolio.outcomes.get(slug)).find((outcome) => outcome?.media) ?? portfolio.outcomes.get(agent.portfolio[0] ?? "");
   return (
     <article className="agent-card">
@@ -47,8 +47,8 @@ function AgentCard({ agent, portfolio }: { agent: AgentProfile; portfolio: Portf
         <h2><a href={href}>{agent.name}</a></h2>
         <p>{agent.tagline}</p>
         <footer>
-          <span>US${agent.priceUsd} · {agent.portfolio.length} portfolio {agent.portfolio.length === 1 ? "result" : "results"}</span>
-          <a className="agent-card-link" href={href} aria-label={`View agent ${agent.name}`}>View agent <span aria-hidden="true">→</span></a>
+          <span>{paymentLink(agent.slug) ? `US$${agent.priceUsd}` : "Opening soon"}</span>
+          <a className="agent-card-link" href={href} aria-label={`View skill ${agent.name}`}>View skill <span aria-hidden="true">→</span></a>
         </footer>
       </div>
     </article>
@@ -57,21 +57,20 @@ function AgentCard({ agent, portfolio }: { agent: AgentProfile; portfolio: Portf
 
 export function AgentsPage() {
   const portfolio = usePortfolioOutcomes();
-  const count = agentProfiles.length === 9 ? "nine" : String(agentProfiles.length);
   return (
     <SiteShell className="agents-page">
       <section className="agents-directory layout-reading" aria-labelledby="agents-heading">
         <header className="agents-heading">
-          <span>AGENTS</span>
-          <h1 id="agents-heading">Agents you download and run yourself.</h1>
-          <p>Each agent is a skill for {RUNS_IN.join(" or ")}. See what it has made so far, download it, fill in a short brief, and your own agent makes the finished work.</p>
+          <span>SKILLS</span>
+          <h1 id="agents-heading">Skills you download and run yourself.</h1>
+          <p>Each skill runs in {RUNS_IN.join(" or ")}. See what it has made, then use it to make yours.</p>
           <div className="agents-bundle">
-            <strong>All {count} agents</strong>
-            <BuyBox slug={BUNDLE_SLUG} priceUsd={BUNDLE_PRICE_USD} label="Buy all agents" what={`for all ${count}, instead of US$${agentProfiles.reduce((sum, agent) => sum + agent.priceUsd, 0)} one by one.`} />
+            <BuyBox slug={BUNDLE_SLUG} priceUsd={BUNDLE_PRICE_USD} label="Buy every skill on sale" what="Every skill on sale." />
+            <p>or US$19 each. You also get any skill that opens later.</p>
           </div>
         </header>
         <div className="agents-grid">
-          {agentProfiles.map((agent) => <AgentCard agent={agent} portfolio={portfolio} key={agent.slug} />)}
+          {[...agentProfiles].sort((a, b) => Number(Boolean(paymentLink(b.slug))) - Number(Boolean(paymentLink(a.slug)))).map((agent) => <AgentCard agent={agent} portfolio={portfolio} key={agent.slug} />)}
         </div>
       </section>
     </SiteShell>
@@ -79,7 +78,7 @@ export function AgentsPage() {
 }
 
 const howItWorks = [
-  { title: "Buy and download", text: "You get a zip with the agent's skill, a blank brief and a short guide." },
+  { title: "Buy and download", text: "You get a zip with the skill, a blank brief and a short guide." },
   { title: "Install the skill", text: "Unzip it into ~/.claude/skills for Claude Code, or into your project's .agents/skills for Codex." },
   { title: "Fill in the brief and run it", text: "Your own agent does the work on your machine and puts everything it makes in ./out." },
 ];
@@ -91,7 +90,7 @@ function PortfolioItem({ slug, outcome, status, staticEntry }: { slug: string; o
   const body = <>
     <span className="agent-portfolio-media" data-fit={outcome?.media?.fit ?? "cover"}><PortfolioThumbnail outcome={outcome} label={title} /></span>
     <strong>{title}</strong>
-    <small>{outcome || staticEntry ? "View Outcome →" : status === "loading" ? "Loading…" : "Not in the public directory yet"}</small>
+    <small>{outcome || staticEntry ? "View result →" : status === "loading" ? "Loading…" : "Not in the public directory yet"}</small>
   </>;
   return <li>{outcome || staticEntry ? <a href={staticEntry?.path ?? outcome?.href}>{body}</a> : <div>{body}</div>}</li>;
 }
@@ -102,13 +101,13 @@ export function AgentProfilePage({ agent, staticPortfolio = [] }: { agent: Agent
     <SiteShell className="agent-profile-page">
       <article className="agent-profile layout-reading">
         <header className="agent-hero">
-          <nav aria-label="Breadcrumb"><a href="/agents/">← All agents</a></nav>
-          <div className="outcome-meta"><span>Agent</span><span aria-label={`Model: ${agentModelLabel(agent)}`}>{agentModelLabel(agent)}</span></div>
+          <nav aria-label="Breadcrumb"><a href="/skills/">← All skills</a></nav>
+          <div className="outcome-meta"><span>Skill</span><span aria-label={`Model: ${agentModelLabel(agent)}`}>{agentModelLabel(agent)}</span></div>
           <h1>{agent.name}</h1>
           <p>{agent.tagline}</p>
           {agent.credit ? <p className="agent-note">{agent.credit}</p> : null}
-          <BuyBox slug={agent.slug} priceUsd={agent.priceUsd} label={`Buy the ${agent.name}`} what="for this agent." />
-          {agent.slug === "browser-game-maker" ? <DemoFilm caption="This agent, run in a buyer's own Claude Code." /> : null}
+          <BuyBox slug={agent.slug} priceUsd={agent.priceUsd} label={`Buy the ${agent.name} skill`} what="for this skill." />
+          {agent.slug === "browser-game-maker" ? <DemoFilm caption="This skill, run in a buyer's own Claude Code." /> : null}
         </header>
 
         <section className="agent-section" aria-labelledby="agent-delivers-heading">
@@ -116,6 +115,7 @@ export function AgentProfilePage({ agent, staticPortfolio = [] }: { agent: Agent
           <ul className="agent-list">{agent.delivers.map((item) => <li key={item}>{item}</li>)}</ul>
         </section>
 
+        <section className="agent-section" aria-labelledby="zip-heading"><h2 id="zip-heading">What's in the zip</h2><p>SKILL.md, a BRIEF.md to fill in, a README and the licence.</p><h3>Checks</h3><ul>{agent.checks.map((item) => <li key={item}>{item}</li>)}</ul><h3>Refuses</h3><ul>{agent.refuses.map((item) => <li key={item}>{item}</li>)}</ul></section>
         <section className="agent-section" aria-labelledby="agent-how-heading">
           <h2 id="agent-how-heading">How it works</h2>
           <ol className="agent-steps">{howItWorks.map((step, index) => <li key={step.title}><span aria-hidden="true">{String(index + 1).padStart(2, "0")}</span><div><strong>{step.title}</strong><p>{step.text}</p></div></li>)}</ol>
@@ -146,9 +146,9 @@ export function AgentProfilePage({ agent, staticPortfolio = [] }: { agent: Agent
         <section className="agent-section" aria-labelledby="agent-runtime-heading">
           <h2 id="agent-runtime-heading">Runs in</h2>
           <dl className="agent-runtime">
-            <div><dt>Agents</dt><dd>{RUNS_IN.join(", ")}</dd></div>
+            <div><dt>Runs in</dt><dd>{RUNS_IN.join(", ")}</dd></div>
             <div><dt>Made with</dt><dd>{agentModelLabel(agent)} <code>{agent.runtime.model}</code></dd></div>
-            <div><dt>Needs</dt><dd>Your agent allowed to run commands on your machine. Without it, the agent stops after the main files and asks to run the checks and previews.</dd></div>
+            <div><dt>Needs</dt><dd>Permission to run commands on your machine. Without it, checks and previews need your approval.</dd></div>
             {agent.tools.length ? <div><dt>Tools</dt><dd>{agent.tools.join(", ")}</dd></div> : null}
           </dl>
         </section>

@@ -16,7 +16,7 @@
     "test": "npm run test -w @possible/catalog && npm run test -w @fraylabs/possible && npm run test -w @possible/mcp && npm run test -w @possible/web",
     "skill:validate": "node scripts/validate-skill.mjs",
     "routes:validate": "node scripts/validate-routes.mjs",
-    "html:validate": "node scripts/validate-static-html.mjs",
+    "html:validate": "node scripts/validate-static-html.mjs && node scripts/check-shop-copy.mjs",
     "convex:codegen": "convex codegen --typecheck enable",
     "convex:typecheck": "tsc -p convex/tsconfig.json --noEmit",
     "test:convex": "vitest run convex/*.test.ts",

@@ -11,7 +11,7 @@ export function BuyBox({ slug, priceUsd, label, what }: { slug: string; priceUsd
   const link = paymentLink(slug);
   return (
     <div className="buy-box">
-      <p><strong>US${priceUsd}</strong> {what}</p>
+      {link ? <p><strong>{slug === "all" ? `Every skill on sale, US$${priceUsd}` : `US$${priceUsd}`}</strong>{slug === "all" ? null : ` ${what}`}</p> : null}
       {link
         ? <a className="buy-button" href={link}>{label}</a>
         : <button className="buy-button" type="button" disabled>Opening soon</button>}

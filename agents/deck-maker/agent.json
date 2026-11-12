@@ -34,9 +34,17 @@
     }
   ],
   "portfolio": [
-    "bakery-central-kitchen-deck",
-    "polished-editable-powerpoint-presentation"
+    "bakery-central-kitchen-deck"
   ],
   "limits": "Uses only the facts you supply. Anything missing is marked TBD; nothing is researched or invented.",
-  "priceUsd": 19
+  "priceUsd": 19,
+  "checks": [
+    "Checks figures and marks missing facts.",
+    "Renders and reviews every slide.",
+    "Keeps slide elements editable and sources in notes."
+  ],
+  "refuses": [
+    "Does not invent facts or research.",
+    "Does not flatten the deck into slide images."
+  ]
 }

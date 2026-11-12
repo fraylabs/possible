@@ -125,6 +125,7 @@ const CATEGORY_ALIASES = new Map<string, OutcomeCategory>([
 
 function inferCategory(text: string, mediaUrl = ""): OutcomeCategory {
   const normalized = `${text} ${mediaUrl}`.toLowerCase();
+  if (/\.(mp4|mov|webm)(?:$|\?)/i.test(mediaUrl)) return "video";
   const explicitChecks: Array<[OutcomeCategory, RegExp]> = [
     ["slides", /\b(powerpoint|presentation|slide|slides|deck|pptx)\b/],
     ["audio", /\b(audio|bgm|music|song|soundtrack|strudel|wav)\b/],
@@ -184,7 +185,7 @@ function fromPublicRow(
     ...row.secondary_attributions.map((attribution) => attributionSource(attribution, "secondary")),
   ];
   const source = sources.find((item) => item.role === "primary") ?? sources[0];
-  const category = inferCategory(
+  const category = row.slug === "tiny-workers-inside-a-machine-blender-short" || row.slug === "ricksclips-style-cartoon-short" ? "video" : inferCategory(
     [row.title, row.summary, row.provider, row.model, source?.name].filter(Boolean).join(" "),
     row.result_media_url ?? "",
   );
@@ -202,7 +203,7 @@ function fromPublicRow(
     title: row.title,
     summary: row.summary?.trim() || "Open the original result and copy its prompt.",
     prompt: row.prompt,
-    href: `/outcomes/view/?id=${row.id}`,
+    href: `/results/view/?id=${row.id}`,
     category,
     sources,
     requirements: row.requirements,

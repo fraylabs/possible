@@ -37,10 +37,17 @@
     }
   ],
   "portfolio": [
-    "possible-agents-launch-kit",
-    "html-css-animated-product-launch-film",
-    "polished-technical-product-showcase-artwork"
+    "possible-agents-launch-kit"
   ],
   "limits": "Delivers drafts and assets; it doesn't post, buy ads or contact anyone. Uses only claims you can back up.",
-  "priceUsd": 19
+  "priceUsd": 19,
+  "checks": [
+    "Checks claims against the supplied product facts.",
+    "Reviews film frames before rendering.",
+    "Checks copy and assets for readability and file integrity."
+  ],
+  "refuses": [
+    "Does not invent customers or numbers.",
+    "Does not use drawn substitutes for real brand assets."
+  ]
 }

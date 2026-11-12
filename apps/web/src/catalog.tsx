@@ -12,8 +12,9 @@ import {
 } from "./discovery-data";
 import type { DiscoveryOutcome, DiscoverySource, OutcomeCategory } from "./discovery-data";
 import { OutcomeReactions } from "./outcome-reactions";
-import { DemoFilm } from "./demo-film";
 import { CopyButton, SiteShell } from "./shared";
+import { agentProfiles, cardTaglines, BUNDLE_PRICE_USD, BUNDLE_SLUG } from "./agents-data";
+import { BuyBox, paymentLink } from "./buy";
 
 const pageSize = 10;
 
@@ -81,23 +82,13 @@ function OutcomeSource({ outcome, onSelect }: { outcome: DiscoveryOutcome; onSel
   );
 }
 
-function copyCountLabel(count: number): string {
-  return `${count.toLocaleString()} ${count === 1 ? "copy" : "copies"}`;
-}
-
 function OutcomeResult({ outcome, rank, priority, featured, onSelectSource }: { outcome: DiscoveryOutcome; rank: number | undefined; priority: boolean; featured: boolean; onSelectSource: (source: DiscoverySource) => void }) {
   const external = outcome.href.startsWith("https://");
-  const [useCount, setUseCount] = useState(outcome.useCount);
-
-  useEffect(() => setUseCount(outcome.useCount), [outcome.id, outcome.useCount]);
-
-  async function recordCopy() {
-    if (await recordOutcomeUse(outcome.databaseId)) setUseCount((count) => count + 1);
-  }
+  async function recordCopy() { await recordOutcomeUse(outcome.databaseId); }
 
   return (
     <article className="home-result-row" data-featured={featured ? "true" : undefined} data-rank={rank}>
-      <span className="home-result-rank" aria-label={rank ? `Rank ${rank}` : "Unranked Outcome"}>{rank ? `#${rank}` : "—"}</span>
+      <span className="home-result-rank" aria-label={rank ? `Rank ${rank}` : "Unranked result"}>{rank ? `#${rank}` : "—"}</span>
       <a
         className="home-result-media"
         data-fit={outcome.media?.fit ?? "cover"}
@@ -111,18 +102,18 @@ function OutcomeResult({ outcome, rank, priority, featured, onSelectSource }: { 
       <div className="home-result-copy">
         <div className="home-result-meta">
           <OutcomeSource outcome={outcome} onSelect={onSelectSource} />
-          <em className="home-result-kind" data-kind={outcome.recipe ? "recipe" : "prompt"}>{outcome.recipe ? "Recipe" : "Prompt only"}</em>
+          <em className="home-result-kind" data-kind={outcome.recipe ? "recipe" : "prompt"}>{outcome.recipe ? "Result" : "Prompt"}</em>
           <span>{outcome.publicationKind === "official" ? "Official · " : ""}{outcomeCategoryLabels[outcome.category]}</span>
         </div>
         <h2><a href={outcome.href} target={external ? "_blank" : undefined} rel={external ? "noreferrer" : undefined}>{outcome.title}</a></h2>
         <p>{outcome.summary}</p>
         <footer>
           <div className="home-result-signals">
-            <strong><i aria-hidden="true" /> {copyCountLabel(useCount)}</strong>
+            
             <OutcomeReactions outcomeId={outcome.databaseId} likeCount={outcome.likeCount} />
           </div>
           {outcome.recipe
-            ? <CopyButton label="Copy recipe" ariaLabel={`Copy recipe for ${outcome.title}`} value={outcome.recipe} onCopied={recordCopy} />
+            ? <CopyButton label="Copy details" ariaLabel={`Copy details for ${outcome.title}`} value={outcome.recipe} onCopied={recordCopy} />
             : <CopyButton label="Copy prompt" ariaLabel={`Copy prompt for ${outcome.title}`} value={outcome.prompt} onCopied={recordCopy} />}
         </footer>
       </div>
@@ -130,17 +121,17 @@ function OutcomeResult({ outcome, rank, priority, featured, onSelectSource }: { 
   );
 }
 
-function Pagination({ page, total, onPageChange, label = "Outcome pages" }: { page: number; total: number; onPageChange: (page: number) => void; label?: string }) {
+function Pagination({ page, total, onPageChange, label = "Result pages" }: { page: number; total: number; onPageChange: (page: number) => void; label?: string }) {
   const pageCount = Math.ceil(total / pageSize);
   if (pageCount <= 1) return null;
   const pages = visiblePages(page, pageCount);
   return (
     <nav className="home-pagination" aria-label={label}>
-      <button type="button" onClick={() => onPageChange(page - 1)} disabled={page === 1} aria-label={`Previous ${label === "Outcome pages" ? "Outcome" : "leaderboard"} page`}>←</button>
+      <button type="button" onClick={() => onPageChange(page - 1)} disabled={page === 1} aria-label={`Previous ${label === "Result pages" ? "Result" : "leaderboard"} page`}>←</button>
       {pages[0] && pages[0] > 1 ? <span aria-hidden="true">…</span> : null}
       {pages.map((pageNumber) => <button type="button" key={pageNumber} aria-current={pageNumber === page ? "page" : undefined} onClick={() => onPageChange(pageNumber)}>{pageNumber}</button>)}
       {pages.at(-1) && pages.at(-1)! < pageCount ? <span aria-hidden="true">…</span> : null}
-      <button type="button" onClick={() => onPageChange(page + 1)} disabled={page === pageCount} aria-label={`Next ${label === "Outcome pages" ? "Outcome" : "leaderboard"} page`}>→</button>
+      <button type="button" onClick={() => onPageChange(page + 1)} disabled={page === pageCount} aria-label={`Next ${label === "Result pages" ? "Result" : "leaderboard"} page`}>→</button>
     </nav>
   );
 }
@@ -162,22 +153,28 @@ export function OutcomesPage({ outcomesFixture }: { outcomesFixture?: DiscoveryO
   const directoryTitle = normalizedQuery
     ? "Search results"
     : activeSource
-      ? `${activeSource.name} ${recipesOnly ? "recipes" : "Outcomes"}`
+      ? `${activeSource.name} ${recipesOnly ? "results" : "Results"}`
       : category === "all"
-        ? recipesOnly ? "Outcomes with recipes" : "All Outcomes"
-        : `${outcomeCategoryLabels[category]} ${recipesOnly ? "recipes" : "Outcomes"}`;
+        ? recipesOnly ? "Results with details" : "All results"
+        : `${outcomeCategoryLabels[category]} ${recipesOnly ? "results" : "Results"}`;
   const directoryContext = normalizedQuery
-    ? "Ranked by relevance, then copies"
+    ? "Ranked by relevance"
     : sourceFilter || category !== "all" || recipesOnly
       ? "Filtered directory"
       : hasUsageRanking
-        ? "Ranked by copies"
+        ? "Results"
         : "Latest published";
 
   const filteredOutcomes = useMemo(() => {
     const matches = searchDiscoveryOutcomes(outcomes, query, category, sourceFilter, recipesOnly);
-    if (normalizedQuery || hasUsageRanking) return matches;
+    if (normalizedQuery) return matches;
+    const owned = new Set(agentProfiles.flatMap((agent) => agent.portfolio));
     return [...matches].sort((left, right) => {
+      const leftIncomplete = /\b(incomplete|needs repair|repair.required)\b/i.test(`${left.title} ${left.summary}`);
+      const rightIncomplete = /\b(incomplete|needs repair|repair.required)\b/i.test(`${right.title} ${right.summary}`);
+      if (leftIncomplete !== rightIncomplete) return Number(leftIncomplete) - Number(rightIncomplete);
+      const bySkill = Number(Boolean(right.slug && owned.has(right.slug))) - Number(Boolean(left.slug && owned.has(left.slug)));
+      if (bySkill) return bySkill;
       const byDate = Date.parse(right.publishedAt ?? "") - Date.parse(left.publishedAt ?? "");
       if (Number.isFinite(byDate) && byDate !== 0) return byDate;
       return left.catalogNumber - right.catalogNumber;
@@ -277,17 +274,31 @@ export function OutcomesPage({ outcomesFixture }: { outcomesFixture?: DiscoveryO
 
   return (
     <SiteShell className="home-page">
+      <section className="home-offer layout-reading">
+        <span>Skills for Claude Code and Codex</span>
+        <h1>Skills our agents run. Yours can too.</h1>
+        <p>Each skill is shown by what it made. Download one for US$19, run it in your own Claude Code or Codex, and it makes yours.</p>
+        <div className="home-offer-actions"><a href="/skills/" className="button-link">See the skills</a><BuyBox slug={BUNDLE_SLUG} priceUsd={BUNDLE_PRICE_USD} label="Buy every skill on sale" what="Every skill on sale." /></div>
+        <p>or US$19 each. You also get any skill that opens later.</p>
+      </section>
+      <section className="home-skill-grid layout-reading" aria-label="Skills">
+        {[...agentProfiles].sort((a, b) => Number(Boolean(paymentLink(b.slug))) - Number(Boolean(paymentLink(a.slug)))).map((agent) => {
+          const lead = agent.portfolio.map((slug) => outcomes.find((outcome) => outcome.slug === slug)).find(Boolean);
+          return <a className="home-skill-card" href={`/skills/${agent.slug}/`} key={agent.slug}>
+            {lead ? <span className="home-skill-media"><OutcomeMedia outcome={lead} /></span> : agent.slug === "browser-game-maker" ? <img src="/media/possible-demo-poster.png" alt="Browser Game Maker result" /> : null}
+            <strong>{agent.name}</strong><span>{cardTaglines[agent.slug] ?? agent.tagline}</span><b>{paymentLink(agent.slug) ? "US$19" : "Opening soon"}</b>
+          </a>;
+        })}
+      </section>
       <section className="home-directory layout-reading" id="discover" aria-labelledby="home-heading">
         <header className="home-heading">
           <div>
-            <span>OUTCOME DIRECTORY</span>
-            <h1 id="home-heading">See what AI can make.</h1>
-            <p>Inspect real results. Take the recipe to your agent.</p>
+            <h2 id="home-heading">Results</h2>
+            <p>Everything our skills and our agents made, with the exact prompt.</p>
           </div>
-          <strong>{directoryState === "loading" ? "—" : `${filteredOutcomes.length} ${filteredOutcomes.length === 1 ? "Outcome" : "Outcomes"}`}</strong>
+          <strong>{directoryState === "loading" ? "—" : `${filteredOutcomes.length} ${filteredOutcomes.length === 1 ? "Result" : "Results"}`}</strong>
         </header>
 
-        <DemoFilm caption="A buyer runs the Browser Game Maker in their own Claude Code." />
 
         <label className="home-search">
           <span aria-hidden="true">⌕</span>
@@ -296,19 +307,19 @@ export function OutcomesPage({ outcomesFixture }: { outcomesFixture?: DiscoveryO
             type="search"
             value={query}
             onChange={(event) => changeQuery(event.target.value)}
-            placeholder="What do you want an agent to make?"
-            aria-label="What do you want an agent to make?"
+            placeholder="What would you like to make?"
+            aria-label="What would you like to make?"
           />
           {query ? <button type="button" onClick={() => changeQuery("")} aria-label="Clear search">Clear</button> : <kbd>⌘ K</kbd>}
         </label>
 
         <div className="home-controls">
-          <nav className="home-category-filter" aria-label="Outcome categories">
+          <nav className="home-category-filter" aria-label="Result categories">
             <button type="button" aria-pressed={category === "all"} onClick={() => changeCategory("all")}>All</button>
             {availableCategories.map((candidate) => <button type="button" aria-pressed={category === candidate} onClick={() => changeCategory(candidate)} key={candidate}>{outcomeCategoryLabels[candidate]}</button>)}
           </nav>
           {hasRecipes || recipesOnly ? <button className="home-recipe-filter" type="button" aria-pressed={recipesOnly} onClick={() => changeRecipesOnly(!recipesOnly)}>
-            <i aria-hidden="true" />Recipes only
+            <i aria-hidden="true" />With details
           </button> : null}
           {sourceFilter ? <button className="home-active-filter" type="button" onClick={() => changeSource(null)} aria-label="Clear Product or Skill filter">
             <span>{activeSource?.kind ?? sourceFilter.split(":", 1)[0]}</span>
@@ -323,17 +334,17 @@ export function OutcomesPage({ outcomesFixture }: { outcomesFixture?: DiscoveryO
         </header>
 
         {directoryState === "loading" ? (
-          <div className="home-empty" role="status"><h2>Loading Outcomes…</h2><p>Reading the public directory.</p></div>
+          <div className="home-empty" role="status"><h2>Loading results…</h2><p>Reading the public directory.</p></div>
         ) : directoryState === "error" ? (
           <div className="home-empty" role="alert"><h2>The directory is unavailable.</h2><p>Try again shortly. Published sources remain unchanged.</p></div>
         ) : visibleOutcomes.length ? (
-          <div className="home-results" role="region" aria-label="Outcome results">
+          <div className="home-results" role="region" aria-label="Result list">
             {visibleOutcomes.map((outcome, index) => (
               <OutcomeResult
                 outcome={outcome}
-                rank={!normalizedQuery && hasUsageRanking ? (currentPage - 1) * pageSize + index + 1 : undefined}
+                rank={undefined}
                 priority={currentPage === 1 && index < 3}
-                featured={!normalizedQuery && hasUsageRanking && currentPage === 1 && index < 3}
+                featured={currentPage === 1 && index < 3}
                 onSelectSource={changeSource}
                 key={outcome.id}
               />

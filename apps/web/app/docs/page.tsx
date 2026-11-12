@@ -3,7 +3,7 @@ import { pageMetadata } from "../_metadata";
 
 export const metadata = pageMetadata({
   title: "Documentation",
-  description: "Learn how to explore results, reuse their recipes, and publish your own Outcome.",
+  description: "Learn how to explore results, reuse their details, and publish your own result.",
   path: "/docs",
 });
 

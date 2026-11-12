@@ -1,12 +1,10 @@
 # Possible
 
-See what AI can make, explore how it was made, and reuse the recipe.
+Possible is a shop of skills our agents run, each shown by its results. A skill runs in your own Claude Code or Codex: US$19 each, or US$49 for every skill on sale. The results list and the Possible tool are open.
 
-[Browse Outcomes](https://possible.sh) · [Read the docs](https://possible.sh/docs) · [Agents](https://possible.sh/agents/)
+[Browse skills](https://possible.sh/skills/) · [Browse results](https://possible.sh/results/) · [Read the docs](https://possible.sh/docs/)
 
-## Agents
-
-possible.sh also sells Fray's agents as downloadable prompts (see `PRODUCT_DIRECTION.md`): US$19 each, or US$49 for all nine. Each one is a skill that runs in the buyer's own Claude Code or Codex. This repo keeps only the public profiles (`agents/<slug>/agent.json`). The paid instructions and the zip build are in the private `fraylabs/possible-prompts` repo. `apps/web/src/payment-links.json` turns Buy on, one link per agent. The Cloudflare Pages build reads `POSSIBLE_PROMPTS_READ_TOKEN` and `POSSIBLE_DELIVERY_TOKENS_JSON` from its encrypted build environment and copies the active download pages into `apps/web/out/d/`. Update the single `PROMPTS_COMMIT` pin in `scripts/prepare-pages-delivery.mjs` when the reviewed private package changes. `POSSIBLE_DELIVERY_DIR` remains supported for the separate Sites distribution route.
+The public repository holds skill profiles; paid instructions and packaging stay private. The payment links file controls which skills are on sale.
 
 ## One public contract
 

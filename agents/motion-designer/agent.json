@@ -40,7 +40,18 @@
       "example": "20 seconds, 9:16 for social, upbeat electronic, hits on every cut"
     }
   ],
-  "portfolio": [],
+  "portfolio": [
+    "possible-launch-film"
+  ],
   "limits": "Short films up to about 60 seconds made in code. No live footage or real people.",
-  "priceUsd": 19
+  "priceUsd": 19,
+  "checks": [
+    "Checks reference facts and plans visible states.",
+    "Reviews contact sheets and measures visual and audio timing.",
+    "Decodes and checks the finished film."
+  ],
+  "refuses": [
+    "Does not invent brand facts.",
+    "Does not copy reference elements one for one."
+  ]
 }

@@ -1,0 +1,5 @@
+/agents /skills/ 301
+/agents/* /skills/:splat 301
+/outcomes /results/ 301
+/outcomes/* /results/:splat 301
+/publish /docs/publish/ 301

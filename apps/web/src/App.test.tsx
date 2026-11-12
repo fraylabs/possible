@@ -39,7 +39,7 @@ const baseOutcome: DiscoveryOutcome = {
   catalogNumber: 1,
 };
 
-const heroActions = () => within(screen.getByRole("group", { name: "Use this Outcome" }));
+const heroActions = () => within(screen.getByRole("group", { name: "Use this result" }));
 
 const seedOutcomes: DiscoveryOutcome[] = [
   baseOutcome,
@@ -91,28 +91,27 @@ describe("Possible website", () => {
 
   it("uses one ranked, visual Outcome directory as the homepage", async () => {
     const { container } = render(<OutcomesPage outcomesFixture={outcomeFixture} />);
-    expect(screen.getByRole("heading", { name: "See what AI can make.", level: 1 })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "All Outcomes", level: 2 })).toBeInTheDocument();
-    expect(screen.getByText("Inspect real results. Take the recipe to your agent.")).toBeInTheDocument();
-    expect(screen.getByText("Ranked by copies")).toBeInTheDocument();
-    expect(screen.getByText("12 copies")).toBeInTheDocument();
-    expect(Array.from(container.querySelectorAll(".nav-links a")).map((link) => link.textContent)).toEqual(["AGENTS", "DOCS", "PUBLISH"]);
+    expect(screen.getByRole("heading", { name: "Skills our agents run. Yours can too.", level: 1 })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "All results", level: 2 })).toBeInTheDocument();
+    expect(screen.getByText("Everything our skills and our agents made, with the exact prompt.")).toBeInTheDocument();
+    expect(screen.queryByText("12 copies")).not.toBeInTheDocument();
+    expect(Array.from(container.querySelectorAll(".nav-links a")).map((link) => link.textContent)).toEqual(["Skills", "Results", "Docs"]);
     expect(screen.queryByRole("heading", { name: "Most copied Outcomes" })).not.toBeInTheDocument();
     expect(container.querySelectorAll(".home-outcome-fallback").length).toBeGreaterThan(0);
     expect(screen.getAllByText("HyperFrames").length).toBeGreaterThan(0);
     expect(screen.getAllByText(/product · HeyGen/i).length).toBeGreaterThan(0);
     expect(container.querySelectorAll('.home-result-row[data-featured="true"]')).toHaveLength(3);
     expect(screen.getAllByRole("article")).toHaveLength(10);
-    expect(screen.getAllByRole("navigation", { name: "Outcome pages" })).toHaveLength(1);
-    await userEvent.click(screen.getByRole("button", { name: "Next Outcome page" }));
+    expect(screen.getAllByRole("navigation", { name: "Result pages" })).toHaveLength(1);
+    await userEvent.click(screen.getByRole("button", { name: "Next Result page" }));
     expect(screen.getByRole("heading", { name: "Fixture Outcome 11" })).toBeInTheDocument();
     expect((await axe(container)).violations).toHaveLength(0);
   });
 
   it("turns ordinary searches into related visual results", async () => {
     render(<OutcomesPage outcomesFixture={seedOutcomes} />);
-    await userEvent.type(screen.getByRole("searchbox", { name: "What do you want an agent to make?" }), "quiet soundtrack");
-    expect(within(screen.getByRole("region", { name: "Outcome results" })).getByRole("heading", { name: /Lantern Rain/i })).toBeInTheDocument();
+    await userEvent.type(screen.getByRole("searchbox", { name: "What would you like to make?" }), "quiet soundtrack");
+    expect(within(screen.getByRole("region", { name: "Result list" })).getByRole("heading", { name: /Lantern Rain/i })).toBeInTheDocument();
   });
 
   it("keeps a site-wide theme preference and can return to the system theme", async () => {
@@ -131,7 +130,7 @@ describe("Possible website", () => {
   it("filters Outcomes by understandable capability categories", async () => {
     render(<OutcomesPage outcomesFixture={seedOutcomes} />);
     await userEvent.click(screen.getByRole("button", { name: "CAD" }));
-    const results = screen.getByRole("region", { name: "Outcome results" });
+    const results = screen.getByRole("region", { name: "Result list" });
     expect(within(results).getByRole("heading", { name: /Robot Snake CAD Prototype/i })).toBeInTheDocument();
     expect(within(results).queryByRole("heading", { name: /Launch Film/i })).not.toBeInTheDocument();
   });
@@ -139,12 +138,18 @@ describe("Possible website", () => {
   it("uses Product and Skill labels as shareable leaderboard filters", async () => {
     render(<OutcomesPage outcomesFixture={seedOutcomes} />);
     await userEvent.click(screen.getAllByRole("button", { name: "Filter by product HyperFrames" })[0]!);
-    const results = screen.getByRole("region", { name: "Outcome results" });
+    const results = screen.getByRole("region", { name: "Result list" });
     expect(within(results).getByRole("heading", { name: /Possible Launch Film/i })).toBeInTheDocument();
     expect(within(results).queryByRole("heading", { name: /Robot Snake CAD Prototype/i })).not.toBeInTheDocument();
     expect(window.location.search).toContain("uses=product%3Aheygen%2Fhyperframes");
     await userEvent.click(screen.getByRole("button", { name: "Clear Product or Skill filter" }));
-    expect(within(screen.getByRole("region", { name: "Outcome results" })).getByRole("heading", { name: /Robot Snake CAD Prototype/i })).toBeInTheDocument();
+    expect(within(screen.getByRole("region", { name: "Result list" })).getByRole("heading", { name: /Robot Snake CAD Prototype/i })).toBeInTheDocument();
+  });
+
+  it("links the reconstructed Motion Designer result to its skill", () => {
+    render(<DynamicOutcomeDetailPage outcomeFixture={{ ...detailFixture, slug: "possible-launch-film", recipe: { provenance: { method: "reconstructed" } } }} />);
+    expect(screen.getByRole("heading", { name: "Made with the Motion Designer skill" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "See the skill" })).toHaveAttribute("href", "/skills/motion-designer/");
   });
 
   it("shows a source-owned preview, exact prompt, provenance, and artifacts", async () => {
@@ -155,7 +160,7 @@ describe("Possible website", () => {
     } satisfies DirectoryOutcomeDetail;
     const { container } = render(<DynamicOutcomeDetailPage outcomeFixture={outcomeWithGallery} attributionsFixture={[{ id: "heygen/hyperframes", kind: "Product", name: "HyperFrames", owner: "HeyGen", href: "/?uses=product%3Aheygen%2Fhyperframes#discover", role: "primary" }]} />);
     expect(screen.getByRole("heading", { name: "Possible Launch Film", level: 1 })).toBeInTheDocument();
-    expect(screen.getByRole("region", { name: "Outcome result" })).toBeInTheDocument();
+    expect(screen.getByRole("region", { name: "Result" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Exact prompt" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Download the result" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Copy prompt" })).toBeInTheDocument();
@@ -196,7 +201,7 @@ describe("Possible website", () => {
     };
     const { container } = render(<DynamicOutcomeDetailPage outcomeFixture={outcome} />);
     const panel = screen.getByRole("region", { name: "How it was made" });
-    expect(container.querySelector(".outcome-gallery")?.nextElementSibling).toBe(panel);
+    expect(container.querySelector(".outcome-gallery")?.nextElementSibling).toHaveClass("outcome-hero");
     expect(within(panel).getByText("GPT-6 · OpenAI · execution · Codex")).toBeInTheDocument();
     expect(within(panel).getByText("Claude · Anthropic · review · Claude Code")).toBeInTheDocument();
     expect(within(panel).getByRole("link", { name: /maker\/film/ })).toHaveAttribute("href", `https://github.com/maker/film/tree/${commit}/skills/video`);
@@ -204,7 +209,7 @@ describe("Possible website", () => {
     expect(within(panel).getByText("Renders the final film.")).toBeInTheDocument();
     expect(Array.from(panel.querySelectorAll("ol h4")).map((element) => element.textContent)).toEqual(["Storyboard", "Render"]);
     for (const link of panel.querySelectorAll("a")) expect(link).toHaveAttribute("rel", "noopener noreferrer");
-    await user.click(heroActions().getByRole("button", { name: "Copy recipe" }));
+    await user.click(heroActions().getByRole("button", { name: "Copy details" }));
     const kit = await navigator.clipboard.readText();
     expect(kit).toContain(commit);
     expect(kit).toContain("Claude · Anthropic · review · Claude Code");
@@ -218,7 +223,7 @@ describe("Possible website", () => {
     await user.type(screen.getByRole("textbox", { name: "Remix prompt" }), "Make a shorter film.");
     await user.click(screen.getByRole("button", { name: "Copy remixed prompt" }));
     expect(await navigator.clipboard.readText()).toBe("Make a shorter film.");
-    await user.click(within(panel).getByRole("button", { name: "Copy recipe" }));
+    await user.click(within(panel).getByRole("button", { name: "Copy details" }));
     expect(await navigator.clipboard.readText()).toContain("Exact published prompt\nCreate a launch film.");
     expect((await axe(container)).violations).toHaveLength(0);
   });
@@ -241,7 +246,7 @@ describe("Possible website", () => {
     expect(container.textContent).not.toContain(hidden);
     await user.click(heroActions().getByRole("button", { name: "Copy prompt" }));
     expect(await navigator.clipboard.readText()).toBe("Draw a planet.\\u{e0041}");
-    await user.click(heroActions().getByRole("button", { name: "Copy recipe" }));
+    await user.click(heroActions().getByRole("button", { name: "Copy details" }));
     expect(await navigator.clipboard.readText()).toContain("Add rings.\\u{e0041}");
     expect(await navigator.clipboard.readText()).not.toContain(hidden);
   });
@@ -254,14 +259,13 @@ describe("Possible website", () => {
       steps: [{ title: "First request", instructions: "Recorded user message", prompt: "Make a spinning planet." }],
     } };
     render(<DynamicOutcomeDetailPage outcomeFixture={recorded} />);
-    expect(screen.getByText("Recorded from session")).toBeInTheDocument();
-    expect(screen.getByText(/not an unedited transcript/)).toBeInTheDocument();
-    await user.click(heroActions().getByRole("button", { name: "Copy recipe" }));
+    expect(screen.getByText(/Recorded: a creator-reviewed session/)).toBeInTheDocument();
+    await user.click(heroActions().getByRole("button", { name: "Copy details" }));
     expect(await navigator.clipboard.readText()).toContain("Some source details were removed for privacy.");
     expect(await navigator.clipboard.readText()).toContain("Recorded from session");
     cleanup();
     render(<DynamicOutcomeDetailPage outcomeFixture={{ ...detailFixture, recipe: { provenance: { method: "reconstructed" } } }} />);
-    expect(screen.getByText("Reconstructed")).toBeInTheDocument();
+    expect(screen.getByText("Reconstructed from the publisher's account.")).toBeInTheDocument();
     expect(screen.queryByText("Recorded from session")).not.toBeInTheDocument();
   });
 
@@ -270,11 +274,11 @@ describe("Possible website", () => {
     const outcome = { ...detailFixture, author_name: "Independent Maker", author_url: "https://maker.example", source_url: "https://github.com/maker/old-outcome", source_locator: "maker/old-outcome" };
     render(<DynamicOutcomeDetailPage outcomeFixture={outcome} />);
     const panel = screen.getByRole("region", { name: "How it was made" });
-    expect(within(panel).getByText("Prompt only")).toBeInTheDocument();
+    expect(within(panel).getByText("No additional details were supplied.")).toBeInTheDocument();
     expect(within(panel).queryByText("PUBLISHED RECIPE")).not.toBeInTheDocument();
     expect(within(panel).getByText("GPT-5.6 · OpenAI · Codex")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Independent Maker" })).toHaveAttribute("href", "https://maker.example");
-    await user.click(screen.getByRole("button", { name: "Copy recipe" }));
+    await user.click(screen.getByRole("button", { name: "Copy details" }));
     expect(await navigator.clipboard.readText()).toContain("Prompt only — no recipe was published.");
     expect(await navigator.clipboard.readText()).toContain(outcome.prompt);
   });
@@ -286,7 +290,7 @@ describe("Possible website", () => {
     expect(within(panel).getByText("No steps were recorded.")).toBeInTheDocument();
     expect(within(panel).getByText("Offline editor")).toBeInTheDocument();
     expect(within(panel).queryByRole("link")).not.toBeInTheDocument();
-    expect(panel).toHaveTextContent("Unlisted details are unknown.");
+    expect(panel).toHaveTextContent("Reconstructed from the publisher");
   });
 
   it("makes Copy recipe the hero's primary action when a recipe exists, with Copy prompt secondary", async () => {
@@ -294,7 +298,7 @@ describe("Possible website", () => {
     const outcome: DirectoryOutcomeDetail = { ...detailFixture, recipe: { steps: [{ title: "Storyboard", instructions: "Plan three scenes." }] } };
     const { container } = render(<DynamicOutcomeDetailPage outcomeFixture={outcome} />);
     const buttons = heroActions().getAllByRole("button");
-    expect(buttons.map((button) => button.textContent?.replace(/[↗✓]/g, "").trim())).toEqual(["Copy recipe", "Copy prompt"]);
+    expect(buttons.map((button) => button.textContent?.replace(/[↗✓]/g, "").trim())).toEqual(["Copy details", "Copy prompt"]);
     expect(buttons[0]).not.toHaveClass("copy-button--secondary");
     expect(buttons[1]).toHaveClass("copy-button--secondary");
     expect(heroActions().getByRole("link", { name: "Remix" })).toHaveAttribute("href", "#exact-prompt");
@@ -313,7 +317,7 @@ describe("Possible website", () => {
     render(<DynamicOutcomeDetailPage outcomeFixture={detailFixture} />);
     expect(heroActions().getAllByRole("button").map((button) => button.textContent?.replace(/[↗✓]/g, "").trim())).toEqual(["Copy prompt"]);
     expect(heroActions().getByRole("button", { name: "Copy prompt" })).not.toHaveClass("copy-button--secondary");
-    expect(heroActions().queryByRole("button", { name: "Copy recipe" })).not.toBeInTheDocument();
+    expect(heroActions().queryByRole("button", { name: "Copy details" })).not.toBeInTheDocument();
     await user.click(heroActions().getByRole("button", { name: "Copy prompt" }));
     expect(await navigator.clipboard.readText()).toBe(detailFixture.prompt);
   });
@@ -327,7 +331,7 @@ describe("Possible website", () => {
       return new Response(JSON.stringify({ counted: true }));
     }));
     render(<DynamicOutcomeDetailPage outcomeFixture={{ ...detailFixture, recipe: { steps: [{ title: "Plan", instructions: "Plan it." }] } }} />);
-    await user.click(heroActions().getByRole("button", { name: "Copy recipe" }));
+    await user.click(heroActions().getByRole("button", { name: "Copy details" }));
     await user.click(heroActions().getByRole("button", { name: "Copy prompt" }));
     await vi.waitFor(() => expect(uses).toEqual([detailFixture.id, detailFixture.id]));
   });
@@ -338,10 +342,10 @@ describe("Possible website", () => {
     const outcomes = [{ ...seedOutcomes[0]!, recipe: kit }, seedOutcomes[1]!];
     const { container } = render(<OutcomesPage outcomesFixture={outcomes} />);
     const [withRecipe, promptOnly] = screen.getAllByRole("article");
-    expect(within(withRecipe!).getByText("Recipe")).toHaveAttribute("data-kind", "recipe");
-    expect(within(promptOnly!).getByText("Prompt only")).toHaveAttribute("data-kind", "prompt");
+    expect(within(withRecipe!).getByText("Result")).toHaveAttribute("data-kind", "recipe");
+    expect(within(promptOnly!).getByText("Prompt")).toHaveAttribute("data-kind", "prompt");
     expect(within(withRecipe!).queryByRole("button", { name: /Copy prompt/ })).not.toBeInTheDocument();
-    await user.click(within(withRecipe!).getByRole("button", { name: "Copy recipe for Possible Launch Film" }));
+    await user.click(within(withRecipe!).getByRole("button", { name: "Copy details for Possible Launch Film" }));
     expect(await navigator.clipboard.readText()).toBe(kit);
     await user.click(within(promptOnly!).getByRole("button", { name: "Copy prompt for Lantern Rain: Quiet Soundtrack" }));
     expect(await navigator.clipboard.readText()).toBe("Compose a quiet soundtrack.");
@@ -352,12 +356,12 @@ describe("Possible website", () => {
     const user = userEvent.setup();
     const outcomes = [{ ...seedOutcomes[0]!, recipe: "kit" }, seedOutcomes[1]!, seedOutcomes[2]!];
     render(<OutcomesPage outcomesFixture={outcomes} />);
-    const toggle = screen.getByRole("button", { name: "Recipes only" });
+    const toggle = screen.getByRole("button", { name: "With details" });
     expect(toggle).toHaveAttribute("aria-pressed", "false");
     await user.click(toggle);
     expect(toggle).toHaveAttribute("aria-pressed", "true");
     expect(window.location.search).toContain("recipe=1");
-    expect(screen.getByRole("heading", { name: "Outcomes with recipes", level: 2 })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Results with details", level: 2 })).toBeInTheDocument();
     expect(screen.getAllByRole("article")).toHaveLength(1);
     expect(screen.getByRole("heading", { name: "Possible Launch Film" })).toBeInTheDocument();
     await user.click(toggle);
@@ -366,14 +370,14 @@ describe("Possible website", () => {
     cleanup();
     window.history.pushState({}, "", "/?recipe=1");
     render(<OutcomesPage outcomesFixture={outcomes} />);
-    expect(screen.getByRole("button", { name: "Recipes only" })).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByRole("button", { name: "With details" })).toHaveAttribute("aria-pressed", "true");
     expect(screen.getAllByRole("article")).toHaveLength(1);
   });
 
   it("hides the recipe filter when no Outcome has a recipe", () => {
     render(<OutcomesPage outcomesFixture={seedOutcomes} />);
-    expect(screen.queryByRole("button", { name: "Recipes only" })).not.toBeInTheDocument();
-    expect(screen.getAllByText("Prompt only")).toHaveLength(3);
+    expect(screen.queryByRole("button", { name: "With details" })).not.toBeInTheDocument();
+    expect(screen.getAllByText("Prompt")).toHaveLength(3);
   });
 
   it("builds the card recipe kit from directory rows that publish a recipe", async () => {
@@ -387,7 +391,7 @@ describe("Possible website", () => {
 
   it("documents the same small public contract", () => {
     render(<DocsPage />);
-    expect(screen.getByRole("heading", { name: "Results and the recipes behind them" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Results and the details behind them" })).toBeInTheDocument();
     cleanup();
     render(<AuthoringDocsPage />);
     expect(screen.getByRole("heading", { name: "Publish from your source" })).toBeInTheDocument();
@@ -410,7 +414,7 @@ describe("Possible website", () => {
     render(<AgentProfilePage agent={findAgentProfile("competitor-analyst")!} />);
     expect(screen.getByRole("heading", { name: "Competitor Analyst" })).toBeInTheDocument();
     expect(screen.getByText("US$19")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Buy the Competitor Analyst" })).toHaveAttribute("href", paymentLinks["competitor-analyst"]);
+    expect(screen.getByRole("link", { name: "Buy the Competitor Analyst skill" })).toHaveAttribute("href", paymentLinks["competitor-analyst"]);
     expect(document.querySelector(".buy-box .buy-terms")?.textContent).toBe("By buying, you agree to our Terms and Refund Policy. Your purchase is sold through Link, a Stripe company, which takes your payment.");
     expect(screen.getByText("Claude Code, Codex")).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Portfolio" })).toBeInTheDocument();
@@ -433,11 +437,11 @@ describe("Possible website", () => {
     expect(screen.getByRole("heading", { name: "Animated Shorts Maker" })).toBeInTheDocument();
     expect(screen.getByText("Workflow inspired by mromidev/claude-animated-shorts (MIT)." )).toBeInTheDocument();
     expect(screen.getByText("US$19")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Buy the Animated Shorts Maker" })).toHaveAttribute("href", paymentLinks["animated-shorts-maker"]);
+    expect(screen.getByRole("link", { name: "Buy the Animated Shorts Maker skill" })).toHaveAttribute("href", paymentLinks["animated-shorts-maker"]);
     cleanup();
     render(<AgentsPage />);
-    expect(screen.getByText("All nine agents")).toBeInTheDocument();
-    expect(screen.getByText("US$49")).toBeInTheDocument();
+    expect(screen.getByText("Every skill on sale, US$49")).toBeInTheDocument();
+    expect(screen.getByText("Every skill on sale, US$49")).toBeInTheDocument();
   });
 
   it("keeps one payment link key per agent plus the bundle", () => {
@@ -477,10 +481,10 @@ describe("Possible website", () => {
   it("offers all agents as a US$49 bundle on the index", () => {
     vi.stubGlobal("fetch", vi.fn(async () => new Response(JSON.stringify({ outcomes: [] }))));
     render(<AgentsPage />);
-    expect(screen.getByText("US$49")).toBeInTheDocument();
+    expect(screen.getByText("Every skill on sale, US$49")).toBeInTheDocument();
     const buyLegal = document.querySelector(".buy-box .buy-legal")!;
     expect([...buyLegal.querySelectorAll("a")].map((link) => link.getAttribute("href"))).toEqual(["/terms/", "/refunds/", "/privacy/"]);
-    expect(screen.getByRole("link", { name: "Buy all agents" })).toHaveAttribute("href", paymentLinks[BUNDLE_SLUG]);
+    expect(screen.getByRole("link", { name: "Buy every skill on sale" })).toHaveAttribute("href", paymentLinks[BUNDLE_SLUG]);
     expect(document.body.textContent).not.toMatch(/hire|hiring|cleanroom|waitlist/i);
   });
 });

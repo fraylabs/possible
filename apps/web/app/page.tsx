@@ -2,8 +2,8 @@ import { OutcomesPage } from "../src/App";
 import { pageMetadata } from "./_metadata";
 
 export const metadata = pageMetadata({
-  title: "Possible — Discover what agents can do",
-  description: "See what AI can make, inspect the recipe, and hand it to your agent.",
+  title: "Skills our agents run. Yours can too.",
+  description: "Skills for Claude Code and Codex, each shown by what it made. US$19 each or US$49 for every skill on sale.",
   path: "/",
 });
 
