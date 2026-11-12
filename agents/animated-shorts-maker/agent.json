@@ -39,7 +39,7 @@
       "example": "My own English voice recording, no captions, quiet music"
     }
   ],
-  "portfolio": [],
+  "portfolio": ["tacoma-narrows-bridge-lesson"],
   "limits": "Makes a 45\u201370 second vertical animation from code. References are studied, never copied or shipped; no AI-video clips or stock footage. Review the script before production.",
   "priceUsd": 19,
   "credit": "Workflow inspired by mromidev/claude-animated-shorts (MIT).",
