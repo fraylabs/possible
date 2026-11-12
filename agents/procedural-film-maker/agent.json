@@ -35,7 +35,7 @@
       "example": "30 seconds, 21:9, drone-like moves, a new place every 6 seconds, calm nature sounds and an epic score"
     }
   ],
-  "portfolio": [],
+  "portfolio": ["a-river-did-this-grand-canyon"],
   "limits": "Landscapes and environments rendered offline from code. No characters, dialogue or real-time games. Quality and length scale with render time.",
   "priceUsd": 19,
   "checks": [
